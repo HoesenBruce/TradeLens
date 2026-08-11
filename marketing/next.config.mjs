@@ -7,6 +7,8 @@ const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  // Dev-only: let other devices on the LAN load /_next assets when the dev
+  // server runs with -H 0.0.0.0 (Next blocks cross-origin dev requests by default).
   async redirects() {
     // Docs pages moved into section folders (2026-08)
     return [
