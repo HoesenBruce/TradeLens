@@ -5,6 +5,7 @@ import "time"
 // ParsedExecution is a broker-agnostic fill produced by an Importer.
 type ParsedExecution struct {
 	ExternalID     string
+	DedupKey       string // optional broker-stable identity when fill fields are not unique
 	Symbol         string
 	StockName      string // broker-provided company/security name, when available
 	InstrumentType string

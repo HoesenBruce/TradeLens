@@ -42,6 +42,9 @@ type loadedImport struct {
 
 // readCSV parses uploaded CSV bytes into headers + row maps.
 func readCSV(data []byte) (headers []string, rows []map[string]string, err error) {
+	if headers, rows, ok, err := importer.ReadSBITradeCSV(data); ok || err != nil {
+		return headers, rows, err
+	}
 	r := csv.NewReader(bytes.NewReader(data))
 	r.FieldsPerRecord = -1
 	records, err := r.ReadAll()
@@ -443,9 +446,13 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 			// clock (US Eastern / exchange time), not UTC.
 			sourceTZ = presetTZ
 		}
-		parsed = importer.NewGeneric(mapping).WithSourceTZ(sourceTZ).
-			WithLotSizedQuantity(importer.LotSizedBroker(loaded.Headers)).
-			ParseRows(loaded.Rows)
+		if importer.IsSBI(loaded.Headers) {
+			parsed = importer.ParseSBIRows(loaded.Rows, sourceTZ)
+		} else {
+			parsed = importer.NewGeneric(mapping).WithSourceTZ(sourceTZ).
+				WithLotSizedQuantity(importer.LotSizedBroker(loaded.Headers)).
+				ParseRows(loaded.Rows)
+		}
 		parsed.Format = "executions"
 	}
 

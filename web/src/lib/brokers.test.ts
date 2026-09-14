@@ -8,6 +8,7 @@ import { BROKERS, findBroker, KIND_ORDER, searchBrokers } from "./brokers";
  * promise checkable when either side changes.
  */
 const SERVER_PRESET_KEYS = [
+  "sbi",
   "ibkr",
   "thinkorswim",
   "webull",
@@ -75,6 +76,7 @@ describe("searchBrokers", () => {
   });
 
   it("matches aliases, so old and parent names still find the card", () => {
+    expect(searchBrokers("SBI証券").map((b) => b.key)).toContain("sbi");
     expect(searchBrokers("ameritrade").map((b) => b.key)).toContain("thinkorswim");
     expect(searchBrokers("mt5").map((b) => b.key)).toContain("metatrader");
     expect(searchBrokers("futu").map((b) => b.key)).toContain("moomoo");

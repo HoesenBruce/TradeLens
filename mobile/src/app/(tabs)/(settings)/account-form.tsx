@@ -31,6 +31,7 @@ import { pnlColor, usePnlPalette } from '@/styles/pnl';
 /** Mirrors the web settings broker dropdown; anything else is a custom entry. */
 const POPULAR_BROKERS = [
   'IBKR',
+  'SBI Securities',
   'Webull',
   'Robinhood',
   'Fidelity',
