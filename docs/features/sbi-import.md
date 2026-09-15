@@ -2,7 +2,7 @@
 
 ## Status
 
-Implemented for SBI Securities `約定履歴照会` CSV exports.
+Implemented for SBI Securities `約定履歴照会` and `円貨入出金明細` CSV exports.
 
 ## Goal
 
@@ -10,7 +10,7 @@ Import Japanese equity trades exported by SBI Securities into TraderMemos.
 
 ## Non-goals for v1
 
-- Dividends
+- Trade-linked dividend attribution (cash-statement dividends import as ledger entries)
 - Investment trusts
 - NISA-specific tax handling
 - Automated SBI login
@@ -82,6 +82,41 @@ authoritative.
 
 Reuse `importer.DedupHash` and `importer.Commit`. Do not create an SBI-only duplicate
 detection or persistence path.
+
+## Cash transactions
+
+`円貨入出金明細` imports directly into the existing cash ledger with currency `JPY`:
+
+- bank funding and withdrawals → `deposit` / `withdrawal`;
+- interest and dividends → `dividend`;
+- tax withholding, tax refunds, and other broker adjustments → signed `adjustment`.
+
+The Japanese category and description remain in the note. Re-import compares the full
+ledger record and skips the matching number of duplicates while preserving legitimate
+identical rows in the same export. Import History rollback removes cash rows from that
+batch together with its executions.
+
+## Import flow and client behavior
+
+The API detects an SBI cash file during `POST /api/v1/imports` and returns
+`format: cash_transactions` with `detected_broker: SBI Securities (Cash Transactions)`.
+The preview is parse-only; it does not create a batch or write ledger rows. Commit through
+`POST /api/v1/imports/commit` writes the parsed rows to the selected account and reports
+the count as `cash_inserted`; duplicate rows are reported in `skipped`.
+
+The Web and mobile import screens recognize this format and skip execution column mapping.
+They show the SBI cash-ledger explanation during the confirmation step and show cash rows
+inserted in the result instead of an execution `Inserted`/`Fills inserted` count.
+
+## Verification status
+
+Covered by the SBI parser fixture and tests: CP932 decoding, UTF-8 acceptance, header
+detection, JPY conversion, deposit/withdrawal/dividend/adjustment classification,
+Asia/Tokyo date normalization, malformed-row reporting, duplicate handling, and batch
+rollback. The Web preview/result behavior has a focused component test.
+
+Real-device mobile taps and a live server end-to-end import have not been run in this
+checkout; those remain required before calling the mobile workflow production-verified.
 
 ## Testing
 

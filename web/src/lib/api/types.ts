@@ -472,8 +472,8 @@ export interface ImportPreview {
    * (from the broker preset). Override with `source_tz` on commit.
    */
   suggested_source_tz?: string;
-  /** "journal_trades" for closed-trade journal CSVs; "executions" for fill CSVs */
-  format?: "journal_trades" | "executions";
+  /** Parsed payload kind. */
+  format?: "journal_trades" | "executions" | "cash_transactions";
   /** Upload source detected by the API; "statement" = MetaTrader report */
   source?: "csv" | "json" | "statement";
   row_count?: number;

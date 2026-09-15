@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"maps"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -12,6 +13,13 @@ import (
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 )
+
+type SBICashImport struct {
+	Headers      []string
+	Rows         []map[string]string
+	Transactions []JSONCashTx
+	Errors       []RowError
+}
 
 var sbiFields = map[string]string{
 	"symbol":          "銘柄コード",
@@ -25,12 +33,9 @@ var sbiFields = map[string]string{
 
 // ReadSBITradeCSV decodes SBI's CP932 export and removes its report preamble.
 func ReadSBITradeCSV(data []byte) (headers []string, rows []map[string]string, ok bool, err error) {
-	decoded := data
-	if !utf8.Valid(decoded) {
-		decoded, _, err = transform.Bytes(japanese.ShiftJIS.NewDecoder(), decoded)
-		if err != nil {
-			return nil, nil, false, nil
-		}
+	decoded, err := decodeSBI(data)
+	if err != nil {
+		return nil, nil, false, nil
 	}
 	if !bytes.Contains(decoded, []byte("約定履歴照会")) {
 		return nil, nil, false, nil
@@ -69,13 +74,106 @@ func ReadSBITradeCSV(data []byte) (headers []string, rows []map[string]string, o
 	return headers, rows, true, nil
 }
 
+// ReadSBICashCSV parses SBI's 円貨入出金明細 export into the existing cash ledger.
+func ReadSBICashCSV(data []byte) (SBICashImport, bool, error) {
+	decoded, err := decodeSBI(data)
+	if err != nil {
+		return SBICashImport{}, false, nil
+	}
+	if !bytes.Contains(decoded, []byte("円貨入出金明細")) {
+		return SBICashImport{}, false, nil
+	}
+
+	r := csv.NewReader(bytes.NewReader(decoded))
+	r.FieldsPerRecord = -1
+	records, err := r.ReadAll()
+	if err != nil {
+		return SBICashImport{}, true, err
+	}
+	headerAt := -1
+	for i, record := range records {
+		if hasSBIHeaderFields(record, []string{"入出金日", "取引", "区分", "摘要", "出金額", "入金額"}) {
+			headerAt = i
+			break
+		}
+	}
+	if headerAt < 0 {
+		return SBICashImport{}, true, fmt.Errorf("SBI cash transaction header not found")
+	}
+
+	out := SBICashImport{Headers: trimHeaders(records[headerAt]), Errors: []RowError{}}
+	loc, _ := time.LoadLocation("Asia/Tokyo")
+	for i, record := range records[headerAt+1:] {
+		if len(record) == 1 && strings.TrimSpace(record[0]) == "" {
+			continue
+		}
+		row := make(map[string]string, len(out.Headers))
+		for j, header := range out.Headers {
+			if j < len(record) {
+				row[header] = strings.TrimSpace(record[j])
+			}
+		}
+		out.Rows = append(out.Rows, row)
+
+		tx, err := parseSBICashRow(row, loc)
+		if err != nil {
+			out.Errors = append(out.Errors, RowError{Row: i + 1, Message: err.Error()})
+			continue
+		}
+		out.Transactions = append(out.Transactions, tx)
+	}
+	return out, true, nil
+}
+
+func decodeSBI(data []byte) ([]byte, error) {
+	if utf8.Valid(data) {
+		return data, nil
+	}
+	decoded, _, err := transform.Bytes(japanese.ShiftJIS.NewDecoder(), data)
+	return decoded, err
+}
+
+func parseSBICashRow(row map[string]string, loc *time.Location) (JSONCashTx, error) {
+	date, err := time.ParseInLocation("2006/01/02", row["入出金日"], loc)
+	if err != nil {
+		return JSONCashTx{}, fmt.Errorf("invalid cash transaction date %q", row["入出金日"])
+	}
+	outflow, outErr := strconv.ParseFloat(strings.ReplaceAll(row["出金額"], ",", ""), 64)
+	inflow, inErr := strconv.ParseFloat(strings.ReplaceAll(row["入金額"], ",", ""), 64)
+	if outErr != nil || inErr != nil || (outflow == 0) == (inflow == 0) {
+		return JSONCashTx{}, fmt.Errorf("invalid cash transaction amount")
+	}
+	if (inflow > 0 && row["取引"] != "入金") || (outflow > 0 && row["取引"] != "出金") {
+		return JSONCashTx{}, fmt.Errorf("cash transaction direction does not match amount")
+	}
+
+	typ := "adjustment"
+	switch row["区分"] {
+	case "金融機関からの入金":
+		typ = "deposit"
+	case "金融機関への出金", "各商品取引口座への振替出金":
+		typ = "withdrawal"
+	case "利金・配当金":
+		typ = "dividend"
+	}
+	amount := inflow - outflow
+	return JSONCashTx{
+		Type: typ, Amount: amount, Currency: "JPY",
+		OccurredAt: date.UTC(), Note: strings.TrimSpace(row["区分"] + " · " + row["摘要"]),
+	}, nil
+}
+
 func hasSBIHeader(record []string) bool {
+	return hasSBIHeaderFields(record, []string{"約定日", "銘柄コード", "取引", "約定数量", "約定単価"})
+}
+
+func hasSBIHeaderFields(record, required []string) bool {
 	present := make(map[string]bool, len(record))
 	for _, value := range record {
 		present[strings.TrimSpace(strings.TrimPrefix(value, "\ufeff"))] = true
 	}
-	for _, required := range []string{"約定日", "銘柄コード", "取引", "約定数量", "約定単価"} {
-		if !present[required] {
+	for _, field := range required {
+		if !present[field] {
 			return false
 		}
 	}

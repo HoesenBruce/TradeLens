@@ -36,6 +36,7 @@ type loadedImport struct {
 	Format    string
 	Headers   []string
 	Rows      []map[string]string
+	Cash      importer.SBICashImport
 	JSON      importer.JSONImport
 	Statement *importer.MTStatement
 }
@@ -93,6 +94,12 @@ func loadImportFile(fh *multipart.FileHeader) (loadedImport, error) {
 			Rows:    j.Rows,
 			JSON:    j,
 		}, nil
+	}
+	if cash, ok, err := importer.ReadSBICashCSV(data); ok || err != nil {
+		return loadedImport{
+			Source: "csv", Format: "cash_transactions", Headers: cash.Headers,
+			Rows: cash.Rows, Cash: cash,
+		}, err
 	}
 
 	// MetaTrader statements (MT5 Trade History Report .xlsx/.html, MT4
@@ -179,6 +186,9 @@ func (s *Server) handleImportPreview(c *echo.Context) error {
 	detectedBroker := ""
 	suggestedTZ := ""
 	switch {
+	case loaded.Format == "cash_transactions":
+		suggested = map[string]string{}
+		detectedBroker = "SBI Securities (Cash Transactions)"
 	case loaded.Source == "statement":
 		// Statement tables are parsed positionally — no column mapping. The
 		// tz suggestion is the MetaTrader server-time convention, not UTC.
@@ -424,6 +434,8 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 		// Empty override keeps the MetaTrader server-time default (EET) —
 		// reading broker wall clocks as UTC is the historical tz trap.
 		parsed = loaded.Statement.Parse(sourceTZ)
+	case loaded.Format == "cash_transactions":
+		parsed = importer.ParseResult{Format: loaded.Format, Errors: loaded.Cash.Errors}
 	case loaded.Format == "journal_trades":
 		opts := journalOptionOverrides(c)
 		parsed = importer.NewJournal().ParseRowsWithOptions(loaded.Rows, opts)
@@ -471,28 +483,41 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 			setupsUpserted = n
 		}
 
-		var err error
-		committed, err = importer.Commit(ctx, q, uid, batch.AccountID,
-			sql.NullString{String: batch.ID, Valid: true}, parsed)
-		if err != nil {
-			return fmt.Errorf("commit executions: %w", err)
+		if loaded.Format == "cash_transactions" {
+			committed = importer.CommitResult{Format: loaded.Format, Errors: parsed.Errors}
+		} else {
+			var err error
+			committed, err = importer.Commit(ctx, q, uid, batch.AccountID,
+				sql.NullString{String: batch.ID, Valid: true}, parsed)
+			if err != nil {
+				return fmt.Errorf("commit executions: %w", err)
+			}
 		}
 
 		if loaded.Source == "json" {
 			if err := s.applyJSONAccountMeta(ctx, q, uid, batch.AccountID, loaded.JSON.Account); err != nil {
 				return fmt.Errorf("apply account metadata: %w", err)
 			}
-			cashInserted, err = s.applyJSONCashTransactions(ctx, q, uid, batch.AccountID,
+			inserted, cashErr := s.applyJSONCashTransactions(ctx, q, uid, batch.AccountID,
 				sql.NullString{String: batch.ID, Valid: true}, loaded.JSON.Cash)
-			if err != nil {
-				return fmt.Errorf("import cash transactions: %w", err)
+			if cashErr != nil {
+				return fmt.Errorf("import cash transactions: %w", cashErr)
 			}
+			cashInserted = inserted
 			acc, err := q.GetAccount(ctx, store.GetAccountParams{ID: batch.AccountID, UserID: uid})
 			if err == nil {
 				if err := s.ensureOpeningDeposit(ctx, q, uid, acc); err != nil {
 					return fmt.Errorf("seed opening deposit: %w", err)
 				}
 			}
+		} else if loaded.Format == "cash_transactions" {
+			inserted, skipped, cashErr := s.applySBICashTransactions(ctx, q, uid, batch.AccountID,
+				sql.NullString{String: batch.ID, Valid: true}, loaded.Cash.Transactions)
+			if cashErr != nil {
+				return fmt.Errorf("import SBI cash transactions: %w", cashErr)
+			}
+			cashInserted = inserted
+			committed.Skipped = skipped
 		}
 
 		if err := q.SetImportBatchStatus(ctx, store.SetImportBatchStatusParams{Status: "committed", ID: batch.ID, UserID: uid}); err != nil {
@@ -512,6 +537,50 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 		CashInserted: cashInserted, SetupsUpserted: setupsUpserted,
 		AccountID: batch.AccountID,
 	})
+}
+
+func (s *Server) applySBICashTransactions(
+	ctx context.Context,
+	q store.Querier,
+	userID, accountID string,
+	batchID sql.NullString,
+	rows []importer.JSONCashTx,
+) (inserted, skipped int, err error) {
+	existing, err := q.ListCashTransactions(ctx, store.ListCashTransactionsParams{
+		UserID: userID, AccountID: sql.NullString{String: accountID, Valid: true},
+	})
+	if err != nil {
+		return 0, 0, err
+	}
+	existingCounts := make(map[string]int, len(existing))
+	for _, row := range existing {
+		existingCounts[cashImportKey(row.Type, row.Amount, row.Currency, row.OccurredAt, row.Note)]++
+	}
+	occurrences := make(map[string]int, len(rows))
+	for _, row := range rows {
+		key := cashImportKey(row.Type, row.Amount, row.Currency, row.OccurredAt, row.Note)
+		occurrences[key]++
+		if occurrences[key] <= existingCounts[key] {
+			skipped++
+			continue
+		}
+		if _, err := q.InsertCashTransaction(ctx, store.InsertCashTransactionParams{
+			ID: uuid.New().String(), UserID: userID, AccountID: accountID,
+			Type: row.Type, Amount: row.Amount, Currency: row.Currency,
+			OccurredAt: row.OccurredAt, Note: row.Note, ImportBatchID: batchID,
+		}); err != nil {
+			return inserted, skipped, err
+		}
+		inserted++
+	}
+	return inserted, skipped, nil
+}
+
+func cashImportKey(typ string, amount float64, currency string, occurredAt time.Time, note string) string {
+	return strings.Join([]string{
+		typ, strconv.FormatFloat(amount, 'g', -1, 64), currency,
+		occurredAt.UTC().Format(time.RFC3339Nano), note,
+	}, "|")
 }
 
 func (s *Server) applyJSONAccountMeta(ctx context.Context, q store.Querier, userID, accountID string, meta *importer.JSONAccountMeta) error {
@@ -662,13 +731,22 @@ func (s *Server) handleDeleteImport(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusNotFound, "not_found", "import batch not found", nil)
 	}
-	if err := s.deps.Store.DeleteExecutionsForBatch(ctx, store.DeleteExecutionsForBatchParams{
-		ImportBatchID: sql.NullString{String: batch.ID, Valid: true}, UserID: uid,
+	if err := store.InTx(ctx, s.deps.Store, func(q store.Querier) error {
+		if err := q.DeleteExecutionsForBatch(ctx, store.DeleteExecutionsForBatchParams{
+			ImportBatchID: sql.NullString{String: batch.ID, Valid: true}, UserID: uid,
+		}); err != nil {
+			return err
+		}
+		if err := q.DeleteCashTransactionsForBatch(ctx, store.DeleteCashTransactionsForBatchParams{
+			ImportBatchID: sql.NullString{String: batch.ID, Valid: true}, UserID: uid,
+		}); err != nil {
+			return err
+		}
+		return q.SetImportBatchStatus(ctx, store.SetImportBatchStatusParams{
+			Status: "reversed", ID: batch.ID, UserID: uid,
+		})
 	}); err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not reverse import", nil)
-	}
-	if err := s.deps.Store.SetImportBatchStatus(ctx, store.SetImportBatchStatusParams{Status: "reversed", ID: batch.ID, UserID: uid}); err != nil {
-		return Fail(http.StatusInternalServerError, "internal", "could not update batch", nil)
 	}
 	if err := s.deps.Trades.Regroup(ctx, uid, batch.AccountID); err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not regroup trades", nil)

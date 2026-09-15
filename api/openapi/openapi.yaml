@@ -841,6 +841,8 @@ paths:
           the mapping and `suggested_source_tz`.
         - **Journal CSV** — one row per finished trade (Stonk Journal-style);
           detected as `format: journal_trades`, no mapping step.
+        - **SBI cash CSV** — SBI Securities `円貨入出金明細`, detected as
+          `format: cash_transactions`; imports JPY ledger entries without mapping.
         - **MetaTrader statement** — the MT5 Trade History Report
           (XLSX/HTML) or MT4 Statement / Account History (HTML), detected from
           content (`source: statement`); parsed positionally, no mapping.
@@ -923,7 +925,7 @@ paths:
       tags: [Import]
       summary: Reverse an import batch
       description: |
-        Deletes the batch's executions, marks the batch `reversed`, and
+        Deletes the batch's executions and cash transactions, marks the batch `reversed`, and
         regroups the account's trades. Journal annotations on surviving trades
         are unaffected.
       operationId: deleteImport
@@ -1819,7 +1821,7 @@ components:
             override with `source_tz` on commit.
         format:
           type: string
-          enum: [executions, journal_trades, account_backup]
+          enum: [executions, journal_trades, cash_transactions, account_backup]
         source:
           type: string
           enum: [csv, json, statement]
@@ -1874,7 +1876,7 @@ components:
           type: string
           description: >
             JSON object of canonical field → CSV header. Required for fill
-            CSVs; ignored for journal CSVs, statements, and JSON backups.
+            CSVs; ignored for journal CSVs, SBI cash CSVs, statements, and JSON backups.
         source_tz:
           type: string
           description: >
@@ -1903,14 +1905,14 @@ components:
           type: integer
         skipped:
           type: integer
-          description: Duplicate fills (same symbol+side+quantity+price+time in the account).
+          description: Duplicate executions or cash ledger rows already in the account.
         annotated:
           type: integer
         trades:
           type: integer
         cash_inserted:
           type: integer
-          description: JSON backups only.
+          description: Cash ledger rows inserted from JSON backups or SBI cash CSVs.
         setups_upserted:
           type: integer
           description: JSON backups only.

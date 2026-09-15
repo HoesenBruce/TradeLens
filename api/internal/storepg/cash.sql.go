@@ -28,6 +28,20 @@ func (q *Queries) DeleteCashTransaction(ctx context.Context, arg DeleteCashTrans
 	return result.RowsAffected()
 }
 
+const deleteCashTransactionsForBatch = `-- name: DeleteCashTransactionsForBatch :exec
+DELETE FROM cash_transactions WHERE import_batch_id = $1 AND user_id = $2
+`
+
+type DeleteCashTransactionsForBatchParams struct {
+	ImportBatchID sql.NullString `json:"import_batch_id"`
+	UserID        string         `json:"user_id"`
+}
+
+func (q *Queries) DeleteCashTransactionsForBatch(ctx context.Context, arg DeleteCashTransactionsForBatchParams) error {
+	_, err := q.db.ExecContext(ctx, deleteCashTransactionsForBatch, arg.ImportBatchID, arg.UserID)
+	return err
+}
+
 const insertCashTransaction = `-- name: InsertCashTransaction :one
 INSERT INTO cash_transactions (id, user_id, account_id, type, amount, currency, occurred_at, note, import_batch_id, trade_id)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id, user_id, account_id, type, amount, currency, occurred_at, note, import_batch_id, created_at, trade_id

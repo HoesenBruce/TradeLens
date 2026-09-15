@@ -1,6 +1,7 @@
 package importer
 
 import (
+	"bytes"
 	"os"
 	"testing"
 	"time"
@@ -57,4 +58,29 @@ func TestSBITradeExecutionCSV(t *testing.T) {
 	require.Zero(t, cashOpen.Fees)
 	require.True(t, marginClose.ExecutedAt.Before(cashOpen.ExecutedAt))
 	require.NotEqual(t, marginClose.DedupKey, cashOpen.DedupKey)
+}
+
+func TestSBICashTransactionCSV(t *testing.T) {
+	fixture, err := os.ReadFile("testdata/sbi-cash-transactions.csv")
+	require.NoError(t, err)
+	fixture = bytes.TrimPrefix(fixture, []byte("\xef\xbb\xbf"))
+	cp932, _, err := transform.Bytes(japanese.ShiftJIS.NewEncoder(), fixture)
+	require.NoError(t, err)
+
+	got, ok, err := ReadSBICashCSV(cp932)
+	require.NoError(t, err)
+	require.True(t, ok)
+	require.Len(t, got.Rows, 5)
+	require.Len(t, got.Transactions, 4)
+	require.Equal(t, []RowError{{Row: 5, Message: `invalid cash transaction date "bad-date"`}}, got.Errors)
+
+	require.Equal(t, "deposit", got.Transactions[0].Type)
+	require.Equal(t, 100000.0, got.Transactions[0].Amount)
+	require.Equal(t, "JPY", got.Transactions[0].Currency)
+	require.Equal(t, time.Date(2026, 1, 4, 15, 0, 0, 0, time.UTC), got.Transactions[0].OccurredAt)
+	require.Equal(t, "withdrawal", got.Transactions[1].Type)
+	require.Equal(t, -50000.0, got.Transactions[1].Amount)
+	require.Equal(t, "dividend", got.Transactions[2].Type)
+	require.Equal(t, "adjustment", got.Transactions[3].Type)
+	require.Equal(t, -300.0, got.Transactions[3].Amount)
 }
