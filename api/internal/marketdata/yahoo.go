@@ -112,6 +112,9 @@ func (p *YahooProvider) FetchBars(ctx context.Context, req Request) ([]Bar, erro
 
 func chartSymbol(req Request) string {
 	sym := strings.ToUpper(strings.TrimSpace(req.Symbol))
+	if IsJapaneseEquity(req) {
+		return sym + ".T"
+	}
 	if req.InstrumentType == "option" {
 		// Options: chart underlying when symbol looks like OCC (e.g. TSLA250117C00425000).
 		if u := occUnderlying(sym); u != "" {

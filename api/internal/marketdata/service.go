@@ -40,15 +40,7 @@ func (s *Service) GetBars(ctx context.Context, req Request) (Response, error) {
 	}
 	key := CacheKey(req)
 	if bars, ok := s.mem.get(key); ok {
-		return Response{
-			Symbol:   req.Symbol,
-			Interval: req.Interval,
-			From:     FormatTimeRFC3339(req.From),
-			To:       FormatTimeRFC3339(req.To),
-			Provider: s.Provider.Name(),
-			Cached:   true,
-			Bars:     bars,
-		}, nil
+		return responseFor(req, s.Provider.Name(), true, bars), nil
 	}
 
 	v, err, _ := s.group.Do(key, func() (any, error) {
@@ -60,13 +52,18 @@ func (s *Service) GetBars(ctx context.Context, req Request) (Response, error) {
 	return v.(Response), nil
 }
 
+func responseFor(req Request, provider string, cached bool, bars []Bar) Response {
+	return Response{
+		Symbol: req.Symbol, Instrument: req.Symbol, Interval: req.Interval,
+		From: FormatTimeRFC3339(req.From), To: FormatTimeRFC3339(req.To),
+		Provider: provider, Source: provider, Timezone: MarketTimezone(req),
+		AdjustmentStatus: "unadjusted", Cached: cached, Bars: normalizeBars(req, bars),
+	}
+}
+
 func (s *Service) fetchBars(ctx context.Context, req Request, key string) (Response, error) {
 	if bars, ok := s.mem.get(key); ok {
-		return Response{
-			Symbol: req.Symbol, Interval: req.Interval,
-			From: FormatTimeRFC3339(req.From), To: FormatTimeRFC3339(req.To),
-			Provider: s.Provider.Name(), Cached: true, Bars: bars,
-		}, nil
+		return responseFor(req, s.Provider.Name(), true, bars), nil
 	}
 
 	cached, err := s.Store.GetMarketBarsCache(ctx, key)
@@ -80,11 +77,7 @@ func (s *Service) fetchBars(ctx context.Context, req Request, key string) (Respo
 		var bars []Bar
 		if uerr := json.Unmarshal(cached.BarsJson, &bars); uerr == nil {
 			s.mem.set(key, bars, cacheExpiresAt(req.To))
-			return Response{
-				Symbol: req.Symbol, Interval: req.Interval,
-				From: FormatTimeRFC3339(req.From), To: FormatTimeRFC3339(req.To),
-				Provider: cached.Provider, Cached: true, Bars: bars,
-			}, nil
+			return responseFor(req, cached.Provider, true, bars), nil
 		}
 	} else if !errors.Is(err, sql.ErrNoRows) {
 		return Response{}, err
@@ -95,6 +88,7 @@ fetch:
 	if err != nil {
 		return Response{}, err
 	}
+	bars = normalizeBars(req, bars)
 	raw, err := json.Marshal(bars)
 	if err != nil {
 		return Response{}, err
@@ -120,11 +114,7 @@ fetch:
 		slog.Warn("market bars cache write failed", "key", key, "err", err)
 	}
 	s.mem.set(key, bars, expires)
-	return Response{
-		Symbol: req.Symbol, Interval: req.Interval,
-		From: FormatTimeRFC3339(req.From), To: FormatTimeRFC3339(req.To),
-		Provider: s.Provider.Name(), Cached: false, Bars: bars,
-	}, nil
+	return responseFor(req, s.Provider.Name(), false, bars), nil
 }
 
 func cacheExpiresAt(to time.Time) *time.Time {

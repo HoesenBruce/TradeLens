@@ -5,7 +5,7 @@ import { type BarInterval, marketApi } from "@/lib/api/market";
 export function isChartableSymbol(symbol: string): boolean {
   const s = symbol.trim().toUpperCase();
   if (!s || s.startsWith("E2E")) return false;
-  return /[A-Z]/.test(s);
+  return /[A-Z]/.test(s) || /^\d{4}$/.test(s);
 }
 
 /** Round to minute boundary for stable react-query keys and server cache. */

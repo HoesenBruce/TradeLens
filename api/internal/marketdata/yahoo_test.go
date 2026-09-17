@@ -13,6 +13,20 @@ func TestOccUnderlying(t *testing.T) {
 	require.Equal(t, "", occUnderlying("TSLA"))
 }
 
+func TestJapaneseEquityUsesTokyoYahooSymbol(t *testing.T) {
+	req := Request{Symbol: "7203", InstrumentType: "stock"}
+	require.True(t, ChartableSymbol(req.Symbol))
+	require.True(t, IsJapaneseEquity(req))
+	require.Equal(t, "7203.T", chartSymbol(req))
+	require.Equal(t, "Asia/Tokyo", MarketTimezone(req))
+}
+
+func TestNormalizeBarsAddsTokyoMarketDate(t *testing.T) {
+	req := Request{Symbol: "7203", InstrumentType: "stock"}
+	bars := normalizeBars(req, []Bar{{Time: time.Date(2026, 9, 15, 15, 0, 0, 0, time.UTC).Unix()}})
+	require.Equal(t, "2026-09-16", bars[0].MarketDate)
+}
+
 func TestDefaultInterval(t *testing.T) {
 	from := time.Date(2026, 3, 10, 9, 30, 0, 0, time.UTC)
 	require.Equal(t, "1", DefaultInterval(from, from.Add(90*time.Minute)))
