@@ -216,6 +216,10 @@ func ParseSideToken(raw string) string {
 	case "sell", "s", "sld", "sto", "stc", "short", "sell short",
 		"sell to open", "sell to close":
 		return "sell"
+	case "株式現物買", "現物買", "信用新規買", "信用返済買":
+		return "buy"
+	case "株式現物売", "現物売", "信用新規売", "信用返済売":
+		return "sell"
 	}
 	switch {
 	case strings.HasPrefix(s, "buy"), strings.HasPrefix(s, "bot"):
@@ -326,6 +330,7 @@ func parseTimeIn(s string, loc *time.Location) (time.Time, error) {
 		"02.01.2006 15:04:05", // European day-first dotted
 		"2006-01-02 15:04",
 		"01/02/2006",
+		"2006/01/02",
 		"2006-01-02",
 	}
 	for _, l := range layouts {

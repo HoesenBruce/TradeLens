@@ -29,6 +29,7 @@ type Querier interface {
 	DeleteAnnualGoal(ctx context.Context, arg DeleteAnnualGoalParams) (int64, error)
 	DeleteAttachment(ctx context.Context, arg DeleteAttachmentParams) (int64, error)
 	DeleteCashTransaction(ctx context.Context, arg DeleteCashTransactionParams) (int64, error)
+	DeleteCashTransactionsForBatch(ctx context.Context, arg DeleteCashTransactionsForBatchParams) error
 	DeleteCoachReview(ctx context.Context, arg DeleteCoachReviewParams) (int64, error)
 	DeleteExecution(ctx context.Context, arg DeleteExecutionParams) (int64, error)
 	DeleteExecutionsForAccount(ctx context.Context, arg DeleteExecutionsForAccountParams) error

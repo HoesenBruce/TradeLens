@@ -15,6 +15,9 @@ ORDER BY occurred_at;
 -- name: DeleteCashTransaction :execrows
 DELETE FROM cash_transactions WHERE id = ? AND user_id = ?;
 
+-- name: DeleteCashTransactionsForBatch :exec
+DELETE FROM cash_transactions WHERE import_batch_id = ? AND user_id = ?;
+
 -- name: UpdateCashTransaction :one
 UPDATE cash_transactions
 SET type = ?, amount = ?, currency = ?, occurred_at = ?, note = ?

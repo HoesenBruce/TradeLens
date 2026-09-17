@@ -131,6 +131,7 @@ export function ledgerBalance(account: Account, transactions: CashTransaction[])
 
 export const POPULAR_BROKERS = [
   "IBKR",
+  "SBI Securities",
   "Webull",
   "Robinhood",
   "Fidelity",

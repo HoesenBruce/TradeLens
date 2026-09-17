@@ -584,11 +584,15 @@ interface Step2Props {
 
 function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loading }: Step2Props) {
   const isJournal = preview.format === "journal_trades";
+  const isCash = preview.format === "cash_transactions";
   // MetaTrader statements are parsed positionally — no column mapping, but the
   // server-timezone choice still applies (statement times are broker wall clock).
   const isStatement = preview.source === "statement";
   const skipMapping =
-    isJournal || isStatement || (preview.source === "json" && preview.format === "executions");
+    isJournal ||
+    isCash ||
+    isStatement ||
+    (preview.source === "json" && preview.format === "executions");
   const [mapping, setMapping] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
     for (const field of CANONICAL_FIELDS) {
@@ -658,6 +662,10 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
                 importing.
               </p>
             </div>
+          ) : isCash ? (
+            <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
+              SBI cash transactions import directly into the cash ledger — no column mapping needed.
+            </p>
           ) : skipMapping ? (
             <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
               TraderMemos JSON execution export — fills import directly, no column mapping needed.
@@ -827,11 +835,13 @@ function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
             {result.format === "journal_trades" && typeof result.trades === "number" ? (
               <Row label="Trades created" value={String(result.trades)} highlight="pos" />
             ) : null}
-            <Row
-              label={result.format === "journal_trades" ? "Fills inserted" : "Inserted"}
-              value={String(result.inserted)}
-              highlight={result.format === "journal_trades" ? undefined : "pos"}
-            />
+            {result.format !== "cash_transactions" ? (
+              <Row
+                label={result.format === "journal_trades" ? "Fills inserted" : "Inserted"}
+                value={String(result.inserted)}
+                highlight={result.format === "journal_trades" ? undefined : "pos"}
+              />
+            ) : null}
             <Row label="Skipped (duplicates)" value={String(result.skipped)} />
             {typeof result.annotated === "number" && (
               <Row label="Journal annotated" value={String(result.annotated)} />

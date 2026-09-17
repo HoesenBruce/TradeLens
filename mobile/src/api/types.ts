@@ -443,8 +443,8 @@ export type ImportPreview = {
   suggested_mapping: Record<string, string>;
   /** Broker preset name when the header signature matched (e.g. "Webull (Orders)"). */
   detected_broker?: string;
-  /** "journal_trades" = closed-trade journal; "executions" = fill rows; "account_backup" = JSON meta only. */
-  format?: 'journal_trades' | 'executions' | 'account_backup';
+  /** Parsed payload kind. */
+  format?: 'journal_trades' | 'executions' | 'cash_transactions' | 'account_backup';
   source?: 'csv' | 'json';
   row_count?: number;
   journal_summary?: JournalPreviewSummary;

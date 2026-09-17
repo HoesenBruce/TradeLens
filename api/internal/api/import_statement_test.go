@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"golang.org/x/text/encoding/japanese"
+	"golang.org/x/text/transform"
 )
 
 // A minimal MT5 Trade History Report: one balance deal and one EURUSD
@@ -108,4 +111,77 @@ func TestUnrecognizedStatementUploadFails(t *testing.T) {
 		map[string]string{"account_id": acc}))
 	require.Equal(t, http.StatusBadRequest, rec.Code, rec.Body.String())
 	require.Contains(t, rec.Body.String(), "MetaTrader")
+}
+
+func TestSBIImportEndToEnd(t *testing.T) {
+	fixture, err := os.ReadFile("../importer/testdata/sbi-trade-executions.csv")
+	require.NoError(t, err)
+	cp932, _, err := transform.Bytes(japanese.ShiftJIS.NewEncoder(), fixture)
+	require.NoError(t, err)
+
+	s := testServer(t)
+	tok := registerAndLogin(t, s, "sbi@x.com")
+	acc := accountID(t, s, tok)
+
+	rec := httptest.NewRecorder()
+	s.Echo.ServeHTTP(rec, multipartFileReq(t, "/api/v1/imports", tok, "sbi.csv", string(cp932),
+		map[string]string{"account_id": acc}))
+	require.Equal(t, http.StatusOK, rec.Code, rec.Body.String())
+	var preview struct {
+		DetectedBroker    string            `json:"detected_broker"`
+		SuggestedSourceTZ string            `json:"suggested_source_tz"`
+		SuggestedMapping  map[string]string `json:"suggested_mapping"`
+		RowCount          int               `json:"row_count"`
+	}
+	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &preview))
+	require.Equal(t, "SBI Securities (Execution History)", preview.DetectedBroker)
+	require.Equal(t, "Asia/Tokyo", preview.SuggestedSourceTZ)
+	require.Equal(t, "銘柄コード", preview.SuggestedMapping["symbol"])
+	require.Equal(t, 11, preview.RowCount)
+
+	fields := map[string]string{
+		"account_id":     acc,
+		"column_mapping": `{"symbol":"銘柄コード","side":"取引","quantity":"約定数量","price":"約定単価","executed_at":"約定日","fees":"手数料/諸経費等"}`,
+	}
+	commit := func() struct {
+		Inserted int `json:"inserted"`
+		Skipped  int `json:"skipped"`
+		Errors   []struct {
+			Row int `json:"row"`
+		} `json:"errors"`
+	} {
+		rec := httptest.NewRecorder()
+		s.Echo.ServeHTTP(rec, multipartFileReq(t, "/api/v1/imports/commit", tok, "sbi.csv", string(cp932), fields))
+		require.Equal(t, http.StatusOK, rec.Code, rec.Body.String())
+		var result struct {
+			Inserted int `json:"inserted"`
+			Skipped  int `json:"skipped"`
+			Errors   []struct {
+				Row int `json:"row"`
+			} `json:"errors"`
+		}
+		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &result))
+		return result
+	}
+
+	first := commit()
+	require.Equal(t, 11, first.Inserted)
+	require.Equal(t, 0, first.Skipped)
+	require.Len(t, first.Errors, 1)
+	second := commit()
+	require.Equal(t, 0, second.Inserted)
+	require.Equal(t, 11, second.Skipped)
+
+	rec = do(s, http.MethodGet, "/api/v1/trades?account_id="+acc, "", tok)
+	require.Equal(t, http.StatusOK, rec.Code, rec.Body.String())
+	var trades []map[string]any
+	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &trades))
+	converted := []map[string]any{}
+	for _, trade := range trades {
+		if trade["symbol"] == "9998" {
+			converted = append(converted, trade)
+		}
+	}
+	require.Len(t, converted, 2)
+	require.ElementsMatch(t, []any{"closed", "open"}, []any{converted[0]["status"], converted[1]["status"]})
 }

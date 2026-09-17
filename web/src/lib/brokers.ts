@@ -1,7 +1,7 @@
 /**
  * The broker catalogue behind the Connect flow.
  *
- * The server already recognises nine broker exports by their header signature
+ * The server recognises broker exports by their header signature
  * (`api/internal/importer/brokers.go`) but that detection is invisible: the
  * import page asks for "a file" and silently guesses. This catalogue is the
  * user-facing half — it names the brokers, says how to get the file out of
@@ -45,6 +45,23 @@ export interface BrokerDef {
 }
 
 export const BROKERS: BrokerDef[] = [
+  {
+    key: "sbi",
+    name: "SBI Securities",
+    accountBroker: "SBI Securities",
+    kind: "file",
+    recognised: true,
+    brand: "#E60012",
+    monogram: "SBI",
+    formats: "Execution History CSV",
+    steps: [
+      "Open the SBI Securities execution history page.",
+      "Set the period and export the execution history as CSV.",
+      "Upload the original CSV — CP932 encoding and the report header are handled automatically.",
+    ],
+    note: "Cash, margin, and 現引 position conversions are supported.",
+    aliases: ["sbi", "sbisec", "sbi証券", "エスビーアイ"],
+  },
   {
     key: "ibkr",
     name: "Interactive Brokers",
