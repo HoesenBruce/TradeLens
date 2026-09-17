@@ -11,13 +11,16 @@ currently required delivery targets unless an issue explicitly opts them back in
 For ordinary fork development:
 
 - implement and verify the Web experience when UI work is requested;
-- keep shared API, domain, data-model, and service changes reasonably platform-neutral;
+- keep shared API, domain, data-model, persistence, importer, market-data, analytics, and service
+  changes reasonably platform-neutral;
 - reuse existing shared abstractions instead of introducing Web-only assumptions without need;
 - do not remove, rewrite, or intentionally break mobile code merely because mobile is currently
   outside active validation scope;
+- do not add iOS/Android implementation or validation work to an issue by default;
 - mobile-specific implementation is optional unless an issue explicitly requires it;
 - Android emulator / real-device and iOS simulator / real-device validation are **not required**
   to complete a Web-focused issue;
+- preserving mobile-compatible contracts does **not** mean mobile behavior has been tested;
 - if a change is known to leave mobile unsupported or unverified, document that limitation in
   the issue or PR rather than expanding scope automatically;
 - when mobile support is reactivated, treat the existing mobile codebase as the starting point:
