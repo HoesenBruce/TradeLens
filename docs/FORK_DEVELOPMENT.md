@@ -17,8 +17,8 @@ The fork currently follows a **Web-first, mobile-preserving** strategy.
 The Web application is the primary product surface for new fork-specific features.
 
 A Web-focused feature can be considered complete when its API/domain behavior and Web behavior
-meet the issue acceptance criteria. iOS and Android validation are not required unless the issue
-explicitly includes mobile support.
+meet the issue acceptance criteria. iOS and Android implementation, simulator/device testing, and
+mobile E2E validation are not required unless the issue explicitly includes mobile support.
 
 ### Mobile status
 
@@ -33,9 +33,11 @@ This means:
 - do not require mobile-specific UI work for ordinary Web-focused issues;
 - do not require Android emulator, Android real-device, iOS simulator, or iOS real-device testing
   for Web-focused feature completion;
+- preserving shared contracts does not imply that the mobile client is verified;
 - document known mobile incompatibilities instead of silently ignoring them;
 - avoid unnecessary platform-specific assumptions in shared API, domain, persistence, market-data,
-  importer, and analytics layers.
+  importer, analytics, validation, and service layers;
+- keep Web-specific implementation details isolated from shared business behavior where practical.
 
 ## Future mobile reactivation
 
@@ -44,15 +46,16 @@ starting point.
 
 The default reactivation process should be:
 
-1. restore mobile to the active acceptance scope;
-2. run compatibility and end-to-end testing against the current API;
+1. restore the selected mobile platform(s) to the active acceptance scope;
+2. run compatibility, build, and end-to-end testing against the current API;
 3. identify regressions and unsupported flows accumulated during the Web-first period;
 4. fix shared-contract incompatibilities first;
 5. add platform-specific adaptations where required;
-6. add or restore mobile-specific automated and manual validation.
+6. restore automated and manual validation for the reactivated platform(s);
+7. update issue templates/checklists so new work includes the reactivated platform going forward.
 
 Do **not** assume the mobile client must be rebuilt from scratch. A rewrite should require a
-separate architectural justification.
+separate architectural justification based on the actual condition of the existing client.
 
 ## Shared-code rule
 
@@ -63,13 +66,17 @@ Examples include:
 - API contracts;
 - domain models;
 - importer semantics;
+- persistence and validation behavior;
 - market-data abstractions;
 - analytics calculations;
 - symbol/instrument metadata;
-- validation rules.
+- service interfaces.
 
 A Web implementation may use browser-specific presentation or interaction code, but shared
 business behavior should not become Web-only without a clear reason.
+
+This policy is not a requirement to pre-implement mobile UI. It is a requirement to avoid
+unnecessary architectural dead ends that would force a future mobile rewrite.
 
 ## Web-first acceptance policy
 
@@ -80,8 +87,9 @@ For ordinary fork issues:
 - changed Web workflows should be exercised end to end;
 - loading, empty, error, and important state-transition behavior should be tested where applicable;
 - lint and type checks should pass for affected components;
-- mobile testing is optional unless explicitly required by the issue;
-- any known mobile regression or incompatibility introduced by the change must be documented.
+- mobile implementation and testing are optional unless explicitly required by the issue;
+- any known mobile regression or incompatibility introduced by the change must be documented;
+- completion reports must not imply that iOS or Android were validated when they were not.
 
 `AGENTS.md` contains the operational UI verification rules.
 
@@ -109,7 +117,8 @@ Recommended wording for current fork work:
 
 > Platform scope: Web is the active delivery target. iOS and Android are not required acceptance
 > targets for this issue. Shared API/domain changes should remain reasonably compatible with
-> future mobile reactivation, and known mobile incompatibilities must be documented.
+> future mobile reactivation, and known mobile incompatibilities must be documented. Mobile is
+> not considered tested unless the issue explicitly requires and records mobile validation.
 
 Do not create Android/iOS implementation or validation sub-issues merely because the upstream
 project supports those platforms.
