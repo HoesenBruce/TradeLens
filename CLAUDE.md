@@ -4,9 +4,15 @@ Self-hosted trading journal (Go API + React web + Expo mobile).
 
 ## Shipping UI
 
-Read `AGENTS.md` before calling any UI work done. Every new or changed UI feature is
-driven end to end — real taps on a device or emulator, every case passing — before the
-work is finished or a PR is opened. `tsc`, `eslint` and a screenshot do not cover it.
+Read `AGENTS.md` before calling any UI work done. The required end-to-end validation follows the
+active platform scope defined there and in `docs/FORK_DEVELOPMENT.md`.
+
+For the current private-fork policy, Web is the active UI delivery target. Web UI changes must be
+exercised end to end in the browser against a working API. iOS/Android simulator, emulator, or
+real-device validation is required only when an issue explicitly includes that mobile platform or
+the task specifically changes mobile behavior that must be verified.
+
+Static checks and screenshots do not replace required end-to-end validation on the active target.
 
 ## Design System
 
