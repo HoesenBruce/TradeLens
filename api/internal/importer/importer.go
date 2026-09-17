@@ -6,6 +6,7 @@ import "time"
 type ParsedExecution struct {
 	ExternalID     string
 	Symbol         string
+	StockName      string // broker-provided company/security name, when available
 	InstrumentType string
 	OptionRight    string // call|put when instrument is option
 	Strike         string // option strike, decimal string ("120", "37.5")

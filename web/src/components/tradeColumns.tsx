@@ -118,6 +118,12 @@ export function tradeColumns(
       ),
     },
     {
+      accessorKey: "stock_name",
+      header: "Stock Name",
+      meta: { label: "Stock Name", minWidth: 120 },
+      cell: (i) => i.getValue<string | undefined>() || muted("-"),
+    },
+    {
       id: "status",
       accessorFn: (row) => tradeStatus(row).label,
       header: "Status",
@@ -448,6 +454,7 @@ export const TRADE_SORT_COLUMNS: { id: string; label: string }[] = [
 /** Hideable trade columns for the tablecn-style View button. */
 export const TRADE_VIEW_COLUMNS: { id: string; label: string }[] = [
   { id: "symbol", label: "Symbol" },
+  { id: "stock_name", label: "Stock Name" },
   { id: "status", label: "Status" },
   { id: "direction", label: "Direction" },
   { id: "instrument_type", label: "Market" },

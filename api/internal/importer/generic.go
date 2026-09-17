@@ -104,6 +104,7 @@ func (g *Generic) roundTrip() bool {
 func (g *Generic) parseRoundTripRow(row map[string]string) ([]ParsedExecution, error) {
 	var open ParsedExecution
 	open.Symbol = g.col(row, "symbol")
+	open.StockName = strings.TrimSpace(g.col(row, "stock_name"))
 	if open.Symbol == "" {
 		return nil, fmt.Errorf("missing symbol")
 	}
@@ -229,6 +230,7 @@ func ParseSideToken(raw string) string {
 func (g *Generic) parseRow(row map[string]string) (ParsedExecution, error) {
 	var p ParsedExecution
 	p.Symbol = g.col(row, "symbol")
+	p.StockName = strings.TrimSpace(g.col(row, "stock_name"))
 	if p.Symbol == "" {
 		return p, fmt.Errorf("missing symbol")
 	}
