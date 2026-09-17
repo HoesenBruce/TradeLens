@@ -79,6 +79,7 @@ export function TradeChartSection({ trade }: { trade: TradeDetail }) {
     symbol: trade.symbol,
     bars,
     fills: trade.fills,
+    timezone: barsQ.data?.timezone,
     loading: barsQ.isLoading,
     error: barsQ.isError,
     errorMessage: showUnavailable

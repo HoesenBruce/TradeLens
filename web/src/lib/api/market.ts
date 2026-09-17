@@ -4,6 +4,7 @@ export type BarInterval = "1" | "5" | "15" | "60" | "240" | "D";
 
 export interface MarketBar {
   time: number;
+  market_date?: string;
   open: number;
   high: number;
   low: number;
@@ -13,10 +14,14 @@ export interface MarketBar {
 
 export interface MarketBarsResponse {
   symbol: string;
+  instrument: string;
   interval: BarInterval;
   from: string;
   to: string;
   provider: string;
+  source: string;
+  timezone: string;
+  adjustment_status: string;
   cached: boolean;
   bars: MarketBar[];
 }

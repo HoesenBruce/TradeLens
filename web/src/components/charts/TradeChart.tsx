@@ -21,16 +21,30 @@ import { utcSecToChartTime } from "./chartTime";
 import { BAR_INTERVALS, tradeChartTheme } from "./tradeChartTheme";
 
 /** The fill fields the chart draws — synthetic backtest fills qualify too. */
-export type ChartFill = Pick<Execution, "side" | "quantity" | "price" | "executed_at">;
+export type ChartFill = Pick<
+  Execution,
+  "side" | "quantity" | "price" | "executed_at" | "trade_type"
+>;
 
-function fillMarkers(fills: ChartFill[]): SeriesMarker<Time>[] {
+function fillMarkers(fills: ChartFill[], timezone?: string): SeriesMarker<Time>[] {
   return fills.map((f) => ({
-    time: utcSecToChartTime(Math.floor(new Date(f.executed_at).getTime() / 1000)),
+    time: utcSecToChartTime(Math.floor(new Date(f.executed_at).getTime() / 1000), timezone),
     position: f.side === "buy" ? "belowBar" : "aboveBar",
     shape: f.side === "buy" ? "arrowUp" : "arrowDown",
     color: f.side === "buy" ? tradeChartTheme.buyMarker : tradeChartTheme.sellMarker,
     text: `${f.quantity} @ ${f.price}`,
   }));
+}
+
+export function executionPriceLine(fill: ChartFill) {
+  return {
+    price: fill.price,
+    color: fill.side === "buy" ? tradeChartTheme.buyMarker : tradeChartTheme.sellMarker,
+    lineWidth: 1 as const,
+    lineStyle: 4 as const,
+    axisLabelVisible: true,
+    title: `${fill.side === "buy" ? "B" : "S"} ${fill.quantity} · ${fill.trade_type ?? fill.side}`,
+  };
 }
 
 // Matches the Card header on the trade detail page — the chart is one of its
@@ -41,6 +55,7 @@ export interface TradeChartProps {
   symbol: string;
   bars: MarketBar[] | undefined;
   fills: ChartFill[];
+  timezone?: string;
   loading?: boolean;
   error?: boolean;
   errorMessage?: string;
@@ -73,6 +88,7 @@ export function TradeChart({
   symbol: _symbol,
   bars,
   fills,
+  timezone,
   loading = false,
   error = false,
   errorMessage,
@@ -179,13 +195,13 @@ export function TradeChart({
       return;
     }
 
-    let points = barsToCandlestickData(bars, interval);
+    let points = barsToCandlestickData(bars, interval, timezone);
     let visibleFills = fills;
     if (replayUpTo != null) {
       // Hide not-yet-reached bars by painting them transparent. Lightweight
       // Charts drops trailing whitespace points, so swapping them for
       // whitespace would collapse the time axis instead of holding it steady.
-      const cut = utcSecToChartTime(replayUpTo) as number;
+      const cut = utcSecToChartTime(replayUpTo, timezone) as number;
       const hidden = "rgba(0,0,0,0)";
       points = points.map((p) =>
         "open" in p && (p.time as number) >= cut
@@ -248,9 +264,12 @@ export function TradeChart({
         title: "Stop",
       });
     }
+    for (const fill of visibleFills) {
+      series.createPriceLine(executionPriceLine(fill));
+    }
 
     if (visibleFills.length > 0) {
-      const markers = fillMarkers(visibleFills);
+      const markers = fillMarkers(visibleFills, timezone);
       if (markersRef.current) {
         markersRef.current.setMarkers(markers);
       } else {
@@ -268,7 +287,7 @@ export function TradeChart({
       fitKeyRef.current = fitKey;
       chart.timeScale().fitContent();
     }
-  }, [ready, bars, fills, interval, targetPrice, stopPrice, entryPrice, replayUpTo]);
+  }, [ready, bars, fills, interval, targetPrice, stopPrice, entryPrice, replayUpTo, timezone]);
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>

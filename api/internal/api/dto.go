@@ -65,8 +65,8 @@ type tradeDTO struct {
 	Tags            []store.Tag `json:"tags"`
 	// call/put for option trades, resolved from the fills' contract details
 	// (OCC symbol as fallback). Absent for non-options and unresolvable rows.
-	OptionRight *string `json:"option_right,omitempty"`
-	InitialRisk     *float64    `json:"initial_risk,omitempty"`
+	OptionRight *string  `json:"option_right,omitempty"`
+	InitialRisk *float64 `json:"initial_risk,omitempty"`
 	// Journal quick-filter fields, filled on list rows so clients can filter by
 	// setup/emotion/ratings without a detail fetch. The detail DTO's own fields
 	// shadow the emotion/rating ones (same JSON keys at shallower depth).
@@ -144,6 +144,7 @@ type executionDTO struct {
 	Symbol         string            `json:"symbol"`
 	InstrumentType string            `json:"instrument_type"`
 	Side           string            `json:"side"`
+	TradeType      string            `json:"trade_type"`
 	Quantity       float64           `json:"quantity"`
 	Price          float64           `json:"price"`
 	Fees           float64           `json:"fees"`
@@ -167,9 +168,28 @@ func toExecutionDTO(e store.Execution) executionDTO {
 	return executionDTO{
 		ID: e.ID, UserID: e.UserID, AccountID: e.AccountID,
 		ExternalID: sptr(e.ExternalID), Symbol: e.Symbol, InstrumentType: e.InstrumentType,
-		Side: e.Side, Quantity: e.Quantity, Price: e.Price, Fees: e.Fees, Commission: e.Commission,
+		Side: e.Side, TradeType: tradeType(e.Side, details), Quantity: e.Quantity, Price: e.Price, Fees: e.Fees, Commission: e.Commission,
 		ExecutedAt: e.ExecutedAt, Multiplier: e.Multiplier, Details: details,
 		ImportBatchID: sptr(e.ImportBatchID), DedupHash: e.DedupHash, CreatedAt: e.CreatedAt,
+	}
+}
+
+func tradeType(side string, details map[string]string) string {
+	switch details["lot"] {
+	case "sbi:cash":
+		return "cash_" + side
+	case "sbi:margin-long":
+		if side == "buy" {
+			return "margin_long_open"
+		}
+		return "margin_long_close"
+	case "sbi:margin-short":
+		if side == "sell" {
+			return "margin_short_open"
+		}
+		return "margin_short_close"
+	default:
+		return side
 	}
 }
 

@@ -187,6 +187,8 @@ export interface Execution {
   symbol: string;
   instrument_type: string;
   side: string;
+  /** Additive API metadata; absent when talking to an older server. */
+  trade_type?: string;
   quantity: number;
   price: number;
   fees: number;

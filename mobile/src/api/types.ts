@@ -100,6 +100,7 @@ export type Execution = {
   symbol: string;
   instrument_type: string;
   side: string;
+  trade_type?: string;
   quantity: number;
   price: number;
   fees: number;

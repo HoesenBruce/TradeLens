@@ -20,7 +20,7 @@ vi.mock("lightweight-charts", () => {
   };
 });
 
-import { TradeChart } from "./TradeChart";
+import { executionPriceLine, TradeChart } from "./TradeChart";
 
 describe("TradeChart empty state", () => {
   it("renders an inset well with icon and message when empty", () => {
@@ -36,5 +36,19 @@ describe("TradeChart empty state", () => {
     );
     expect(screen.getByText("No market data for this window.")).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /no chart data/i })).toBeInTheDocument();
+  });
+});
+
+describe("TradeChart execution prices", () => {
+  it("uses the actual execution price and type", () => {
+    expect(
+      executionPriceLine({
+        side: "buy",
+        quantity: 100,
+        price: 2010,
+        executed_at: "2026-09-15T01:00:00Z",
+        trade_type: "cash_buy",
+      }),
+    ).toMatchObject({ price: 2010, title: expect.stringContaining("cash_buy") });
   });
 });
