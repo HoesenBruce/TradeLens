@@ -77,7 +77,7 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 		}
 		id := uuid.New().String()
 		details := sql.NullString{}
-		if pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" {
+		if pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" {
 			payload := map[string]string{}
 			if pe.LotKey != "" {
 				payload["lot"] = pe.LotKey
@@ -90,6 +90,9 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 			}
 			if pe.Expiry != "" {
 				payload["expiry"] = pe.Expiry
+			}
+			if pe.StockName != "" {
+				payload["stock_name"] = pe.StockName
 			}
 			if b, err := json.Marshal(payload); err == nil {
 				details = sql.NullString{String: string(b), Valid: true}

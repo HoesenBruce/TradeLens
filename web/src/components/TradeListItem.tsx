@@ -142,6 +142,11 @@ export function TradeListItem({
             <span className="mr-0.5 font-semibold tracking-tight text-foreground">
               {trade.symbol}
             </span>
+            {trade.stock_name ? (
+              <span className="min-w-0 truncate text-sm font-normal text-muted-foreground">
+                {trade.stock_name}
+              </span>
+            ) : null}
             {/* Direction rides as a tag next to the status one, spelling out side
                 and option right ("LONG CALL") rather than the table's terse
                 LC/SP. Neutral chip, with tone on the arrow and the call/put word

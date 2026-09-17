@@ -218,6 +218,7 @@ export interface Trade {
   id: string;
   account_id: string;
   symbol: string;
+  stock_name?: string;
   instrument_type: string;
   direction: string;
   status: string;
