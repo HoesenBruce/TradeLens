@@ -1,25 +1,41 @@
 # Agent rules
 
-## UI features ship only after a full end-to-end run
+## Private-fork platform policy
 
-**Any new or changed UI must be driven end to end — real taps, on a real device or
-emulator — before the work is called done or a PR is opened. Every case below has to
-pass. A feature with an unexercised case is unfinished, not "probably fine".**
+This repository currently follows a **Web-first, mobile-preserving** development policy.
 
-This is not a style preference. Two bugs in one session got through `tsc`, `eslint`, a
-screenshot and an accessibility-tree read, and were caught only by a finger on a screen:
+The Web application is the active product and acceptance target for fork-specific feature work.
+The existing Expo mobile application remains in the repository, but iOS and Android are not
+currently required delivery targets unless an issue explicitly opts them back in.
 
-- A month/year picker whose year face rendered nothing, because a Reanimated `entering`
-  animation that starts inside a bottom sheet's portal never runs and leaves the view at
-  its `initialValues` opacity of `0`.
-- An `Apply` button that reverted its own result, because closing the sheet re-entered a
-  handler holding a stale closure over the state set one line earlier.
+For ordinary fork development:
 
-Neither is visible in code review. Both are obvious in two taps.
+- implement and verify the Web experience when UI work is requested;
+- keep shared API, domain, data-model, and service changes reasonably platform-neutral;
+- reuse existing shared abstractions instead of introducing Web-only assumptions without need;
+- do not remove, rewrite, or intentionally break mobile code merely because mobile is currently
+  outside active validation scope;
+- mobile-specific implementation is optional unless an issue explicitly requires it;
+- Android emulator / real-device and iOS simulator / real-device validation are **not required**
+  to complete a Web-focused issue;
+- if a change is known to leave mobile unsupported or unverified, document that limitation in
+  the issue or PR rather than expanding scope automatically;
+- when mobile support is reactivated, treat the existing mobile codebase as the starting point:
+  run compatibility testing, fix regressions, and add platform-specific adaptations as needed
+  rather than rebuilding the client from scratch by default.
 
-### The cases that must pass
+See `docs/FORK_DEVELOPMENT.md` for the canonical scope and upstream-compatibility policy.
 
-Run each and keep the screenshot:
+## Web UI features ship only after a full end-to-end run
+
+**Any new or changed Web UI must be driven end to end before the work is called done or a PR
+is opened. A feature with an unexercised required Web case is unfinished, not "probably fine".**
+
+Static checks and screenshots are useful but do not replace exercising the behavior.
+
+### The cases that must pass when applicable
+
+Run the relevant cases and keep screenshots or other evidence where useful:
 
 1. **Happy path** — the thing does what it says.
 2. **The inverse** — a filter that *excludes*, a toggle turned off, an empty result. A
@@ -33,39 +49,22 @@ Run each and keep the screenshot:
 7. **Every state transition the feature has.** Both directions of a toggle, both
    directions of a transition. Arriving somewhere is not proof you can get back.
 
-### Screenshot after every step
+Only apply cases that exist for the feature. Do not invent mobile validation work for a Web-only
+issue.
 
-The accessibility tree is not evidence. A view at `opacity: 0` is fully present in it,
-correctly labelled, and completely invisible — which is exactly how the empty year face
-read as working. Look at the pixels.
+### Screenshots and visual verification
 
-### Where to run it
-
-**Android emulator** (`Pixel_10_Pro` AVD) is the reliable target: `adb shell input tap`
-delivers real touches, and screenshot pixels map 1:1 to tap coordinates.
-
-```
-adb -s emulator-5554 shell input tap <x> <y>
-adb -s emulator-5554 exec-out screencap -p > shot.png
-```
-
-Always `-s emulator-5554`; several devices are usually attached.
-
-**The iOS simulator on this machine accepts no synthetic input.** This Xcode install ships
-no `Simulator.app`, so SimulatorKit HID injection has nothing to inject into: `axe` and
-`idb` both report success and deliver nothing, `axe button home` included. Screenshots via
-`simctl io` still work. Prefix `DEVELOPER_DIR` only onto `axe` itself — exporting it breaks
-every `xcrun` in the same shell.
+For visible Web changes, inspect the rendered result rather than relying only on DOM,
+accessibility-tree, type-check, or lint output. Keep screenshots for important states when they
+materially help review.
 
 ### Point the app at a real API first
 
-Check Settings → Server before trusting a single result. An app pointed at Metro's port,
-or at a dead server, still renders a full screen from the **MMKV query cache** — and only
-the queries whose cache key is new go to the network and fail. A screen that loads is not
-proof the server is reachable.
+Before trusting a Web result, confirm the app is pointed at a working API and is not displaying
+stale cached data.
 
-When the dev server's data is thin or its state is unknown, stand up a throwaway one from
-the working tree rather than testing against a moving target:
+When the dev server's data is thin or its state is unknown, stand up a throwaway one from the
+working tree rather than testing against a moving target:
 
 ```
 TM_HTTP_PORT=8091 TM_DB_PATH=<tmp>/qa.db TM_JWT_SECRET=$(openssl rand -hex 32) go run ./cmd/server
@@ -74,11 +73,25 @@ POST /api/v1/accounts   # an account
 POST /api/v1/executions # buy + sell pairs, dated to straddle whatever is being tested
 ```
 
-Seed data that makes the assertion sharp: to test a date filter, two trades on different
-sides of the boundary, so the right one drops out.
+Seed data that makes the assertion sharp: to test a date filter, two trades on different sides
+of the boundary, so the right one drops out.
+
+### Mobile validation
+
+The previous repository rule requiring Android emulator / real-device validation for every UI
+change is suspended for this private fork while mobile is outside active scope.
+
+Do not run mobile E2E merely to satisfy a generic completion checklist. Run it only when:
+
+- the issue explicitly includes iOS and/or Android;
+- the user explicitly asks for mobile verification; or
+- the change is specifically in `mobile/` and requires validation to answer the task correctly.
+
+When mobile validation is required, use the platform-specific instructions in `CLAUDE.md` and
+existing mobile tooling.
 
 ### Reporting
 
-State plainly what was tapped and what was not. "Renders correctly" is not "works" —
-if a path could not be exercised, name it as unverified rather than letting a green
-`check`/`lint` imply coverage it does not have.
+State plainly what was exercised and what remains unverified. Do not imply that iOS or Android
+was tested when it was not. For Web-first issues, "mobile not validated; outside current fork
+scope" is an acceptable explicit status.
