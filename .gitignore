@@ -83,3 +83,6 @@ mobile/.codex/
 mobile/.mcp.json
 mobile/CLAUDE.md
 mobile/opencode.json
+
+# Local references (e.g. for local dev builds of mobile/ and web/)
+.local-references/
