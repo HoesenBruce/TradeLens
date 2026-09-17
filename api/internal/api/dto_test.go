@@ -50,3 +50,9 @@ func TestToExecutionDTO_emptyDetails(t *testing.T) {
 	require.NotNil(t, dto.Details)
 	require.Empty(t, dto.Details)
 }
+
+func TestToExecutionDTODerivesSBIMarginTradeType(t *testing.T) {
+	raw := []byte(`{"lot":"sbi:margin-short"}`)
+	dto := toExecutionDTO(store.Execution{Side: "sell", Details: sql.NullString{String: string(raw), Valid: true}})
+	require.Equal(t, "margin_short_open", dto.TradeType)
+}
