@@ -313,6 +313,48 @@ describe("ImportView - MetaTrader statement preview", () => {
   });
 });
 
+describe("ImportView - SBI cash preview", () => {
+  it("imports cash rows without execution column mapping", async () => {
+    const user = (await import("@testing-library/user-event")).default.setup();
+    const preview: ImportPreview = {
+      import_batch_id: "",
+      headers: ["入出金日", "取引", "区分", "摘要", "出金額", "入金額"],
+      sample_rows: [],
+      suggested_mapping: {},
+      detected_broker: "SBI Securities (Cash Transactions)",
+      format: "cash_transactions",
+      source: "csv",
+      row_count: 2,
+    };
+    renderImportView({
+      accounts,
+      accountsLoading: false,
+      onPreview: vi.fn<(...args: any[]) => any>().mockResolvedValue(preview),
+      onCommit: vi.fn<(...args: any[]) => any>().mockResolvedValue({
+        inserted: 0,
+        skipped: 0,
+        cash_inserted: 2,
+        format: "cash_transactions",
+        errors: [],
+      }),
+      onDone: vi.fn<(...args: any[]) => any>(),
+    });
+
+    const file = new File(["円貨入出金明細"], "cash.csv", { type: "text/csv" });
+    fireEvent.change(screen.getByLabelText("Import file input"), { target: { files: [file] } });
+    await user.click(screen.getByRole("button", { name: /preview import/i }));
+    await waitFor(() =>
+      expect(screen.getByText(/SBI cash transactions import directly/)).toBeInTheDocument(),
+    );
+    expect(screen.queryByLabelText("Map symbol")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /confirm import/i }));
+    await waitFor(() => expect(screen.getByText("Cash transactions")).toBeInTheDocument());
+    expect(screen.getByText("2")).toBeInTheDocument();
+    expect(screen.queryByText("Inserted")).not.toBeInTheDocument();
+  });
+});
+
 describe("jsonFileHasAccountName", () => {
   it("reads nested account.name from export JSON", () => {
     expect(

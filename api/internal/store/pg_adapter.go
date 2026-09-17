@@ -144,6 +144,10 @@ func (p *PG) DeleteCashTransaction(ctx context.Context, arg DeleteCashTransactio
 	return p.q.DeleteCashTransaction(ctx, storepg.DeleteCashTransactionParams(arg))
 }
 
+func (p *PG) DeleteCashTransactionsForBatch(ctx context.Context, arg DeleteCashTransactionsForBatchParams) error {
+	return p.q.DeleteCashTransactionsForBatch(ctx, storepg.DeleteCashTransactionsForBatchParams(arg))
+}
+
 func (p *PG) DeleteCoachReview(ctx context.Context, arg DeleteCoachReviewParams) (int64, error) {
 	return p.q.DeleteCoachReview(ctx, storepg.DeleteCoachReviewParams(arg))
 }

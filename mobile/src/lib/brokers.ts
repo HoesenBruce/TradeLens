@@ -24,6 +24,16 @@ export interface BrokerDef {
 
 export const BROKERS: readonly BrokerDef[] = [
   {
+    key: 'sbi',
+    domain: 'sbisec.co.jp',
+    name: 'SBI Securities',
+    accountBroker: 'SBI Securities',
+    kind: 'file',
+    brand: '#E60012',
+    monogram: 'SBI',
+    formats: 'Execution History CSV',
+  },
+  {
     key: 'ibkr',
     domain: 'interactivebrokers.com',
     name: 'Interactive Brokers',

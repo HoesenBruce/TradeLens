@@ -247,9 +247,11 @@ export default function ImportTradesScreen() {
               <ValueText>{String(result.trades ?? 0)}</ValueText>
             </SettingsRow>
           ) : null}
-          <SettingsRow label={isJournal ? t`Fills inserted` : t`Inserted`}>
-            <ValueText>{String(result.inserted)}</ValueText>
-          </SettingsRow>
+          {result.format !== 'cash_transactions' ? (
+            <SettingsRow label={isJournal ? t`Fills inserted` : t`Inserted`}>
+              <ValueText>{String(result.inserted)}</ValueText>
+            </SettingsRow>
+          ) : null}
           <SettingsRow label={t`Skipped (duplicates)`}>
             <ValueText>{String(result.skipped)}</ValueText>
           </SettingsRow>

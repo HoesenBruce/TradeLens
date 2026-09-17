@@ -47,7 +47,11 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 	// still skipped — the row-at-a-time path got that from its own prior insert.
 	hashes := make([]string, len(parsed.Executions))
 	for i, pe := range parsed.Executions {
-		hashes[i] = DedupHash(dedupSymbol(pe), pe.Side, pe.Quantity, pe.Price, pe.ExecutedAt)
+		if pe.DedupKey != "" {
+			hashes[i] = dedupHash(pe.DedupKey)
+		} else {
+			hashes[i] = DedupHash(dedupSymbol(pe), pe.Side, pe.Quantity, pe.Price, pe.ExecutedAt)
+		}
 	}
 	seen, err := store.BulkExistingDedupHashes(ctx, q, accountID, hashes)
 	if err != nil {

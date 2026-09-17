@@ -25,6 +25,21 @@ type BrokerPreset struct {
 
 var brokerPresets = []BrokerPreset{
 	{
+		Key:       "sbi",
+		Name:      "SBI Securities (Execution History)",
+		TZ:        "Asia/Tokyo",
+		signature: []string{"約定日", "銘柄コード", "取引", "約定数量", "約定単価"},
+		fields: map[string][]string{
+			"symbol":          {"銘柄コード"},
+			"side":            {"取引"},
+			"quantity":        {"約定数量"},
+			"price":           {"約定単価"},
+			"executed_at":     {"約定日"},
+			"fees":            {"手数料/諸経費等"},
+			"instrument_type": {"=stock"},
+		},
+	},
+	{
 		Key:       "ibkr",
 		Name:      "Interactive Brokers (Flex/Activity)",
 		TZ:        "America/New_York",
@@ -174,6 +189,12 @@ var brokerPresets = []BrokerPreset{
 			"instrument_type": {"=future"},
 		},
 	},
+}
+
+// IsSBI reports whether headers belong to SBI's execution-history export.
+func IsSBI(headers []string) bool {
+	p, _, ok := matchPreset(headers)
+	return ok && p.Key == "sbi"
 }
 
 // MatchBroker returns the first preset whose full signature appears in the
