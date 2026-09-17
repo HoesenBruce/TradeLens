@@ -4,12 +4,13 @@ import "strings"
 
 // canonical field -> candidate header substrings (lowercased)
 var fieldHints = map[string][]string{
-	"symbol":      {"symbol", "ticker", "instrument"},
-	"side":        {"side", "b/s", "action", "buy/sell"},
-	"quantity":    {"qty", "quantity", "shares", "contracts"},
-	"price":       {"fill price", "price", "avg price", "exec price"},
-	"executed_at": {"trade date", "date/time", "datetime", "time", "date"},
-	"fees":        {"fee", "fees"},
+	"symbol":          {"symbol", "ticker", "instrument"},
+	"stock_name":      {"stock name", "company name", "security name", "銘柄名", "銘柄"},
+	"side":            {"side", "b/s", "action", "buy/sell"},
+	"quantity":        {"qty", "quantity", "shares", "contracts"},
+	"price":           {"fill price", "price", "avg price", "exec price"},
+	"executed_at":     {"trade date", "date/time", "datetime", "time", "date"},
+	"fees":            {"fee", "fees"},
 	"commission":      {"commission", "comm"},
 	"instrument_type": {"market", "instrument type", "asset type", "sec type", "product type", "asset class"},
 	"option_right":    {"call/put", "option right", "option type", "right", "cp"},

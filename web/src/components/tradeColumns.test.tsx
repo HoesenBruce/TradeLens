@@ -75,6 +75,7 @@ const TRADE: Trade = {
   id: "t1",
   account_id: "a1",
   symbol: "TSLQ",
+  stock_name: "Tesla",
   instrument_type: "stock",
   direction: "long",
   status: "closed",
@@ -148,6 +149,7 @@ describe("tradeColumns", () => {
       />,
     );
     expect(screen.getByText("TSLQ")).toBeInTheDocument();
+    expect(screen.getByText("Tesla")).toBeInTheDocument();
     expect(screen.getByText("WIN")).toBeInTheDocument();
     expect(screen.getByText("STK")).toBeInTheDocument();
     expect(screen.getByText("39m")).toBeInTheDocument();
@@ -184,6 +186,17 @@ describe("tradeColumns", () => {
       />,
     );
     expect(screen.getByText("Breakout")).toBeInTheDocument();
+  });
+
+  it("renders a fallback when the stock name is missing", () => {
+    render(
+      <DataTable
+        columns={tradeColumns("USD", { onOpenFullPage: vi.fn<(...args: any[]) => any>() })}
+        data={[{ ...TRADE, stock_name: undefined }]}
+        columnPinning={TRADE_COLUMN_PINNING}
+      />,
+    );
+    expect(screen.getAllByText("-").length).toBeGreaterThan(0);
   });
 
   it("shows option entry/exit totals with contract multiplier", () => {

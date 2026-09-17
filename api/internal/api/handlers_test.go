@@ -61,7 +61,7 @@ func TestManualExecutionsProduceClosedTrade(t *testing.T) {
 	tok := registerAndLogin(t, s, "m@x.com")
 	acc := accountID(t, s, tok)
 
-	buy := `{"account_id":"` + acc + `","symbol":"AAPL","instrument_type":"stock","side":"buy","quantity":100,"price":10,"executed_at":"2026-01-01T10:00:00Z"}`
+	buy := `{"account_id":"` + acc + `","symbol":"AAPL","instrument_type":"stock","side":"buy","quantity":100,"price":10,"executed_at":"2026-01-01T10:00:00Z","details":{"stock_name":"Apple"}}`
 	sell := `{"account_id":"` + acc + `","symbol":"AAPL","instrument_type":"stock","side":"sell","quantity":100,"price":12,"executed_at":"2026-01-01T11:00:00Z"}`
 	require.Equal(t, http.StatusCreated, do(s, http.MethodPost, "/api/v1/executions", buy, tok).Code)
 	require.Equal(t, http.StatusCreated, do(s, http.MethodPost, "/api/v1/executions", sell, tok).Code)
@@ -72,6 +72,7 @@ func TestManualExecutionsProduceClosedTrade(t *testing.T) {
 	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &got))
 	require.Len(t, got, 1)
 	require.Equal(t, "closed", got[0]["status"])
+	require.Equal(t, "Apple", got[0]["stock_name"])
 	require.Equal(t, 200.0, got[0]["net_pnl"])
 	require.Equal(t, 0.0, got[0]["qty_remaining"])
 

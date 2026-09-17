@@ -54,6 +54,7 @@ import { useUI } from "@/lib/ui";
 // Canonical trade fields we want to map
 const CANONICAL_FIELDS = [
   "symbol",
+  "stock_name",
   "side",
   "quantity",
   "price",

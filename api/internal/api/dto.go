@@ -66,6 +66,7 @@ type tradeDTO struct {
 	// call/put for option trades, resolved from the fills' contract details
 	// (OCC symbol as fallback). Absent for non-options and unresolvable rows.
 	OptionRight *string  `json:"option_right,omitempty"`
+	StockName   *string  `json:"stock_name,omitempty"`
 	InitialRisk *float64 `json:"initial_risk,omitempty"`
 	// Journal quick-filter fields, filled on list rows so clients can filter by
 	// setup/emotion/ratings without a detail fetch. The detail DTO's own fields
@@ -118,6 +119,22 @@ func optionRightsByTrade(rows []store.ListOptionExecutionDetailsForUserRow) map[
 		}
 		if right := optionRightFrom(r.Details, r.Symbol); right != "" {
 			out[r.TradeID] = right
+		}
+	}
+	return out
+}
+
+func stockNamesByTrade(rows []store.ListOptionExecutionDetailsForUserRow) map[string]string {
+	out := make(map[string]string)
+	for _, r := range rows {
+		if out[r.TradeID] != "" || !r.Details.Valid || r.Details.String == "" {
+			continue
+		}
+		var details map[string]string
+		if json.Unmarshal([]byte(r.Details.String), &details) == nil {
+			if name := strings.TrimSpace(details["stock_name"]); name != "" {
+				out[r.TradeID] = name
+			}
 		}
 	}
 	return out

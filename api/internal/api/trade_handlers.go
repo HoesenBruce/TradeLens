@@ -67,11 +67,15 @@ func (s *Server) handleListTrades(c *echo.Context) error {
 		return Fail(http.StatusInternalServerError, "internal", "could not load option contracts", nil)
 	}
 	rightByTrade := optionRightsByTrade(optionRows)
+	stockNameByTrade := stockNamesByTrade(optionRows)
 	out := make([]tradeDTO, 0, len(rows))
 	for _, t := range rows {
 		dto := toTradeDTO(t, tagsByTrade[t.ID])
 		if right, ok := rightByTrade[t.ID]; ok {
 			dto.OptionRight = &right
+		}
+		if name, ok := stockNameByTrade[t.ID]; ok {
+			dto.StockName = &name
 		}
 		if risk, ok := riskByTrade[t.ID]; ok {
 			dto.InitialRisk = &risk
