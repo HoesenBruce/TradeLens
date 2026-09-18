@@ -100,5 +100,31 @@ func TestReplayIsolatesAccountsInstrumentsAndRejectsOverClose(t *testing.T) {
 	require.Equal(t, -130.0, snapshot.Accounts[0].CashDelta)
 	require.Equal(t, -10.0, snapshot.Accounts[1].CashDelta)
 	require.Equal(t, "invalid_execution_sequence", snapshot.Warnings[0].Code)
+	require.Equal(t, "AAA", snapshot.Warnings[0].Instrument)
 	require.Equal(t, "4", snapshot.Warnings[0].ExecutionID)
+	require.Equal(t, "2026-09-02", snapshot.Warnings[0].Date)
+}
+
+func TestReplayOrdersSBIOpensBeforeSameDayCloses(t *testing.T) {
+	date := "2026-09-02"
+	snapshot := Replay([]store.Execution{
+		execution("sell", "a", "7203", "sbi:cash", "sell", date+"T01:00:00Z", 100, 101),
+		execution("buy", "a", "7203", "sbi:cash", "buy", date+"T01:00:00.000001Z", 100, 100),
+	}, []time.Time{day(date)})[0]
+
+	require.Empty(t, snapshot.Warnings)
+	require.Equal(t, 100.0, snapshot.Accounts[0].RealizedPnL)
+}
+
+func TestReplayAppliesExplicitSplitBeforeEffectiveDateExecutions(t *testing.T) {
+	snapshot := ReplayWithSplits([]store.Execution{
+		execution("open", "a", "7013", "sbi:margin-long", "buy", "2025-09-25T01:00:00Z", 100, 17500),
+		execution("close", "a", "7013", "sbi:margin-long", "sell", "2025-09-29T01:00:00Z", 700, 2500),
+	}, []time.Time{day("2025-09-29")}, []Split{{
+		Symbol: "7013", InstrumentType: "stock", EffectiveDate: day("2025-09-29"), Ratio: 7,
+	}})[0]
+
+	require.Empty(t, snapshot.Warnings)
+	require.Empty(t, snapshot.Accounts[0].Positions)
+	require.Zero(t, snapshot.Accounts[0].RealizedPnL)
 }

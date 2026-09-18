@@ -62,9 +62,6 @@ func responseFor(req Request, provider string, cached bool, bars []Bar) Response
 }
 
 func adjustmentStatus(provider string) string {
-	if provider == "yahoo" {
-		return "split_adjusted"
-	}
 	return "unadjusted"
 }
 

@@ -322,6 +322,33 @@ export interface EquityCurve {
   max_drawdown: number;
 }
 
+export interface AccountValueWarning {
+  code: string;
+  instrument?: string;
+  execution_id?: string;
+  date: string;
+  message: string;
+}
+
+export interface AccountValuePoint {
+  date: string;
+  estimated_account_value: number | null;
+  contributed_capital: number;
+  cash_balance: number;
+  open_position_value: number | null;
+  realized_pnl: number;
+  unrealized_pnl: number | null;
+  status: string;
+  warnings: AccountValueWarning[] | null;
+}
+
+export interface AccountValue {
+  currency: string;
+  timezone: string;
+  adjustment_status: string;
+  points: AccountValuePoint[];
+}
+
 // MonteCarloResult matches analytics.MonteCarloResult from analytics/montecarlo.go
 export interface McBand {
   n: number;

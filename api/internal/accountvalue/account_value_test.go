@@ -55,6 +55,24 @@ func TestReconstructValuesAccountsPositionsAndCashEvents(t *testing.T) {
 	require.Equal(t, 100.0, *result.Accounts[1].Points[0].EstimatedAccountValue)
 }
 
+func TestReconstructIdentifiesInvalidExecution(t *testing.T) {
+	service := testService(map[string]marketdata.Response{
+		"AAA": bars("AAA", "unadjusted", map[string]float64{"2026-09-02": 10}),
+	})
+	result, err := service.Reconstruct(context.Background(), Request{
+		Executions: []store.Execution{
+			execution("1", "a", "AAA", "sbi:cash", "buy", "2026-09-01T01:00:00Z", 1, 10),
+			execution("2", "a", "AAA", "sbi:cash", "sell", "2026-09-02T01:00:00Z", 2, 10),
+		},
+		MarketSessions: []time.Time{day("2026-09-02")},
+	})
+	require.NoError(t, err)
+	warning := result.Accounts[0].Points[0].Warnings[0]
+	require.Equal(t, "AAA", warning.Instrument)
+	require.Equal(t, "2", warning.ExecutionID)
+	require.Equal(t, "2026-09-02", warning.Date)
+}
+
 func TestReconstructMissingSuspendedAndCorporateActionPrices(t *testing.T) {
 	service := testService(map[string]marketdata.Response{
 		"AAA": bars("AAA", "unadjusted", map[string]float64{"2026-09-01": 10}),
@@ -75,6 +93,24 @@ func TestReconstructMissingSuspendedAndCorporateActionPrices(t *testing.T) {
 	require.Nil(t, point.EstimatedAccountValue)
 	require.Contains(t, warningCodes(point.Warnings), "carried_forward_suspension_price")
 	require.Contains(t, warningCodes(point.Warnings), "unsupported_corporate_action")
+}
+
+func TestReconstructAppliesReportedSplit(t *testing.T) {
+	response := bars("7013", "unadjusted", map[string]float64{"2025-09-26": 17500, "2025-09-29": 2500})
+	response.Bars[1].SplitRatio = 7
+	service := testService(map[string]marketdata.Response{"7013": response})
+	result, err := service.Reconstruct(context.Background(), Request{
+		Executions: []store.Execution{
+			execution("open", "a", "7013", "sbi:margin-long", "buy", "2025-09-25T01:00:00Z", 100, 17500),
+			execution("close", "a", "7013", "sbi:margin-long", "sell", "2025-09-29T01:00:00Z", 700, 2500),
+		},
+		MarketSessions: []time.Time{day("2025-09-29")},
+	})
+
+	require.NoError(t, err)
+	point := result.Accounts[0].Points[0]
+	require.Equal(t, "complete", point.Status)
+	require.Empty(t, point.Warnings)
 }
 
 func TestReconstructMissingPriceAndPartialProviderFailure(t *testing.T) {
