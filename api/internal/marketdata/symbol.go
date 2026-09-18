@@ -7,7 +7,7 @@ import (
 	"unicode"
 )
 
-var japaneseEquitySymbol = regexp.MustCompile(`^\d{4}$`)
+var japaneseEquitySymbol = regexp.MustCompile(`^[0-9]{3}[0-9A-Za-z]$`)
 
 func IsJapaneseEquity(req Request) bool {
 	return req.InstrumentType == "stock" && japaneseEquitySymbol.MatchString(strings.TrimSpace(req.Symbol))

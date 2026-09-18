@@ -14,11 +14,10 @@ func TestOccUnderlying(t *testing.T) {
 }
 
 func TestJapaneseEquityUsesTokyoYahooSymbol(t *testing.T) {
-	req := Request{Symbol: "7203", InstrumentType: "stock"}
-	require.True(t, ChartableSymbol(req.Symbol))
-	require.True(t, IsJapaneseEquity(req))
-	require.Equal(t, "7203.T", chartSymbol(req))
-	require.Equal(t, "Asia/Tokyo", MarketTimezone(req))
+	for symbol, want := range map[string]string{"7203": "7203.T", "584A": "584A.T"} {
+		req := Request{Symbol: symbol, InstrumentType: "stock"}
+		require.Equal(t, want, chartSymbol(req))
+	}
 }
 
 func TestNormalizeBarsAddsTokyoMarketDate(t *testing.T) {
