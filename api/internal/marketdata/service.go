@@ -6,12 +6,16 @@ import (
 	"encoding/json"
 	"errors"
 	"log/slog"
+	"sort"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/tradermemos/api/internal/store"
 	"golang.org/x/sync/singleflight"
 )
+
+const DefaultDailyMarketDataLookbackDays = 365
 
 // Service resolves bar requests with in-memory LRU, SQLite cache, and provider fetch.
 type Service struct {
@@ -50,6 +54,107 @@ func (s *Service) GetBars(ctx context.Context, req Request) (Response, error) {
 		return Response{}, err
 	}
 	return v.(Response), nil
+}
+
+// GetTransactionBars returns broad shared daily coverage while preserving the
+// explicit request window in Response.From/To for the chart's initial viewport.
+func (s *Service) GetTransactionBars(ctx context.Context, req Request, earliest time.Time) (Response, error) {
+	if s.Provider == nil {
+		return Response{}, errors.New("market data provider not configured")
+	}
+	if req.Interval != "D" || earliest.IsZero() {
+		return s.GetBars(ctx, req)
+	}
+	required := req
+	required.From = marketDayOffset(req, earliest, -DefaultDailyMarketDataLookbackDays)
+	required.To = marketDayOffset(req, time.Now(), 1)
+	key := strings.Join([]string{"daily-coverage-v1", strings.ToUpper(req.Symbol), req.InstrumentType}, "|")
+
+	v, err, _ := s.group.Do(key, func() (any, error) {
+		return s.syncCoverage(ctx, required, key)
+	})
+	if err != nil {
+		return Response{}, err
+	}
+	return responseFor(req, s.Provider.Name(), true, v.([]Bar)), nil
+}
+
+func (s *Service) syncCoverage(ctx context.Context, req Request, key string) ([]Bar, error) {
+	var bars []Bar
+	from, to := req.From, req.To
+	cached, err := s.Store.GetMarketBarsCache(ctx, key)
+	if err == nil {
+		if err := json.Unmarshal(cached.BarsJson, &bars); err != nil {
+			bars = nil
+		} else if cachedFrom, fromErr := time.Parse(time.RFC3339, cached.FromTs); fromErr == nil {
+			if cachedTo, toErr := time.Parse(time.RFC3339, cached.ToTs); toErr == nil {
+				from, to = cachedFrom, cachedTo
+			}
+		}
+	} else if !errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
+
+	if len(bars) == 0 {
+		fetched, err := s.Provider.FetchBars(ctx, req)
+		if err != nil {
+			return nil, err
+		}
+		bars = fetched
+		from, to = req.From, req.To
+	} else {
+		if req.From.Before(from) {
+			fetched, err := s.Provider.FetchBars(ctx, Request{Symbol: req.Symbol, InstrumentType: req.InstrumentType, Interval: req.Interval, From: req.From, To: from})
+			if err != nil {
+				return nil, err
+			}
+			bars = append(bars, fetched...)
+			from = req.From
+		}
+		if req.To.After(to) {
+			fetched, err := s.Provider.FetchBars(ctx, Request{Symbol: req.Symbol, InstrumentType: req.InstrumentType, Interval: req.Interval, From: to, To: req.To})
+			if err != nil {
+				return nil, err
+			}
+			bars = append(bars, fetched...)
+			to = req.To
+		}
+	}
+	bars = dedupeBars(normalizeBars(req, bars))
+	raw, err := json.Marshal(bars)
+	if err != nil {
+		return nil, err
+	}
+	if err := s.Store.UpsertMarketBarsCache(ctx, store.UpsertMarketBarsCacheParams{
+		CacheKey: key, Symbol: req.Symbol, Interval: req.Interval,
+		FromTs: FormatTimeRFC3339(from), ToTs: FormatTimeRFC3339(to), BarsJson: raw,
+		Provider: s.Provider.Name(), FetchedAt: time.Now().UTC().Format(time.RFC3339),
+	}); err != nil {
+		slog.Warn("market bars coverage cache write failed", "key", key, "err", err)
+	}
+	return bars, nil
+}
+
+func marketDayOffset(req Request, t time.Time, days int) time.Time {
+	loc, err := time.LoadLocation(MarketTimezone(req))
+	if err != nil {
+		loc = time.UTC
+	}
+	t = t.In(loc)
+	return time.Date(t.Year(), t.Month(), t.Day()+days, 0, 0, 0, 0, loc).UTC()
+}
+
+func dedupeBars(bars []Bar) []Bar {
+	byTime := make(map[int64]Bar, len(bars))
+	for _, bar := range bars {
+		byTime[bar.Time] = bar
+	}
+	out := make([]Bar, 0, len(byTime))
+	for _, bar := range byTime {
+		out = append(out, bar)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Time < out[j].Time })
+	return out
 }
 
 func responseFor(req Request, provider string, cached bool, bars []Bar) Response {

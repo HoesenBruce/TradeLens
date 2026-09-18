@@ -6,6 +6,7 @@ import type { MarketBar } from "@/lib/api/market";
 const setData = vi.fn<(...args: any[]) => any>();
 const setMarkers = vi.fn<(...args: any[]) => any>();
 const createSeriesMarkers = vi.fn<(...args: any[]) => any>(() => ({ setMarkers }));
+const setVisibleRange = vi.fn<(...args: any[]) => any>();
 
 vi.mock("lightweight-charts", () => {
   const series = {
@@ -19,7 +20,10 @@ vi.mock("lightweight-charts", () => {
     addSeries: vi.fn<(...args: any[]) => any>(() => series),
     applyOptions: vi.fn<(...args: any[]) => any>(),
     remove: vi.fn<(...args: any[]) => any>(),
-    timeScale: () => ({ fitContent: vi.fn<(...args: any[]) => any>() }),
+    timeScale: () => ({
+      fitContent: vi.fn<(...args: any[]) => any>(),
+      setVisibleRange: (...args: any[]) => setVisibleRange(...args),
+    }),
   };
   return {
     CandlestickSeries: {},
@@ -66,6 +70,7 @@ describe("TradeChart replay mode", () => {
     setData.mockClear();
     setMarkers.mockClear();
     createSeriesMarkers.mockClear();
+    setVisibleRange.mockClear();
   });
 
   it("hides bars past the cursor (transparent, keeping the time axis) and their fill markers", () => {
@@ -99,6 +104,22 @@ describe("TradeChart replay mode", () => {
     render(<TradeChart symbol="AAPL" bars={bars} fills={[]} interval="1" />);
     const points = setData.mock.calls.at(-1)![0];
     expect(points.every((p: object) => "open" in p && !("color" in p))).toBe(true);
+  });
+
+  it("keeps the requested trade window visible while older bars remain pannable", () => {
+    const from = new Date(T0 * 1000).toISOString();
+    const to = new Date((T0 + 120) * 1000).toISOString();
+    render(
+      <TradeChart
+        symbol="AAPL"
+        bars={bars}
+        fills={[]}
+        interval="D"
+        visibleFrom={from}
+        visibleTo={to}
+      />,
+    );
+    expect(setVisibleRange).toHaveBeenCalledTimes(1);
   });
 
   it("renders the replay toggle with a state-dependent label", () => {

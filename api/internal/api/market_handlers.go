@@ -1,12 +1,15 @@
 package api
 
 import (
+	"context"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/labstack/echo/v5"
+	"github.com/tradermemos/api/internal/auth"
 	"github.com/tradermemos/api/internal/marketdata"
+	"github.com/tradermemos/api/internal/store"
 )
 
 func (s *Server) marketRoutes(g *echo.Group) {
@@ -137,13 +140,44 @@ func (s *Server) handleMarketBars(c *echo.Context) error {
 		From:           from,
 		To:             to,
 	}
-	out, err := s.deps.Market.GetBars(c.Request().Context(), req)
+	var out marketdata.Response
+	if interval == "D" {
+		earliest, rangeErr := s.earliestExecution(c.Request().Context(), auth.UserID(c), symbol, instrumentType)
+		if rangeErr != nil {
+			c.Logger().Warn("execution range lookup failed", "symbol", symbol, "err", rangeErr)
+			out, err = s.deps.Market.GetBars(c.Request().Context(), req)
+		} else {
+			out, err = s.deps.Market.GetTransactionBars(c.Request().Context(), req, earliest)
+		}
+	} else {
+		out, err = s.deps.Market.GetBars(c.Request().Context(), req)
+	}
 	if err != nil {
 		// Chart widget should degrade gracefully — return empty bars, not 502.
 		c.Logger().Warn("market bars fetch failed", "symbol", symbol, "err", err)
 		return c.JSON(http.StatusOK, marketdata.EmptyResponse(req, "unavailable"))
 	}
 	return c.JSON(http.StatusOK, out)
+}
+
+func (s *Server) earliestExecution(ctx context.Context, userID, symbol, instrumentType string) (time.Time, error) {
+	accounts, err := s.deps.Store.ListAccounts(ctx, userID)
+	if err != nil {
+		return time.Time{}, err
+	}
+	var earliest time.Time
+	for _, account := range accounts {
+		executions, err := s.deps.Store.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: userID, AccountID: account.ID})
+		if err != nil {
+			return time.Time{}, err
+		}
+		for _, execution := range executions {
+			if strings.EqualFold(strings.TrimSpace(execution.Symbol), strings.TrimSpace(symbol)) && execution.InstrumentType == instrumentType && (earliest.IsZero() || execution.ExecutedAt.Before(earliest)) {
+				earliest = execution.ExecutedAt
+			}
+		}
+	}
+	return earliest, nil
 }
 
 func chartPadding(interval string) time.Duration {
