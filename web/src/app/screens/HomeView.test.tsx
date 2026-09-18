@@ -311,7 +311,7 @@ describe("HomeView", () => {
     expect(screen.getByText("Contributed Capital")).toBeInTheDocument();
   });
 
-  it("shows account-value loading, empty, error, and warning states", () => {
+  it("shows account-value loading, empty, error, and a single warning detail", () => {
     const { rerender } = render(<HomeView {...BASE} accountValueLoading />);
     expect(screen.queryByText("Estimated Account Value")).not.toBeInTheDocument();
 
@@ -332,9 +332,9 @@ describe("HomeView", () => {
               estimated_account_value: null,
               status: "unsupported_corporate_action",
               warnings: [
-                { code: "missing_price", date: "2026-07-01", message: "missing" },
                 {
                   code: "unsupported_corporate_action",
+                  instrument: "5401",
                   date: "2026-07-01",
                   message: "split",
                 },
@@ -344,8 +344,66 @@ describe("HomeView", () => {
         }}
       />,
     );
-    expect(screen.getByText("Missing market data")).toBeInTheDocument();
     expect(screen.getByText("Corporate action review required")).toBeInTheDocument();
+    expect(screen.getByText(/5401 · 2026-07-01/)).toBeInTheDocument();
+    expect(screen.getByText(/split/)).toBeInTheDocument();
+  });
+
+  it("deduplicates and collapses multiple account-value warning details", async () => {
+    const user = userEvent.setup();
+    render(
+      <HomeView
+        {...BASE}
+        accountValue={{
+          ...BASE.accountValue,
+          points: [
+            {
+              ...BASE.accountValue.points[0],
+              status: "unsupported_corporate_action",
+              warnings: [
+                {
+                  code: "unsupported_corporate_action",
+                  instrument: "5401",
+                  date: "2026-07-01",
+                  message: "split",
+                },
+                {
+                  code: "missing_price",
+                  instrument: "6501",
+                  date: "2026-07-01",
+                  message: "missing",
+                },
+              ],
+            },
+            {
+              ...BASE.accountValue.points[0],
+              date: "2026-07-02",
+              status: "unsupported_corporate_action",
+              warnings: [
+                {
+                  code: "unsupported_corporate_action",
+                  instrument: "5401",
+                  date: "2026-07-02",
+                  message: "split",
+                },
+              ],
+            },
+          ],
+        }}
+      />,
+    );
+
+    expect(screen.getByText("2 account value issues")).toBeInTheDocument();
+    expect(screen.queryByText(/5401 · 2026-07-01/)).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /2 account value issues/i }));
+    expect(screen.getByRole("button", { name: /hide/i })).toBeInTheDocument();
+    expect(screen.getByText(/5401 · 2026-07-01/)).toBeInTheDocument();
+    expect(screen.getByText(/6501 · 2026-07-01/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /2 account value issues/i }));
+    expect(screen.getByRole("button", { name: /show all/i })).toBeInTheDocument();
+    expect(screen.queryByText(/5401 · 2026-07-01/)).not.toBeInTheDocument();
   });
 
   it("computes OPEN percentage against all trades, not closed-only total", () => {

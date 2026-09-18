@@ -16,6 +16,12 @@ import { DailyLossCard } from "@/components/DailyLossCard";
 import { PropStatusCard } from "@/components/PropStatusCard";
 import { Card } from "@/components/Card";
 import { ChartFrame, chartTheme, chartTooltipStyle } from "@/components/ChartFrame";
+import {
+  Collapsible,
+  CollapsibleChevron,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/Collapsible";
 import { HomeAccountContribution } from "@/components/HomeAccountContribution";
 import { type HomeBreakdownDim, HomeBreakdownChart } from "@/components/HomeBreakdownChart";
 import { HomeInsightBento } from "@/components/HomeInsightBento";
@@ -37,6 +43,7 @@ import type {
   Account,
   AccountValue,
   AccountValuePoint,
+  AccountValueWarning,
   BreakGroup,
   EquityPoint,
   Summary,
@@ -306,47 +313,80 @@ function AccountValueChart({
 }
 
 function AccountValueWarnings({ points }: { points: AccountValuePoint[] }) {
-  const corporate = points.some(
-    (point) =>
-      point.status === "unsupported_corporate_action" ||
-      (point.warnings ?? []).some((warning) => warning.code === "unsupported_corporate_action"),
-  );
-  const missing = points.some((point) =>
-    (point.warnings ?? []).some((warning) => warning.code === "missing_price"),
-  );
+  const [open, setOpen] = useState(false);
+  const warningMap = new Map<string, AccountValueWarning>();
+  for (const warning of points.flatMap((point) => point.warnings ?? [])) {
+    const key = `${warning.code}\u0000${warning.instrument ?? ""}\u0000${warning.message}`;
+    if (!warningMap.has(key)) warningMap.set(key, warning);
+  }
+  const warnings = Array.from(warningMap.values());
   const incomplete = points.some((point) => point.status !== "complete");
   if (!incomplete) return null;
 
+  if (warnings.length === 0) {
+    return (
+      <Alert variant="warning">
+        <AlertTriangle />
+        <AlertTitle>Incomplete reconstruction</AlertTitle>
+        <AlertDescription>Some account values are unavailable for this range.</AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (warnings.length === 1) {
+    return <AccountValueWarningAlert warning={warnings[0]} />;
+  }
+
   return (
-    <div className="grid gap-2">
-      {corporate ? (
-        <Alert variant="warning">
-          <AlertTriangle />
-          <AlertTitle>Corporate action review required</AlertTitle>
-          <AlertDescription>
-            This range contains a suspected or unsupported corporate action; affected values are
-            omitted.
-          </AlertDescription>
-        </Alert>
-      ) : null}
-      {missing ? (
-        <Alert variant="warning">
-          <AlertTriangle />
-          <AlertTitle>Missing market data</AlertTitle>
-          <AlertDescription>
-            One or more sessions could not be valued; affected account values are omitted.
-          </AlertDescription>
-        </Alert>
-      ) : null}
-      {!corporate && !missing ? (
-        <Alert variant="warning">
-          <AlertTriangle />
-          <AlertTitle>Incomplete reconstruction</AlertTitle>
-          <AlertDescription>Some account values are unavailable for this range.</AlertDescription>
-        </Alert>
-      ) : null}
-    </div>
+    <Alert variant="warning">
+      <AlertTriangle />
+      <Collapsible open={open} onOpenChange={setOpen}>
+        <CollapsibleTrigger className="w-full">
+          <span className="font-medium">{warnings.length} account value issues</span>
+          <span className="text-xs text-muted-foreground">{open ? "Hide" : "Show all"}</span>
+          <CollapsibleChevron />
+        </CollapsibleTrigger>
+        <CollapsibleContent className="pt-2">
+          <ul className="grid gap-2">
+            {warnings.map((warning) => (
+              <li key={`${warning.code}-${warning.instrument}-${warning.message}`}>
+                <AccountValueWarningDetail warning={warning} />
+              </li>
+            ))}
+          </ul>
+        </CollapsibleContent>
+      </Collapsible>
+    </Alert>
   );
+}
+
+function AccountValueWarningAlert({ warning }: { warning: AccountValueWarning }) {
+  return (
+    <Alert variant="warning">
+      <AlertTriangle />
+      <AlertTitle>{accountValueWarningTitle(warning.code)}</AlertTitle>
+      <AlertDescription>
+        <AccountValueWarningDetail warning={warning} />
+      </AlertDescription>
+    </Alert>
+  );
+}
+
+function AccountValueWarningDetail({ warning }: { warning: AccountValueWarning }) {
+  return (
+    <p>
+      <span className="font-medium text-foreground">
+        {[warning.instrument, warning.date].filter(Boolean).join(" · ")}
+      </span>
+      {warning.message ? ` — ${warning.message}` : null}
+    </p>
+  );
+}
+
+function accountValueWarningTitle(code: string) {
+  if (code === "unsupported_corporate_action") return "Corporate action review required";
+  if (code === "missing_price") return "Missing market data";
+  return "Incomplete reconstruction";
 }
 
 export function HomeView({
