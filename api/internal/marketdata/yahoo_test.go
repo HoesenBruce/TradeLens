@@ -26,17 +26,24 @@ func TestNormalizeBarsAddsTokyoMarketDate(t *testing.T) {
 	require.Equal(t, "2026-09-16", bars[0].MarketDate)
 }
 
-func TestApplyYahooSplitsAddsProviderEventToAdjustedBars(t *testing.T) {
+func TestApplyYahooSplitsRestoresUnadjustedBarsAndAddsProviderEvent(t *testing.T) {
 	req := Request{Symbol: "5803", InstrumentType: "stock"}
 	effective := time.Date(2026, 4, 1, 0, 0, 0, 0, time.FixedZone("JST", 9*60*60))
-	bars := []Bar{{Time: effective.Unix(), Open: 4370, Close: 4446}}
+	bars := []Bar{
+		{Time: effective.AddDate(0, 0, -1).Unix(), Open: 100, High: 102, Low: 99, Close: 101, Volume: 600},
+		{Time: effective.Unix(), Open: 110, High: 112, Low: 109, Close: 111, Volume: 900},
+	}
 
 	applyYahooSplits(req, bars, map[string]yahooSplit{
 		"event": {Date: effective.Unix(), Numerator: 6, Denominator: 1},
 	})
 
-	require.Equal(t, 6.0, bars[0].SplitRatio)
-	require.Equal(t, "split_adjusted", adjustmentStatus("yahoo"))
+	require.Equal(t, Bar{
+		Time: effective.AddDate(0, 0, -1).Unix(), Open: 600, High: 612, Low: 594, Close: 606, Volume: 100,
+	}, bars[0])
+	require.Equal(t, 6.0, bars[1].SplitRatio)
+	require.Equal(t, 110.0, bars[1].Open)
+	require.Equal(t, "unadjusted", adjustmentStatus("yahoo"))
 }
 
 func TestDefaultInterval(t *testing.T) {

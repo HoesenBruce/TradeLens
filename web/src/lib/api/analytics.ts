@@ -1,5 +1,6 @@
 import { apiFetch, qs } from "./client";
 import type {
+  AccountValue,
   BehaviorReport,
   BreakGroup,
   ComplianceReport,
@@ -18,6 +19,12 @@ export const analyticsApi = {
     apiFetch<RSummary>(`/analytics/r-summary${qs(f as Record<string, string | undefined>)}`),
   equityCurve: (f: Filters) =>
     apiFetch<EquityCurve>(`/analytics/equity-curve${qs(f as Record<string, string | undefined>)}`),
+  accountValue: (
+    f: Pick<Filters, "account_id" | "from" | "to"> & { ignored_missing_prices?: string },
+  ) =>
+    apiFetch<AccountValue>(
+      `/analytics/account-value${qs(f as Record<string, string | undefined>)}`,
+    ),
   daily: (f: Filters) =>
     apiFetch<Record<string, number>>(
       `/analytics/daily${qs(f as Record<string, string | undefined>)}`,

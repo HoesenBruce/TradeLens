@@ -3,6 +3,7 @@ package positions
 import (
 	"encoding/json"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/tradermemos/api/internal/money"
@@ -35,7 +36,9 @@ type Position struct {
 type Warning struct {
 	AccountID   string `json:"account_id"`
 	Code        string `json:"code"`
+	Instrument  string `json:"instrument"`
 	ExecutionID string `json:"execution_id"`
+	Date        string `json:"date"`
 	Message     string `json:"message"`
 }
 
@@ -51,6 +54,12 @@ type Snapshot struct {
 	Date     string            `json:"date"`
 	Accounts []AccountSnapshot `json:"accounts"`
 	Warnings []Warning         `json:"warnings"`
+}
+
+type Split struct {
+	Symbol, InstrumentType string
+	EffectiveDate          time.Time
+	Ratio                  float64
 }
 
 type positionKey struct {
@@ -76,27 +85,56 @@ func (s *state) account(accountID string) *AccountSnapshot {
 // Replay applies every execution up to each requested Tokyo market date. Dates
 // select output only: executions before the first date still establish opening state.
 func Replay(executions []store.Execution, dates []time.Time) []Snapshot {
+	return ReplayWithSplits(executions, dates, nil)
+}
+
+func ReplayWithSplits(executions []store.Execution, dates []time.Time, splits []Split) []Snapshot {
 	executions = append([]store.Execution(nil), executions...)
 	sort.SliceStable(executions, func(i, j int) bool {
-		if executions[i].ExecutedAt.Equal(executions[j].ExecutedAt) {
+		iTime, jTime := replayTime(executions[i]), replayTime(executions[j])
+		if iTime.Equal(jTime) {
 			return executions[i].ID < executions[j].ID
 		}
-		return executions[i].ExecutedAt.Before(executions[j].ExecutedAt)
+		return iTime.Before(jTime)
 	})
 	dates = uniqueDates(dates)
+	splits = append([]Split(nil), splits...)
+	sort.SliceStable(splits, func(i, j int) bool { return splits[i].EffectiveDate.Before(splits[j].EffectiveDate) })
 
 	s := state{positions: map[positionKey]Position{}, accounts: map[string]*AccountSnapshot{}}
 	out := make([]Snapshot, 0, len(dates))
 	nextExecution := 0
+	nextSplit := 0
 	for _, date := range dates {
 		end := tokyoDate(date).AddDate(0, 0, 1)
 		for nextExecution < len(executions) && executions[nextExecution].ExecutedAt.Before(end) {
+			for nextSplit < len(splits) && !tokyoDate(splits[nextSplit].EffectiveDate).After(replayTime(executions[nextExecution])) {
+				s.applySplit(splits[nextSplit])
+				nextSplit++
+			}
 			s.apply(executions[nextExecution])
 			nextExecution++
+		}
+		for nextSplit < len(splits) && tokyoDate(splits[nextSplit].EffectiveDate).Before(end) {
+			s.applySplit(splits[nextSplit])
+			nextSplit++
 		}
 		out = append(out, s.snapshot(date))
 	}
 	return out
+}
+
+func (s *state) applySplit(split Split) {
+	if split.Ratio <= 0 || split.Ratio == 1 {
+		return
+	}
+	for key, position := range s.positions {
+		if key.symbol == split.Symbol && key.instrument == split.InstrumentType {
+			position.Quantity *= split.Ratio
+			position.AverageCost /= split.Ratio
+			s.positions[key] = position
+		}
+	}
 }
 
 func (s *state) apply(ex store.Execution) {
@@ -177,7 +215,28 @@ func (s *state) bookOpen(ex store.Execution, kind Kind, multiplier float64) {
 
 func (s *state) warn(ex store.Execution, code, message string) {
 	s.account(ex.AccountID)
-	s.warnings = append(s.warnings, Warning{AccountID: ex.AccountID, Code: code, ExecutionID: ex.ID, Message: message})
+	s.warnings = append(s.warnings, Warning{
+		AccountID: ex.AccountID, Code: code, Instrument: ex.Symbol, ExecutionID: ex.ID,
+		Date: tokyoDate(ex.ExecutedAt).Format(time.DateOnly), Message: message,
+	})
+}
+
+func replayTime(ex store.Execution) time.Time {
+	if !strings.HasPrefix(lotFromDetails(ex), "sbi:") {
+		return ex.ExecutedAt
+	}
+	day := tokyoDate(ex.ExecutedAt)
+	if !opensPosition(ex) {
+		day = day.Add(12 * time.Hour)
+	}
+	return day
+}
+
+func opensPosition(ex store.Execution) bool {
+	if kindFromLot(lotFromDetails(ex)) == MarginShort {
+		return ex.Side == "sell"
+	}
+	return ex.Side == "buy"
 }
 
 func (s *state) snapshot(date time.Time) Snapshot {

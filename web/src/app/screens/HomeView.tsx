@@ -1,9 +1,11 @@
-import { ArrowRight, Plus, TrendingUp, Upload } from "lucide-react";
+import { AlertTriangle, ArrowRight, Plus, TrendingUp, Upload } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
   CartesianGrid,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -14,6 +16,12 @@ import { DailyLossCard } from "@/components/DailyLossCard";
 import { PropStatusCard } from "@/components/PropStatusCard";
 import { Card } from "@/components/Card";
 import { ChartFrame, chartTheme, chartTooltipStyle } from "@/components/ChartFrame";
+import {
+  Collapsible,
+  CollapsibleChevron,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/Collapsible";
 import { HomeAccountContribution } from "@/components/HomeAccountContribution";
 import { type HomeBreakdownDim, HomeBreakdownChart } from "@/components/HomeBreakdownChart";
 import { HomeInsightBento } from "@/components/HomeInsightBento";
@@ -21,7 +29,16 @@ import { HomeMiniCalendar } from "@/components/HomeMiniCalendar";
 import { DataTable } from "@/components/DataTable";
 import { ItemGroup } from "@/components/Item";
 import { EmptyState } from "@/components/EmptyState";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Page } from "@/components/Page";
 import { PerformanceStrip } from "@/components/PerformanceStrip";
 import { SegmentedControl } from "@/components/SegmentedControl";
@@ -30,7 +47,16 @@ import { CardSkeleton } from "@/components/skeletons/card-skeleton";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
 import { tradeColumns } from "@/components/tradeColumns";
 import { TradeListItem } from "@/components/TradeListItem";
-import type { Account, BreakGroup, EquityPoint, Summary, Trade } from "@/lib/api/types";
+import type {
+  Account,
+  AccountValue,
+  AccountValuePoint,
+  AccountValueWarning,
+  BreakGroup,
+  EquityPoint,
+  Summary,
+  Trade,
+} from "@/lib/api/types";
 import type { DayRecord } from "@/lib/calendar";
 import { uniqueDayTicks } from "@/lib/chartTicks";
 import { accountBaseCurrency, useDisplayTimePrefs, usePrivacyMode } from "@/lib/displayPrefs";
@@ -49,6 +75,12 @@ export interface HomeViewProps {
   equityError: boolean;
   equityPoints: EquityPoint[];
   maxDrawdown?: number;
+  accountValue: AccountValue | undefined;
+  accountValueLoading: boolean;
+  accountValueError: boolean;
+  accountValueRange: string;
+  onAccountValueRangeChange: (range: string) => void;
+  onIgnoreAccountValueWarning: (warning: AccountValueWarning) => void;
   tradesLoading: boolean;
   tradesError: boolean;
   trades: Trade[];
@@ -195,6 +227,209 @@ function EquityCurveChart({
   );
 }
 
+function AccountValueChart({
+  data,
+  loading,
+  error,
+  currency,
+  fxRate,
+}: {
+  data: AccountValue | undefined;
+  loading: boolean;
+  error: boolean;
+  currency: string;
+  fxRate: number;
+}) {
+  const points = useMemo(
+    () =>
+      (data?.points ?? []).map((point) => ({
+        ...point,
+        timestamp: new Date(`${point.date}T00:00:00+09:00`).getTime(),
+        estimated_account_value:
+          point.estimated_account_value == null ? null : point.estimated_account_value * fxRate,
+        contributed_capital: point.contributed_capital * fxRate,
+      })),
+    [data?.points, fxRate],
+  );
+
+  if (loading) return <Skeleton className="min-h-[240px] w-full" />;
+  if (error) return <p className="text-xs text-destructive">Failed to load account value.</p>;
+  if (points.length === 0) {
+    return <EmptyState title="No account value data" hint="Import executions or cash activity." />;
+  }
+
+  return (
+    <div className="h-[280px] w-full">
+      <ChartFrame inset className="h-full rounded-none border-0 bg-transparent">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={points} margin={{ top: 8, right: 8, bottom: 0, left: 4 }}>
+            <CartesianGrid vertical={false} stroke={chartTheme.gridColor} />
+            <XAxis
+              dataKey="timestamp"
+              type="number"
+              scale="time"
+              domain={["dataMin", "dataMax"]}
+              tick={{ fontSize: 10, fill: chartTheme.axisColor }}
+              tickFormatter={(value: number) =>
+                fmtDayShort(new Date(value).toISOString(), intlLocale())
+              }
+              axisLine={false}
+              tickLine={false}
+              minTickGap={60}
+            />
+            <YAxis
+              tick={{ fontSize: 10, fill: chartTheme.axisColor }}
+              tickFormatter={(value: number) => fmtMoneyCompact(value, currency, intlLocale())}
+              axisLine={false}
+              tickLine={false}
+              width={52}
+              domain={["auto", "auto"]}
+            />
+            <Tooltip
+              {...chartTooltipStyle}
+              labelFormatter={(value) => new Date(Number(value)).toLocaleDateString(intlLocale())}
+              formatter={(value, name) => [
+                fmtMoney(Number(value ?? 0), currency, intlLocale()),
+                name === "estimated_account_value"
+                  ? "Estimated Account Value"
+                  : "Contributed Capital",
+              ]}
+              cursor={{ stroke: chartTheme.gridColor }}
+            />
+            <Line
+              type="monotone"
+              dataKey="estimated_account_value"
+              name="Estimated Account Value"
+              stroke={chartTheme.accentStroke}
+              strokeWidth={2}
+              dot={false}
+              connectNulls={false}
+            />
+            <Line
+              type="stepAfter"
+              dataKey="contributed_capital"
+              name="Contributed Capital"
+              stroke="var(--color-chart-2)"
+              strokeWidth={1.5}
+              strokeDasharray="5 4"
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </ChartFrame>
+    </div>
+  );
+}
+
+function AccountValueWarnings({
+  points,
+  onIgnore,
+}: {
+  points: AccountValuePoint[];
+  onIgnore: (warning: AccountValueWarning) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const warningMap = new Map<string, AccountValueWarning>();
+  for (const warning of points.flatMap((point) => point.warnings ?? [])) {
+    const key = `${warning.code}\u0000${warning.instrument ?? ""}\u0000${warning.execution_id ?? ""}\u0000${warning.message}`;
+    if (!warningMap.has(key)) warningMap.set(key, warning);
+  }
+  const warnings = Array.from(warningMap.values());
+  const incomplete = points.some((point) => point.status !== "complete");
+  if (!incomplete && warnings.length === 0) return null;
+
+  if (warnings.length === 0) {
+    return (
+      <Alert variant="warning">
+        <AlertTriangle />
+        <AlertTitle>Incomplete reconstruction</AlertTitle>
+        <AlertDescription>Some account values are unavailable for this range.</AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (warnings.length === 1) {
+    return <AccountValueWarningAlert warning={warnings[0]} onIgnore={onIgnore} />;
+  }
+
+  return (
+    <Alert variant="warning">
+      <AlertTriangle />
+      <Collapsible open={open} onOpenChange={setOpen}>
+        <CollapsibleTrigger className="w-full">
+          <span className="font-medium">{warnings.length} account value issues</span>
+          <span className="text-xs text-muted-foreground">{open ? "Hide" : "Show all"}</span>
+          <CollapsibleChevron />
+        </CollapsibleTrigger>
+        <CollapsibleContent className="pt-2">
+          <ul className="grid gap-2">
+            {warnings.map((warning) => (
+              <li
+                key={`${warning.code}-${warning.instrument}-${warning.execution_id}-${warning.message}`}
+              >
+                <AccountValueWarningDetail warning={warning} onIgnore={onIgnore} />
+              </li>
+            ))}
+          </ul>
+        </CollapsibleContent>
+      </Collapsible>
+    </Alert>
+  );
+}
+
+function AccountValueWarningAlert({
+  warning,
+  onIgnore,
+}: {
+  warning: AccountValueWarning;
+  onIgnore: (warning: AccountValueWarning) => void;
+}) {
+  return (
+    <Alert variant="warning">
+      <AlertTriangle />
+      <AlertTitle>{accountValueWarningTitle(warning.code)}</AlertTitle>
+      <AlertDescription>
+        <AccountValueWarningDetail warning={warning} onIgnore={onIgnore} />
+      </AlertDescription>
+    </Alert>
+  );
+}
+
+function AccountValueWarningDetail({
+  warning,
+  onIgnore,
+}: {
+  warning: AccountValueWarning;
+  onIgnore: (warning: AccountValueWarning) => void;
+}) {
+  return (
+    <p className="flex items-center gap-2">
+      <span className="font-medium text-foreground">
+        {[
+          warning.instrument,
+          warning.date,
+          warning.execution_id && `Execution ${warning.execution_id}`,
+        ]
+          .filter(Boolean)
+          .join(" · ")}
+      </span>
+      {warning.message ? ` — ${warning.message}` : null}
+      {warning.code === "missing_price" && warning.instrument ? (
+        <Button type="button" variant="outline" size="sm" onClick={() => onIgnore(warning)}>
+          Ignore
+        </Button>
+      ) : null}
+    </p>
+  );
+}
+
+function accountValueWarningTitle(code: string) {
+  if (code === "unsupported_corporate_action") return "Corporate action review required";
+  if (code === "missing_price") return "Missing market data";
+  if (code === "carried_forward_suspension_price") return "Estimated using previous close";
+  return "Incomplete reconstruction";
+}
+
 export function HomeView({
   summaryLoading,
   summaryError,
@@ -203,6 +438,12 @@ export function HomeView({
   equityError,
   equityPoints,
   maxDrawdown,
+  accountValue,
+  accountValueLoading,
+  accountValueError,
+  accountValueRange,
+  onAccountValueRangeChange,
+  onIgnoreAccountValueWarning,
   tradesLoading,
   tradesError,
   trades,
@@ -246,6 +487,7 @@ export function HomeView({
   const fxRate = rate ?? 1;
   const compact = useMediaQuery(COMPACT_VIEWPORT);
   const [range, setRange] = useState("30D");
+  const [warningToIgnore, setWarningToIgnore] = useState<AccountValueWarning | null>(null);
 
   const recentTrades = useMemo(() => trades.slice(0, HOME_RECENT_LIMIT), [trades]);
   const hasMoreTrades = trades.length > HOME_RECENT_LIMIT;
@@ -354,6 +596,41 @@ export function HomeView({
           </div>
         ) : null}
       </div>
+
+      <Card
+        title="Historical account value"
+        action={
+          <SegmentedControl
+            ariaLabel="Account value range"
+            options={RANGES}
+            value={accountValueRange}
+            onChange={onAccountValueRangeChange}
+          />
+        }
+      >
+        <div className="grid gap-3">
+          <AccountValueWarnings points={accountValue?.points ?? []} onIgnore={setWarningToIgnore} />
+          <AccountValueChart
+            data={accountValue}
+            loading={accountValueLoading}
+            error={accountValueError}
+            currency={currency}
+            fxRate={fxRate}
+          />
+          {!accountValueLoading && !accountValueError && (accountValue?.points.length ?? 0) > 0 ? (
+            <div className="flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-muted-foreground">
+              <span>
+                <span className="mr-1.5 inline-block h-0.5 w-4 bg-primary" />
+                Estimated Account Value
+              </span>
+              <span>
+                <span className="mr-1.5 inline-block w-4 border-t border-dashed border-chart-2" />
+                Contributed Capital
+              </span>
+            </div>
+          ) : null}
+        </div>
+      </Card>
 
       <DailyLossCard todayNetPnl={todayNetPnl} currency={currency} fxRate={fxRate} />
 
@@ -470,6 +747,38 @@ export function HomeView({
           </>
         )}
       </Card>
+
+      <Dialog
+        open={warningToIgnore !== null}
+        onOpenChange={(open) => {
+          if (!open) setWarningToIgnore(null);
+        }}
+      >
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>Ignore missing market data?</DialogTitle>
+            <DialogDescription>
+              {warningToIgnore?.instrument} has no unadjusted closing price for{" "}
+              {warningToIgnore?.date}. TraderMemos will use the previous available market close for
+              this date.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setWarningToIgnore(null)}>
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                if (warningToIgnore) onIgnoreAccountValueWarning(warningToIgnore);
+                setWarningToIgnore(null);
+              }}
+            >
+              Ignore and use previous close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Page>
   );
 }
