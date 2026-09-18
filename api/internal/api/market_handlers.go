@@ -11,7 +11,45 @@ import (
 
 func (s *Server) marketRoutes(g *echo.Group) {
 	g.GET("/market/bars", s.handleMarketBars)
+	g.GET("/market/corporate-actions", s.handleMarketCorporateActions)
 	g.GET("/market/fx", s.handleMarketFx)
+}
+
+func (s *Server) handleMarketCorporateActions(c *echo.Context) error {
+	symbol := strings.TrimSpace(c.QueryParam("symbol"))
+	if symbol == "" {
+		return Fail(http.StatusBadRequest, "bad_request", "symbol is required", nil)
+	}
+	from, err := marketdata.ParseTimeParam(strings.TrimSpace(c.QueryParam("from")))
+	if err != nil {
+		return Fail(http.StatusBadRequest, "bad_request", "invalid from: "+err.Error(), nil)
+	}
+	to, err := marketdata.ParseTimeParam(strings.TrimSpace(c.QueryParam("to")))
+	if err != nil {
+		return Fail(http.StatusBadRequest, "bad_request", "invalid to: "+err.Error(), nil)
+	}
+	instrumentType := strings.TrimSpace(c.QueryParam("instrument_type"))
+	if instrumentType == "" {
+		instrumentType = "stock"
+	}
+	if !marketdata.SupportedInstrument(instrumentType) {
+		return Fail(http.StatusBadRequest, "bad_request", "unsupported instrument_type", nil)
+	}
+	if s.deps.Market == nil {
+		return Fail(http.StatusServiceUnavailable, "unavailable", "market data not configured", nil)
+	}
+	if !marketdata.ChartableSymbol(symbol) {
+		return c.JSON(http.StatusOK, []marketdata.CorporateActionCandidate{})
+	}
+
+	out, err := s.deps.Market.DetectCorporateActions(c.Request().Context(), marketdata.Request{
+		Symbol: symbol, InstrumentType: instrumentType, From: from, To: to,
+	})
+	if err != nil {
+		c.Logger().Warn("corporate action detection failed", "symbol", symbol, "err", err)
+		return Fail(http.StatusBadGateway, "upstream_error", "failed to detect corporate actions", nil)
+	}
+	return c.JSON(http.StatusOK, out)
 }
 
 func (s *Server) handleMarketFx(c *echo.Context) error {

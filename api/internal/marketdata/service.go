@@ -57,8 +57,15 @@ func responseFor(req Request, provider string, cached bool, bars []Bar) Response
 		Symbol: req.Symbol, Instrument: req.Symbol, Interval: req.Interval,
 		From: FormatTimeRFC3339(req.From), To: FormatTimeRFC3339(req.To),
 		Provider: provider, Source: provider, Timezone: MarketTimezone(req),
-		AdjustmentStatus: "unadjusted", Cached: cached, Bars: normalizeBars(req, bars),
+		AdjustmentStatus: adjustmentStatus(provider), Cached: cached, Bars: normalizeBars(req, bars),
 	}
+}
+
+func adjustmentStatus(provider string) string {
+	if provider == "yahoo" {
+		return "split_adjusted"
+	}
+	return "unadjusted"
 }
 
 func (s *Service) fetchBars(ctx context.Context, req Request, key string) (Response, error) {

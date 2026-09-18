@@ -10,6 +10,7 @@ export interface MarketBar {
   low: number;
   close: number;
   volume: number;
+  split_ratio?: number;
 }
 
 export interface MarketBarsResponse {
