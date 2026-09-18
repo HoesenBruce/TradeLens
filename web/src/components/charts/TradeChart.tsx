@@ -64,6 +64,8 @@ export interface TradeChartProps {
   stopPrice?: number | null;
   entryPrice?: number | null;
   interval: BarInterval;
+  visibleFrom?: string;
+  visibleTo?: string;
   onIntervalChange?: (interval: BarInterval) => void;
   className?: string;
   empty?: boolean;
@@ -97,6 +99,8 @@ export function TradeChart({
   stopPrice,
   entryPrice,
   interval,
+  visibleFrom,
+  visibleTo,
   onIntervalChange,
   className,
   empty = false,
@@ -285,9 +289,28 @@ export function TradeChart({
     const fitKey = `${interval}:${bars.length}:${bars[0]!.time}:${bars.at(-1)!.time}`;
     if (fitKeyRef.current !== fitKey) {
       fitKeyRef.current = fitKey;
-      chart.timeScale().fitContent();
+      if (visibleFrom && visibleTo) {
+        chart.timeScale().setVisibleRange({
+          from: utcSecToChartTime(Math.floor(new Date(visibleFrom).getTime() / 1000), timezone),
+          to: utcSecToChartTime(Math.floor(new Date(visibleTo).getTime() / 1000), timezone),
+        });
+      } else {
+        chart.timeScale().fitContent();
+      }
     }
-  }, [ready, bars, fills, interval, targetPrice, stopPrice, entryPrice, replayUpTo, timezone]);
+  }, [
+    ready,
+    bars,
+    fills,
+    interval,
+    targetPrice,
+    stopPrice,
+    entryPrice,
+    replayUpTo,
+    timezone,
+    visibleFrom,
+    visibleTo,
+  ]);
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>

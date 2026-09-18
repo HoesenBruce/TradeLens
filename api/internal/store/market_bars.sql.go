@@ -38,6 +38,8 @@ INSERT INTO market_bars_cache (
     cache_key, symbol, interval, from_ts, to_ts, bars_json, provider, fetched_at, expires_at
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 ON CONFLICT(cache_key) DO UPDATE SET
+    from_ts = excluded.from_ts,
+    to_ts = excluded.to_ts,
     bars_json = excluded.bars_json,
     provider = excluded.provider,
     fetched_at = excluded.fetched_at,

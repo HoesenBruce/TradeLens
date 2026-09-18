@@ -93,6 +93,8 @@ export function TradeChartSection({ trade }: { trade: TradeDetail }) {
     stopPrice: trade.stop_price,
     entryPrice: trade.avg_entry_price,
     interval,
+    visibleFrom: barsQ.data?.from,
+    visibleTo: barsQ.data?.to,
     onIntervalChange: setInterval,
     empty: showUnavailable || showEmpty,
     hideIntervalWhenEmpty: showUnavailable,
