@@ -61,8 +61,98 @@ type Service struct {
 	getBars func(context.Context, marketdata.Request) (marketdata.Response, error)
 }
 
-func NewService(marketData *marketdata.Service) *Service {
-	return &Service{getBars: marketData.GetBars}
+func NewService(getBars func(context.Context, marketdata.Request) (marketdata.Response, error)) *Service {
+	return &Service{getBars: getBars}
+}
+
+// MarketSessions returns authoritative JPX sessions from a broad-market ETF
+// fetched through the same shared market-data path used for valuation.
+func (s *Service) MarketSessions(ctx context.Context, from, to time.Time) ([]time.Time, error) {
+	response, err := s.getBars(ctx, marketdata.Request{
+		Symbol: "1306", InstrumentType: "stock", Interval: "D",
+		From: from, To: to.AddDate(0, 0, 1),
+	})
+	if err != nil {
+		return nil, err
+	}
+	dates := map[string]time.Time{}
+	for _, bar := range response.Bars {
+		date, err := time.ParseInLocation(time.DateOnly, bar.MarketDate, tokyo)
+		if err == nil && !date.Before(from) && !date.After(to) {
+			dates[bar.MarketDate] = date
+		}
+	}
+	out := make([]time.Time, 0, len(dates))
+	for _, date := range dates {
+		out = append(out, date)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Before(out[j]) })
+	return out, nil
+}
+
+// Combine sums same-currency account series into the public portfolio series.
+func Combine(result Result) []Point {
+	points := map[string]Point{}
+	complete := map[string]bool{}
+	for _, account := range result.Accounts {
+		for _, point := range account.Points {
+			combined, exists := points[point.Date]
+			if !exists {
+				combined = Point{Date: point.Date, Status: "complete"}
+				complete[point.Date] = true
+			}
+			combined.ContributedCapital += point.ContributedCapital
+			combined.CashBalance += point.CashBalance
+			combined.RealizedPnL += point.RealizedPnL
+			combined.Status = worseStatus(combined.Status, point.Status)
+			combined.Warnings = append(combined.Warnings, point.Warnings...)
+			if point.EstimatedAccountValue == nil || point.OpenPositionValue == nil || point.UnrealizedPnL == nil {
+				complete[point.Date] = false
+			} else {
+				add(&combined.EstimatedAccountValue, *point.EstimatedAccountValue)
+				add(&combined.OpenPositionValue, *point.OpenPositionValue)
+				add(&combined.UnrealizedPnL, *point.UnrealizedPnL)
+			}
+			points[point.Date] = combined
+		}
+	}
+	out := make([]Point, 0, len(points))
+	for date, point := range points {
+		point.ContributedCapital = money.Round2(point.ContributedCapital)
+		point.CashBalance = money.Round2(point.CashBalance)
+		point.RealizedPnL = money.Round2(point.RealizedPnL)
+		if !complete[date] {
+			point.EstimatedAccountValue = nil
+			point.OpenPositionValue = nil
+			point.UnrealizedPnL = nil
+		} else {
+			*point.EstimatedAccountValue = money.Round2(*point.EstimatedAccountValue)
+			*point.OpenPositionValue = money.Round2(*point.OpenPositionValue)
+			*point.UnrealizedPnL = money.Round2(*point.UnrealizedPnL)
+		}
+		out = append(out, point)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Date < out[j].Date })
+	return out
+}
+
+func add(total **float64, value float64) {
+	if *total == nil {
+		zero := 0.0
+		*total = &zero
+	}
+	**total += value
+}
+
+func worseStatus(a, b string) string {
+	priority := map[string]int{
+		"complete": 0, "incomplete_missing_price": 1,
+		"incomplete_invalid_sequence": 2, "unsupported_corporate_action": 3,
+	}
+	if priority[b] > priority[a] {
+		return b
+	}
+	return a
 }
 
 func (s *Service) Reconstruct(ctx context.Context, req Request) (Result, error) {
