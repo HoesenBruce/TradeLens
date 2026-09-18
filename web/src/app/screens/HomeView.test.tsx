@@ -138,6 +138,28 @@ const BASE = {
     { at: "2026-07-01T00:00:00Z", equity: -20.03 },
     { at: "2026-07-02T00:00:00Z", equity: -61.79 },
   ],
+  accountValue: {
+    currency: "USD",
+    timezone: "Asia/Tokyo",
+    adjustment_status: "unadjusted",
+    points: [
+      {
+        date: "2026-07-01",
+        estimated_account_value: 1000,
+        contributed_capital: 900,
+        cash_balance: 800,
+        open_position_value: 200,
+        realized_pnl: 0,
+        unrealized_pnl: 100,
+        status: "complete",
+        warnings: [],
+      },
+    ],
+  },
+  accountValueLoading: false,
+  accountValueError: false,
+  accountValueRange: "30D",
+  onAccountValueRangeChange: vi.fn<(...args: any[]) => any>(),
   tradesLoading: false,
   tradesError: false,
   trades: [TRADE],
@@ -278,8 +300,52 @@ describe("HomeView", () => {
 
   it("renders range segmented control", () => {
     render(<HomeView {...BASE} />);
-    expect(screen.getByRole("button", { name: "30D" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "ALL" })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "30D" })).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: "ALL" })).toHaveLength(2);
+  });
+
+  it("renders reconstructed account value and contributed capital", () => {
+    render(<HomeView {...BASE} />);
+    expect(screen.getByText("Historical account value")).toBeInTheDocument();
+    expect(screen.getByText("Estimated Account Value")).toBeInTheDocument();
+    expect(screen.getByText("Contributed Capital")).toBeInTheDocument();
+  });
+
+  it("shows account-value loading, empty, error, and warning states", () => {
+    const { rerender } = render(<HomeView {...BASE} accountValueLoading />);
+    expect(screen.queryByText("Estimated Account Value")).not.toBeInTheDocument();
+
+    rerender(<HomeView {...BASE} accountValue={undefined} />);
+    expect(screen.getByText("No account value data")).toBeInTheDocument();
+
+    rerender(<HomeView {...BASE} accountValueError />);
+    expect(screen.getByText("Failed to load account value.")).toBeInTheDocument();
+
+    rerender(
+      <HomeView
+        {...BASE}
+        accountValue={{
+          ...BASE.accountValue,
+          points: [
+            {
+              ...BASE.accountValue.points[0],
+              estimated_account_value: null,
+              status: "unsupported_corporate_action",
+              warnings: [
+                { code: "missing_price", date: "2026-07-01", message: "missing" },
+                {
+                  code: "unsupported_corporate_action",
+                  date: "2026-07-01",
+                  message: "split",
+                },
+              ],
+            },
+          ],
+        }}
+      />,
+    );
+    expect(screen.getByText("Missing market data")).toBeInTheDocument();
+    expect(screen.getByText("Corporate action review required")).toBeInTheDocument();
   });
 
   it("computes OPEN percentage against all trades, not closed-only total", () => {

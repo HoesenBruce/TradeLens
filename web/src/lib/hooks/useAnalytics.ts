@@ -23,6 +23,13 @@ export function useEquityCurve(filters: Filters) {
   });
 }
 
+export function useAccountValue(filters: Pick<Filters, "account_id" | "from" | "to">) {
+  return useQuery({
+    queryKey: ["analytics", "account-value", filters],
+    queryFn: () => analyticsApi.accountValue(filters),
+  });
+}
+
 export function useDailyPnl(filters: Filters) {
   return useQuery({
     queryKey: ["analytics", "daily", filters],

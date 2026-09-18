@@ -1,9 +1,11 @@
-import { ArrowRight, Plus, TrendingUp, Upload } from "lucide-react";
+import { AlertTriangle, ArrowRight, Plus, TrendingUp, Upload } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
   CartesianGrid,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -21,6 +23,7 @@ import { HomeMiniCalendar } from "@/components/HomeMiniCalendar";
 import { DataTable } from "@/components/DataTable";
 import { ItemGroup } from "@/components/Item";
 import { EmptyState } from "@/components/EmptyState";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/components/Page";
 import { PerformanceStrip } from "@/components/PerformanceStrip";
@@ -30,7 +33,15 @@ import { CardSkeleton } from "@/components/skeletons/card-skeleton";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
 import { tradeColumns } from "@/components/tradeColumns";
 import { TradeListItem } from "@/components/TradeListItem";
-import type { Account, BreakGroup, EquityPoint, Summary, Trade } from "@/lib/api/types";
+import type {
+  Account,
+  AccountValue,
+  AccountValuePoint,
+  BreakGroup,
+  EquityPoint,
+  Summary,
+  Trade,
+} from "@/lib/api/types";
 import type { DayRecord } from "@/lib/calendar";
 import { uniqueDayTicks } from "@/lib/chartTicks";
 import { accountBaseCurrency, useDisplayTimePrefs, usePrivacyMode } from "@/lib/displayPrefs";
@@ -49,6 +60,11 @@ export interface HomeViewProps {
   equityError: boolean;
   equityPoints: EquityPoint[];
   maxDrawdown?: number;
+  accountValue: AccountValue | undefined;
+  accountValueLoading: boolean;
+  accountValueError: boolean;
+  accountValueRange: string;
+  onAccountValueRangeChange: (range: string) => void;
   tradesLoading: boolean;
   tradesError: boolean;
   trades: Trade[];
@@ -195,6 +211,144 @@ function EquityCurveChart({
   );
 }
 
+function AccountValueChart({
+  data,
+  loading,
+  error,
+  currency,
+  fxRate,
+}: {
+  data: AccountValue | undefined;
+  loading: boolean;
+  error: boolean;
+  currency: string;
+  fxRate: number;
+}) {
+  const points = useMemo(
+    () =>
+      (data?.points ?? []).map((point) => ({
+        ...point,
+        timestamp: new Date(`${point.date}T00:00:00+09:00`).getTime(),
+        estimated_account_value:
+          point.estimated_account_value == null ? null : point.estimated_account_value * fxRate,
+        contributed_capital: point.contributed_capital * fxRate,
+      })),
+    [data?.points, fxRate],
+  );
+
+  if (loading) return <Skeleton className="min-h-[240px] w-full" />;
+  if (error) return <p className="text-xs text-destructive">Failed to load account value.</p>;
+  if (points.length === 0) {
+    return <EmptyState title="No account value data" hint="Import executions or cash activity." />;
+  }
+
+  return (
+    <div className="h-[280px] w-full">
+      <ChartFrame inset className="h-full rounded-none border-0 bg-transparent">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={points} margin={{ top: 8, right: 8, bottom: 0, left: 4 }}>
+            <CartesianGrid vertical={false} stroke={chartTheme.gridColor} />
+            <XAxis
+              dataKey="timestamp"
+              type="number"
+              scale="time"
+              domain={["dataMin", "dataMax"]}
+              tick={{ fontSize: 10, fill: chartTheme.axisColor }}
+              tickFormatter={(value: number) =>
+                fmtDayShort(new Date(value).toISOString(), intlLocale())
+              }
+              axisLine={false}
+              tickLine={false}
+              minTickGap={60}
+            />
+            <YAxis
+              tick={{ fontSize: 10, fill: chartTheme.axisColor }}
+              tickFormatter={(value: number) => fmtMoneyCompact(value, currency, intlLocale())}
+              axisLine={false}
+              tickLine={false}
+              width={52}
+              domain={["auto", "auto"]}
+            />
+            <Tooltip
+              {...chartTooltipStyle}
+              labelFormatter={(value) => new Date(Number(value)).toLocaleDateString(intlLocale())}
+              formatter={(value, name) => [
+                fmtMoney(Number(value ?? 0), currency, intlLocale()),
+                name === "estimated_account_value"
+                  ? "Estimated Account Value"
+                  : "Contributed Capital",
+              ]}
+              cursor={{ stroke: chartTheme.gridColor }}
+            />
+            <Line
+              type="monotone"
+              dataKey="estimated_account_value"
+              name="Estimated Account Value"
+              stroke={chartTheme.accentStroke}
+              strokeWidth={2}
+              dot={false}
+              connectNulls={false}
+            />
+            <Line
+              type="stepAfter"
+              dataKey="contributed_capital"
+              name="Contributed Capital"
+              stroke="var(--color-chart-2)"
+              strokeWidth={1.5}
+              strokeDasharray="5 4"
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </ChartFrame>
+    </div>
+  );
+}
+
+function AccountValueWarnings({ points }: { points: AccountValuePoint[] }) {
+  const corporate = points.some(
+    (point) =>
+      point.status === "unsupported_corporate_action" ||
+      (point.warnings ?? []).some((warning) => warning.code === "unsupported_corporate_action"),
+  );
+  const missing = points.some((point) =>
+    (point.warnings ?? []).some((warning) => warning.code === "missing_price"),
+  );
+  const incomplete = points.some((point) => point.status !== "complete");
+  if (!incomplete) return null;
+
+  return (
+    <div className="grid gap-2">
+      {corporate ? (
+        <Alert variant="warning">
+          <AlertTriangle />
+          <AlertTitle>Corporate action review required</AlertTitle>
+          <AlertDescription>
+            This range contains a suspected or unsupported corporate action; affected values are
+            omitted.
+          </AlertDescription>
+        </Alert>
+      ) : null}
+      {missing ? (
+        <Alert variant="warning">
+          <AlertTriangle />
+          <AlertTitle>Missing market data</AlertTitle>
+          <AlertDescription>
+            One or more sessions could not be valued; affected account values are omitted.
+          </AlertDescription>
+        </Alert>
+      ) : null}
+      {!corporate && !missing ? (
+        <Alert variant="warning">
+          <AlertTriangle />
+          <AlertTitle>Incomplete reconstruction</AlertTitle>
+          <AlertDescription>Some account values are unavailable for this range.</AlertDescription>
+        </Alert>
+      ) : null}
+    </div>
+  );
+}
+
 export function HomeView({
   summaryLoading,
   summaryError,
@@ -203,6 +357,11 @@ export function HomeView({
   equityError,
   equityPoints,
   maxDrawdown,
+  accountValue,
+  accountValueLoading,
+  accountValueError,
+  accountValueRange,
+  onAccountValueRangeChange,
   tradesLoading,
   tradesError,
   trades,
@@ -354,6 +513,41 @@ export function HomeView({
           </div>
         ) : null}
       </div>
+
+      <Card
+        title="Historical account value"
+        action={
+          <SegmentedControl
+            ariaLabel="Account value range"
+            options={RANGES}
+            value={accountValueRange}
+            onChange={onAccountValueRangeChange}
+          />
+        }
+      >
+        <div className="grid gap-3">
+          <AccountValueWarnings points={accountValue?.points ?? []} />
+          <AccountValueChart
+            data={accountValue}
+            loading={accountValueLoading}
+            error={accountValueError}
+            currency={currency}
+            fxRate={fxRate}
+          />
+          {!accountValueLoading && !accountValueError && (accountValue?.points.length ?? 0) > 0 ? (
+            <div className="flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-muted-foreground">
+              <span>
+                <span className="mr-1.5 inline-block h-0.5 w-4 bg-primary" />
+                Estimated Account Value
+              </span>
+              <span>
+                <span className="mr-1.5 inline-block w-4 border-t border-dashed border-chart-2" />
+                Contributed Capital
+              </span>
+            </div>
+          ) : null}
+        </div>
+      </Card>
 
       <DailyLossCard todayNetPnl={todayNetPnl} currency={currency} fxRate={fxRate} />
 
