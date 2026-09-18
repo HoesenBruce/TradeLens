@@ -23,6 +23,18 @@ func TestMarketBarsValidation(t *testing.T) {
 	require.Contains(t, rec.Body.String(), `"provider":"skipped"`)
 }
 
+func TestMarketCorporateActionsValidation(t *testing.T) {
+	s := testServer(t)
+	token := registerAndLogin(t, s, "corporate-actions@example.com")
+
+	rec := do(s, http.MethodGet, "/api/v1/market/corporate-actions?from=2026-01-01T00:00:00Z&to=2026-01-02T00:00:00Z", "", token)
+	require.Equal(t, http.StatusBadRequest, rec.Code)
+
+	rec = do(s, http.MethodGet, "/api/v1/market/corporate-actions?symbol=E2E8500&from=2026-01-01T00:00:00Z&to=2026-01-02T00:00:00Z", "", token)
+	require.Equal(t, http.StatusOK, rec.Code)
+	require.JSONEq(t, `[]`, rec.Body.String())
+}
+
 func TestMarketFxValidation(t *testing.T) {
 	s := testServer(t)
 	token := registerAndLogin(t, s, "fx@example.com")

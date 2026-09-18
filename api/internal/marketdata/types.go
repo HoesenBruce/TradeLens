@@ -11,6 +11,7 @@ type Bar struct {
 	Low        float64 `json:"low"`
 	Close      float64 `json:"close"`
 	Volume     float64 `json:"volume"`
+	SplitRatio float64 `json:"split_ratio,omitempty"` // new shares per old share
 }
 
 // Request describes a bar fetch window.
