@@ -13,24 +13,23 @@ describe("barsToCandlestickData", () => {
     expect(points.every((p) => "open" in p)).toBe(true);
   });
 
-  it("inserts whitespace for a missing interval", () => {
-    const t0 = Math.floor(Date.parse("2024-07-15T13:30:00.000Z") / 1000);
-    const t1 = t0 + 600;
-    const points = barsToCandlestickData([bar(t0), bar(t1)], "5", "UTC");
-    expect(points).toHaveLength(3);
-    expect(points[1]).toEqual({ time: t0 + 300 });
-    expect("open" in points[0]!).toBe(true);
-    expect("open" in points[2]!).toBe(true);
-  });
+  it("keeps TSE lunch, overnight, and weekend gaps compact", () => {
+    const times = [
+      "2024-07-12T06:00:00.000Z", // Friday 15:00 JST
+      "2024-07-16T00:00:00.000Z", // Tuesday 09:00 JST (Monday holiday)
+      "2024-07-16T02:30:00.000Z", // 11:30 JST
+      "2024-07-16T03:30:00.000Z", // 12:30 JST
+      "2024-07-17T00:00:00.000Z", // next session
+    ].map((value) => Math.floor(Date.parse(value) / 1000));
+    const points = barsToCandlestickData(
+      times.map((time) => bar(time)),
+      "60",
+      "Asia/Tokyo",
+    );
 
-  it("fills a multi-hour intraday hole so the axis can advance", () => {
-    const start = Math.floor(Date.parse("2024-07-15T14:15:00.000Z") / 1000);
-    const end = Math.floor(Date.parse("2024-07-15T20:00:00.000Z") / 1000);
-    const points = barsToCandlestickData([bar(start), bar(end)], "5", "UTC");
-    expect(points.length).toBeGreaterThan(60);
-    expect(points[0]).toMatchObject({ time: start, open: 100 });
-    expect(points.at(-1)).toMatchObject({ time: end, open: 100 });
-    expect(points.filter((p) => !("open" in p)).length).toBeGreaterThan(60);
+    expect(points).toHaveLength(times.length);
+    expect(points.every((point) => "open" in point)).toBe(true);
+    expect(points.map((point) => point.time)).toEqual(times.map((time) => time + 9 * 60 * 60));
   });
 
   it("shifts labels to America/New_York wall clock", () => {
@@ -42,12 +41,11 @@ describe("barsToCandlestickData", () => {
     });
   });
 
-  it("uses a short break for oversized gaps instead of exploding", () => {
-    const t0 = Math.floor(Date.parse("2024-01-02T00:00:00.000Z") / 1000);
-    const t1 = t0 + 86_400 * 30;
-    const points = barsToCandlestickData([bar(t0), bar(t1)], "D", "UTC");
-    // 29 missing days > max fill of 5 → 3 whitespace + 2 candles
-    expect(points).toHaveLength(5);
-    expect(points.filter((p) => !("open" in p))).toHaveLength(3);
+  it("keeps daily bars compact across market holidays", () => {
+    const friday = Math.floor(Date.parse("2024-12-27T00:00:00.000Z") / 1000);
+    const monday = Math.floor(Date.parse("2025-01-06T00:00:00.000Z") / 1000);
+    const points = barsToCandlestickData([bar(friday), bar(monday)], "D", "UTC");
+
+    expect(points.map((point) => point.time)).toEqual([friday, monday]);
   });
 });
