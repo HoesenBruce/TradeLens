@@ -23,6 +23,7 @@ type SBICashImport struct {
 
 var sbiFields = map[string]string{
 	"symbol":          "銘柄コード",
+	"stock_name":      "銘柄",
 	"side":            "取引",
 	"quantity":        "約定数量",
 	"price":           "約定単価",
@@ -189,16 +190,22 @@ func trimHeaders(headers []string) []string {
 }
 
 // ParseSBIRows maps SBI cash and margin executions onto canonical fills.
-func ParseSBIRows(rows []map[string]string, sourceTZ string) ParseResult {
+func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ string) ParseResult {
 	if sourceTZ == "" {
 		sourceTZ = "Asia/Tokyo"
 	}
-	generic := NewGeneric(sbiFields).WithSourceTZ(sourceTZ)
+	fields := maps.Clone(sbiFields)
+	for key, value := range mapping {
+		if value = strings.TrimSpace(value); value != "" {
+			fields[key] = value
+		}
+	}
+	generic := NewGeneric(fields).WithSourceTZ(sourceTZ)
 	occurrences := map[string]int{}
 	result := ParseResult{Format: "executions"}
 
 	for i, row := range rows {
-		transaction := strings.TrimSpace(row["取引"])
+		transaction := strings.TrimSpace(row[fields["side"]])
 		type leg struct{ transaction, lot string }
 		legs := []leg{}
 		if transaction == "現引" {
@@ -213,16 +220,16 @@ func ParseSBIRows(rows []map[string]string, sourceTZ string) ParseResult {
 			continue
 		}
 		key := strings.Join([]string{
-			row["約定日"], row["銘柄コード"], transaction, row["約定数量"],
-			row["約定単価"], row["手数料/諸経費等"], row["市場"],
+			row[fields["executed_at"]], row[fields["symbol"]], transaction, row[fields["quantity"]],
+			row[fields["price"]], row[fields["fees"]], row["市場"],
 		}, "|")
 		occurrences[key]++
 
 		for legIndex, leg := range legs {
 			legRow := maps.Clone(row)
-			legRow["取引"] = leg.transaction
+			legRow[fields["side"]] = leg.transaction
 			if transaction == "現引" && legIndex == 1 {
-				legRow["手数料/諸経費等"] = "--" // charge the conversion once, on margin close
+				legRow[fields["fees"]] = "--" // charge the conversion once, on margin close
 			}
 			parsed := generic.ParseRows([]map[string]string{legRow})
 			if len(parsed.Errors) > 0 {

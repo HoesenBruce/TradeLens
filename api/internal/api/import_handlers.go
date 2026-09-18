@@ -459,7 +459,7 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 			sourceTZ = presetTZ
 		}
 		if importer.IsSBI(loaded.Headers) {
-			parsed = importer.ParseSBIRows(loaded.Rows, sourceTZ)
+			parsed = importer.ParseSBIRows(loaded.Rows, mapping, sourceTZ)
 		} else {
 			parsed = importer.NewGeneric(mapping).WithSourceTZ(sourceTZ).
 				WithLotSizedQuantity(importer.LotSizedBroker(loaded.Headers)).

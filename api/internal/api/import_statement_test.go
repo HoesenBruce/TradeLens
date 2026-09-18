@@ -137,11 +137,12 @@ func TestSBIImportEndToEnd(t *testing.T) {
 	require.Equal(t, "SBI Securities (Execution History)", preview.DetectedBroker)
 	require.Equal(t, "Asia/Tokyo", preview.SuggestedSourceTZ)
 	require.Equal(t, "銘柄コード", preview.SuggestedMapping["symbol"])
+	require.Equal(t, "銘柄", preview.SuggestedMapping["stock_name"])
 	require.Equal(t, 11, preview.RowCount)
 
 	fields := map[string]string{
 		"account_id":     acc,
-		"column_mapping": `{"symbol":"銘柄コード","side":"取引","quantity":"約定数量","price":"約定単価","executed_at":"約定日","fees":"手数料/諸経費等"}`,
+		"column_mapping": `{"symbol":"銘柄コード","stock_name":"銘柄","side":"取引","quantity":"約定数量","price":"約定単価","executed_at":"約定日","fees":"手数料/諸経費等"}`,
 	}
 	commit := func() struct {
 		Inserted int `json:"inserted"`
@@ -184,4 +185,11 @@ func TestSBIImportEndToEnd(t *testing.T) {
 	}
 	require.Len(t, converted, 2)
 	require.ElementsMatch(t, []any{"closed", "open"}, []any{converted[0]["status"], converted[1]["status"]})
+	for _, trade := range trades {
+		if trade["symbol"] == "6501" {
+			require.Equal(t, "匿名銘柄A", trade["stock_name"])
+			return
+		}
+	}
+	require.Fail(t, "imported SBI trade not found")
 }
