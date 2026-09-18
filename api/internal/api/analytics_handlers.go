@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v5"
@@ -94,12 +95,32 @@ func (s *Server) handleAccountValue(c *echo.Context) error {
 	}
 	result, err := s.deps.AccountValue.Reconstruct(ctx, accountvalue.Request{
 		Executions: executions, CashTransactions: cash, MarketSessions: sessions,
+		ConfirmedSuspensions: ignoredMissingPrices(c.QueryParam("ignored_missing_prices")),
 	})
 	if err != nil {
 		return Fail(http.StatusBadGateway, "upstream_error", "could not reconstruct account value", nil).Wrap(err)
 	}
 	response.Points = accountvalue.Combine(result)
 	return c.JSON(http.StatusOK, response)
+}
+
+func ignoredMissingPrices(raw string) map[accountvalue.Instrument]map[string]bool {
+	out := map[accountvalue.Instrument]map[string]bool{}
+	for _, item := range strings.Split(raw, ",") {
+		parts := strings.SplitN(item, ":", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		instrument := accountvalue.Instrument{Symbol: strings.TrimSpace(parts[0]), InstrumentType: "stock"}
+		date := strings.TrimSpace(parts[1])
+		if _, err := time.Parse(time.DateOnly, date); instrument.Symbol != "" && err == nil {
+			if out[instrument] == nil {
+				out[instrument] = map[string]bool{}
+			}
+			out[instrument][date] = true
+		}
+	}
+	return out
 }
 
 func (s *Server) accountValueAccounts(ctx context.Context, userID string, requested []string) ([]store.Account, string, error) {

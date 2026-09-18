@@ -128,9 +128,17 @@ func applyYahooSplits(req Request, bars []Bar, splits map[string]yahooSplit) {
 		}
 		date := time.Unix(split.Date, 0).In(loc).Format("2006-01-02")
 		for i := range bars {
-			if time.Unix(bars[i].Time, 0).In(loc).Format("2006-01-02") == date {
-				bars[i].SplitRatio = split.Numerator / split.Denominator
-				break
+			barDate := time.Unix(bars[i].Time, 0).In(loc).Format("2006-01-02")
+			ratio := split.Numerator / split.Denominator
+			if barDate < date {
+				bars[i].Open *= ratio
+				bars[i].High *= ratio
+				bars[i].Low *= ratio
+				bars[i].Close *= ratio
+				bars[i].Volume /= ratio
+			}
+			if barDate == date {
+				bars[i].SplitRatio = ratio
 			}
 		}
 	}
@@ -257,7 +265,7 @@ func DefaultInterval(from, to time.Time) string {
 // CacheKey builds a stable cache key for a bar request.
 func CacheKey(req Request) string {
 	return strings.Join([]string{
-		"bars-v2", // v2 retains provider split events on historical bars.
+		"bars-v3", // v3 stores Yahoo bars converted back to unadjusted prices.
 		strings.ToUpper(req.Symbol),
 		req.InstrumentType,
 		req.Interval,

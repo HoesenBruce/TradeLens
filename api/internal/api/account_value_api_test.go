@@ -105,6 +105,31 @@ func TestAccountValuePropagatesMissingAndCorporateActionWarnings(t *testing.T) {
 	require.Contains(t, codes, "unsupported_corporate_action")
 }
 
+func TestAccountValueCarriesPreviousCloseOnlyAfterIgnore(t *testing.T) {
+	s := testServerWithAccountValue(t, true, accountValueBars(map[string]map[string]float64{
+		"1306": {"2026-09-01": 100, "2026-09-02": 100},
+		"1328": {"2026-09-01": 100},
+	}))
+	token := registerAndLogin(t, s, "account-value-ignore@example.com")
+	account := createAccount(t, s, token, "A", "JPY")
+	postCash(t, s, token, account, 1000, "2026-08-01T01:00:00Z")
+	rec := do(s, http.MethodPost, "/api/v1/executions", `{
+		"account_id":"`+account+`","symbol":"1328","instrument_type":"stock",
+		"side":"buy","quantity":1,"price":100,"executed_at":"2026-09-01T01:00:00Z",
+		"details":{"lot":"sbi:cash"}}`, token)
+	require.Equal(t, http.StatusCreated, rec.Code, rec.Body.String())
+
+	path := "/api/v1/analytics/account-value?account_id=" + account + "&from=2026-09-02&to=2026-09-02"
+	rec = do(s, http.MethodGet, path, "", token)
+	require.Equal(t, "incomplete_missing_price", decodeAccountValue(t, rec.Body.Bytes()).Points[0].Status)
+
+	rec = do(s, http.MethodGet, path+"&ignored_missing_prices=1328:2026-09-02,bad,1328:not-a-date", "", token)
+	point := decodeAccountValue(t, rec.Body.Bytes()).Points[0]
+	require.Equal(t, "complete", point.Status)
+	require.Equal(t, 1000.0, *point.EstimatedAccountValue)
+	require.Equal(t, "carried_forward_suspension_price", point.Warnings[0].Code)
+}
+
 type accountValueAPIResponse struct {
 	Currency string               `json:"currency"`
 	Points   []accountvalue.Point `json:"points"`

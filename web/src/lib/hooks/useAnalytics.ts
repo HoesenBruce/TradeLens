@@ -23,7 +23,9 @@ export function useEquityCurve(filters: Filters) {
   });
 }
 
-export function useAccountValue(filters: Pick<Filters, "account_id" | "from" | "to">) {
+export function useAccountValue(
+  filters: Pick<Filters, "account_id" | "from" | "to"> & { ignored_missing_prices?: string },
+) {
   return useQuery({
     queryKey: ["analytics", "account-value", filters],
     queryFn: () => analyticsApi.accountValue(filters),

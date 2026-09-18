@@ -1,9 +1,9 @@
 import type { ColumnDef } from "@/lib/table";
 import { flexRender, getCoreRowModel, useReactTable, type RowData } from "@/lib/table";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vite-plus/test";
-import type { Summary, Trade } from "@/lib/api/types";
+import type { AccountValueWarning, Summary, Trade } from "@/lib/api/types";
 import { HomeView } from "./HomeView";
 
 vi.mock("../../components/Toast", () => ({
@@ -160,6 +160,7 @@ const BASE = {
   accountValueError: false,
   accountValueRange: "30D",
   onAccountValueRangeChange: vi.fn<(...args: any[]) => any>(),
+  onIgnoreAccountValueWarning: vi.fn<(...args: any[]) => any>(),
   tradesLoading: false,
   tradesError: false,
   trades: [TRADE],
@@ -335,6 +336,7 @@ describe("HomeView", () => {
                 {
                   code: "unsupported_corporate_action",
                   instrument: "5401",
+                  execution_id: "execution-1",
                   date: "2026-07-01",
                   message: "split",
                 },
@@ -345,7 +347,7 @@ describe("HomeView", () => {
       />,
     );
     expect(screen.getByText("Corporate action review required")).toBeInTheDocument();
-    expect(screen.getByText(/5401 · 2026-07-01/)).toBeInTheDocument();
+    expect(screen.getByText(/5401 · 2026-07-01 · Execution execution-1/)).toBeInTheDocument();
     expect(screen.getByText(/split/)).toBeInTheDocument();
   });
 
@@ -404,6 +406,72 @@ describe("HomeView", () => {
     await user.click(screen.getByRole("button", { name: /2 account value issues/i }));
     expect(screen.getByRole("button", { name: /show all/i })).toBeInTheDocument();
     expect(screen.queryByText(/5401 · 2026-07-01/)).not.toBeInTheDocument();
+  });
+
+  it("offers ignore for a missing price and labels a carried-forward close", async () => {
+    const user = userEvent.setup();
+    const onIgnore = vi.fn<(warning: AccountValueWarning) => void>();
+    const warning = {
+      code: "missing_price",
+      instrument: "1328",
+      date: "2025-10-24",
+      message: "no unadjusted close is available for this market session",
+    };
+    const { rerender } = render(
+      <HomeView
+        {...BASE}
+        onIgnoreAccountValueWarning={onIgnore}
+        accountValue={{
+          ...BASE.accountValue,
+          points: [
+            {
+              ...BASE.accountValue.points[0],
+              status: "incomplete_missing_price",
+              warnings: [warning],
+            },
+          ],
+        }}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Ignore" }));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByText("Ignore missing market data?")).toBeInTheDocument();
+    expect(screen.getByText(/previous available market close/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(onIgnore).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+
+    await user.click(screen.getByRole("button", { name: "Ignore" }));
+    await user.click(screen.getByRole("button", { name: "Ignore and use previous close" }));
+    expect(onIgnore).toHaveBeenCalledWith(warning);
+
+    rerender(
+      <HomeView
+        {...BASE}
+        onIgnoreAccountValueWarning={onIgnore}
+        accountValue={{
+          ...BASE.accountValue,
+          points: [
+            {
+              ...BASE.accountValue.points[0],
+              status: "complete",
+              warnings: [
+                {
+                  ...warning,
+                  code: "carried_forward_suspension_price",
+                  message: "using the previous market close after the missing price was ignored",
+                },
+              ],
+            },
+          ],
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Estimated using previous close")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Ignore" })).not.toBeInTheDocument();
   });
 
   it("computes OPEN percentage against all trades, not closed-only total", () => {

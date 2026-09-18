@@ -31,6 +31,14 @@ import { ItemGroup } from "@/components/Item";
 import { EmptyState } from "@/components/EmptyState";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Page } from "@/components/Page";
 import { PerformanceStrip } from "@/components/PerformanceStrip";
 import { SegmentedControl } from "@/components/SegmentedControl";
@@ -72,6 +80,7 @@ export interface HomeViewProps {
   accountValueError: boolean;
   accountValueRange: string;
   onAccountValueRangeChange: (range: string) => void;
+  onIgnoreAccountValueWarning: (warning: AccountValueWarning) => void;
   tradesLoading: boolean;
   tradesError: boolean;
   trades: Trade[];
@@ -312,16 +321,22 @@ function AccountValueChart({
   );
 }
 
-function AccountValueWarnings({ points }: { points: AccountValuePoint[] }) {
+function AccountValueWarnings({
+  points,
+  onIgnore,
+}: {
+  points: AccountValuePoint[];
+  onIgnore: (warning: AccountValueWarning) => void;
+}) {
   const [open, setOpen] = useState(false);
   const warningMap = new Map<string, AccountValueWarning>();
   for (const warning of points.flatMap((point) => point.warnings ?? [])) {
-    const key = `${warning.code}\u0000${warning.instrument ?? ""}\u0000${warning.message}`;
+    const key = `${warning.code}\u0000${warning.instrument ?? ""}\u0000${warning.execution_id ?? ""}\u0000${warning.message}`;
     if (!warningMap.has(key)) warningMap.set(key, warning);
   }
   const warnings = Array.from(warningMap.values());
   const incomplete = points.some((point) => point.status !== "complete");
-  if (!incomplete) return null;
+  if (!incomplete && warnings.length === 0) return null;
 
   if (warnings.length === 0) {
     return (
@@ -334,7 +349,7 @@ function AccountValueWarnings({ points }: { points: AccountValuePoint[] }) {
   }
 
   if (warnings.length === 1) {
-    return <AccountValueWarningAlert warning={warnings[0]} />;
+    return <AccountValueWarningAlert warning={warnings[0]} onIgnore={onIgnore} />;
   }
 
   return (
@@ -349,8 +364,10 @@ function AccountValueWarnings({ points }: { points: AccountValuePoint[] }) {
         <CollapsibleContent className="pt-2">
           <ul className="grid gap-2">
             {warnings.map((warning) => (
-              <li key={`${warning.code}-${warning.instrument}-${warning.message}`}>
-                <AccountValueWarningDetail warning={warning} />
+              <li
+                key={`${warning.code}-${warning.instrument}-${warning.execution_id}-${warning.message}`}
+              >
+                <AccountValueWarningDetail warning={warning} onIgnore={onIgnore} />
               </li>
             ))}
           </ul>
@@ -360,25 +377,48 @@ function AccountValueWarnings({ points }: { points: AccountValuePoint[] }) {
   );
 }
 
-function AccountValueWarningAlert({ warning }: { warning: AccountValueWarning }) {
+function AccountValueWarningAlert({
+  warning,
+  onIgnore,
+}: {
+  warning: AccountValueWarning;
+  onIgnore: (warning: AccountValueWarning) => void;
+}) {
   return (
     <Alert variant="warning">
       <AlertTriangle />
       <AlertTitle>{accountValueWarningTitle(warning.code)}</AlertTitle>
       <AlertDescription>
-        <AccountValueWarningDetail warning={warning} />
+        <AccountValueWarningDetail warning={warning} onIgnore={onIgnore} />
       </AlertDescription>
     </Alert>
   );
 }
 
-function AccountValueWarningDetail({ warning }: { warning: AccountValueWarning }) {
+function AccountValueWarningDetail({
+  warning,
+  onIgnore,
+}: {
+  warning: AccountValueWarning;
+  onIgnore: (warning: AccountValueWarning) => void;
+}) {
   return (
-    <p>
+    <p className="flex items-center gap-2">
       <span className="font-medium text-foreground">
-        {[warning.instrument, warning.date].filter(Boolean).join(" · ")}
+        {[
+          warning.instrument,
+          warning.date,
+          warning.execution_id && `Execution ${warning.execution_id}`,
+        ]
+          .filter(Boolean)
+          .join(" · ")}
       </span>
       {warning.message ? ` — ${warning.message}` : null}
+      {warning.code === "missing_price" && warning.instrument ? (
+        <Button type="button" variant="outline" size="sm" onClick={() => onIgnore(warning)}>
+          Ignore
+        </Button>
+      ) : null}
     </p>
   );
 }
@@ -386,6 +426,7 @@ function AccountValueWarningDetail({ warning }: { warning: AccountValueWarning }
 function accountValueWarningTitle(code: string) {
   if (code === "unsupported_corporate_action") return "Corporate action review required";
   if (code === "missing_price") return "Missing market data";
+  if (code === "carried_forward_suspension_price") return "Estimated using previous close";
   return "Incomplete reconstruction";
 }
 
@@ -402,6 +443,7 @@ export function HomeView({
   accountValueError,
   accountValueRange,
   onAccountValueRangeChange,
+  onIgnoreAccountValueWarning,
   tradesLoading,
   tradesError,
   trades,
@@ -445,6 +487,7 @@ export function HomeView({
   const fxRate = rate ?? 1;
   const compact = useMediaQuery(COMPACT_VIEWPORT);
   const [range, setRange] = useState("30D");
+  const [warningToIgnore, setWarningToIgnore] = useState<AccountValueWarning | null>(null);
 
   const recentTrades = useMemo(() => trades.slice(0, HOME_RECENT_LIMIT), [trades]);
   const hasMoreTrades = trades.length > HOME_RECENT_LIMIT;
@@ -566,7 +609,7 @@ export function HomeView({
         }
       >
         <div className="grid gap-3">
-          <AccountValueWarnings points={accountValue?.points ?? []} />
+          <AccountValueWarnings points={accountValue?.points ?? []} onIgnore={setWarningToIgnore} />
           <AccountValueChart
             data={accountValue}
             loading={accountValueLoading}
@@ -704,6 +747,38 @@ export function HomeView({
           </>
         )}
       </Card>
+
+      <Dialog
+        open={warningToIgnore !== null}
+        onOpenChange={(open) => {
+          if (!open) setWarningToIgnore(null);
+        }}
+      >
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>Ignore missing market data?</DialogTitle>
+            <DialogDescription>
+              {warningToIgnore?.instrument} has no unadjusted closing price for{" "}
+              {warningToIgnore?.date}. TraderMemos will use the previous available market close for
+              this date.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setWarningToIgnore(null)}>
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                if (warningToIgnore) onIgnoreAccountValueWarning(warningToIgnore);
+                setWarningToIgnore(null);
+              }}
+            >
+              Ignore and use previous close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Page>
   );
 }

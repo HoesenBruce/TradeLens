@@ -28,10 +28,11 @@ type Instrument struct {
 }
 
 type Warning struct {
-	Code       string `json:"code"`
-	Instrument string `json:"instrument,omitempty"`
-	Date       string `json:"date"`
-	Message    string `json:"message"`
+	Code        string `json:"code"`
+	Instrument  string `json:"instrument,omitempty"`
+	ExecutionID string `json:"execution_id,omitempty"`
+	Date        string `json:"date"`
+	Message     string `json:"message"`
 }
 
 type Point struct {
@@ -156,16 +157,16 @@ func worseStatus(a, b string) string {
 }
 
 func (s *Service) Reconstruct(ctx context.Context, req Request) (Result, error) {
-	snapshots := positions.Replay(req.Executions, req.MarketSessions)
 	result := Result{Timezone: "Asia/Tokyo", AdjustmentStatus: "unadjusted"}
-	if len(snapshots) == 0 {
+	if len(req.MarketSessions) == 0 {
 		return result, nil
 	}
 
-	responses, fetchErrors := s.loadPrices(ctx, req.Executions, snapshots)
+	responses, fetchErrors := s.loadPrices(ctx, req.Executions, req.MarketSessions)
 	if len(responses) == 0 && len(fetchErrors) > 0 {
 		return Result{}, fmt.Errorf("load historical prices: %w", firstError(fetchErrors))
 	}
+	snapshots := positions.ReplayWithSplits(req.Executions, req.MarketSessions, explicitSplits(responses))
 
 	accountIDs := collectAccounts(req.Executions, req.CashTransactions)
 	ledgers := ledgerStates(req.CashTransactions, snapshots)
@@ -182,11 +183,11 @@ func (s *Service) Reconstruct(ctx context.Context, req Request) (Result, error) 
 			}
 			for _, warning := range snapshot.Warnings {
 				if warning.AccountID == accountID {
-					point.invalid(warning.Code, "", warning.Message)
+					point.invalid(warning.Code, warning.Instrument, warning.ExecutionID, warning.Date, warning.Message)
 				}
 			}
 			for _, warning := range ledger.warnings {
-				point.invalid(warning.Code, warning.Instrument, warning.Message)
+				point.invalid(warning.Code, warning.Instrument, "", "", warning.Message)
 			}
 			s.valuePositions(&point, replay.Positions, responses, fetchErrors, lastClose, req.ConfirmedSuspensions)
 			account.Points = append(account.Points, point)
@@ -196,22 +197,24 @@ func (s *Service) Reconstruct(ctx context.Context, req Request) (Result, error) 
 	return result, nil
 }
 
-func (s *Service) loadPrices(ctx context.Context, executions []store.Execution, snapshots []positions.Snapshot) (map[Instrument]marketdata.Response, map[Instrument]error) {
-	instruments := map[Instrument]positions.Position{}
-	for _, snapshot := range snapshots {
-		for _, account := range snapshot.Accounts {
-			for _, position := range account.Positions {
-				instruments[Instrument{position.Symbol, position.InstrumentType}] = position
-			}
-		}
+func (s *Service) loadPrices(ctx context.Context, executions []store.Execution, sessions []time.Time) (map[Instrument]marketdata.Response, map[Instrument]error) {
+	instruments := map[Instrument]bool{}
+	for _, execution := range executions {
+		instruments[Instrument{execution.Symbol, execution.InstrumentType}] = true
 	}
 	responses := map[Instrument]marketdata.Response{}
 	errs := map[Instrument]error{}
-	to, _ := time.ParseInLocation(time.DateOnly, snapshots[len(snapshots)-1].Date, tokyo)
-	for key, instrument := range instruments {
-		from := earliestExecution(executions, instrument.Symbol, instrument.InstrumentType, to)
+	to := sessions[0].In(tokyo)
+	for _, session := range sessions[1:] {
+		if session.After(to) {
+			to = session.In(tokyo)
+		}
+	}
+	to = time.Date(to.Year(), to.Month(), to.Day(), 0, 0, 0, 0, tokyo)
+	for key := range instruments {
+		from := earliestExecution(executions, key.Symbol, key.InstrumentType, to)
 		response, err := s.getBars(ctx, marketdata.Request{
-			Symbol: instrument.Symbol, InstrumentType: instrument.InstrumentType,
+			Symbol: key.Symbol, InstrumentType: key.InstrumentType,
 			Interval: "D", From: from, To: to.AddDate(0, 0, 1),
 		})
 		if err != nil {
@@ -221,6 +224,22 @@ func (s *Service) loadPrices(ctx context.Context, executions []store.Execution, 
 		responses[key] = response
 	}
 	return responses, errs
+}
+
+func explicitSplits(responses map[Instrument]marketdata.Response) []positions.Split {
+	var splits []positions.Split
+	for instrument, response := range responses {
+		for _, bar := range response.Bars {
+			if bar.SplitRatio <= 0 || bar.SplitRatio == 1 {
+				continue
+			}
+			date, err := time.ParseInLocation(time.DateOnly, bar.MarketDate, tokyo)
+			if err == nil {
+				splits = append(splits, positions.Split{Symbol: instrument.Symbol, InstrumentType: instrument.InstrumentType, EffectiveDate: date, Ratio: bar.SplitRatio})
+			}
+		}
+	}
+	return splits
 }
 
 func (s *Service) valuePositions(point *Point, held []positions.Position, responses map[Instrument]marketdata.Response, fetchErrors map[Instrument]error, lastClose map[Instrument]float64, suspensions map[Instrument]map[string]bool) {
@@ -241,7 +260,7 @@ func (s *Service) valuePositions(point *Point, held []positions.Position, respon
 			continue
 		}
 		for _, candidate := range marketdata.FindCorporateActionCandidates(response) {
-			if candidate.Status != "rejected" && candidate.EffectiveDate <= point.Date {
+			if candidate.Status != "rejected" && candidate.EffectiveDate <= point.Date && !isExplicitSplit(response, candidate) {
 				point.unsupported(position.Symbol, fmt.Sprintf("unconfirmed %s candidate on %s", candidate.CandidateType, candidate.EffectiveDate))
 			}
 		}
@@ -252,7 +271,7 @@ func (s *Service) valuePositions(point *Point, held []positions.Position, respon
 				close, found = lastCloseBefore(response.Bars, point.Date)
 			}
 			if found {
-				point.warn("carried_forward_suspension_price", position.Symbol, "carried forward the last close for a confirmed suspension")
+				point.warn("carried_forward_suspension_price", position.Symbol, "using the previous market close after the missing price was ignored")
 			}
 		}
 		if !found {
@@ -281,6 +300,15 @@ func (s *Service) valuePositions(point *Point, held []positions.Position, respon
 	}
 }
 
+func isExplicitSplit(response marketdata.Response, candidate marketdata.CorporateActionCandidate) bool {
+	for _, bar := range response.Bars {
+		if bar.MarketDate == candidate.EffectiveDate && bar.SplitRatio > 0 && bar.SplitRatio != 1 {
+			return true
+		}
+	}
+	return false
+}
+
 func (p *Point) warn(code, instrument, message string) {
 	p.Warnings = append(p.Warnings, Warning{Code: code, Instrument: instrument, Date: p.Date, Message: message})
 }
@@ -292,11 +320,20 @@ func (p *Point) missing(instrument, message string) {
 	p.warn("missing_price", instrument, message)
 }
 
-func (p *Point) invalid(code, instrument, message string) {
+func (p *Point) invalid(code, instrument, executionID, date, message string) {
 	if p.Status != "unsupported_corporate_action" {
 		p.Status = "incomplete_invalid_sequence"
 	}
-	p.warn(code, instrument, message)
+	p.Warnings = append(p.Warnings, Warning{
+		Code: code, Instrument: instrument, ExecutionID: executionID, Date: firstNonEmpty(date, p.Date), Message: message,
+	})
+}
+
+func firstNonEmpty(value, fallback string) string {
+	if value != "" {
+		return value
+	}
+	return fallback
 }
 
 func (p *Point) unsupported(instrument, message string) {

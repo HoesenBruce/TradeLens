@@ -325,6 +325,7 @@ export interface EquityCurve {
 export interface AccountValueWarning {
   code: string;
   instrument?: string;
+  execution_id?: string;
   date: string;
   message: string;
 }

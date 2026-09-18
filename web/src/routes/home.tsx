@@ -20,6 +20,9 @@ import { useCash } from "@/lib/hooks/useCash";
 import { useTrades } from "@/lib/hooks/useTrades";
 import { filterTradesByStatus } from "@/lib/tradeFilters";
 import { useUI } from "@/lib/ui";
+import type { AccountValueWarning } from "@/lib/api/types";
+
+const IGNORED_PRICES_KEY = "tradermemos-account-value-ignored-prices";
 
 export const Route = createFileRoute("/home")({
   component: HomePage,
@@ -45,6 +48,14 @@ function HomePage() {
   const [selectedTradeId, setSelectedTradeId] = useState<string | null>(null);
   const [breakdownDim, setBreakdownDim] = useState<HomeBreakdownDim>("day_of_week");
   const [accountValueRange, setAccountValueRange] = useState("30D");
+  const [ignoredPrices, setIgnoredPrices] = useState<string[]>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(IGNORED_PRICES_KEY) ?? "[]");
+      return Array.isArray(saved) && saved.every((item) => typeof item === "string") ? saved : [];
+    } catch {
+      return [];
+    }
+  });
 
   const now = new Date();
   const calendarYear = now.getFullYear();
@@ -59,7 +70,9 @@ function HomePage() {
   const summaryQ = useSummary(filters);
   const ytdSummaryQ = useSummary(ytdFilters);
   const equityQ = useEquityCurve(filters);
-  const accountValueQ = useAccountValue(accountValueFilters(filters.account_id, accountValueRange));
+  const accountValueQ = useAccountValue(
+    accountValueFilters(filters.account_id, accountValueRange, ignoredPrices),
+  );
   const tradesQ = useTrades(filters);
   const monthTradesQ = useTrades(monthFilters);
   const accountsQ = useAccounts();
@@ -104,6 +117,13 @@ function HomePage() {
         accountValueError={accountValueQ.isError}
         accountValueRange={accountValueRange}
         onAccountValueRangeChange={setAccountValueRange}
+        onIgnoreAccountValueWarning={(warning: AccountValueWarning) => {
+          if (!warning.instrument) return;
+          const key = `${warning.instrument}:${warning.date}`;
+          const next = ignoredPrices.includes(key) ? ignoredPrices : [...ignoredPrices, key];
+          localStorage.setItem(IGNORED_PRICES_KEY, JSON.stringify(next));
+          setIgnoredPrices(next);
+        }}
         tradesLoading={tradesQ.isLoading}
         tradesError={tradesQ.isError}
         trades={trades}
@@ -165,9 +185,14 @@ function HomePage() {
   );
 }
 
-function accountValueFilters(accountId: string | undefined, range: string) {
-  if (range === "ALL") return { account_id: accountId };
+function accountValueFilters(
+  accountId: string | undefined,
+  range: string,
+  ignoredPrices: string[],
+) {
+  const ignored_missing_prices = ignoredPrices.join(",") || undefined;
+  if (range === "ALL") return { account_id: accountId, ignored_missing_prices };
   const from = new Date();
   from.setDate(from.getDate() - (range === "30D" ? 29 : 89));
-  return { account_id: accountId, from: from.toLocaleDateString("en-CA") };
+  return { account_id: accountId, from: from.toLocaleDateString("en-CA"), ignored_missing_prices };
 }
