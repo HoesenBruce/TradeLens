@@ -23,7 +23,7 @@ func TestSBITradeExecutionCSV(t *testing.T) {
 	require.True(t, IsSBI(headers))
 	require.Len(t, rows, 11)
 
-	result := ParseSBIRows(rows, "")
+	result := ParseSBIRows(rows, nil, "")
 	require.Len(t, result.Executions, 11)
 	require.Equal(t, []RowError{
 		{Row: 10, Message: "invalid quantity"},
@@ -58,6 +58,16 @@ func TestSBITradeExecutionCSV(t *testing.T) {
 	require.Zero(t, cashOpen.Fees)
 	require.True(t, marginClose.ExecutedAt.Before(cashOpen.ExecutedAt))
 	require.NotEqual(t, marginClose.DedupKey, cashOpen.DedupKey)
+}
+
+func TestSBIRowsUseConfirmedMapping(t *testing.T) {
+	result := ParseSBIRows([]map[string]string{{
+		"約定日": "2026/01/04", "銘柄コード": "5401", "銘柄": "既定名", "確認した銘柄名": "日本製鉄",
+		"取引": "株式現物買", "約定数量": "100", "約定単価": "3250",
+	}}, map[string]string{"stock_name": "確認した銘柄名"}, "")
+	require.Empty(t, result.Errors)
+	require.Len(t, result.Executions, 1)
+	require.Equal(t, "日本製鉄", result.Executions[0].StockName)
 }
 
 func TestSBICashTransactionCSV(t *testing.T) {
