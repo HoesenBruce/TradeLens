@@ -1,0 +1,104 @@
+package positions
+
+import (
+	"database/sql"
+	"testing"
+	"time"
+
+	"github.com/stretchr/testify/require"
+	"github.com/tradermemos/api/internal/store"
+)
+
+func execution(id, account, symbol, lot, side, at string, quantity, price float64) store.Execution {
+	timestamp, _ := time.Parse(time.RFC3339, at)
+	details := sql.NullString{}
+	if lot != "" {
+		details = sql.NullString{String: `{"lot":"` + lot + `"}`, Valid: true}
+	}
+	return store.Execution{
+		ID: id, AccountID: account, Symbol: symbol, InstrumentType: "stock", Side: side,
+		Quantity: quantity, Price: price, ExecutedAt: timestamp, Multiplier: 1, Details: details,
+	}
+}
+
+func day(value string) time.Time {
+	date, _ := time.Parse(time.DateOnly, value)
+	return date
+}
+
+func TestReplayCashLongPreservesOpeningStateAndPartialClose(t *testing.T) {
+	executions := []store.Execution{
+		execution("1", "a", "5401", "sbi:cash", "buy", "2026-08-10T01:00:00Z", 100, 10),
+		execution("2", "a", "5401", "sbi:cash", "buy", "2026-08-11T01:00:00Z", 100, 20),
+		execution("3", "a", "5401", "sbi:cash", "sell", "2026-09-02T01:00:00Z", 40, 25),
+		execution("4", "a", "5401", "sbi:cash", "sell", "2026-09-03T01:00:00Z", 160, 30),
+	}
+
+	snapshots := Replay(executions, []time.Time{day("2026-09-03"), day("2026-09-01"), day("2026-09-02")})
+	require.Equal(t, []string{"2026-09-01", "2026-09-02", "2026-09-03"}, []string{snapshots[0].Date, snapshots[1].Date, snapshots[2].Date})
+	require.Equal(t, 200.0, snapshots[0].Accounts[0].Positions[0].Quantity)
+	require.Equal(t, 15.0, snapshots[0].Accounts[0].Positions[0].AverageCost)
+	require.Equal(t, 160.0, snapshots[1].Accounts[0].Positions[0].Quantity)
+	require.Equal(t, 400.0, snapshots[1].Accounts[0].RealizedPnL)
+	require.Empty(t, snapshots[2].Accounts[0].Positions)
+	require.Equal(t, 2800.0, snapshots[2].Accounts[0].RealizedPnL)
+	require.Equal(t, 2800.0, snapshots[2].Accounts[0].CashDelta)
+}
+
+func TestReplayMarginLongAndShort(t *testing.T) {
+	executions := []store.Execution{
+		execution("1", "a", "L", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 10, 100),
+		execution("2", "a", "S", "sbi:margin-short", "sell", "2026-09-01T01:00:00Z", 8, 200),
+		execution("3", "a", "L", "sbi:margin-long", "sell", "2026-09-02T01:00:00Z", 4, 120),
+		execution("4", "a", "S", "sbi:margin-short", "buy", "2026-09-02T01:00:00Z", 3, 180),
+		execution("5", "a", "L", "sbi:margin-long", "sell", "2026-09-03T01:00:00Z", 6, 90),
+		execution("6", "a", "S", "sbi:margin-short", "buy", "2026-09-03T01:00:00Z", 5, 210),
+	}
+
+	snapshots := Replay(executions, []time.Time{day("2026-09-02"), day("2026-09-03")})
+	require.Equal(t, []Position{
+		{AccountID: "a", Symbol: "L", InstrumentType: "stock", Kind: MarginLong, Lot: "sbi:margin-long", Quantity: 6, AverageCost: 100, Multiplier: 1},
+		{AccountID: "a", Symbol: "S", InstrumentType: "stock", Kind: MarginShort, Lot: "sbi:margin-short", Quantity: 5, AverageCost: 200, Multiplier: 1},
+	}, snapshots[0].Accounts[0].Positions)
+	require.Equal(t, 140.0, snapshots[0].Accounts[0].RealizedPnL)
+	require.Empty(t, snapshots[1].Accounts[0].Positions)
+	require.Equal(t, 30.0, snapshots[1].Accounts[0].RealizedPnL)
+	require.Equal(t, 30.0, snapshots[1].Accounts[0].CashDelta)
+}
+
+func TestReplayGenbikiMovesMarginLongToCashOnce(t *testing.T) {
+	open := execution("1", "a", "5401", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 900)
+	closeMargin := execution("2", "a", "5401", "sbi:margin-long", "sell", "2026-09-02T01:00:00Z", 100, 920)
+	closeMargin.Fees = 20
+	openCash := execution("3", "a", "5401", "sbi:cash", "buy", "2026-09-02T01:00:00.000001Z", 100, 920)
+
+	snapshot := Replay([]store.Execution{openCash, closeMargin, open}, []time.Time{day("2026-09-02")})[0]
+	require.Equal(t, []Position{{
+		AccountID: "a", Symbol: "5401", InstrumentType: "stock", Kind: CashLong,
+		Lot: "sbi:cash", Quantity: 100, AverageCost: 920, Multiplier: 1,
+	}}, snapshot.Accounts[0].Positions)
+	require.Equal(t, 1980.0, snapshot.Accounts[0].RealizedPnL)
+	require.Equal(t, -90020.0, snapshot.Accounts[0].CashDelta)
+	require.Equal(t, 20.0, snapshot.Accounts[0].Fees)
+}
+
+func TestReplayIsolatesAccountsInstrumentsAndRejectsOverClose(t *testing.T) {
+	executions := []store.Execution{
+		execution("1", "b", "AAA", "sbi:cash", "buy", "2026-09-01T01:00:00Z", 1, 10),
+		execution("2", "a", "BBB", "sbi:cash", "buy", "2026-09-01T01:00:00Z", 2, 20),
+		execution("3", "a", "AAA", "sbi:cash", "buy", "2026-09-01T01:00:00Z", 3, 30),
+		execution("4", "a", "AAA", "sbi:cash", "sell", "2026-09-02T01:00:00Z", 4, 40),
+	}
+
+	snapshot := Replay(executions, []time.Time{day("2026-09-02"), day("2026-09-02")})[0]
+	require.Equal(t, []string{"a", "b"}, []string{snapshot.Accounts[0].AccountID, snapshot.Accounts[1].AccountID})
+	require.Equal(t, []string{"AAA", "BBB"}, []string{
+		snapshot.Accounts[0].Positions[0].Symbol, snapshot.Accounts[0].Positions[1].Symbol,
+	})
+	require.Equal(t, "AAA", snapshot.Accounts[1].Positions[0].Symbol)
+	require.Equal(t, 3.0, snapshot.Accounts[0].Positions[0].Quantity)
+	require.Equal(t, -130.0, snapshot.Accounts[0].CashDelta)
+	require.Equal(t, -10.0, snapshot.Accounts[1].CashDelta)
+	require.Equal(t, "invalid_execution_sequence", snapshot.Warnings[0].Code)
+	require.Equal(t, "4", snapshot.Warnings[0].ExecutionID)
+}
