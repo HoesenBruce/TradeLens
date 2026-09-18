@@ -1017,6 +1017,69 @@ paths:
         "200":
           description: Equity points
 
+  /api/v1/analytics/account-value:
+    get:
+      tags: [Analytics]
+      summary: Reconstructed daily account value
+      operationId: analyticsAccountValue
+      parameters:
+        - $ref: "#/components/parameters/AccountIdQuery"
+        - $ref: "#/components/parameters/FromQuery"
+        - $ref: "#/components/parameters/ToQuery"
+      responses:
+        "200":
+          description: Daily mark-to-market account value
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [currency, timezone, adjustment_status, points]
+                properties:
+                  currency:
+                    type: string
+                  timezone:
+                    type: string
+                  adjustment_status:
+                    type: string
+                  points:
+                    type: array
+                    items:
+                      type: object
+                      required: [date, contributed_capital, cash_balance, realized_pnl, status, warnings]
+                      properties:
+                        date:
+                          type: string
+                          format: date
+                        estimated_account_value:
+                          type: [number, "null"]
+                        contributed_capital:
+                          type: number
+                        cash_balance:
+                          type: number
+                        open_position_value:
+                          type: [number, "null"]
+                        realized_pnl:
+                          type: number
+                        unrealized_pnl:
+                          type: [number, "null"]
+                        status:
+                          type: string
+                        warnings:
+                          type: array
+                          items:
+                            type: object
+                            required: [code, date, message]
+                            properties:
+                              code:
+                                type: string
+                              instrument:
+                                type: string
+                              date:
+                                type: string
+                                format: date
+                              message:
+                                type: string
+
   /api/v1/tags:
     get:
       tags: [Tags]

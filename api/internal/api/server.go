@@ -12,6 +12,7 @@ import (
 
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
+	"github.com/tradermemos/api/internal/accountvalue"
 	"github.com/tradermemos/api/internal/alerts"
 	"github.com/tradermemos/api/internal/auth"
 	"github.com/tradermemos/api/internal/econdata"
@@ -37,6 +38,7 @@ type Deps struct {
 	ImportMaxBytes int64
 	OCRMaxBytes    int64
 	Market         *marketdata.Service
+	AccountValue   *accountvalue.Service
 	Econ           *econdata.Service
 	OCR            *ocr.Service
 	CoachDefaults  ocr.VisionConfig

@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/tradermemos/api/internal/accountvalue"
 	"github.com/tradermemos/api/internal/alerts"
 	"github.com/tradermemos/api/internal/api"
 	"github.com/tradermemos/api/internal/auth"
@@ -76,9 +77,11 @@ func main() {
 		}
 	}
 	var marketSvc *marketdata.Service
+	var accountValueSvc *accountvalue.Service
 	if cfg.MarketDataEnabled {
 		provider := marketdata.NewProvider(cfg.MarketDataProvider, cfg.MarketDataAPIKey)
 		marketSvc = marketdata.NewService(q, provider)
+		accountValueSvc = accountvalue.NewService(marketSvc.GetBars)
 		logger.Info("market data enabled", "provider", provider.Name())
 	}
 	var econSvc *econdata.Service
@@ -131,6 +134,7 @@ func main() {
 		ImportMaxBytes:    cfg.ImportMaxBytes,
 		OCRMaxBytes:       cfg.OCRMaxBytes,
 		Market:            marketSvc,
+		AccountValue:      accountValueSvc,
 		Econ:              econSvc,
 		OCR:               ocrSvc,
 		CoachDefaults:     coachDefaults,
