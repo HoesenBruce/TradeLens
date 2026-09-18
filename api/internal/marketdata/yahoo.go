@@ -45,7 +45,7 @@ func (p *YahooProvider) FetchBars(ctx context.Context, req Request) ([]Bar, erro
 	}
 
 	u := fmt.Sprintf(
-		"%s/v8/finance/chart/%s?interval=%s&period1=%d&period2=%d&includePrePost=false",
+		"%s/v8/finance/chart/%s?interval=%s&period1=%d&period2=%d&includePrePost=false&events=splits",
 		p.chartBase(),
 		url.PathEscape(symbol),
 		interval,
@@ -107,7 +107,33 @@ func (p *YahooProvider) FetchBars(ctx context.Context, req Request) ([]Bar, erro
 			Volume: vol,
 		})
 	}
+	applyYahooSplits(req, bars, result.Events.Splits)
 	return bars, nil
+}
+
+type yahooSplit struct {
+	Date        int64   `json:"date"`
+	Numerator   float64 `json:"numerator"`
+	Denominator float64 `json:"denominator"`
+}
+
+func applyYahooSplits(req Request, bars []Bar, splits map[string]yahooSplit) {
+	loc, err := time.LoadLocation(MarketTimezone(req))
+	if err != nil {
+		return
+	}
+	for _, split := range splits {
+		if split.Numerator <= 0 || split.Denominator <= 0 {
+			continue
+		}
+		date := time.Unix(split.Date, 0).In(loc).Format("2006-01-02")
+		for i := range bars {
+			if time.Unix(bars[i].Time, 0).In(loc).Format("2006-01-02") == date {
+				bars[i].SplitRatio = split.Numerator / split.Denominator
+				break
+			}
+		}
+	}
 }
 
 func chartSymbol(req Request) string {
@@ -171,7 +197,10 @@ func at(vals []*float64, i int) *float64 {
 type yahooChartResponse struct {
 	Chart struct {
 		Result []struct {
-			Timestamp  []int64 `json:"timestamp"`
+			Timestamp []int64 `json:"timestamp"`
+			Events    struct {
+				Splits map[string]yahooSplit `json:"splits"`
+			} `json:"events"`
 			Indicators struct {
 				Quote []struct {
 					Open   []*float64 `json:"open"`
@@ -228,6 +257,7 @@ func DefaultInterval(from, to time.Time) string {
 // CacheKey builds a stable cache key for a bar request.
 func CacheKey(req Request) string {
 	return strings.Join([]string{
+		"bars-v2", // v2 retains provider split events on historical bars.
 		strings.ToUpper(req.Symbol),
 		req.InstrumentType,
 		req.Interval,
