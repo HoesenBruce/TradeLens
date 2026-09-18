@@ -1,11 +1,14 @@
 package api
 
 import (
+	"context"
 	"net/http"
 	"sort"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v5"
+	"github.com/tradermemos/api/internal/accountvalue"
 	"github.com/tradermemos/api/internal/analytics"
 	"github.com/tradermemos/api/internal/auth"
 	"github.com/tradermemos/api/internal/store"
@@ -15,12 +18,148 @@ func (s *Server) analyticsRoutes(g *echo.Group) {
 	g.GET("/analytics/summary", s.handleSummary)
 	g.GET("/analytics/r-summary", s.handleRSummary)
 	g.GET("/analytics/equity-curve", s.handleEquityCurve)
+	g.GET("/analytics/account-value", s.handleAccountValue)
 	g.GET("/analytics/daily", s.handleDaily)
 	g.GET("/analytics/breakdown", s.handleBreakdown)
 	g.GET("/analytics/compliance", s.handleCompliance)
 	g.GET("/analytics/behavior", s.handleBehavior)
 	g.GET("/analytics/montecarlo", s.handleMonteCarlo)
 	g.GET("/analytics/execution-score", s.handleExecScore)
+}
+
+type accountValueResponse struct {
+	Currency         string               `json:"currency"`
+	Timezone         string               `json:"timezone"`
+	AdjustmentStatus string               `json:"adjustment_status"`
+	Points           []accountvalue.Point `json:"points"`
+}
+
+func (s *Server) handleAccountValue(c *echo.Context) error {
+	if s.deps.AccountValue == nil {
+		return Fail(http.StatusServiceUnavailable, "unavailable", "market data not configured", nil)
+	}
+	ctx, uid := c.Request().Context(), auth.UserID(c)
+	from, err := dateParam(c.QueryParam("from"))
+	if err != nil {
+		return Fail(http.StatusBadRequest, "bad_request", "invalid 'from' date (want YYYY-MM-DD)", nil)
+	}
+	to, err := dateParam(c.QueryParam("to"))
+	if err != nil {
+		return Fail(http.StatusBadRequest, "bad_request", "invalid 'to' date (want YYYY-MM-DD)", nil)
+	}
+	if from != nil && to != nil && from.After(*to) {
+		return Fail(http.StatusBadRequest, "bad_request", "from must not be after to", nil)
+	}
+
+	accounts, currency, err := s.accountValueAccounts(ctx, uid, parseAccountIDs(c))
+	if err != nil {
+		return err
+	}
+	response := accountValueResponse{Currency: currency, Timezone: "Asia/Tokyo", AdjustmentStatus: "unadjusted", Points: []accountvalue.Point{}}
+	if len(accounts) == 0 {
+		return c.JSON(http.StatusOK, response)
+	}
+
+	executions := make([]store.Execution, 0)
+	selected := make(map[string]bool, len(accounts))
+	for _, account := range accounts {
+		selected[account.ID] = true
+		rows, loadErr := s.deps.Store.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: uid, AccountID: account.ID})
+		if loadErr != nil {
+			return Fail(http.StatusInternalServerError, "internal", "could not load executions", nil)
+		}
+		executions = append(executions, rows...)
+	}
+	cashRows, err := s.deps.Store.ListCashTransactions(ctx, store.ListCashTransactionsParams{UserID: uid})
+	if err != nil {
+		return Fail(http.StatusInternalServerError, "internal", "could not load cash flows", nil)
+	}
+	cash := cashRows[:0]
+	for _, row := range cashRows {
+		if selected[row.AccountID] {
+			cash = append(cash, row)
+		}
+	}
+	if len(executions) == 0 && len(cash) == 0 {
+		return c.JSON(http.StatusOK, response)
+	}
+
+	from, to = reconstructionRange(from, to, executions, cash)
+	if from.After(*to) {
+		return c.JSON(http.StatusOK, response)
+	}
+	sessions, err := s.deps.AccountValue.MarketSessions(ctx, *from, *to)
+	if err != nil {
+		return Fail(http.StatusBadGateway, "upstream_error", "could not load market sessions", nil).Wrap(err)
+	}
+	result, err := s.deps.AccountValue.Reconstruct(ctx, accountvalue.Request{
+		Executions: executions, CashTransactions: cash, MarketSessions: sessions,
+	})
+	if err != nil {
+		return Fail(http.StatusBadGateway, "upstream_error", "could not reconstruct account value", nil).Wrap(err)
+	}
+	response.Points = accountvalue.Combine(result)
+	return c.JSON(http.StatusOK, response)
+}
+
+func (s *Server) accountValueAccounts(ctx context.Context, userID string, requested []string) ([]store.Account, string, error) {
+	rows, err := s.deps.Store.ListAccounts(ctx, userID)
+	if err != nil {
+		return nil, "", Fail(http.StatusInternalServerError, "internal", "could not load accounts", nil)
+	}
+	wanted := map[string]bool{}
+	for _, accountID := range requested {
+		wanted[accountID] = true
+	}
+	selected, currency := make([]store.Account, 0), ""
+	for _, account := range rows {
+		if len(wanted) > 0 && !wanted[account.ID] {
+			continue
+		}
+		if len(wanted) == 0 && account.AccountType == AccountTypeBacktest {
+			continue
+		}
+		if currency != "" && account.BaseCurrency != currency {
+			return nil, "", Fail(http.StatusBadRequest, "mixed_currencies", errMixedCurrencies.Error(), nil)
+		}
+		currency = account.BaseCurrency
+		selected = append(selected, account)
+	}
+	return selected, currency, nil
+}
+
+func dateParam(value string) (*time.Time, error) {
+	if value == "" {
+		return nil, nil
+	}
+	date, err := time.ParseInLocation(time.DateOnly, value, time.FixedZone("Asia/Tokyo", 9*60*60))
+	return &date, err
+}
+
+func reconstructionRange(from, to *time.Time, executions []store.Execution, cash []store.CashTransaction) (*time.Time, *time.Time) {
+	tokyo := time.FixedZone("Asia/Tokyo", 9*60*60)
+	if from == nil {
+		var earliest time.Time
+		for _, execution := range executions {
+			if earliest.IsZero() || execution.ExecutedAt.Before(earliest) {
+				earliest = execution.ExecutedAt
+			}
+		}
+		for _, row := range cash {
+			if earliest.IsZero() || row.OccurredAt.Before(earliest) {
+				earliest = row.OccurredAt
+			}
+		}
+		date := earliest.In(tokyo)
+		value := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, tokyo)
+		from = &value
+	}
+	if to == nil {
+		now := time.Now().In(tokyo)
+		value := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, tokyo)
+		to = &value
+	}
+	return from, to
 }
 
 // grossPnlOf reads the stored gross P&L, reconstructing it from net + fees

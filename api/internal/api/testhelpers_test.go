@@ -2,6 +2,7 @@ package api_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"mime/multipart"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"github.com/tradermemos/api/internal/accountvalue"
 	"github.com/tradermemos/api/internal/api"
 	"github.com/tradermemos/api/internal/auth"
 	"github.com/tradermemos/api/internal/db"
@@ -28,6 +30,10 @@ func testServer(t *testing.T) *api.Server {
 // testServerWithRegistration builds a server with open sign-up on or off — the
 // shipped default is off, which is what the admin routes have to work against.
 func testServerWithRegistration(t *testing.T, allowRegistration bool) *api.Server {
+	return testServerWithAccountValue(t, allowRegistration, nil)
+}
+
+func testServerWithAccountValue(t *testing.T, allowRegistration bool, loader func(context.Context, marketdata.Request) (marketdata.Response, error)) *api.Server {
 	t.Helper()
 	conn, err := db.Open(filepath.Join(t.TempDir(), "t.db"))
 	require.NoError(t, err)
@@ -37,10 +43,13 @@ func testServerWithRegistration(t *testing.T, allowRegistration bool) *api.Serve
 	j := auth.NewJWT("test")
 	provider := marketdata.NewYahooProvider()
 	market := marketdata.NewService(q, provider)
+	if loader == nil {
+		loader = market.GetBars
+	}
 	return api.New(api.Deps{
 		JWT: j, Auth: auth.NewService(q, j, allowRegistration), Store: q, Trades: trades.NewService(q),
 		Storage: storage.NewLocalDisk(filepath.Join(t.TempDir(), "attach")), AttachMaxBytes: 10 << 20,
-		Market: market,
+		Market: market, AccountValue: accountvalue.NewService(loader),
 	})
 }
 
