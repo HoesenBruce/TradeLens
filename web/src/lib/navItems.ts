@@ -4,6 +4,7 @@ import {
   Calculator,
   House,
   List,
+  Megaphone,
   Newspaper,
   PieChart,
   StickyNote,
@@ -53,6 +54,7 @@ export const PRIMARY_NAV: NavItem[] = [
 /** Shown in the desktop/tablet rail bottom group and the mobile nav drawer. */
 export const SECONDARY_NAV: NavItem[] = [
   { to: "/events", labelKey: "events", icon: Newspaper },
+  { to: "/news", labelKey: "news", icon: Megaphone },
   { to: "/notes", labelKey: "notes", icon: StickyNote },
   { to: "/playbook", labelKey: "playbook", icon: BookOpen },
   { to: "/calculator", labelKey: "calculator", icon: Calculator },
