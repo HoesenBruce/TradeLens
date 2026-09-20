@@ -229,6 +229,7 @@ func (s *Server) routes() {
 	s.settingsRoutes(protected)
 	s.alertRoutes(protected)
 	s.noteRoutes(protected)
+	s.newsRoutes(protected)
 	s.checklistRoutes(protected)
 	s.marketRoutes(protected)
 	s.economicEventRoutes(protected)
