@@ -57,3 +57,21 @@ exclusion, reset, refresh and route re-entry, forward/back pagination and page s
 interception is used only to verify loading and error/retry states; the main assertions use
 real API data. Screenshots: [overview](../screenshots/news-predictions/overview.png),
 [filtered](../screenshots/news-predictions/filtered.png).
+
+## Detail
+
+News titles link to `/news/{id}`. Direct navigation loads the current API record, with source
+metadata, original text, summary and notes above the affected assets. Each asset contains its
+own User/AI predictions; the existing editors are reused. Prediction details include timestamps,
+catalysts, risks/invalidation and a horizon/status/result table ready for the later outcome data.
+Missing/deleted records show a not-found state; API failures offer retry.
+
+`e2e/news-detail.spec.ts` verifies direct routing, source links, hierarchy, edit/cancel/re-entry,
+refresh read-back, prediction creation/deletion, loading/error/retry and missing/deleted records.
+Set `E2E_SQLITE_PATH` only to a disposable test database to additionally seed and verify an AI
+record alongside the User record; this fixture does not invoke an AI provider. All three News
+browser suites passed together with Service Worker caching disabled.
+
+Inspected screenshots: [detail](../screenshots/news-predictions/detail.png),
+[AI record](../screenshots/news-predictions/detail-ai.png),
+[deleted](../screenshots/news-predictions/deleted.png). Mobile remains outside validation scope.

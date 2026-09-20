@@ -79,7 +79,7 @@ function parseTags(value: string): string[] {
   ];
 }
 
-function NewsFormDialog({
+export function NewsFormDialog({
   item,
   onClose,
   onSave,
