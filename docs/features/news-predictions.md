@@ -18,3 +18,24 @@ This persistence layer does not call AI or compute outcomes.
 
 Run the shared store checks with `cd api && go test ./internal/store -run TestPredictions`.
 Set `TM_TEST_DATABASE_URL` to a disposable Postgres database to exercise the Postgres case too.
+
+## Manual editing
+
+The News page supports creating, editing and deleting User predictions. AI records are visible
+but cannot be edited or deleted through the manual API. The affected asset cannot be changed
+on an existing prediction. Saving replaces the selected horizons atomically; at least one is
+required. GET `/api/v1/news` and `/api/v1/news/{id}` include predictions and their horizons.
+
+Browser validation uses a disposable API database and the current Web working tree:
+
+```
+cd web
+E2E_API_URL=http://localhost:8092/api/v1 E2E_WEB_URL=http://localhost:5175 \
+E2E_EMAIL=<test-user> E2E_PASSWORD=<test-password> pnpm run e2e e2e/news-predictions.spec.ts
+```
+
+Verified create/edit/delete, refresh read-back, cancel/re-entry, invalid confidence, empty horizons,
+select/unselect horizons, nullable confidence and API read-back. Rendered screenshots:
+[editor](../screenshots/news-predictions/editor.png), [saved](../screenshots/news-predictions/saved.png).
+Mobile not validated; outside current fork scope. Outcomes remain pending; no AI calls or
+validation calculations are implemented here.

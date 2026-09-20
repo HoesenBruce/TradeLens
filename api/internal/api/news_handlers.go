@@ -17,6 +17,9 @@ import (
 )
 
 func (s *Server) newsRoutes(g *echo.Group) {
+	g.POST("/news/:id/predictions", s.handleSavePrediction)
+	g.PATCH("/news/:id/predictions/:predictionId", s.handleSavePrediction)
+	g.DELETE("/news/:id/predictions/:predictionId", s.handleDeletePrediction)
 	g.POST("/news", s.handleCreateNews)
 	g.GET("/news", s.handleListNews)
 	g.GET("/news/:id", s.handleGetNews)
@@ -59,20 +62,21 @@ type newsBody struct {
 }
 
 type newsDTO struct {
-	ID           string         `json:"id"`
-	UserID       string         `json:"user_id"`
-	Title        string         `json:"title"`
-	Source       string         `json:"source"`
-	URL          string         `json:"url"`
-	PublishedAt  time.Time      `json:"published_at"`
-	OriginalText string         `json:"original_text"`
-	Notes        string         `json:"notes"`
-	Summary      string         `json:"summary"`
-	Category     string         `json:"category"`
-	Tags         []string       `json:"tags"`
-	Assets       []newsAssetDTO `json:"assets"`
-	CreatedAt    time.Time      `json:"created_at"`
-	UpdatedAt    time.Time      `json:"updated_at"`
+	Predictions  []predictionDTO `json:"predictions"`
+	ID           string          `json:"id"`
+	UserID       string          `json:"user_id"`
+	Title        string          `json:"title"`
+	Source       string          `json:"source"`
+	URL          string          `json:"url"`
+	PublishedAt  time.Time       `json:"published_at"`
+	OriginalText string          `json:"original_text"`
+	Notes        string          `json:"notes"`
+	Summary      string          `json:"summary"`
+	Category     string          `json:"category"`
+	Tags         []string        `json:"tags"`
+	Assets       []newsAssetDTO  `json:"assets"`
+	CreatedAt    time.Time       `json:"created_at"`
+	UpdatedAt    time.Time       `json:"updated_at"`
 }
 
 func normalizeNewsBody(in newsBody) (newsBody, *Error) {
@@ -216,7 +220,9 @@ func (s *Server) loadNewsDTO(ctx context.Context, q store.Querier, id, userID st
 	if err != nil {
 		return newsDTO{}, err
 	}
-	return toNewsDTO(n, assets), nil
+	out := toNewsDTO(n, assets)
+	out.Predictions, err = loadPredictions(ctx, q, id, userID)
+	return out, err
 }
 
 func (s *Server) handleCreateNews(c *echo.Context) error {
@@ -261,7 +267,12 @@ func (s *Server) handleListNews(c *echo.Context) error {
 		if err != nil {
 			return Fail(http.StatusInternalServerError, "internal", "could not list news", nil).Wrap(err)
 		}
-		out = append(out, toNewsDTO(row, assets))
+		dto := toNewsDTO(row, assets)
+		dto.Predictions, err = loadPredictions(ctx, s.deps.Store, row.ID, userID)
+		if err != nil {
+			return Fail(http.StatusInternalServerError, "internal", "could not load predictions", nil).Wrap(err)
+		}
+		out = append(out, dto)
 	}
 	return c.JSON(http.StatusOK, out)
 }
