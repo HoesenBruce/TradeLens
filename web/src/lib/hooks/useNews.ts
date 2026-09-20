@@ -1,5 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { newsApi, type NewsAssetBody, type NewsBody } from "@/lib/api/news";
+import {
+  newsApi,
+  predictionApi,
+  type Prediction,
+  type PredictionBody,
+  type NewsAssetBody,
+  type NewsBody,
+} from "@/lib/api/news";
 
 export type NewsAssetDraft = NewsAssetBody & { id?: string };
 
@@ -51,4 +58,19 @@ export function useDeleteNews() {
     mutationFn: newsApi.delete,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["news"] }),
   });
+}
+
+export function usePredictionActions() {
+  const client = useQueryClient();
+  return {
+    onSavePrediction: async (newsId: string, body: PredictionBody, prediction?: Prediction) => {
+      if (prediction) await predictionApi.update(newsId, prediction.id, body);
+      else await predictionApi.create(newsId, body);
+      await client.invalidateQueries({ queryKey: ["news"] });
+    },
+    onDeletePrediction: async (newsId: string, prediction: Prediction) => {
+      await predictionApi.delete(newsId, prediction.id);
+      await client.invalidateQueries({ queryKey: ["news"] });
+    },
+  };
 }

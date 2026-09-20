@@ -2,11 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { NewsView, type NewsFormValue } from "@/app/screens/NewsView";
 import { useToastManager } from "@/components/Toast";
 import type { News } from "@/lib/api/news";
-import { useCreateNews, useDeleteNews, useNews, useUpdateNews } from "@/lib/hooks/useNews";
+import {
+  useCreateNews,
+  useDeleteNews,
+  useNews,
+  useUpdateNews,
+  usePredictionActions,
+} from "@/lib/hooks/useNews";
 
 export const Route = createFileRoute("/news")({ component: NewsPage });
 
 function NewsPage() {
+  const predictionActions = usePredictionActions();
   const toast = useToastManager();
   const newsQ = useNews();
   const createM = useCreateNews();
@@ -30,6 +37,7 @@ function NewsPage() {
 
   return (
     <NewsView
+      predictionActions={predictionActions}
       news={newsQ.data ?? []}
       loading={newsQ.isLoading}
       error={newsQ.isError}
