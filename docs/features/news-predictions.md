@@ -39,3 +39,21 @@ select/unselect horizons, nullable confidence and API read-back. Rendered screen
 [editor](../screenshots/news-predictions/editor.png), [saved](../screenshots/news-predictions/saved.png).
 Mobile not validated; outside current fork scope. Outcomes remain pending; no AI calls or
 validation calculations are implemented here.
+
+## Overview
+
+The News overview shows each thesis's published date, source, affected assets, predictions,
+confidence and trading-day horizons. Open **Predictions** to use the manual editor.
+Filters combine direction, symbol, published-date range and validation status; dates use the
+same display timezone as the table. News filters persist separately from trading filters,
+and **Reset filters** restores the unfiltered list. Pagination reuses the existing component.
+
+There are no outcome records yet, so all theses explicitly show **Pending validation** and
+**Validated** correctly produces an empty result. Actual result calculation remains in #47.
+Filtering/pagination operate on the existing full News response.
+
+`e2e/news-list.spec.ts` exercises real API records on both sides of date/direction filters,
+exclusion, reset, refresh and route re-entry, forward/back pagination and page size. Network
+interception is used only to verify loading and error/retry states; the main assertions use
+real API data. Screenshots: [overview](../screenshots/news-predictions/overview.png),
+[filtered](../screenshots/news-predictions/filtered.png).
