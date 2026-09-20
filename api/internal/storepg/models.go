@@ -268,6 +268,25 @@ type OcrSetting struct {
 	CustomPrompt string    `json:"custom_prompt"`
 }
 
+type Prediction struct {
+	ID           string        `json:"id"`
+	NewsAssetID  string        `json:"news_asset_id"`
+	Source       string        `json:"source"`
+	Direction    string        `json:"direction"`
+	Confidence   sql.NullInt64 `json:"confidence"`
+	Reasoning    string        `json:"reasoning"`
+	Catalysts    string        `json:"catalysts"`
+	Risks        string        `json:"risks"`
+	Invalidation string        `json:"invalidation"`
+	CreatedAt    time.Time     `json:"created_at"`
+	UpdatedAt    time.Time     `json:"updated_at"`
+}
+
+type PredictionHorizon struct {
+	PredictionID string `json:"prediction_id"`
+	TradingDays  int64  `json:"trading_days"`
+}
+
 type PropSetting struct {
 	AccountID      string          `json:"account_id"`
 	UserID         string          `json:"user_id"`
