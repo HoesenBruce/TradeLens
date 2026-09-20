@@ -23,6 +23,7 @@ import {
 import { EmptyState } from "@/components/EmptyState";
 import { Field } from "@/components/Field";
 import { FormInput, FormTextarea } from "@/components/FormInput";
+import { NewsPredictions, type PredictionActions } from "@/components/NewsPredictions";
 import { Page } from "@/components/Page";
 import { Pill } from "@/components/Pill";
 import { ListSkeleton } from "@/components/skeletons/list-skeleton";
@@ -40,6 +41,7 @@ export interface NewsFormValue {
 }
 
 export interface NewsViewProps {
+  predictionActions?: PredictionActions;
   news: News[];
   loading: boolean;
   error: boolean;
@@ -413,7 +415,7 @@ function DeleteNewsDialog({
           <div>
             <DialogTitle>Delete news thesis?</DialogTitle>
             <DialogDescription className="mt-1">
-              This also removes its affected assets. This cannot be undone.
+              This also removes its affected assets and predictions. This cannot be undone.
             </DialogDescription>
           </div>
         </DialogHeader>
@@ -453,7 +455,15 @@ function DeleteNewsDialog({
   );
 }
 
-export function NewsView({ news, loading, error, onRetry, onSave, onDelete }: NewsViewProps) {
+export function NewsView({
+  news,
+  loading,
+  error,
+  onRetry,
+  onSave,
+  onDelete,
+  predictionActions,
+}: NewsViewProps) {
   const [editing, setEditing] = useState<News | null | undefined>(undefined);
   const [deleting, setDeleting] = useState<News>();
 
@@ -564,6 +574,7 @@ export function NewsView({ news, loading, error, onRetry, onSave, onDelete }: Ne
                     </Button>
                   </div>
                 </div>
+                {predictionActions && <NewsPredictions news={item} {...predictionActions} />}
               </article>
             ))}
           </div>
