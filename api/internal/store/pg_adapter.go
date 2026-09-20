@@ -28,6 +28,10 @@ func NewPGFromDBTX(db DBTX) *PG {
 
 var _ Querier = (*PG)(nil)
 
+func (p *PG) AddPredictionHorizon(ctx context.Context, arg AddPredictionHorizonParams) error {
+	return p.q.AddPredictionHorizon(ctx, storepg.AddPredictionHorizonParams(arg))
+}
+
 func (p *PG) ClearTradeExecutions(ctx context.Context, tradeID string) error {
 	return p.q.ClearTradeExecutions(ctx, tradeID)
 }
@@ -102,6 +106,14 @@ func (p *PG) CreateNewsAsset(ctx context.Context, arg CreateNewsAssetParams) (Ne
 		return NewsAsset{}, err
 	}
 	return NewsAsset(v), nil
+}
+
+func (p *PG) CreatePrediction(ctx context.Context, arg CreatePredictionParams) (Prediction, error) {
+	v, err := p.q.CreatePrediction(ctx, storepg.CreatePredictionParams(arg))
+	if err != nil {
+		return Prediction{}, err
+	}
+	return Prediction(v), nil
 }
 
 func (p *PG) CreateSetup(ctx context.Context, arg CreateSetupParams) (Setup, error) {
@@ -206,6 +218,14 @@ func (p *PG) DeleteNews(ctx context.Context, arg DeleteNewsParams) (int64, error
 
 func (p *PG) DeleteNewsAsset(ctx context.Context, arg DeleteNewsAssetParams) (int64, error) {
 	return p.q.DeleteNewsAsset(ctx, storepg.DeleteNewsAssetParams(arg))
+}
+
+func (p *PG) DeletePrediction(ctx context.Context, arg DeletePredictionParams) (int64, error) {
+	return p.q.DeletePrediction(ctx, storepg.DeletePredictionParams(arg))
+}
+
+func (p *PG) DeletePredictionHorizons(ctx context.Context, arg DeletePredictionHorizonsParams) error {
+	return p.q.DeletePredictionHorizons(ctx, storepg.DeletePredictionHorizonsParams(arg))
 }
 
 func (p *PG) DeletePropSettings(ctx context.Context, arg DeletePropSettingsParams) error {
@@ -406,6 +426,14 @@ func (p *PG) GetOcrSettings(ctx context.Context) (GetOcrSettingsRow, error) {
 		return GetOcrSettingsRow{}, err
 	}
 	return GetOcrSettingsRow(v), nil
+}
+
+func (p *PG) GetPrediction(ctx context.Context, arg GetPredictionParams) (Prediction, error) {
+	v, err := p.q.GetPrediction(ctx, storepg.GetPredictionParams(arg))
+	if err != nil {
+		return Prediction{}, err
+	}
+	return Prediction(v), nil
 }
 
 func (p *PG) GetPropSettings(ctx context.Context, arg GetPropSettingsParams) (PropSetting, error) {
@@ -775,6 +803,22 @@ func (p *PG) ListOptionExecutions(ctx context.Context) ([]Execution, error) {
 	return func() []Execution { in := v; out := make([]Execution, len(in)); for i := range in { out[i] = Execution(in[i]) }; return out }(), nil
 }
 
+func (p *PG) ListPredictionHorizons(ctx context.Context, arg ListPredictionHorizonsParams) ([]PredictionHorizon, error) {
+	v, err := p.q.ListPredictionHorizons(ctx, storepg.ListPredictionHorizonsParams(arg))
+	if err != nil {
+		return nil, err
+	}
+	return func() []PredictionHorizon { in := v; out := make([]PredictionHorizon, len(in)); for i := range in { out[i] = PredictionHorizon(in[i]) }; return out }(), nil
+}
+
+func (p *PG) ListPredictions(ctx context.Context, arg ListPredictionsParams) ([]Prediction, error) {
+	v, err := p.q.ListPredictions(ctx, storepg.ListPredictionsParams(arg))
+	if err != nil {
+		return nil, err
+	}
+	return func() []Prediction { in := v; out := make([]Prediction, len(in)); for i := range in { out[i] = Prediction(in[i]) }; return out }(), nil
+}
+
 func (p *PG) ListPropSettingsForUser(ctx context.Context, userID string) ([]PropSetting, error) {
 	v, err := p.q.ListPropSettingsForUser(ctx, userID)
 	if err != nil {
@@ -977,6 +1021,14 @@ func (p *PG) UpdateNewsAsset(ctx context.Context, arg UpdateNewsAssetParams) (Ne
 		return NewsAsset{}, err
 	}
 	return NewsAsset(v), nil
+}
+
+func (p *PG) UpdatePrediction(ctx context.Context, arg UpdatePredictionParams) (Prediction, error) {
+	v, err := p.q.UpdatePrediction(ctx, storepg.UpdatePredictionParams(arg))
+	if err != nil {
+		return Prediction{}, err
+	}
+	return Prediction(v), nil
 }
 
 func (p *PG) UpdateSetup(ctx context.Context, arg UpdateSetupParams) error {
