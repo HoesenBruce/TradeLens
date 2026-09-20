@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
 
+// Exercise the live API, without the service worker serving cached responses.
+test.use({ serviceWorkers: "block" });
+
 const api = process.env.E2E_API_URL ?? "http://localhost:8080/api/v1";
 const web = process.env.E2E_WEB_URL ?? "http://localhost:5173";
 
@@ -33,6 +36,12 @@ test("manual predictions persist, cancel cleanly, validate and delete", async ({
   );
   try {
     await page.goto(`${web}/news`);
+    await page.getByRole("button", { name: "Reset filters", exact: true }).first().click();
+    await page
+      .getByRole("row")
+      .filter({ hasText: news.title })
+      .getByRole("button", { name: "Predictions", exact: true })
+      .click();
     const section = page.getByRole("region", { name: `Predictions for ${news.title}` });
     await section.getByRole("button", { name: "Add prediction" }).click();
     let dialog = page.getByRole("dialog");
@@ -59,6 +68,11 @@ test("manual predictions persist, cancel cleanly, validate and delete", async ({
     await expect(dialog).toBeHidden();
     await expect(section.getByText("80%", { exact: true })).toBeVisible();
     await page.reload();
+    await page
+      .getByRole("row")
+      .filter({ hasText: news.title })
+      .getByRole("button", { name: "Predictions", exact: true })
+      .click();
     await section.getByRole("button", { name: "Edit prediction" }).click();
     await expect(dialog.getByRole("spinbutton", { name: "Confidence (%)" })).toHaveValue("80");
     await expect(dialog.getByRole("checkbox", { name: "5D", exact: true })).toBeChecked();
