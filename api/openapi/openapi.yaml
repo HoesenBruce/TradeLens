@@ -28,6 +28,7 @@ tags:
   - name: Tags
   - name: Setups
   - name: Notes
+  - name: News
   - name: Alerts
   - name: Admin
 paths:
@@ -1163,6 +1164,117 @@ paths:
       responses:
         "201":
           description: Created
+
+  /api/v1/news:
+    get:
+      tags: [News]
+      summary: List manual news theses
+      operationId: listNews
+      responses:
+        "200":
+          description: News with affected assets
+    post:
+      tags: [News]
+      summary: Create a manual news thesis
+      operationId: createNews
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        "201":
+          description: Created
+
+  /api/v1/news/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      tags: [News]
+      summary: Get a manual news thesis
+      operationId: getNews
+      responses:
+        "200": { description: News with affected assets }
+        "404": { description: Not found }
+    patch:
+      tags: [News]
+      summary: Update a manual news thesis
+      operationId: updateNews
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        "200": { description: Updated }
+        "404": { description: Not found }
+    delete:
+      tags: [News]
+      summary: Delete a manual news thesis
+      operationId: deleteNews
+      responses:
+        "204": { description: Deleted }
+        "404": { description: Not found }
+
+  /api/v1/news/{id}/assets:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+    post:
+      tags: [News]
+      summary: Add an affected asset
+      operationId: createNewsAsset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        "201": { description: Created }
+        "404": { description: News not found }
+
+  /api/v1/news/{id}/assets/{assetId}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+      - name: assetId
+        in: path
+        required: true
+        schema: { type: string }
+    patch:
+      tags: [News]
+      summary: Update an affected asset
+      operationId: updateNewsAsset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        "200": { description: Updated }
+        "404": { description: Not found }
+    delete:
+      tags: [News]
+      summary: Remove an affected asset
+      operationId: deleteNewsAsset
+      responses:
+        "204": { description: Deleted }
+        "404": { description: Not found }
 
   /api/v1/me/preferences:
     get:
