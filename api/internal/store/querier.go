@@ -19,6 +19,8 @@ type Querier interface {
 	CreateCoachReview(ctx context.Context, arg CreateCoachReviewParams) (CoachReview, error)
 	CreateImportBatch(ctx context.Context, arg CreateImportBatchParams) (ImportBatch, error)
 	CreateJournalNote(ctx context.Context, arg CreateJournalNoteParams) (JournalNote, error)
+	CreateNews(ctx context.Context, arg CreateNewsParams) (News, error)
+	CreateNewsAsset(ctx context.Context, arg CreateNewsAssetParams) (NewsAsset, error)
 	CreateSetup(ctx context.Context, arg CreateSetupParams) (Setup, error)
 	CreateShareLink(ctx context.Context, arg CreateShareLinkParams) (ShareLink, error)
 	CreateTag(ctx context.Context, arg CreateTagParams) (Tag, error)
@@ -39,6 +41,8 @@ type Querier interface {
 	DeleteFutureEconomicEvents(ctx context.Context, arg DeleteFutureEconomicEventsParams) error
 	DeleteJournalNote(ctx context.Context, arg DeleteJournalNoteParams) (int64, error)
 	DeleteMediaFile(ctx context.Context, arg DeleteMediaFileParams) (int64, error)
+	DeleteNews(ctx context.Context, arg DeleteNewsParams) (int64, error)
+	DeleteNewsAsset(ctx context.Context, arg DeleteNewsAssetParams) (int64, error)
 	DeletePropSettings(ctx context.Context, arg DeletePropSettingsParams) error
 	DeleteSetup(ctx context.Context, arg DeleteSetupParams) (int64, error)
 	DeleteTag(ctx context.Context, arg DeleteTagParams) (int64, error)
@@ -66,6 +70,8 @@ type Querier interface {
 	GetJournalNote(ctx context.Context, arg GetJournalNoteParams) (JournalNote, error)
 	GetMarketBarsCache(ctx context.Context, cacheKey string) (MarketBarsCache, error)
 	GetMediaFile(ctx context.Context, arg GetMediaFileParams) (MediaFile, error)
+	GetNews(ctx context.Context, arg GetNewsParams) (News, error)
+	GetNewsAsset(ctx context.Context, arg GetNewsAssetParams) (NewsAsset, error)
 	GetOcrSettings(ctx context.Context) (GetOcrSettingsRow, error)
 	GetPropSettings(ctx context.Context, arg GetPropSettingsParams) (PropSetting, error)
 	GetRiskRules(ctx context.Context, userID string) (RiskRule, error)
@@ -108,6 +114,8 @@ type Querier interface {
 	ListJournalNotes(ctx context.Context, arg ListJournalNotesParams) ([]JournalNote, error)
 	ListJournalRisks(ctx context.Context, userID string) ([]ListJournalRisksRow, error)
 	ListMediaFilesForUser(ctx context.Context, userID string) ([]MediaFile, error)
+	ListNews(ctx context.Context, userID string) ([]News, error)
+	ListNewsAssets(ctx context.Context, arg ListNewsAssetsParams) ([]NewsAsset, error)
 	ListOptionExecutionDetailsForUser(ctx context.Context, userID string) ([]ListOptionExecutionDetailsForUserRow, error)
 	ListOptionExecutions(ctx context.Context) ([]Execution, error)
 	ListPropSettingsForUser(ctx context.Context, userID string) ([]PropSetting, error)
@@ -145,6 +153,8 @@ type Querier interface {
 	UpdateExecutionContract(ctx context.Context, arg UpdateExecutionContractParams) error
 	UpdateFlexSyncStatus(ctx context.Context, arg UpdateFlexSyncStatusParams) error
 	UpdateJournalNote(ctx context.Context, arg UpdateJournalNoteParams) (JournalNote, error)
+	UpdateNews(ctx context.Context, arg UpdateNewsParams) (News, error)
+	UpdateNewsAsset(ctx context.Context, arg UpdateNewsAssetParams) (NewsAsset, error)
 	UpdateSetup(ctx context.Context, arg UpdateSetupParams) error
 	UpdateTag(ctx context.Context, arg UpdateTagParams) (int64, error)
 	UpdateTradeNotes(ctx context.Context, arg UpdateTradeNotesParams) error

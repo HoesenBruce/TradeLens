@@ -88,6 +88,22 @@ func (p *PG) CreateJournalNote(ctx context.Context, arg CreateJournalNoteParams)
 	return JournalNote(v), nil
 }
 
+func (p *PG) CreateNews(ctx context.Context, arg CreateNewsParams) (News, error) {
+	v, err := p.q.CreateNews(ctx, storepg.CreateNewsParams(arg))
+	if err != nil {
+		return News{}, err
+	}
+	return News(v), nil
+}
+
+func (p *PG) CreateNewsAsset(ctx context.Context, arg CreateNewsAssetParams) (NewsAsset, error) {
+	v, err := p.q.CreateNewsAsset(ctx, storepg.CreateNewsAssetParams(arg))
+	if err != nil {
+		return NewsAsset{}, err
+	}
+	return NewsAsset(v), nil
+}
+
 func (p *PG) CreateSetup(ctx context.Context, arg CreateSetupParams) (Setup, error) {
 	v, err := p.q.CreateSetup(ctx, storepg.CreateSetupParams(arg))
 	if err != nil {
@@ -182,6 +198,14 @@ func (p *PG) DeleteJournalNote(ctx context.Context, arg DeleteJournalNoteParams)
 
 func (p *PG) DeleteMediaFile(ctx context.Context, arg DeleteMediaFileParams) (int64, error) {
 	return p.q.DeleteMediaFile(ctx, storepg.DeleteMediaFileParams(arg))
+}
+
+func (p *PG) DeleteNews(ctx context.Context, arg DeleteNewsParams) (int64, error) {
+	return p.q.DeleteNews(ctx, storepg.DeleteNewsParams(arg))
+}
+
+func (p *PG) DeleteNewsAsset(ctx context.Context, arg DeleteNewsAssetParams) (int64, error) {
+	return p.q.DeleteNewsAsset(ctx, storepg.DeleteNewsAssetParams(arg))
 }
 
 func (p *PG) DeletePropSettings(ctx context.Context, arg DeletePropSettingsParams) error {
@@ -358,6 +382,22 @@ func (p *PG) GetMediaFile(ctx context.Context, arg GetMediaFileParams) (MediaFil
 		return MediaFile{}, err
 	}
 	return MediaFile(v), nil
+}
+
+func (p *PG) GetNews(ctx context.Context, arg GetNewsParams) (News, error) {
+	v, err := p.q.GetNews(ctx, storepg.GetNewsParams(arg))
+	if err != nil {
+		return News{}, err
+	}
+	return News(v), nil
+}
+
+func (p *PG) GetNewsAsset(ctx context.Context, arg GetNewsAssetParams) (NewsAsset, error) {
+	v, err := p.q.GetNewsAsset(ctx, storepg.GetNewsAssetParams(arg))
+	if err != nil {
+		return NewsAsset{}, err
+	}
+	return NewsAsset(v), nil
 }
 
 func (p *PG) GetOcrSettings(ctx context.Context) (GetOcrSettingsRow, error) {
@@ -703,6 +743,22 @@ func (p *PG) ListMediaFilesForUser(ctx context.Context, userID string) ([]MediaF
 	return func() []MediaFile { in := v; out := make([]MediaFile, len(in)); for i := range in { out[i] = MediaFile(in[i]) }; return out }(), nil
 }
 
+func (p *PG) ListNews(ctx context.Context, userID string) ([]News, error) {
+	v, err := p.q.ListNews(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	return func() []News { in := v; out := make([]News, len(in)); for i := range in { out[i] = News(in[i]) }; return out }(), nil
+}
+
+func (p *PG) ListNewsAssets(ctx context.Context, arg ListNewsAssetsParams) ([]NewsAsset, error) {
+	v, err := p.q.ListNewsAssets(ctx, storepg.ListNewsAssetsParams(arg))
+	if err != nil {
+		return nil, err
+	}
+	return func() []NewsAsset { in := v; out := make([]NewsAsset, len(in)); for i := range in { out[i] = NewsAsset(in[i]) }; return out }(), nil
+}
+
 func (p *PG) ListOptionExecutionDetailsForUser(ctx context.Context, userID string) ([]ListOptionExecutionDetailsForUserRow, error) {
 	v, err := p.q.ListOptionExecutionDetailsForUser(ctx, userID)
 	if err != nil {
@@ -905,6 +961,22 @@ func (p *PG) UpdateJournalNote(ctx context.Context, arg UpdateJournalNoteParams)
 		return JournalNote{}, err
 	}
 	return JournalNote(v), nil
+}
+
+func (p *PG) UpdateNews(ctx context.Context, arg UpdateNewsParams) (News, error) {
+	v, err := p.q.UpdateNews(ctx, storepg.UpdateNewsParams(arg))
+	if err != nil {
+		return News{}, err
+	}
+	return News(v), nil
+}
+
+func (p *PG) UpdateNewsAsset(ctx context.Context, arg UpdateNewsAssetParams) (NewsAsset, error) {
+	v, err := p.q.UpdateNewsAsset(ctx, storepg.UpdateNewsAssetParams(arg))
+	if err != nil {
+		return NewsAsset{}, err
+	}
+	return NewsAsset(v), nil
 }
 
 func (p *PG) UpdateSetup(ctx context.Context, arg UpdateSetupParams) error {
