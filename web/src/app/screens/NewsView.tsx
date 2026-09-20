@@ -1,13 +1,4 @@
-import {
-  AlertCircle,
-  ExternalLink,
-  Newspaper,
-  Pencil,
-  Plus,
-  RefreshCw,
-  Trash2,
-  X,
-} from "lucide-react";
+import { AlertCircle, Newspaper, Plus, RefreshCw, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
 import { DateTimePicker } from "@/components/DateTimePicker";
@@ -23,16 +14,17 @@ import {
 import { EmptyState } from "@/components/EmptyState";
 import { Field } from "@/components/Field";
 import { FormInput, FormTextarea } from "@/components/FormInput";
-import { NewsPredictions, type PredictionActions } from "@/components/NewsPredictions";
+import { type PredictionActions } from "@/components/NewsPredictions";
 import { Page } from "@/components/Page";
-import { Pill } from "@/components/Pill";
+import { NewsTable } from "@/components/NewsTable";
+import { filterNews, useNewsFilters } from "@/lib/newsFilters";
 import { ListSkeleton } from "@/components/skeletons/list-skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import type { News, NewsAssetType, NewsBody } from "@/lib/api/news";
 import { isoToWallClock, wallClockToIso } from "@/lib/displayPrefs";
-import { fmtDateTime } from "@/lib/format";
+
 import type { NewsAssetDraft } from "@/lib/hooks/useNews";
 
 export interface NewsFormValue {
@@ -466,6 +458,8 @@ export function NewsView({
 }: NewsViewProps) {
   const [editing, setEditing] = useState<News | null | undefined>(undefined);
   const [deleting, setDeleting] = useState<News>();
+  const { filters, setFilters, reset } = useNewsFilters();
+  const filtered = filterNews(news, filters);
 
   return (
     <Page>
@@ -480,6 +474,65 @@ export function NewsView({
           <Plus aria-hidden /> New entry
         </Button>
       </header>
+
+      <section
+        aria-label="News filters"
+        className="flex flex-wrap items-end gap-3 rounded-lg bg-card p-3"
+      >
+        <Field label="Validation">
+          <NativeSelect
+            aria-label="Validation filter"
+            value={filters.status}
+            onChange={(e) => setFilters({ status: e.target.value as typeof filters.status })}
+          >
+            <NativeSelectOption value="all">All statuses</NativeSelectOption>
+            <NativeSelectOption value="pending">Pending</NativeSelectOption>
+            <NativeSelectOption value="validated">Validated</NativeSelectOption>
+          </NativeSelect>
+        </Field>
+        <Field label="Direction">
+          <NativeSelect
+            aria-label="Direction filter"
+            value={filters.direction}
+            onChange={(e) => setFilters({ direction: e.target.value as typeof filters.direction })}
+          >
+            {["all", "bullish", "bearish", "neutral"].map((d) => (
+              <NativeSelectOption key={d} value={d}>
+                {d === "all" ? "All directions" : d[0].toUpperCase() + d.slice(1)}
+              </NativeSelectOption>
+            ))}
+          </NativeSelect>
+        </Field>
+        <Field label="Symbol">
+          <FormInput
+            aria-label="Symbol filter"
+            placeholder="285A"
+            value={filters.symbol}
+            onChange={(e) => setFilters({ symbol: e.target.value })}
+          />
+        </Field>
+        <Field label="From">
+          <FormInput
+            aria-label="Published from"
+            type="date"
+            value={filters.from}
+            max={filters.to || undefined}
+            onChange={(e) => setFilters({ from: e.target.value })}
+          />
+        </Field>
+        <Field label="To">
+          <FormInput
+            aria-label="Published to"
+            type="date"
+            value={filters.to}
+            min={filters.from || undefined}
+            onChange={(e) => setFilters({ to: e.target.value })}
+          />
+        </Field>
+        <Button variant="outline" onClick={reset}>
+          Reset filters
+        </Button>
+      </section>
 
       {loading ? (
         <Card>
@@ -510,74 +563,29 @@ export function NewsView({
           />
         </Card>
       ) : (
-        <Card title={`${news.length} ${news.length === 1 ? "entry" : "entries"}`} flush>
-          <div className="flex flex-col gap-1 p-2">
-            {news.map((item) => (
-              <article
-                key={item.id}
-                className="rounded-md px-3 py-3 transition-colors hover:bg-accent"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="text-sm font-semibold">{item.title}</h2>
-                      {item.category ? <Pill tone="accent">{item.category}</Pill> : null}
-                    </div>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {item.source} · {fmtDateTime(item.published_at)}
-                    </p>
-                    {item.summary || item.notes ? (
-                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-                        {item.summary || item.notes}
-                      </p>
-                    ) : null}
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {item.assets.map((asset) => (
-                        <Pill key={asset.id}>
-                          {asset.symbol} · {asset.asset_type.toUpperCase()}
-                        </Pill>
-                      ))}
-                      {item.tags.map((tag) => (
-                        <Pill key={tag} tone="accent">
-                          #{tag}
-                        </Pill>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-1">
-                    {item.url ? (
-                      <Button
-                        render={<a href={item.url} target="_blank" rel="noreferrer" />}
-                        variant="ghost"
-                        size="icon-sm"
-                        aria-label={`Open source for ${item.title}`}
-                      >
-                        <ExternalLink aria-hidden />
-                      </Button>
-                    ) : null}
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      aria-label={`Edit ${item.title}`}
-                      onClick={() => setEditing(item)}
-                    >
-                      <Pencil aria-hidden />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      className="text-muted-foreground hover:text-destructive"
-                      aria-label={`Delete ${item.title}`}
-                      onClick={() => setDeleting(item)}
-                    >
-                      <Trash2 aria-hidden />
-                    </Button>
-                  </div>
-                </div>
-                {predictionActions && <NewsPredictions news={item} {...predictionActions} />}
-              </article>
-            ))}
-          </div>
+        <Card title={`${filtered.length} ${filtered.length === 1 ? "entry" : "entries"}`} flush>
+          {filtered.length ? (
+            <NewsTable
+              key={JSON.stringify(filters)}
+              news={filtered}
+              onEdit={setEditing}
+              onDelete={setDeleting}
+              predictionActions={predictionActions}
+            />
+          ) : (
+            <div className="p-6">
+              <EmptyState
+                icon={<Newspaper aria-hidden />}
+                title="No matching theses"
+                hint="Change or reset filters to see more entries."
+                actions={
+                  <Button variant="outline" onClick={reset}>
+                    Reset filters
+                  </Button>
+                }
+              />
+            </div>
+          )}
         </Card>
       )}
 
