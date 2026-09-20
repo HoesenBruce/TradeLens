@@ -228,6 +228,36 @@ type MediaFile struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
+type News struct {
+	ID           string    `json:"id"`
+	UserID       string    `json:"user_id"`
+	Title        string    `json:"title"`
+	Source       string    `json:"source"`
+	Url          string    `json:"url"`
+	PublishedAt  time.Time `json:"published_at"`
+	OriginalText string    `json:"original_text"`
+	Notes        string    `json:"notes"`
+	Summary      string    `json:"summary"`
+	Category     string    `json:"category"`
+	Tags         string    `json:"tags"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+}
+
+type NewsAsset struct {
+	ID          string    `json:"id"`
+	NewsID      string    `json:"news_id"`
+	AssetType   string    `json:"asset_type"`
+	Symbol      string    `json:"symbol"`
+	Market      string    `json:"market"`
+	Exchange    string    `json:"exchange"`
+	DisplayName string    `json:"display_name"`
+	Relation    string    `json:"relation"`
+	Source      string    `json:"source"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}
+
 type OcrSetting struct {
 	ID           int64     `json:"id"`
 	Enabled      int64     `json:"enabled"`
