@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Fragment, useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -57,7 +58,13 @@ export function NewsTable({
                   {fmtDateTime(n.published_at)}
                 </TableCell>
                 <TableCell className="min-w-52 max-w-80 whitespace-normal">
-                  <strong>{n.title}</strong>
+                  <Link
+                    to="/news/$id"
+                    params={{ id: n.id }}
+                    className="font-semibold hover:underline"
+                  >
+                    {n.title}
+                  </Link>
                   <p className="mt-1 text-xs text-muted-foreground">{n.source}</p>
                 </TableCell>
                 <TableCell>

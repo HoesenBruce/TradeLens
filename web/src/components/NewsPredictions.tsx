@@ -10,6 +10,15 @@ import {
 } from "@/components/Dialog";
 import { Field } from "@/components/Field";
 import { FormInput, FormTextarea } from "@/components/FormInput";
+import { fmtDateTime } from "@/lib/format";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Pill } from "@/components/Pill";
 import { Button } from "@/components/ui/button";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
@@ -187,7 +196,8 @@ export function NewsPredictions({
   news,
   onSavePrediction,
   onDeletePrediction,
-}: { news: News } & PredictionActions) {
+  detail = false,
+}: { news: News; detail?: boolean } & PredictionActions) {
   const [editing, setEditing] = useState<Prediction | null | undefined>();
   const [deleting, setDeleting] = useState<Prediction>();
   const [busy, setBusy] = useState(false);
@@ -227,7 +237,43 @@ export function NewsPredictions({
             <span>{p.horizons.map((h) => `${h}D`).join(" / ")}</span>
           </div>
           {p.reasoning && <p className="mt-2 whitespace-pre-wrap">{p.reasoning}</p>}
-          <p className="mt-2 text-xs text-muted-foreground">Pending validation</p>
+          {detail ? (
+            <div className="mt-3 space-y-3">
+              <p className="text-xs text-muted-foreground">
+                Created {fmtDateTime(p.created_at)} · Updated {fmtDateTime(p.updated_at)}
+              </p>
+              <dl className="grid gap-3 sm:grid-cols-2">
+                {(["catalysts", "risks", "invalidation"] as const).map((field) => (
+                  <div key={field}>
+                    <dt className="text-xs font-medium capitalize text-muted-foreground">
+                      {field}
+                    </dt>
+                    <dd className="mt-1 whitespace-pre-wrap">{p[field] || "Not recorded"}</dd>
+                  </div>
+                ))}
+              </dl>
+              <Table aria-label={`Validation horizons for ${p.source} prediction`}>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Trading-day horizon</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Result</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {p.horizons.map((h) => (
+                    <TableRow key={h}>
+                      <TableCell>{h}D</TableCell>
+                      <TableCell>Pending validation</TableCell>
+                      <TableCell>Not available</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <p className="mt-2 text-xs text-muted-foreground">Pending validation</p>
+          )}
           {p.source === "user" && (
             <div className="mt-2 flex gap-2">
               <Button size="sm" variant="ghost" onClick={() => setEditing(p)}>

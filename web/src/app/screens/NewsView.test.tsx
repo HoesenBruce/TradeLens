@@ -6,6 +6,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import type { News } from "@/lib/api/news";
 import { NewsView, type NewsFormValue } from "./NewsView";
 
+vi.mock("@tanstack/react-router", () => ({
+  Link: ({ children, params }: { children: React.ReactNode; params: { id: string } }) => (
+    <a href={`/news/${params.id}`}>{children}</a>
+  ),
+}));
+
 const item: News = {
   id: "news-1",
   user_id: "user-1",

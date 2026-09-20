@@ -74,3 +74,7 @@ export function usePredictionActions() {
     },
   };
 }
+
+export function useNewsDetail(id: string) {
+  return useQuery({ queryKey: ["news", id], queryFn: () => newsApi.get(id) });
+}

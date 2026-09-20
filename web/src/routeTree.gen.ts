@@ -30,6 +30,8 @@ import { Route as TradesRouteImport } from './routes/trades'
 import { Route as WrappedRouteImport } from './routes/wrapped'
 import { Route as AccountsAccountIdRouteImport } from './routes/accounts.$accountId'
 import { Route as DayDateRouteImport } from './routes/day.$date'
+import { Route as NewsIndexRouteImport } from './routes/news.index'
+import { Route as NewsIdRouteImport } from './routes/news.$id'
 import { Route as STokenRouteImport } from './routes/s.$token'
 import { Route as TradesIndexRouteImport } from './routes/trades.index'
 import { Route as TradesIdRouteImport } from './routes/trades.$id'
@@ -139,6 +141,16 @@ const DayDateRoute = DayDateRouteImport.update({
   path: '/day/$date',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewsIndexRoute = NewsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => NewsRoute,
+} as any)
+const NewsIdRoute = NewsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => NewsRoute,
+} as any)
 const STokenRoute = STokenRouteImport.update({
   id: '/s/$token',
   path: '/s/$token',
@@ -166,7 +178,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/import': typeof ImportRoute
   '/login': typeof LoginRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/notes': typeof NotesRoute
   '/playbook': typeof PlaybookRoute
   '/replay': typeof ReplayRoute
@@ -177,8 +189,10 @@ export interface FileRoutesByFullPath {
   '/wrapped': typeof WrappedRoute
   '/accounts/$accountId': typeof AccountsAccountIdRoute
   '/day/$date': typeof DayDateRoute
+  '/news/$id': typeof NewsIdRoute
   '/s/$token': typeof STokenRoute
   '/trades/$id': typeof TradesIdRoute
+  '/news/': typeof NewsIndexRoute
   '/trades/': typeof TradesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -192,7 +206,6 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/import': typeof ImportRoute
   '/login': typeof LoginRoute
-  '/news': typeof NewsRoute
   '/notes': typeof NotesRoute
   '/playbook': typeof PlaybookRoute
   '/replay': typeof ReplayRoute
@@ -202,8 +215,10 @@ export interface FileRoutesByTo {
   '/wrapped': typeof WrappedRoute
   '/accounts/$accountId': typeof AccountsAccountIdRoute
   '/day/$date': typeof DayDateRoute
+  '/news/$id': typeof NewsIdRoute
   '/s/$token': typeof STokenRoute
   '/trades/$id': typeof TradesIdRoute
+  '/news': typeof NewsIndexRoute
   '/trades': typeof TradesIndexRoute
 }
 export interface FileRoutesById {
@@ -218,7 +233,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/import': typeof ImportRoute
   '/login': typeof LoginRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/notes': typeof NotesRoute
   '/playbook': typeof PlaybookRoute
   '/replay': typeof ReplayRoute
@@ -229,8 +244,10 @@ export interface FileRoutesById {
   '/wrapped': typeof WrappedRoute
   '/accounts/$accountId': typeof AccountsAccountIdRoute
   '/day/$date': typeof DayDateRoute
+  '/news/$id': typeof NewsIdRoute
   '/s/$token': typeof STokenRoute
   '/trades/$id': typeof TradesIdRoute
+  '/news/': typeof NewsIndexRoute
   '/trades/': typeof TradesIndexRoute
 }
 export interface FileRouteTypes {
@@ -257,8 +274,10 @@ export interface FileRouteTypes {
     | '/wrapped'
     | '/accounts/$accountId'
     | '/day/$date'
+    | '/news/$id'
     | '/s/$token'
     | '/trades/$id'
+    | '/news/'
     | '/trades/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -272,7 +291,6 @@ export interface FileRouteTypes {
     | '/home'
     | '/import'
     | '/login'
-    | '/news'
     | '/notes'
     | '/playbook'
     | '/replay'
@@ -282,8 +300,10 @@ export interface FileRouteTypes {
     | '/wrapped'
     | '/accounts/$accountId'
     | '/day/$date'
+    | '/news/$id'
     | '/s/$token'
     | '/trades/$id'
+    | '/news'
     | '/trades'
   id:
     | '__root__'
@@ -308,8 +328,10 @@ export interface FileRouteTypes {
     | '/wrapped'
     | '/accounts/$accountId'
     | '/day/$date'
+    | '/news/$id'
     | '/s/$token'
     | '/trades/$id'
+    | '/news/'
     | '/trades/'
   fileRoutesById: FileRoutesById
 }
@@ -324,7 +346,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   ImportRoute: typeof ImportRoute
   LoginRoute: typeof LoginRoute
-  NewsRoute: typeof NewsRoute
+  NewsRoute: typeof NewsRouteWithChildren
   NotesRoute: typeof NotesRoute
   PlaybookRoute: typeof PlaybookRoute
   ReplayRoute: typeof ReplayRoute
@@ -487,6 +509,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DayDateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news/': {
+      id: '/news/'
+      path: '/'
+      fullPath: '/news/'
+      preLoaderRoute: typeof NewsIndexRouteImport
+      parentRoute: typeof NewsRoute
+    }
+    '/news/$id': {
+      id: '/news/$id'
+      path: '/$id'
+      fullPath: '/news/$id'
+      preLoaderRoute: typeof NewsIdRouteImport
+      parentRoute: typeof NewsRoute
+    }
     '/s/$token': {
       id: '/s/$token'
       path: '/s/$token'
@@ -510,6 +546,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface NewsRouteChildren {
+  NewsIdRoute: typeof NewsIdRoute
+  NewsIndexRoute: typeof NewsIndexRoute
+}
+
+const NewsRouteChildren: NewsRouteChildren = {
+  NewsIdRoute: NewsIdRoute,
+  NewsIndexRoute: NewsIndexRoute,
+}
+
+const NewsRouteWithChildren = NewsRoute._addFileChildren(NewsRouteChildren)
 
 interface TradesRouteChildren {
   TradesIdRoute: typeof TradesIdRoute
@@ -535,7 +583,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   ImportRoute: ImportRoute,
   LoginRoute: LoginRoute,
-  NewsRoute: NewsRoute,
+  NewsRoute: NewsRouteWithChildren,
   NotesRoute: NotesRoute,
   PlaybookRoute: PlaybookRoute,
   ReplayRoute: ReplayRoute,
