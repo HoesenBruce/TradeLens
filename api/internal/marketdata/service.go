@@ -42,6 +42,10 @@ func (s *Service) GetBars(ctx context.Context, req Request) (Response, error) {
 	if s.Provider == nil {
 		return Response{}, errors.New("market data provider not configured")
 	}
+	if provider, ok := s.Provider.(ResponseProvider); ok {
+		// Preserve response metadata rather than passing it through the legacy bars-only cache.
+		return provider.FetchResponse(ctx, req)
+	}
 	key := CacheKey(req)
 	if bars, ok := s.mem.get(key); ok {
 		return responseFor(req, s.Provider.Name(), true, bars), nil
@@ -68,6 +72,11 @@ func (s *Service) GetTransactionBars(ctx context.Context, req Request, earliest 
 	required := req
 	required.From = marketDayOffset(req, earliest, -DefaultDailyMarketDataLookbackDays)
 	required.To = marketDayOffset(req, time.Now(), 1)
+	if _, ok := s.Provider.(ResponseProvider); ok {
+		response, err := s.GetBars(ctx, required)
+		response.From, response.To = FormatTimeRFC3339(req.From), FormatTimeRFC3339(req.To)
+		return response, err
+	}
 	key := strings.Join([]string{"daily-coverage-v1", strings.ToUpper(req.Symbol), req.InstrumentType}, "|")
 
 	v, err, _ := s.group.Do(key, func() (any, error) {
@@ -295,8 +304,17 @@ func (c *memCache) set(key string, bars []Bar, expires *time.Time) {
 }
 
 // NewProvider picks a market data provider from config.
-func NewProvider(providerName, apiKey string) Provider {
+func NewProvider(providerName, apiKey string, httpConfig ...string) Provider {
 	switch providerName {
+	case "http":
+		var baseURL, key string
+		if len(httpConfig) > 0 {
+			baseURL = httpConfig[0]
+		}
+		if len(httpConfig) > 1 {
+			key = httpConfig[1]
+		}
+		return NewHTTPProvider(baseURL, key)
 	case "finnhub":
 		if apiKey != "" {
 			return NewFinnhubProvider(apiKey)

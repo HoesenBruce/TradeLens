@@ -79,7 +79,7 @@ func main() {
 	var marketSvc *marketdata.Service
 	var accountValueSvc *accountvalue.Service
 	if cfg.MarketDataEnabled {
-		provider := marketdata.NewProvider(cfg.MarketDataProvider, cfg.MarketDataAPIKey)
+		provider := marketdata.NewProvider(cfg.MarketDataProvider, cfg.MarketDataAPIKey, cfg.MarketDataHTTPBaseURL, cfg.MarketDataHTTPAPIKey)
 		marketSvc = marketdata.NewService(q, provider)
 		accountValueSvc = accountvalue.NewService(marketSvc.GetBars)
 		logger.Info("market data enabled", "provider", provider.Name())
