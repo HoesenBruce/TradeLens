@@ -198,13 +198,21 @@ func GenerateReview(ctx context.Context, cfg ocr.VisionConfig, trade TradeContex
 	return review, err
 }
 
-// requestReview performs one chat completion and decodes it into a Review.
-func requestReview(
+func requestReview(ctx context.Context, cfg ocr.VisionConfig, messages []chatMessage, format *chatFmt) (Review, error) {
+	content, err := requestContent(ctx, cfg, messages, format)
+	if err != nil {
+		return Review{}, err
+	}
+	return parseReview(content)
+}
+
+// requestContent shares the bounded OpenAI-compatible transport across structured tasks.
+func requestContent(
 	ctx context.Context,
 	cfg ocr.VisionConfig,
 	messages []chatMessage,
 	format *chatFmt,
-) (Review, error) {
+) (string, error) {
 	payload, err := json.Marshal(chatRequest{
 		Model:          modelName(cfg),
 		Messages:       messages,
@@ -212,14 +220,14 @@ func requestReview(
 		Temperature:    0.3,
 	})
 	if err != nil {
-		return Review{}, err
+		return "", err
 	}
 
 	base := strings.TrimRight(strings.TrimSpace(cfg.BaseURL), "/")
 	url := base + "/chat/completions"
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(payload))
 	if err != nil {
-		return Review{}, err
+		return "", err
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+strings.TrimSpace(cfg.APIKey))
@@ -227,43 +235,43 @@ func requestReview(
 	res, err := client(cfg).Do(req)
 	if err != nil {
 		if isTimeoutErr(err) {
-			return Review{}, fmt.Errorf(
+			return "", fmt.Errorf(
 				"%w: coach API at %s did not respond within %s",
 				ErrTimeout,
 				base,
 				timeout(cfg),
 			)
 		}
-		return Review{}, err
+		return "", err
 	}
 	defer res.Body.Close()
 	raw, err := io.ReadAll(io.LimitReader(res.Body, 2<<20))
 	if err != nil {
-		return Review{}, err
+		return "", err
 	}
 	if res.StatusCode >= 300 {
 		apiErr := fmt.Errorf("coach api %s: %s", res.Status, truncateRunes(string(raw), 300))
 		if isSchemaRequest(format) && rejectsRequestShape(res.StatusCode) {
-			return Review{}, fmt.Errorf("%w: %w", errFormatRejected, apiErr)
+			return "", fmt.Errorf("%w: %w", errFormatRejected, apiErr)
 		}
-		return Review{}, apiErr
+		return "", apiErr
 	}
 
 	var api chatAPIResponse
 	if err := json.Unmarshal(raw, &api); err != nil {
-		return Review{}, fmt.Errorf("coach decode: %w", err)
+		return "", fmt.Errorf("coach decode: %w", err)
 	}
 	if api.Error != nil && api.Error.Message != "" {
-		return Review{}, fmt.Errorf("coach api: %s", api.Error.Message)
+		return "", fmt.Errorf("coach api: %s", api.Error.Message)
 	}
 	if len(api.Choices) == 0 {
-		return Review{}, fmt.Errorf("coach api: empty choices")
+		return "", fmt.Errorf("coach api: empty choices")
 	}
 	content, err := messageText(api.Choices[0].Message.Content)
 	if err != nil {
-		return Review{}, err
+		return "", err
 	}
-	return parseReview(content)
+	return content, nil
 }
 
 // parseReview turns a raw model payload into a Review, repairing the common

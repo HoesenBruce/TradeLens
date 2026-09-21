@@ -75,3 +75,21 @@ browser suites passed together with Service Worker caching disabled.
 Inspected screenshots: [detail](../screenshots/news-predictions/detail.png),
 [AI record](../screenshots/news-predictions/detail-ai.png),
 [deleted](../screenshots/news-predictions/deleted.png). Mobile remains outside validation scope.
+
+## Structured AI news analysis
+
+`coach.AnalyzeNews` reuses the Coach OpenAI-compatible transport/configuration and asks for
+`news_analysis` JSON Schema before falling back to JSON-object mode on format rejection.
+A single configured timeout bounds both attempts. The news prompt is separate from the
+custom trade-coaching prompt; input news is treated as untrusted content.
+
+The result contains a summary, category and up to 20 affected assets (stock/ETF/index), each
+with symbol, market/exchange/name, direction, integer confidence 0–100, reasoning,
+catalysts, risks and unique 1/3/5/10/20 trading-day horizons. Alphanumeric symbols such as
+`285A` are preserved. Empty asset lists are valid. Required fields, unknown fields, types,
+enums and ranges are checked locally in both response modes; malformed or partial output
+fails as a whole. The service only returns tentative suggestions and never writes user data.
+
+`go test ./internal/coach` covers schema/fallback, multiple assets, missing/null/invalid
+fields, authentication/quota failures and timeouts with a local HTTP provider fixture.
+These are deterministic transport tests, not validation of a live model's analysis quality.
