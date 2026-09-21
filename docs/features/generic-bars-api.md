@@ -48,3 +48,14 @@ contract. They currently fetch fresh responses rather than discard metadata in t
 legacy bars-only cache. Legacy provider caching is unchanged. The service preserves
 source/timezone/adjustment and split evidence for both chart request paths. This API
 does not promise authoritative corporate-action coverage or final daily-bar completeness.
+
+Validation-capable archives should expose optional RFC3339 `fetched_at` on each
+bar (actual source acquisition time), or on the response when one source snapshot
+covers all bars. Reading an archive over HTTP must not advance these timestamps.
+Missing provenance remains unknown and produces an incomplete validation; it does
+not prevent chart display. This is an additive v1 field.
+Optional `corporate_actions` uses the shared candidate shape (`effective_date`,
+`candidate_type`, `suspected_ratio`, `status`, `source`, `evidence`). Explicitly
+reviewed `rejected` candidates suppress only an exact date/type/ratio detection
+match. Cash-dividend evidence is retained without converting price return to total
+return. Unknown events never imply verified corporate-action completeness.

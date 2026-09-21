@@ -67,6 +67,16 @@ func (p *HTTPProvider) FetchResponse(ctx context.Context, req Request) (Response
 	}
 	defer response.Body.Close()
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
+		if response.StatusCode == http.StatusUnprocessableEntity {
+			var remote struct {
+				Error struct {
+					Code string `json:"code"`
+				} `json:"error"`
+			}
+			if json.NewDecoder(io.LimitReader(response.Body, 1024)).Decode(&remote) == nil && remote.Error.Code == "unsupported_interval" {
+				return Response{}, ErrUnsupportedResolution
+			}
+		}
 		return fail(fmt.Sprintf("status %d", response.StatusCode))
 	}
 	raw, err := io.ReadAll(io.LimitReader(response.Body, maxHTTPBarsBytes+1))
@@ -74,20 +84,23 @@ func (p *HTTPProvider) FetchResponse(ctx context.Context, req Request) (Response
 		return fail("response unreadable or too large")
 	}
 	var wire struct {
-		Symbol           string `json:"symbol"`
-		Interval         string `json:"interval"`
-		Source           string `json:"source"`
-		Timezone         string `json:"timezone"`
-		AdjustmentStatus string `json:"adjustment_status"`
+		CorporateActions []CorporateActionCandidate `json:"corporate_actions"`
+		Symbol           string                     `json:"symbol"`
+		Interval         string                     `json:"interval"`
+		Source           string                     `json:"source"`
+		Timezone         string                     `json:"timezone"`
+		AdjustmentStatus string                     `json:"adjustment_status"`
+		FetchedAt        *time.Time                 `json:"fetched_at"`
 		Bars             *[]struct {
-			Timestamp  time.Time `json:"timestamp"`
-			MarketDate string    `json:"market_date"`
-			Open       *float64  `json:"open"`
-			High       *float64  `json:"high"`
-			Low        *float64  `json:"low"`
-			Close      *float64  `json:"close"`
-			Volume     *float64  `json:"volume"`
-			SplitRatio float64   `json:"split_ratio"`
+			Timestamp  time.Time  `json:"timestamp"`
+			FetchedAt  *time.Time `json:"fetched_at"`
+			MarketDate string     `json:"market_date"`
+			Open       *float64   `json:"open"`
+			High       *float64   `json:"high"`
+			Low        *float64   `json:"low"`
+			Close      *float64   `json:"close"`
+			Volume     *float64   `json:"volume"`
+			SplitRatio float64    `json:"split_ratio"`
 		} `json:"bars"`
 	}
 	if json.Unmarshal(raw, &wire) != nil || wire.Bars == nil {
@@ -131,8 +144,8 @@ func (p *HTTPProvider) FetchResponse(ctx context.Context, req Request) (Response
 				return fail("invalid market date")
 			}
 		}
-		bars = append(bars, Bar{Time: b.Timestamp.Unix(), MarketDate: date, Open: *b.Open, High: *b.High, Low: *b.Low, Close: *b.Close, Volume: *b.Volume, SplitRatio: b.SplitRatio})
+		bars = append(bars, Bar{Time: b.Timestamp.Unix(), FetchedAt: b.FetchedAt, MarketDate: date, Open: *b.Open, High: *b.High, Low: *b.Low, Close: *b.Close, Volume: *b.Volume, SplitRatio: b.SplitRatio})
 	}
 	sort.Slice(bars, func(i, j int) bool { return bars[i].Time < bars[j].Time })
-	return Response{Symbol: req.Symbol, Instrument: wire.Symbol, Interval: req.Interval, From: FormatTimeRFC3339(req.From), To: FormatTimeRFC3339(req.To), Provider: p.Name(), Source: wire.Source, Timezone: wire.Timezone, AdjustmentStatus: wire.AdjustmentStatus, Bars: bars}, nil
+	return Response{CorporateActions: wire.CorporateActions, Symbol: req.Symbol, Instrument: wire.Symbol, Interval: req.Interval, From: FormatTimeRFC3339(req.From), To: FormatTimeRFC3339(req.To), Provider: p.Name(), FetchedAt: wire.FetchedAt, Source: wire.Source, Timezone: wire.Timezone, AdjustmentStatus: wire.AdjustmentStatus, Bars: bars}, nil
 }

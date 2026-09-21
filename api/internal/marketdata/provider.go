@@ -1,6 +1,11 @@
 package marketdata
 
-import "context"
+import (
+	"context"
+	"errors"
+)
+
+var ErrUnsupportedResolution = errors.New("market data resolution unsupported")
 
 // Provider fetches OHLCV bars from an external market data source.
 type Provider interface {

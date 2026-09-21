@@ -78,6 +78,7 @@ type Querier interface {
 	GetNewsAsset(ctx context.Context, arg GetNewsAssetParams) (NewsAsset, error)
 	GetOcrSettings(ctx context.Context) (GetOcrSettingsRow, error)
 	GetPrediction(ctx context.Context, arg GetPredictionParams) (Prediction, error)
+	GetPredictionRevision(ctx context.Context, arg GetPredictionRevisionParams) (int64, error)
 	GetPropSettings(ctx context.Context, arg GetPropSettingsParams) (PropSetting, error)
 	GetRiskRules(ctx context.Context, userID string) (RiskRule, error)
 	GetSetup(ctx context.Context, arg GetSetupParams) (Setup, error)
@@ -123,6 +124,7 @@ type Querier interface {
 	ListNewsAssets(ctx context.Context, arg ListNewsAssetsParams) ([]NewsAsset, error)
 	ListOptionExecutionDetailsForUser(ctx context.Context, userID string) ([]ListOptionExecutionDetailsForUserRow, error)
 	ListOptionExecutions(ctx context.Context) ([]Execution, error)
+	ListPredictionEvaluations(ctx context.Context, arg ListPredictionEvaluationsParams) ([]PredictionEvaluation, error)
 	ListPredictionHorizons(ctx context.Context, arg ListPredictionHorizonsParams) ([]PredictionHorizon, error)
 	ListPredictions(ctx context.Context, arg ListPredictionsParams) ([]Prediction, error)
 	ListPropSettingsForUser(ctx context.Context, userID string) ([]PropSetting, error)
@@ -147,6 +149,7 @@ type Querier interface {
 	RecordAccessTokenUse(ctx context.Context, arg RecordAccessTokenUseParams) error
 	RevokeAccessToken(ctx context.Context, arg RevokeAccessTokenParams) (int64, error)
 	RevokeShareLink(ctx context.Context, arg RevokeShareLinkParams) (int64, error)
+	SavePredictionEvaluation(ctx context.Context, arg SavePredictionEvaluationParams) (PredictionEvaluation, error)
 	SetAlertChannelEnabled(ctx context.Context, arg SetAlertChannelEnabledParams) (AlertChannel, error)
 	SetImportBatchStatus(ctx context.Context, arg SetImportBatchStatusParams) error
 	SetTradeSetup(ctx context.Context, arg SetTradeSetupParams) error
