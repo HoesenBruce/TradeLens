@@ -3,6 +3,7 @@ import { useState } from "react";
 import { NewsFormDialog } from "@/app/screens/NewsView";
 import { Card } from "@/components/Card";
 import { EmptyState } from "@/components/EmptyState";
+import { NewsAnalysisReview } from "@/components/NewsAnalysisReview";
 import { NewsPredictions } from "@/components/NewsPredictions";
 import { Page } from "@/components/Page";
 import { Pill } from "@/components/Pill";
@@ -58,7 +59,10 @@ function NewsDetailPage() {
                 {news.source} · {fmtDateTime(news.published_at)}
               </p>
             </div>
-            <Button onClick={() => setEditing(true)}>Edit news thesis</Button>
+            <div className="flex gap-2">
+              <NewsAnalysisReview key={news.id} news={news} />
+              <Button onClick={() => setEditing(true)}>Edit news thesis</Button>
+            </div>
           </header>
           <Card
             title="News / source"
