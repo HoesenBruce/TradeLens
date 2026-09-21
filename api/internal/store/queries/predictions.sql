@@ -23,7 +23,7 @@ ORDER BY predictions.created_at, predictions.id;
 -- name: UpdatePrediction :one
 UPDATE predictions SET direction = sqlc.arg(direction), confidence = sqlc.narg(confidence),
   reasoning = sqlc.arg(reasoning), catalysts = sqlc.arg(catalysts), risks = sqlc.arg(risks),
-  invalidation = sqlc.arg(invalidation), updated_at = CURRENT_TIMESTAMP
+  invalidation = sqlc.arg(invalidation), updated_at = strftime('%Y-%m-%d %H:%M:%f', 'now')
 WHERE predictions.id = sqlc.arg(id) AND predictions.source = sqlc.arg(source) AND EXISTS (SELECT 1 FROM news_assets JOIN news ON news.id = news_assets.news_id
   WHERE news_assets.id = predictions.news_asset_id AND news.user_id = sqlc.arg(user_id))
 RETURNING *;

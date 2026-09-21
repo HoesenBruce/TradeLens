@@ -4,14 +4,15 @@ import "time"
 
 // Bar is one OHLCV candle normalized for charting.
 type Bar struct {
-	Time       int64   `json:"time"` // Unix seconds (UTC)
-	MarketDate string  `json:"market_date,omitempty"`
-	Open       float64 `json:"open"`
-	High       float64 `json:"high"`
-	Low        float64 `json:"low"`
-	Close      float64 `json:"close"`
-	Volume     float64 `json:"volume"`
-	SplitRatio float64 `json:"split_ratio,omitempty"` // new shares per old share
+	Time       int64      `json:"time"` // Unix seconds (UTC)
+	MarketDate string     `json:"market_date,omitempty"`
+	Open       float64    `json:"open"`
+	High       float64    `json:"high"`
+	Low        float64    `json:"low"`
+	Close      float64    `json:"close"`
+	Volume     float64    `json:"volume"`
+	FetchedAt  *time.Time `json:"fetched_at,omitempty"`
+	SplitRatio float64    `json:"split_ratio,omitempty"` // new shares per old share
 }
 
 // Request describes a bar fetch window.
@@ -25,15 +26,17 @@ type Request struct {
 
 // Response is returned by GET /market/bars.
 type Response struct {
-	Symbol           string `json:"symbol"`
-	Instrument       string `json:"instrument"`
-	Interval         string `json:"interval"`
-	From             string `json:"from"`
-	To               string `json:"to"`
-	Provider         string `json:"provider"`
-	Source           string `json:"source"`
-	Timezone         string `json:"timezone"`
-	AdjustmentStatus string `json:"adjustment_status"`
-	Cached           bool   `json:"cached"`
-	Bars             []Bar  `json:"bars"`
+	CorporateActions []CorporateActionCandidate `json:"corporate_actions,omitempty"`
+	Symbol           string                     `json:"symbol"`
+	Instrument       string                     `json:"instrument"`
+	Interval         string                     `json:"interval"`
+	From             string                     `json:"from"`
+	To               string                     `json:"to"`
+	Provider         string                     `json:"provider"`
+	Source           string                     `json:"source"`
+	Timezone         string                     `json:"timezone"`
+	AdjustmentStatus string                     `json:"adjustment_status"`
+	FetchedAt        *time.Time                 `json:"fetched_at,omitempty"`
+	Cached           bool                       `json:"cached"`
+	Bars             []Bar                      `json:"bars"`
 }

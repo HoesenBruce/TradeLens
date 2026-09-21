@@ -282,9 +282,25 @@ type Prediction struct {
 	UpdatedAt    time.Time     `json:"updated_at"`
 }
 
+type PredictionEvaluation struct {
+	ID                 string `json:"id"`
+	PredictionID       string `json:"prediction_id"`
+	PredictionRevision string `json:"prediction_revision"`
+	Horizon            int64  `json:"horizon"`
+	Fingerprint        string `json:"fingerprint"`
+	PreviousID         string `json:"previous_id"`
+	ResultJson         string `json:"result_json"`
+	AttemptedAt        string `json:"attempted_at"`
+}
+
 type PredictionHorizon struct {
 	PredictionID string `json:"prediction_id"`
 	TradingDays  int64  `json:"trading_days"`
+}
+
+type PredictionRevision struct {
+	PredictionID string `json:"prediction_id"`
+	Revision     int64  `json:"revision"`
 }
 
 type PropSetting struct {

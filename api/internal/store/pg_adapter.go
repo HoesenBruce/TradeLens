@@ -436,6 +436,10 @@ func (p *PG) GetPrediction(ctx context.Context, arg GetPredictionParams) (Predic
 	return Prediction(v), nil
 }
 
+func (p *PG) GetPredictionRevision(ctx context.Context, arg GetPredictionRevisionParams) (int64, error) {
+	return p.q.GetPredictionRevision(ctx, storepg.GetPredictionRevisionParams(arg))
+}
+
 func (p *PG) GetPropSettings(ctx context.Context, arg GetPropSettingsParams) (PropSetting, error) {
 	v, err := p.q.GetPropSettings(ctx, storepg.GetPropSettingsParams(arg))
 	if err != nil {
@@ -803,6 +807,14 @@ func (p *PG) ListOptionExecutions(ctx context.Context) ([]Execution, error) {
 	return func() []Execution { in := v; out := make([]Execution, len(in)); for i := range in { out[i] = Execution(in[i]) }; return out }(), nil
 }
 
+func (p *PG) ListPredictionEvaluations(ctx context.Context, arg ListPredictionEvaluationsParams) ([]PredictionEvaluation, error) {
+	v, err := p.q.ListPredictionEvaluations(ctx, storepg.ListPredictionEvaluationsParams(arg))
+	if err != nil {
+		return nil, err
+	}
+	return func() []PredictionEvaluation { in := v; out := make([]PredictionEvaluation, len(in)); for i := range in { out[i] = PredictionEvaluation(in[i]) }; return out }(), nil
+}
+
 func (p *PG) ListPredictionHorizons(ctx context.Context, arg ListPredictionHorizonsParams) ([]PredictionHorizon, error) {
 	v, err := p.q.ListPredictionHorizons(ctx, storepg.ListPredictionHorizonsParams(arg))
 	if err != nil {
@@ -933,6 +945,14 @@ func (p *PG) RevokeAccessToken(ctx context.Context, arg RevokeAccessTokenParams)
 
 func (p *PG) RevokeShareLink(ctx context.Context, arg RevokeShareLinkParams) (int64, error) {
 	return p.q.RevokeShareLink(ctx, storepg.RevokeShareLinkParams(arg))
+}
+
+func (p *PG) SavePredictionEvaluation(ctx context.Context, arg SavePredictionEvaluationParams) (PredictionEvaluation, error) {
+	v, err := p.q.SavePredictionEvaluation(ctx, storepg.SavePredictionEvaluationParams(arg))
+	if err != nil {
+		return PredictionEvaluation{}, err
+	}
+	return PredictionEvaluation(v), nil
 }
 
 func (p *PG) SetAlertChannelEnabled(ctx context.Context, arg SetAlertChannelEnabledParams) (AlertChannel, error) {
