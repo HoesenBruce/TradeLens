@@ -470,9 +470,14 @@ export function NewsView({
             Manual catalysts and the assets they may affect.
           </p>
         </div>
-        <Button onClick={() => setEditing(null)}>
-          <Plus aria-hidden /> New entry
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" render={<a href="/news/performance" />}>
+            Performance report
+          </Button>
+          <Button onClick={() => setEditing(null)}>
+            <Plus aria-hidden /> New entry
+          </Button>
+        </div>
       </header>
 
       <section
