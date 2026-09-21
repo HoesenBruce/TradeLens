@@ -14,22 +14,30 @@ outside the acceptance scope.
 
 ## 1. Existing capabilities and implementation boundaries
 
-- Reuse `api/internal/marketdata.Service.GetBars`, `Request`, `Response`, the Yahoo/Finnhub
-  providers, and existing memory/database caches. Request `Interval = "D"`; do not introduce
-  a news-specific downloader or cache.
-- Reuse `MarketTimezone`, `Bar.MarketDate`, and Japanese symbol mapping. For example, request
-  `285A` as a stock; Yahoo maps it internally to `285A.T`. An arbitrary symbol string in a
-  news item is not sufficient evidence of its market.
+- Validation obtains prices only through `marketdata.Service` and its shared `Request`,
+  `Response`, and `Bar` contracts. The service uses `marketdata.Provider`; existing
+  Yahoo/Finnhub providers, the generic HTTP provider tracked in #76, and future providers
+  must all support the same validation rules when they supply equivalent normalized inputs.
+- Provider selection, transport, authentication, symbol translation, and market-data caches
+  belong below that boundary. The validator must not call concrete providers, HTTP endpoints,
+  collectors, or market-data databases directly, inspect external schemas, or introduce a
+  news-specific price loader/cache. Outcome persistence uses the application's existing
+  persistence boundary; it is not permission to query a price database from validation logic.
+- Reuse `MarketTimezone`, `Bar.MarketDate`, and Japanese alphanumeric symbol support. Request
+  `285A` as a stock through the shared contract; concrete provider symbol mapping stays inside
+  the adapter. An arbitrary symbol string in a news item is not sufficient market evidence.
 - Reuse `FindCorporateActionCandidates` / `CorporateActionWarnings`. Candidates are not
-  confirmed corporate actions.
+  confirmed corporate actions. Interpret normalized events and adjustment metadata, not a
+  provider name, when deciding whether prices are comparable.
 - `predictions` currently stores source, direction, confidence, created_at, and updated_at;
   `prediction_horizons` stores 1/3/5/10/20. Outcomes, prediction revision snapshots, and trading
-  calendars are not implemented yet.
-- The shared service currently returns `adjustment_status = unadjusted`. Yahoo's
-  `applyYahooSplits` attempts to restore prices using split events within the request.
-  The older corporate-action specification's `split_adjusted` description is not the current
-  contract. The label alone proves neither complete event coverage nor that historical OHLC
-  values are comparable across corporate actions.
+  calendars are not implemented yet. The current `Provider.FetchBars` returns bars only;
+  `Response` exposes interval/source/adjustment metadata but lacks the complete provenance
+  needed below. These are shared-contract gaps, not grounds for provider-specific workarounds.
+- The current service labels responses `unadjusted`. This label alone proves neither complete
+  event coverage nor comparable historical OHLC across corporate actions. Future adapters
+  must preserve actual adjustment/capability metadata rather than inheriting an unsupported
+  claim. Missing metadata must remain unknown and follow the same failure rules for every source.
 - #60 must identify and version the JP/US exchange calendar source and use it at the shared
   market-data boundary. Existing timezone/date normalization is not a trading calendar:
   neither dates with bars nor Monday through Friday can substitute for one. Fail explicitly
@@ -72,6 +80,69 @@ runs from D0's open to the third trading day's close. Count exchange trading day
 days or returned bars. An individual stock's suspension still counts as a trading day.
 Calculate and track each horizon independently; shorter horizons need not wait for the longest.
 
+### Data resolution and validation horizon are separate
+
+Resolution describes the input bars; horizon describes the evaluation window. Neither is
+inferred from the other. In #60 the only supported combination is the existing daily policy:
+
+| Dimension | MVP value | Meaning |
+| --- | --- | --- |
+| reference_policy | `next_regular_open` | Select P0 under section 2 |
+| reference_resolution | `D` | Daily bar supplying Open |
+| outcome_resolution | `D` | Daily bar supplying Close |
+| horizon_kind | `trading_days` | Exchange-session count, including D0 |
+| horizon_value | 1, 3, 5, 10, or 20 | Count in that unit, not an interval code |
+| outcome_policy | `horizon_session_close` | Close of DH |
+
+Persist these dimensions explicitly with the semantics version, even when #60 accepts only
+these values. Keep the existing prediction_horizons contract for MVP inputs; this does not
+require implementing additional input types now. Do not define an outcome identity as only
+prediction ID + daily date + number of days. Its logical identity also includes prediction
+revision, semantics version, reference/outcome policies and resolutions, and horizon kind/value.
+Evidence revisions remain separate as described in section 7.
+
+An intraday-capable provider must not automatically change existing daily results. Requesting
+`D` still selects the daily policy even when `5` is available. Do not silently fall back from
+an unsupported requested resolution to another resolution. Report
+`unavailable / unsupported_resolution`; unknown capability is not evidence of support.
+The shared service/adapter handles capability and metadata normalization. Validation never
+branches on provider name, URL, or storage technology. If bar timestamp semantics or provenance
+cannot be established, report `incomplete / insufficient_metadata` for returned partial evidence.
+
+### Future intraday extension contract (not implemented by #60)
+
+An explicitly selected, separately versioned policy may use `next_complete_regular_bar_open`:
+choose the first full regular-session bar whose start is strictly after prediction_as_of,
+and take its Open as the reference. For a prediction saved at 10:32 on a session's 5-minute
+grid, the reference is the 10:35 bar Open, never the already-started 10:30 bar's Open or Close.
+Wait until that selected bar has completed and its data is available before using it. A save
+exactly at 10:35 uses the next full bar. Outside the session or during a break, select the
+next full regular-session bar; never select extended-hours data implicitly. Missing bars do
+not move the planned reference to an arbitrary later bar.
+
+The extension must normalize bar start/end UTC timestamps, session grid, timestamp convention,
+and completeness through shared market-data metadata; daily `MarketDate` alone is insufficient.
+Unsupported intervals or missing metadata use the failure rules above. Resolutions are shared
+interval codes (for example `5`), not provider-specific transport strings.
+
+Future horizons remain explicitly typed and may include:
+
+- `elapsed_time` with a duration such as 30 minutes or 1 hour: target the instant that duration
+  after the selected reference bar start. Use the completed bar ending exactly at that instant.
+  If no regular-session bar can end there, report `unavailable / unsupported_alignment`; do not choose a nearby
+  close or count through breaks as if they contained bars.
+- `session_close`: target the close of the selected reference session.
+- `trading_days`: preserve the inclusive rule, with value 1 targeting the reference session's
+  close, 3 its third trading-session close, and so on. Labels such as T+1 must not redefine this
+  rule; store the explicit kind/value and display an unambiguous label.
+
+This defines how finer references can coexist with daily validation, not an intraday engine
+for #60. A future version must specify its data-publication waiting rule and supported
+resolution/horizon combinations before implementation. The daily 60-minute waiting rule below
+belongs to v1 and is not implicitly applied to intraday results. New policies create separate
+results; never backfill a more precise reference into `news-validation-v1`, overwrite daily
+prices, or aggregate different policies as one accuracy series without identifying them.
+
 ## 3. Market dates, completeness, and availability
 
 - Use `Asia/Tokyo` for JP and `America/New_York` for US. Store instants in UTC and trading
@@ -96,6 +167,17 @@ Calculate and track each horizon independently; shorter horizons need not wait f
 - A missing intermediate bar also makes the result incomplete, even if both endpoint prices
   exist. Do not interpolate, forward-fill, skip missing days, or silently extend the window.
   Distinguish wholly absent data from partial data. A network failure does not mean no price move.
+
+For a newly listed stock, never synthesize pre-listing history or shift the planned D0 to its
+first available bar. If D0 precedes listing and no valid window exists, return
+`unavailable / not_listed`; if only part of the required window/check history is missing,
+return `incomplete / listing_history_missing`. In particular, the preceding-day corporate-action
+check below can make a first-session validation incomplete even with both endpoint prices.
+For a delisted stock, preserve an already complete pre-delisting window. If delisting removes
+required bars from a partially observed window, return `incomplete / delisted_window`; a wholly
+unavailable window returns unavailable. Do not substitute a last close, cash settlement, or
+another symbol. Use listing/delisting reason codes only with reliable shared metadata; otherwise
+use the ordinary missing-data reasons without inventing a lifecycle event.
 
 ## 4. Adjustment policy and corporate actions
 
@@ -172,8 +254,8 @@ benchmark's own result may be stored, but excess and its directional correctness
 
 ## 7. States and reruns
 
-Each prediction revision × horizon has an asset state. The benchmark has an independent state
-with the additional value not_requested. Evaluate the following table in order, persisting
+Each prediction revision × validation policy × horizon has an asset state. The benchmark has
+an independent state with the additional value not_requested. Evaluate the following table in order, persisting
 reason_code and an explanation rather than collapsing failures into permanent pending.
 
 | State | Conditions and examples | Publishable result |
@@ -207,8 +289,8 @@ the result; this is not a second market-data service cache.
 | --- | --- |
 | Identity | Owner/news/asset/prediction IDs, prediction revision ID/content hash and snapshot, source, direction, confidence, horizon H |
 | Time and rules | prediction_as_of, nullable news published_at, rules version, epsilon, calculation time, eligible_at, calendar source/version, timezone, market, currency |
-| Window | D0, DH, reference/outcome fields open/close, corresponding trading instants in UTC, expected trading dates, missing dates |
-| Price evidence | Normalized symbol, provider symbol/instrument, interval, provider/source, adjustment_status, request window, actual fetched_at, cache flag, daily-bar snapshots/hashes used |
+| Window and policy | reference_policy, outcome_policy, reference_resolution, outcome_resolution, horizon_kind/value; D0, DH for daily windows; reference/outcome UTC instants, bar start/end timestamps and timestamp convention where applicable, price fields open/close, expected trading dates, missing dates |
+| Price evidence | Normalized symbol, provider symbol/instrument, interval, provider/source, adjustment_status, request window, actual fetched_at, cache flag, input bar snapshots/hashes used, normalized capability/completeness metadata |
 | Corporate actions | Check window including the preceding day, candidates/events, status, source, warnings, detection and coverage limitations |
 | Asset result | P0, PH, asset_return, observed_direction, direction_correct, status, reason_code, explanation |
 | Benchmark result | Nullable benchmark identity, independent window/source/price/snapshot/corporate-action evidence, benchmark_status/reason, B0, BH, benchmark_return, excess_return, excess_direction_correct |
@@ -253,6 +335,20 @@ assumption about closed days; actual calendar integration requires separate sour
 9. Repeating a snapshot does not duplicate statistical contributions. Historical price revisions
    can retract validated while preserving old evaluations. Editing creates a new as_of/revision.
    Original news, User/AI source, and other owners' records remain unchanged.
+10. Supply equivalent normalized daily evidence through shared-service fixtures representing
+    Yahoo, Finnhub, HTTP, and an unnamed future provider. Prices, dates, states, and correctness
+    are identical; only provenance differs. No test requires direct provider/collector/database
+    access from validation logic. Unknown adjustment metadata and unsupported intervals fail
+    consistently, without provider-name exceptions.
+11. Persist `reference_resolution=D` independently of `horizon_kind=trading_days/value=3`.
+    Adding 5-minute provider support leaves the existing daily result unchanged. An unsupported
+    `5` request cannot silently become `D`. For a future policy, 10:32 selects 10:35 Open on a
+    5-minute grid; its +30m target is 11:05, with a bar ending there required. This is a distinct
+    result from a daily 3D validation, not a replacement. These future-policy examples are
+    specification checks, not a requirement to implement intraday validation in #60.
+12. A new listing with no preceding check bar is incomplete; missing pre-listing data is never
+    fabricated. A delisting inside a partially observed window is incomplete; no last-close
+    substitution occurs. A complete pre-delisting window remains eligible for validation.
 
 ## 10. Delivery boundary
 
