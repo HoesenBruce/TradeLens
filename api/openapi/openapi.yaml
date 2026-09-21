@@ -1329,6 +1329,42 @@ paths:
         "204": { description: Deleted }
         "404": { description: User prediction not found; AI records cannot be deleted }
 
+  /api/v1/news/{id}/predictions/{predictionId}/validate:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+      - name: predictionId
+        in: path
+        required: true
+        schema: { type: string }
+    post:
+      tags: [News]
+      summary: Evaluate each selected horizon using fresh shared market data and persist audit evidence
+      operationId: validatePrediction
+      responses:
+        "200": { description: Evaluation array with id, previous_id, fingerprint, last_attempt_at, current and result audit snapshot }
+        "404": { description: Prediction not found for this owner and news }
+
+  /api/v1/news/{id}/predictions/{predictionId}/validations:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+      - name: predictionId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      tags: [News]
+      summary: List retained evaluations; current identifies the latest selected horizon of the current prediction revision
+      operationId: listPredictionValidations
+      responses:
+        "200": { description: Evaluation array with id, previous_id, fingerprint, last_attempt_at, current and result audit snapshot }
+        "404": { description: Prediction not found for this owner and news }
+
   /api/v1/me/preferences:
     get:
       tags: [Auth]

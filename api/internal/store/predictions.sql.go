@@ -235,7 +235,7 @@ func (q *Queries) ListPredictions(ctx context.Context, arg ListPredictionsParams
 const updatePrediction = `-- name: UpdatePrediction :one
 UPDATE predictions SET direction = ?1, confidence = ?2,
   reasoning = ?3, catalysts = ?4, risks = ?5,
-  invalidation = ?6, updated_at = CURRENT_TIMESTAMP
+  invalidation = ?6, updated_at = strftime('%Y-%m-%d %H:%M:%f', 'now')
 WHERE predictions.id = ?7 AND predictions.source = ?8 AND EXISTS (SELECT 1 FROM news_assets JOIN news ON news.id = news_assets.news_id
   WHERE news_assets.id = predictions.news_asset_id AND news.user_id = ?9)
 RETURNING id, news_asset_id, source, direction, confidence, reasoning, catalysts, risks, invalidation, created_at, updated_at
