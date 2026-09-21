@@ -99,3 +99,28 @@ The implementation reuses per-prediction history reads inside a transaction. Thi
 personal journal; batching is the upgrade path if measured volume makes it slow.
 `go test ./internal/predictionvalidation ./internal/api` covers reproducibility, mixed statuses,
 AI/User separation, one/zero-sample rates, filtering, isolation, retractions and stale revisions.
+
+## Web performance report
+
+Open **News → Performance report** (`/news/performance`). The report reuses `Page`, `Card`,
+`StatCard`, `DataTable`, `Field` and native form controls from the existing dashboard/report UI.
+It shows all five status counts plus AI/User, horizon, asset and category breakdowns from the
+aggregate API. The browser formats rates but never computes results or denominators. Every rate
+shows `n` and the number correct; pending-only groups show **Not available · n=0**.
+
+Source, asset type, symbol, category, trading-day horizon and UTC publication-date filters combine
+on the server. Filters are stored in the URL for refresh/back re-entry. **Reset filters** restores
+the baseline. Loading, empty and failed requests have explicit states; failed requests offer retry.
+
+`e2e/news-performance.spec.ts` passed against the working-tree API/Web with a fresh disposable
+SQLite database. It seeds known September 2026 prediction times, then calls the real validation
+endpoint against a local Generic Bars HTTP fixture to produce hits, misses, pending and unavailable
+outcomes. It verifies all filters/exclusions/reset, URL read-back, refresh/re-entry, zero denominators,
+loading, empty, error/retry, and the News entry link. The report makes no additional market calls.
+Set `E2E_SQLITE_PATH` only to that disposable database; the fixture adjusts timestamps/source there.
+The test API must use `TM_MARKET_DATA_PROVIDER=http` and
+`TM_MARKET_DATA_HTTP_BASE_URL=http://127.0.0.1:18963`. Live market quality and mobile were not tested.
+
+Inspected screenshots: [overview](../screenshots/news-performance/overview.png),
+[pending-only](../screenshots/news-performance/pending.png),
+[empty](../screenshots/news-performance/empty.png), [error](../screenshots/news-performance/error.png).
