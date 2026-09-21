@@ -2,11 +2,14 @@ package api
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"github.com/labstack/echo/v5"
 	"github.com/tradermemos/api/internal/auth"
 	"github.com/tradermemos/api/internal/predictionvalidation"
+	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -16,7 +19,22 @@ func (s *Server) handlePredictionValidation(c *echo.Context) error {
 	var result []predictionvalidation.Evaluation
 	var err error
 	if c.Request().Method == http.MethodPost {
-		result, err = engine.Validate(ctx, owner, news, prediction, time.Now().UTC())
+		var body struct {
+			Benchmark *predictionvalidation.Benchmark `json:"benchmark"`
+		}
+		decoder := json.NewDecoder(http.MaxBytesReader(c.Response(), c.Request().Body, 4096))
+		decoder.DisallowUnknownFields()
+		if decodeErr := decoder.Decode(&body); decodeErr != nil && !errors.Is(decodeErr, io.EOF) {
+			return Fail(http.StatusBadRequest, "bad_request", "invalid benchmark body", nil)
+		}
+		var extra any
+		if decoder.Decode(&extra) != io.EOF {
+			return Fail(http.StatusBadRequest, "bad_request", "invalid benchmark body", nil)
+		}
+		if body.Benchmark != nil && (strings.TrimSpace(body.Benchmark.Symbol) == "" || strings.TrimSpace(body.Benchmark.Market) == "" || strings.TrimSpace(body.Benchmark.Currency) == "") {
+			return Fail(http.StatusBadRequest, "bad_request", "benchmark requires symbol, market and currency", nil)
+		}
+		result, err = engine.Validate(ctx, owner, news, prediction, time.Now().UTC(), body.Benchmark)
 	} else {
 		result, err = engine.History(ctx, owner, news, prediction)
 	}

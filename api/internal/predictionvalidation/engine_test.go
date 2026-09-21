@@ -13,10 +13,11 @@ import (
 )
 
 type evidenceProvider struct {
-	name   string
-	mutate func(*marketdata.Response)
-	fail   bool
-	calls  int
+	failSymbol string
+	name       string
+	mutate     func(*marketdata.Response)
+	fail       bool
+	calls      int
 }
 
 func (p *evidenceProvider) Name() string { return p.name }
@@ -26,7 +27,7 @@ func (p *evidenceProvider) FetchBars(ctx context.Context, req marketdata.Request
 }
 func (p *evidenceProvider) FetchResponse(_ context.Context, req marketdata.Request) (marketdata.Response, error) {
 	p.calls++
-	if p.fail {
+	if p.fail || (p.failSymbol != "" && req.Symbol == p.failSymbol) {
 		return marketdata.Response{}, errors.New("offline")
 	}
 	market := "JP"

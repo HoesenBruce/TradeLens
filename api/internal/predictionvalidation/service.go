@@ -45,7 +45,7 @@ func (e *Engine) Load(ctx context.Context, owner, newsID, predictionID string) (
 	return Input{Prediction: p, Asset: a, PublishedAt: n.PublishedAt, OwnerID: owner, RevisionNumber: revision}, nil
 }
 
-func (e *Engine) Validate(ctx context.Context, owner, newsID, predictionID string, now time.Time) ([]Evaluation, error) {
+func (e *Engine) Validate(ctx context.Context, owner, newsID, predictionID string, now time.Time, benchmark ...*Benchmark) ([]Evaluation, error) {
 	in, err := e.Load(ctx, owner, newsID, predictionID)
 	if err != nil {
 		return nil, err
@@ -56,7 +56,11 @@ func (e *Engine) Validate(ctx context.Context, owner, newsID, predictionID strin
 	}
 	results := make([]Result, 0, len(horizons))
 	for _, h := range horizons {
-		results = append(results, e.Evaluate(ctx, in, int(h.TradingDays), now))
+		result := e.Evaluate(ctx, in, int(h.TradingDays), now)
+		if len(benchmark) > 0 {
+			result = e.WithBenchmark(ctx, result, benchmark[0], now)
+		}
+		results = append(results, result)
 	}
 	out := make([]Evaluation, 0, len(results))
 	err = store.InTx(ctx, e.Store, func(q store.Querier) error {
@@ -99,17 +103,12 @@ func (e *Engine) Validate(ctx context.Context, owner, newsID, predictionID strin
 // Fingerprint excludes acquisition/attempt clocks, but includes all price/rule/source evidence
 // and resulting state. A refresh of unchanged evidence does not create another contribution.
 func Fingerprint(r Result) (string, error) {
-	r.CalculatedAt = time.Time{}
-	if r.Evidence != nil {
-		copyResponse := *r.Evidence
-		copyResponse.FetchedAt = nil
-		copyResponse.Cached = false
-		copyResponse.Bars = append([]marketdata.Bar(nil), copyResponse.Bars...)
-		for i := range copyResponse.Bars {
-			copyResponse.Bars[i].FetchedAt = nil
-		}
-		r.Evidence = &copyResponse
+	if r.BenchmarkEvidence != nil {
+		snapshot := *r.BenchmarkEvidence
+		clearEvidenceClocks(&snapshot)
+		r.BenchmarkEvidence = &snapshot
 	}
+	clearEvidenceClocks(&r)
 	raw, err := json.Marshal(r)
 	if err != nil {
 		return "", err
@@ -120,6 +119,9 @@ func Fingerprint(r Result) (string, error) {
 func evaluation(row store.PredictionEvaluation) (Evaluation, error) {
 	out := Evaluation{ID: row.ID, PreviousID: row.PreviousID, Fingerprint: row.Fingerprint, LastAttempt: row.AttemptedAt}
 	err := json.Unmarshal([]byte(row.ResultJson), &out.Result)
+	if out.Result.BenchmarkStatus == "" {
+		out.Result.BenchmarkStatus = "not_requested"
+	}
 	return out, err
 }
 func (e *Engine) History(ctx context.Context, owner, newsID, predictionID string) ([]Evaluation, error) {
@@ -155,4 +157,18 @@ func (e *Engine) History(ctx context.Context, owner, newsID, predictionID string
 		out = append(out, item)
 	}
 	return out, nil
+}
+
+func clearEvidenceClocks(r *Result) {
+	r.CalculatedAt = time.Time{}
+	if r.Evidence != nil {
+		copyResponse := *r.Evidence
+		copyResponse.FetchedAt = nil
+		copyResponse.Cached = false
+		copyResponse.Bars = append([]marketdata.Bar(nil), copyResponse.Bars...)
+		for i := range copyResponse.Bars {
+			copyResponse.Bars[i].FetchedAt = nil
+		}
+		r.Evidence = &copyResponse
+	}
 }

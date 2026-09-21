@@ -1343,8 +1343,26 @@ paths:
       tags: [News]
       summary: Evaluate each selected horizon using fresh shared market data and persist audit evidence
       operationId: validatePrediction
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                benchmark:
+                  nullable: true
+                  type: object
+                  additionalProperties: false
+                  required: [symbol, market, currency]
+                  properties:
+                    symbol: { type: string }
+                    market: { type: string, enum: [JP, US] }
+                    currency: { type: string, enum: [JPY, USD] }
       responses:
         "200": { description: Evaluation array with id, previous_id, fingerprint, last_attempt_at, current and result audit snapshot }
+        "400": { description: Malformed or incomplete benchmark selection }
         "404": { description: Prediction not found for this owner and news }
 
   /api/v1/news/{id}/predictions/{predictionId}/validations:
