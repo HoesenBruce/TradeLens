@@ -83,6 +83,15 @@ func TestManualPredictions(t *testing.T) {
 	history := do(s, http.MethodGet, path+"/"+id+"/validations", "", token)
 	require.Equal(t, 200, history.Code, history.Body.String())
 	require.Contains(t, history.Body.String(), `"current":true`)
+	for _, bad := range []string{`{"benchmark":{"symbol":"1306"}}`, `{"unexpected":true}`, `{} {}`, `{"benchmark":`} {
+		require.Equal(t, 400, do(s, http.MethodPost, path+"/"+id+"/validate", bad, token).Code)
+	}
+	withBenchmark := do(s, http.MethodPost, path+"/"+id+"/validate", `{"benchmark":{"symbol":"1306","market":"JP","currency":"JPY"}}`, token)
+	require.Equal(t, 200, withBenchmark.Code, withBenchmark.Body.String())
+	require.Contains(t, withBenchmark.Body.String(), `"symbol":"1306"`)
+	resetBenchmark := do(s, http.MethodPost, path+"/"+id+"/validate", `{"benchmark":null}`, token)
+	require.Equal(t, 200, resetBenchmark.Code)
+	require.Contains(t, resetBenchmark.Body.String(), `"benchmark_status":"not_requested"`)
 	require.Equal(t, 404, do(s, http.MethodPost, path+"/"+id+"/validate", "", other).Code)
 	require.Equal(t, 404, do(s, http.MethodGet, path+"/"+id+"/validations", "", other).Code)
 	require.Equal(t, 204, do(s, http.MethodDelete, path+"/"+id, "", token).Code)

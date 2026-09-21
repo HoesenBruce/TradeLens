@@ -38,4 +38,36 @@ as a separate evaluation and may retract a previously validated result. `current
 the newest attempt, not the best outcome. Parent deletion cascades to evidence. Both
 SQLite and Postgres schemas/queries support this contract.
 
-Mobile was not validated; no UI or mobile contract was changed. Benchmark evaluation is #61.
+## Optional benchmark
+
+The validation POST optionally accepts:
+
+```json
+{"benchmark":{"symbol":"1306","market":"JP","currency":"JPY"}}
+```
+
+The symbol identifies a security resolvable through the shared stock OHLCV contract
+(for example a selected proxy ETF); no index, proxy or currency is guessed. Each call
+explicitly supplies the desired association. An omitted/null benchmark clears it for
+that evaluation and yields `benchmark_status=not_requested` with null benchmark/excess
+values. Earlier evidence and selections remain in history.
+
+The benchmark must have the same currency and identical dates, regular opening UTC
+instants and closing UTC instants on **every** session of the asset window. A holiday,
+extra session, timezone or early-close difference is not repaired by intersecting dates
+or carrying prices forward. Currency/calendar failures are explicit independent benchmark
+states. Matching windows are evaluated by the same engine and shared market service,
+including source-time, missing-bar, adjustment and corporate-action checks.
+
+`benchmark_return = BH/B0 - 1`; `excess_return = asset_return - benchmark_return`.
+Only two validated sides yield excess and excess-direction correctness; classification
+uses exact decimal rationals with the same ±0.001 neutral band. Primary direction
+correctness always uses raw asset return. Asset +2% and benchmark +3% yield -1 percentage
+point excess: a bullish prediction is correct on raw return and incorrect on excess.
+Benchmark failure never clears a valid asset return. A validated benchmark can be retained
+when the asset is unavailable, with null excess.
+
+Benchmark identity, independent evaluation evidence, returns and states use the existing
+immutable audit snapshot persistence. A changed selection/evidence creates an evaluation;
+identical evidence updates attempt time. No duplicate provider, cache, schema migration,
+Web UI or automatic benchmark selection is added. Mobile was not validated.

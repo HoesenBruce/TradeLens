@@ -28,6 +28,13 @@ type Input struct {
 	OwnerID        string           `json:"owner_id"`
 }
 type Result struct {
+	Benchmark                  *Benchmark                            `json:"benchmark"`
+	BenchmarkStatus            string                                `json:"benchmark_status"`
+	BenchmarkReason            string                                `json:"benchmark_reason"`
+	BenchmarkEvidence          *Result                               `json:"benchmark_evidence"`
+	BenchmarkReturn            *float64                              `json:"benchmark_return"`
+	ExcessReturn               *float64                              `json:"excess_return"`
+	ExcessDirectionCorrect     *bool                                 `json:"excess_direction_correct"`
 	Input                      Input                                 `json:"input"`
 	Revision                   string                                `json:"prediction_revision"`
 	Rules                      string                                `json:"rules_version"`
@@ -82,7 +89,7 @@ func Revision(in Input) string {
 }
 
 func (e *Engine) Evaluate(ctx context.Context, in Input, horizon int, now time.Time) Result {
-	r := Result{Input: in, Revision: Revision(in), Rules: RulesVersion, Epsilon: "0.001", HorizonKind: "trading_days", Horizon: horizon, ReferencePolicy: "next_regular_session_open", OutcomePolicy: "horizon_regular_session_close", ReferenceResolution: "D", OutcomeResolution: "D", ReferencePriceField: "open", OutcomePriceField: "close", PredictionAsOf: in.Prediction.UpdatedAt, CalculatedAt: now.UTC(), Market: strings.ToUpper(in.Asset.Market), CorporateActionLimitations: "reported split ratios plus OHLC gap heuristic; no authoritative dividend, listing, suspension or event coverage"}
+	r := Result{BenchmarkStatus: "not_requested", Input: in, Revision: Revision(in), Rules: RulesVersion, Epsilon: "0.001", HorizonKind: "trading_days", Horizon: horizon, ReferencePolicy: "next_regular_session_open", OutcomePolicy: "horizon_regular_session_close", ReferenceResolution: "D", OutcomeResolution: "D", ReferencePriceField: "open", OutcomePriceField: "close", PredictionAsOf: in.Prediction.UpdatedAt, CalculatedAt: now.UTC(), Market: strings.ToUpper(in.Asset.Market), CorporateActionLimitations: "reported split ratios plus OHLC gap heuristic; no authoritative dividend, listing, suspension or event coverage"}
 	fail := func(status, reason string) Result {
 		r.Status = status
 		r.Reason = reason
