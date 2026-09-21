@@ -32,6 +32,7 @@ import { Route as AccountsAccountIdRouteImport } from './routes/accounts.$accoun
 import { Route as DayDateRouteImport } from './routes/day.$date'
 import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as NewsIdRouteImport } from './routes/news.$id'
+import { Route as NewsPerformanceRouteImport } from './routes/news.performance'
 import { Route as STokenRouteImport } from './routes/s.$token'
 import { Route as TradesIndexRouteImport } from './routes/trades.index'
 import { Route as TradesIdRouteImport } from './routes/trades.$id'
@@ -151,6 +152,11 @@ const NewsIdRoute = NewsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => NewsRoute,
 } as any)
+const NewsPerformanceRoute = NewsPerformanceRouteImport.update({
+  id: '/performance',
+  path: '/performance',
+  getParentRoute: () => NewsRoute,
+} as any)
 const STokenRoute = STokenRouteImport.update({
   id: '/s/$token',
   path: '/s/$token',
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/accounts/$accountId': typeof AccountsAccountIdRoute
   '/day/$date': typeof DayDateRoute
   '/news/$id': typeof NewsIdRoute
+  '/news/performance': typeof NewsPerformanceRoute
   '/s/$token': typeof STokenRoute
   '/trades/$id': typeof TradesIdRoute
   '/news/': typeof NewsIndexRoute
@@ -216,6 +223,7 @@ export interface FileRoutesByTo {
   '/accounts/$accountId': typeof AccountsAccountIdRoute
   '/day/$date': typeof DayDateRoute
   '/news/$id': typeof NewsIdRoute
+  '/news/performance': typeof NewsPerformanceRoute
   '/s/$token': typeof STokenRoute
   '/trades/$id': typeof TradesIdRoute
   '/news': typeof NewsIndexRoute
@@ -245,6 +253,7 @@ export interface FileRoutesById {
   '/accounts/$accountId': typeof AccountsAccountIdRoute
   '/day/$date': typeof DayDateRoute
   '/news/$id': typeof NewsIdRoute
+  '/news/performance': typeof NewsPerformanceRoute
   '/s/$token': typeof STokenRoute
   '/trades/$id': typeof TradesIdRoute
   '/news/': typeof NewsIndexRoute
@@ -275,6 +284,7 @@ export interface FileRouteTypes {
     | '/accounts/$accountId'
     | '/day/$date'
     | '/news/$id'
+    | '/news/performance'
     | '/s/$token'
     | '/trades/$id'
     | '/news/'
@@ -301,6 +311,7 @@ export interface FileRouteTypes {
     | '/accounts/$accountId'
     | '/day/$date'
     | '/news/$id'
+    | '/news/performance'
     | '/s/$token'
     | '/trades/$id'
     | '/news'
@@ -329,6 +340,7 @@ export interface FileRouteTypes {
     | '/accounts/$accountId'
     | '/day/$date'
     | '/news/$id'
+    | '/news/performance'
     | '/s/$token'
     | '/trades/$id'
     | '/news/'
@@ -523,6 +535,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewsIdRouteImport
       parentRoute: typeof NewsRoute
     }
+    '/news/performance': {
+      id: '/news/performance'
+      path: '/performance'
+      fullPath: '/news/performance'
+      preLoaderRoute: typeof NewsPerformanceRouteImport
+      parentRoute: typeof NewsRoute
+    }
     '/s/$token': {
       id: '/s/$token'
       path: '/s/$token'
@@ -549,11 +568,13 @@ declare module '@tanstack/react-router' {
 
 interface NewsRouteChildren {
   NewsIdRoute: typeof NewsIdRoute
+  NewsPerformanceRoute: typeof NewsPerformanceRoute
   NewsIndexRoute: typeof NewsIndexRoute
 }
 
 const NewsRouteChildren: NewsRouteChildren = {
   NewsIdRoute: NewsIdRoute,
+  NewsPerformanceRoute: NewsPerformanceRoute,
   NewsIndexRoute: NewsIndexRoute,
 }
 
