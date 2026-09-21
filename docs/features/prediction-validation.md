@@ -71,3 +71,31 @@ Benchmark identity, independent evaluation evidence, returns and states use the 
 immutable audit snapshot persistence. A changed selection/evidence creates an evaluation;
 identical evidence updates attempt time. No duplicate provider, cache, schema migration,
 Web UI or automatic benchmark selection is added. Mobile was not validated.
+
+## Performance aggregation
+
+`GET /api/v1/news/performance` reads persisted results without fetching prices or running
+validation. Optional filters: `source=ai|user`, exact `symbol` (case normalized),
+`asset_type=stock|etf|index`, exact `category`, `horizon=1|3|5|10|20`, and inclusive
+`from`/`to` news-publication dates (`YYYY-MM-DD`, UTC). Filters combine with AND; invalid
+values return 400. All reads are owner-scoped.
+
+The unit is **one current prediction × one selected trading-day horizon**, not one news
+article or one independent trade. Total equals pending + validated + unavailable + incomplete.
+Each horizon contributes once using the latest current-revision evaluation from the existing
+validation history rules. Missing current results are pending, including after prediction edits.
+A newer failure replaces an older successful result; retained audit history is not extra samples.
+Old rules or malformed finalized results without correctness are unavailable.
+
+Counts are combined at the top level. Rates remain separated by `source` in `by_source`,
+`by_horizon`, `by_asset` (type/market/exchange/symbol), and `by_category`.
+`sample_count` is the number of validated outcomes; `correct` is its directional-hit numerator;
+`hit_rate = 100 * correct / sample_count`. Pending, unavailable and incomplete never enter that
+denominator. Zero samples yield `hit_rate: null`, never zero percent. Small samples retain their
+actual counts; no confidence or significance is implied. Rates use raw directional correctness,
+not optional benchmark excess returns. Empty breakdowns are `[]`.
+
+The implementation reuses per-prediction history reads inside a transaction. This suits a
+personal journal; batching is the upgrade path if measured volume makes it slow.
+`go test ./internal/predictionvalidation ./internal/api` covers reproducibility, mixed statuses,
+AI/User separation, one/zero-sample rates, filtering, isolation, retractions and stale revisions.
