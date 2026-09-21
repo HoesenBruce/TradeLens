@@ -93,3 +93,27 @@ fails as a whole. The service only returns tentative suggestions and never write
 `go test ./internal/coach` covers schema/fallback, multiple assets, missing/null/invalid
 fields, authentication/quota failures and timeouts with a local HTTP provider fixture.
 These are deterministic transport tests, not validation of a live model's analysis quality.
+
+## AI review in Web
+
+From a news detail, **Analyze with AI** calls `POST /news/{id}/analyze` using the existing
+AI Coach settings. This sends the title, original text, source, publication time and notes
+to the configured provider. Analysis does not persist anything. Invalid provider output,
+disabled settings or timeouts show a non-destructive error and retry.
+
+Summary/category and each asset require explicit selection. Edit suggestions, reject rows,
+exclude a row's prediction, or add a manual asset/prediction. Edited AI rows keep `ai` identity;
+manual additions use `user`. Cancel discards the draft; reopening runs fresh analysis.
+`POST /news/{id}/analysis/accept` validates selected items and writes them in one transaction.
+Existing assets/predictions are never overwritten: accepted suggestions create separate records,
+even for an existing symbol. Summary/category replace values only when selected and when the
+review baseline still matches. Repeated acceptance is a new insertion, not a deduplicating sync.
+
+`e2e/news-analysis.spec.ts` exercises the current Web and real API with a local HTTP AI fixture:
+loading, success, selection in both directions, prediction inclusion in both directions,
+editing, rejection, invalid horizons, manual additions, cancel/re-entry, refresh/API read-back,
+provider failure/retry and empty suggestions. Existing User predictions remain unchanged.
+No real model quality assessment or mobile validation was performed.
+Screenshots: [review](../screenshots/news-analysis/review.png),
+[accepted](../screenshots/news-analysis/accepted.png),
+[provider failure](../screenshots/news-analysis/provider-error.png).
