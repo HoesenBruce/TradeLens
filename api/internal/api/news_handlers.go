@@ -17,6 +17,8 @@ import (
 )
 
 func (s *Server) newsRoutes(g *echo.Group) {
+	g.POST("/news/:id/analyze", s.handleAnalyzeNews)
+	g.POST("/news/:id/analysis/accept", s.handleAcceptNewsAnalysis)
 	g.POST("/news/:id/predictions", s.handleSavePrediction)
 	g.POST("/news/:id/predictions/:predictionId/validate", s.handlePredictionValidation)
 	g.GET("/news/:id/predictions/:predictionId/validations", s.handlePredictionValidation)

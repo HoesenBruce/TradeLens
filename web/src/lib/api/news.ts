@@ -93,3 +93,29 @@ export const predictionApi = {
   delete: (newsId: string, id: string) =>
     apiFetch<void>(`/news/${newsId}/predictions/${id}`, { method: "DELETE" }),
 };
+
+export interface NewsAssetSuggestion extends Required<Omit<NewsAssetBody, "source" | "relation">> {
+  direction: PredictionBody["direction"];
+  confidence: number;
+  reasoning: string;
+  catalysts: string;
+  risks: string;
+  horizons: number[];
+}
+export interface NewsAnalysis {
+  summary: string;
+  category: string;
+  assets: NewsAssetSuggestion[];
+}
+export interface NewsAnalysisReview {
+  summary?: string;
+  category?: string;
+  expected_summary: string;
+  expected_category: string;
+  assets: (NewsAssetSuggestion & { source: "ai" | "user"; include_prediction: boolean })[];
+}
+export const newsAnalysisApi = {
+  analyze: (id: string) => apiFetch<NewsAnalysis>(`/news/${id}/analyze`, { method: "POST" }),
+  accept: (id: string, body: NewsAnalysisReview) =>
+    apiFetch<News>(`/news/${id}/analysis/accept`, { method: "POST", body: JSON.stringify(body) }),
+};
