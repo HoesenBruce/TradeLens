@@ -1,3 +1,5 @@
+import { fmtPct } from "@/lib/format";
+import { intlLocale } from "@/lib/locale";
 import { Link } from "@tanstack/react-router";
 import { Fragment, useState } from "react";
 import { useLingui } from "@lingui/react/macro";
@@ -29,6 +31,14 @@ export function NewsTable({
   predictionActions?: PredictionActions;
 }) {
   const { t } = useLingui();
+  const labels = {
+    bullish: t({ id: "news.bullish", message: "Bullish" }),
+    bearish: t({ id: "news.bearish", message: "Bearish" }),
+    neutral: t({ id: "news.neutral", message: "Neutral" }),
+    stock: t({ id: "news.stock", message: "Stock" }),
+    etf: "ETF",
+    index: t({ id: "news.index", message: "Index" }),
+  };
   const [selected, setSelected] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -42,19 +52,19 @@ export function NewsTable({
       <div className="p-3">
         <NewsExportActions ids={news.map((n) => n.id)} selected={selectedIds} />
       </div>
-      <Table aria-label="News theses">
+      <Table aria-label={t({ id: "news.table", message: "News theses" })}>
         <TableHeader>
           <TableRow>
             <TableHead>{t({ id: "news.export.select", message: "Select" })}</TableHead>
             {[
-              "Published",
-              "Title / source",
-              "Affected assets",
-              "Prediction / source",
-              "Confidence",
-              "Horizon",
-              "Validation",
-              "Actions",
+              t({ id: "news.published", message: "Published" }),
+              t({ id: "news.titleSource", message: "Title / source" }),
+              t({ id: "news.assets", message: "Affected assets" }),
+              t({ id: "news.predictionSource", message: "Prediction / source" }),
+              t({ id: "news.confidence", message: "Confidence" }),
+              t({ id: "news.horizon", message: "Horizon" }),
+              t({ id: "news.validation", message: "Validation" }),
+              t({ id: "news.actions", message: "Actions" }),
             ].map((label) => (
               <TableHead key={label}>{label}</TableHead>
             ))}
@@ -100,7 +110,7 @@ export function NewsTable({
                         <div key={a.id}>
                           {a.symbol}{" "}
                           <span className="text-xs text-muted-foreground">
-                            {a.market} {a.asset_type.toUpperCase()}
+                            {a.market} {labels[a.asset_type]}
                           </span>
                         </div>
                       ))
@@ -110,17 +120,20 @@ export function NewsTable({
                   {n.predictions?.length
                     ? n.predictions.map((p) => (
                         <div key={p.id} className="whitespace-nowrap capitalize">
-                          {n.assets.find((a) => a.id === p.news_asset_id)?.symbol} · {p.direction} ·{" "}
-                          {p.source === "user" ? "User" : "AI"}
+                          {n.assets.find((a) => a.id === p.news_asset_id)?.symbol} ·{" "}
+                          {labels[p.direction]} ·{" "}
+                          {p.source === "user" ? t({ id: "news.user", message: "User" }) : "AI"}
                         </div>
                       ))
-                    : "No prediction"}
+                    : t({ id: "news.noPrediction", message: "No prediction" })}
                 </TableCell>
                 <TableCell>
                   {n.predictions?.length
                     ? n.predictions.map((p) => (
                         <div key={p.id}>
-                          {p.confidence === null ? "Not set" : `${p.confidence}%`}
+                          {p.confidence === null
+                            ? t({ id: "news.notSet", message: "Not set" })
+                            : fmtPct(p.confidence / 100, intlLocale())}
                         </div>
                       ))
                     : "—"}
@@ -129,12 +142,16 @@ export function NewsTable({
                   {n.predictions?.length
                     ? n.predictions.map((p) => (
                         <div key={p.id} className="whitespace-nowrap">
-                          {p.horizons.map((h) => `${h}D`).join(" / ")}
+                          {p.horizons
+                            .map((h) => `${t({ id: "news.days", message: `${h}D` })}`)
+                            .join(" / ")}
                         </div>
                       ))
                     : "—"}
                 </TableCell>
-                <TableCell className="text-xs text-muted-foreground">Pending validation</TableCell>
+                <TableCell className="text-xs text-muted-foreground">
+                  {t({ id: "news.pendingValidation", message: "Pending validation" })}
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <Button
@@ -143,12 +160,12 @@ export function NewsTable({
                       aria-expanded={expanded === n.id}
                       onClick={() => setExpanded(expanded === n.id ? undefined : n.id)}
                     >
-                      Predictions
+                      {t({ id: "news.predictions", message: "Predictions" })}
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon-sm"
-                      aria-label={`Edit ${n.title}`}
+                      aria-label={t({ id: "news.editTitle", message: `Edit ${n.title}` })}
                       onClick={() => onEdit(n)}
                     >
                       <Pencil aria-hidden />
@@ -156,7 +173,7 @@ export function NewsTable({
                     <Button
                       variant="ghost"
                       size="icon-sm"
-                      aria-label={`Delete ${n.title}`}
+                      aria-label={t({ id: "news.deleteNamedEntry", message: `Delete ${n.title}` })}
                       onClick={() => onDelete(n)}
                     >
                       <Trash2 aria-hidden />

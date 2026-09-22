@@ -26,3 +26,16 @@ describe("catalog activation", () => {
     expect(localStorage.getItem("tm-locale")).toBe("en");
   });
 });
+
+it("translates news labels and interpolated values in all required locales", async () => {
+  for (const [locale, heading, period, current] of [
+    ["en", "News thesis", "5D", "Current: QA"],
+    ["zh-CN", "新闻观点", "5个交易日", "当前：QA"],
+    ["ja", "ニュース仮説", "5取引日", "現在：QA"],
+  ]) {
+    await loadLocale(locale);
+    expect(i18n._("news.heading")).toBe(heading);
+    expect(i18n._("news.days", { h: 5 })).toBe(period);
+    expect(i18n._("news.current", { 0: "QA" })).toBe(current);
+  }
+});

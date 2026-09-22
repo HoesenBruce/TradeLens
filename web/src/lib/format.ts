@@ -60,10 +60,11 @@ export function fmtNumber(value: number, locale: string = intlLocale()): string 
   return new Intl.NumberFormat(locale).format(value);
 }
 
-export function fmtPct(ratio: number, locale: string): string {
+export function fmtPct(ratio: number, locale: string, fractionDigits = 0): string {
   return new Intl.NumberFormat(locale, {
     style: "percent",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
   }).format(ratio);
 }
 

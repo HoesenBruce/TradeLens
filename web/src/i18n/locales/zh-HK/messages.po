@@ -219,49 +219,1181 @@ msgid "Worst day"
 msgstr "最差交易日"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: row.original.sample_count
+#. placeholder {1}: row.original.correct
+#: src/routes/news.performance.tsx:81
+msgid "news.sampleCount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: p.source === "user" ? t({ id: "news.user", message: "User" }) : "AI"
+#. placeholder {1}: p.id
+#: src/components/NewsPredictions.tsx:296
+msgid "news.predictionAria"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: row.original.key
+#: src/routes/news.performance.tsx:60
+msgid "news.groupDays"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:345
+#: src/components/NewsPredictions.tsx:210
+#: src/components/NewsPredictions.tsx:312
+#: src/components/NewsPredictions.tsx:354
+#: src/components/NewsTable.tsx:146
+#: src/routes/news.performance.tsx:186
+msgid "news.days"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:37
+#: src/routes/news.performance.tsx:126
+msgid "news.back"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:43
 msgid "news.export.missing"
 msgstr "A thesis is no longer available. Refresh the list and try again."
 
 #. js-lingui-explicit-id
+#. placeholder {0}: i + 1
+#: src/components/NewsAnalysisReview.tsx:230
+msgid "news.acceptAsset"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:188
+msgid "news.acceptCategory"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:187
+msgid "news.acceptSummary"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:67
+msgid "news.actions"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:282
+msgid "news.predictionAssetHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:324
+msgid "news.addAsset"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:390
+msgid "news.addManualAsset"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:277
+msgid "news.addPrediction"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:281
+msgid "news.performanceEmptyHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:136
+#: src/components/NewsPredictions.tsx:138
+msgid "news.affectedAsset"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:339
+msgid "news.assetNumber"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:311
+#: src/components/NewsTable.tsx:62
+msgid "news.assets"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:141
+msgid "news.assetsPredictions"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:133
+msgid "news.assetsPredictionsAria"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:295
+msgid "news.aiUser"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:166
+msgid "news.allAssets"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:605
+msgid "news.allDirections"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:182
+msgid "news.allHorizons"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:151
+msgid "news.allSources"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:586
+msgid "news.allStatuses"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:80
+msgid "news.analysisFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:132
+msgid "news.analyze"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:158
+msgid "news.analyzing"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:399
+msgid "news.assetName"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:412
+msgid "news.assetRelation"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:366
+msgid "news.assetSymbol"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:343
+msgid "news.assetTypeNumber"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: asset.source === "ai" ? "AI" : t({ id: "news.user", message: "User" })
+#: src/routes/news.$id.tsx:173
+msgid "news.assetSource"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:159
+#: src/routes/news.performance.tsx:161
+msgid "news.assetType"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:542
+#: src/components/NewsAnalysisReview.tsx:41
+#: src/components/NewsPredictions.tsx:57
+#: src/components/NewsPredictions.tsx:164
+#: src/components/NewsPredictions.tsx:252
+#: src/components/NewsTable.tsx:36
+msgid "news.bearish"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:541
+#: src/components/NewsAnalysisReview.tsx:40
+#: src/components/NewsPredictions.tsx:56
+#: src/components/NewsPredictions.tsx:161
+#: src/components/NewsPredictions.tsx:251
+#: src/components/NewsTable.tsx:35
+msgid "news.bullish"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:307
+msgid "news.byAsset"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:317
+msgid "news.byCategory"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:302
+msgid "news.byHorizon"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:447
+#: src/app/screens/NewsView.tsx:500
+#: src/components/NewsAnalysisReview.tsx:398
+#: src/components/NewsPredictions.tsx:228
+#: src/components/NewsPredictions.tsx:427
+msgid "news.cancel"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:35
+#: src/components/NewsPredictions.tsx:53
+#: src/components/NewsPredictions.tsx:248
+msgid "news.catalysts"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:242
+#: src/app/screens/NewsView.tsx:247
+#: src/routes/news.performance.tsx:198
+#: src/routes/news.performance.tsx:200
+msgid "news.category"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:694
+msgid "news.noMatchesHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:654
+#: src/routes/news.$id.tsx:58
+msgid "news.connectionHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:241
+msgid "news.performanceRetryHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:259
+msgid "news.tagsHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:214
+msgid "news.sourceExample"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:64
+msgid "news.confidence"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:295
+#: src/components/NewsAnalysisReview.tsx:301
+#: src/components/NewsPredictions.tsx:172
+#: src/components/NewsPredictions.tsx:176
+msgid "news.confidencePercent"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:92
+msgid "news.confidenceInvalid"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:308
+msgid "news.confidenceUnset"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:76
+msgid "news.aiUnavailable"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:515
+msgid "news.deleteFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:441
+msgid "news.deletePredictionFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:47
 msgid "news.export.failed"
 msgstr "Could not export. Check your connection and selection, then try again."
 
 #. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:652
+msgid "news.loadFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:49
+msgid "news.detailLoadFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:237
+msgid "news.performanceFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:190
+msgid "news.couldNotSave"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:160
+msgid "news.saveFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:108
+msgid "news.savePredictionFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:117
+msgid "news.reviewFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:452
+msgid "news.createEntry"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtDateTime(news.created_at)
+#. placeholder {0}: fmtDateTime(p.created_at)
+#. placeholder {1}: fmtDateTime(news.updated_at)
+#. placeholder {1}: fmtDateTime(p.updated_at)
+#: src/components/NewsPredictions.tsx:319
+#: src/routes/news.$id.tsx:126
+msgid "news.timestamps"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: baseline[field] || t({ id: "news.notRecorded", message: "Not recorded" })
+#: src/components/NewsAnalysisReview.tsx:191
+msgid "news.current"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:522
+#: src/components/NewsPredictions.tsx:451
+msgid "news.delete"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: n.title
+#: src/components/NewsTable.tsx:176
+msgid "news.deleteNamedEntry"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:479
+msgid "news.deleteTitle"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:384
+msgid "news.deletePrediction"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:408
+msgid "news.deletePredictionTitle"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:596
+#: src/components/NewsAnalysisReview.tsx:277
+#: src/components/NewsAnalysisReview.tsx:279
+#: src/components/NewsPredictions.tsx:152
+#: src/components/NewsPredictions.tsx:154
+msgid "news.direction"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:598
+msgid "news.directionFilter"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:75
+msgid "news.hitRate"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:33
+msgid "news.display_name"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:28
 msgid "news.export.started"
 msgstr "Download requested. Check your browser downloads."
 
 #. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:250
+msgid "news.categoryExample"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: n.title
+#: src/components/NewsTable.tsx:168
+msgid "news.editTitle"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:174
+#: src/routes/news.$id.tsx:85
+msgid "news.edit"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:374
+msgid "news.editPrediction"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:121
+msgid "news.editUserPrediction"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: filtered.length
+#: src/app/screens/NewsView.tsx:680
+msgid "news.entryCount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:124
+msgid "news.assetRequired"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:388
+#: src/components/NewsAnalysisReview.tsx:32
+msgid "news.exchange"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:68
 msgid "news.export.filtered"
 msgstr "Export filtered"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:63
 msgid "news.export.single"
 msgstr "Export Markdown"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:71
 msgid "news.export.selected"
 msgstr "Export selected ({count})"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:38
 msgid "news.export.denied"
 msgstr "Export unavailable. Sign in and check your access."
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:76
 msgid "news.export.loading"
 msgstr "Exporting…"
 
 #. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:619
+msgid "news.from"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:57
+msgid "news.group"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:65
+#: src/routes/news.performance.tsx:175
+#: src/routes/news.performance.tsx:177
+msgid "news.horizon"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:272
+msgid "news.includePrediction"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:49
+#: src/routes/news.performance.tsx:105
+msgid "news.incomplete"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:360
+#: src/components/NewsAnalysisReview.tsx:39
+#: src/components/NewsPredictions.tsx:61
+#: src/components/NewsPredictions.tsx:256
+#: src/components/NewsTable.tsx:40
+#: src/routes/news.$id.tsx:25
+#: src/routes/news.performance.tsx:52
+#: src/routes/news.performance.tsx:108
+msgid "news.index"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:55
+#: src/components/NewsPredictions.tsx:250
+msgid "news.invalidation"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:266
+msgid "news.tagsExample"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:229
+msgid "news.loadingPerformance"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:558
+msgid "news.subtitle"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:379
+#: src/components/NewsAnalysisReview.tsx:31
+msgid "news.market"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:397
+msgid "news.name"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:543
+#: src/components/NewsAnalysisReview.tsx:42
+#: src/components/NewsPredictions.tsx:58
+#: src/components/NewsPredictions.tsx:167
+#: src/components/NewsPredictions.tsx:253
+#: src/components/NewsTable.tsx:37
+msgid "news.neutral"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:570
+#: src/app/screens/NewsView.tsx:674
+msgid "news.newEntry"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:175
+msgid "news.new"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:122
+msgid "news.newUserPrediction"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:90
+msgid "news.newsSource"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:576
+msgid "news.filters"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:55
+msgid "news.table"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:555
+msgid "news.heading"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.index.tsx:41
+msgid "news.created"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.index.tsx:57
+msgid "news.deleted"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:48
+msgid "news.missing"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:130
+msgid "news.performanceTitle"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.index.tsx:34
+msgid "news.updated"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:329
+msgid "news.noAssets"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:154
+msgid "news.addAssetDetail"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:209
+msgid "news.noSuggestions"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:280
+msgid "news.noMatchingPredictions"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:693
+msgid "news.noMatches"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:666
+msgid "news.empty"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:128
+msgid "news.noPrediction"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:290
+msgid "news.noPredictions"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:36
+#: src/components/NewsExportActions.tsx:89
 msgid "news.export.empty"
 msgstr "No theses to export."
 
 #. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:359
+#: src/routes/news.performance.tsx:79
+msgid "news.notAvailable"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:193
+#: src/components/NewsPredictions.tsx:331
+#: src/routes/news.$id.tsx:120
+#: src/routes/news.$id.tsx:184
+msgid "news.notRecorded"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:135
+msgid "news.notSet"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:294
+#: src/app/screens/NewsView.tsx:299
+#: src/routes/news.$id.tsx:114
+msgid "news.notes"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:133
+msgid "news.sampleHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:98
+msgid "news.openSource"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:407
+msgid "news.optional"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:230
+msgid "news.urlHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:173
+msgid "news.confidenceHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:272
+#: src/app/screens/NewsView.tsx:277
+#: src/routes/news.$id.tsx:112
+msgid "news.originalText"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:280
+msgid "news.excerptHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:589
+#: src/routes/news.performance.tsx:46
+#: src/routes/news.performance.tsx:102
+msgid "news.pending"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:356
+#: src/components/NewsPredictions.tsx:368
+#: src/components/NewsTable.tsx:153
+msgid "news.pendingValidation"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:271
+msgid "news.statisticsWarning"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:256
+msgid "news.performanceCounts"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:141
+msgid "news.performanceFilters"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:566
+msgid "news.performance"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:63
+msgid "news.predictionSource"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:265
+msgid "news.predictionHorizons"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:269
+#: src/components/NewsTable.tsx:163
+msgid "news.predictions"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: news.title
+#: src/components/NewsPredictions.tsx:264
+msgid "news.predictionsFor"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:60
+msgid "news.published"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:621
+msgid "news.publishedFrom"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:205
+#: src/routes/news.performance.tsx:207
+msgid "news.fromUtc"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:220
+#: src/app/screens/NewsView.tsx:222
+msgid "news.publishedTime"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:630
+msgid "news.publishedTo"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:213
+#: src/routes/news.performance.tsx:215
+msgid "news.toUtc"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:34
+#: src/components/NewsPredictions.tsx:52
+#: src/components/NewsPredictions.tsx:247
+msgid "news.reasoning"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:667
+msgid "news.emptyHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:178
+msgid "news.formHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:360
+msgid "news.rejectSuggestion"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:410
+msgid "news.relation"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: asset.relation || t({ id: "news.notRecorded", message: "Not recorded" })
+#: src/routes/news.$id.tsx:182
+msgid "news.relationValue"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:428
+msgid "news.removeAsset"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:638
+#: src/app/screens/NewsView.tsx:700
+#: src/routes/news.performance.tsx:222
+#: src/routes/news.performance.tsx:287
+msgid "news.resetFilters"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:348
+msgid "news.result"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:168
+msgid "news.retryAnalysis"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:144
+msgid "news.review"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:36
+#: src/components/NewsPredictions.tsx:54
+#: src/components/NewsPredictions.tsx:249
+msgid "news.risks"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:451
+msgid "news.saveChanges"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:231
+msgid "news.savePrediction"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:410
+msgid "news.saveSuggestions"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:58
 msgid "news.export.select"
 msgstr "Select"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: n.title
+#: src/components/NewsTable.tsx:80
 msgid "news.export.selectTitle"
 msgstr "Select {0}"
 
 #. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:94
+msgid "news.reviewHorizonRequired"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:83
+msgid "news.horizonRequired"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:81
 msgid "news.export.selectionHint"
 msgstr "Selection is page-local; changing page, page size, or filters clears it. Filtered export includes all matching pages."
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:207
+#: src/app/screens/NewsView.tsx:210
+#: src/routes/news.performance.tsx:65
+#: src/routes/news.performance.tsx:144
+#: src/routes/news.performance.tsx:146
+msgid "news.source"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:347
+msgid "news.status"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:356
+#: src/components/NewsAnalysisReview.tsx:37
+#: src/components/NewsPredictions.tsx:59
+#: src/components/NewsPredictions.tsx:254
+#: src/components/NewsTable.tsx:38
+#: src/routes/news.$id.tsx:23
+#: src/routes/news.performance.tsx:50
+#: src/routes/news.performance.tsx:106
+msgid "news.stock"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:314
+msgid "news.assetHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:200
+msgid "news.suggestedCategory"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:199
+msgid "news.suggestedSummary"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: i + 1
+#: src/components/NewsAnalysisReview.tsx:218
+msgid "news.suggestionNumber"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:147
+msgid "news.reviewHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:284
+#: src/app/screens/NewsView.tsx:287
+#: src/routes/news.$id.tsx:113
+msgid "news.summary"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:420
+msgid "news.relationHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:364
+#: src/app/screens/NewsView.tsx:611
+#: src/components/NewsAnalysisReview.tsx:30
+#: src/routes/news.performance.tsx:191
+#: src/routes/news.performance.tsx:193
+msgid "news.symbol"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:613
+msgid "news.symbolFilter"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:257
+#: src/app/screens/NewsView.tsx:263
+msgid "news.tags"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:482
+msgid "news.deleteWarning"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:53
+msgid "news.missingHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:411
+msgid "news.deletePredictionWarning"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:196
+#: src/app/screens/NewsView.tsx:199
+msgid "news.title"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:61
+msgid "news.titleSource"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:118
+msgid "news.required"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:628
+msgid "news.to"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:45
+#: src/routes/news.performance.tsx:101
+msgid "news.total"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:345
+msgid "news.tradingHorizon"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:329
+#: src/components/NewsPredictions.tsx:193
+msgid "news.horizons"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:658
+#: src/routes/news.$id.tsx:66
+#: src/routes/news.performance.tsx:248
+msgid "news.retry"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:341
+#: src/components/NewsAnalysisReview.tsx:234
+#: src/components/NewsAnalysisReview.tsx:236
+msgid "news.type"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:48
+#: src/routes/news.performance.tsx:104
+msgid "news.unavailable"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:61
+msgid "news.uncategorized"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:231
+#: src/components/NewsPredictions.tsx:298
+#: src/components/NewsPredictions.tsx:303
+#: src/components/NewsPredictions.tsx:339
+#: src/components/NewsTable.tsx:125
+#: src/routes/news.$id.tsx:175
+#: src/routes/news.performance.tsx:67
+#: src/routes/news.performance.tsx:154
+#: src/routes/news.performance.tsx:298
+msgid "news.user"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:144
+msgid "news.judgmentHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:125
+msgid "news.userJudgment"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:592
+#: src/routes/news.performance.tsx:47
+#: src/routes/news.performance.tsx:103
+msgid "news.validated"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:579
+#: src/components/NewsTable.tsx:66
+msgid "news.validation"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:581
+msgid "news.validationFilter"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: p.source === "user" ? t({ id: "news.user", message: "User" }) : "AI"
+#: src/components/NewsPredictions.tsx:337
+msgid "news.validationAria"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:290
+msgid "news.summaryHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:204
+msgid "news.whatHappened"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:302
+msgid "news.notesHint"
+msgstr ""

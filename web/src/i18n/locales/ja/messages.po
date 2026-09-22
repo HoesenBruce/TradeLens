@@ -219,49 +219,1181 @@ msgid "Worst day"
 msgstr "最悪の日"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: row.original.sample_count
+#. placeholder {1}: row.original.correct
+#: src/routes/news.performance.tsx:81
+msgid "news.sampleCount"
+msgstr "· n={0}（正解 {1}）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: p.source === "user" ? t({ id: "news.user", message: "User" }) : "AI"
+#. placeholder {1}: p.id
+#: src/components/NewsPredictions.tsx:296
+msgid "news.predictionAria"
+msgstr "{0} の予測 {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: row.original.key
+#: src/routes/news.performance.tsx:60
+msgid "news.groupDays"
+msgstr "{0}取引日"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:345
+#: src/components/NewsPredictions.tsx:210
+#: src/components/NewsPredictions.tsx:312
+#: src/components/NewsPredictions.tsx:354
+#: src/components/NewsTable.tsx:146
+#: src/routes/news.performance.tsx:186
+msgid "news.days"
+msgstr "{h}取引日"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:37
+#: src/routes/news.performance.tsx:126
+msgid "news.back"
+msgstr "← ニュースに戻る"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:43
 msgid "news.export.missing"
 msgstr "利用できなくなったニュースがあります。一覧を更新して再試行してください。"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: i + 1
+#: src/components/NewsAnalysisReview.tsx:230
+msgid "news.acceptAsset"
+msgstr "資産 {0} を採用"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:188
+msgid "news.acceptCategory"
+msgstr "カテゴリーを採用"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:187
+msgid "news.acceptSummary"
+msgstr "要約を採用"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:67
+msgid "news.actions"
+msgstr "操作"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:282
+msgid "news.predictionAssetHint"
+msgstr "予測を作成する前に関連資産を追加してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:324
+msgid "news.addAsset"
+msgstr "資産を追加"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:390
+msgid "news.addManualAsset"
+msgstr "資産を手動で追加"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:277
+msgid "news.addPrediction"
+msgstr "予測を追加"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:281
+msgid "news.performanceEmptyHint"
+msgstr "予測を追加するか、絞り込みをリセットしてください。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:136
+#: src/components/NewsPredictions.tsx:138
+msgid "news.affectedAsset"
+msgstr "関連資産"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:339
+msgid "news.assetNumber"
+msgstr "関連資産 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:311
+#: src/components/NewsTable.tsx:62
+msgid "news.assets"
+msgstr "関連資産"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:141
+msgid "news.assetsPredictions"
+msgstr "関連資産と予測"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:133
+msgid "news.assetsPredictionsAria"
+msgstr "関連資産と予測"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:295
+msgid "news.aiUser"
+msgstr "AI・ユーザー"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:166
+msgid "news.allAssets"
+msgstr "すべての資産"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:605
+msgid "news.allDirections"
+msgstr "すべての方向"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:182
+msgid "news.allHorizons"
+msgstr "すべての期間"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:151
+msgid "news.allSources"
+msgstr "すべての作成元"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:586
+msgid "news.allStatuses"
+msgstr "すべての状態"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:80
+msgid "news.analysisFailed"
+msgstr "分析に失敗しました。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:132
+msgid "news.analyze"
+msgstr "AI で分析"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:158
+msgid "news.analyzing"
+msgstr "ニュースを分析中…データはまだ保存されていません。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:399
+msgid "news.assetName"
+msgstr "資産 {0} の名称"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:412
+msgid "news.assetRelation"
+msgstr "資産 {0} の関連性"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:366
+msgid "news.assetSymbol"
+msgstr "資産 {0} の銘柄コード"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:343
+msgid "news.assetTypeNumber"
+msgstr "資産 {0} の種類"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: asset.source === "ai" ? "AI" : t({ id: "news.user", message: "User" })
+#: src/routes/news.$id.tsx:173
+msgid "news.assetSource"
+msgstr "資産の作成元：{0}"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:159
+#: src/routes/news.performance.tsx:161
+msgid "news.assetType"
+msgstr "資産の種類"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:542
+#: src/components/NewsAnalysisReview.tsx:41
+#: src/components/NewsPredictions.tsx:57
+#: src/components/NewsPredictions.tsx:164
+#: src/components/NewsPredictions.tsx:252
+#: src/components/NewsTable.tsx:36
+msgid "news.bearish"
+msgstr "弱気"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:541
+#: src/components/NewsAnalysisReview.tsx:40
+#: src/components/NewsPredictions.tsx:56
+#: src/components/NewsPredictions.tsx:161
+#: src/components/NewsPredictions.tsx:251
+#: src/components/NewsTable.tsx:35
+msgid "news.bullish"
+msgstr "強気"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:307
+msgid "news.byAsset"
+msgstr "資産別"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:317
+msgid "news.byCategory"
+msgstr "カテゴリー別"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:302
+msgid "news.byHorizon"
+msgstr "期間別"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:447
+#: src/app/screens/NewsView.tsx:500
+#: src/components/NewsAnalysisReview.tsx:398
+#: src/components/NewsPredictions.tsx:228
+#: src/components/NewsPredictions.tsx:427
+msgid "news.cancel"
+msgstr "キャンセル"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:35
+#: src/components/NewsPredictions.tsx:53
+#: src/components/NewsPredictions.tsx:248
+msgid "news.catalysts"
+msgstr "材料"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:242
+#: src/app/screens/NewsView.tsx:247
+#: src/routes/news.performance.tsx:198
+#: src/routes/news.performance.tsx:200
+msgid "news.category"
+msgstr "カテゴリー"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:694
+msgid "news.noMatchesHint"
+msgstr "絞り込みを変更またはリセットしてください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:654
+#: src/routes/news.$id.tsx:58
+msgid "news.connectionHint"
+msgstr "API 接続を確認して再試行してください。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:241
+msgid "news.performanceRetryHint"
+msgstr "API 接続を確認するか、絞り込みをリセットしてください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:259
+msgid "news.tagsHint"
+msgstr "カンマで区切ってください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:214
+msgid "news.sourceExample"
+msgstr "企業開示、ロイター、手動記録など"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:64
+msgid "news.confidence"
+msgstr "確信度"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:295
+#: src/components/NewsAnalysisReview.tsx:301
+#: src/components/NewsPredictions.tsx:172
+#: src/components/NewsPredictions.tsx:176
+msgid "news.confidencePercent"
+msgstr "確信度 (%)"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:92
+msgid "news.confidenceInvalid"
+msgstr "確信度は0～100の整数で入力してください。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:308
+msgid "news.confidenceUnset"
+msgstr "確信度は未設定"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:76
+msgid "news.aiUnavailable"
+msgstr "設定で AI コーチを構成して有効にしてください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:515
+msgid "news.deleteFailed"
+msgstr "記録を削除できませんでした。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:441
+msgid "news.deletePredictionFailed"
+msgstr "予測を削除できませんでした。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:47
 msgid "news.export.failed"
 msgstr "エクスポートできませんでした。接続と選択内容を確認して再試行してください。"
 
 #. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:652
+msgid "news.loadFailed"
+msgstr "ニュースを読み込めませんでした"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:49
+msgid "news.detailLoadFailed"
+msgstr "ニュース仮説を読み込めませんでした"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:237
+msgid "news.performanceFailed"
+msgstr "成績を読み込めませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:190
+msgid "news.couldNotSave"
+msgstr "保存できませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:160
+msgid "news.saveFailed"
+msgstr "ニュース記録を保存できませんでした。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:108
+msgid "news.savePredictionFailed"
+msgstr "予測を保存できませんでした。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:117
+msgid "news.reviewFailed"
+msgstr "確認結果を保存できませんでした。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:452
+msgid "news.createEntry"
+msgstr "記録を作成"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtDateTime(news.created_at)
+#. placeholder {0}: fmtDateTime(p.created_at)
+#. placeholder {1}: fmtDateTime(news.updated_at)
+#. placeholder {1}: fmtDateTime(p.updated_at)
+#: src/components/NewsPredictions.tsx:319
+#: src/routes/news.$id.tsx:126
+msgid "news.timestamps"
+msgstr "作成 {0} · 更新 {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: baseline[field] || t({ id: "news.notRecorded", message: "Not recorded" })
+#: src/components/NewsAnalysisReview.tsx:191
+msgid "news.current"
+msgstr "現在：{0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:522
+#: src/components/NewsPredictions.tsx:451
+msgid "news.delete"
+msgstr "削除"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: n.title
+#: src/components/NewsTable.tsx:176
+msgid "news.deleteNamedEntry"
+msgstr "{0} を削除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:479
+msgid "news.deleteTitle"
+msgstr "ニュース仮説を削除しますか？"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:384
+msgid "news.deletePrediction"
+msgstr "予測を削除"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:408
+msgid "news.deletePredictionTitle"
+msgstr "ユーザー予測を削除しますか？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:596
+#: src/components/NewsAnalysisReview.tsx:277
+#: src/components/NewsAnalysisReview.tsx:279
+#: src/components/NewsPredictions.tsx:152
+#: src/components/NewsPredictions.tsx:154
+msgid "news.direction"
+msgstr "方向"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:598
+msgid "news.directionFilter"
+msgstr "方向の絞り込み"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:75
+msgid "news.hitRate"
+msgstr "方向の的中率"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:33
+msgid "news.display_name"
+msgstr "表示名"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:28
 msgid "news.export.started"
 msgstr "ダウンロードを開始しました。ブラウザーのダウンロード一覧を確認してください。"
 
 #. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:250
+msgid "news.categoryExample"
+msgstr "決算、政策、新製品発表など"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: n.title
+#: src/components/NewsTable.tsx:168
+msgid "news.editTitle"
+msgstr "{0} を編集"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:174
+#: src/routes/news.$id.tsx:85
+msgid "news.edit"
+msgstr "ニュース仮説を編集"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:374
+msgid "news.editPrediction"
+msgstr "予測を編集"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:121
+msgid "news.editUserPrediction"
+msgstr "ユーザー予測を編集"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: filtered.length
+#: src/app/screens/NewsView.tsx:680
+msgid "news.entryCount"
+msgstr "記録数：{0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:124
+msgid "news.assetRequired"
+msgstr "関連資産には銘柄コードが必要です。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:388
+#: src/components/NewsAnalysisReview.tsx:32
+msgid "news.exchange"
+msgstr "取引所"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:68
 msgid "news.export.filtered"
 msgstr "絞り込み結果をエクスポート"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:63
 msgid "news.export.single"
 msgstr "Markdown をエクスポート"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:71
 msgid "news.export.selected"
 msgstr "選択項目をエクスポート（{count}）"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:38
 msgid "news.export.denied"
 msgstr "エクスポートできません。ログインとアクセス権を確認してください。"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:76
 msgid "news.export.loading"
 msgstr "エクスポート中…"
 
 #. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:619
+msgid "news.from"
+msgstr "開始日"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:57
+msgid "news.group"
+msgstr "グループ"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:65
+#: src/routes/news.performance.tsx:175
+#: src/routes/news.performance.tsx:177
+msgid "news.horizon"
+msgstr "期間"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:272
+msgid "news.includePrediction"
+msgstr "予測を含める"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:49
+#: src/routes/news.performance.tsx:105
+msgid "news.incomplete"
+msgstr "不完全"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:360
+#: src/components/NewsAnalysisReview.tsx:39
+#: src/components/NewsPredictions.tsx:61
+#: src/components/NewsPredictions.tsx:256
+#: src/components/NewsTable.tsx:40
+#: src/routes/news.$id.tsx:25
+#: src/routes/news.performance.tsx:52
+#: src/routes/news.performance.tsx:108
+msgid "news.index"
+msgstr "指数"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:55
+#: src/components/NewsPredictions.tsx:250
+msgid "news.invalidation"
+msgstr "無効化条件"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:266
+msgid "news.tagsExample"
+msgstr "日本, ETF"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:229
+msgid "news.loadingPerformance"
+msgstr "成績を読み込み中"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:558
+msgid "news.subtitle"
+msgstr "材料となる出来事と影響を受ける可能性のある資産を記録します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:379
+#: src/components/NewsAnalysisReview.tsx:31
+msgid "news.market"
+msgstr "市場"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:397
+msgid "news.name"
+msgstr "名称"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:543
+#: src/components/NewsAnalysisReview.tsx:42
+#: src/components/NewsPredictions.tsx:58
+#: src/components/NewsPredictions.tsx:167
+#: src/components/NewsPredictions.tsx:253
+#: src/components/NewsTable.tsx:37
+msgid "news.neutral"
+msgstr "中立"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:570
+#: src/app/screens/NewsView.tsx:674
+msgid "news.newEntry"
+msgstr "新規記録"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:175
+msgid "news.new"
+msgstr "ニュース仮説を作成"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:122
+msgid "news.newUserPrediction"
+msgstr "ユーザー予測を作成"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:90
+msgid "news.newsSource"
+msgstr "ニュース・出典"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:576
+msgid "news.filters"
+msgstr "ニュースの絞り込み"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:55
+msgid "news.table"
+msgstr "ニュース仮説"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:555
+msgid "news.heading"
+msgstr "ニュース仮説"
+
+#. js-lingui-explicit-id
+#: src/routes/news.index.tsx:41
+msgid "news.created"
+msgstr "ニュース仮説を作成しました"
+
+#. js-lingui-explicit-id
+#: src/routes/news.index.tsx:57
+msgid "news.deleted"
+msgstr "ニュース仮説を削除しました"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:48
+msgid "news.missing"
+msgstr "ニュース仮説が見つかりません"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:130
+msgid "news.performanceTitle"
+msgstr "ニュース仮説の成績"
+
+#. js-lingui-explicit-id
+#: src/routes/news.index.tsx:34
+msgid "news.updated"
+msgstr "ニュース仮説を更新しました"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:329
+msgid "news.noAssets"
+msgstr "関連資産はまだありません。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:154
+msgid "news.addAssetDetail"
+msgstr "関連資産はまだありません。ニュース仮説を編集して追加してください。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:209
+msgid "news.noSuggestions"
+msgstr "資産の提案はありません。手動で追加できます。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:280
+msgid "news.noMatchingPredictions"
+msgstr "一致する予測はありません"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:693
+msgid "news.noMatches"
+msgstr "一致する仮説はありません"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:666
+msgid "news.empty"
+msgstr "ニュース仮説はまだありません"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:128
+msgid "news.noPrediction"
+msgstr "予測なし"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:290
+msgid "news.noPredictions"
+msgstr "予測はまだありません。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:36
+#: src/components/NewsExportActions.tsx:89
 msgid "news.export.empty"
 msgstr "エクスポートできるニュースはありません。"
 
 #. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:359
+#: src/routes/news.performance.tsx:79
+msgid "news.notAvailable"
+msgstr "データなし"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:193
+#: src/components/NewsPredictions.tsx:331
+#: src/routes/news.$id.tsx:120
+#: src/routes/news.$id.tsx:184
+msgid "news.notRecorded"
+msgstr "未記録"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:135
+msgid "news.notSet"
+msgstr "未設定"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:294
+#: src/app/screens/NewsView.tsx:299
+#: src/routes/news.$id.tsx:114
+msgid "news.notes"
+msgstr "メモ・仮説"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:133
+msgid "news.sampleHint"
+msgstr "1件の予測と1つの取引日期間の組み合わせを1標本とします。確定した結果のみを的中率に含めます。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:98
+msgid "news.openSource"
+msgstr "出典を開く"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:407
+msgid "news.optional"
+msgstr "任意"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:230
+msgid "news.urlHint"
+msgstr "HTTP(S) の出典リンク（任意）。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:173
+msgid "news.confidenceHint"
+msgstr "任意、0～100。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:272
+#: src/app/screens/NewsView.tsx:277
+#: src/routes/news.$id.tsx:112
+msgid "news.originalText"
+msgstr "原文"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:280
+msgid "news.excerptHint"
+msgstr "関連する文章を貼り付けてください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:589
+#: src/routes/news.performance.tsx:46
+#: src/routes/news.performance.tsx:102
+msgid "news.pending"
+msgstr "検証待ち"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:356
+#: src/components/NewsPredictions.tsx:368
+#: src/components/NewsTable.tsx:153
+msgid "news.pendingValidation"
+msgstr "検証待ち"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:271
+msgid "news.statisticsWarning"
+msgstr "検証待ち、利用不可、不完全な結果は的中率の分母から除外します。n は確定済みの標本数です。少数の標本では精度の信頼性を判断できません。価格の方向だけではニュースとの因果関係は証明できません。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:256
+msgid "news.performanceCounts"
+msgstr "成績の集計"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:141
+msgid "news.performanceFilters"
+msgstr "成績の絞り込み"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:566
+msgid "news.performance"
+msgstr "成績レポート"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:63
+msgid "news.predictionSource"
+msgstr "予測・作成元"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:265
+msgid "news.predictionHorizons"
+msgstr "予測と期間の組み合わせ"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:269
+#: src/components/NewsTable.tsx:163
+msgid "news.predictions"
+msgstr "予測"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: news.title
+#: src/components/NewsPredictions.tsx:264
+msgid "news.predictionsFor"
+msgstr "{0} の予測"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:60
+msgid "news.published"
+msgstr "公開日時"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:621
+msgid "news.publishedFrom"
+msgstr "公開日（開始）"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:205
+#: src/routes/news.performance.tsx:207
+msgid "news.fromUtc"
+msgstr "公開日（開始、UTC）"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:220
+#: src/app/screens/NewsView.tsx:222
+msgid "news.publishedTime"
+msgstr "公開日時"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:630
+msgid "news.publishedTo"
+msgstr "公開日（終了）"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:213
+#: src/routes/news.performance.tsx:215
+msgid "news.toUtc"
+msgstr "公開日（終了、UTC）"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:34
+#: src/components/NewsPredictions.tsx:52
+#: src/components/NewsPredictions.tsx:247
+msgid "news.reasoning"
+msgstr "根拠"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:667
+msgid "news.emptyHint"
+msgstr "材料となる出来事を記録し、関連する株式・ETF・指数を追加してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:178
+msgid "news.formHint"
+msgstr "出典、メモ、関連する株式・ETF・指数を記録します。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:360
+msgid "news.rejectSuggestion"
+msgstr "提案を除外"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:410
+msgid "news.relation"
+msgstr "関連性"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: asset.relation || t({ id: "news.notRecorded", message: "Not recorded" })
+#: src/routes/news.$id.tsx:182
+msgid "news.relationValue"
+msgstr "関連性：{0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:428
+msgid "news.removeAsset"
+msgstr "資産 {0} を削除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:638
+#: src/app/screens/NewsView.tsx:700
+#: src/routes/news.performance.tsx:222
+#: src/routes/news.performance.tsx:287
+msgid "news.resetFilters"
+msgstr "絞り込みをリセット"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:348
+msgid "news.result"
+msgstr "結果"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:168
+msgid "news.retryAnalysis"
+msgstr "分析を再試行"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:144
+msgid "news.review"
+msgstr "AI の提案を確認"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:36
+#: src/components/NewsPredictions.tsx:54
+#: src/components/NewsPredictions.tsx:249
+msgid "news.risks"
+msgstr "リスク"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:451
+msgid "news.saveChanges"
+msgstr "変更を保存"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:231
+msgid "news.savePrediction"
+msgstr "予測を保存"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:410
+msgid "news.saveSuggestions"
+msgstr "選択した提案を保存"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:58
 msgid "news.export.select"
 msgstr "選択"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: n.title
+#: src/components/NewsTable.tsx:80
 msgid "news.export.selectTitle"
 msgstr "{0} を選択"
 
 #. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:94
+msgid "news.reviewHorizonRequired"
+msgstr "採用する各予測に期間を1つ以上選択してください。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:83
+msgid "news.horizonRequired"
+msgstr "取引日ベースの期間を1つ以上選択してください。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:81
 msgid "news.export.selectionHint"
 msgstr "選択は現在のページのみです。ページ、表示件数、絞り込みを変更すると解除されます。絞り込み結果のエクスポートには全ページが含まれます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:207
+#: src/app/screens/NewsView.tsx:210
+#: src/routes/news.performance.tsx:65
+#: src/routes/news.performance.tsx:144
+#: src/routes/news.performance.tsx:146
+msgid "news.source"
+msgstr "出典"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:347
+msgid "news.status"
+msgstr "状態"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:356
+#: src/components/NewsAnalysisReview.tsx:37
+#: src/components/NewsPredictions.tsx:59
+#: src/components/NewsPredictions.tsx:254
+#: src/components/NewsTable.tsx:38
+#: src/routes/news.$id.tsx:23
+#: src/routes/news.performance.tsx:50
+#: src/routes/news.performance.tsx:106
+msgid "news.stock"
+msgstr "株式"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:314
+msgid "news.assetHint"
+msgstr "株式、ETF、指数。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:200
+msgid "news.suggestedCategory"
+msgstr "提案されたカテゴリー"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:199
+msgid "news.suggestedSummary"
+msgstr "提案された要約"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: i + 1
+#: src/components/NewsAnalysisReview.tsx:218
+msgid "news.suggestionNumber"
+msgstr "提案 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:147
+msgid "news.reviewHint"
+msgstr "提案には誤りが含まれる場合があります。保存する内容だけを選択してください。編集した AI 提案も AI として、手動追加はユーザーの記録として保存されます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:284
+#: src/app/screens/NewsView.tsx:287
+#: src/routes/news.$id.tsx:113
+msgid "news.summary"
+msgstr "要約"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:420
+msgid "news.relationHint"
+msgstr "サプライヤー、同業他社など"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:364
+#: src/app/screens/NewsView.tsx:611
+#: src/components/NewsAnalysisReview.tsx:30
+#: src/routes/news.performance.tsx:191
+#: src/routes/news.performance.tsx:193
+msgid "news.symbol"
+msgstr "銘柄コード"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:613
+msgid "news.symbolFilter"
+msgstr "銘柄コードの絞り込み"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:257
+#: src/app/screens/NewsView.tsx:263
+msgid "news.tags"
+msgstr "タグ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:482
+msgid "news.deleteWarning"
+msgstr "関連資産と予測も削除されます。この操作は取り消せません。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:53
+msgid "news.missingHint"
+msgstr "この記録は削除されたか、このアカウントでは閲覧できません。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:411
+msgid "news.deletePredictionWarning"
+msgstr "予測とその期間が削除されます。この操作は取り消せません。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:196
+#: src/app/screens/NewsView.tsx:199
+msgid "news.title"
+msgstr "タイトル"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:61
+msgid "news.titleSource"
+msgstr "タイトル・出典"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:118
+msgid "news.required"
+msgstr "タイトル、出典、公開日時は必須です。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:628
+msgid "news.to"
+msgstr "終了日"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:45
+#: src/routes/news.performance.tsx:101
+msgid "news.total"
+msgstr "合計"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:345
+msgid "news.tradingHorizon"
+msgstr "取引日ベースの期間"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:329
+#: src/components/NewsPredictions.tsx:193
+msgid "news.horizons"
+msgstr "取引日ベースの期間"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:658
+#: src/routes/news.$id.tsx:66
+#: src/routes/news.performance.tsx:248
+msgid "news.retry"
+msgstr "再試行"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:341
+#: src/components/NewsAnalysisReview.tsx:234
+#: src/components/NewsAnalysisReview.tsx:236
+msgid "news.type"
+msgstr "種類"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:48
+#: src/routes/news.performance.tsx:104
+msgid "news.unavailable"
+msgstr "利用不可"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:61
+msgid "news.uncategorized"
+msgstr "未分類"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:231
+#: src/components/NewsPredictions.tsx:298
+#: src/components/NewsPredictions.tsx:303
+#: src/components/NewsPredictions.tsx:339
+#: src/components/NewsTable.tsx:125
+#: src/routes/news.$id.tsx:175
+#: src/routes/news.performance.tsx:67
+#: src/routes/news.performance.tsx:154
+#: src/routes/news.performance.tsx:298
+msgid "news.user"
+msgstr "ユーザー"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:144
+msgid "news.judgmentHint"
+msgstr "ユーザーと AI の判断は別々に記録されます。AI 予測は利用可能な場合に表示され、検証結果は検証待ちとなります。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:125
+msgid "news.userJudgment"
+msgstr "ユーザーの判断"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:592
+#: src/routes/news.performance.tsx:47
+#: src/routes/news.performance.tsx:103
+msgid "news.validated"
+msgstr "検証済み"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:579
+#: src/components/NewsTable.tsx:66
+msgid "news.validation"
+msgstr "検証"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:581
+msgid "news.validationFilter"
+msgstr "検証状態の絞り込み"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: p.source === "user" ? t({ id: "news.user", message: "User" }) : "AI"
+#: src/components/NewsPredictions.tsx:337
+msgid "news.validationAria"
+msgstr "{0} 予測の検証期間"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:290
+msgid "news.summaryHint"
+msgstr "何が変わりましたか？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:204
+msgid "news.whatHappened"
+msgstr "何が起きましたか？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:302
+msgid "news.notesHint"
+msgstr "なぜ重要だと考えますか？"
