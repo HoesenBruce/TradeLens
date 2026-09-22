@@ -63,7 +63,10 @@ func (p *YahooProvider) FetchBars(ctx context.Context, req Request) ([]Bar, erro
 		return nil, err
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode == http.StatusNotFound || resp.StatusCode == http.StatusUnprocessableEntity {
+	if unavailableStatus(resp.StatusCode) {
+		return nil, fmt.Errorf("%w: status %d", ErrProviderUnavailable, resp.StatusCode)
+	}
+	if resp.StatusCode == http.StatusNotFound {
 		return []Bar{}, nil
 	}
 	if resp.StatusCode != http.StatusOK {
@@ -76,18 +79,33 @@ func (p *YahooProvider) FetchBars(ctx context.Context, req Request) ([]Bar, erro
 		return nil, err
 	}
 	if payload.Chart.Error != nil {
-		// Unknown or delisted symbols — treat as empty, not a hard failure.
-		return []Bar{}, nil
+		// Only an explicit missing symbol is no-data; other errors must surface.
+		if payload.Chart.Error.Code == "Not Found" {
+			return []Bar{}, nil
+		}
+		return nil, fmt.Errorf("yahoo chart: provider error")
+	}
+	if payload.Chart.Result == nil {
+		return nil, fmt.Errorf("yahoo chart: missing result")
 	}
 	if len(payload.Chart.Result) == 0 {
 		return []Bar{}, nil
 	}
 	result := payload.Chart.Result[0]
 	quotes := result.Indicators.Quote
-	if len(quotes) == 0 {
+	if result.Timestamp == nil {
+		return nil, fmt.Errorf("yahoo chart: missing timestamps")
+	}
+	if len(result.Timestamp) == 0 {
 		return []Bar{}, nil
 	}
+	if len(quotes) == 0 {
+		return nil, fmt.Errorf("yahoo chart: missing quotes")
+	}
 	q := quotes[0]
+	if len(q.Open) != len(result.Timestamp) || len(q.High) != len(result.Timestamp) || len(q.Low) != len(result.Timestamp) || len(q.Close) != len(result.Timestamp) {
+		return nil, fmt.Errorf("yahoo chart: partial quotes")
+	}
 	bars := make([]Bar, 0, len(result.Timestamp))
 	for i, ts := range result.Timestamp {
 		o, h, l, c := at(q.Open, i), at(q.High, i), at(q.Low, i), at(q.Close, i)
@@ -106,6 +124,9 @@ func (p *YahooProvider) FetchBars(ctx context.Context, req Request) ([]Bar, erro
 			Close:  *c,
 			Volume: vol,
 		})
+	}
+	if len(bars) == 0 {
+		return nil, fmt.Errorf("yahoo chart: no usable quotes")
 	}
 	applyYahooSplits(req, bars, result.Events.Splits)
 	return bars, nil
@@ -220,6 +241,7 @@ type yahooChartResponse struct {
 			} `json:"indicators"`
 		} `json:"result"`
 		Error *struct {
+			Code        string `json:"code"`
 			Description string `json:"description"`
 		} `json:"error"`
 	} `json:"chart"`

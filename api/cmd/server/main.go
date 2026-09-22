@@ -79,7 +79,11 @@ func main() {
 	var marketSvc *marketdata.Service
 	var accountValueSvc *accountvalue.Service
 	if cfg.MarketDataEnabled {
-		provider := marketdata.NewProvider(cfg.MarketDataProvider, cfg.MarketDataAPIKey, cfg.MarketDataHTTPBaseURL, cfg.MarketDataHTTPAPIKey)
+		provider, err := marketdata.NewConfiguredProvider(cfg.MarketDataProvider, cfg.MarketDataProviders, cfg.MarketDataAPIKey, cfg.MarketDataHTTPBaseURL, cfg.MarketDataHTTPAPIKey)
+		if err != nil {
+			logger.Error("invalid market data routing", "err", err)
+			os.Exit(1)
+		}
 		marketSvc = marketdata.NewService(q, provider)
 		accountValueSvc = accountvalue.NewService(marketSvc.GetBars)
 		logger.Info("market data enabled", "provider", provider.Name())
