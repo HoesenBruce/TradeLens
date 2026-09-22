@@ -131,3 +131,33 @@ If a mobile-only issue already exists and is no longer part of the current roadm
 When mobile becomes active again, update this document first or as part of the issue that changes
 the platform policy. Acceptance criteria and agent instructions should then be updated together so
 that repository documentation does not contradict the active development scope.
+
+### Web i18n convention
+
+- Use the existing Lingui provider (`web/src/i18n/index.tsx`) and `useLocale()`.
+  Required locales are `en`, `zh-CN`, and `ja`; preserve upstream `zh-HK` and `ko`.
+- Navigation and Settings resources live in `web/src/lib/locale.ts`. Their typed
+  `navLabel(locale, "home")` / `settingsLabel(locale, "language")` APIs use semantic
+  keys, equivalent to `nav.home` / `settings.language`. Add new labels to English
+  first, then the supported translations. Do not use display strings as keys.
+- Other UI uses Lingui catalogs in `web/src/i18n/locales/{locale}/messages.po`.
+  For new fork strings, use explicit semantic IDs, e.g.
+  `t({ id: "trade.import", message: "Import trades" })` from Lingui's React macro
+  hook. Run `pnpm i18n:extract`, translate the entries, then `pnpm i18n:compile`
+  from `web/`; commit the relevant PO and compiled TS changes. Existing upstream
+  display-string IDs can remain until their surface is migrated.
+- New user-facing text in localized surfaces must use these APIs, not hard-coded
+  JSX. Fallback is selected translation → English → visible key. Typed label keys
+  catch typos; Lingui warns about unknown IDs during development.
+- The device-local `tm-locale` preference wins at startup. When absent, match
+  `navigator.languages`; otherwise use English. Invalid saved values use English.
+  Changes apply immediately; this selector has no separate save/reset operation.
+- Reuse `fmtDate`, `fmtTime`, `fmtNumber`, `fmtPct`, and `fmtMoney` in
+  `web/src/lib/format.ts` with `useIntlLocale()` for reactive formatting. Date/time
+  helpers preserve display timezone/clock preferences; money preserves privacy.
+  Percentages take ratios (0.58 = 58%). Locale must never change currency codes,
+  stored dates, API enum/filter values, or financial calculations.
+- Issue #85 covers navigation and General settings as the representative surface.
+  Remaining UI/catalog entries may fall back to English; full translation and
+  layout QA belong to a later issue once the UI stabilizes. Mobile is preserved
+  but localization/device behavior has not been validated.

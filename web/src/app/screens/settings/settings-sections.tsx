@@ -2083,8 +2083,8 @@ export function GeneralTab() {
     link.remove();
     URL.revokeObjectURL(url);
     toast.add({
-      title: "App config exported",
-      description: "Downloaded your local app preferences as JSON.",
+      title: settingsLabel(locale, "configExported"),
+      description: settingsLabel(locale, "configExportedDescription"),
     });
   }
 
@@ -2094,13 +2094,13 @@ export function GeneralTab() {
       await applyParsedAppConfig(parsed, setLocale);
       setServerUrl(editableApiBaseUrl(getCustomApiBaseUrl()));
       toast.add({
-        title: "App config imported",
-        description: "Settings restored from backup.",
+        title: settingsLabel(parsed.locale ?? locale, "configImported"),
+        description: settingsLabel(parsed.locale ?? locale, "configImportedDescription"),
       });
     } catch (err) {
       toast.add({
-        title: "Could not import config",
-        description: err instanceof Error ? err.message : "Invalid config file.",
+        title: settingsLabel(locale, "configImportFailed"),
+        description: err instanceof Error ? err.message : settingsLabel(locale, "configInvalid"),
       });
     }
   }
