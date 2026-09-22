@@ -213,6 +213,7 @@ User docs live on the docs site: **[trader-memos.vercel.app](https://trader-memo
 
 | Doc | Topic |
 |-----|--------|
+| [docs/features/analytics-metrics.md](docs/features/analytics-metrics.md) | Analytics formulas, sample rules, units, and edge cases |
 | [docs/fork-deploy.md](docs/fork-deploy.md) | One-click / fork → Vercel, Cloudflare, Netlify, Railway |
 | [docs/deploy.md](docs/deploy.md) | Docker, CORS, edge rewrite |
 | [docs/tm-sync.md](docs/tm-sync.md) | The tm-sync local statement watcher |
