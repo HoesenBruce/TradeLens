@@ -217,3 +217,51 @@ msgstr "승률"
 #: src/app/screens/PublicShareView.tsx:313
 msgid "Worst day"
 msgstr "최악의 날"
+
+#. js-lingui-explicit-id
+msgid "news.export.missing"
+msgstr "A thesis is no longer available. Refresh the list and try again."
+
+#. js-lingui-explicit-id
+msgid "news.export.failed"
+msgstr "Could not export. Check your connection and selection, then try again."
+
+#. js-lingui-explicit-id
+msgid "news.export.started"
+msgstr "Download requested. Check your browser downloads."
+
+#. js-lingui-explicit-id
+msgid "news.export.filtered"
+msgstr "Export filtered"
+
+#. js-lingui-explicit-id
+msgid "news.export.single"
+msgstr "Export Markdown"
+
+#. js-lingui-explicit-id
+msgid "news.export.selected"
+msgstr "Export selected ({count})"
+
+#. js-lingui-explicit-id
+msgid "news.export.denied"
+msgstr "Export unavailable. Sign in and check your access."
+
+#. js-lingui-explicit-id
+msgid "news.export.loading"
+msgstr "Exporting…"
+
+#. js-lingui-explicit-id
+msgid "news.export.empty"
+msgstr "No theses to export."
+
+#. js-lingui-explicit-id
+msgid "news.export.select"
+msgstr "Select"
+
+#. js-lingui-explicit-id
+msgid "news.export.selectTitle"
+msgstr "Select {0}"
+
+#. js-lingui-explicit-id
+msgid "news.export.selectionHint"
+msgstr "Selection is page-local; changing page, page size, or filters clears it. Filtered export includes all matching pages."

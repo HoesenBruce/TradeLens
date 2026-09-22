@@ -3,22 +3,26 @@ import type { ExportFormat } from "./exports.types";
 
 export type { ExportFormat } from "./exports.types";
 
-function filenameFromDisposition(header: string | null, fallback: string): string {
+export function filenameFromDisposition(header: string | null, fallback: string): string {
   if (!header) return fallback;
   const match = /filename="?([^";]+)"?/i.exec(header);
   return match?.[1] ?? fallback;
 }
 
-function triggerDownload(blob: Blob, filename: string) {
+export function triggerDownload(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
   a.download = filename;
   a.rel = "noopener";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
+  try {
+    document.body.appendChild(a);
+    a.click();
+  } finally {
+    a.remove();
+    // Let the browser consume the object URL before releasing it.
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 }
 
 /** Download unified account export (same data as JSON backup; CSV is journal view). */

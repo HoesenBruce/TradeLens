@@ -1,4 +1,33 @@
-import { apiFetch } from "./client";
+import { ApiError, apiFetch, apiRawGet } from "./client";
+import { filenameFromDisposition, triggerDownload } from "./exports";
+
+/** IDs preserve the list's client-side filter semantics, including display-timezone dates. */
+export async function downloadNews(target: string | string[]): Promise<void> {
+  if (Array.isArray(target) && !target.length) throw new ApiError(200, "empty_export", "");
+  const query = new URLSearchParams();
+  if (Array.isArray(target)) for (const id of new Set(target)) query.append("id", id);
+  const path = Array.isArray(target)
+    ? `/news/export?${query}`
+    : `/news/${encodeURIComponent(target)}/export`;
+  const res = await apiRawGet(path);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new ApiError(
+      res.status,
+      body?.error?.code ?? "error",
+      body?.error?.message ?? res.statusText,
+    );
+  }
+  const blob = await res.blob();
+  const text = await blob.text();
+  if (!text.trim() || /^---\r?\ntype: news-thesis-batch\r?\ncount: 0\r?\n/.test(text)) {
+    throw new ApiError(200, "empty_export", "");
+  }
+  triggerDownload(
+    blob,
+    filenameFromDisposition(res.headers.get("Content-Disposition"), "news-theses.md"),
+  );
+}
 
 export type NewsAssetType = "stock" | "etf" | "index";
 

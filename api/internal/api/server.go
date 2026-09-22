@@ -111,7 +111,7 @@ func New(deps Deps) *Server {
 				echo.HeaderAccept,
 				echo.HeaderAuthorization,
 			},
-			ExposeHeaders: []string{echo.HeaderXRequestID},
+			ExposeHeaders: []string{echo.HeaderXRequestID, "Content-Disposition"},
 			MaxAge:        600,
 		}))
 	}

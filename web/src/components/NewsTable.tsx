@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Fragment, useState } from "react";
+import { useLingui } from "@lingui/react/macro";
+import { NewsExportActions } from "@/components/NewsExportActions";
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,16 +28,24 @@ export function NewsTable({
   onDelete: (n: News) => void;
   predictionActions?: PredictionActions;
 }) {
+  const { t } = useLingui();
+  const [selected, setSelected] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [expanded, setExpanded] = useState<string>();
   const pageCount = Math.max(1, Math.ceil(news.length / pageSize));
   const current = Math.min(page, pageCount);
+  const rows = news.slice((current - 1) * pageSize, current * pageSize);
+  const selectedIds = selected.filter((id) => rows.some((n) => n.id === id));
   return (
     <>
+      <div className="p-3">
+        <NewsExportActions ids={news.map((n) => n.id)} selected={selectedIds} />
+      </div>
       <Table aria-label="News theses">
         <TableHeader>
           <TableRow>
+            <TableHead>{t({ id: "news.export.select", message: "Select" })}</TableHead>
             {[
               "Published",
               "Title / source",
@@ -51,9 +61,26 @@ export function NewsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {news.slice((current - 1) * pageSize, current * pageSize).map((n) => (
+          {rows.map((n) => (
             <Fragment key={n.id}>
               <TableRow>
+                <TableCell>
+                  <input
+                    type="checkbox"
+                    aria-label={t({
+                      id: "news.export.selectTitle",
+                      message: `Select ${n.title}`,
+                    })}
+                    checked={selectedIds.includes(n.id)}
+                    onChange={(e) =>
+                      setSelected(
+                        e.target.checked
+                          ? [...selectedIds, n.id]
+                          : selectedIds.filter((id) => id !== n.id),
+                      )
+                    }
+                  />
+                </TableCell>
                 <TableCell className="whitespace-nowrap text-xs">
                   {fmtDateTime(n.published_at)}
                 </TableCell>
@@ -139,7 +166,7 @@ export function NewsTable({
               </TableRow>
               {expanded === n.id && predictionActions && (
                 <TableRow>
-                  <TableCell colSpan={8}>
+                  <TableCell colSpan={9}>
                     <NewsPredictions news={n} {...predictionActions} />
                   </TableCell>
                 </TableRow>
@@ -153,9 +180,13 @@ export function NewsTable({
         pageCount={pageCount}
         total={news.length}
         pageSize={pageSize}
-        onPageChange={setPage}
+        onPageChange={(next) => {
+          setPage(next);
+          setSelected([]);
+        }}
         onPageSizeChange={(size) => {
           setPageSize(size);
+          setSelected([]);
           setPage(1);
         }}
         alwaysShow
