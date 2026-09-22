@@ -40,6 +40,7 @@ type Config struct {
 	AttachDir             string
 	ImportMaxBytes        int64
 	MarketDataProvider    string
+	MarketDataProviders   string
 	MarketDataAPIKey      string
 	MarketDataHTTPBaseURL string
 	MarketDataHTTPAPIKey  string
@@ -158,6 +159,7 @@ func Load() (Config, error) {
 		AttachDir:                  k.String("attach_dir"),
 		ImportMaxBytes:             k.Int64("import_max_bytes"),
 		MarketDataProvider:         k.String("market_data_provider"),
+		MarketDataProviders:        k.String("market_data_providers"),
 		MarketDataHTTPBaseURL:      k.String("market_data_http_base_url"),
 		MarketDataHTTPAPIKey:       k.String("market_data_http_api_key"),
 		MarketDataAPIKey:           k.String("market_data_api_key"),

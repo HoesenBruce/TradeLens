@@ -96,3 +96,9 @@ func TestIsInsecureJWTSecret(t *testing.T) {
 	require.False(t, IsInsecureJWTSecret("abcdefghijklmnopqrstuvwxyz012345"))
 }
 
+func TestLoadMarketDataRouting(t *testing.T) {
+	t.Setenv("TM_MARKET_DATA_PROVIDERS", "http,yahoo")
+	cfg, err := Load()
+	require.NoError(t, err)
+	require.Equal(t, "http,yahoo", cfg.MarketDataProviders)
+}

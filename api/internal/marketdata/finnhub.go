@@ -59,6 +59,9 @@ func (p *FinnhubProvider) FetchBars(ctx context.Context, req Request) ([]Bar, er
 		return nil, err
 	}
 	defer resp.Body.Close()
+	if unavailableStatus(resp.StatusCode) {
+		return nil, fmt.Errorf("%w: status %d", ErrProviderUnavailable, resp.StatusCode)
+	}
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
 		return nil, fmt.Errorf("finnhub candle: %s: %s", resp.Status, strings.TrimSpace(string(body)))
@@ -68,8 +71,11 @@ func (p *FinnhubProvider) FetchBars(ctx context.Context, req Request) ([]Bar, er
 	if err := json.NewDecoder(resp.Body).Decode(&payload); err != nil {
 		return nil, err
 	}
-	if payload.Status != "ok" {
+	if payload.Status == "no_data" {
 		return []Bar{}, nil
+	}
+	if payload.Status != "ok" || payload.T == nil || len(payload.O) != len(payload.T) || len(payload.H) != len(payload.T) || len(payload.L) != len(payload.T) || len(payload.C) != len(payload.T) || len(payload.V) != len(payload.T) {
+		return nil, fmt.Errorf("finnhub: invalid candle response")
 	}
 	bars := make([]Bar, 0, len(payload.T))
 	for i, ts := range payload.T {

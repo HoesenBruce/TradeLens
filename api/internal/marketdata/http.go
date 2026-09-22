@@ -66,6 +66,9 @@ func (p *HTTPProvider) FetchResponse(ctx context.Context, req Request) (Response
 		return fail("request failed or timed out")
 	}
 	defer response.Body.Close()
+	if unavailableStatus(response.StatusCode) {
+		return Response{}, fmt.Errorf("%w: status %d", ErrProviderUnavailable, response.StatusCode)
+	}
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
 		if response.StatusCode == http.StatusUnprocessableEntity {
 			var remote struct {
