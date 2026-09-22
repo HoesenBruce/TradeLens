@@ -26,6 +26,55 @@ func TestGenericImporterParsesAndReportsBadRows(t *testing.T) {
 	require.Equal(t, 2, res.Errors[0].Row)
 }
 
+func TestParseMoney(t *testing.T) {
+	for input, want := range map[string]float64{
+		"10.00": 10, "$23.145": 23.145, "$1,234.56": 1234.56,
+		"($1.02)": -1.02, "-$1.25": -1.25, "$-0.40": -0.40,
+		"US$400.00": 400, "USD 1.00": 1, "23.145$": 23.145,
+	} {
+		got, err := parseMoney(input)
+		require.NoError(t, err, input)
+		require.Equal(t, want, got, input)
+	}
+	for _, input := range []string{"", "$", "abc", "()", "(abc)"} {
+		_, err := parseMoney(input)
+		require.Error(t, err, input)
+	}
+}
+
+func TestGenericImporterMoneyAndNonFillRows(t *testing.T) {
+	mapping := map[string]string{
+		"symbol": "Symbol", "side": "Action", "quantity": "Quantity",
+		"price": "Price", "executed_at": "Date", "commission": "Commission",
+		"fees": "Fees", "swap": "Swap",
+	}
+	res := NewGeneric(mapping).ParseRows([]map[string]string{
+		{"Symbol": "ACME", "Action": "Buy", "Quantity": "100", "Price": "$1,234.56", "Date": "2026-09-14", "Commission": "($1.02)", "Fees": "$-0.40", "Swap": "USD 1.00"},
+		{"Symbol": "ACME", "Action": "Qualified Dividend", "Quantity": "", "Price": "", "Date": "2026-09-15"},
+		{"Symbol": "ACME", "Action": "UnknownAction", "Quantity": "100", "Price": "20.00", "Date": "2026-09-16"},
+	})
+	require.Len(t, res.Executions, 1)
+	require.Equal(t, 1234.56, res.Executions[0].Price)
+	require.Equal(t, 1.02, res.Executions[0].Commission)
+	require.Equal(t, 1.40, res.Executions[0].Fees)
+	require.Len(t, res.Errors, 1)
+	require.Contains(t, res.Errors[0].Message, "invalid side")
+}
+
+func TestGenericImporterRejectsInvalidCosts(t *testing.T) {
+	mapping := map[string]string{
+		"symbol": "Symbol", "side": "Side", "quantity": "Qty",
+		"price": "Price", "executed_at": "Date", "fees": "Fees",
+	}
+	res := NewGeneric(mapping).ParseRows([]map[string]string{{
+		"Symbol": "ACME", "Side": "Buy", "Qty": "1", "Price": "10",
+		"Date": "2026-09-14", "Fees": "abc",
+	}})
+	require.Empty(t, res.Executions)
+	require.Len(t, res.Errors, 1)
+	require.Equal(t, "invalid fees", res.Errors[0].Message)
+}
+
 // Naive broker timestamps are the broker's wall clock, not UTC. A Friday
 // 16:30 ET fill read as UTC would land on the wrong instant (and late-Friday
 // fills on Saturday once bucketed) — WithSourceTZ pins the source zone.

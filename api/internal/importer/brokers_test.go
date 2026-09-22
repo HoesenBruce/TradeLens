@@ -151,7 +151,7 @@ func TestMatchBrokerSchwab(t *testing.T) {
 	g := NewGeneric(mapping)
 	res := g.ParseRows([]map[string]string{{
 		"Date": "07/10/2026", "Action": "Sell to Close", "Symbol": "AAPL",
-		"Quantity": "100", "Price": "231.50", "Fees & Comm": "0.65",
+		"Quantity": "100", "Price": "$231.50", "Fees & Comm": "$0.65",
 	}})
 	require.Empty(t, res.Errors)
 	require.Equal(t, "sell", res.Executions[0].Side)
@@ -255,9 +255,9 @@ func TestMatchBrokerMatchTraderOpenPositionKeepsSingleFill(t *testing.T) {
 	res := g.ParseRows([]map[string]string{
 		{
 			"Symbol": "XAUUSD", "Side": "Sell", "Volume": "0.25",
-			"Open time": "2026-07-10 09:31:22", "Open price": "2412.50",
-			"Close time": "2026-07-10 14:00:05", "Close price": "2398.00",
-			"Commission": "1.50", "Swap": "0",
+			"Open time": "2026-07-10 09:31:22", "Open price": "$2,412.50",
+			"Close time": "2026-07-10 14:00:05", "Close price": "USD 2398.00",
+			"Commission": "($1.50)", "Swap": "$0",
 		},
 		{
 			// Still-open position: no close columns → only the opening fill,

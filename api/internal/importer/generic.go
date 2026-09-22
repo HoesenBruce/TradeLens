@@ -60,7 +60,7 @@ func (g *Generic) ParseRows(rows []map[string]string) ParseResult {
 	var res ParseResult
 	roundTrip := g.roundTrip()
 	for i, row := range rows {
-		if rowHasSkipStatus(row) {
+		if rowHasSkipStatus(row) || g.skipNonFillRow(row) {
 			continue
 		}
 		if roundTrip {
@@ -117,7 +117,7 @@ func (g *Generic) parseRoundTripRow(row map[string]string) ([]ParsedExecution, e
 		return nil, fmt.Errorf("invalid quantity")
 	}
 	open.Quantity = math.Abs(qty)
-	price, err := strconv.ParseFloat(g.col(row, "open_price"), 64)
+	price, err := parseMoney(g.col(row, "open_price"))
 	if err != nil {
 		return nil, fmt.Errorf("invalid open price")
 	}
@@ -130,8 +130,19 @@ func (g *Generic) parseRoundTripRow(row map[string]string) ([]ParsedExecution, e
 	open.InstrumentType = ParseInstrumentType(g.col(row, "instrument_type"), open.Symbol)
 	g.applyMultiplier(&open, row)
 
-	commission := absFloat(g.col(row, "commission"))
-	swap := absFloat(g.col(row, "swap")) + absFloat(g.col(row, "fees"))
+	commission, err := parseCost(g.col(row, "commission"), "commission")
+	if err != nil {
+		return nil, err
+	}
+	swap, err := parseCost(g.col(row, "swap"), "swap")
+	if err != nil {
+		return nil, err
+	}
+	fees, err := parseCost(g.col(row, "fees"), "fees")
+	if err != nil {
+		return nil, err
+	}
+	swap += fees
 
 	closePrice := g.col(row, "close_price")
 	closeTime := g.col(row, "close_time")
@@ -142,7 +153,7 @@ func (g *Generic) parseRoundTripRow(row map[string]string) ([]ParsedExecution, e
 	}
 	cls := open
 	cls.Side = flipSide(open.Side)
-	if cls.Price, err = strconv.ParseFloat(closePrice, 64); err != nil {
+	if cls.Price, err = parseMoney(closePrice); err != nil {
 		return nil, fmt.Errorf("invalid close price")
 	}
 	if cls.ExecutedAt, err = parseTimeIn(closeTime, g.loc); err != nil {
@@ -160,11 +171,41 @@ func flipSide(side string) string {
 	return "buy"
 }
 
-// absFloat parses a cost/size cell to a positive magnitude; empty or
-// unparseable cells are 0.
-func absFloat(s string) float64 {
-	v, _ := strconv.ParseFloat(strings.ReplaceAll(strings.TrimSpace(s), ",", ""), 64)
-	return math.Abs(v)
+// parseMoney reads the common currency wrappers used by broker exports.
+func parseMoney(s string) (float64, error) {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return 0, fmt.Errorf("empty money value")
+	}
+	negative := strings.HasPrefix(s, "(") && strings.HasSuffix(s, ")")
+	if negative {
+		s = s[1 : len(s)-1]
+	}
+	var clean strings.Builder
+	for _, r := range s {
+		if (r >= '0' && r <= '9') || r == '.' || r == '-' || r == '+' {
+			clean.WriteRune(r)
+		}
+	}
+	v, err := strconv.ParseFloat(clean.String(), 64)
+	if err != nil {
+		return 0, err
+	}
+	if negative {
+		v = -v
+	}
+	return v, nil
+}
+
+func parseCost(s, field string) (float64, error) {
+	if s = strings.TrimSpace(s); s == "" || s == "--" {
+		return 0, nil
+	}
+	v, err := parseMoney(s)
+	if err != nil {
+		return 0, fmt.Errorf("invalid %s", field)
+	}
+	return math.Abs(v), nil
 }
 
 // applyMultiplier resolves the contract multiplier: an explicit column wins;
@@ -185,6 +226,17 @@ func (g *Generic) applyMultiplier(p *ParsedExecution, row map[string]string) {
 	if p.Multiplier == 0 && p.InstrumentType != "future" {
 		p.Multiplier = DefaultMultiplier(p.InstrumentType)
 	}
+}
+
+func (g *Generic) skipNonFillRow(row map[string]string) bool {
+	if ParseSideToken(g.col(row, "side")) != "" {
+		return false
+	}
+	priceField := "price"
+	if g.roundTrip() {
+		priceField = "open_price"
+	}
+	return g.col(row, "quantity") == "" || g.col(row, priceField) == ""
 }
 
 func rowHasSkipStatus(row map[string]string) bool {
@@ -249,7 +301,7 @@ func (g *Generic) parseRow(row map[string]string) (ParsedExecution, error) {
 	// Some brokers (IBKR, ThinkOrSwim) sign the quantity instead of, or as
 	// well as, the side column; the side column is authoritative here.
 	p.Quantity = math.Abs(qty)
-	price, err := strconv.ParseFloat(g.col(row, "price"), 64)
+	price, err := parseMoney(g.col(row, "price"))
 	if err != nil {
 		return p, fmt.Errorf("invalid price")
 	}
@@ -262,16 +314,20 @@ func (g *Generic) parseRow(row map[string]string) (ParsedExecution, error) {
 	// Costs are stored as positive magnitudes: brokers disagree on sign
 	// (IBKR reports IBCommission negative), and the P&L engine subtracts
 	// fees_total from gross either way.
-	if c := g.col(row, "commission"); c != "" {
-		v, _ := strconv.ParseFloat(c, 64)
-		p.Commission = math.Abs(v)
+	p.Commission, err = parseCost(g.col(row, "commission"), "commission")
+	if err != nil {
+		return p, err
 	}
-	if f := g.col(row, "fees"); f != "" {
-		v, _ := strconv.ParseFloat(f, 64)
-		p.Fees = math.Abs(v)
+	p.Fees, err = parseCost(g.col(row, "fees"), "fees")
+	if err != nil {
+		return p, err
 	}
 	// Overnight financing on FX/CFD exports; a cost either way, like fees.
-	p.Fees += absFloat(g.col(row, "swap"))
+	swap, err := parseCost(g.col(row, "swap"), "swap")
+	if err != nil {
+		return p, err
+	}
+	p.Fees += swap
 	p.InstrumentType = ParseInstrumentType(g.col(row, "instrument_type"), p.Symbol)
 	if p.InstrumentType == "option" {
 		p.OptionRight = ParseOptionRight(g.col(row, "option_right"))
