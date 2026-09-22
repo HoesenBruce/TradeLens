@@ -5,6 +5,16 @@ import { describe, expect, it, vi } from "vite-plus/test";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import type { News } from "@/lib/api/news";
 import { NewsView, type NewsFormValue } from "./NewsView";
+import { I18nProvider } from "@lingui/react";
+import { i18n } from "@/i18n";
+
+function LocalizedTooltipProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <I18nProvider i18n={i18n}>
+      <TooltipProvider>{children}</TooltipProvider>
+    </I18nProvider>
+  );
+}
 
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ children, params }: { children: React.ReactNode; params: { id: string } }) => (
@@ -58,7 +68,7 @@ const item: News = {
 
 function renderView(props: Partial<ComponentProps<typeof NewsView>> = {}) {
   return render(
-    <TooltipProvider>
+    <LocalizedTooltipProvider>
       <NewsView
         news={[item]}
         loading={false}
@@ -70,18 +80,51 @@ function renderView(props: Partial<ComponentProps<typeof NewsView>> = {}) {
         onDelete={vi.fn<(item: News) => Promise<void>>().mockResolvedValue(undefined)}
         {...props}
       />
-    </TooltipProvider>,
+    </LocalizedTooltipProvider>,
   );
 }
 
 describe("NewsView", () => {
+  it("keeps selection page-local and clears it on pagination, filtering, and re-entry", async () => {
+    const user = userEvent.setup();
+    const news = Array.from({ length: 12 }, (_, index) => ({
+      ...item,
+      id: `news-${index}`,
+      title: `Thesis ${index}`,
+    }));
+    const view = renderView({ news });
+    const select = () => screen.getByRole("checkbox", { name: "Select Thesis 0" });
+    await user.click(select());
+    expect(screen.getByRole("button", { name: "Export selected (1)" })).toBeEnabled();
+    await user.click(select());
+    expect(screen.getByRole("button", { name: "Export selected (0)" })).toBeDisabled();
+    await user.click(select());
+    await user.click(screen.getByRole("button", { name: "Next page" }));
+    expect(screen.getByRole("button", { name: "Export selected (0)" })).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: "Previous page" }));
+    expect(select()).not.toBeChecked();
+    await user.click(select());
+    await user.selectOptions(screen.getByRole("combobox", { name: "Rows per page" }), "20");
+    expect(select()).not.toBeChecked();
+    await user.click(select());
+    await user.type(screen.getByRole("textbox", { name: "Symbol" }), "NO-MATCH");
+    expect(screen.getByRole("button", { name: "Export filtered" })).toBeDisabled();
+    expect(screen.getByText("No theses to export.")).toBeVisible();
+    await user.click(screen.getAllByRole("button", { name: "Reset filters" })[0]);
+    expect(select()).not.toBeChecked();
+    await user.click(select());
+    view.unmount();
+    renderView({ news });
+    expect(select()).not.toBeChecked();
+  });
+
   it("renders loading, error, and empty states", async () => {
     const onRetry = vi.fn<() => void>();
     const view = renderView({ news: [], loading: true });
     expect(document.querySelector("[data-slot=skeleton]")).toBeInTheDocument();
 
     view.rerender(
-      <TooltipProvider>
+      <LocalizedTooltipProvider>
         <NewsView
           news={[]}
           loading={false}
@@ -90,13 +133,13 @@ describe("NewsView", () => {
           onSave={vi.fn<(value: NewsFormValue, item?: News) => Promise<void>>()}
           onDelete={vi.fn<(item: News) => Promise<void>>()}
         />
-      </TooltipProvider>,
+      </LocalizedTooltipProvider>,
     );
     await userEvent.click(screen.getByRole("button", { name: "Try again" }));
     expect(onRetry).toHaveBeenCalledOnce();
 
     view.rerender(
-      <TooltipProvider>
+      <LocalizedTooltipProvider>
         <NewsView
           news={[]}
           loading={false}
@@ -105,7 +148,7 @@ describe("NewsView", () => {
           onSave={vi.fn<(value: NewsFormValue, item?: News) => Promise<void>>()}
           onDelete={vi.fn<(item: News) => Promise<void>>()}
         />
-      </TooltipProvider>,
+      </LocalizedTooltipProvider>,
     );
     expect(screen.getByText("No news theses yet")).toBeInTheDocument();
   });

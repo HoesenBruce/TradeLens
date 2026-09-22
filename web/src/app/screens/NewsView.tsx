@@ -17,6 +17,7 @@ import { FormInput, FormTextarea } from "@/components/FormInput";
 import { type PredictionActions } from "@/components/NewsPredictions";
 import { Page } from "@/components/Page";
 import { NewsTable } from "@/components/NewsTable";
+import { NewsExportActions } from "@/components/NewsExportActions";
 import { filterNews, useNewsFilters } from "@/lib/newsFilters";
 import { ListSkeleton } from "@/components/skeletons/list-skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -538,6 +539,8 @@ export function NewsView({
           Reset filters
         </Button>
       </section>
+
+      {!loading && !error && !filtered.length && <NewsExportActions />}
 
       {loading ? (
         <Card>

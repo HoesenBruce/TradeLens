@@ -117,3 +117,19 @@ No real model quality assessment or mobile validation was performed.
 Screenshots: [review](../screenshots/news-analysis/review.png),
 [accepted](../screenshots/news-analysis/accepted.png),
 [provider failure](../screenshots/news-analysis/provider-error.png).
+
+## Web Markdown export
+
+News details expose **Export Markdown**. The list supports **Export selected (N)** and
+**Export filtered**. Selection is limited to the current page and clears when changing
+page, page size, filters, or leaving the list. Filtered export includes all matching pages.
+The existing list filters run client-side, so export sends those exact result IDs to
+`GET /news/export?id=...`, preserving symbol substring and display-timezone date semantics.
+Single export uses `GET /news/{id}/export`; Markdown and filenames come from the server.
+
+Empty selections/results disable export. Empty server documents, unavailable records,
+permission errors, request failures, and detectable download failures show feedback.
+Export requests bypass the Service Worker cache so stale files cannot hide API failures.
+Downloads require a working API; the browser may still block or cancel saving after the
+download is requested. Very large filtered sets remain subject to server/proxy URL limits
+because the existing batch API uses GET. Mobile export UI is outside the current fork scope.

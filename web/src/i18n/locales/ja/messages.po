@@ -217,3 +217,51 @@ msgstr "勝率"
 #: src/app/screens/PublicShareView.tsx:313
 msgid "Worst day"
 msgstr "最悪の日"
+
+#. js-lingui-explicit-id
+msgid "news.export.missing"
+msgstr "利用できなくなったニュースがあります。一覧を更新して再試行してください。"
+
+#. js-lingui-explicit-id
+msgid "news.export.failed"
+msgstr "エクスポートできませんでした。接続と選択内容を確認して再試行してください。"
+
+#. js-lingui-explicit-id
+msgid "news.export.started"
+msgstr "ダウンロードを開始しました。ブラウザーのダウンロード一覧を確認してください。"
+
+#. js-lingui-explicit-id
+msgid "news.export.filtered"
+msgstr "絞り込み結果をエクスポート"
+
+#. js-lingui-explicit-id
+msgid "news.export.single"
+msgstr "Markdown をエクスポート"
+
+#. js-lingui-explicit-id
+msgid "news.export.selected"
+msgstr "選択項目をエクスポート（{count}）"
+
+#. js-lingui-explicit-id
+msgid "news.export.denied"
+msgstr "エクスポートできません。ログインとアクセス権を確認してください。"
+
+#. js-lingui-explicit-id
+msgid "news.export.loading"
+msgstr "エクスポート中…"
+
+#. js-lingui-explicit-id
+msgid "news.export.empty"
+msgstr "エクスポートできるニュースはありません。"
+
+#. js-lingui-explicit-id
+msgid "news.export.select"
+msgstr "選択"
+
+#. js-lingui-explicit-id
+msgid "news.export.selectTitle"
+msgstr "{0} を選択"
+
+#. js-lingui-explicit-id
+msgid "news.export.selectionHint"
+msgstr "選択は現在のページのみです。ページ、表示件数、絞り込みを変更すると解除されます。絞り込み結果のエクスポートには全ページが含まれます。"
