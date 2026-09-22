@@ -8,17 +8,25 @@ import (
 	"strconv"
 )
 
-func (s *Server) handleNewsPerformance(c *echo.Context) error {
+func parseNewsPerformanceFilter(c *echo.Context) (predictionvalidation.PerformanceFilter, error) {
 	f := predictionvalidation.PerformanceFilter{Source: c.QueryParam("source"), Symbol: c.QueryParam("symbol"), AssetType: c.QueryParam("asset_type"), Category: c.QueryParam("category"), From: c.QueryParam("from"), To: c.QueryParam("to")}
 	if h := c.QueryParam("horizon"); h != "" {
 		var err error
 		f.Horizon, err = strconv.ParseInt(h, 10, 64)
 		if err != nil || f.Horizon == 0 {
-			return Fail(400, "bad_request", "invalid horizon", nil)
+			return f, Fail(400, "bad_request", "invalid horizon", nil)
 		}
 	}
 	if err := f.Validate(); err != nil {
-		return Fail(400, "bad_request", err.Error(), nil)
+		return f, Fail(400, "bad_request", err.Error(), nil)
+	}
+	return f, nil
+}
+
+func (s *Server) handleNewsPerformance(c *echo.Context) error {
+	f, err := parseNewsPerformanceFilter(c)
+	if err != nil {
+		return err
 	}
 	engine := predictionvalidation.Engine{Store: s.deps.Store}
 	result, err := engine.Performance(c.Request().Context(), auth.UserID(c), f)

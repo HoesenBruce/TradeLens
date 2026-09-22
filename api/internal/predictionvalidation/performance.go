@@ -45,6 +45,25 @@ func (f PerformanceFilter) Validate() error {
 	return nil
 }
 
+// MatchesNews uses the report's inclusive UTC publication-date and exact category semantics.
+func (f PerformanceFilter) MatchesNews(n store.News) bool {
+	date := n.PublishedAt.UTC().Format("2006-01-02")
+	return (f.From == "" || date >= f.From) && (f.To == "" || date <= f.To) && (f.Category == "" || n.Category == f.Category)
+}
+
+func (f PerformanceFilter) MatchesAsset(a store.NewsAsset) bool {
+	symbol := strings.ToUpper(strings.TrimSpace(f.Symbol))
+	return (symbol == "" || a.Symbol == symbol) && (f.AssetType == "" || a.AssetType == f.AssetType)
+}
+
+func (f PerformanceFilter) MatchesPrediction(p store.Prediction) bool {
+	return f.Source == "" || p.Source == f.Source
+}
+
+func (f PerformanceFilter) MatchesHorizon(h int64) bool {
+	return f.Horizon == 0 || h == f.Horizon
+}
+
 type PerformanceCounts struct {
 	Total       int `json:"total"`
 	Pending     int `json:"pending"`
@@ -132,8 +151,7 @@ func (e *Engine) Performance(ctx context.Context, owner string, f PerformanceFil
 		}
 		bySource, byHorizon, byAsset, byCategory := map[[2]string]*PerformanceGroup{}, map[[2]string]*PerformanceGroup{}, map[[2]string]*PerformanceGroup{}, map[[2]string]*PerformanceGroup{}
 		for _, n := range news {
-			date := n.PublishedAt.UTC().Format("2006-01-02")
-			if (f.From != "" && date < f.From) || (f.To != "" && date > f.To) || (f.Category != "" && n.Category != f.Category) {
+			if !f.MatchesNews(n) {
 				continue
 			}
 			assets, err := q.ListNewsAssets(ctx, store.ListNewsAssetsParams{NewsID: n.ID, UserID: owner})
@@ -150,7 +168,7 @@ func (e *Engine) Performance(ctx context.Context, owner string, f PerformanceFil
 			}
 			for _, p := range predictions {
 				a := assetMap[p.NewsAssetID]
-				if (f.Source != "" && p.Source != f.Source) || (f.Symbol != "" && a.Symbol != f.Symbol) || (f.AssetType != "" && a.AssetType != f.AssetType) {
+				if !f.MatchesPrediction(p) || !f.MatchesAsset(a) {
 					continue
 				}
 				history, err := reader.History(ctx, owner, n.ID, p.ID)
@@ -168,7 +186,7 @@ func (e *Engine) Performance(ctx context.Context, owner string, f PerformanceFil
 					return err
 				}
 				for _, h := range horizons {
-					if f.Horizon != 0 && f.Horizon != h.TradingDays {
+					if !f.MatchesHorizon(h.TradingDays) {
 						continue
 					}
 					status, correct := "pending", false
