@@ -36,6 +36,13 @@ is opened. A feature with an unexercised required Web case is unfinished, not "p
 
 Static checks and screenshots are useful but do not replace exercising the behavior.
 
+### Browser preference
+
+Use the Codex built-in browser (`@Browser`) by default for Web interaction and end-to-end
+acceptance. Use an external browser only when the built-in browser is unavailable or cannot
+complete a required verification, or when the user explicitly requests one. Explain the reason
+when falling back to an external browser.
+
 ### The cases that must pass when applicable
 
 Run the relevant cases and keep screenshots or other evidence where useful:
