@@ -2,7 +2,7 @@
 /// <reference lib="webworker" />
 import { defaultCache } from "@serwist/vite/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
-import { CacheableResponsePlugin, ExpirationPlugin, NetworkFirst, Serwist } from "serwist";
+import { CacheableResponsePlugin, ExpirationPlugin, NetworkFirst, NetworkOnly, Serwist } from "serwist";
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -20,6 +20,11 @@ const serwist = new Serwist({
   clientsClaim: true,
   navigationPreload: false,
   runtimeCaching: [
+    // Exports must recheck ownership and current records, never download an offline snapshot.
+    {
+      matcher: ({ url }) => /\/news\/(?:[^/]+\/)?export$/.test(url.pathname),
+      handler: new NetworkOnly(),
+    },
     // Trade/report data: prefer fresh network, fall back to last-seen cache when offline.
     {
       matcher: ({ url }) => url.pathname.startsWith("/api/"),

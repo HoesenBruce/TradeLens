@@ -2,3 +2,51 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Language: zh-CN\n"
+
+#. js-lingui-explicit-id
+msgid "news.export.missing"
+msgstr "某条新闻观点已不可用，请刷新列表后重试。"
+
+#. js-lingui-explicit-id
+msgid "news.export.failed"
+msgstr "导出失败，请检查网络和所选记录后重试。"
+
+#. js-lingui-explicit-id
+msgid "news.export.started"
+msgstr "已请求下载，请查看浏览器下载列表。"
+
+#. js-lingui-explicit-id
+msgid "news.export.filtered"
+msgstr "导出筛选结果"
+
+#. js-lingui-explicit-id
+msgid "news.export.single"
+msgstr "导出 Markdown"
+
+#. js-lingui-explicit-id
+msgid "news.export.selected"
+msgstr "导出所选（{count}）"
+
+#. js-lingui-explicit-id
+msgid "news.export.denied"
+msgstr "无法导出，请登录并确认访问权限。"
+
+#. js-lingui-explicit-id
+msgid "news.export.loading"
+msgstr "正在导出…"
+
+#. js-lingui-explicit-id
+msgid "news.export.empty"
+msgstr "没有可导出的新闻观点。"
+
+#. js-lingui-explicit-id
+msgid "news.export.select"
+msgstr "选择"
+
+#. js-lingui-explicit-id
+msgid "news.export.selectTitle"
+msgstr "选择 {0}"
+
+#. js-lingui-explicit-id
+msgid "news.export.selectionHint"
+msgstr "选择仅限当前页；翻页、更改每页条数或筛选条件会清空选择。筛选导出包含所有匹配页面。"

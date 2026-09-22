@@ -5,6 +5,7 @@ import { Card } from "@/components/Card";
 import { EmptyState } from "@/components/EmptyState";
 import { NewsAnalysisReview } from "@/components/NewsAnalysisReview";
 import { NewsPredictions } from "@/components/NewsPredictions";
+import { NewsExportActions } from "@/components/NewsExportActions";
 import { Page } from "@/components/Page";
 import { Pill } from "@/components/Pill";
 import { ListSkeleton } from "@/components/skeletons/list-skeleton";
@@ -59,7 +60,8 @@ function NewsDetailPage() {
                 {news.source} · {fmtDateTime(news.published_at)}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
+              <NewsExportActions key={news.id} id={news.id} />
               <NewsAnalysisReview key={news.id} news={news} />
               <Button onClick={() => setEditing(true)}>Edit news thesis</Button>
             </div>
