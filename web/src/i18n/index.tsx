@@ -25,6 +25,7 @@ type CatalogModule = { messages: Messages };
 
 const catalogLoaders: Record<AppLocale, () => Promise<CatalogModule>> = {
   en: async () => ({ messages: enMessages }),
+  "zh-CN": () => import("./locales/zh-CN/messages"),
   "zh-HK": () => import("./locales/zh-HK/messages"),
   ja: () => import("./locales/ja/messages"),
   ko: () => import("./locales/ko/messages"),
@@ -42,10 +43,17 @@ type LocaleContextValue = {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
+let localeRequest = 0;
+
 export async function loadLocale(locale: string): Promise<void> {
+  const request = ++localeRequest;
   const next = isAppLocale(locale) ? locale : DEFAULT_LOCALE;
   const { messages } = await catalogLoaders[next]();
-  i18n.load(next, messages);
+  if (request !== localeRequest) return;
+  i18n.load(next, {
+    ...enMessages,
+    ...Object.fromEntries(Object.entries(messages).filter(([, value]) => value !== "")),
+  });
   i18n.activate(next);
   setStoredLocale(next);
   document.documentElement.lang = getIntlLocale(next);

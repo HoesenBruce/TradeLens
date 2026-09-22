@@ -55,6 +55,11 @@ export function fmtSignedMoneyCompact(v: number, currency: string, locale: strin
   if (v > 0) return `+${s}`;
   return s;
 }
+/** Locale-aware decimal display; never use formatted output in API/domain values. */
+export function fmtNumber(value: number, locale: string = intlLocale()): string {
+  return new Intl.NumberFormat(locale).format(value);
+}
+
 export function fmtPct(ratio: number, locale: string): string {
   return new Intl.NumberFormat(locale, {
     style: "percent",
