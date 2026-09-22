@@ -59,3 +59,54 @@ Optional `corporate_actions` uses the shared candidate shape (`effective_date`,
 reviewed `rejected` candidates suppress only an exact date/type/ratio detection
 match. Cash-dividend evidence is retained without converting price return to total
 return. Unknown events never imply verified corporate-action completeness.
+
+## Optional provider routing (#77)
+
+Set `TM_MARKET_DATA_PROVIDERS=http,yahoo` (ordered, comma-separated names) to try
+HTTP first, then Yahoo. Supported names are `http`, `yahoo`, and `finnhub` in any
+order. This overrides `TM_MARKET_DATA_PROVIDER`; leave it empty to preserve the
+existing single-provider selection and cache behavior. The Docker Compose service
+forwards these variables. Explicit routing rejects unknown/duplicate/empty entries,
+an invalid/missing HTTP base URL, and Finnhub without `TM_MARKET_DATA_API_KEY` at
+startup; it never silently substitutes Yahoo for a configured Finnhub route.
+
+The router lives behind `Provider` / `ResponseProvider`; consumers use the existing
+service. It returns the first nonempty successful response, without merging bars.
+Fallback occurs only for:
+
+- A successful, explicitly empty response (HTTP `bars: []`, Finnhub `no_data`, or
+  Yahoo's 404, explicit `Not Found` error, or empty result/timestamp array).
+  Yahoo 422 is terminal because it can indicate an invalid request range.
+- Explicit temporary unavailability: HTTP 429, 502, 503, or 504 from any adapter.
+- `ErrUnsupportedResolution` (Generic Bars 422 with `unsupported_interval`).
+
+All other failures stop routing: authentication/permission errors, invalid requests,
+unknown server errors (including 500), malformed/partial data, transport/TLS/timeout
+errors, and cancellation. Transport errors deliberately remain terminal because
+these also include configuration/security failures. Unknown Yahoo/Finnhub payload
+errors are errors rather than empty windows; malformed Finnhub arrays cannot panic.
+No retries, source scoring, or load balancing are added.
+
+If every provider returns empty, return the first empty response and its metadata.
+If no provider supplies data and any fallback-eligible error occurred, return an
+error instead of claiming a successful empty window. Cancellation stops the chain.
+`provider` identifies the actual adapter, never `router`; HTTP `source`, timezone,
+adjustment status, acquisition timestamps and corporate-action evidence are
+preserved. Legacy providers report their own name as `source` and their fetch start
+as acquisition time. An absent HTTP source or acquisition time stays unknown.
+
+Routing uses fresh metadata-bearing responses and bypasses the legacy bars-only
+cache, including daily transaction coverage and validation refresh. This avoids
+returning cached bars from a different route or losing source metadata; enabling
+routing can increase upstream requests. Single-provider caching is unchanged when
+routing is unset.
+
+**Deferred sub-step:** interval-specific route overrides. This first version uses
+one deployment-wide order for every interval; it does not hard-code daily or
+intraday preferences. A later change can add per-interval order configuration at
+the router boundary without modifying chart, News Thesis, or analytics consumers.
+
+Verification uses local HTTP fixtures and service tests for order, empty/error
+exhaustion, terminal errors, cancellation, startup configuration, and provenance
+through chart/transaction/validation paths. No Web UI is changed; live provider
+availability and iOS/Android behavior are not validated by these tests.
