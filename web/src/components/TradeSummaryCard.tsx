@@ -1,3 +1,6 @@
+import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
+import { useLingui } from "@lingui/react";
+import { t as tr } from "@lingui/core/macro";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { Card } from "./Card";
 import { DonutRing } from "./charts/DonutRing";
@@ -31,6 +34,7 @@ export function TradeSummaryCard({
   trade: TradeDetail;
   insights: TradeInsights;
 }) {
+  useLingui();
   usePrivacyMode();
   useDisplayTimePrefs();
   const locale = intlLocale();
@@ -74,14 +78,16 @@ export function TradeSummaryCard({
               {/* Side and option right spelled out ("LONG CALL"), matching the
                   trade list row — tone rides on the arrow and the call/put word
                   so green/red elsewhere on the page still means outcome. */}
-              <Pill tone="muted" title={dir.detail}>
+              <Pill tone="muted" title={directionLabel(dir)}>
                 <DirIcon
                   size={11}
                   strokeWidth={2.75}
                   className={DIR_TONE_CLASS[dir.tone]}
                   aria-hidden
                 />
-                {dir.long ? "LONG" : "SHORT"}
+                {dir.long
+                  ? tr({ id: "trades.longUpper", message: "LONG" })
+                  : tr({ id: "trades.shortUpper", message: "SHORT" })}
                 {optionRight ? (
                   <span className={DIR_TONE_CLASS[dir.tone]}>{optionRight}</span>
                 ) : null}
@@ -90,12 +96,19 @@ export function TradeSummaryCard({
                     <span className="opacity-70" aria-hidden>
                       ?
                     </span>
-                    <span className="sr-only">{dir.label}</span>
+                    <span className="sr-only">{directionLabel(dir)}</span>
                   </>
                 ) : null}
               </Pill>
-              <Pill tone={status.tone} title={status.label === "BE" ? "Break-even" : undefined}>
-                {status.label}
+              <Pill
+                tone={status.tone}
+                title={
+                  status.label === "BE"
+                    ? tr({ id: "trades.breakEven", message: "Break-even" })
+                    : undefined
+                }
+              >
+                {tradeStatusLabel(status.label)}
               </Pill>
             </div>
             {/* Instrument and clock are two separate facts, so they get two
@@ -129,7 +142,10 @@ export function TradeSummaryCard({
               >
                 <span
                   className="text-[14px] font-semibold leading-none tabular-nums text-foreground"
-                  title="Execution score — entry heat and MFE capture from auto excursion"
+                  title={tr({
+                    id: "trades.executionScoreHint",
+                    message: "Execution score — entry heat and MFE capture from auto excursion",
+                  })}
                 >
                   {insights.execScore}
                 </span>
@@ -141,7 +157,7 @@ export function TradeSummaryCard({
                   "text-[32px] leading-none font-semibold tracking-[-0.03em] tabular-nums sm:text-[38px]",
                   net != null ? pnlColor(net) : "text-flat",
                 )}
-                title="Net P&L after fees"
+                title={tr({ id: "trades.netAfterFees", message: "Net P&L after fees" })}
               >
                 {net != null ? fmtSignedMoney(net, currency, locale) : "—"}
               </span>
@@ -157,7 +173,10 @@ export function TradeSummaryCard({
                 {trade.r_multiple != null && (
                   <span
                     className={cn("text-sm font-semibold tabular-nums", pnlColor(trade.r_multiple))}
-                    title="Realized R — net P&L ÷ planned risk"
+                    title={tr({
+                      id: "trades.realizedR",
+                      message: "Realized R — net P&L ÷ planned risk",
+                    })}
                   >
                     {trade.r_multiple >= 0 ? "+" : ""}
                     {trade.r_multiple.toFixed(2)}R
@@ -172,44 +191,54 @@ export function TradeSummaryCard({
             numbers, a third of the height, and the same tile treatment the
             home page gives its metrics. */}
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
-          <StatCell label="Entry">{fmtMoney(trade.avg_entry_price, currency, locale)}</StatCell>
-          <StatCell label="Exit">
+          <StatCell label={tr({ id: "trades.entry", message: "Entry" })}>
+            {fmtMoney(trade.avg_entry_price, currency, locale)}
+          </StatCell>
+          <StatCell label={tr({ id: "trades.exit", message: "Exit" })}>
             {trade.avg_exit_price != null ? fmtMoney(trade.avg_exit_price, currency, locale) : "—"}
           </StatCell>
           <StatCell
-            label="Size"
+            label={tr({ id: "trades.size", message: "Size" })}
             hint={multiplier !== 1 ? `×${multiplier}` : fmtMoney(notional, currency, locale)}
           >
             {trade.qty_opened.toFixed(trade.qty_opened % 1 === 0 ? 0 : 2)}
           </StatCell>
-          <StatCell label="Hold">{insights.holdLabel === "-" ? "—" : insights.holdLabel}</StatCell>
+          <StatCell label={tr({ id: "trades.hold", message: "Hold" })}>
+            {insights.holdLabel === "-" ? "—" : insights.holdLabel}
+          </StatCell>
           <StatCell
-            label="Gross"
+            label={tr({ id: "trades.gross", message: "Gross" })}
             valueClassName={insights.grossPnl != null ? pnlColor(insights.grossPnl) : undefined}
           >
             {insights.grossPnl != null ? fmtSignedMoney(insights.grossPnl, currency, locale) : "—"}
           </StatCell>
           <StatCell
-            label="Fees"
+            label={tr({ id: "trades.fees", message: "Fees" })}
             // Fee drag is the number that explains a scratch trade turning red,
             // so it rides next to the amount instead of floating unlabeled.
             hint={
               insights.feeDragPct != null
-                ? `${(insights.feeDragPct * 100).toFixed(1)}% of gross`
+                ? tr({
+                    id: "trades.grossPercent",
+                    message: `${(insights.feeDragPct * 100).toFixed(1)}% of gross`,
+                  })
                 : undefined
             }
           >
             {fmtMoney(insights.feesTotal, currency, locale)}
           </StatCell>
           {hasDividends && (
-            <StatCell label="Dividends" valueClassName={pnlColor(trade.dividend_total)}>
+            <StatCell
+              label={tr({ id: "trades.dividends", message: "Dividends" })}
+              valueClassName={pnlColor(trade.dividend_total)}
+            >
               {fmtSignedMoney(trade.dividend_total, currency, locale)}
             </StatCell>
           )}
           {hasDividends && trade.total_pnl != null && (
             <StatCell
-              label="Total"
-              hint="incl. dividends"
+              label={tr({ id: "trades.total", message: "Total" })}
+              hint={tr({ id: "trades.inclDividends", message: "incl. dividends" })}
               valueClassName={pnlColor(trade.total_pnl)}
             >
               {fmtSignedMoney(trade.total_pnl, currency, locale)}

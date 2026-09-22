@@ -1,3 +1,5 @@
+import { i18n } from "@/i18n";
+i18n.activate("en");
 import { describe, expect, it } from "vite-plus/test";
 import {
   emptyExecutionRow,

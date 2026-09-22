@@ -1,6 +1,7 @@
+import { render } from "@/test/render";
 import type { ColumnDef } from "@/lib/table";
 import { flexRender, getCoreRowModel, useReactTable, type RowData } from "@/lib/table";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vite-plus/test";
@@ -380,4 +381,22 @@ describe("sortTrades", () => {
       "AAPL",
     ]);
   });
+});
+
+it("updates translated column and filter labels when the active locale changes", async () => {
+  const { loadLocale } = await import("@/i18n");
+  const { act } = await import("@testing-library/react");
+  render(<TradesView {...base} trades={[trade({})]} totalInScope={1} />);
+  try {
+    await act(() => loadLocale("zh-CN"));
+    expect(screen.getByRole("button", { name: "添加筛选" })).toBeTruthy();
+    expect(screen.getByRole("columnheader", { name: "股票名称" })).toBeTruthy();
+    await act(() => loadLocale("ja"));
+    expect(screen.getByRole("button", { name: "絞り込みを追加" })).toBeTruthy();
+    expect(screen.getByRole("columnheader", { name: "銘柄名" })).toBeTruthy();
+    await act(() => loadLocale("en"));
+    expect(screen.getByRole("columnheader", { name: "Stock Name" })).toBeTruthy();
+  } finally {
+    await act(() => loadLocale("en"));
+  }
 });
