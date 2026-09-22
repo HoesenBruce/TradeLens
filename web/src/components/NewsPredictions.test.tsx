@@ -1,3 +1,5 @@
+import { I18nProvider } from "@lingui/react";
+import { i18n } from "@/i18n";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { expect, it, vi } from "vite-plus/test";
@@ -27,13 +29,15 @@ it("saves horizons, resets cancelled drafts, and preserves AI records", async ()
     ],
   } as News;
   render(
-    <TooltipProvider>
-      <NewsPredictions
-        news={news}
-        onSavePrediction={onSavePrediction}
-        onDeletePrediction={vi.fn<PredictionActions["onDeletePrediction"]>()}
-      />
-    </TooltipProvider>,
+    <I18nProvider i18n={i18n}>
+      <TooltipProvider>
+        <NewsPredictions
+          news={news}
+          onSavePrediction={onSavePrediction}
+          onDeletePrediction={vi.fn<PredictionActions["onDeletePrediction"]>()}
+        />
+      </TooltipProvider>
+    </I18nProvider>,
   );
   expect(screen.queryByRole("button", { name: "Edit prediction" })).not.toBeInTheDocument();
   await user.click(screen.getByRole("button", { name: "Add prediction" }));
