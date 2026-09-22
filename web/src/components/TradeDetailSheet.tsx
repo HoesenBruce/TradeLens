@@ -1,3 +1,6 @@
+import { tradeStatusLabel } from "@/lib/tradeLabels";
+import { useLingui } from "@lingui/react";
+import { t as tr } from "@lingui/core/macro";
 import { useNavigate } from "@tanstack/react-router";
 import { ExternalLink, Trash2, X, Zap } from "lucide-react";
 import { useId, useState } from "react";
@@ -38,6 +41,7 @@ export interface TradeDetailSheetProps {
 const sectionLabelClass = cn(cardSectionLabelClass, "mb-2");
 
 export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
+  useLingui();
   const navigate = useNavigate();
   const toast = useToastManager();
   const open = Boolean(tradeId);
@@ -79,13 +83,16 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
     if (!tradeId || !trade) return;
     try {
       await deleteTrade.mutateAsync(tradeId);
-      toast.add({ title: "Trade removed", description: trade.symbol });
+      toast.add({
+        title: tr({ id: "trades.removed", message: "Trade removed" }),
+        description: trade.symbol,
+      });
       closeDeleteModal(false);
       onClose();
     } catch {
       toast.add({
-        title: "Could not remove trade",
-        description: "Try again in a moment",
+        title: tr({ id: "trades.removeFailed", message: "Could not remove trade" }),
+        description: tr({ id: "trades.retryLater", message: "Try again in a moment" }),
       });
     }
   };
@@ -122,7 +129,7 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
                 </span>
               </>
             ) : (
-              "Trade"
+              tr({ id: "trades.trade", message: "Trade" })
             )}
           </DrawerTitle>
           <div className="ml-auto flex shrink-0 items-center gap-1">
@@ -135,11 +142,11 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
                 className="gap-1.5"
               >
                 <ExternalLink size={12} strokeWidth={1.5} />
-                Open full page
+                {tr({ id: "trades.openFull", message: "Open full page" })}
               </Button>
             )}
             <DrawerClose
-              aria-label="Close"
+              aria-label={tr({ id: "trades.close", message: "Close" })}
               className="flex cursor-pointer rounded-md border-none bg-transparent p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
               <X size={18} strokeWidth={1.5} />
@@ -156,7 +163,9 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
             </div>
           )}
           {detailQ.isError && (
-            <p className="p-4 text-sm text-muted-foreground">Could not load trade detail.</p>
+            <p className="p-4 text-sm text-muted-foreground">
+              {tr({ id: "trades.detailFailed", message: "Could not load trade detail." })}
+            </p>
           )}
           {trade && <TradeDetailSheetBody trade={trade} onOpenFullPage={openFullPage} />}
         </DrawerBody>
@@ -170,7 +179,7 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
               className="w-full gap-2 border-transparent bg-destructive/15 hover:bg-destructive/25"
             >
               <Trash2 size={15} strokeWidth={1.5} aria-hidden />
-              Remove trade
+              {tr({ id: "trades.removeTrade", message: "Remove trade" })}
             </Button>
           </DrawerFooter>
         ) : null}
@@ -178,7 +187,7 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
           <Modal
             open={deleteOpen}
             onOpenChange={closeDeleteModal}
-            title={`Remove ${trade.symbol}?`}
+            title={tr({ id: "trades.removeSymbolConfirm", message: `Remove ${trade.symbol}?` })}
             className="max-w-[min(336px,94vw)]"
             footer={
               <>
@@ -188,7 +197,7 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
                   disabled={deleteTrade.isPending}
                   onClick={() => closeDeleteModal(false)}
                 >
-                  Cancel
+                  {tr({ id: "trades.cancel", message: "Cancel" })}
                 </Button>
                 <Button
                   type="button"
@@ -197,20 +206,26 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
                   onClick={() => void handleDelete()}
                   className="border-transparent bg-destructive/15 hover:bg-destructive/25"
                 >
-                  {deleteTrade.isPending ? "Removing…" : "Remove trade"}
+                  {deleteTrade.isPending
+                    ? tr({ id: "trades.removing", message: "Removing…" })
+                    : tr({ id: "trades.removeTrade", message: "Remove trade" })}
                 </Button>
               </>
             }
           >
             <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-              Permanently deletes this trade and all of its fills. This cannot be undone.
+              {tr({
+                id: "trades.removeWarning",
+                message:
+                  "Permanently deletes this trade and all of its fills. This cannot be undone.",
+              })}
             </p>
             <div>
               <label
                 htmlFor={confirmInputId}
                 className="mb-1.5 block text-[11px] text-muted-foreground"
               >
-                Type <span className="font-medium text-foreground">{trade.symbol}</span> to confirm
+                {tr({ id: "trades.confirmSymbol", message: `Type ${trade.symbol} to confirm` })}
               </label>
               <FormInput
                 id={confirmInputId}
@@ -219,7 +234,10 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
                 autoFocus
                 autoComplete="off"
                 spellCheck={false}
-                aria-label={`Type ${trade.symbol} to confirm`}
+                aria-label={tr({
+                  id: "trades.typeSymbolConfirm",
+                  message: `Type ${trade.symbol} to confirm`,
+                })}
               />
             </div>
           </Modal>
@@ -260,6 +278,7 @@ function TradeDetailSheetBody({
   trade: TradeDetail;
   onOpenFullPage: () => void;
 }) {
+  useLingui();
   usePrivacyMode();
   useDisplayTimePrefs();
   const currency = trade.pnl_currency;
@@ -273,12 +292,22 @@ function TradeDetailSheetBody({
     <div className="flex flex-col gap-5 px-4 py-4">
       <div>
         <div className="flex flex-wrap items-center gap-2.5">
-          <Pill tone={status.tone} title={status.label === "BE" ? "Break-even" : undefined}>
-            {status.label}
+          <Pill
+            tone={status.tone}
+            title={
+              status.label === "BE"
+                ? tr({ id: "trades.breakEven", message: "Break-even" })
+                : undefined
+            }
+          >
+            {tradeStatusLabel(status.label)}
           </Pill>
           <span className="text-xs tabular-nums text-muted-foreground">
             {trade.status === "open"
-              ? `${fmtDateTime(trade.opened_at)} · still open`
+              ? tr({
+                  id: "trades.stillOpen",
+                  message: `${fmtDateTime(trade.opened_at)} · still open`,
+                })
               : `${fmtDateTime(trade.opened_at)} → ${
                   trade.closed_at ? fmtDateTime(trade.closed_at) : "—"
                 }${hold === "-" ? "" : ` · ${hold}`}`}
@@ -317,18 +346,20 @@ function TradeDetailSheetBody({
             </div>
             {trade.gross_pnl != null && (
               <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
-                {fmtSignedMoney(trade.gross_pnl, currency, intlLocale())} gross −{""}
-                {fmtMoney(trade.fees_total, currency, intlLocale())} fees
+                {fmtSignedMoney(trade.gross_pnl, currency, intlLocale())}{" "}
+                {tr({ id: "trades.gross", message: "Gross" })} −{" "}
+                {fmtMoney(trade.fees_total, currency, intlLocale())}{" "}
+                {tr({ id: "trades.fees", message: "Fees" })}
               </p>
             )}
           </div>
           <div className="grid grid-cols-2 gap-px">
             <BentoStat
-              label="Entry"
+              label={tr({ id: "trades.entry", message: "Entry" })}
               value={fmtMoney(trade.avg_entry_price, currency, intlLocale())}
             />
             <BentoStat
-              label="Exit"
+              label={tr({ id: "trades.exit", message: "Exit" })}
               value={
                 trade.avg_exit_price != null
                   ? fmtMoney(trade.avg_exit_price, currency, intlLocale())
@@ -343,9 +374,15 @@ function TradeDetailSheetBody({
               its own value needs and the slack is shared; `truncate` on the
               value stays as the last resort when all three run long. */}
           <div className="grid grid-cols-[auto_auto_auto] gap-px">
-            <BentoStat label="Qty" value={qty.toFixed(2)} />
-            <BentoStat label="Hold" value={hold === "-" ? "—" : hold} />
-            <BentoStat label="Fees" value={fmtMoney(trade.fees_total, currency, intlLocale())} />
+            <BentoStat label={tr({ id: "trades.qty", message: "Qty" })} value={qty.toFixed(2)} />
+            <BentoStat
+              label={tr({ id: "trades.hold", message: "Hold" })}
+              value={hold === "-" ? "—" : hold}
+            />
+            <BentoStat
+              label={tr({ id: "trades.fees", message: "Fees" })}
+              value={fmtMoney(trade.fees_total, currency, intlLocale())}
+            />
           </div>
         </div>
         {(trade.tags.length > 0 || trade.setup) && (
@@ -358,7 +395,8 @@ function TradeDetailSheetBody({
             {trade.setup && (
               <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Zap size={14} strokeWidth={1.5} className="text-chart-3" />
-                Setup: <span className="font-medium text-foreground">{trade.setup.name}</span>
+                {tr({ id: "trades.setup", message: "Setup" })}:{" "}
+                <span className="font-medium text-foreground">{trade.setup.name}</span>
               </span>
             )}
           </div>
@@ -372,9 +410,13 @@ function TradeDetailSheetBody({
       </div>
 
       <section>
-        <p className={sectionLabelClass}>Executions ({trade.fills.length})</p>
+        <p className={sectionLabelClass}>
+          {tr({ id: "trades.fillTitle", message: `Executions (${trade.fills.length})` })}
+        </p>
         {trade.fills.length === 0 ? (
-          <p className="text-xs text-muted-foreground">No fills recorded.</p>
+          <p className="text-xs text-muted-foreground">
+            {tr({ id: "trades.noFills", message: "No fills recorded." })}
+          </p>
         ) : (
           <ul className="m-0 flex list-none flex-col gap-0.5 p-0">
             {trade.fills.map((f) => (
@@ -384,7 +426,11 @@ function TradeDetailSheetBody({
               >
                 <span className="flex items-center gap-2">
                   <span
-                    aria-label={f.side === "buy" ? "Buy" : "Sell"}
+                    aria-label={
+                      f.side === "buy"
+                        ? tr({ id: "trades.buy", message: "Buy" })
+                        : tr({ id: "trades.sell", message: "Sell" })
+                    }
                     className={cn(
                       "flex size-4 items-center justify-center rounded-md text-[10px] font-bold",
                       f.side === "buy"
@@ -399,7 +445,8 @@ function TradeDetailSheetBody({
                   </span>
                   {f.fees + f.commission > 0 && (
                     <span className="text-muted-foreground">
-                      {fmtMoney(f.fees + f.commission, currency, intlLocale())} fee
+                      {fmtMoney(f.fees + f.commission, currency, intlLocale())}{" "}
+                      {tr({ id: "trades.fee", message: "Fee" })}
                     </span>
                   )}
                 </span>
@@ -412,7 +459,7 @@ function TradeDetailSheetBody({
 
       {trade.notes.trim() !== "" && (
         <section>
-          <p className={sectionLabelClass}>Notes</p>
+          <p className={sectionLabelClass}>{tr({ id: "trades.notes", message: "Notes" })}</p>
           <p className="m-0 line-clamp-3 text-sm whitespace-pre-wrap text-muted-foreground">
             {trade.notes}
           </p>
@@ -422,7 +469,7 @@ function TradeDetailSheetBody({
             onClick={onOpenFullPage}
             className="mt-1.5 h-auto text-xs"
           >
-            Read more
+            {tr({ id: "trades.readMore", message: "Read more" })}
           </Button>
         </section>
       )}

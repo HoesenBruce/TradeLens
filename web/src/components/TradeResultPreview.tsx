@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react";
+import { t as tr } from "@lingui/core/macro";
 import type { ReactNode } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -49,6 +51,7 @@ export function TradeResultPreview({
   initialRisk,
   className,
 }: TradeResultPreviewProps) {
+  useLingui();
   const hasEntry = preview.avgEntry != null;
   if (!hasEntry && preview.net == null) return null;
 
@@ -63,19 +66,23 @@ export function TradeResultPreview({
     >
       <div className="flex items-baseline justify-between gap-3">
         <p className="m-0 text-[10px] font-semibold uppercase tracking-widest text-chart-3">
-          Result
+          {tr({ id: "trades.result", message: "Result" })}
         </p>
         {initialRisk != null && initialRisk > 0 ? (
           <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
-            Risk {fmtMoney(initialRisk, currency, locale)}
+            {tr({ id: "trades.risk", message: "Risk" })} {fmtMoney(initialRisk, currency, locale)}
           </p>
         ) : null}
       </div>
 
       <div className="grid grid-cols-2 gap-3 @min-[32rem]/result:grid-cols-4">
-        <BentoCell label="Avg Entry">{money(preview.avgEntry)}</BentoCell>
-        <BentoCell label="Avg Exit">{money(preview.avgExit)}</BentoCell>
-        <BentoCell label="Est. P&L">
+        <BentoCell label={tr({ id: "trades.avgEntryShort", message: "Avg Entry" })}>
+          {money(preview.avgEntry)}
+        </BentoCell>
+        <BentoCell label={tr({ id: "trades.avgExitShort", message: "Avg Exit" })}>
+          {money(preview.avgExit)}
+        </BentoCell>
+        <BentoCell label={tr({ id: "trades.estimatedPnl", message: "Est. P&L" })}>
           {preview.net == null ? (
             <span className="text-muted-foreground">—</span>
           ) : (
@@ -95,13 +102,13 @@ export function TradeResultPreview({
             </span>
           )}
         </BentoCell>
-        <BentoCell label="Position">
+        <BentoCell label={tr({ id: "trades.position", message: "Position" })}>
           {preview.closed ? (
             <span className="inline-flex items-center gap-1.5 text-profit">
               <span>0</span>
               <span
                 className="inline-flex size-4 items-center justify-center rounded-full bg-profit/15"
-                aria-label="Closed"
+                aria-label={tr({ id: "trades.closed", message: "Closed" })}
               >
                 <Check size={11} strokeWidth={2.75} aria-hidden />
               </span>
@@ -148,6 +155,7 @@ export function AfterSaveResultPreview({
   initialRisk,
   className,
 }: AfterSaveResultPreviewProps) {
+  useLingui();
   if (preview.avgEntry == null && preview.net == null) return null;
 
   const delta = preview.net ?? 0;
@@ -167,17 +175,17 @@ export function AfterSaveResultPreview({
     >
       <div className="flex items-baseline justify-between gap-3">
         <p className="m-0 text-[10px] font-semibold uppercase tracking-widest text-chart-3">
-          After save
+          {tr({ id: "trades.afterSave", message: "After save" })}
         </p>
         {initialRisk != null && initialRisk > 0 ? (
           <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
-            Risk {fmtMoney(initialRisk, currency, locale)}
+            {tr({ id: "trades.risk", message: "Risk" })} {fmtMoney(initialRisk, currency, locale)}
           </p>
         ) : null}
       </div>
 
       <div className="grid grid-cols-1 gap-3 @min-[30rem]/aftersave:grid-cols-3">
-        <BentoCell label="Est. P&L">
+        <BentoCell label={tr({ id: "trades.estimatedPnl", message: "Est. P&L" })}>
           {preview.net == null ? (
             <span className="text-muted-foreground">—</span>
           ) : (
@@ -202,14 +210,14 @@ export function AfterSaveResultPreview({
             </span>
           )}
         </BentoCell>
-        <BentoCell label="Balance">
+        <BentoCell label={tr({ id: "trades.balance", message: "Balance" })}>
           {balanceAfter == null ? (
             <span className="text-muted-foreground">—</span>
           ) : (
             <span>{fmtMoney(balanceAfter, currency, locale)}</span>
           )}
         </BentoCell>
-        <BentoCell label="Account P&L">
+        <BentoCell label={tr({ id: "trades.accountPnl", message: "Account P&L" })}>
           {pnlAfter == null ? (
             <span className="text-muted-foreground">—</span>
           ) : (
@@ -264,6 +272,7 @@ export function BatchTradeResultPreview({
   depositedCapital,
   className,
 }: BatchTradeResultPreviewProps) {
+  useLingui();
   if (batch.withFills === 0 && batch.net == null) return null;
 
   const batchDelta = batch.net ?? 0;
@@ -283,11 +292,12 @@ export function BatchTradeResultPreview({
     >
       <div className="flex items-baseline justify-between gap-3">
         <p className="m-0 text-[10px] font-semibold uppercase tracking-widest text-chart-3">
-          Batch result
+          {tr({ id: "trades.batchResult", message: "Batch result" })}
         </p>
         {batch.riskTotal != null && batch.riskTotal > 0 ? (
           <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
-            Risk {fmtMoney(batch.riskTotal, currency, locale)}
+            {tr({ id: "trades.risk", message: "Risk" })}{" "}
+            {fmtMoney(batch.riskTotal, currency, locale)}
           </p>
         ) : null}
       </div>
@@ -295,7 +305,7 @@ export function BatchTradeResultPreview({
       <div className="flex flex-col gap-3 @min-[32rem]/batch:flex-row @min-[32rem]/batch:items-end @min-[32rem]/batch:justify-between @min-[32rem]/batch:gap-6">
         <div className="min-w-0">
           <p className="m-0 text-[10px] font-medium tracking-[0.04em] text-muted-foreground">
-            Est. P&L
+            {tr({ id: "trades.estimatedPnl", message: "Est. P&L" })}
           </p>
           {batch.net == null ? (
             <p className="mt-1.5 m-0 text-[26px] font-semibold leading-none tracking-[-0.04em] text-muted-foreground">
@@ -321,16 +331,20 @@ export function BatchTradeResultPreview({
         </div>
 
         <div className="flex flex-wrap items-start gap-x-5 gap-y-2.5 @min-[32rem]/batch:justify-end">
-          <BatchMeta label="Symbols">
+          <BatchMeta label={tr({ id: "trades.symbols", message: "Symbols" })}>
             <span>
               {batch.symbolCount}
               <span className="ml-1.5 text-[11px] font-medium text-muted-foreground">
-                {batch.openCount === 0 ? "closed" : `${batch.closedCount}c · ${batch.openCount}o`}
+                {batch.openCount === 0
+                  ? tr({ id: "trades.closedLower", message: "closed" })
+                  : `${batch.closedCount}c · ${batch.openCount}o`}
               </span>
             </span>
           </BatchMeta>
-          <BatchMeta label="Fees">{fmtMoney(batch.feesTotal, currency, locale)}</BatchMeta>
-          <BatchMeta label="Closed">
+          <BatchMeta label={tr({ id: "trades.fees", message: "Fees" })}>
+            {fmtMoney(batch.feesTotal, currency, locale)}
+          </BatchMeta>
+          <BatchMeta label={tr({ id: "trades.closed", message: "Closed" })}>
             {allClosed ? (
               <span className="inline-flex items-center gap-1.5 text-profit">
                 <span>
@@ -338,7 +352,7 @@ export function BatchTradeResultPreview({
                 </span>
                 <span
                   className="inline-flex size-4 items-center justify-center rounded-full bg-profit/15"
-                  aria-label="All closed"
+                  aria-label={tr({ id: "trades.allClosed", message: "All closed" })}
                 >
                   <Check size={11} strokeWidth={2.75} aria-hidden />
                 </span>
@@ -364,10 +378,12 @@ export function BatchTradeResultPreview({
         >
           <div className="min-w-0">
             <p className="m-0 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-              After save
+              {tr({ id: "trades.afterSave", message: "After save" })}
             </p>
             <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-              <span className="text-[11px] text-muted-foreground">Account P&L</span>
+              <span className="text-[11px] text-muted-foreground">
+                {tr({ id: "trades.accountPnl", message: "Account P&L" })}
+              </span>
               {extTotal == null ? (
                 <span className="text-[15px] font-semibold text-muted-foreground">—</span>
               ) : (
@@ -391,7 +407,7 @@ export function BatchTradeResultPreview({
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-              Balance
+              {tr({ id: "trades.balance", message: "Balance" })}
             </span>
             <span className="text-[13px] font-semibold tabular-nums tracking-tight text-foreground">
               {cashAfter == null ? "—" : fmtMoney(cashAfter, currency, locale)}

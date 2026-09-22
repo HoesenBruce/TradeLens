@@ -1396,3 +1396,2140 @@ msgstr "What happened?"
 #: src/app/screens/NewsView.tsx:302
 msgid "news.notesHint"
 msgstr "Why could this matter?"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(fee, currency, locale)
+#: src/components/TradeExecutionsCard.tsx:221
+msgid "trades.feeAmount"
+msgstr " · {0} fee"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtQty(position)
+#: src/components/TradeExecutionsCard.tsx:227
+msgid "trades.heldQuantity"
+msgstr " · {0} held"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: s.name
+#: src/app/screens/TradeDetailView.tsx:535
+#: src/app/screens/TradeDetailView.tsx:815
+msgid "trades.mainSetup"
+msgstr "{0} · main"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtDateTime(trade.opened_at)
+#: src/components/TradeDetailSheet.tsx:307
+msgid "trades.stillOpen"
+msgstr "{0} · still open"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(totalFees, currency, locale)
+#: src/components/TradeExecutionsCard.tsx:170
+msgid "trades.feesAmount"
+msgstr "{0} fees"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: (insights.feeDragPct * 100).toFixed(1)
+#: src/components/TradeSummaryCard.tsx:221
+msgid "trades.grossPercent"
+msgstr "{0}% of gross"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:153
+msgid "trades.amountRequired"
+msgstr "{label} is required"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:156
+msgid "trades.amountPositive"
+msgstr "{label} must be > 0"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:165
+msgid "trades.amountNonnegative"
+msgstr "{label} must be ≥ 0"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:778
+msgid "trades.longChoice"
+msgstr "↗ LONG"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:779
+msgid "trades.shortChoice"
+msgstr "↘ SHORT"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2097
+msgid "trades.account"
+msgstr "Account"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1515
+msgid "trades.accountRequired"
+msgstr "Account is required."
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:220
+#: src/components/TradeResultPreview.tsx:385
+msgid "trades.accountPnl"
+msgstr "Account P&L"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:902
+#: src/app/drawers/NewTradeDrawer.tsx:937
+msgid "trades.action"
+msgstr "Action"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/components/TradeRowMenu.tsx:93
+msgid "trades.actionsForSymbol"
+msgstr "Actions for {0}"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:226
+msgid "trades.symbolAtLeastOne"
+msgstr "Add at least one symbol."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1526
+#: src/lib/newTradeFormSchema.ts:220
+#: src/lib/newTradeFormSchema.ts:235
+msgid "trades.fillRequired"
+msgstr "Add at least one valid execution row."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1125
+msgid "trades.addExecutionRow"
+msgstr "Add execution row symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:231
+#: src/components/TradesFilters.tsx:235
+#: src/components/TradesFilters.tsx:239
+msgid "trades.addFilter"
+msgstr "Add filter"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2067
+msgid "trades.newHint"
+msgstr "Add one or more symbols — each with fills, journal, and optional dividend. One Save logs every symbol as its own trade."
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:122
+msgid "trades.addPlan"
+msgstr "Add plan"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1303
+#: src/components/JournalScreenshotUpload.tsx:131
+msgid "trades.addShots"
+msgstr "Add screenshots"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2256
+msgid "trades.addSymbol"
+msgstr "Add symbol"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:181
+msgid "trades.afterFees"
+msgstr "after fees"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:178
+#: src/components/TradeResultPreview.tsx:381
+msgid "trades.afterSave"
+msgstr "After save"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:355
+msgid "trades.allClosed"
+msgstr "All closed"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1622
+msgid "trades.allFillsRemoved"
+msgstr "All fills removed — returned to trades."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:906
+#: src/app/drawers/NewTradeDrawer.tsx:1031
+msgid "trades.amount"
+msgstr "Amount"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1399
+msgid "trades.currencyAmount"
+msgstr "Amount ({currency})"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1040
+msgid "trades.rowAmountEmpty"
+msgstr "Amount symbol {0} row {1}: empty"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:9
+msgid "trades.anxious"
+msgstr "Anxious"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2323
+msgid "trades.apply"
+msgstr "Apply"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:23
+msgid "trades.asia"
+msgstr "Asia"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:282
+msgid "trades.askAi"
+msgstr "Ask AI"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:264
+msgid "trades.askCoach"
+msgstr "Ask AI coach"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:239
+msgid "trades.askingCoach"
+msgstr "Asking the coach…"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:253
+msgid "trades.autoBars"
+msgstr "Auto-fill from bars"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:144
+msgid "trades.autoExcursion"
+msgstr "Auto-fill MAE/MFE from market data"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:212
+msgid "trades.avgEntry"
+msgstr "Average entry price"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:223
+msgid "trades.avgExit"
+msgstr "Average exit price"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:79
+msgid "trades.avgEntryShort"
+msgstr "Avg Entry"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:82
+msgid "trades.avgExitShort"
+msgstr "Avg Exit"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1112
+msgid "trades.backTrades"
+msgstr "Back to trades"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:213
+#: src/components/TradeResultPreview.tsx:410
+msgid "trades.balance"
+msgstr "Balance"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:295
+msgid "trades.batchResult"
+msgstr "Batch result"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:48
+msgid "trades.statusBe"
+msgstr "BE"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:14
+msgid "trades.bored"
+msgstr "Bored"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:145
+#: src/components/TradeDetailSheet.tsx:299
+#: src/components/TradeListItem.tsx:179
+#: src/components/TradeSummaryCard.tsx:107
+msgid "trades.breakEven"
+msgstr "Break-even"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:180
+msgid "trades.breakeven"
+msgstr "Breakeven"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:431
+msgid "trades.buy"
+msgstr "Buy"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:384
+#: src/components/TradeExecutionsCard.tsx:79
+#: src/components/TradeExecutionsCard.tsx:201
+msgid "trades.buyUpper"
+msgstr "BUY"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:6
+msgid "trades.calm"
+msgstr "Calm"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2310
+#: src/app/screens/TradeDetailView.tsx:1177
+#: src/components/TradeDetailSheet.tsx:200
+#: src/components/TradeRowMenu.tsx:167
+msgid "trades.cancel"
+msgstr "Cancel"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:274
+msgid "trades.capture"
+msgstr "Capture"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1257
+msgid "trades.screenshotsHint"
+msgstr "Charts and fills attached to this trade."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2299
+msgid "trades.clear"
+msgstr "Clear"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:302
+msgid "trades.clearFilters"
+msgstr "Clear filters"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:58
+msgid "trades.clipboardBlocked"
+msgstr "Clipboard access was blocked"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2043
+#: src/components/TradeDetailSheet.tsx:149
+msgid "trades.close"
+msgstr "Close"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:406
+msgid "trades.closeColumn"
+msgstr "Close"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:408
+#: src/components/tradeColumns.tsx:505
+#: src/components/tradeColumns.tsx:543
+msgid "trades.closeDate"
+msgstr "Close date"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:339
+msgid "trades.closedLower"
+msgstr "closed"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:111
+#: src/components/TradeResultPreview.tsx:347
+msgid "trades.closed"
+msgstr "Closed"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:209
+#: src/app/screens/TradeDetailView.tsx:215
+msgid "trades.coach"
+msgstr "Coach"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:143
+#: src/components/TradePlanCard.tsx:250
+msgid "trades.computing"
+msgstr "Computing…"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:8
+msgid "trades.confident"
+msgstr "Confident"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:718
+msgid "trades.contract"
+msgstr "Contract"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:720
+msgid "trades.contractSymbol"
+msgstr "Contract symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:52
+msgid "trades.copied"
+msgstr "Copied"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:128
+msgid "trades.copySymbol"
+msgstr "Copy symbol"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1086
+msgid "trades.excursionFailed"
+msgstr "Could not compute MAE/MFE"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:57
+msgid "trades.copyFailed"
+msgstr "Could not copy"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:167
+msgid "trades.detailFailed"
+msgstr "Could not load trade detail."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2079
+msgid "trades.editLoadFailed"
+msgstr "Could not load trade for editing."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1719
+msgid "trades.logFailed"
+msgstr "Could not log trades"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:201
+msgid "trades.coachUnavailable"
+msgstr "Could not reach the coach API"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:94
+#: src/components/TradeRowMenu.tsx:79
+msgid "trades.removeFailed"
+msgstr "Could not remove trade"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1644
+msgid "trades.updateFailed"
+msgstr "Could not update trade"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:395
+#: src/components/tradeColumns.tsx:504
+#: src/components/tradeColumns.tsx:542
+msgid "trades.createdAt"
+msgstr "Created At"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:28
+#: src/lib/tradeLabels.ts:35
+msgid "trades.crypto"
+msgstr "Crypto"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:729
+msgid "trades.custom"
+msgstr "Custom"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1412
+#: src/components/tradeColumns.tsx:393
+msgid "trades.date"
+msgstr "Date"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:903
+#: src/app/drawers/NewTradeDrawer.tsx:955
+msgid "trades.dateTime"
+msgstr "Date / Time"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:409
+msgid "trades.closedDateHint"
+msgstr "Date closed (last activity)"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:396
+msgid "trades.openedDate"
+msgstr "Date opened"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:963
+msgid "trades.rowDateTime"
+msgstr "Date/time symbol {0} row {1}"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:301
+msgid "trades.dipAfter"
+msgstr "dip after exit"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:162
+#: src/components/tradeColumns.tsx:164
+#: src/components/tradeColumns.tsx:508
+#: src/components/tradeColumns.tsx:530
+msgid "trades.direction"
+msgstr "Direction"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:165
+msgid "trades.directionHint"
+msgstr "Direction — long/short; LC/LP/SC/SP when option"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:788
+msgid "trades.discardDraft"
+msgstr "Discard draft"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:429
+msgid "trades.dividend"
+msgstr "Dividend"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1402
+msgid "trades.dividendAmountField"
+msgstr "Dividend amount{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1414
+msgid "trades.dividendDateField"
+msgstr "Dividend date{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1425
+msgid "trades.dividendNoteField"
+msgstr "Dividend note{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:232
+msgid "trades.dividends"
+msgstr "Dividends"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:63
+msgid "trades.editJournal"
+msgstr "Edit journal"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:164
+msgid "trades.editPlan"
+msgstr "Edit plan"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1131
+msgid "trades.editTrade"
+msgstr "Edit trade"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1976
+#: src/app/drawers/NewTradeDrawer.tsx:1978
+msgid "trades.editTradeTitle"
+msgstr "Edit Trade"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1238
+#: src/app/screens/TradeDetailView.tsx:546
+#: src/app/screens/TradeDetailView.tsx:843
+#: src/app/screens/TradeDetailView.tsx:852
+msgid "trades.emotion"
+msgstr "Emotion"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1245
+msgid "trades.emotionField"
+msgstr "Emotion{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:208
+#: src/components/tradeColumns.tsx:211
+#: src/components/tradeColumns.tsx:511
+#: src/components/tradeColumns.tsx:533
+#: src/components/TradeDetailSheet.tsx:358
+#: src/components/TradeSummaryCard.tsx:194
+msgid "trades.entry"
+msgstr "Entry"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1318
+#: src/app/screens/TradeDetailView.tsx:612
+#: src/app/screens/TradeDetailView.tsx:929
+#: src/components/TradeJournalCard.tsx:122
+msgid "trades.entryReason"
+msgstr "Entry reason"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1322
+msgid "trades.entryReasonField"
+msgstr "Entry reason{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:233
+#: src/components/tradeColumns.tsx:236
+#: src/components/tradeColumns.tsx:513
+#: src/components/tradeColumns.tsx:535
+msgid "trades.entryTotal"
+msgstr "Entry total"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:237
+msgid "trades.entryTotalHint"
+msgstr "Entry total — quantity × average entry × multiplier"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:85
+#: src/components/TradeResultPreview.tsx:188
+#: src/components/TradeResultPreview.tsx:308
+msgid "trades.estimatedPnl"
+msgstr "Est. P&L"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:239
+msgid "trades.excursion"
+msgstr "Excursion"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1080
+msgid "trades.excursionUpdated"
+msgstr "Excursion updated"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:110
+msgid "trades.exec"
+msgstr "Exec"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:152
+msgid "trades.executed"
+msgstr "Executed"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1308
+#: src/app/screens/TradeDetailView.tsx:604
+#: src/app/screens/TradeDetailView.tsx:919
+msgid "trades.executionRating"
+msgstr "Execution rating"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:145
+msgid "trades.executionScoreHint"
+msgstr "Execution score — entry heat and MFE capture from auto excursion"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:894
+msgid "trades.executions"
+msgstr "Executions"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: block.symbol
+#: src/app/drawers/NewTradeDrawer.tsx:893
+msgid "trades.executionsSymbol"
+msgstr "Executions · {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.fills.length
+#: src/components/TradeDetailSheet.tsx:414
+msgid "trades.fillTitle"
+msgstr "Executions ({0})"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fills.length
+#: src/components/TradeExecutionsCard.tsx:165
+msgid "trades.executionsCount"
+msgstr "Executions ({0})"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:219
+#: src/components/tradeColumns.tsx:222
+#: src/components/tradeColumns.tsx:512
+#: src/components/tradeColumns.tsx:534
+#: src/components/TradeDetailSheet.tsx:362
+#: src/components/TradeSummaryCard.tsx:197
+msgid "trades.exit"
+msgstr "Exit"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1334
+#: src/app/screens/TradeDetailView.tsx:615
+#: src/app/screens/TradeDetailView.tsx:942
+#: src/components/TradeJournalCard.tsx:127
+msgid "trades.exitReason"
+msgstr "Exit reason"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1338
+msgid "trades.exitReasonField"
+msgstr "Exit reason{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:260
+#: src/components/tradeColumns.tsx:263
+#: src/components/tradeColumns.tsx:514
+#: src/components/tradeColumns.tsx:536
+msgid "trades.exitTotal"
+msgstr "Exit total"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:264
+msgid "trades.exitTotalHint"
+msgstr "Exit total — quantity × average exit × multiplier"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:845
+msgid "trades.expiry"
+msgstr "Expiry"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:847
+msgid "trades.expirySymbol"
+msgstr "Expiry symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:266
+msgid "trades.loadFailed"
+msgstr "Failed to load trades. Check your connection and try again."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:10
+msgid "trades.fearful"
+msgstr "Fearful"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:907
+#: src/app/drawers/NewTradeDrawer.tsx:1047
+#: src/app/drawers/NewTradeDrawer.tsx:1056
+#: src/app/drawers/NewTradeDrawer.tsx:1068
+#: src/components/TradeDetailSheet.tsx:449
+msgid "trades.fee"
+msgstr "Fee"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index ? ` symbol ${index + 1}` : ""
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1062
+msgid "trades.rowFee"
+msgstr "Fee{0} row {1}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:345
+#: src/components/tradeColumns.tsx:348
+#: src/components/tradeColumns.tsx:517
+#: src/components/tradeColumns.tsx:539
+#: src/components/TradeDetailSheet.tsx:352
+#: src/components/TradeDetailSheet.tsx:383
+#: src/components/TradeExecutionsCard.tsx:119
+#: src/components/TradeResultPreview.tsx:344
+#: src/components/TradeSummaryCard.tsx:216
+msgid "trades.fees"
+msgstr "Fees"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:97
+msgid "trades.fillPrice"
+msgstr "Fill price"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1621
+msgid "trades.fillsSaved"
+msgstr "Fills and journal saved."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: block.rows.length
+#: src/app/drawers/NewTradeDrawer.tsx:630
+msgid "trades.fillCount"
+msgstr "Fills: {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/components/TradeRowMenu.tsx:137
+msgid "trades.filterSymbol"
+msgstr "Filter by {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:798
+msgid "trades.primarySetupHint"
+msgstr "First selected setup becomes the main setup."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:7
+msgid "trades.focused"
+msgstr "Focused"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:12
+msgid "trades.fomo"
+msgstr "FOMO"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:30
+#: src/lib/tradeLabels.ts:38
+msgid "trades.forex"
+msgstr "Forex"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:29
+#: src/lib/tradeLabels.ts:36
+#: src/lib/tradeLabels.ts:37
+msgid "trades.futures"
+msgstr "Futures"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:279
+msgid "trades.generating"
+msgstr "Generating…"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:11
+msgid "trades.greedy"
+msgstr "Greedy"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:350
+#: src/components/TradeSummaryCard.tsx:210
+msgid "trades.gross"
+msgstr "Gross"
+
+#. js-lingui-explicit-id
+#: src/components/TradeListItem.tsx:243
+msgid "trades.hasNotes"
+msgstr "Has notes"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:325
+#: src/components/tradeColumns.tsx:328
+#: src/components/tradeColumns.tsx:516
+#: src/components/tradeColumns.tsx:538
+#: src/components/TradeDetailSheet.tsx:379
+#: src/components/TradeSummaryCard.tsx:206
+msgid "trades.hold"
+msgstr "Hold"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:281
+msgid "trades.emptyHint"
+msgstr "Import broker history or log your first trade to start tracking performance."
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:252
+msgid "trades.importCsv"
+msgstr "Import CSV"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2175
+msgid "trades.importFile"
+msgstr "Import file"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2057
+msgid "trades.importPreviewHint"
+msgstr "Import preview — review fills and set call/put. Apply updates this row; Confirm import writes the account."
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:241
+msgid "trades.inclDividends"
+msgstr "incl. dividends"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:95
+msgid "trades.includesAll"
+msgstr "includes all"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:556
+#: src/app/screens/TradeDetailView.tsx:859
+msgid "trades.initialRisk"
+msgstr "Initial risk"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:183
+msgid "trades.instrumentType"
+msgstr "Instrument type"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:99
+msgid "trades.is"
+msgstr "is"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:87
+#: src/components/TradesFilters.tsx:93
+msgid "trades.anyOf"
+msgstr "is any of"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:100
+msgid "trades.isNot"
+msgstr "is not"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:88
+#: src/components/TradesFilters.tsx:94
+msgid "trades.notAnyOf"
+msgstr "is not any of"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:99
+msgid "trades.issue"
+msgstr "Issue"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:411
+#: src/components/TradeJournalCard.tsx:70
+#: src/components/TradeJournalCard.tsx:84
+msgid "trades.journal"
+msgstr "Journal"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:284
+msgid "trades.leftOnTable"
+msgstr "Left on table"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2075
+#: src/app/drawers/NewTradeDrawer.tsx:2083
+msgid "trades.loading"
+msgstr "Loading trade…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:256
+msgid "trades.logTrade"
+msgstr "Log trade"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:24
+msgid "trades.london"
+msgstr "London"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:628
+#: src/lib/tradeLabels.ts:67
+msgid "trades.long"
+msgstr "Long"
+
+#. js-lingui-explicit-id
+#: src/components/TradeListItem.tsx:103
+#: src/components/TradeSummaryCard.tsx:89
+msgid "trades.longUpper"
+msgstr "LONG"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:56
+msgid "trades.longCall"
+msgstr "Long Call"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:58
+msgid "trades.longPut"
+msgstr "Long Put"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:143
+msgid "trades.loss"
+msgstr "Loss"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:46
+msgid "trades.statusLoss"
+msgstr "LOSS"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:80
+msgid "trades.losses"
+msgstr "Losses"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:623
+#: src/app/screens/TradeDetailView.tsx:968
+msgid "trades.mae"
+msgstr "MAE ($)"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:683
+#: src/components/tradeColumns.tsx:180
+#: src/components/tradeColumns.tsx:182
+#: src/components/tradeColumns.tsx:509
+#: src/components/tradeColumns.tsx:531
+#: src/components/TradesFilters.tsx:133
+msgid "trades.market"
+msgstr "Market"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1090
+msgid "trades.marketUnavailable"
+msgstr "Market data unavailable."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:685
+msgid "trades.marketSymbol"
+msgstr "Market symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:973
+msgid "trades.maxAdverse"
+msgstr "Max adverse"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:982
+msgid "trades.maxFavorable"
+msgstr "Max favorable"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:626
+#: src/app/screens/TradeDetailView.tsx:977
+msgid "trades.mfe"
+msgstr "MFE ($)"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1275
+#: src/app/screens/TradeDetailView.tsx:583
+#: src/app/screens/TradeDetailView.tsx:899
+msgid "trades.mistakeType"
+msgstr "Mistake type"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1282
+msgid "trades.mistakesField"
+msgstr "Mistake type{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:798
+msgid "trades.multiplier"
+msgstr "Multiplier"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:800
+msgid "trades.multiplierSymbol"
+msgstr "Multiplier symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:360
+msgid "trades.netPnl"
+msgstr "Net P&L"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:424
+msgid "trades.riskHint"
+msgstr "Net P&L ÷ planned risk (initial risk)"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:160
+msgid "trades.netAfterFees"
+msgstr "Net P&L after fees"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:375
+msgid "trades.pnlPercentHint"
+msgstr "Net P&L as a percentage of entry total"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1979
+msgid "trades.newTradeTitle"
+msgstr "New Trade"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:25
+msgid "trades.nyAm"
+msgstr "New York AM"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:26
+msgid "trades.nyPm"
+msgstr "New York PM"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:140
+msgid "trades.nextAction"
+msgstr "Next action"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:418
+#: src/components/TradeExecutionsCard.tsx:183
+msgid "trades.noFills"
+msgstr "No fills recorded."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1257
+msgid "trades.noEmotions"
+msgstr "No matching emotions."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1294
+msgid "trades.noMistakes"
+msgstr "No matching mistakes."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1207
+msgid "trades.noMatchingSetups"
+msgstr "No matching setups."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1269
+msgid "trades.noTags"
+msgstr "No matching tags."
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:128
+msgid "trades.emptyPlan"
+msgstr "No plan recorded. Add a stop, target, or risk amount to score this trade in R."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2007
+msgid "trades.noTemplates"
+msgstr "No saved templates yet"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:316
+msgid "trades.noScreenshots"
+msgstr "No screenshots yet"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1228
+msgid "trades.noSession"
+msgstr "No session"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1183
+msgid "trades.noSetupsPlaybook"
+msgstr "No setups yet — create some in Playbook."
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:805
+msgid "trades.noSetups"
+msgstr "No setups yet."
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:241
+msgid "trades.noSymbols"
+msgstr "No symbols found."
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:292
+msgid "trades.noMatches"
+msgstr "No trades match these filters"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:280
+msgid "trades.empty"
+msgstr "No trades yet"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:849
+msgid "trades.notSet"
+msgstr "Not set"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1423
+msgid "trades.note"
+msgstr "Note"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:462
+#: src/components/TradeJournalCard.tsx:138
+msgid "trades.notes"
+msgstr "Notes"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:73
+msgid "trades.emptyJournal"
+msgstr "Nothing written yet — record why you entered and exited while it is still fresh."
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:275
+msgid "trades.ofMfe"
+msgstr "of MFE"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1216
+msgid "trades.oneSession"
+msgstr "One session per trade."
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:144
+#: src/components/TradesFilters.tsx:81
+msgid "trades.open"
+msgstr "Open"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:47
+msgid "trades.statusOpen"
+msgstr "OPEN"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:111
+msgid "trades.openDrawer"
+msgstr "Open drawer"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:145
+#: src/components/TradeRowMenu.tsx:120
+msgid "trades.openFull"
+msgstr "Open full page"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:27
+#: src/lib/tradeLabels.ts:34
+msgid "trades.option"
+msgstr "Option"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:64
+msgid "trades.missingRight"
+msgstr "Option — call/put missing"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:812
+msgid "trades.optionRightSymbol"
+msgstr "Option right symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:874
+#: src/app/drawers/NewTradeDrawer.tsx:883
+#: src/app/drawers/NewTradeDrawer.tsx:1431
+msgid "trades.optional"
+msgstr "Optional"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1276
+msgid "trades.mistakeHint"
+msgstr "Optional — select any that apply."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1391
+msgid "trades.dividendHint"
+msgstr "Optional payout on this symbol. Amount rolls into trade P&L (shorts as a debit)."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:16
+msgid "trades.overconfident"
+msgstr "Overconfident"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:908
+#: src/app/drawers/NewTradeDrawer.tsx:1075
+#: src/components/tradeColumns.tsx:356
+#: src/components/tradeColumns.tsx:359
+#: src/components/tradeColumns.tsx:518
+#: src/components/tradeColumns.tsx:540
+msgid "trades.pnl"
+msgstr "P&L"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:371
+#: src/components/tradeColumns.tsx:374
+#: src/components/tradeColumns.tsx:519
+#: src/components/tradeColumns.tsx:541
+msgid "trades.pnlPercent"
+msgstr "P&L %"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1084
+msgid "trades.rowPnlEmpty"
+msgstr "P&L symbol {0} row {1}: empty"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1196
+#: src/components/TradeDetailSheet.tsx:217
+#: src/components/TradeRowMenu.tsx:184
+msgid "trades.removeWarning"
+msgstr "Permanently deletes this trade and all of its fills. This cannot be undone."
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:118
+#: src/components/TradePlanCard.tsx:160
+msgid "trades.planActual"
+msgstr "Plan vs actual"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:200
+#: src/components/TradePlanCard.tsx:213
+msgid "trades.planned"
+msgstr "planned"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:185
+msgid "trades.plannedRR"
+msgstr "Planned R:R"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:132
+msgid "trades.shotFormatsShort"
+msgstr "PNG, JPG · click to browse"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1304
+msgid "trades.shotFormats"
+msgstr "PNG, JPG, WebP · click to browse"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:135
+msgid "trades.pos"
+msgstr "Pos"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:297
+#: src/components/tradeColumns.tsx:300
+#: src/components/tradeColumns.tsx:515
+#: src/components/tradeColumns.tsx:537
+#: src/components/TradeResultPreview.tsx:105
+msgid "trades.position"
+msgstr "Position"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:139
+msgid "trades.positionAfterFill"
+msgstr "Position held after this fill"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:301
+msgid "trades.openPosition"
+msgstr "Position still open"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:300
+msgid "trades.postMae"
+msgstr "Post-exit MAE"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:291
+msgid "trades.postMfe"
+msgstr "Post-exit MFE"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2165
+msgid "trades.prefillFile"
+msgstr "Prefill trade from a CSV or JSON file"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2127
+msgid "trades.prefillScreenshot"
+msgstr "Prefill trade from screenshot"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:905
+#: src/app/drawers/NewTradeDrawer.tsx:1003
+#: src/app/drawers/NewTradeDrawer.tsx:1012
+#: src/app/drawers/NewTradeDrawer.tsx:1024
+#: src/components/TradeExecutionsCard.tsx:93
+msgid "trades.price"
+msgstr "Price"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index ? ` symbol ${index + 1}` : ""
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1018
+msgid "trades.rowPrice"
+msgstr "Price{0} row {1}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:904
+#: src/app/drawers/NewTradeDrawer.tsx:975
+#: src/app/drawers/NewTradeDrawer.tsx:984
+#: src/app/drawers/NewTradeDrawer.tsx:996
+#: src/components/tradeColumns.tsx:510
+#: src/components/tradeColumns.tsx:532
+#: src/components/TradeDetailSheet.tsx:377
+#: src/components/TradeExecutionsCard.tsx:87
+msgid "trades.qty"
+msgstr "Qty"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:110
+msgid "trades.fillValueHint"
+msgstr "Qty × price × contract multiplier"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:260
+msgid "trades.amountCalc"
+msgstr "Qty × price × multiplier"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index ? ` symbol ${index + 1}` : ""
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:990
+msgid "trades.rowQty"
+msgstr "Qty{0} row {1}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:193
+#: src/components/tradeColumns.tsx:196
+msgid "trades.quantity"
+msgstr "Quantity"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:197
+msgid "trades.quantityOpened"
+msgstr "Quantity opened"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:911
+msgid "trades.setupRatingHint"
+msgstr "Rate the setup itself — ignore PnL and emotion."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1300
+msgid "trades.rateSetup"
+msgstr "Rate the setup itself — ignore PnL and emotion."
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:920
+msgid "trades.executionRatingHint"
+msgstr "Rate your execution — patience, timing, stop discipline."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1309
+msgid "trades.rateExecution"
+msgstr "Rate your execution — patience, timing, stop discipline."
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:472
+msgid "trades.readMore"
+msgstr "Read more"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:176
+msgid "trades.realizedR"
+msgstr "Realized R — net P&L ÷ planned risk"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:252
+msgid "trades.recompute"
+msgstr "Recompute from bars"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:281
+msgid "trades.regenerate"
+msgstr "Regenerate"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:263
+msgid "trades.regenerateCoach"
+msgstr "Regenerate AI coach"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:149
+msgid "trades.remove"
+msgstr "Remove"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/app/screens/TradeDetailView.tsx:1167
+#: src/components/TradeDetailSheet.tsx:190
+#: src/components/TradeRowMenu.tsx:157
+msgid "trades.removeSymbolConfirm"
+msgstr "Remove {0}?"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1095
+msgid "trades.removeRow"
+msgstr "Remove row symbol {0} row {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:671
+msgid "trades.removeSymbol"
+msgstr "Remove symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1155
+#: src/app/screens/TradeDetailView.tsx:1190
+#: src/components/TradeDetailSheet.tsx:182
+#: src/components/TradeDetailSheet.tsx:211
+#: src/components/TradeRowMenu.tsx:178
+msgid "trades.removeTrade"
+msgstr "Remove trade"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1189
+#: src/components/TradeDetailSheet.tsx:210
+#: src/components/TradeRowMenu.tsx:177
+msgid "trades.removing"
+msgstr "Removing…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:218
+msgid "trades.reset"
+msgstr "Reset"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:219
+#: src/components/TradeResultPreview.tsx:69
+msgid "trades.result"
+msgstr "Result"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:273
+msgid "trades.retry"
+msgstr "Retry"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:13
+msgid "trades.revenge"
+msgstr "Revenge"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1350
+#: src/app/screens/TradeDetailView.tsx:618
+#: src/app/screens/TradeDetailView.tsx:955
+#: src/components/TradeJournalCard.tsx:132
+msgid "trades.reviewNotes"
+msgstr "Review notes"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1354
+msgid "trades.reviewField"
+msgstr "Review notes{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:205
+msgid "trades.reward"
+msgstr "Reward"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:810
+msgid "trades.right"
+msgstr "Right"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:195
+#: src/components/TradeResultPreview.tsx:73
+#: src/components/TradeResultPreview.tsx:182
+#: src/components/TradeResultPreview.tsx:299
+msgid "trades.risk"
+msgstr "Risk"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:248
+msgid "trades.coachEmpty"
+msgstr "Rule-based notes — AI coach returned nothing useful"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:252
+msgid "trades.coachRules"
+msgstr "Rule-based notes — click Ask AI for model coaching"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:224
+msgid "trades.rules"
+msgstr "Rules"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:292
+msgid "trades.runAfter"
+msgstr "run after exit"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2326
+#: src/app/screens/TradeDetailView.tsx:1000
+msgid "trades.save"
+msgstr "Save"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2325
+msgid "trades.saveChanges"
+msgstr "Save changes"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1641
+#: src/app/drawers/NewTradeDrawer.tsx:1716
+msgid "trades.saveFailed"
+msgstr "Save failed"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2037
+msgid "trades.saveTemplate"
+msgstr "Save first symbol as template…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:999
+msgid "trades.saving"
+msgstr "Saving..."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2144
+msgid "trades.scanFill"
+msgstr "Scan to fill"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1366
+#: src/app/screens/TradeDetailView.tsx:1256
+msgid "trades.screenshots"
+msgstr "Screenshots"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: screenshotFiles.length
+#: src/app/drawers/NewTradeDrawer.tsx:1163
+msgid "trades.shotCount"
+msgstr "Screenshots: {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1253
+msgid "trades.searchEmotions"
+msgstr "Search emotions…"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:240
+msgid "trades.searchFilters"
+msgstr "Search filters…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1290
+msgid "trades.searchMistakes"
+msgstr "Search mistakes…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1203
+msgid "trades.searchSetups"
+msgstr "Search setups…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1268
+msgid "trades.searchTags"
+msgstr "Search tags…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2169
+msgid "trades.selectFile"
+msgstr "Select a CSV or JSON file of fills"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1192
+msgid "trades.setupSelectHint"
+msgstr "Select any that apply — the first becomes the main setup."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1252
+msgid "trades.selectEmotions"
+msgstr "Select emotions"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1239
+msgid "trades.emotionSelectHint"
+msgstr "Select every state that applied during the trade."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1289
+msgid "trades.selectMistakes"
+msgstr "Select mistakes"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2133
+msgid "trades.selectScreenshots"
+msgstr "Select one or more screenshots"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1202
+msgid "trades.selectSetups"
+msgstr "Select setups"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1267
+msgid "trades.selectTags"
+msgstr "Select tags"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:432
+msgid "trades.sell"
+msgstr "Sell"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:385
+#: src/components/TradeExecutionsCard.tsx:80
+#: src/components/TradeExecutionsCard.tsx:202
+msgid "trades.sellUpper"
+msgstr "SELL"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1215
+#: src/app/screens/TradeDetailView.tsx:542
+#: src/app/screens/TradeDetailView.tsx:825
+msgid "trades.session"
+msgstr "Session"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1221
+msgid "trades.sessionField"
+msgstr "Session{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/DirCell.tsx:53
+msgid "trades.setRight"
+msgstr "Set call or put via Edit"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2137
+msgid "trades.scanSetup"
+msgstr "Set up screenshot scan in Settings before scanning"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:398
+#: src/components/TradeJournalCard.tsx:105
+msgid "trades.setup"
+msgstr "Setup"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1299
+#: src/app/screens/TradeDetailView.tsx:598
+#: src/app/screens/TradeDetailView.tsx:910
+msgid "trades.setupRating"
+msgstr "Setup rating"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1180
+#: src/app/drawers/NewTradeDrawer.tsx:1191
+#: src/app/screens/TradeDetailView.tsx:528
+msgid "trades.setups"
+msgstr "Setups"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:795
+msgid "trades.multiSetups"
+msgstr "Setups (select multiple)"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: block.setupIds.length
+#: src/app/drawers/NewTradeDrawer.tsx:1156
+msgid "trades.setupCount"
+msgstr "Setups: {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1198
+msgid "trades.setupsField"
+msgstr "Setups{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1150
+msgid "trades.shareCard"
+msgstr "Share card"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:629
+#: src/lib/tradeLabels.ts:68
+msgid "trades.short"
+msgstr "Short"
+
+#. js-lingui-explicit-id
+#: src/components/TradeListItem.tsx:104
+#: src/components/TradeSummaryCard.tsx:90
+msgid "trades.shortUpper"
+msgstr "SHORT"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:60
+msgid "trades.shortCall"
+msgstr "Short Call"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:62
+msgid "trades.shortPut"
+msgstr "Short Put"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:243
+msgid "trades.coachFallback"
+msgstr "Showing rule-based notes — AI unavailable"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:772
+#: src/components/TradeExecutionsCard.tsx:75
+msgid "trades.side"
+msgstr "Side"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:774
+msgid "trades.sideSymbol"
+msgstr "Side symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:201
+msgid "trades.size"
+msgstr "Size"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:133
+#: src/components/tradeColumns.tsx:135
+#: src/components/tradeColumns.tsx:507
+#: src/components/tradeColumns.tsx:529
+#: src/components/TradesFilters.tsx:121
+msgid "trades.status"
+msgstr "Status"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:26
+#: src/lib/tradeLabels.ts:33
+msgid "trades.stock"
+msgstr "Stock"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:126
+#: src/components/tradeColumns.tsx:127
+#: src/components/tradeColumns.tsx:528
+msgid "trades.stockName"
+msgstr "Stock Name"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:878
+#: src/app/screens/TradeDetailView.tsx:562
+#: src/app/screens/TradeDetailView.tsx:877
+#: src/app/screens/TradeDetailView.tsx:882
+#: src/components/TradePlanCard.tsx:173
+msgid "trades.stop"
+msgstr "Stop"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:880
+msgid "trades.stopSymbol"
+msgstr "Stop symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:103
+msgid "trades.strength"
+msgstr "Strength"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:830
+msgid "trades.strike"
+msgstr "Strike"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:832
+msgid "trades.strikeSymbol"
+msgstr "Strike symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:754
+#: src/components/tradeColumns.tsx:116
+#: src/components/tradeColumns.tsx:117
+#: src/components/tradeColumns.tsx:506
+#: src/components/tradeColumns.tsx:527
+#: src/components/TradesFilters.tsx:106
+msgid "trades.symbol"
+msgstr "Symbol"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:661
+msgid "trades.symbolIndex"
+msgstr "Symbol {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:657
+msgid "trades.symbolSummary"
+msgstr "Symbol {0} · {collapsedSummary}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:749
+#: src/lib/newTradeFormSchema.ts:147
+#: src/lib/newTradeFormSchema.ts:234
+#: src/lib/newTradeFormSchema.ts:242
+msgid "trades.symbolRequired"
+msgstr "Symbol is required."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:642
+msgid "trades.symbolTrade"
+msgstr "Symbol trade {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:758
+msgid "trades.symbolField"
+msgstr "Symbol{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:334
+msgid "trades.symbols"
+msgstr "Symbols"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: Object.keys(bySymbol).length || tradeIds.length
+#: src/app/drawers/NewTradeDrawer.tsx:1702
+msgid "trades.savedSymbols"
+msgstr "Symbols saved: {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1261
+#: src/app/screens/TradeDetailView.tsx:569
+#: src/app/screens/TradeDetailView.tsx:888
+#: src/components/tradeColumns.tsx:448
+#: src/components/tradeColumns.tsx:451
+#: src/components/tradeColumns.tsx:545
+#: src/components/TradesFilters.tsx:145
+msgid "trades.tags"
+msgstr "Tags"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1263
+msgid "trades.tagsField"
+msgstr "Tags{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:866
+#: src/app/screens/TradeDetailView.tsx:559
+#: src/app/screens/TradeDetailView.tsx:869
+#: src/app/screens/TradeDetailView.tsx:874
+#: src/components/TradePlanCard.tsx:176
+msgid "trades.target"
+msgstr "Target"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:868
+msgid "trades.targetSymbol"
+msgstr "Target symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1986
+#: src/app/drawers/NewTradeDrawer.tsx:1996
+msgid "trades.templates"
+msgstr "Templates"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1061
+msgid "trades.tradeMissingHint"
+msgstr "This trade may have been deleted or the ID is invalid."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:766
+msgid "trades.ticker"
+msgstr "Ticker"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:151
+msgid "trades.time"
+msgstr "Time"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:329
+msgid "trades.holdHint"
+msgstr "Time in trade"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:105
+msgid "trades.tip"
+msgstr "Tip"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:15
+msgid "trades.tired"
+msgstr "Tired"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:942
+msgid "trades.toggleRowAction"
+msgstr "Toggle action symbol {0} row {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:649
+msgid "trades.toggleSymbol"
+msgstr "Toggle symbol {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:240
+msgid "trades.total"
+msgstr "Total"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:349
+msgid "trades.feesHint"
+msgstr "Total fees and commissions"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:132
+msgid "trades.trade"
+msgstr "Trade"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1136
+msgid "trades.tradeActions"
+msgstr "Trade actions"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1060
+msgid "trades.tradeMissing"
+msgstr "Trade not found"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:87
+#: src/components/TradeRowMenu.tsx:72
+msgid "trades.removed"
+msgstr "Trade removed"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:136
+msgid "trades.tradeResult"
+msgstr "Trade result"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1535
+msgid "trades.stillLoading"
+msgstr "Trade still loading — try again."
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:452
+msgid "trades.tradeTags"
+msgstr "Trade tags"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2003
+msgid "trades.tradeTemplates"
+msgstr "Trade templates"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1619
+msgid "trades.updated"
+msgstr "Trade updated"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1701
+msgid "trades.logged"
+msgstr "Trades logged"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:95
+#: src/components/TradeRowMenu.tsx:80
+msgid "trades.retryLater"
+msgstr "Try again in a moment"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/app/screens/TradeDetailView.tsx:1207
+#: src/components/TradeDetailSheet.tsx:228
+#: src/components/TradeRowMenu.tsx:194
+msgid "trades.confirmSymbol"
+msgstr "Type {0} to confirm"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/app/screens/TradeDetailView.tsx:1216
+#: src/components/TradeDetailSheet.tsx:237
+#: src/components/TradeRowMenu.tsx:203
+msgid "trades.typeSymbolConfirm"
+msgstr "Type {0} to confirm"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:780
+msgid "trades.draftRestored"
+msgstr "Unsaved draft restored."
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:653
+msgid "trades.untitled"
+msgstr "Untitled"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2063
+msgid "trades.editHint"
+msgstr "Update fills, journal, and optional dividend for this trade."
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:223
+msgid "trades.uploadShots"
+msgstr "Upload journal screenshots"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:264
+msgid "trades.uploading"
+msgstr "Uploading…"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:103
+msgid "trades.value"
+msgstr "Value"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:82
+msgid "trades.wash"
+msgstr "Wash"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:101
+msgid "trades.watch"
+msgstr "Watch"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:963
+msgid "trades.reviewHint"
+msgstr "What would you do differently?"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1358
+msgid "trades.reviewPrompt"
+msgstr "What would you do differently?"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:937
+msgid "trades.entryReasonHint"
+msgstr "Why did you enter?"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1329
+msgid "trades.whyEntry"
+msgstr "Why did you enter?"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:950
+msgid "trades.exitReasonHint"
+msgstr "Why did you exit?"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1345
+msgid "trades.whyExit"
+msgstr "Why did you exit?"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:293
+msgid "trades.noMatchesHint"
+msgstr "Widen the date range, clear symbol/status/market/tags filters, or switch account."
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:142
+msgid "trades.win"
+msgstr "Win"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:45
+msgid "trades.statusWin"
+msgstr "WIN"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:79
+msgid "trades.wins"
+msgstr "Wins"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:64
+msgid "trades.writeReview"
+msgstr "Write review"

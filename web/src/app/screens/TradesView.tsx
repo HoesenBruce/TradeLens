@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react";
+import { t as tr } from "@lingui/core/macro";
 import type { SortingState, VisibilityState } from "@/lib/table";
 import { List, Plus, Search, Upload } from "lucide-react";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
@@ -13,8 +15,8 @@ import { TableSkeleton } from "@/components/skeletons/table-skeleton";
 import { SortList } from "@/components/SortList";
 import {
   TRADE_COLUMN_PINNING,
-  TRADE_SORT_COLUMNS,
-  TRADE_VIEW_COLUMNS,
+  tradeSortColumns,
+  tradeViewColumns,
   tradeColumns,
 } from "@/components/tradeColumns";
 import { TradeListItem } from "@/components/TradeListItem";
@@ -121,6 +123,7 @@ export function TradesView({
   onNewTrade,
   onRetry,
 }: TradesViewProps) {
+  useLingui();
   useDisplayTimePrefs();
   const { currency: displayCurrency, rate } = useMoneyFx(currency);
   const fxRate = rate ?? 1;
@@ -212,7 +215,7 @@ export function TradesView({
             onClick={onClearFilters}
             className={cn("px-2 text-[12px]", toolbarControlClass)}
           >
-            Reset
+            {tr({ id: "trades.reset", message: "Reset" })}
           </Button>
         ) : null}
       </div>
@@ -222,13 +225,13 @@ export function TradesView({
           iconOnly={compact}
           sorting={sorting}
           onSortingChange={setSorting}
-          columns={TRADE_SORT_COLUMNS}
+          columns={tradeSortColumns()}
           className={toolbarControlClass}
         />
         {/* Column visibility has nothing to toggle in the list view, so this
             follows the view mode (md) rather than the toolbar's wrap width. */}
         <ViewOptions
-          columns={TRADE_VIEW_COLUMNS}
+          columns={tradeViewColumns()}
           columnVisibility={columnVisibility}
           onColumnVisibilityChange={setColumnVisibility}
           className={cn("hidden md:inline-flex", toolbarControlClass)}
@@ -246,11 +249,11 @@ export function TradesView({
     <>
       <Button type="button" variant="ghost" onClick={onImport}>
         <Upload size={13} strokeWidth={1.75} />
-        Import CSV
+        {tr({ id: "trades.importCsv", message: "Import CSV" })}
       </Button>
       <Button type="button" variant="soft" onClick={onNewTrade}>
         <Plus size={13} strokeWidth={1.75} />
-        Log trade
+        {tr({ id: "trades.logTrade", message: "Log trade" })}
       </Button>
     </>
   );
@@ -260,19 +263,25 @@ export function TradesView({
   ) : error ? (
     <div className="flex flex-wrap items-center gap-3 p-4">
       <p className="text-xs text-destructive">
-        Failed to load trades. Check your connection and try again.
+        {tr({
+          id: "trades.loadFailed",
+          message: "Failed to load trades. Check your connection and try again.",
+        })}
       </p>
       {onRetry ? (
         <Button type="button" variant="ghost" size="sm" onClick={onRetry}>
-          Retry
+          {tr({ id: "trades.retry", message: "Retry" })}
         </Button>
       ) : null}
     </div>
   ) : trulyEmpty ? (
     <div className="flex flex-1 items-center justify-center py-10">
       <EmptyState
-        title="No trades yet"
-        hint="Import broker history or log your first trade to start tracking performance."
+        title={tr({ id: "trades.empty", message: "No trades yet" })}
+        hint={tr({
+          id: "trades.emptyHint",
+          message: "Import broker history or log your first trade to start tracking performance.",
+        })}
         icon={<List size={40} strokeWidth={1.5} />}
         actions={emptyActions}
       />
@@ -280,13 +289,17 @@ export function TradesView({
   ) : narrowedEmpty ? (
     <div className="flex flex-1 items-center justify-center py-10">
       <EmptyState
-        title="No trades match these filters"
-        hint="Widen the date range, clear symbol/status/market/tags filters, or switch account."
+        title={tr({ id: "trades.noMatches", message: "No trades match these filters" })}
+        hint={tr({
+          id: "trades.noMatchesHint",
+          message:
+            "Widen the date range, clear symbol/status/market/tags filters, or switch account.",
+        })}
         icon={<Search size={36} strokeWidth={1.5} />}
         actions={
           hasNarrowingFilters ? (
             <Button type="button" variant="ghost" onClick={onClearFilters}>
-              Clear filters
+              {tr({ id: "trades.clearFilters", message: "Clear filters" })}
             </Button>
           ) : undefined
         }

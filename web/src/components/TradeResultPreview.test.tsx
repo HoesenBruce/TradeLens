@@ -1,5 +1,6 @@
+import { render } from "@/test/render";
 import { describe, expect, it } from "vite-plus/test";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { AfterSaveResultPreview, BatchTradeResultPreview } from "./TradeResultPreview";
 import type { BatchTradePnlPreview, TradePnlPreview } from "@/lib/tradePnlPreview";
 

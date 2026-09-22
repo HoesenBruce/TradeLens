@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import type { ColumnDef } from "@/lib/table";
 import { useMemo } from "react";
 import { Card } from "./Card";
@@ -48,6 +49,7 @@ function fillRows(fills: readonly Execution[], direction: string): FillRow[] {
  * can't show: three adds before the exit reads as averaging down.
  */
 export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
+  const { t: tr } = useLingui();
   usePrivacyMode();
   const locale = intlLocale();
   const currency = trade.pnl_currency;
@@ -70,42 +72,51 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
     const defs: ColumnDef<FillRow>[] = [
       {
         id: "side",
-        header: "Side",
+        header: tr({ id: "trades.side", message: "Side" }),
         cell: ({ row }) => (
           <Pill tone={row.original.fill.side === "buy" ? "pos" : "neg"}>
-            {row.original.fill.side === "buy" ? "BUY" : "SELL"}
+            {row.original.fill.side === "buy"
+              ? tr({ id: "trades.buyUpper", message: "BUY" })
+              : tr({ id: "trades.sellUpper", message: "SELL" })}
           </Pill>
         ),
         meta: { minWidth: 72 },
       },
       {
         id: "qty",
-        header: "Qty",
+        header: tr({ id: "trades.qty", message: "Qty" }),
         cell: ({ row }) => fmtQty(row.original.fill.quantity),
         meta: { align: "right", minWidth: 64 },
       },
       {
         id: "price",
-        header: "Price",
+        header: tr({ id: "trades.price", message: "Price" }),
         cell: ({ row }) => fmtMoney(row.original.fill.price, currency, locale),
-        meta: { align: "right", headerTitle: "Fill price", minWidth: 80 },
+        meta: {
+          align: "right",
+          headerTitle: tr({ id: "trades.fillPrice", message: "Fill price" }),
+          minWidth: 80,
+        },
       },
       {
         id: "value",
-        header: "Value",
+        header: tr({ id: "trades.value", message: "Value" }),
         cell: ({ row }) => {
           const f = row.original.fill;
           return fmtMoney(f.quantity * f.price * (f.multiplier || 1), currency, locale);
         },
         meta: {
           align: "right",
-          headerTitle: "Qty × price × contract multiplier",
+          headerTitle: tr({
+            id: "trades.fillValueHint",
+            message: "Qty × price × contract multiplier",
+          }),
           minWidth: 96,
         },
       },
       {
         id: "fees",
-        header: "Fees",
+        header: tr({ id: "trades.fees", message: "Fees" }),
         cell: ({ row }) => {
           const fee = row.original.fill.fees + row.original.fill.commission;
           return fee > 0 ? (
@@ -121,15 +132,24 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
     if (scaled) {
       defs.push({
         id: "position",
-        header: "Pos",
+        header: tr({ id: "trades.pos", message: "Pos" }),
         cell: ({ row }) => fmtQty(row.original.position),
-        meta: { align: "right", headerTitle: "Position held after this fill", minWidth: 64 },
+        meta: {
+          align: "right",
+          headerTitle: tr({
+            id: "trades.positionAfterFill",
+            message: "Position held after this fill",
+          }),
+          minWidth: 64,
+        },
       });
     }
 
     defs.push({
       id: "time",
-      header: singleDay ? "Time" : "Executed",
+      header: singleDay
+        ? tr({ id: "trades.time", message: "Time" })
+        : tr({ id: "trades.executed", message: "Executed" }),
       cell: ({ row }) =>
         singleDay
           ? fmtTime(row.original.fill.executed_at)
@@ -138,15 +158,20 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
     });
 
     return defs;
-  }, [currency, locale, scaled, singleDay]);
+  }, [currency, locale, scaled, singleDay, tr]);
 
   return (
     <Card
-      title={`Executions (${fills.length})`}
+      title={tr({ id: "trades.executionsCount", message: `Executions (${fills.length})` })}
       action={
         fills.length > 0 ? (
           <p className="m-0 text-[12px] tabular-nums text-muted-foreground">
-            {totalFees > 0 ? `${fmtMoney(totalFees, currency, locale)} fees` : null}
+            {totalFees > 0
+              ? tr({
+                  id: "trades.feesAmount",
+                  message: `${fmtMoney(totalFees, currency, locale)} fees`,
+                })
+              : null}
             {totalFees > 0 && singleDay && fills[0] ? " · " : null}
             {singleDay && fills[0] ? fmtDate(fills[0].executed_at, locale) : null}
           </p>
@@ -154,7 +179,9 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
       }
     >
       {fills.length === 0 ? (
-        <p className="m-0 text-[13px] text-muted-foreground">No fills recorded.</p>
+        <p className="m-0 text-[13px] text-muted-foreground">
+          {tr({ id: "trades.noFills", message: "No fills recorded." })}
+        </p>
       ) : compact ? (
         <ItemGroup className="gap-2">
           {rows.map(({ fill, position }) => {
@@ -170,7 +197,9 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
                   <div className="flex items-center justify-between gap-3">
                     <span className="flex items-center gap-2">
                       <Pill tone={fill.side === "buy" ? "pos" : "neg"}>
-                        {fill.side === "buy" ? "BUY" : "SELL"}
+                        {fill.side === "buy"
+                          ? tr({ id: "trades.buyUpper", message: "BUY" })
+                          : tr({ id: "trades.sellUpper", message: "SELL" })}
                       </Pill>
                       <span className="text-[15px] font-semibold tabular-nums text-foreground">
                         {fmtQty(fill.quantity)} @ {fmtMoney(fill.price, currency, locale)}
@@ -188,8 +217,15 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
                       currency,
                       locale,
                     )}
-                    {fee > 0 ? ` · ${fmtMoney(fee, currency, locale)} fee` : ""}
-                    {scaled ? ` · ${fmtQty(position)} held` : ""}
+                    {fee > 0
+                      ? tr({
+                          id: "trades.feeAmount",
+                          message: ` · ${fmtMoney(fee, currency, locale)} fee`,
+                        })
+                      : ""}
+                    {scaled
+                      ? tr({ id: "trades.heldQuantity", message: ` · ${fmtQty(position)} held` })
+                      : ""}
                   </p>
                 </ItemContent>
               </Item>

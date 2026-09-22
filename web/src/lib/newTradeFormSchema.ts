@@ -1,3 +1,4 @@
+import { t as tr } from "@lingui/core/macro";
 import { isoToWallClock } from "./displayPrefs";
 import { z } from "zod";
 import { parseAmountToNumber } from "./amountInput";
@@ -143,15 +144,16 @@ export function defaultNewTradeFormValues(): NewTradeFormValues {
 }
 
 export function validateSymbol(value: string): string | undefined {
-  if (!value.trim()) return "Symbol is required.";
+  if (!value.trim()) return tr({ id: "trades.symbolRequired", message: "Symbol is required." });
   return undefined;
 }
 
 export function validatePositiveAmount(value: string, label: string): string | undefined {
   const t = value.trim();
-  if (!t) return `${label} is required`;
+  if (!t) return tr({ id: "trades.amountRequired", message: `${label} is required` });
   const n = parseAmountToNumber(t);
-  if (n == null || n <= 0) return `${label} must be > 0`;
+  if (n == null || n <= 0)
+    return tr({ id: "trades.amountPositive", message: `${label} must be > 0` });
   return undefined;
 }
 
@@ -159,7 +161,8 @@ export function validateNonNegativeAmount(value: string, label: string): string 
   const t = value.trim();
   if (!t) return undefined;
   const n = parseAmountToNumber(t);
-  if (n == null || n < 0) return `${label} must be ≥ 0`;
+  if (n == null || n < 0)
+    return tr({ id: "trades.amountNonnegative", message: `${label} must be ≥ 0` });
   return undefined;
 }
 
@@ -214,27 +217,29 @@ export function parseTradeRows(rows: ExecutionRow[]): ParsedExecutionRow[] {
 
 export function validateTradeRows(rows: ExecutionRow[]): string | undefined {
   if (parseTradeRows(rows).length > 0) return undefined;
-  return "Add at least one valid execution row.";
+  return tr({ id: "trades.fillRequired", message: "Add at least one valid execution row." });
 }
 
 /** At least one symbol block with a ticker and ≥1 valid fill. */
 export function validateSymbolTrades(trades: SymbolTradeBlock[]): string | undefined {
-  if (!trades.length) return "Add at least one symbol.";
+  if (!trades.length)
+    return tr({ id: "trades.symbolAtLeastOne", message: "Add at least one symbol." });
   let anyValid = false;
   for (const t of trades) {
     if (!t.symbol.trim()) continue;
     if (parseTradeRows(t.rows).length > 0) anyValid = true;
   }
   if (!anyValid) {
-    if (trades.some((t) => !t.symbol.trim())) return "Symbol is required.";
-    return "Add at least one valid execution row.";
+    if (trades.some((t) => !t.symbol.trim()))
+      return tr({ id: "trades.symbolRequired", message: "Symbol is required." });
+    return tr({ id: "trades.fillRequired", message: "Add at least one valid execution row." });
   }
   for (const t of trades) {
     if (t.symbol.trim() && parseTradeRows(t.rows).length === 0) {
       return `${t.symbol.toUpperCase()}: add at least one valid execution.`;
     }
     if (!t.symbol.trim() && parseTradeRows(t.rows).length > 0) {
-      return "Symbol is required.";
+      return tr({ id: "trades.symbolRequired", message: "Symbol is required." });
     }
   }
   return undefined;

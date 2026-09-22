@@ -1397,3 +1397,2140 @@ msgstr "何が起きましたか？"
 #: src/app/screens/NewsView.tsx:302
 msgid "news.notesHint"
 msgstr "なぜ重要だと考えますか？"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(fee, currency, locale)
+#: src/components/TradeExecutionsCard.tsx:221
+msgid "trades.feeAmount"
+msgstr " · 手数料 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtQty(position)
+#: src/components/TradeExecutionsCard.tsx:227
+msgid "trades.heldQuantity"
+msgstr " · 保有 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: s.name
+#: src/app/screens/TradeDetailView.tsx:535
+#: src/app/screens/TradeDetailView.tsx:815
+msgid "trades.mainSetup"
+msgstr "{0} · メイン"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtDateTime(trade.opened_at)
+#: src/components/TradeDetailSheet.tsx:307
+msgid "trades.stillOpen"
+msgstr "{0} · 未決済"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(totalFees, currency, locale)
+#: src/components/TradeExecutionsCard.tsx:170
+msgid "trades.feesAmount"
+msgstr "手数料 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: (insights.feeDragPct * 100).toFixed(1)
+#: src/components/TradeSummaryCard.tsx:221
+msgid "trades.grossPercent"
+msgstr "総損益の {0}%"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:153
+msgid "trades.amountRequired"
+msgstr "{label}を入力してください"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:156
+msgid "trades.amountPositive"
+msgstr "{label}は 0 より大きい値にしてください"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:165
+msgid "trades.amountNonnegative"
+msgstr "{label}は 0 以上にしてください"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:778
+msgid "trades.longChoice"
+msgstr "↗ 買い"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:779
+msgid "trades.shortChoice"
+msgstr "↘ 売り"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2097
+msgid "trades.account"
+msgstr "アカウント"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1515
+msgid "trades.accountRequired"
+msgstr "アカウントを選択してください。"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:220
+#: src/components/TradeResultPreview.tsx:385
+msgid "trades.accountPnl"
+msgstr "アカウント損益"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:902
+#: src/app/drawers/NewTradeDrawer.tsx:937
+msgid "trades.action"
+msgstr "操作"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/components/TradeRowMenu.tsx:93
+msgid "trades.actionsForSymbol"
+msgstr "操作：{0}"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:226
+msgid "trades.symbolAtLeastOne"
+msgstr "銘柄を 1 つ以上追加してください。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1526
+#: src/lib/newTradeFormSchema.ts:220
+#: src/lib/newTradeFormSchema.ts:235
+msgid "trades.fillRequired"
+msgstr "有効な約定を 1 行以上追加してください。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1125
+msgid "trades.addExecutionRow"
+msgstr "約定を追加：銘柄 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:231
+#: src/components/TradesFilters.tsx:235
+#: src/components/TradesFilters.tsx:239
+msgid "trades.addFilter"
+msgstr "絞り込みを追加"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2067
+msgid "trades.newHint"
+msgstr "銘柄ごとに約定・ジャーナル・配当を入力。一度の保存で各銘柄を個別のトレードとして記録します。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:122
+msgid "trades.addPlan"
+msgstr "計画を追加"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1303
+#: src/components/JournalScreenshotUpload.tsx:131
+msgid "trades.addShots"
+msgstr "スクリーンショットを追加"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2256
+msgid "trades.addSymbol"
+msgstr "銘柄を追加"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:181
+msgid "trades.afterFees"
+msgstr "手数料控除後"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:178
+#: src/components/TradeResultPreview.tsx:381
+msgid "trades.afterSave"
+msgstr "保存後"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:355
+msgid "trades.allClosed"
+msgstr "すべて決済済み"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1622
+msgid "trades.allFillsRemoved"
+msgstr "すべての約定を削除し、一覧に戻りました。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:906
+#: src/app/drawers/NewTradeDrawer.tsx:1031
+msgid "trades.amount"
+msgstr "金額"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1399
+msgid "trades.currencyAmount"
+msgstr "金額（{currency}）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1040
+msgid "trades.rowAmountEmpty"
+msgstr "金額：銘柄 {0}、行 {1}：未入力"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:9
+msgid "trades.anxious"
+msgstr "不安"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2323
+msgid "trades.apply"
+msgstr "適用"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:23
+msgid "trades.asia"
+msgstr "アジア"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:282
+msgid "trades.askAi"
+msgstr "AI に相談"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:264
+msgid "trades.askCoach"
+msgstr "AI コーチに相談"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:239
+msgid "trades.askingCoach"
+msgstr "コーチに問い合わせ中…"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:253
+msgid "trades.autoBars"
+msgstr "価格データから自動入力"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:144
+msgid "trades.autoExcursion"
+msgstr "市場データから MAE/MFE を自動入力"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:212
+msgid "trades.avgEntry"
+msgstr "平均エントリー価格"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:223
+msgid "trades.avgExit"
+msgstr "平均決済価格"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:79
+msgid "trades.avgEntryShort"
+msgstr "平均エントリー"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:82
+msgid "trades.avgExitShort"
+msgstr "平均決済"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1112
+msgid "trades.backTrades"
+msgstr "トレード一覧に戻る"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:213
+#: src/components/TradeResultPreview.tsx:410
+msgid "trades.balance"
+msgstr "残高"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:295
+msgid "trades.batchResult"
+msgstr "一括入力の結果"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:48
+msgid "trades.statusBe"
+msgstr "損益ゼロ"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:14
+msgid "trades.bored"
+msgstr "退屈"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:145
+#: src/components/TradeDetailSheet.tsx:299
+#: src/components/TradeListItem.tsx:179
+#: src/components/TradeSummaryCard.tsx:107
+msgid "trades.breakEven"
+msgstr "損益ゼロ"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:180
+msgid "trades.breakeven"
+msgstr "損益分岐点"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:431
+msgid "trades.buy"
+msgstr "買い"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:384
+#: src/components/TradeExecutionsCard.tsx:79
+#: src/components/TradeExecutionsCard.tsx:201
+msgid "trades.buyUpper"
+msgstr "買い"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:6
+msgid "trades.calm"
+msgstr "冷静"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2310
+#: src/app/screens/TradeDetailView.tsx:1177
+#: src/components/TradeDetailSheet.tsx:200
+#: src/components/TradeRowMenu.tsx:167
+msgid "trades.cancel"
+msgstr "キャンセル"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:274
+msgid "trades.capture"
+msgstr "利益獲得率"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1257
+msgid "trades.screenshotsHint"
+msgstr "このトレードに添付されたチャートと約定の画像。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2299
+msgid "trades.clear"
+msgstr "クリア"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:302
+msgid "trades.clearFilters"
+msgstr "絞り込みを解除"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:58
+msgid "trades.clipboardBlocked"
+msgstr "クリップボードへのアクセスが拒否されました"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2043
+#: src/components/TradeDetailSheet.tsx:149
+msgid "trades.close"
+msgstr "閉じる"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:406
+msgid "trades.closeColumn"
+msgstr "決済日"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:408
+#: src/components/tradeColumns.tsx:505
+#: src/components/tradeColumns.tsx:543
+msgid "trades.closeDate"
+msgstr "決済日"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:339
+msgid "trades.closedLower"
+msgstr "決済済み"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:111
+#: src/components/TradeResultPreview.tsx:347
+msgid "trades.closed"
+msgstr "決済済み"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:209
+#: src/app/screens/TradeDetailView.tsx:215
+msgid "trades.coach"
+msgstr "コーチ"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:143
+#: src/components/TradePlanCard.tsx:250
+msgid "trades.computing"
+msgstr "計算中…"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:8
+msgid "trades.confident"
+msgstr "自信"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:718
+msgid "trades.contract"
+msgstr "契約"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:720
+msgid "trades.contractSymbol"
+msgstr "契約：銘柄 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:52
+msgid "trades.copied"
+msgstr "コピーしました"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:128
+msgid "trades.copySymbol"
+msgstr "銘柄コードをコピー"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1086
+msgid "trades.excursionFailed"
+msgstr "MAE/MFE を計算できませんでした"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:57
+msgid "trades.copyFailed"
+msgstr "コピーできませんでした"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:167
+msgid "trades.detailFailed"
+msgstr "トレード詳細を読み込めませんでした。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2079
+msgid "trades.editLoadFailed"
+msgstr "編集するトレードを読み込めませんでした。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1719
+msgid "trades.logFailed"
+msgstr "トレードを記録できませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:201
+msgid "trades.coachUnavailable"
+msgstr "コーチ API に接続できませんでした"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:94
+#: src/components/TradeRowMenu.tsx:79
+msgid "trades.removeFailed"
+msgstr "トレードを削除できませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1644
+msgid "trades.updateFailed"
+msgstr "トレードを更新できませんでした"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:395
+#: src/components/tradeColumns.tsx:504
+#: src/components/tradeColumns.tsx:542
+msgid "trades.createdAt"
+msgstr "建玉日時"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:28
+#: src/lib/tradeLabels.ts:35
+msgid "trades.crypto"
+msgstr "暗号資産"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:729
+msgid "trades.custom"
+msgstr "カスタム"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1412
+#: src/components/tradeColumns.tsx:393
+msgid "trades.date"
+msgstr "日付"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:903
+#: src/app/drawers/NewTradeDrawer.tsx:955
+msgid "trades.dateTime"
+msgstr "日付 / 時刻"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:409
+msgid "trades.closedDateHint"
+msgstr "決済日（最終取引）"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:396
+msgid "trades.openedDate"
+msgstr "建玉日"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:963
+msgid "trades.rowDateTime"
+msgstr "日時：銘柄 {0}、行 {1}"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:301
+msgid "trades.dipAfter"
+msgstr "決済後の下落"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:162
+#: src/components/tradeColumns.tsx:164
+#: src/components/tradeColumns.tsx:508
+#: src/components/tradeColumns.tsx:530
+msgid "trades.direction"
+msgstr "方向"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:165
+msgid "trades.directionHint"
+msgstr "方向：買い／売り。オプションは LC/LP/SC/SP"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:788
+msgid "trades.discardDraft"
+msgstr "下書きを破棄"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:429
+msgid "trades.dividend"
+msgstr "配当"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1402
+msgid "trades.dividendAmountField"
+msgstr "配当額{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1414
+msgid "trades.dividendDateField"
+msgstr "配当日{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1425
+msgid "trades.dividendNoteField"
+msgstr "配当メモ{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:232
+msgid "trades.dividends"
+msgstr "配当"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:63
+msgid "trades.editJournal"
+msgstr "ジャーナルを編集"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:164
+msgid "trades.editPlan"
+msgstr "計画を編集"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1131
+msgid "trades.editTrade"
+msgstr "トレードを編集"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1976
+#: src/app/drawers/NewTradeDrawer.tsx:1978
+msgid "trades.editTradeTitle"
+msgstr "トレードを編集"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1238
+#: src/app/screens/TradeDetailView.tsx:546
+#: src/app/screens/TradeDetailView.tsx:843
+#: src/app/screens/TradeDetailView.tsx:852
+msgid "trades.emotion"
+msgstr "感情"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1245
+msgid "trades.emotionField"
+msgstr "感情{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:208
+#: src/components/tradeColumns.tsx:211
+#: src/components/tradeColumns.tsx:511
+#: src/components/tradeColumns.tsx:533
+#: src/components/TradeDetailSheet.tsx:358
+#: src/components/TradeSummaryCard.tsx:194
+msgid "trades.entry"
+msgstr "エントリー"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1318
+#: src/app/screens/TradeDetailView.tsx:612
+#: src/app/screens/TradeDetailView.tsx:929
+#: src/components/TradeJournalCard.tsx:122
+msgid "trades.entryReason"
+msgstr "エントリー理由"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1322
+msgid "trades.entryReasonField"
+msgstr "エントリー理由{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:233
+#: src/components/tradeColumns.tsx:236
+#: src/components/tradeColumns.tsx:513
+#: src/components/tradeColumns.tsx:535
+msgid "trades.entryTotal"
+msgstr "エントリー総額"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:237
+msgid "trades.entryTotalHint"
+msgstr "エントリー総額 = 数量 × 平均エントリー価格 × 乗数"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:85
+#: src/components/TradeResultPreview.tsx:188
+#: src/components/TradeResultPreview.tsx:308
+msgid "trades.estimatedPnl"
+msgstr "予想損益"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:239
+msgid "trades.excursion"
+msgstr "価格変動"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1080
+msgid "trades.excursionUpdated"
+msgstr "価格変動を更新しました"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:110
+msgid "trades.exec"
+msgstr "執行"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:152
+msgid "trades.executed"
+msgstr "約定日時"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1308
+#: src/app/screens/TradeDetailView.tsx:604
+#: src/app/screens/TradeDetailView.tsx:919
+msgid "trades.executionRating"
+msgstr "執行評価"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:145
+msgid "trades.executionScoreHint"
+msgstr "執行スコア：自動計算したエントリー後の逆行幅と最大含み益の獲得率"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:894
+msgid "trades.executions"
+msgstr "約定"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: block.symbol
+#: src/app/drawers/NewTradeDrawer.tsx:893
+msgid "trades.executionsSymbol"
+msgstr "約定 · {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.fills.length
+#: src/components/TradeDetailSheet.tsx:414
+msgid "trades.fillTitle"
+msgstr "約定（{0}）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fills.length
+#: src/components/TradeExecutionsCard.tsx:165
+msgid "trades.executionsCount"
+msgstr "約定（{0}）"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:219
+#: src/components/tradeColumns.tsx:222
+#: src/components/tradeColumns.tsx:512
+#: src/components/tradeColumns.tsx:534
+#: src/components/TradeDetailSheet.tsx:362
+#: src/components/TradeSummaryCard.tsx:197
+msgid "trades.exit"
+msgstr "決済"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1334
+#: src/app/screens/TradeDetailView.tsx:615
+#: src/app/screens/TradeDetailView.tsx:942
+#: src/components/TradeJournalCard.tsx:127
+msgid "trades.exitReason"
+msgstr "決済理由"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1338
+msgid "trades.exitReasonField"
+msgstr "決済理由{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:260
+#: src/components/tradeColumns.tsx:263
+#: src/components/tradeColumns.tsx:514
+#: src/components/tradeColumns.tsx:536
+msgid "trades.exitTotal"
+msgstr "決済総額"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:264
+msgid "trades.exitTotalHint"
+msgstr "決済総額 = 数量 × 平均決済価格 × 乗数"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:845
+msgid "trades.expiry"
+msgstr "満期日"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:847
+msgid "trades.expirySymbol"
+msgstr "満期日：銘柄 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:266
+msgid "trades.loadFailed"
+msgstr "トレードを読み込めません。接続を確認して再試行してください。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:10
+msgid "trades.fearful"
+msgstr "恐怖"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:907
+#: src/app/drawers/NewTradeDrawer.tsx:1047
+#: src/app/drawers/NewTradeDrawer.tsx:1056
+#: src/app/drawers/NewTradeDrawer.tsx:1068
+#: src/components/TradeDetailSheet.tsx:449
+msgid "trades.fee"
+msgstr "手数料"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index ? ` symbol ${index + 1}` : ""
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1062
+msgid "trades.rowFee"
+msgstr "手数料{0}、行 {1}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:345
+#: src/components/tradeColumns.tsx:348
+#: src/components/tradeColumns.tsx:517
+#: src/components/tradeColumns.tsx:539
+#: src/components/TradeDetailSheet.tsx:352
+#: src/components/TradeDetailSheet.tsx:383
+#: src/components/TradeExecutionsCard.tsx:119
+#: src/components/TradeResultPreview.tsx:344
+#: src/components/TradeSummaryCard.tsx:216
+msgid "trades.fees"
+msgstr "手数料"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:97
+msgid "trades.fillPrice"
+msgstr "約定価格"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1621
+msgid "trades.fillsSaved"
+msgstr "約定とジャーナルを保存しました。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: block.rows.length
+#: src/app/drawers/NewTradeDrawer.tsx:630
+msgid "trades.fillCount"
+msgstr "約定：{0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/components/TradeRowMenu.tsx:137
+msgid "trades.filterSymbol"
+msgstr "銘柄 {0} で絞り込み"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:798
+msgid "trades.primarySetupHint"
+msgstr "最初に選択したものがメインになります。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:7
+msgid "trades.focused"
+msgstr "集中"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:12
+msgid "trades.fomo"
+msgstr "乗り遅れへの焦り"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:30
+#: src/lib/tradeLabels.ts:38
+msgid "trades.forex"
+msgstr "外国為替"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:29
+#: src/lib/tradeLabels.ts:36
+#: src/lib/tradeLabels.ts:37
+msgid "trades.futures"
+msgstr "先物"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:279
+msgid "trades.generating"
+msgstr "生成中…"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:11
+msgid "trades.greedy"
+msgstr "欲張り"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:350
+#: src/components/TradeSummaryCard.tsx:210
+msgid "trades.gross"
+msgstr "総損益"
+
+#. js-lingui-explicit-id
+#: src/components/TradeListItem.tsx:243
+msgid "trades.hasNotes"
+msgstr "メモあり"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:325
+#: src/components/tradeColumns.tsx:328
+#: src/components/tradeColumns.tsx:516
+#: src/components/tradeColumns.tsx:538
+#: src/components/TradeDetailSheet.tsx:379
+#: src/components/TradeSummaryCard.tsx:206
+msgid "trades.hold"
+msgstr "保有期間"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:281
+msgid "trades.emptyHint"
+msgstr "証券会社の履歴をインポートするか、最初のトレードを記録してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:252
+msgid "trades.importCsv"
+msgstr "CSV をインポート"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2175
+msgid "trades.importFile"
+msgstr "ファイルをインポート"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2057
+msgid "trades.importPreviewHint"
+msgstr "インポートのプレビュー：約定とコール／プットを確認。「適用」で行を更新し、「インポートを確定」で保存します。"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:241
+msgid "trades.inclDividends"
+msgstr "配当を含む"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:95
+msgid "trades.includesAll"
+msgstr "すべてを含む"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:556
+#: src/app/screens/TradeDetailView.tsx:859
+msgid "trades.initialRisk"
+msgstr "初期リスク"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:183
+msgid "trades.instrumentType"
+msgstr "商品種類"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:99
+msgid "trades.is"
+msgstr "一致する"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:87
+#: src/components/TradesFilters.tsx:93
+msgid "trades.anyOf"
+msgstr "いずれかに一致"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:100
+msgid "trades.isNot"
+msgstr "一致しない"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:88
+#: src/components/TradesFilters.tsx:94
+msgid "trades.notAnyOf"
+msgstr "いずれにも一致しない"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:99
+msgid "trades.issue"
+msgstr "問題"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:411
+#: src/components/TradeJournalCard.tsx:70
+#: src/components/TradeJournalCard.tsx:84
+msgid "trades.journal"
+msgstr "ジャーナル"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:284
+msgid "trades.leftOnTable"
+msgstr "取り逃した利益"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2075
+#: src/app/drawers/NewTradeDrawer.tsx:2083
+msgid "trades.loading"
+msgstr "トレードを読み込み中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:256
+msgid "trades.logTrade"
+msgstr "トレードを記録"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:24
+msgid "trades.london"
+msgstr "ロンドン"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:628
+#: src/lib/tradeLabels.ts:67
+msgid "trades.long"
+msgstr "買い"
+
+#. js-lingui-explicit-id
+#: src/components/TradeListItem.tsx:103
+#: src/components/TradeSummaryCard.tsx:89
+msgid "trades.longUpper"
+msgstr "買い"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:56
+msgid "trades.longCall"
+msgstr "コール買い"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:58
+msgid "trades.longPut"
+msgstr "プット買い"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:143
+msgid "trades.loss"
+msgstr "損失"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:46
+msgid "trades.statusLoss"
+msgstr "損失"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:80
+msgid "trades.losses"
+msgstr "損失"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:623
+#: src/app/screens/TradeDetailView.tsx:968
+msgid "trades.mae"
+msgstr "最大含み損 ($)"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:683
+#: src/components/tradeColumns.tsx:180
+#: src/components/tradeColumns.tsx:182
+#: src/components/tradeColumns.tsx:509
+#: src/components/tradeColumns.tsx:531
+#: src/components/TradesFilters.tsx:133
+msgid "trades.market"
+msgstr "市場"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1090
+msgid "trades.marketUnavailable"
+msgstr "市場データを利用できません。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:685
+msgid "trades.marketSymbol"
+msgstr "市場：銘柄 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:973
+msgid "trades.maxAdverse"
+msgstr "最大含み損"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:982
+msgid "trades.maxFavorable"
+msgstr "最大含み益"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:626
+#: src/app/screens/TradeDetailView.tsx:977
+msgid "trades.mfe"
+msgstr "最大含み益 ($)"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1275
+#: src/app/screens/TradeDetailView.tsx:583
+#: src/app/screens/TradeDetailView.tsx:899
+msgid "trades.mistakeType"
+msgstr "ミスの種類"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1282
+msgid "trades.mistakesField"
+msgstr "ミスの種類{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:798
+msgid "trades.multiplier"
+msgstr "乗数"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:800
+msgid "trades.multiplierSymbol"
+msgstr "乗数：銘柄 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:360
+msgid "trades.netPnl"
+msgstr "純損益"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:424
+msgid "trades.riskHint"
+msgstr "純損益 ÷ 予定リスク（初期リスク）"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:160
+msgid "trades.netAfterFees"
+msgstr "手数料控除後の純損益"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:375
+msgid "trades.pnlPercentHint"
+msgstr "エントリー総額に対する純損益の割合"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1979
+msgid "trades.newTradeTitle"
+msgstr "新規トレード"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:25
+msgid "trades.nyAm"
+msgstr "ニューヨーク午前"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:26
+msgid "trades.nyPm"
+msgstr "ニューヨーク午後"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:140
+msgid "trades.nextAction"
+msgstr "次のアクション"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:418
+#: src/components/TradeExecutionsCard.tsx:183
+msgid "trades.noFills"
+msgstr "約定記録はありません。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1257
+msgid "trades.noEmotions"
+msgstr "一致する感情がありません。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1294
+msgid "trades.noMistakes"
+msgstr "一致するミスがありません。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1207
+msgid "trades.noMatchingSetups"
+msgstr "一致するセットアップがありません。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1269
+msgid "trades.noTags"
+msgstr "一致するタグがありません。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:128
+msgid "trades.emptyPlan"
+msgstr "計画がありません。ストップ・目標・リスク額を追加して R で評価できます。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2007
+msgid "trades.noTemplates"
+msgstr "保存済みテンプレートはありません"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:316
+msgid "trades.noScreenshots"
+msgstr "スクリーンショットはありません"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1228
+msgid "trades.noSession"
+msgstr "セッションなし"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1183
+msgid "trades.noSetupsPlaybook"
+msgstr "セットアップがありません。プレイブックで作成してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:805
+msgid "trades.noSetups"
+msgstr "セットアップはまだありません。"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:241
+msgid "trades.noSymbols"
+msgstr "銘柄が見つかりません。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:292
+msgid "trades.noMatches"
+msgstr "条件に一致するトレードはありません"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:280
+msgid "trades.empty"
+msgstr "トレードはまだありません"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:849
+msgid "trades.notSet"
+msgstr "未設定"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1423
+msgid "trades.note"
+msgstr "メモ"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:462
+#: src/components/TradeJournalCard.tsx:138
+msgid "trades.notes"
+msgstr "メモ"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:73
+msgid "trades.emptyJournal"
+msgstr "まだ記録がありません。記憶が新しいうちにエントリーと決済の理由を残しましょう。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:275
+msgid "trades.ofMfe"
+msgstr "MFE に対する割合"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1216
+msgid "trades.oneSession"
+msgstr "トレードごとにセッションを 1 つ選択。"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:144
+#: src/components/TradesFilters.tsx:81
+msgid "trades.open"
+msgstr "未決済"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:47
+msgid "trades.statusOpen"
+msgstr "未決済"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:111
+msgid "trades.openDrawer"
+msgstr "サイドパネルを開く"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:145
+#: src/components/TradeRowMenu.tsx:120
+msgid "trades.openFull"
+msgstr "詳細ページを開く"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:27
+#: src/lib/tradeLabels.ts:34
+msgid "trades.option"
+msgstr "オプション"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:64
+msgid "trades.missingRight"
+msgstr "オプション：コール／プット未設定"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:812
+msgid "trades.optionRightSymbol"
+msgstr "オプション種別：銘柄 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:874
+#: src/app/drawers/NewTradeDrawer.tsx:883
+#: src/app/drawers/NewTradeDrawer.tsx:1431
+msgid "trades.optional"
+msgstr "任意"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1276
+msgid "trades.mistakeHint"
+msgstr "任意。該当する項目を選択。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1391
+msgid "trades.dividendHint"
+msgstr "この銘柄の配当（任意）。損益に加算し、売り建玉では支出になります。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:16
+msgid "trades.overconfident"
+msgstr "過信"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:908
+#: src/app/drawers/NewTradeDrawer.tsx:1075
+#: src/components/tradeColumns.tsx:356
+#: src/components/tradeColumns.tsx:359
+#: src/components/tradeColumns.tsx:518
+#: src/components/tradeColumns.tsx:540
+msgid "trades.pnl"
+msgstr "損益"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:371
+#: src/components/tradeColumns.tsx:374
+#: src/components/tradeColumns.tsx:519
+#: src/components/tradeColumns.tsx:541
+msgid "trades.pnlPercent"
+msgstr "損益率"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1084
+msgid "trades.rowPnlEmpty"
+msgstr "損益：銘柄 {0}、行 {1}：未入力"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1196
+#: src/components/TradeDetailSheet.tsx:217
+#: src/components/TradeRowMenu.tsx:184
+msgid "trades.removeWarning"
+msgstr "このトレードとすべての約定を完全に削除します。この操作は取り消せません。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:118
+#: src/components/TradePlanCard.tsx:160
+msgid "trades.planActual"
+msgstr "計画と実績"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:200
+#: src/components/TradePlanCard.tsx:213
+msgid "trades.planned"
+msgstr "予定"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:185
+msgid "trades.plannedRR"
+msgstr "予定リスクリワード比"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:132
+msgid "trades.shotFormatsShort"
+msgstr "PNG・JPG · クリックして選択"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1304
+msgid "trades.shotFormats"
+msgstr "PNG・JPG・WebP · クリックして選択"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:135
+msgid "trades.pos"
+msgstr "建玉"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:297
+#: src/components/tradeColumns.tsx:300
+#: src/components/tradeColumns.tsx:515
+#: src/components/tradeColumns.tsx:537
+#: src/components/TradeResultPreview.tsx:105
+msgid "trades.position"
+msgstr "建玉"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:139
+msgid "trades.positionAfterFill"
+msgstr "この約定後の建玉"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:301
+msgid "trades.openPosition"
+msgstr "未決済の建玉"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:300
+msgid "trades.postMae"
+msgstr "決済後 MAE"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:291
+msgid "trades.postMfe"
+msgstr "決済後 MFE"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2165
+msgid "trades.prefillFile"
+msgstr "CSV または JSON から入力"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2127
+msgid "trades.prefillScreenshot"
+msgstr "スクリーンショットから入力"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:905
+#: src/app/drawers/NewTradeDrawer.tsx:1003
+#: src/app/drawers/NewTradeDrawer.tsx:1012
+#: src/app/drawers/NewTradeDrawer.tsx:1024
+#: src/components/TradeExecutionsCard.tsx:93
+msgid "trades.price"
+msgstr "価格"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index ? ` symbol ${index + 1}` : ""
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1018
+msgid "trades.rowPrice"
+msgstr "価格{0}、行 {1}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:904
+#: src/app/drawers/NewTradeDrawer.tsx:975
+#: src/app/drawers/NewTradeDrawer.tsx:984
+#: src/app/drawers/NewTradeDrawer.tsx:996
+#: src/components/tradeColumns.tsx:510
+#: src/components/tradeColumns.tsx:532
+#: src/components/TradeDetailSheet.tsx:377
+#: src/components/TradeExecutionsCard.tsx:87
+msgid "trades.qty"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:110
+msgid "trades.fillValueHint"
+msgstr "数量 × 価格 × 契約乗数"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:260
+msgid "trades.amountCalc"
+msgstr "数量 × 価格 × 乗数"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index ? ` symbol ${index + 1}` : ""
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:990
+msgid "trades.rowQty"
+msgstr "数量{0}、行 {1}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:193
+#: src/components/tradeColumns.tsx:196
+msgid "trades.quantity"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:197
+msgid "trades.quantityOpened"
+msgstr "新規建玉数量"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:911
+msgid "trades.setupRatingHint"
+msgstr "損益や感情を除いてセットアップ自体を評価してください。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1300
+msgid "trades.rateSetup"
+msgstr "損益や感情を除いてセットアップ自体を評価。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:920
+msgid "trades.executionRatingHint"
+msgstr "忍耐、タイミング、ストップの規律など執行を評価してください。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1309
+msgid "trades.rateExecution"
+msgstr "忍耐・タイミング・損切り規律を評価。"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:472
+msgid "trades.readMore"
+msgstr "続きを読む"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:176
+msgid "trades.realizedR"
+msgstr "実現 R = 純損益 ÷ 予定リスク"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:252
+msgid "trades.recompute"
+msgstr "価格データから再計算"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:281
+msgid "trades.regenerate"
+msgstr "再生成"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:263
+msgid "trades.regenerateCoach"
+msgstr "AI コーチを再生成"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:149
+msgid "trades.remove"
+msgstr "削除"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/app/screens/TradeDetailView.tsx:1167
+#: src/components/TradeDetailSheet.tsx:190
+#: src/components/TradeRowMenu.tsx:157
+msgid "trades.removeSymbolConfirm"
+msgstr "削除：{0}?"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1095
+msgid "trades.removeRow"
+msgstr "約定を削除：銘柄 {0}、行 {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:671
+msgid "trades.removeSymbol"
+msgstr "銘柄を削除 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1155
+#: src/app/screens/TradeDetailView.tsx:1190
+#: src/components/TradeDetailSheet.tsx:182
+#: src/components/TradeDetailSheet.tsx:211
+#: src/components/TradeRowMenu.tsx:178
+msgid "trades.removeTrade"
+msgstr "トレードを削除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1189
+#: src/components/TradeDetailSheet.tsx:210
+#: src/components/TradeRowMenu.tsx:177
+msgid "trades.removing"
+msgstr "削除中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:218
+msgid "trades.reset"
+msgstr "リセット"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:219
+#: src/components/TradeResultPreview.tsx:69
+msgid "trades.result"
+msgstr "結果"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:273
+msgid "trades.retry"
+msgstr "再試行"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:13
+msgid "trades.revenge"
+msgstr "リベンジ"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1350
+#: src/app/screens/TradeDetailView.tsx:618
+#: src/app/screens/TradeDetailView.tsx:955
+#: src/components/TradeJournalCard.tsx:132
+msgid "trades.reviewNotes"
+msgstr "振り返りメモ"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1354
+msgid "trades.reviewField"
+msgstr "振り返り{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:205
+msgid "trades.reward"
+msgstr "リワード"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:810
+msgid "trades.right"
+msgstr "オプション種別"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:195
+#: src/components/TradeResultPreview.tsx:73
+#: src/components/TradeResultPreview.tsx:182
+#: src/components/TradeResultPreview.tsx:299
+msgid "trades.risk"
+msgstr "リスク"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:248
+msgid "trades.coachEmpty"
+msgstr "AI の有効な回答がないためルールに基づくメモを表示"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:252
+msgid "trades.coachRules"
+msgstr "ルールに基づくメモ。「AI に相談」でモデルの助言を取得"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:224
+msgid "trades.rules"
+msgstr "ルール"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:292
+msgid "trades.runAfter"
+msgstr "決済後の上昇"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2326
+#: src/app/screens/TradeDetailView.tsx:1000
+msgid "trades.save"
+msgstr "保存"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2325
+msgid "trades.saveChanges"
+msgstr "変更を保存"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1641
+#: src/app/drawers/NewTradeDrawer.tsx:1716
+msgid "trades.saveFailed"
+msgstr "保存に失敗しました"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2037
+msgid "trades.saveTemplate"
+msgstr "最初の銘柄をテンプレートとして保存…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:999
+msgid "trades.saving"
+msgstr "保存中…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2144
+msgid "trades.scanFill"
+msgstr "スキャンして入力"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1366
+#: src/app/screens/TradeDetailView.tsx:1256
+msgid "trades.screenshots"
+msgstr "スクリーンショット"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: screenshotFiles.length
+#: src/app/drawers/NewTradeDrawer.tsx:1163
+msgid "trades.shotCount"
+msgstr "スクリーンショット：{0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1253
+msgid "trades.searchEmotions"
+msgstr "感情を検索…"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:240
+msgid "trades.searchFilters"
+msgstr "絞り込みを検索…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1290
+msgid "trades.searchMistakes"
+msgstr "ミスを検索…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1203
+msgid "trades.searchSetups"
+msgstr "セットアップを検索…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1268
+msgid "trades.searchTags"
+msgstr "タグを検索…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2169
+msgid "trades.selectFile"
+msgstr "約定の CSV または JSON ファイルを選択"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1192
+msgid "trades.setupSelectHint"
+msgstr "該当するものを選択。最初の項目がメインになります。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1252
+msgid "trades.selectEmotions"
+msgstr "感情を選択"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1239
+msgid "trades.emotionSelectHint"
+msgstr "トレード中に該当した感情をすべて選択。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1289
+msgid "trades.selectMistakes"
+msgstr "ミスを選択"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2133
+msgid "trades.selectScreenshots"
+msgstr "スクリーンショットを選択"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1202
+msgid "trades.selectSetups"
+msgstr "セットアップを選択"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1267
+msgid "trades.selectTags"
+msgstr "タグを選択"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:432
+msgid "trades.sell"
+msgstr "売り"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:385
+#: src/components/TradeExecutionsCard.tsx:80
+#: src/components/TradeExecutionsCard.tsx:202
+msgid "trades.sellUpper"
+msgstr "売り"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1215
+#: src/app/screens/TradeDetailView.tsx:542
+#: src/app/screens/TradeDetailView.tsx:825
+msgid "trades.session"
+msgstr "セッション"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1221
+msgid "trades.sessionField"
+msgstr "セッション{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/DirCell.tsx:53
+msgid "trades.setRight"
+msgstr "編集でコール／プットを設定してください"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2137
+msgid "trades.scanSetup"
+msgstr "スキャン前に設定でスクリーンショット読み取りを設定してください"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:398
+#: src/components/TradeJournalCard.tsx:105
+msgid "trades.setup"
+msgstr "セットアップ"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1299
+#: src/app/screens/TradeDetailView.tsx:598
+#: src/app/screens/TradeDetailView.tsx:910
+msgid "trades.setupRating"
+msgstr "セットアップ評価"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1180
+#: src/app/drawers/NewTradeDrawer.tsx:1191
+#: src/app/screens/TradeDetailView.tsx:528
+msgid "trades.setups"
+msgstr "セットアップ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:795
+msgid "trades.multiSetups"
+msgstr "セットアップ（複数選択可）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: block.setupIds.length
+#: src/app/drawers/NewTradeDrawer.tsx:1156
+msgid "trades.setupCount"
+msgstr "セットアップ：{0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1198
+msgid "trades.setupsField"
+msgstr "セットアップ{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1150
+msgid "trades.shareCard"
+msgstr "カードを共有"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:629
+#: src/lib/tradeLabels.ts:68
+msgid "trades.short"
+msgstr "売り"
+
+#. js-lingui-explicit-id
+#: src/components/TradeListItem.tsx:104
+#: src/components/TradeSummaryCard.tsx:90
+msgid "trades.shortUpper"
+msgstr "売り"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:60
+msgid "trades.shortCall"
+msgstr "コール売り"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:62
+msgid "trades.shortPut"
+msgstr "プット売り"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:243
+msgid "trades.coachFallback"
+msgstr "AI が利用できないためルールに基づくメモを表示"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:772
+#: src/components/TradeExecutionsCard.tsx:75
+msgid "trades.side"
+msgstr "売買区分"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:774
+msgid "trades.sideSymbol"
+msgstr "方向：銘柄 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:201
+msgid "trades.size"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:133
+#: src/components/tradeColumns.tsx:135
+#: src/components/tradeColumns.tsx:507
+#: src/components/tradeColumns.tsx:529
+#: src/components/TradesFilters.tsx:121
+msgid "trades.status"
+msgstr "状態"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:26
+#: src/lib/tradeLabels.ts:33
+msgid "trades.stock"
+msgstr "株式"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:126
+#: src/components/tradeColumns.tsx:127
+#: src/components/tradeColumns.tsx:528
+msgid "trades.stockName"
+msgstr "銘柄名"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:878
+#: src/app/screens/TradeDetailView.tsx:562
+#: src/app/screens/TradeDetailView.tsx:877
+#: src/app/screens/TradeDetailView.tsx:882
+#: src/components/TradePlanCard.tsx:173
+msgid "trades.stop"
+msgstr "ストップ価格"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:880
+msgid "trades.stopSymbol"
+msgstr "ストップ：銘柄 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:103
+msgid "trades.strength"
+msgstr "強み"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:830
+msgid "trades.strike"
+msgstr "権利行使価格"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:832
+msgid "trades.strikeSymbol"
+msgstr "権利行使価格：銘柄 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:754
+#: src/components/tradeColumns.tsx:116
+#: src/components/tradeColumns.tsx:117
+#: src/components/tradeColumns.tsx:506
+#: src/components/tradeColumns.tsx:527
+#: src/components/TradesFilters.tsx:106
+msgid "trades.symbol"
+msgstr "銘柄コード"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:661
+msgid "trades.symbolIndex"
+msgstr "銘柄 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:657
+msgid "trades.symbolSummary"
+msgstr "銘柄 {0} · {collapsedSummary}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:749
+#: src/lib/newTradeFormSchema.ts:147
+#: src/lib/newTradeFormSchema.ts:234
+#: src/lib/newTradeFormSchema.ts:242
+msgid "trades.symbolRequired"
+msgstr "銘柄コードを入力してください。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:642
+msgid "trades.symbolTrade"
+msgstr "銘柄トレード {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:758
+msgid "trades.symbolField"
+msgstr "銘柄コード{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:334
+msgid "trades.symbols"
+msgstr "銘柄"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: Object.keys(bySymbol).length || tradeIds.length
+#: src/app/drawers/NewTradeDrawer.tsx:1702
+msgid "trades.savedSymbols"
+msgstr "保存した銘柄：{0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1261
+#: src/app/screens/TradeDetailView.tsx:569
+#: src/app/screens/TradeDetailView.tsx:888
+#: src/components/tradeColumns.tsx:448
+#: src/components/tradeColumns.tsx:451
+#: src/components/tradeColumns.tsx:545
+#: src/components/TradesFilters.tsx:145
+msgid "trades.tags"
+msgstr "タグ"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1263
+msgid "trades.tagsField"
+msgstr "タグ{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:866
+#: src/app/screens/TradeDetailView.tsx:559
+#: src/app/screens/TradeDetailView.tsx:869
+#: src/app/screens/TradeDetailView.tsx:874
+#: src/components/TradePlanCard.tsx:176
+msgid "trades.target"
+msgstr "目標価格"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:868
+msgid "trades.targetSymbol"
+msgstr "目標：銘柄 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1986
+#: src/app/drawers/NewTradeDrawer.tsx:1996
+msgid "trades.templates"
+msgstr "テンプレート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1061
+msgid "trades.tradeMissingHint"
+msgstr "このトレードは削除されたか、ID が無効です。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:766
+msgid "trades.ticker"
+msgstr "銘柄コード"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:151
+msgid "trades.time"
+msgstr "時刻"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:329
+msgid "trades.holdHint"
+msgstr "トレードの保有期間"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:105
+msgid "trades.tip"
+msgstr "ヒント"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:15
+msgid "trades.tired"
+msgstr "疲労"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:942
+msgid "trades.toggleRowAction"
+msgstr "売買切替：銘柄 {0}、行 {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:649
+msgid "trades.toggleSymbol"
+msgstr "銘柄の開閉 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:240
+msgid "trades.total"
+msgstr "合計"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:349
+msgid "trades.feesHint"
+msgstr "手数料・コミッションの合計"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:132
+msgid "trades.trade"
+msgstr "トレード"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1136
+msgid "trades.tradeActions"
+msgstr "トレード操作"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1060
+msgid "trades.tradeMissing"
+msgstr "トレードが見つかりません"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:87
+#: src/components/TradeRowMenu.tsx:72
+msgid "trades.removed"
+msgstr "トレードを削除しました"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:136
+msgid "trades.tradeResult"
+msgstr "トレード結果"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1535
+msgid "trades.stillLoading"
+msgstr "トレードを読み込み中です。再試行してください。"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:452
+msgid "trades.tradeTags"
+msgstr "トレードのタグ"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2003
+msgid "trades.tradeTemplates"
+msgstr "トレードテンプレート"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1619
+msgid "trades.updated"
+msgstr "トレードを更新しました"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1701
+msgid "trades.logged"
+msgstr "トレードを記録しました"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:95
+#: src/components/TradeRowMenu.tsx:80
+msgid "trades.retryLater"
+msgstr "しばらくしてから再試行してください"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/app/screens/TradeDetailView.tsx:1207
+#: src/components/TradeDetailSheet.tsx:228
+#: src/components/TradeRowMenu.tsx:194
+msgid "trades.confirmSymbol"
+msgstr "{0} を入力して確定"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/app/screens/TradeDetailView.tsx:1216
+#: src/components/TradeDetailSheet.tsx:237
+#: src/components/TradeRowMenu.tsx:203
+msgid "trades.typeSymbolConfirm"
+msgstr "入力：{0} で確定"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:780
+msgid "trades.draftRestored"
+msgstr "未保存の下書きを復元しました。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:653
+msgid "trades.untitled"
+msgstr "無題"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2063
+msgid "trades.editHint"
+msgstr "このトレードの約定・ジャーナル・配当を更新します。"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:223
+msgid "trades.uploadShots"
+msgstr "ジャーナルのスクリーンショットをアップロード"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:264
+msgid "trades.uploading"
+msgstr "アップロード中…"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:103
+msgid "trades.value"
+msgstr "金額"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:82
+msgid "trades.wash"
+msgstr "損益ゼロ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:101
+msgid "trades.watch"
+msgstr "注意"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:963
+msgid "trades.reviewHint"
+msgstr "次回は何を変えますか？"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1358
+msgid "trades.reviewPrompt"
+msgstr "次回はどう改善しますか？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:937
+msgid "trades.entryReasonHint"
+msgstr "なぜエントリーしましたか？"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1329
+msgid "trades.whyEntry"
+msgstr "エントリーの理由は？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:950
+msgid "trades.exitReasonHint"
+msgstr "なぜ決済しましたか？"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1345
+msgid "trades.whyExit"
+msgstr "決済の理由は？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:293
+msgid "trades.noMatchesHint"
+msgstr "期間を広げるか、銘柄・状態・市場・タグの絞り込みを解除するか、アカウントを切り替えてください。"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:142
+msgid "trades.win"
+msgstr "利益"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:45
+msgid "trades.statusWin"
+msgstr "利益"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:79
+msgid "trades.wins"
+msgstr "利益"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:64
+msgid "trades.writeReview"
+msgstr "振り返りを書く"

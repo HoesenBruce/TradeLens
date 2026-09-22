@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react";
+import { t as tr } from "@lingui/core/macro";
 import { Copy, ExternalLink, Filter, MoreVertical, PanelRight, Trash2 } from "lucide-react";
 import { useId, useState } from "react";
 import type { Trade } from "@/lib/api/types";
@@ -33,6 +35,7 @@ const triggerClass = cn(
 );
 
 export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeRowActions }) {
+  useLingui();
   const [menuOpen, setMenuOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [typedConfirm, setTypedConfirm] = useState("");
@@ -45,11 +48,14 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
   async function copySymbol() {
     try {
       await navigator.clipboard.writeText(trade.symbol);
-      toast.add({ title: "Copied", description: trade.symbol });
+      toast.add({
+        title: tr({ id: "trades.copied", message: "Copied" }),
+        description: trade.symbol,
+      });
     } catch {
       toast.add({
-        title: "Could not copy",
-        description: "Clipboard access was blocked",
+        title: tr({ id: "trades.copyFailed", message: "Could not copy" }),
+        description: tr({ id: "trades.clipboardBlocked", message: "Clipboard access was blocked" }),
       });
     }
   }
@@ -62,13 +68,16 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
   async function handleDelete() {
     try {
       await deleteTrade.mutateAsync(trade.id);
-      toast.add({ title: "Trade removed", description: trade.symbol });
+      toast.add({
+        title: tr({ id: "trades.removed", message: "Trade removed" }),
+        description: trade.symbol,
+      });
       closeDeleteModal(false);
       actions.onDeleted?.(trade);
     } catch {
       toast.add({
-        title: "Could not remove trade",
-        description: "Try again in a moment",
+        title: tr({ id: "trades.removeFailed", message: "Could not remove trade" }),
+        description: tr({ id: "trades.retryLater", message: "Try again in a moment" }),
       });
     }
   }
@@ -81,7 +90,7 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
     >
       <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger
-          aria-label={`Actions for ${trade.symbol}`}
+          aria-label={tr({ id: "trades.actionsForSymbol", message: `Actions for ${trade.symbol}` })}
           className={cn(triggerClass, menuOpen && "bg-accent text-foreground")}
         >
           <MoreVertical size={14} strokeWidth={1.5} aria-hidden />
@@ -99,7 +108,7 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
               }}
             >
               <PanelRight size={14} strokeWidth={1.5} aria-hidden />
-              Open drawer
+              {tr({ id: "trades.openDrawer", message: "Open drawer" })}
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuItem
@@ -108,7 +117,7 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
             }}
           >
             <ExternalLink size={14} strokeWidth={1.5} aria-hidden />
-            Open full page
+            {tr({ id: "trades.openFull", message: "Open full page" })}
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
@@ -116,7 +125,7 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
             }}
           >
             <Copy size={14} strokeWidth={1.5} aria-hidden />
-            Copy symbol
+            {tr({ id: "trades.copySymbol", message: "Copy symbol" })}
           </DropdownMenuItem>
           {actions.onFilterSymbol ? (
             <DropdownMenuItem
@@ -125,7 +134,7 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
               }}
             >
               <Filter size={14} strokeWidth={1.5} aria-hidden />
-              Filter by {trade.symbol}
+              {tr({ id: "trades.filterSymbol", message: `Filter by ${trade.symbol}` })}
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuSeparator />
@@ -137,7 +146,7 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
             }}
           >
             <Trash2 size={14} strokeWidth={1.5} aria-hidden />
-            Remove
+            {tr({ id: "trades.remove", message: "Remove" })}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -145,7 +154,7 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
       <Modal
         open={deleteOpen}
         onOpenChange={closeDeleteModal}
-        title={`Remove ${trade.symbol}?`}
+        title={tr({ id: "trades.removeSymbolConfirm", message: `Remove ${trade.symbol}?` })}
         className="max-w-[min(336px,94vw)]"
         footer={
           <>
@@ -155,7 +164,7 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
               disabled={deleteTrade.isPending}
               onClick={() => closeDeleteModal(false)}
             >
-              Cancel
+              {tr({ id: "trades.cancel", message: "Cancel" })}
             </Button>
             <Button
               type="button"
@@ -164,20 +173,25 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
               onClick={() => void handleDelete()}
               className="border-transparent bg-destructive/15 hover:bg-destructive/25"
             >
-              {deleteTrade.isPending ? "Removing…" : "Remove trade"}
+              {deleteTrade.isPending
+                ? tr({ id: "trades.removing", message: "Removing…" })
+                : tr({ id: "trades.removeTrade", message: "Remove trade" })}
             </Button>
           </>
         }
       >
         <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-          Permanently deletes this trade and all of its fills. This cannot be undone.
+          {tr({
+            id: "trades.removeWarning",
+            message: "Permanently deletes this trade and all of its fills. This cannot be undone.",
+          })}
         </p>
         <div>
           <label
             htmlFor={confirmInputId}
             className="mb-1.5 block text-[11px] text-muted-foreground"
           >
-            Type <span className="font-medium text-foreground">{trade.symbol}</span> to confirm
+            {tr({ id: "trades.confirmSymbol", message: `Type ${trade.symbol} to confirm` })}
           </label>
           <FormInput
             id={confirmInputId}
@@ -186,7 +200,10 @@ export function TradeRowMenu({ trade, actions }: { trade: Trade; actions: TradeR
             autoFocus
             autoComplete="off"
             spellCheck={false}
-            aria-label={`Type ${trade.symbol} to confirm`}
+            aria-label={tr({
+              id: "trades.typeSymbolConfirm",
+              message: `Type ${trade.symbol} to confirm`,
+            })}
           />
         </div>
       </Modal>
