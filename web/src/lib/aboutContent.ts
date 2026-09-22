@@ -76,7 +76,7 @@ export type AboutContent = {
   featureNames: Record<string, string>;
 };
 
-const ABOUT: Record<AppLocale, AboutContent> = {
+const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
   en: {
     tagline: "Self-hosted trading journal",
     intro:
@@ -546,6 +546,6 @@ const ABOUT: Record<AppLocale, AboutContent> = {
 };
 
 export function aboutContent(locale: string): AboutContent {
-  if (locale in ABOUT) return ABOUT[locale as AppLocale];
+  if (Object.hasOwn(ABOUT, locale)) return ABOUT[locale as AppLocale] ?? ABOUT.en;
   return ABOUT.en;
 }

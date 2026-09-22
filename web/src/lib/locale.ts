@@ -2,12 +2,13 @@ import { i18n } from "@lingui/core";
 
 export const LOCALE_STORAGE_KEY = "tm-locale";
 
-export type AppLocale = "en" | "zh-HK" | "ja" | "ko";
+export type AppLocale = "en" | "zh-CN" | "zh-HK" | "ja" | "ko";
 
 export const DEFAULT_LOCALE: AppLocale = "en";
 
 export const LOCALES: Record<AppLocale, { label: string; nativeLabel: string; intl: string }> = {
   en: { label: "English", nativeLabel: "English", intl: "en-US" },
+  "zh-CN": { label: "Chinese (Simplified)", nativeLabel: "简体中文", intl: "zh-CN" },
   "zh-HK": {
     label: "Chinese (Hong Kong)",
     nativeLabel: "繁體中文（香港）",
@@ -58,6 +59,24 @@ const NAV_LABELS: Record<AppLocale, Record<NavLabelKey, string>> = {
     newSetup: "New Setup",
     newNote: "New Note",
     more: "More",
+  },
+  "zh-CN": {
+    home: "首页",
+    trades: "交易",
+    calendar: "日历",
+    reports: "报表",
+    events: "财经事件",
+    news: "新闻",
+    notes: "笔记",
+    playbook: "策略库",
+    calculator: "计算器",
+    import: "导入",
+    settings: "设置",
+    create: "新建",
+    newTrade: "新建交易",
+    newSetup: "新建策略",
+    newNote: "新建笔记",
+    more: "更多",
   },
   "zh-HK": {
     home: "首頁",
@@ -117,7 +136,7 @@ const NAV_LABELS: Record<AppLocale, Record<NavLabelKey, string>> = {
 
 export function navLabel(locale: string, key: NavLabelKey): string {
   const loc = isAppLocale(locale) ? locale : DEFAULT_LOCALE;
-  return NAV_LABELS[loc][key];
+  return NAV_LABELS[loc][key] || NAV_LABELS.en[key] || `nav.${key}`;
 }
 
 export type SettingsSectionId =
@@ -226,6 +245,12 @@ export type SettingsLabelKey =
   | "signOutFooter"
   | "appConfig"
   | "appConfigFooter"
+  | "configExported"
+  | "configExportedDescription"
+  | "configImported"
+  | "configImportedDescription"
+  | "configImportFailed"
+  | "configInvalid"
   | "exportConfig"
   | "importConfig"
   | "screenshots"
@@ -307,8 +332,17 @@ export type SettingsLabelKey =
   | "apiTokenRevoked"
   | "apiTokenRevokeFailed";
 
-const SETTINGS_LABELS: Record<AppLocale, Record<SettingsLabelKey, string>> = {
+const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string>>> & {
+  en: Record<SettingsLabelKey, string>;
+} = {
   en: {
+    configExported: "App config exported",
+    configExportedDescription: "Downloaded your local app preferences as JSON.",
+    configImported: "App config imported",
+    configImportedDescription: "Settings restored from backup.",
+    configImportFailed: "Could not import config",
+    configInvalid: "Invalid config file.",
+
     accounts: "Accounts",
     rules: "Rules",
     journal: "Journal",
@@ -500,6 +534,68 @@ const SETTINGS_LABELS: Record<AppLocale, Record<SettingsLabelKey, string>> = {
     apiTokenRevoked: "Token revoked",
     apiTokenRevokeFailed: "Could not revoke token",
   },
+  "zh-CN": {
+    configExported: "已导出应用配置",
+    configExportedDescription: "已将本地偏好设置下载为 JSON 文件。",
+    configImported: "已导入应用配置",
+    configImportedDescription: "已从备份恢复设置。",
+    configImportFailed: "无法导入配置",
+    configInvalid: "配置文件无效。",
+
+    profile: "个人资料",
+    users: "用户",
+    accounts: "账户",
+    rules: "规则",
+    journal: "交易日志",
+    ai: "AI",
+    general: "常规",
+    shortcuts: "快捷键",
+    api: "API",
+    sharing: "分享",
+    about: "关于",
+    generalTitle: "常规",
+    generalDescription: "偏好设置与会话。",
+    syncedPrefsNote:
+      "时区、时间格式、显示货币和截图上限跟随账户，在登录的设备间同步。语言和主题仅保存在当前设备。",
+    language: "语言",
+    languageFooter: "TraderMemos 界面语言。",
+    languageSelector: "选择语言",
+    theme: "外观",
+    themeFooter: "选择浅色、深色或跟随系统。",
+    themeSelector: "选择外观",
+    themeLight: "浅色",
+    themeDark: "深色",
+    themeSystem: "跟随系统",
+    timezone: "显示时区",
+    timezoneFooter: "用于交易时间和图表显示，不改变交易日归属；交易日由市场时区决定。",
+    timezoneSelector: "选择显示时区",
+    marketTimezone: "市场时区",
+    marketTimezoneFooter:
+      "用于确定交易日的交易所时区。日历、日期筛选及每日和每小时分析均按该时区分组。",
+    marketTimezoneSelector: "选择市场时区",
+    timeFormat: "时间格式",
+    timeFormatFooter: "显示时间采用 12 小时制或 24 小时制。",
+    timeFormatSelector: "选择时间格式",
+    tradeDateBasis: "交易日期依据",
+    tradeDateBasisFooter: "选择日历和日期筛选使用的时间：平仓日（最后活动）或开仓日。",
+    tradeDateBasisSelector: "选择交易日期依据",
+    tradeDateBasisClose: "平仓日（最后活动）",
+    tradeDateBasisOpen: "开仓日",
+    maxScreenshots: "每笔交易截图上限",
+    screenshotsFooter: "记录交易时可附加的图片数量上限，留空表示不限。",
+    maxScreenshotsHint: "不限",
+    serverUrl: "API 服务器",
+    serverUrlFooter:
+      "当前设备使用的 API 地址。留空使用默认值；仅输入主机地址时会自动补上 /api/v1。",
+    serverUrlHint: "https://example.com",
+    session: "会话",
+    signOut: "退出登录",
+    signOutFooter: "结束当前设备上的会话。",
+    appConfig: "应用配置",
+    appConfigFooter: "备份或恢复本地偏好设置（语言、时区、API 服务器及截图上限）。",
+    exportConfig: "导出配置",
+    importConfig: "导入配置",
+  },
   "zh-HK": {
     accounts: "帳戶",
     rules: "規則",
@@ -683,6 +779,13 @@ const SETTINGS_LABELS: Record<AppLocale, Record<SettingsLabelKey, string>> = {
     apiTokenRevokeFailed: "無法撤銷權杖",
   },
   ja: {
+    configExported: "アプリ設定をエクスポートしました",
+    configExportedDescription: "ローカル設定を JSON ファイルとしてダウンロードしました。",
+    configImported: "アプリ設定をインポートしました",
+    configImportedDescription: "バックアップから設定を復元しました。",
+    configImportFailed: "設定をインポートできませんでした",
+    configInvalid: "無効な設定ファイルです。",
+
     accounts: "アカウント",
     rules: "ルール",
     journal: "ジャーナル",
@@ -1064,7 +1167,7 @@ const SETTINGS_LABELS: Record<AppLocale, Record<SettingsLabelKey, string>> = {
 
 export function settingsLabel(locale: string, key: SettingsLabelKey): string {
   const loc = isAppLocale(locale) ? locale : DEFAULT_LOCALE;
-  return SETTINGS_LABELS[loc][key];
+  return SETTINGS_LABELS[loc][key] || SETTINGS_LABELS.en[key] || `settings.${key}`;
 }
 
 export function settingsSectionCopy(
@@ -1104,7 +1207,7 @@ export function settingsNavItems(locale: string): {
 }
 
 export function isAppLocale(value: string): value is AppLocale {
-  return value in LOCALES;
+  return Object.hasOwn(LOCALES, value);
 }
 
 export function getIntlLocale(locale: string): string {
@@ -1119,9 +1222,21 @@ export function intlLocale(): string {
 export function getStoredLocale(): AppLocale {
   try {
     const stored = localStorage.getItem(LOCALE_STORAGE_KEY);
-    if (stored && isAppLocale(stored)) return stored;
+    if (stored !== null) return isAppLocale(stored) ? stored : DEFAULT_LOCALE;
   } catch {
     // localStorage unavailable (SSR/tests)
+  }
+  return resolveBrowserLocale(typeof navigator === "undefined" ? [] : navigator.languages);
+}
+
+export function resolveBrowserLocale(languages: readonly string[]): AppLocale {
+  for (const language of languages) {
+    const tag = language.toLowerCase();
+    if (tag === "zh" || tag.startsWith("zh-")) {
+      return /(?:^|-)(hant|tw|hk|mo)(?:-|$)/.test(tag) ? "zh-HK" : "zh-CN";
+    }
+    const base = tag.split("-")[0];
+    if (isAppLocale(base)) return base;
   }
   return DEFAULT_LOCALE;
 }

@@ -7,6 +7,7 @@ import {
   fmtDayShort,
   fmtDuration,
   fmtMoney,
+  fmtNumber,
   fmtMoneyCompact,
   fmtPct,
   fmtRecord,
@@ -163,5 +164,33 @@ describe("fmtRecord", () => {
     expect(fmtRecord(0, 1)).toBe("1L");
     expect(fmtRecord(2, 0)).toBe("2W");
     expect(fmtRecord(0, 0)).toBe("-");
+  });
+});
+
+describe.each(["en-US", "zh-CN", "ja-JP"])("locale-aware formatting: %s", (locale) => {
+  it("formats dates, times, decimals, percentages and currencies using Intl", () => {
+    useDisplayPrefs.setState({ privacyMode: false, timezone: "UTC", timeFormat: "h23" });
+    const date = new Date("2026-09-22T13:05:00Z");
+    expect(fmtDate(date.toISOString(), locale)).toBe(
+      new Intl.DateTimeFormat(locale, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC",
+      }).format(date),
+    );
+    expect(fmtTime(date.toISOString(), locale)).toBe(
+      new Intl.DateTimeFormat(locale, {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "UTC",
+        hour12: false,
+      }).format(date),
+    );
+    expect(fmtNumber(1234.5, locale)).toBe(new Intl.NumberFormat(locale).format(1234.5));
+    expect(fmtPct(0.58, locale)).toBe("58%");
+    expect(fmtMoney(1234.5, "JPY", locale)).toBe(
+      new Intl.NumberFormat(locale, { style: "currency", currency: "JPY" }).format(1234.5),
+    );
   });
 });
