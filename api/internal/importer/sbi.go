@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"maps"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -236,6 +237,17 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 
 			execution := parsed.Executions[0]
 			execution.PositionType, execution.PositionEffect, _ = sbiSemantics(leg)
+			if transaction == leg && execution.PositionEffect == PositionReduce && execution.PositionType != PositionCash {
+				raw := strings.TrimSpace(strings.ReplaceAll(row["受渡金額/決済損益"], ",", ""))
+				if raw != "" && raw != "--" && raw != "-" {
+					pnl, err := strconv.ParseFloat(raw, 64)
+					if err != nil || math.IsNaN(pnl) || math.IsInf(pnl, 0) {
+						result.Errors = append(result.Errors, RowError{Row: i + 1, Message: "invalid margin settlement P&L"})
+						break
+					}
+					execution.ReportedRealizedPnl = &pnl
+				}
+			}
 			execution.LotKey = "sbi:" + strings.ReplaceAll(execution.PositionType, "_", "-")
 			// ponytail: SBI exports dates but no times; tiny offsets preserve its row and transfer-leg order.
 			execution.ExecutedAt = execution.ExecutedAt.Add(time.Duration(i*2+legIndex) * time.Microsecond)

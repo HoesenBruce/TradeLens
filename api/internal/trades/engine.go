@@ -8,17 +8,18 @@ import (
 )
 
 type Execution struct {
-	ID             string
-	Symbol         string
-	InstrumentType string
-	Side           string // buy|sell
-	Quantity       float64
-	Price          float64
-	Fees           float64
-	Commission     float64
-	ExecutedAt     time.Time
-	Multiplier     float64 // 1 stock, 100 option, tick-derived for futures
-	LotKey         string  // optional; isolates overlapping same-symbol round-trips
+	ID                string
+	Symbol            string
+	InstrumentType    string
+	Side              string // buy|sell
+	Quantity          float64
+	Price             float64
+	Fees              float64
+	Commission        float64
+	ExecutedAt        time.Time
+	Multiplier        float64  // 1 stock, 100 option, tick-derived for futures
+	LotKey            string   // optional; isolates overlapping same-symbol round-trips
+	BrokerReportedPnl *float64 // broker-reported result on a closing execution
 }
 
 type Trade struct {
@@ -198,7 +199,7 @@ func (s *openState) finalizeOpen() Trade {
 	return Trade{
 		Symbol: s.symbol, InstrumentType: s.instrument, Direction: s.direction,
 		Status: "open", OpenedAt: s.openedAt, QtyOpened: s.qtyOpened,
-		QtyRemaining: money.Round2(abs(s.position)),
+		QtyRemaining:  money.Round2(abs(s.position)),
 		AvgEntryPrice: money.Round2(avgEntry), FeesTotal: money.Round2(s.feesTotal),
 		ExecutionIDs: s.execIDs,
 	}

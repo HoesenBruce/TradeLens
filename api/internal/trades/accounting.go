@@ -14,8 +14,9 @@ type RealizedClose struct {
 }
 
 type AccountingResult struct {
-	Trades         []Trade
-	RealizedCloses []RealizedClose
+	Trades              []Trade
+	RealizedCloses      []RealizedClose
+	UnavailableCloseIDs []string
 }
 
 type AccountingStrategy func([]Execution) AccountingResult

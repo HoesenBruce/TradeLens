@@ -41,11 +41,14 @@ func TestSBITradeExecutionCSV(t *testing.T) {
 	require.Equal(t, 10.0, cashSell.Fees)
 
 	require.Equal(t, "sbi:margin-long", result.Executions[2].LotKey)
+	require.Nil(t, result.Executions[2].ReportedRealizedPnl)
 	require.Equal(t, "buy", result.Executions[2].Side)
 	require.Equal(t, "sell", result.Executions[3].Side)
+	require.Equal(t, 90.0, *result.Executions[3].ReportedRealizedPnl)
 	require.Equal(t, "sbi:margin-short", result.Executions[4].LotKey)
 	require.Equal(t, "sell", result.Executions[4].Side)
 	require.Equal(t, "buy", result.Executions[5].Side)
+	require.Equal(t, 388.0, *result.Executions[5].ReportedRealizedPnl)
 	require.Equal(t, "584A", result.Executions[6].Symbol)
 	require.NotEqual(t, result.Executions[6].DedupKey, result.Executions[7].DedupKey)
 
@@ -55,6 +58,7 @@ func TestSBITradeExecutionCSV(t *testing.T) {
 	require.Equal(t, "sell", marginClose.Side)
 	require.Equal(t, "sbi:margin-long", marginClose.LotKey)
 	require.Equal(t, 20.0, marginClose.Fees)
+	require.Nil(t, marginClose.ReportedRealizedPnl) // 現引 field is transfer amount
 	require.Equal(t, "buy", cashOpen.Side)
 	require.Equal(t, "sbi:cash", cashOpen.LotKey)
 	require.Zero(t, cashOpen.Fees)
@@ -96,6 +100,23 @@ func TestSBIDateOnlyRowsCashAccountingKeepsMarginSeparate(t *testing.T) {
 	require.Equal(t, 0.0, result.RealizedCloses[0].Pnl)
 	require.Equal(t, 100.0, result.RealizedCloses[0].RemainingQty)
 	require.Equal(t, 110000.0, result.RealizedCloses[0].RemainingCostBasis)
+}
+
+func TestSBIMarginSettlementMissingZeroAndInvalid(t *testing.T) {
+	row := map[string]string{
+		"約定日": "2026/09/01", "銘柄コード": "5401", "銘柄": "A", "取引": "信用返済買",
+		"約定数量": "100", "約定単価": "900", "受渡金額/決済損益": "--",
+	}
+	result := ParseSBIRows([]map[string]string{row}, nil, "")
+	require.Empty(t, result.Errors)
+	require.Nil(t, result.Executions[0].ReportedRealizedPnl)
+	row["受渡金額/決済損益"] = "0"
+	result = ParseSBIRows([]map[string]string{row}, nil, "")
+	require.Equal(t, 0.0, *result.Executions[0].ReportedRealizedPnl)
+	row["受渡金額/決済損益"] = "oops"
+	result = ParseSBIRows([]map[string]string{row}, nil, "")
+	require.Equal(t, []RowError{{Row: 1, Message: "invalid margin settlement P&L"}}, result.Errors)
+	require.Empty(t, result.Executions)
 }
 
 func TestSBISemanticLabels(t *testing.T) {
