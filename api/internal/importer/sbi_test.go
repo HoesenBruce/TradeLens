@@ -70,6 +70,23 @@ func TestSBIRowsUseConfirmedMapping(t *testing.T) {
 	require.Equal(t, "日本製鉄", result.Executions[0].StockName)
 }
 
+func TestSBISemanticLabels(t *testing.T) {
+	cases := []struct{ label, position, effect string }{
+		{"株式現物買", "cash", "increase"}, {"現物買", "cash", "increase"},
+		{"株式現物売", "cash", "reduce"}, {"現物売", "cash", "reduce"},
+		{"信用新規買", "margin_long", "increase"}, {"信用返済売", "margin_long", "reduce"},
+		{"信用新規売", "margin_short", "increase"}, {"信用返済買", "margin_short", "reduce"},
+	}
+	for _, tc := range cases {
+		position, effect, ok := sbiSemantics(tc.label)
+		require.True(t, ok, tc.label)
+		require.Equal(t, tc.position, position)
+		require.Equal(t, tc.effect, effect)
+	}
+	_, _, ok := sbiSemantics("unknown")
+	require.False(t, ok)
+}
+
 func TestSBICashTransactionCSV(t *testing.T) {
 	fixture, err := os.ReadFile("testdata/sbi-cash-transactions.csv")
 	require.NoError(t, err)

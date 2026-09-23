@@ -206,15 +206,11 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 
 	for i, row := range rows {
 		transaction := strings.TrimSpace(row[fields["side"]])
-		type leg struct{ transaction, lot string }
-		legs := []leg{}
+		legs := []string{}
 		if transaction == "現引" {
-			legs = []leg{
-				{transaction: "信用返済売", lot: "sbi:margin-long"},
-				{transaction: "株式現物買", lot: "sbi:cash"},
-			}
-		} else if lot, supported := sbiLot(transaction); supported {
-			legs = []leg{{transaction: transaction, lot: lot}}
+			legs = []string{"信用返済売", "株式現物買"}
+		} else if _, _, supported := sbiSemantics(transaction); supported {
+			legs = []string{transaction}
 		} else {
 			result.Errors = append(result.Errors, RowError{Row: i + 1, Message: fmt.Sprintf("unsupported SBI transaction %q", transaction)})
 			continue
@@ -227,7 +223,7 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 
 		for legIndex, leg := range legs {
 			legRow := maps.Clone(row)
-			legRow[fields["side"]] = leg.transaction
+			legRow[fields["side"]] = leg
 			if transaction == "現引" && legIndex == 1 {
 				legRow[fields["fees"]] = "--" // charge the conversion once, on margin close
 			}
@@ -239,7 +235,8 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 			}
 
 			execution := parsed.Executions[0]
-			execution.LotKey = leg.lot
+			execution.PositionType, execution.PositionEffect, _ = sbiSemantics(leg)
+			execution.LotKey = "sbi:" + strings.ReplaceAll(execution.PositionType, "_", "-")
 			// ponytail: SBI exports dates but no times; tiny offsets preserve its row and transfer-leg order.
 			execution.ExecutedAt = execution.ExecutedAt.Add(time.Duration(i*2+legIndex) * time.Microsecond)
 			execution.DedupKey = fmt.Sprintf("sbi|%s|%d|%d", key, occurrences[key], legIndex)
@@ -249,15 +246,21 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 	return result
 }
 
-func sbiLot(transaction string) (string, bool) {
+func sbiSemantics(transaction string) (positionType, effect string, supported bool) {
 	switch transaction {
-	case "株式現物買", "株式現物売", "現物買", "現物売":
-		return "sbi:cash", true
-	case "信用新規買", "信用返済売":
-		return "sbi:margin-long", true
-	case "信用新規売", "信用返済買":
-		return "sbi:margin-short", true
+	case "株式現物買", "現物買":
+		return PositionCash, PositionIncrease, true
+	case "株式現物売", "現物売":
+		return PositionCash, PositionReduce, true
+	case "信用新規買":
+		return PositionMarginLong, PositionIncrease, true
+	case "信用返済売":
+		return PositionMarginLong, PositionReduce, true
+	case "信用新規売":
+		return PositionMarginShort, PositionIncrease, true
+	case "信用返済買":
+		return PositionMarginShort, PositionReduce, true
 	default:
-		return "", false
+		return "", "", false
 	}
 }
