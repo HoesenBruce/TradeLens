@@ -127,7 +127,7 @@ export function AppNav() {
       {/* Logo band — same 52px + border as HeaderBar */}
       <div className="flex h-[52px] w-full shrink-0 items-center justify-center bg-background">
         <AppLogo
-          size={24}
+          size={36}
           className="transition-transform duration-150 ease-out hover:scale-105 motion-reduce:transition-none"
         />
       </div>
