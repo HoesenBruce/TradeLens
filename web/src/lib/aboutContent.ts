@@ -1,4 +1,5 @@
 import type { AppLocale } from "./locale";
+import { BRAND } from "./brand";
 import { REPO_URL } from "./version";
 
 export { REPO_URL };
@@ -79,8 +80,7 @@ export type AboutContent = {
 const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
   en: {
     tagline: "Self-hosted trading journal",
-    intro:
-      "TraderMemos is an open-source performance journal for active traders. Your trades, screenshots, and analytics stay on infrastructure you control — no SaaS lock-in, no data mining.",
+    intro: `${BRAND.name} is an open-source performance journal for active traders. Your trades, screenshots, and analytics stay on infrastructure you control — no SaaS lock-in, no data mining.`,
     featuresTitle: "What you get",
     features: [
       {
@@ -140,14 +140,13 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
       },
     ],
     philosophyTitle: "Why self-host?",
-    philosophy:
-      "Cloud journals like TradeZella and TraderSync are polished — but your edge lives in the data. TraderMemos follows the same philosophy as projects like Ghost, Umami, and Plane: run it yourself, own the database, and extend it without permission.",
+    philosophy: `Cloud journals like TradeZella and TraderSync are polished — but your edge lives in the data. ${BRAND.name} follows the same philosophy as projects like Ghost, Umami, and Plane: run it yourself, own the database, and extend it without permission.`,
     licenseNote: "Open source. Deploy on Docker, Railway, or your own VPS.",
     developerTitle: "Developer",
     developerRole: "Creator & maintainer",
     developerGithubLabel: "View on GitHub",
     apiTitle: "Backend API",
-    apiDescription: "Live connection to the TraderMemos API this app is using.",
+    apiDescription: `Live connection to the ${BRAND.name} API this app is using.`,
     apiBaseUrlLabel: "API base URL",
     apiHealthLabel: "Health",
     apiVersionLabel: "API version",
@@ -172,7 +171,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     updateLastChecked: "Last checked",
     updateNeverChecked: "Not checked yet",
     updateBannerTitle: "Update available",
-    updateBannerSw: "A new version of TraderMemos is ready. Reload to apply it.",
+    updateBannerSw: `A new version of ${BRAND.name} is ready. Reload to apply it.`,
     updateDismiss: "Dismiss",
     updateReleaseTitle: "Release notes",
     updateReleasePublished: "Published",
@@ -199,8 +198,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
   },
   "zh-HK": {
     tagline: "自架交易日誌",
-    intro:
-      "TraderMemos 是面向活躍交易者的開源績效日誌。你的交易、截圖與分析都留在你控制的基礎設施上——沒有 SaaS 綁定，也沒有資料挖掘。",
+    intro: `${BRAND.name} 是面向活躍交易者的開源績效日誌。你的交易、截圖與分析都留在你控制的基礎設施上——沒有 SaaS 綁定，也沒有資料挖掘。`,
     featuresTitle: "功能概覽",
     features: [
       {
@@ -254,14 +252,13 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
       },
     ],
     philosophyTitle: "為何自架？",
-    philosophy:
-      "雲端日誌如 TradeZella、TraderSync 很完善——但你的優勢藏在資料裡。TraderMemos 與 Ghost、Umami、Plane 等專案同一理念：自己部署、擁有資料庫、無需許可即可擴展。",
+    philosophy: `雲端日誌如 TradeZella、TraderSync 很完善——但你的優勢藏在資料裡。${BRAND.name} 與 Ghost、Umami、Plane 等專案同一理念：自己部署、擁有資料庫、無需許可即可擴展。`,
     licenseNote: "開源。可部署於 Docker、Railway 或自有 VPS。",
     developerTitle: "開發者",
     developerRole: "創作者及維護者",
     developerGithubLabel: "在 GitHub 查看",
     apiTitle: "後端 API",
-    apiDescription: "此應用程式目前連線的 TraderMemos API。",
+    apiDescription: `此應用程式目前連線的 ${BRAND.name} API。`,
     apiBaseUrlLabel: "API 位址",
     apiHealthLabel: "健康狀態",
     apiVersionLabel: "API 版本",
@@ -285,7 +282,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     updateLastChecked: "上次檢查",
     updateNeverChecked: "尚未檢查",
     updateBannerTitle: "有可用更新",
-    updateBannerSw: "TraderMemos 有新版本就緒。重新載入以套用。",
+    updateBannerSw: `${BRAND.name} 有新版本就緒。重新載入以套用。`,
     updateDismiss: "關閉",
     updateReleaseTitle: "發佈說明",
     updateReleasePublished: "發佈日期",
@@ -311,8 +308,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
   },
   ja: {
     tagline: "セルフホスト型トレードジャーナル",
-    intro:
-      "TraderMemos はアクティブトレーダー向けのオープンソースパフォーマンスジャーナルです。トレード、スクショ、分析はすべて自分で管理するインフラに残ります — SaaS ロックインやデータマイニングはありません。",
+    intro: `${BRAND.name} はアクティブトレーダー向けのオープンソースパフォーマンスジャーナルです。トレード、スクショ、分析はすべて自分で管理するインフラに残ります — SaaS ロックインやデータマイニングはありません。`,
     featuresTitle: "主な機能",
     features: [
       {
@@ -379,7 +375,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     developerRole: "作成者 & メンテナ",
     developerGithubLabel: "GitHub で見る",
     apiTitle: "バックエンド API",
-    apiDescription: "このアプリが使用中の TraderMemos API への接続情報。",
+    apiDescription: `このアプリが使用中の ${BRAND.name} API への接続情報。`,
     apiBaseUrlLabel: "API ベース URL",
     apiHealthLabel: "ヘルス",
     apiVersionLabel: "API バージョン",
@@ -403,8 +399,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     updateLastChecked: "最終確認",
     updateNeverChecked: "未確認",
     updateBannerTitle: "アップデートがあります",
-    updateBannerSw:
-      "TraderMemos の新しいバージョンが準備できました。再読み込みして適用してください。",
+    updateBannerSw: `${BRAND.name} の新しいバージョンが準備できました。再読み込みして適用してください。`,
     updateDismiss: "閉じる",
     updateReleaseTitle: "リリースノート",
     updateReleasePublished: "公開日",
@@ -431,8 +426,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
   },
   ko: {
     tagline: "셀프호스팅 트레이딩 저널",
-    intro:
-      "TraderMemos는 활발한 트레이더를 위한 오픈소스 성과 저널입니다. 거래, 스크린샷, 분석이 모두 직접 관리하는 인프라에 남습니다 — SaaS 종속이나 데이터 마이닝 없음.",
+    intro: `${BRAND.name}는 활발한 트레이더를 위한 오픈소스 성과 저널입니다. 거래, 스크린샷, 분석이 모두 직접 관리하는 인프라에 남습니다 — SaaS 종속이나 데이터 마이닝 없음.`,
     featuresTitle: "주요 기능",
     features: [
       {
@@ -494,7 +488,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     developerRole: "제작자 및 유지보수",
     developerGithubLabel: "GitHub에서 보기",
     apiTitle: "백엔드 API",
-    apiDescription: "이 앱이 사용 중인 TraderMemos API 연결 정보.",
+    apiDescription: `이 앱이 사용 중인 ${BRAND.name} API 연결 정보.`,
     apiBaseUrlLabel: "API 기본 URL",
     apiHealthLabel: "상태",
     apiVersionLabel: "API 버전",
@@ -518,7 +512,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     updateLastChecked: "마지막 확인",
     updateNeverChecked: "아직 확인 안 함",
     updateBannerTitle: "업데이트 사용 가능",
-    updateBannerSw: "TraderMemos 새 버전이 준비되었습니다. 새로고침하여 적용하세요.",
+    updateBannerSw: `${BRAND.name} 새 버전이 준비되었습니다. 새로고침하여 적용하세요.`,
     updateDismiss: "닫기",
     updateReleaseTitle: "릴리스 노트",
     updateReleasePublished: "게시일",
