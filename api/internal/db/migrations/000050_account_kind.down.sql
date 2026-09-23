@@ -1,0 +1,1 @@
+-- SQLite migrations are forward-only in this repository.

@@ -5,6 +5,8 @@ interface AccountBody {
   name: string;
   broker: string;
   account_type: string;
+  account_kind?: string;
+  capabilities?: string[];
   base_currency: string;
   starting_balance: number;
 }
