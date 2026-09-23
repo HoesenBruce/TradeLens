@@ -1,3 +1,7 @@
+import { useLingui } from "@lingui/react";
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
+import { intlLocale } from "@/lib/locale";
+import { t as tr } from "@lingui/core/macro";
 import { useState } from "react";
 import { Undo2 } from "lucide-react";
 import { Badge } from "@/components/reui/badge";
@@ -11,12 +15,16 @@ import { SettingsGroup, SettingsSection } from "./settings-ui";
 
 /** Human name for an import batch's source key. */
 function sourceLabel(source: string): string {
-  if (source === "ibkr-flex-sync") return "IBKR Flex sync";
-  if (source === "csv" || source === "json" || source === "file") return "File import";
+  if (source === "ibkr-flex-sync")
+    return tr({ id: "accounts.flexSource", message: "IBKR Flex sync" });
+  if (source === "csv" || source === "json" || source === "file")
+    return tr({ id: "accounts.fileSource", message: "File import" });
   return source;
 }
 
 function RollbackButton({ batch, accountName }: { batch: ImportBatch; accountName: string }) {
+  const { t: tr } = useLinguiMacro();
+
   const [open, setOpen] = useState(false);
   const toast = useToastManager();
   const rollback = useDeleteImport();
@@ -25,12 +33,21 @@ function RollbackButton({ batch, accountName }: { batch: ImportBatch; accountNam
     rollback.mutate(batch.id, {
       onSuccess: () => {
         setOpen(false);
-        toast.add({ title: "Import rolled back", description: `${batch.row_count} rows removed` });
+        toast.add({
+          title: tr({ id: "accounts.rolledBackToast", message: "Import rolled back" }),
+          description: tr({
+            id: "accounts.removedRows",
+            message: `${batch.row_count} rows removed`,
+          }),
+        });
       },
       onError: (err) =>
         toast.add({
-          title: "Could not roll back",
-          description: err instanceof Error ? err.message : "Rollback failed",
+          title: tr({ id: "accounts.rollbackError", message: "Could not roll back" }),
+          description:
+            err instanceof Error
+              ? err.message
+              : tr({ id: "accounts.rollbackFailed", message: "Rollback failed" }),
         }),
     });
   }
@@ -45,17 +62,17 @@ function RollbackButton({ batch, accountName }: { batch: ImportBatch; accountNam
         className="border-border bg-transparent text-destructive hover:bg-destructive/10 hover:text-destructive"
       >
         <Undo2 size={13} strokeWidth={1.5} />
-        Roll back
+        {tr({ id: "accounts.rollback", message: "Roll back" })}
       </Button>
       <Modal
         open={open}
         onOpenChange={setOpen}
-        title="Roll back this import?"
+        title={tr({ id: "accounts.rollbackQuestion", message: "Roll back this import?" })}
         className="max-w-[min(420px,94vw)]"
         footer={
           <>
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
-              Cancel
+              {tr({ id: "accounts.cancel", message: "Cancel" })}
             </Button>
             <Button
               type="button"
@@ -63,15 +80,18 @@ function RollbackButton({ batch, accountName }: { batch: ImportBatch; accountNam
               onClick={handleRollback}
               disabled={rollback.isPending}
             >
-              {rollback.isPending ? "Rolling back…" : "Roll back"}
+              {rollback.isPending
+                ? tr({ id: "accounts.rollingBack", message: "Rolling back…" })
+                : tr({ id: "accounts.rollback", message: "Roll back" })}
             </Button>
           </>
         }
       >
         <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-          The {batch.row_count} execution{batch.row_count === 1 ? "" : "s"} imported into{" "}
-          {accountName} by this batch will be deleted and trades regrouped. A later sync can import
-          them again.
+          {tr({
+            id: "accounts.rollbackDetails",
+            message: `The ${batch.row_count} executions imported into ${accountName} by this batch will be deleted and trades regrouped. A later sync can import them again.`,
+          })}
         </p>
       </Modal>
     </>
@@ -92,9 +112,15 @@ export function ImportHistorySection({
   /** Limit the list to one account (the account detail page). */
   accountId?: string;
 }) {
+  "use no memo";
+  useLingui();
+  const { t: tr } = useLinguiMacro();
+
   const imports = useImports();
 
-  const accountName = (id: string) => accounts.find((a) => a.id === id)?.name ?? "Deleted account";
+  const accountName = (id: string) =>
+    accounts.find((a) => a.id === id)?.name ??
+    tr({ id: "accounts.deletedAccount", message: "Deleted account" });
   const history = (imports.data ?? [])
     .filter((b) => !accountId || b.account_id === accountId)
     .sort((a, b) => b.created_at.localeCompare(a.created_at));
@@ -102,15 +128,25 @@ export function ImportHistorySection({
   return (
     <SettingsSection
       id="import-history"
-      title="Sync & import history"
-      description="Every batch of imported executions — scheduled syncs, manual syncs, and file imports. Rolling one back deletes its executions."
+      title={tr({ id: "accounts.history", message: "Sync & import history" })}
+      description={tr({
+        id: "accounts.historyHint",
+        message:
+          "Every batch of imported executions — scheduled syncs, manual syncs, and file imports. Rolling one back deletes its executions.",
+      })}
     >
       {imports.isError ? (
-        <EmptyState title="Could not load history" hint="Check the server and try again." />
+        <EmptyState
+          title={tr({ id: "accounts.historyError", message: "Could not load history" })}
+          hint={tr({ id: "accounts.checkServer", message: "Check the server and try again." })}
+        />
       ) : history.length === 0 ? (
         <EmptyState
-          title="Nothing imported yet"
-          hint="Batches appear here after a sync or file import."
+          title={tr({ id: "accounts.noImports", message: "Nothing imported yet" })}
+          hint={tr({
+            id: "accounts.noImportsHint",
+            message: "Batches appear here after a sync or file import.",
+          })}
         />
       ) : (
         <SettingsGroup>
@@ -122,13 +158,16 @@ export function ImportHistorySection({
                     {sourceLabel(batch.source)}
                   </span>
                   {batch.status === "reversed" ? (
-                    <Badge variant="secondary">Rolled back</Badge>
+                    <Badge variant="secondary">
+                      {tr({ id: "accounts.rolledBack", message: "Rolled back" })}
+                    </Badge>
                   ) : null}
                 </div>
                 <p className="m-0 text-[12px] text-muted-foreground">
                   {accountName(batch.account_id)}
-                  {batch.filename ? ` · ${batch.filename}` : ""} · {batch.row_count} row
-                  {batch.row_count === 1 ? "" : "s"} · {new Date(batch.created_at).toLocaleString()}
+                  {batch.filename ? ` · ${batch.filename}` : ""} ·{" "}
+                  {tr({ id: "accounts.rowCount", message: `${batch.row_count} rows` })} ·{" "}
+                  {new Date(batch.created_at).toLocaleString(intlLocale())}
                 </p>
               </div>
               {batch.status !== "reversed" ? (

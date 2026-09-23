@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react";
 import type { ReactNode } from "react";
 import type { Summary, Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
@@ -118,6 +119,8 @@ export function HomeInsightBento({
   fxRate = 1,
   maxDrawdown,
 }: HomeInsightBentoProps) {
+  "use no memo";
+  useLingui();
   usePrivacyMode();
   const locale = intlLocale();
   const insights = computeHomeInsights(trades);

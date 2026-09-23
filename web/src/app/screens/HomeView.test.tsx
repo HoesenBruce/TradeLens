@@ -555,3 +555,19 @@ describe("HomeView", () => {
     expect(onNewTrade).toHaveBeenCalledOnce();
   });
 });
+
+it("updates dashboard labels when switching between Chinese and Japanese", async () => {
+  const { loadLocale } = await import("@/i18n");
+  const { act } = await import("@testing-library/react");
+  render(<HomeView {...BASE} />);
+  try {
+    await act(() => loadLocale("zh-CN"));
+    expect(screen.getByText("权益曲线")).toBeInTheDocument();
+    expect(screen.getByText("盈亏质量")).toBeInTheDocument();
+    await act(() => loadLocale("ja"));
+    expect(screen.getByText("資産推移")).toBeInTheDocument();
+    expect(screen.getByText("損益の質")).toBeInTheDocument();
+  } finally {
+    await act(() => loadLocale("en"));
+  }
+});

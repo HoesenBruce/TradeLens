@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
@@ -143,15 +144,6 @@ export const POPULAR_BROKERS = [
 ] as const;
 export const OTHER_BROKER_VALUE = "__other__";
 
-const CASH_TYPE_OPTIONS = [
-  { value: "deposit", label: "Deposit" },
-  { value: "withdrawal", label: "Withdrawal" },
-  { value: "fee", label: "Fee" },
-  { value: "dividend", label: "Dividend" },
-  { value: "interest", label: "Interest" },
-  { value: "adjustment", label: "Adjustment" },
-] as const;
-
 // ---------------------------------------------------------------------------
 // Accounts & funding
 // ---------------------------------------------------------------------------
@@ -203,6 +195,17 @@ export function AccountsTab({
   onUpdateCash,
   onDeleteCash,
 }: AccountsTabProps) {
+  const { t: tr } = useLinguiMacro();
+
+  const CASH_TYPE_OPTIONS = [
+    { value: "deposit", label: tr({ id: "accounts.deposit", message: "Deposit" }) },
+    { value: "withdrawal", label: tr({ id: "accounts.withdrawal", message: "Withdrawal" }) },
+    { value: "fee", label: tr({ id: "accounts.fee", message: "Fee" }) },
+    { value: "dividend", label: tr({ id: "accounts.dividend", message: "Dividend" }) },
+    { value: "interest", label: tr({ id: "accounts.interest", message: "Interest" }) },
+    { value: "adjustment", label: tr({ id: "accounts.adjustment", message: "Adjustment" }) },
+  ] as const;
+
   usePrivacyMode();
   const toast = useToastManager();
   // One request for all accounts' sync state: drives the per-row status pill
@@ -246,11 +249,19 @@ export function AccountsTab({
   async function handleDeleteCash(id: string) {
     try {
       await onDeleteCash(id);
-      toast.add({ title: "Transaction removed" });
+      toast.add({
+        title: tr({ id: "accounts.transactionRemoved", message: "Transaction removed" }),
+      });
     } catch (err) {
       toast.add({
-        title: "Could not remove transaction",
-        description: err instanceof Error ? err.message : "Request failed",
+        title: tr({
+          id: "accounts.transactionRemoveError",
+          message: "Could not remove transaction",
+        }),
+        description:
+          err instanceof Error
+            ? err.message
+            : tr({ id: "accounts.requestFailed", message: "Request failed" }),
       });
     }
   }
@@ -275,11 +286,11 @@ export function AccountsTab({
     if (!editCashId) return;
     const amount = parseAmountToNumber(editCashAmount);
     if (amount == null || amount <= 0) {
-      setEditCashError("Enter a valid amount.");
+      setEditCashError(tr({ id: "accounts.validAmount", message: "Enter a valid amount." }));
       return;
     }
     if (!editCashDate) {
-      setEditCashError("Date is required.");
+      setEditCashError(tr({ id: "accounts.dateRequired", message: "Date is required." }));
       return;
     }
     setSavingCash(true);
@@ -292,12 +303,26 @@ export function AccountsTab({
         occurred_at: new Date(`${editCashDate}T12:00:00.000Z`).toISOString(),
         note: editCashNote.trim() || undefined,
       });
-      toast.add({ title: "Transaction updated" });
+      toast.add({
+        title: tr({ id: "accounts.transactionUpdated", message: "Transaction updated" }),
+      });
       cancelEditCash();
     } catch (err) {
-      const message = err instanceof ApiError ? err.message : "Failed to update transaction.";
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : tr({
+              id: "accounts.transactionUpdateFailed",
+              message: "Failed to update transaction.",
+            });
       setEditCashError(message);
-      toast.add({ title: "Could not update transaction", description: message });
+      toast.add({
+        title: tr({
+          id: "accounts.transactionUpdateError",
+          message: "Could not update transaction",
+        }),
+        description: message,
+      });
       setSavingCash(false);
     }
   }
@@ -318,7 +343,9 @@ export function AccountsTab({
         accountForm.reset(defaultAccountFormValues());
         setShowAccountForm(false);
       } catch {
-        setAccountFormError("Failed to create account.");
+        setAccountFormError(
+          tr({ id: "accounts.createFailed", message: "Failed to create account." }),
+        );
       }
     },
   });
@@ -343,7 +370,9 @@ export function AccountsTab({
         cashForm.reset(defaultCashFormValues(accounts[0]?.id ?? ""));
         setShowCashForm(false);
       } catch {
-        setCashFormError("Failed to create transaction.");
+        setCashFormError(
+          tr({ id: "accounts.transactionCreateFailed", message: "Failed to create transaction." }),
+        );
       }
     },
   });
@@ -385,8 +414,11 @@ export function AccountsTab({
   return (
     <>
       <SettingsSection
-        title="Accounts"
-        description="Broker accounts used for trade grouping and filters."
+        title={tr({ id: "accounts.accounts", message: "Accounts" })}
+        description={tr({
+          id: "accounts.accountsHint",
+          message: "Broker accounts used for trade grouping and filters.",
+        })}
         action={
           <BtnGhost
             onClick={() => {
@@ -399,7 +431,7 @@ export function AccountsTab({
             }}
           >
             <Plus size={13} strokeWidth={1.5} />
-            Add account
+            {tr({ id: "accounts.addAccount", message: "Add account" })}
           </BtnGhost>
         }
       >
@@ -412,7 +444,7 @@ export function AccountsTab({
               accountForm.reset(defaultAccountFormValues());
             }
           }}
-          title="Add account"
+          title={tr({ id: "accounts.addAccount", message: "Add account" })}
           className="max-w-[min(500px,94vw)]"
           footer={
             <accountForm.Subscribe selector={(s) => s.isSubmitting}>
@@ -428,14 +460,16 @@ export function AccountsTab({
                     }}
                     disabled={accountSaving}
                   >
-                    Cancel
+                    {tr({ id: "accounts.cancel", message: "Cancel" })}
                   </Button>
                   <Button
                     type="button"
                     onClick={() => void accountForm.handleSubmit()}
                     disabled={accountSaving}
                   >
-                    {accountSaving ? "Creating…" : "Create"}
+                    {accountSaving
+                      ? tr({ id: "accounts.creating", message: "Creating…" })
+                      : tr({ id: "accounts.create", message: "Create" })}
                   </Button>
                 </>
               )}
@@ -458,7 +492,7 @@ export function AccountsTab({
             >
               {(field) => (
                 <Field
-                  label="Account name"
+                  label={tr({ id: "accounts.accountName", message: "Account name" })}
                   htmlFor="acct-name"
                   error={fieldError(field.state.meta.errors)}
                 >
@@ -467,7 +501,10 @@ export function AccountsTab({
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="e.g. Main Account"
+                    placeholder={tr({
+                      id: "accounts.accountExample",
+                      message: "e.g. Main Account",
+                    })}
                     autoFocus
                   />
                 </Field>
@@ -476,8 +513,14 @@ export function AccountsTab({
             <accountForm.Field
               name="broker"
               validators={{
-                onBlur: ({ value }) => (value.trim() ? undefined : "Broker is required."),
-                onSubmit: ({ value }) => (value.trim() ? undefined : "Broker is required."),
+                onBlur: ({ value }) =>
+                  value.trim()
+                    ? undefined
+                    : tr({ id: "accounts.brokerRequired", message: "Broker is required." }),
+                onSubmit: ({ value }) =>
+                  value.trim()
+                    ? undefined
+                    : tr({ id: "accounts.brokerRequired", message: "Broker is required." }),
               }}
             >
               {(field) => {
@@ -488,7 +531,7 @@ export function AccountsTab({
                 return (
                   <>
                     <Field
-                      label="Broker"
+                      label={tr({ id: "accounts.broker", message: "Broker" })}
                       error={brokerIsOther ? undefined : fieldError(field.state.meta.errors)}
                     >
                       <NativeSelect
@@ -499,7 +542,7 @@ export function AccountsTab({
                           field.handleChange(next === OTHER_BROKER_VALUE ? "" : next);
                         }}
                         onBlur={field.handleBlur}
-                        aria-label="Broker"
+                        aria-label={tr({ id: "accounts.broker", message: "Broker" })}
                         wrapperClassName="w-full"
                       >
                         {POPULAR_BROKERS.map((broker) => (
@@ -507,12 +550,14 @@ export function AccountsTab({
                             {broker}
                           </NativeSelectOption>
                         ))}
-                        <NativeSelectOption value={OTHER_BROKER_VALUE}>Other</NativeSelectOption>
+                        <NativeSelectOption value={OTHER_BROKER_VALUE}>
+                          {tr({ id: "accounts.other", message: "Other" })}
+                        </NativeSelectOption>
                       </NativeSelect>
                     </Field>
                     {brokerSelectValue === OTHER_BROKER_VALUE ? (
                       <Field
-                        label="Custom broker"
+                        label={tr({ id: "accounts.customBroker", message: "Custom broker" })}
                         htmlFor="acct-broker-other"
                         error={fieldError(field.state.meta.errors)}
                       >
@@ -521,7 +566,10 @@ export function AccountsTab({
                           value={field.state.value}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
-                          placeholder="Type broker name"
+                          placeholder={tr({
+                            id: "accounts.brokerPlaceholder",
+                            message: "Type broker name",
+                          })}
                           autoFocus
                         />
                       </Field>
@@ -533,24 +581,35 @@ export function AccountsTab({
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <accountForm.Field name="accountType">
                 {(field) => (
-                  <Field label="Account type">
+                  <Field label={tr({ id: "accounts.accountType", message: "Account type" })}>
                     <NativeSelect
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      aria-label="Account type"
+                      aria-label={tr({ id: "accounts.accountType", message: "Account type" })}
                       wrapperClassName="w-full"
                     >
-                      <NativeSelectOption value="cash">Cash</NativeSelectOption>
-                      <NativeSelectOption value="margin">Margin</NativeSelectOption>
-                      <NativeSelectOption value="prop">Prop</NativeSelectOption>
-                      <NativeSelectOption value="backtest">Backtest (paper)</NativeSelectOption>
+                      <NativeSelectOption value="cash">
+                        {tr({ id: "accounts.cash", message: "Cash" })}
+                      </NativeSelectOption>
+                      <NativeSelectOption value="margin">
+                        {tr({ id: "accounts.margin", message: "Margin" })}
+                      </NativeSelectOption>
+                      <NativeSelectOption value="prop">
+                        {tr({ id: "accounts.prop", message: "Prop" })}
+                      </NativeSelectOption>
+                      <NativeSelectOption value="backtest">
+                        {tr({ id: "accounts.backtest", message: "Backtest (paper)" })}
+                      </NativeSelectOption>
                     </NativeSelect>
                   </Field>
                 )}
               </accountForm.Field>
               <accountForm.Field name="baseCurrency">
                 {(field) => (
-                  <Field label="Base currency" htmlFor="acct-currency">
+                  <Field
+                    label={tr({ id: "accounts.baseCurrency", message: "Base currency" })}
+                    htmlFor="acct-currency"
+                  >
                     <FormInput
                       id="acct-currency"
                       value={field.state.value}
@@ -570,9 +629,12 @@ export function AccountsTab({
               >
                 {(field) => (
                   <Field
-                    label="Starting balance"
+                    label={tr({ id: "accounts.startingBalance", message: "Starting balance" })}
                     htmlFor="acct-balance"
-                    description="Saved as the first deposit in the cash ledger."
+                    description={tr({
+                      id: "accounts.startingHint",
+                      message: "Saved as the first deposit in the cash ledger.",
+                    })}
                     error={fieldError(field.state.meta.errors)}
                   >
                     <AmountInput
@@ -597,13 +659,18 @@ export function AccountsTab({
           </SettingsPanelBody>
         ) : accountsError ? (
           <SettingsPanelBody>
-            <p className="text-[12px] text-destructive">Failed to load accounts.</p>
+            <p className="text-[12px] text-destructive">
+              {tr({ id: "accounts.accountsError", message: "Failed to load accounts." })}
+            </p>
           </SettingsPanelBody>
         ) : accounts.length === 0 ? (
           <SettingsPanelBody className="py-8">
             <EmptyState
-              title="No accounts yet"
-              hint="Start from your broker — we'll show you how to get the trades out of it."
+              title={tr({ id: "accounts.noAccounts", message: "No accounts yet" })}
+              hint={tr({
+                id: "accounts.noAccountsHint",
+                message: "Start from your broker — we'll show you how to get the trades out of it.",
+              })}
               icon={<Building2 size={28} strokeWidth={1.5} />}
               actions={
                 <Button
@@ -612,7 +679,7 @@ export function AccountsTab({
                   render={<Link to="/connect" className="no-underline" />}
                 >
                   <Building2 size={13} strokeWidth={1.5} />
-                  Connect broker
+                  {tr({ id: "accounts.connect", message: "Connect broker" })}
                 </Button>
               }
             />
@@ -633,7 +700,7 @@ export function AccountsTab({
                     acc.broker || null,
                     acc.base_currency || null,
                     tradeCount > 0
-                      ? `${tradeCount} ${tradeCount === 1 ? "trade" : "trades"}`
+                      ? tr({ id: "accounts.tradeCount", message: `${tradeCount} trades` })
                       : null,
                   ].filter(Boolean);
                   return (
@@ -648,7 +715,11 @@ export function AccountsTab({
                           <span className="truncate text-[14px] font-semibold tracking-tight text-foreground">
                             {acc.name}
                           </span>
-                          {isPrimary ? <Pill tone="amber">Primary</Pill> : null}
+                          {isPrimary ? (
+                            <Pill tone="amber">
+                              {tr({ id: "accounts.primary", message: "Primary" })}
+                            </Pill>
+                          ) : null}
                           {conn ? (
                             <Badge
                               variant={
@@ -660,10 +731,10 @@ export function AccountsTab({
                               }
                             >
                               {flexSyncFailed(conn)
-                                ? "Sync failing"
+                                ? tr({ id: "accounts.syncFailing", message: "Sync failing" })
                                 : conn.enabled
-                                  ? "Sync on"
-                                  : "Sync off"}
+                                  ? tr({ id: "accounts.syncOn", message: "Sync on" })
+                                  : tr({ id: "accounts.syncOff", message: "Sync off" })}
                             </Badge>
                           ) : null}
                         </div>
@@ -704,22 +775,25 @@ export function AccountsTab({
 
       <SettingsSection
         id="settings-funding"
-        title="Deposits & withdrawals"
-        description="Track cash flows that affect your equity curve and header cash stat."
+        title={tr({ id: "accounts.funding", message: "Deposits & withdrawals" })}
+        description={tr({
+          id: "accounts.fundingHint",
+          message: "Track cash flows that affect your equity curve and header cash stat.",
+        })}
         action={
           <BtnGhost onClick={openCashForm}>
             <Plus size={13} strokeWidth={1.5} />
-            Add transaction
+            {tr({ id: "accounts.addTransaction", message: "Add transaction" })}
           </BtnGhost>
         }
       >
         {filterAccountId && filteredAccount && (
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-md bg-card px-2 py-1 text-[11px] text-muted-foreground">
-              Filtered to {filteredAccount.name}
+              {tr({ id: "accounts.filtered", message: `Filtered to ${filteredAccount.name}` })}
             </span>
             <BtnGhost className="px-2 py-1 text-[11px]" onClick={() => setFilterAccountId(null)}>
-              Show all
+              {tr({ id: "accounts.showAll", message: "Show all" })}
             </BtnGhost>
           </div>
         )}
@@ -728,7 +802,7 @@ export function AccountsTab({
           onOpenChange={(open) => {
             if (!open) closeCashForm();
           }}
-          title="Add transaction"
+          title={tr({ id: "accounts.addTransaction", message: "Add transaction" })}
           className="max-w-[min(500px,94vw)]"
           footer={
             <cashForm.Subscribe selector={(s) => s.isSubmitting}>
@@ -740,14 +814,16 @@ export function AccountsTab({
                     onClick={closeCashForm}
                     disabled={cashSaving}
                   >
-                    Cancel
+                    {tr({ id: "accounts.cancel", message: "Cancel" })}
                   </Button>
                   <Button
                     type="button"
                     onClick={() => void cashForm.handleSubmit()}
                     disabled={cashSaving}
                   >
-                    {cashSaving ? "Adding…" : "Add transaction"}
+                    {cashSaving
+                      ? tr({ id: "accounts.adding", message: "Adding…" })
+                      : tr({ id: "accounts.addTransaction", message: "Add transaction" })}
                   </Button>
                 </>
               )}
@@ -769,11 +845,14 @@ export function AccountsTab({
                 }}
               >
                 {(field) => (
-                  <Field label="Account" error={fieldError(field.state.meta.errors)}>
+                  <Field
+                    label={tr({ id: "accounts.account", message: "Account" })}
+                    error={fieldError(field.state.meta.errors)}
+                  >
                     <NativeSelect
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      aria-label="Cash account"
+                      aria-label={tr({ id: "accounts.cashAccount", message: "Cash account" })}
                       wrapperClassName="w-full"
                     >
                       {accounts.map((a) => (
@@ -787,11 +866,11 @@ export function AccountsTab({
               </cashForm.Field>
               <cashForm.Field name="type">
                 {(field) => (
-                  <Field label="Type">
+                  <Field label={tr({ id: "accounts.type", message: "Type" })}>
                     <NativeSelect
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      aria-label="Cash type"
+                      aria-label={tr({ id: "accounts.cashType", message: "Cash type" })}
                       wrapperClassName="w-full"
                     >
                       {CASH_TYPE_OPTIONS.map(({ value, label }) => (
@@ -814,7 +893,7 @@ export function AccountsTab({
               >
                 {(field) => (
                   <Field
-                    label="Amount"
+                    label={tr({ id: "accounts.amount", message: "Amount" })}
                     htmlFor="cash-amount"
                     error={fieldError(field.state.meta.errors)}
                   >
@@ -831,9 +910,9 @@ export function AccountsTab({
               </cashForm.Field>
               <cashForm.Field name="occurredAt">
                 {(field) => (
-                  <Field label="Date">
+                  <Field label={tr({ id: "accounts.date", message: "Date" })}>
                     <DatePicker
-                      aria-label="Date"
+                      aria-label={tr({ id: "accounts.date", message: "Date" })}
                       value={field.state.value}
                       onChange={field.handleChange}
                       onBlur={field.handleBlur}
@@ -844,13 +923,13 @@ export function AccountsTab({
             </div>
             <cashForm.Field name="note">
               {(field) => (
-                <Field label="Note" htmlFor="cash-note">
+                <Field label={tr({ id: "accounts.note", message: "Note" })} htmlFor="cash-note">
                   <FormInput
                     id="cash-note"
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Optional note"
+                    placeholder={tr({ id: "accounts.optionalNote", message: "Optional note" })}
                   />
                 </Field>
               )}
@@ -865,16 +944,31 @@ export function AccountsTab({
           </SettingsPanelBody>
         ) : cashError ? (
           <SettingsPanelBody>
-            <p className="text-[12px] text-destructive">Failed to load transactions.</p>
+            <p className="text-[12px] text-destructive">
+              {tr({ id: "accounts.transactionsError", message: "Failed to load transactions." })}
+            </p>
           </SettingsPanelBody>
         ) : displayedTx.length === 0 ? (
           <SettingsPanelBody className="py-8">
             <EmptyState
-              title={filterAccountId ? "No transactions for this account" : "No transactions yet"}
+              title={
+                filterAccountId
+                  ? tr({
+                      id: "accounts.noAccountTransactions",
+                      message: "No transactions for this account",
+                    })
+                  : tr({ id: "accounts.noTransactions", message: "No transactions yet" })
+              }
               hint={
                 filterAccountId
-                  ? "Record a deposit or withdrawal for this account."
-                  : "Add a deposit or withdrawal to track balance changes."
+                  ? tr({
+                      id: "accounts.recordFunding",
+                      message: "Record a deposit or withdrawal for this account.",
+                    })
+                  : tr({
+                      id: "accounts.addFunding",
+                      message: "Add a deposit or withdrawal to track balance changes.",
+                    })
               }
               icon={<Wallet size={28} strokeWidth={1.5} />}
             />
@@ -891,7 +985,7 @@ export function AccountsTab({
                   last={index === displayedTx.length - 1}
                   primary={
                     <span className="capitalize">
-                      {tx.type}
+                      {CASH_TYPE_OPTIONS.find((o) => o.value === tx.type)?.label ?? tx.type}
                       {acct && (
                         <span className="ml-2 font-normal text-muted-foreground">
                           · {acct.name}
@@ -919,12 +1013,18 @@ export function AccountsTab({
                         variant="ghost"
                         size="icon-xs"
                         tooltip={false}
-                        aria-label={`Edit ${tx.type} transaction`}
+                        aria-label={tr({
+                          id: "accounts.editCash",
+                          message: `Edit ${CASH_TYPE_OPTIONS.find((o) => o.value === tx.type)?.label ?? tx.type} transaction`,
+                        })}
                         onClick={() => startEditCash(tx)}
                       >
                         <Pencil size={14} strokeWidth={1.5} />
                       </Button>
-                      <DeleteButton label={tx.type} onDelete={() => void handleDeleteCash(tx.id)} />
+                      <DeleteButton
+                        label={CASH_TYPE_OPTIONS.find((o) => o.value === tx.type)?.label ?? tx.type}
+                        onDelete={() => void handleDeleteCash(tx.id)}
+                      />
                     </div>
                   }
                 />
@@ -939,25 +1039,27 @@ export function AccountsTab({
         onOpenChange={(open) => {
           if (!open) cancelEditCash();
         }}
-        title="Edit transaction"
+        title={tr({ id: "accounts.editTransaction", message: "Edit transaction" })}
         className="max-w-[min(440px,94vw)]"
         footer={
           <>
             <Button type="button" variant="outline" onClick={cancelEditCash} disabled={savingCash}>
-              Cancel
+              {tr({ id: "accounts.cancel", message: "Cancel" })}
             </Button>
             <Button type="button" onClick={() => void handleSaveCash()} disabled={savingCash}>
-              {savingCash ? "Saving…" : "Save"}
+              {savingCash
+                ? tr({ id: "accounts.saving", message: "Saving…" })
+                : tr({ id: "accounts.save", message: "Save" })}
             </Button>
           </>
         }
       >
         <div className="flex flex-col gap-3">
-          <Field label="Type">
+          <Field label={tr({ id: "accounts.type", message: "Type" })}>
             <NativeSelect
               value={editCashType}
               onChange={(e) => setEditCashType(e.target.value)}
-              aria-label="Cash type"
+              aria-label={tr({ id: "accounts.cashType", message: "Cash type" })}
               wrapperClassName="w-full"
             >
               {CASH_TYPE_OPTIONS.map(({ value, label }) => (
@@ -968,7 +1070,10 @@ export function AccountsTab({
             </NativeSelect>
           </Field>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <Field label="Amount" htmlFor="edit-cash-amount">
+            <Field
+              label={tr({ id: "accounts.amount", message: "Amount" })}
+              htmlFor="edit-cash-amount"
+            >
               <AmountInput
                 id="edit-cash-amount"
                 value={editCashAmount}
@@ -976,16 +1081,20 @@ export function AccountsTab({
                 placeholder="0.00"
               />
             </Field>
-            <Field label="Date">
-              <DatePicker aria-label="Date" value={editCashDate} onChange={setEditCashDate} />
+            <Field label={tr({ id: "accounts.date", message: "Date" })}>
+              <DatePicker
+                aria-label={tr({ id: "accounts.date", message: "Date" })}
+                value={editCashDate}
+                onChange={setEditCashDate}
+              />
             </Field>
           </div>
-          <Field label="Note" htmlFor="edit-cash-note">
+          <Field label={tr({ id: "accounts.note", message: "Note" })} htmlFor="edit-cash-note">
             <FormInput
               id="edit-cash-note"
               value={editCashNote}
               onChange={(e) => setEditCashNote(e.target.value)}
-              placeholder="Optional note"
+              placeholder={tr({ id: "accounts.optionalNote", message: "Optional note" })}
             />
           </Field>
           <FormError message={editCashError} />
