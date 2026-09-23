@@ -109,6 +109,104 @@ Prefer:
 
 Before finishing a substantial feature, review the final diff for unnecessary merge risk.
 
+
+## Broker and accounting compatibility
+
+Broker-specific accounting is an **opt-in extension** in this fork. The default behavior for
+existing brokers should remain compatible with upstream unless a separate issue explicitly
+authorizes a semantic change.
+
+### Default behavior
+
+For IBKR and any broker / transaction combination without a verified fork-specific accounting
+rule:
+
+- preserve the current upstream/default trade grouping and P&L semantics;
+- preserve existing importer, fee, commission, multiplier, and dedup behavior;
+- do not change accounting merely because an account is marked `margin` or has a `margin`
+  capability;
+- do not use instrument type, exchange country, or market alone to select a different accounting
+  method;
+- do not opportunistically fix unrelated upstream accounting behavior inside a broker-specific
+  feature.
+
+Unknown or unsupported broker/transaction combinations must fall back to the upstream/default
+path rather than guessing a specialized rule.
+
+### Broker-specific opt-in
+
+A specialized accounting rule may be introduced only when its source semantics are documented and
+covered by tests. Strategy selection should use explicit context such as:
+
+```text
+broker/source + execution/position semantic
+```
+
+For example:
+
+```text
+SBI + cash
+→ verified SBI/Japanese cash-equity strategy
+
+SBI + margin_long / margin_short
+→ verified SBI margin-settlement strategy
+
+SBI + genbiki position conversion
+→ verified SBI conversion strategy
+```
+
+Do **not** assume that a rule verified for SBI automatically applies to every Japanese broker.
+Add another broker only after its export fields and transaction semantics have been checked.
+
+### Account capabilities are not accounting rules
+
+Account metadata and transaction accounting are separate concerns.
+
+A brokerage account may expose capabilities such as:
+
+```text
+cash
+margin
+options
+futures
+```
+
+Those capabilities describe what the account can contain. They must not by themselves decide how a
+specific execution is costed or matched.
+
+For example, an IBKR margin account and an SBI account with Japanese 信用取引 both have margin
+capability, but they must not be assumed to share the same position or settlement semantics.
+
+### Shared-engine changes
+
+When broker-specific support requires touching shared trade/P&L code:
+
+- keep the existing upstream/default path intact whenever practical;
+- prefer a small resolver/strategy seam over rewriting the default engine;
+- make specialized behavior explicit rather than inferred from generic buy/sell direction;
+- add regression tests for representative non-target brokers before calling the change complete;
+- preserve current default partial-close semantics unless the issue explicitly changes them;
+- do not normalize an inherited frontend/backend P&L difference as incidental work.
+
+A change that intentionally alters IBKR or another existing broker's accounting semantics requires
+its own issue, explicit before/after examples, migration/recalculation impact analysis, and
+regression coverage.
+
+### Required regression protection
+
+For accounting/importer changes that touch shared code, verify representative existing behavior as
+applicable:
+
+- IBKR simple stock round trip;
+- IBKR commission handling;
+- IBKR option multiplier/contract handling;
+- generic importer behavior;
+- at least one other affected existing broker preset;
+- historical/import dedup behavior when the import path is touched.
+
+The acceptance report should state both the broker-specific behavior added and which non-target
+broker paths were verified unchanged.
+
 ## Issue scope guidance
 
 An issue should explicitly identify the platform scope when UI work is involved.
