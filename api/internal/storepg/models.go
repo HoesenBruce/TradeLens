@@ -38,6 +38,8 @@ type Account struct {
 	BaseCurrency    string    `json:"base_currency"`
 	StartingBalance float64   `json:"starting_balance"`
 	CreatedAt       time.Time `json:"created_at"`
+	AccountKind     string    `json:"account_kind"`
+	Capabilities    string    `json:"capabilities"`
 }
 
 type AlertChannel struct {

@@ -151,6 +151,8 @@ export interface Account {
   name: string;
   broker: string;
   account_type: string;
+  account_kind?: "brokerage" | "prop" | "paper" | "backtest";
+  capabilities?: string[];
   base_currency: string;
   starting_balance: number;
   created_at: string;

@@ -64,6 +64,9 @@ export type AccountFormValues = {
   name: string;
   broker: string;
   accountType: string;
+  accountKind: string;
+  cashCapability: boolean;
+  marginCapability: boolean;
   baseCurrency: string;
   startingBalance: string;
 };
@@ -73,6 +76,9 @@ export function defaultAccountFormValues(): AccountFormValues {
     name: "",
     broker: "",
     accountType: "cash",
+    accountKind: "brokerage",
+    cashCapability: true,
+    marginCapability: false,
     baseCurrency: "USD",
     startingBalance: "",
   };

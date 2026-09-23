@@ -10,8 +10,8 @@ import (
 )
 
 const createAccount = `-- name: CreateAccount :one
-INSERT INTO accounts (id, user_id, name, broker, account_type, base_currency, starting_balance)
-VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, user_id, name, broker, account_type, base_currency, starting_balance, created_at
+INSERT INTO accounts (id, user_id, name, broker, account_type, base_currency, starting_balance, account_kind, capabilities)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id, user_id, name, broker, account_type, base_currency, starting_balance, created_at, account_kind, capabilities
 `
 
 type CreateAccountParams struct {
@@ -22,6 +22,8 @@ type CreateAccountParams struct {
 	AccountType     string  `json:"account_type"`
 	BaseCurrency    string  `json:"base_currency"`
 	StartingBalance float64 `json:"starting_balance"`
+	AccountKind     string  `json:"account_kind"`
+	Capabilities    string  `json:"capabilities"`
 }
 
 func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
@@ -33,6 +35,8 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 		arg.AccountType,
 		arg.BaseCurrency,
 		arg.StartingBalance,
+		arg.AccountKind,
+		arg.Capabilities,
 	)
 	var i Account
 	err := row.Scan(
@@ -44,6 +48,8 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 		&i.BaseCurrency,
 		&i.StartingBalance,
 		&i.CreatedAt,
+		&i.AccountKind,
+		&i.Capabilities,
 	)
 	return i, err
 }
@@ -66,7 +72,7 @@ func (q *Queries) DeleteAccount(ctx context.Context, arg DeleteAccountParams) (i
 }
 
 const getAccount = `-- name: GetAccount :one
-SELECT id, user_id, name, broker, account_type, base_currency, starting_balance, created_at FROM accounts WHERE id = ? AND user_id = ?
+SELECT id, user_id, name, broker, account_type, base_currency, starting_balance, created_at, account_kind, capabilities FROM accounts WHERE id = ? AND user_id = ?
 `
 
 type GetAccountParams struct {
@@ -86,12 +92,14 @@ func (q *Queries) GetAccount(ctx context.Context, arg GetAccountParams) (Account
 		&i.BaseCurrency,
 		&i.StartingBalance,
 		&i.CreatedAt,
+		&i.AccountKind,
+		&i.Capabilities,
 	)
 	return i, err
 }
 
 const getAccountByIDAny = `-- name: GetAccountByIDAny :one
-SELECT id, user_id, name, broker, account_type, base_currency, starting_balance, created_at FROM accounts WHERE id = ?
+SELECT id, user_id, name, broker, account_type, base_currency, starting_balance, created_at, account_kind, capabilities FROM accounts WHERE id = ?
 `
 
 func (q *Queries) GetAccountByIDAny(ctx context.Context, id string) (Account, error) {
@@ -106,12 +114,14 @@ func (q *Queries) GetAccountByIDAny(ctx context.Context, id string) (Account, er
 		&i.BaseCurrency,
 		&i.StartingBalance,
 		&i.CreatedAt,
+		&i.AccountKind,
+		&i.Capabilities,
 	)
 	return i, err
 }
 
 const listAccounts = `-- name: ListAccounts :many
-SELECT id, user_id, name, broker, account_type, base_currency, starting_balance, created_at FROM accounts WHERE user_id = ? ORDER BY created_at
+SELECT id, user_id, name, broker, account_type, base_currency, starting_balance, created_at, account_kind, capabilities FROM accounts WHERE user_id = ? ORDER BY created_at
 `
 
 func (q *Queries) ListAccounts(ctx context.Context, userID string) ([]Account, error) {
@@ -132,6 +142,8 @@ func (q *Queries) ListAccounts(ctx context.Context, userID string) ([]Account, e
 			&i.BaseCurrency,
 			&i.StartingBalance,
 			&i.CreatedAt,
+			&i.AccountKind,
+			&i.Capabilities,
 		); err != nil {
 			return nil, err
 		}
@@ -148,9 +160,9 @@ func (q *Queries) ListAccounts(ctx context.Context, userID string) ([]Account, e
 
 const updateAccount = `-- name: UpdateAccount :one
 UPDATE accounts
-SET name = ?, broker = ?, account_type = ?, base_currency = ?, starting_balance = ?
+SET name = ?, broker = ?, account_type = ?, base_currency = ?, starting_balance = ?, account_kind = ?, capabilities = ?
 WHERE id = ? AND user_id = ?
-RETURNING id, user_id, name, broker, account_type, base_currency, starting_balance, created_at
+RETURNING id, user_id, name, broker, account_type, base_currency, starting_balance, created_at, account_kind, capabilities
 `
 
 type UpdateAccountParams struct {
@@ -159,6 +171,8 @@ type UpdateAccountParams struct {
 	AccountType     string  `json:"account_type"`
 	BaseCurrency    string  `json:"base_currency"`
 	StartingBalance float64 `json:"starting_balance"`
+	AccountKind     string  `json:"account_kind"`
+	Capabilities    string  `json:"capabilities"`
 	ID              string  `json:"id"`
 	UserID          string  `json:"user_id"`
 }
@@ -170,6 +184,8 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 		arg.AccountType,
 		arg.BaseCurrency,
 		arg.StartingBalance,
+		arg.AccountKind,
+		arg.Capabilities,
 		arg.ID,
 		arg.UserID,
 	)
@@ -183,6 +199,8 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 		&i.BaseCurrency,
 		&i.StartingBalance,
 		&i.CreatedAt,
+		&i.AccountKind,
+		&i.Capabilities,
 	)
 	return i, err
 }

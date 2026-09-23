@@ -86,6 +86,7 @@ func (s *Server) handleSetupComplete(c *echo.Context) error {
 		if accType == "" {
 			accType = "cash"
 		}
+		kind, caps, _, _ := accountMetadata("", nil, accType)
 		cur := in.Account.BaseCurrency
 		if cur == "" {
 			cur = "USD"
@@ -96,6 +97,8 @@ func (s *Server) handleSetupComplete(c *echo.Context) error {
 			Name:            in.Account.Name,
 			Broker:          in.Account.Broker,
 			AccountType:     accType,
+			AccountKind:     kind,
+			Capabilities:    caps,
 			BaseCurrency:    cur,
 			StartingBalance: in.Account.StartingBalance,
 		})
