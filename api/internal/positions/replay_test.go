@@ -2,6 +2,7 @@ package positions
 
 import (
 	"database/sql"
+	"encoding/json"
 	"testing"
 	"time"
 
@@ -64,6 +65,65 @@ func TestReplayMarginLongAndShort(t *testing.T) {
 	require.Empty(t, snapshots[1].Accounts[0].Positions)
 	require.Equal(t, 30.0, snapshots[1].Accounts[0].RealizedPnL)
 	require.Equal(t, 30.0, snapshots[1].Accounts[0].CashDelta)
+}
+
+func withReportedPnl(ex store.Execution, pnl float64) store.Execution {
+	details := map[string]any{"lot": lotFromDetails(ex), "broker_reported_realized_pnl": pnl, "realized_pnl_source": "broker_reported"}
+	encoded, _ := json.Marshal(details)
+	ex.Details = sql.NullString{String: string(encoded), Valid: true}
+	return ex
+}
+
+func TestReplaySBIMarginReportedCloseAndMissingFallback(t *testing.T) {
+	first := execution("open-a", "a", "AAA", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 1000)
+	first.Fees = 5
+	second := execution("open-b", "a", "AAA", "sbi:margin-long", "buy", "2026-09-02T01:00:00Z", 100, 1100)
+	second.Fees = 5
+	close := withReportedPnl(execution("close", "a", "AAA", "sbi:margin-long", "sell", "2026-09-03T01:00:00Z", 100, 1090), 8993)
+	close.Fees = 2
+	cash := execution("cash", "a", "AAA", "sbi:cash", "buy", "2026-09-01T01:00:00Z", 10, 500)
+	snapshot := Replay([]store.Execution{close, first, second, cash}, []time.Time{day("2026-09-03")})[0]
+	require.Empty(t, snapshot.Warnings)
+	require.Equal(t, 8993.0, snapshot.Accounts[0].RealizedPnL)
+	require.Equal(t, 12.0, snapshot.Accounts[0].Fees)
+	require.Equal(t, []Kind{CashLong, MarginLong}, []Kind{snapshot.Accounts[0].Positions[0].Kind, snapshot.Accounts[0].Positions[1].Kind})
+	require.Equal(t, 100.0, snapshot.Accounts[0].Positions[1].Quantity)
+
+	missing := close
+	missing.Details = sql.NullString{String: `{"lot":"sbi:margin-long"}`, Valid: true}
+	snapshot = Replay([]store.Execution{first, second, missing}, []time.Time{day("2026-09-03")})[0]
+	require.Equal(t, "margin_realized_pnl_unavailable", snapshot.Warnings[0].Code)
+	require.Zero(t, snapshot.Accounts[0].RealizedPnL)
+}
+
+func TestReplaySBIMarginShortReportedSignAndSingleOpenFallback(t *testing.T) {
+	open := execution("open", "a", "AAA", "sbi:margin-short", "sell", "2026-09-01T01:00:00Z", 20, 300)
+	open.Fees = 6
+	close := withReportedPnl(execution("close", "a", "AAA", "sbi:margin-short", "buy", "2026-09-02T01:00:00Z", 20, 280), 388)
+	close.Fees = 6
+	snapshot := Replay([]store.Execution{open, close}, []time.Time{day("2026-09-02")})[0]
+	require.Equal(t, 388.0, snapshot.Accounts[0].RealizedPnL)
+	require.Equal(t, 388.0, snapshot.Accounts[0].CashDelta)
+
+	close.Details = sql.NullString{String: `{"lot":"sbi:margin-short"}`, Valid: true}
+	snapshot = Replay([]store.Execution{open, close}, []time.Time{day("2026-09-02")})[0]
+	require.Empty(t, snapshot.Warnings)
+	require.Equal(t, 388.0, snapshot.Accounts[0].RealizedPnL)
+}
+
+func TestReplaySBIMarginPartialAndCompleteReportedSettlements(t *testing.T) {
+	open := execution("open", "a", "AAA", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 10, 100)
+	open.Fees = 5
+	first := withReportedPnl(execution("first", "a", "AAA", "sbi:margin-long", "sell", "2026-09-02T01:00:00Z", 5, 110), 46.5)
+	first.Fees = 1
+	last := withReportedPnl(execution("last", "a", "AAA", "sbi:margin-long", "sell", "2026-09-03T01:00:00Z", 5, 90), -53.5)
+	last.Fees = 1
+	snapshots := Replay([]store.Execution{last, first, open}, []time.Time{day("2026-09-02"), day("2026-09-03")})
+	require.Equal(t, 46.5, snapshots[0].Accounts[0].RealizedPnL)
+	require.Equal(t, 5.0, snapshots[0].Accounts[0].Positions[0].Quantity)
+	require.Equal(t, -7.0, snapshots[1].Accounts[0].RealizedPnL)
+	require.Equal(t, -7.0, snapshots[1].Accounts[0].CashDelta)
+	require.Empty(t, snapshots[1].Accounts[0].Positions)
 }
 
 func TestReplayGenbikiMovesMarginLongToCashOnce(t *testing.T) {

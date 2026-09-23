@@ -69,10 +69,12 @@ type positionKey struct {
 }
 
 type state struct {
-	positions map[positionKey]Position
-	basisDay  map[positionKey]string
-	accounts  map[string]*AccountSnapshot
-	warnings  []Warning
+	positions      map[positionKey]Position
+	basisDay       map[positionKey]string
+	marginOpenings map[positionKey]int
+	marginOpenFees map[positionKey]float64
+	accounts       map[string]*AccountSnapshot
+	warnings       []Warning
 }
 
 func (s *state) account(accountID string) *AccountSnapshot {
@@ -103,7 +105,11 @@ func ReplayWithSplits(executions []store.Execution, dates []time.Time, splits []
 	splits = append([]Split(nil), splits...)
 	sort.SliceStable(splits, func(i, j int) bool { return splits[i].EffectiveDate.Before(splits[j].EffectiveDate) })
 
-	s := state{positions: map[positionKey]Position{}, basisDay: map[positionKey]string{}, accounts: map[string]*AccountSnapshot{}}
+	s := state{
+		positions: map[positionKey]Position{}, basisDay: map[positionKey]string{},
+		marginOpenings: map[positionKey]int{}, marginOpenFees: map[positionKey]float64{},
+		accounts: map[string]*AccountSnapshot{},
+	}
 	out := make([]Snapshot, 0, len(dates))
 	nextExecution := 0
 	nextSplit := 0
@@ -180,6 +186,10 @@ func (s *state) apply(ex store.Execution) {
 		position.AverageCost = (position.AverageCost*position.Quantity + buyCost) / (position.Quantity + ex.Quantity)
 		position.Quantity += ex.Quantity
 		s.positions[key] = position
+		if kind != CashLong && strings.HasPrefix(lot, "sbi:margin-") {
+			s.marginOpenings[key]++
+			s.marginOpenFees[key] += ex.Fees + ex.Commission
+		}
 		s.bookOpen(ex, kind, multiplier, sbiCash)
 		return
 	}
@@ -202,26 +212,57 @@ func (s *state) apply(ex store.Execution) {
 	fees := ex.Fees + ex.Commission
 	account := s.account(ex.AccountID)
 	account.Fees += fees
-	account.RealizedPnL += gross - fees
+	settlement := gross - fees
+	cashSettlement := settlement
+	if kind != CashLong && strings.HasPrefix(lot, "sbi:margin-") {
+		openFees := s.marginOpenFees[key] * ex.Quantity / position.Quantity
+		s.marginOpenFees[key] -= openFees
+		if reported := reportedPnlFromDetails(ex); reported != nil {
+			settlement = *reported
+			cashSettlement = settlement + openFees // opening fee was paid earlier
+		} else if s.marginOpenings[key] > 1 {
+			s.warn(ex, "margin_realized_pnl_unavailable", "multiple margin openings have no broker-reported close result or lot match")
+			settlement = 0
+			cashSettlement = -fees
+		} else {
+			settlement -= openFees
+		}
+	}
+	account.RealizedPnL += settlement
 	if kind == CashLong {
 		account.CashDelta += ex.Price*ex.Quantity*multiplier - fees
 	} else {
-		account.CashDelta += gross - fees
+		account.CashDelta += cashSettlement
 	}
 	position.Quantity -= ex.Quantity
 	if position.Quantity < epsilon {
 		delete(s.positions, key)
 		delete(s.basisDay, key)
+		delete(s.marginOpenings, key)
+		delete(s.marginOpenFees, key)
 	} else {
 		s.positions[key] = position
 	}
+}
+
+func reportedPnlFromDetails(ex store.Execution) *float64 {
+	if !ex.Details.Valid {
+		return nil
+	}
+	var details struct {
+		Pnl *float64 `json:"broker_reported_realized_pnl"`
+	}
+	if json.Unmarshal([]byte(ex.Details.String), &details) != nil {
+		return nil
+	}
+	return details.Pnl
 }
 
 func (s *state) bookOpen(ex store.Execution, kind Kind, multiplier float64, sbiCash bool) {
 	fees := ex.Fees + ex.Commission
 	account := s.account(ex.AccountID)
 	account.Fees += fees
-	if !sbiCash {
+	if !sbiCash && !(kind != CashLong && strings.HasPrefix(lotFromDetails(ex), "sbi:margin-")) {
 		account.RealizedPnL -= fees
 	}
 	account.CashDelta -= fees

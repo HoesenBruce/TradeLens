@@ -41,6 +41,7 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 			ID: r.ID, Symbol: r.Symbol, InstrumentType: r.InstrumentType, Side: r.Side,
 			Quantity: r.Quantity, Price: r.Price, Fees: r.Fees, Commission: r.Commission,
 			ExecutedAt: r.ExecutedAt, Multiplier: r.Multiplier, LotKey: lot,
+			BrokerReportedPnl: reportedPnlFromDetails(r.Details),
 		})
 	}
 
@@ -84,6 +85,19 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 		s.AfterRegroup(userID, accountID)
 	}
 	return nil
+}
+
+func reportedPnlFromDetails(details sql.NullString) *float64 {
+	if !details.Valid {
+		return nil
+	}
+	var value struct {
+		Pnl *float64 `json:"broker_reported_realized_pnl"`
+	}
+	if json.Unmarshal([]byte(details.String), &value) != nil {
+		return nil
+	}
+	return value.Pnl
 }
 
 func lotKeyFromDetails(details sql.NullString) string {
