@@ -3534,3 +3534,762 @@ msgstr "利益"
 #: src/components/TradeJournalCard.tsx:64
 msgid "trades.writeReview"
 msgstr "振り返りを書く"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:798
+msgid "imports.skip"
+msgstr "（スキップ）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: summary.error_count
+#: src/app/screens/ImportView.tsx:561
+msgid "imports.parseErrors"
+msgstr "{0} 行を解析できませんでした。インポート時にスキップします。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1226
+msgid "imports.aboutOmit"
+msgstr "アカウント除外について"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:385
+#: src/app/screens/ImportView.tsx:405
+#: src/app/screens/ImportView.tsx:1137
+msgid "imports.account"
+msgstr "アカウント"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.pending_account.name
+#. placeholder {1}: preview.pending_account.broker || "—"
+#: src/app/screens/ImportView.tsx:858
+msgid "imports.pendingAccount"
+msgstr "確認後、口座「{0}」（{1}）を作成します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1251
+msgid "imports.omitActive"
+msgstr "アカウント名・証券会社・ID を除外します。再インポート時はアカウントを指定または作成してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:419
+msgid "imports.accountSelect"
+msgstr "アカウントを選択"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:157
+msgid "imports.actions"
+msgstr "操作"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: mapping[field].slice(1)
+#: src/app/screens/ImportView.tsx:805
+msgid "imports.constant"
+msgstr "常に「{0}」"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:687
+msgid "imports.back"
+msgstr "戻る"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:180
+msgid "imports.fillHint"
+msgstr "証券会社の約定エクスポート。株式・オプション混在時は市場・商品種類列を指定するか、銘柄から自動判定します。"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:127
+msgid "imports.browse"
+msgstr "ファイルを選択"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1065
+msgid "imports.exportJsonHint"
+msgstr "標準バックアップ：トレード・約定・ジャーナル・資金・セットアップ。このページで再インポートできます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:976
+msgid "imports.cash"
+msgstr "入出金"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1332
+msgid "imports.checkFile"
+msgstr "ファイルを確認して再試行してください。"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:214
+msgid "imports.replaceFile"
+msgstr "別のファイルを選択"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:90
+msgid "imports.fieldClosePrice"
+msgstr "決済価格"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:89
+msgid "imports.fieldCloseTime"
+msgstr "決済日時"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:189
+msgid "imports.journalHint"
+msgstr "エントリー・決済列を含む決済済みトレード。セットアップとタグを保持します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:703
+msgid "imports.journalReviewHint"
+msgstr "決済済み取引のジャーナル：各行を往復取引（約定 2 件）として取り込みます。セットアップ、タグ、ジャーナル項目は自動適用されます。方向には売買とコール／プットを表示します。編集から不足項目を補ってください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:760
+msgid "imports.premapped"
+msgstr "証券会社の形式に合わせて列を設定済みです。確認して必要に応じて調整してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:86
+msgid "imports.fieldCommission"
+msgstr "取引手数料"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:903
+msgid "imports.confirm"
+msgstr "インポートを確定"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1321
+#: src/app/screens/ImportView.tsx:1328
+msgid "imports.readFailed"
+msgstr "ファイルを読み取れませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:476
+msgid "imports.needAccount"
+msgstr "設定でアカウントを作成するか、アカウント情報を含む JSON をアップロードしてください"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(MAX_SIZE)
+#: src/components/CsvDropZone.tsx:131
+msgid "imports.fileHint"
+msgstr "CSV、JSON、MT4/MT5 レポート · 最大ファイルサイズ {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.detected_broker
+#: src/app/screens/ImportView.tsx:718
+#: src/app/screens/ImportView.tsx:754
+msgid "imports.detected"
+msgstr "検出：{0}"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:55
+msgid "imports.dir"
+msgstr "方向"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:65
+msgid "imports.direction"
+msgstr "方向"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:66
+msgid "imports.directionHint"
+msgstr "方向：買い／売り、オプションはコール／プット"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1281
+msgid "imports.download"
+msgstr "エクスポートをダウンロード"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1459
+msgid "imports.exportHint"
+msgstr "バックアップや移行用にトレード・約定をダウンロードします。"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:120
+msgid "imports.drop"
+msgstr "ファイルをここにドロップ、または"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: info.row.original.symbol
+#: src/components/importPreviewColumns.tsx:121
+msgid "imports.editSymbol"
+msgstr "{0} を編集"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:122
+msgid "imports.editTrade"
+msgstr "トレードを編集"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:92
+msgid "imports.entry"
+msgstr "エントリー"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:981
+msgid "imports.errors"
+msgstr "エラー"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:529
+msgid "imports.estimatedNet"
+msgstr "予想純損益"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:82
+msgid "imports.fieldExecutedAt"
+msgstr "約定日時"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:526
+msgid "imports.executions"
+msgstr "約定"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:98
+msgid "imports.exit"
+msgstr "決済"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1472
+msgid "imports.export"
+msgstr "エクスポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1131
+msgid "imports.exportAccount"
+msgstr "アカウントをエクスポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1143
+msgid "imports.exportAccountSelect"
+msgstr "エクスポートするアカウント"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1123
+msgid "imports.exportFailed"
+msgstr "エクスポートに失敗しました。再試行してください。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ImportView.tsx:294
+msgid "imports.brokerExport"
+msgstr "{0} からエクスポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1084
+msgid "imports.exportZipHint"
+msgstr "export.json と attachments/ 内のトレード画像を含みます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1256
+msgid "imports.exportPrivacy"
+msgstr "エクスポートはご自身のサーバーで生成し、このデバイスに直接ダウンロードします。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:85
+msgid "imports.fieldFees"
+msgstr "手数料"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:441
+#: src/components/CsvDropZone.tsx:172
+msgid "imports.file"
+msgstr "ファイル"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: file.name
+#. placeholder {1}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:94
+#: src/hooks/use-file-upload.ts:101
+msgid "imports.uploadSize"
+msgstr "ファイル「{0}」は最大サイズ {1} を超えています。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: file instanceof File ? file.name : file.name
+#: src/hooks/use-file-upload.ts:125
+msgid "imports.uploadType"
+msgstr "ファイル「{0}」の形式はサポートされていません。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:231
+msgid "imports.fileSize"
+msgstr "ファイルが最大サイズ {0} を超えています。"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:221
+msgid "imports.uploadError"
+msgstr "ファイルアップロードエラー"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:179
+msgid "imports.fillCsv"
+msgstr "約定 CSV"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:524
+msgid "imports.fills"
+msgstr "約定"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:951
+msgid "imports.insertedFills"
+msgstr "取り込んだ約定"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:229
+msgid "imports.findBroker"
+msgstr "証券会社を探す"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1167
+msgid "imports.format"
+msgstr "形式"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:400
+msgid "imports.fromBackup"
+msgstr "JSON バックアップから"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:206
+msgid "imports.jsonHint"
+msgstr "アカウント全体のバックアップ：トレード・約定・タグ・資金・セットアップ一覧。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1004
+msgid "imports.home"
+msgstr "ホームへ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1471
+msgid "imports.import"
+msgstr "インポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1443
+msgid "imports.heading"
+msgstr "インポートとエクスポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1013
+msgid "imports.another"
+msgstr "別のファイルをインポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:924
+msgid "imports.complete"
+msgstr "インポート完了"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1322
+msgid "imports.failed"
+msgstr "インポートに失敗しました"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:103
+msgid "imports.fileInput"
+msgstr "インポートファイル入力"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:934
+msgid "imports.finished"
+msgstr "インポートが完了しました"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1467
+msgid "imports.mode"
+msgstr "インポートまたはエクスポート"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:29
+msgid "imports.progress"
+msgstr "インポートの進行状況"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ImportView.tsx:1449
+msgid "imports.importFrom"
+msgstr "{0} からインポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:900
+msgid "imports.importing"
+msgstr "インポート中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:952
+msgid "imports.inserted"
+msgstr "取り込み済み"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:83
+msgid "imports.fieldInstrumentType"
+msgstr "商品種別"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:964
+msgid "imports.annotated"
+msgstr "ジャーナル追記済み"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:188
+msgid "imports.journalExport"
+msgstr "ジャーナルのエクスポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1075
+msgid "imports.exportCsvHint"
+msgstr "決済済みトレードのジャーナル。表計算ソフトに対応した文字コードです。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:205
+msgid "imports.jsonExport"
+msgstr "JSON エクスポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:408
+msgid "imports.overrideJsonAccount"
+msgstr "JSON に「{jsonAccountName}」が含まれます。置き換える場合は口座を選択してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:272
+msgid "imports.manual"
+msgstr "手動でトレードを記録 →"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1336
+msgid "imports.connectionLost"
+msgstr "サーバーとの接続が切れました"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fieldLabel(field, _)
+#: src/app/screens/ImportView.tsx:796
+msgid "imports.mapField"
+msgstr "{0}の割り当て"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:696
+#: src/components/ImportStepIndicator.tsx:11
+msgid "imports.mapColumns"
+msgstr "列を対応付け"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:45
+msgid "imports.market"
+msgstr "市場"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:518
+msgid "imports.markets"
+msgstr "市場"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:769
+msgid "imports.mapHint"
+msgstr "各項目を CSV 列に対応付けます。商品種類は任意。混在ファイルでは市場・商品種類を指定するか、銘柄から自動判定します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:197
+msgid "imports.statementHint"
+msgstr "MetaTrader 取引履歴（.xlsx・.html）または MT4 明細（.html）に対応。サーバー時刻（EET）で約定を取り込みます。異なる場合は確定前に調整してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:196
+msgid "imports.statement"
+msgstr "MT4 / MT5 取引明細"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:147
+msgid "imports.name"
+msgstr "名前"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:424
+#: src/app/screens/ImportView.tsx:1151
+msgid "imports.noAccounts"
+msgstr "アカウントがありません。設定で作成してください"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1220
+#: src/app/screens/ImportView.tsx:1236
+msgid "imports.omit"
+msgstr "アカウントを除外"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1218
+msgid "imports.omitDetails"
+msgstr "アカウント情報を除外"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:88
+msgid "imports.fieldOpenPrice"
+msgstr "開始価格"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:87
+msgid "imports.fieldOpenTime"
+msgstr "開始日時"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:84
+msgid "imports.fieldOptionRight"
+msgstr "オプション種別"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:104
+msgid "imports.pnl"
+msgstr "損益"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:314
+msgid "imports.otherBroker"
+msgstr "別の証券会社を選択 →"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1276
+msgid "imports.preparing"
+msgstr "準備中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:469
+msgid "imports.preview"
+msgstr "インポートをプレビュー"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:81
+msgid "imports.fieldPrice"
+msgstr "価格"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:465
+msgid "imports.processing"
+msgstr "処理中…"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:86
+msgid "imports.qty"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:80
+msgid "imports.fieldQuantity"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:190
+msgid "imports.removeFile"
+msgstr "ファイルを削除"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:14
+msgid "imports.result"
+msgstr "結果"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:12
+msgid "imports.review"
+msgstr "確認"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:695
+msgid "imports.reviewImport"
+msgstr "インポートを確認"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:694
+msgid "imports.reviewJournal"
+msgstr "ジャーナルを確認"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:515
+msgid "imports.roundTrips"
+msgstr "往復取引"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: e.row
+#. placeholder {1}: e.message
+#: src/app/screens/ImportView.tsx:995
+msgid "imports.rowError"
+msgstr "{0} 行目：{1}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:991
+msgid "imports.rowErrors"
+msgstr "行ごとのエラー"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:243
+msgid "imports.sampleCsv"
+msgstr "サンプル CSV"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:254
+msgid "imports.sampleJson"
+msgstr "サンプル JSON"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:884
+msgid "imports.sampleRows"
+msgstr "サンプル行"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:735
+msgid "imports.cashDirect"
+msgstr "SBI の入出金は資金台帳に直接取り込みます。列の対応付けは不要です。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:483
+msgid "imports.selectFile"
+msgstr "続行するには CSV または JSON を選択してください"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:970
+msgid "imports.restoredSetups"
+msgstr "復元したセットアップ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:79
+msgid "imports.fieldSide"
+msgstr "売買"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:154
+msgid "imports.size"
+msgstr "サイズ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:959
+msgid "imports.skipped"
+msgstr "スキップ（重複）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:227
+msgid "imports.someSize"
+msgstr "一部のファイルが最大サイズ {0} を超えています。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:726
+msgid "imports.statementDirect"
+msgstr "明細は直接解析するため列の対応付けは不要です。MetaTrader の時刻はサーバー時刻（通常 EET）です。インポート前に確認してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:520
+msgid "imports.stkOpt"
+msgstr "株式 / オプション"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:78
+msgid "imports.fieldStockName"
+msgstr "銘柄名"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1239
+msgid "imports.omitHint"
+msgstr "トレード・約定を含め、アカウント名・証券会社・ID を除外します。移行用データに適しています。再インポート時はアカウントを指定または作成してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:214
+msgid "imports.supported"
+msgstr "対応形式"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:91
+msgid "imports.fieldSwap"
+msgstr "スワップ"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:38
+msgid "imports.symbol"
+msgstr "銘柄コード"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:77
+msgid "imports.fieldSymbol"
+msgstr "銘柄"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1337
+msgid "imports.connectionHint"
+msgstr "インポートはバックグラウンドで続いている可能性があります。少し待ってトレードを確認してください。同じファイルの再取り込みでは重複約定をスキップします。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:824
+#: src/app/screens/ImportView.tsx:830
+msgid "imports.zone"
+msgstr "タイムスタンプのタイムゾーン"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.journal_summary?.trade_count ?? preview.sample_trades.length
+#: src/app/screens/ImportView.tsx:870
+msgid "imports.tradePreview"
+msgstr "取引プレビュー（{0}）"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:743
+msgid "imports.jsonDirect"
+msgstr "TraderMemos JSON の約定は直接取り込みます。列の対応付けは不要です。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:513
+msgid "imports.trades"
+msgstr "トレード"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:942
+msgid "imports.createdTrades"
+msgstr "作成したトレード"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:151
+msgid "imports.type"
+msgstr "種類"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:8
+msgid "imports.upload"
+msgstr "アップロード"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1455
+msgid "imports.importHint"
+msgstr "証券会社の履歴をアップロードしてジャーナルと分析に反映します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:379
+msgid "imports.uploadFile"
+msgstr "ファイルをアップロード"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:388
+msgid "imports.createJsonAccount"
+msgstr "確認後、JSON ファイルから「{jsonAccountName}」を作成します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:392
+msgid "imports.jsonAccount"
+msgstr "確定時に JSON の情報からアカウントを作成または照合します。"
+
+#. js-lingui-explicit-id
+#: src/hooks/use-file-upload.ts:197
+msgid "imports.maxFiles"
+msgstr "アップロードできるファイルは最大 {maxFiles} 件です。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:259
+#: src/app/screens/ImportView.tsx:301
+msgid "imports.privacy"
+msgstr "ファイルはご自身のサーバーに保存され、第三者には送信されません。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:845
+msgid "imports.fileZone"
+msgstr "ファイル内の時刻のタイムゾーン。米国の証券会社は通常米東部時間です。オフセット付き時刻には影響しません。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:840
+msgid "imports.statementZone"
+msgstr "MetaTrader サーバーのタイムゾーン。通常は EET（アテネ）で、UTC ではありません。"
