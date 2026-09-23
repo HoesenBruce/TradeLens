@@ -1,3 +1,4 @@
+import { t as tr } from "@lingui/core/macro";
 import type { ColumnDef } from "@/lib/table";
 import { Pencil } from "lucide-react";
 import type { JournalTradePreview } from "@/lib/api/types";
@@ -34,14 +35,14 @@ export function journalTradePreviewColumns(
   const columns: ColumnDef<JournalTradePreview>[] = [
     {
       accessorKey: "symbol",
-      header: "Symbol",
+      header: tr({ id: "imports.symbol", message: "Symbol" }),
       cell: (info) => (
         <span className="font-medium text-foreground">{info.getValue<string>()}</span>
       ),
     },
     {
       id: "market",
-      header: "Market",
+      header: tr({ id: "imports.market", message: "Market" }),
       accessorFn: (row) => formatMarketLabel(row),
       cell: (info) => (
         <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
@@ -51,7 +52,7 @@ export function journalTradePreviewColumns(
     },
     {
       id: "direction",
-      header: "Dir",
+      header: tr({ id: "imports.dir", message: "Dir" }),
       accessorFn: (row) =>
         resolveTradeDirection({
           direction: row.side,
@@ -60,7 +61,13 @@ export function journalTradePreviewColumns(
           symbol: row.symbol,
           markMissingOptionRight: true,
         }).sortKey,
-      meta: { label: "Direction", headerTitle: "Direction — long/short, call/put when option" },
+      meta: {
+        label: tr({ id: "imports.direction", message: "Direction" }),
+        headerTitle: tr({
+          id: "imports.directionHint",
+          message: "Direction — long/short, call/put when option",
+        }),
+      },
       cell: (info) => {
         const trade = info.row.original;
         return (
@@ -76,25 +83,25 @@ export function journalTradePreviewColumns(
     },
     {
       accessorKey: "qty",
-      header: "Qty",
+      header: tr({ id: "imports.qty", message: "Qty" }),
       meta: { align: "right" },
       cell: (info) => <span className="tabular-nums">{info.getValue<number>()}</span>,
     },
     {
       accessorKey: "entry",
-      header: "Entry",
+      header: tr({ id: "imports.entry", message: "Entry" }),
       meta: { align: "right" },
       cell: (info) => <span className="tabular-nums">{info.getValue<number>().toFixed(2)}</span>,
     },
     {
       accessorKey: "exit",
-      header: "Exit",
+      header: tr({ id: "imports.exit", message: "Exit" }),
       meta: { align: "right" },
       cell: (info) => <span className="tabular-nums">{info.getValue<number>().toFixed(2)}</span>,
     },
     {
       accessorKey: "return_usd",
-      header: "P&L",
+      header: tr({ id: "imports.pnl", message: "P&L" }),
       meta: { align: "right" },
       cell: (info) => <ReturnCell value={info.getValue<number>()} currency={currency} />,
     },
@@ -111,8 +118,8 @@ export function journalTradePreviewColumns(
           type="button"
           variant="ghost"
           size="icon-xs"
-          aria-label={`Edit ${info.row.original.symbol}`}
-          title="Edit trade"
+          aria-label={tr({ id: "imports.editSymbol", message: `Edit ${info.row.original.symbol}` })}
+          title={tr({ id: "imports.editTrade", message: "Edit trade" })}
           onClick={(e) => {
             e.stopPropagation();
             onEdit(info.row.original);
