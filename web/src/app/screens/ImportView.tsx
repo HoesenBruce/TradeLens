@@ -1,3 +1,6 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react";
+import { msg, t as tr } from "@lingui/core/macro";
 import {
   ArrowLeft,
   ArrowRight,
@@ -70,6 +73,31 @@ const CANONICAL_FIELDS = [
   "swap",
 ] as const;
 
+function fieldLabel(
+  field: (typeof CANONICAL_FIELDS)[number],
+  translate: ReturnType<typeof useLingui>["_"],
+): string {
+  return translate(
+    {
+      symbol: msg({ id: "imports.fieldSymbol", message: "Symbol" }),
+      stock_name: msg({ id: "imports.fieldStockName", message: "Stock name" }),
+      side: msg({ id: "imports.fieldSide", message: "Side" }),
+      quantity: msg({ id: "imports.fieldQuantity", message: "Quantity" }),
+      price: msg({ id: "imports.fieldPrice", message: "Price" }),
+      executed_at: msg({ id: "imports.fieldExecutedAt", message: "Executed at" }),
+      instrument_type: msg({ id: "imports.fieldInstrumentType", message: "Instrument type" }),
+      option_right: msg({ id: "imports.fieldOptionRight", message: "Option right" }),
+      fees: msg({ id: "imports.fieldFees", message: "Fees" }),
+      commission: msg({ id: "imports.fieldCommission", message: "Commission" }),
+      open_time: msg({ id: "imports.fieldOpenTime", message: "Open time" }),
+      open_price: msg({ id: "imports.fieldOpenPrice", message: "Open price" }),
+      close_time: msg({ id: "imports.fieldCloseTime", message: "Close time" }),
+      close_price: msg({ id: "imports.fieldClosePrice", message: "Close price" }),
+      swap: msg({ id: "imports.fieldSwap", message: "Swap" }),
+    }[field],
+  );
+}
+
 // Position-level exports (cTrader, Match-Trader) map an open/close pair per
 // row instead of a single fill. Only shown when the file suggests them, so
 // ordinary fill CSVs keep the short mapping grid.
@@ -127,50 +155,6 @@ interface FormatNote {
   body: string;
 }
 
-const IMPORT_FORMATS: FormatNote[] = [
-  {
-    icon: FileText,
-    name: "Fill CSV",
-    body: "Broker execution exports. Map a Market/Asset Type column for mixed stock/option files, or let us infer it from the symbol.",
-  },
-  {
-    icon: FileText,
-    name: "Journal export",
-    body: "Closed trades with Entry/Exit columns — setup and tags are preserved.",
-  },
-  {
-    icon: FileText,
-    name: "MT4 / MT5 statement",
-    body: "MetaTrader Trade History Report (.xlsx or .html) or MT4 Statement (.html). Deals import as fills in broker server time (EET) — adjust the timezone before confirming if your broker differs.",
-  },
-  {
-    icon: FileJson,
-    name: "JSON export",
-    body: "Full account backup: trades, fills, tags, cash, and the playbook setups catalog.",
-  },
-];
-
-const EXPORT_FORMATS: (FormatNote & { value: ExportFormat })[] = [
-  {
-    value: "json",
-    icon: FileJson,
-    name: "JSON",
-    body: "Canonical backup — trades, fills, journal, cash, and playbook setups. Re-import on this page.",
-  },
-  {
-    value: "csv",
-    icon: FileText,
-    name: "CSV",
-    body: "Journal spreadsheet of closed trades, in spreadsheet-friendly encoding.",
-  },
-  {
-    value: "zip",
-    icon: FileArchive,
-    name: "ZIP",
-    body: "export.json plus trade screenshots under attachments/.",
-  },
-];
-
 function FormatList({ items }: { items: FormatNote[] }) {
   return (
     <ul className="flex flex-col gap-2">
@@ -194,8 +178,48 @@ function ImportGuidance({
   onLogTrade?: () => void;
   onChangeBroker?: () => void;
 }) {
+  const { t: tr } = useLinguiMacro();
+  const IMPORT_FORMATS: FormatNote[] = [
+    {
+      icon: FileText,
+      name: tr({ id: "imports.fillCsv", message: "Fill CSV" }),
+      body: tr({
+        id: "imports.fillHint",
+        message:
+          "Broker execution exports. Map a Market/Asset Type column for mixed stock/option files, or let us infer it from the symbol.",
+      }),
+    },
+    {
+      icon: FileText,
+      name: tr({ id: "imports.journalExport", message: "Journal export" }),
+      body: tr({
+        id: "imports.journalHint",
+        message: "Closed trades with Entry/Exit columns — setup and tags are preserved.",
+      }),
+    },
+    {
+      icon: FileText,
+      name: tr({ id: "imports.statement", message: "MT4 / MT5 statement" }),
+      body: tr({
+        id: "imports.statementHint",
+        message:
+          "MetaTrader Trade History Report (.xlsx or .html) or MT4 Statement (.html). Deals import as fills in broker server time (EET) — adjust the timezone before confirming if your broker differs.",
+      }),
+    },
+    {
+      icon: FileJson,
+      name: tr({ id: "imports.jsonExport", message: "JSON export" }),
+      body: tr({
+        id: "imports.jsonHint",
+        message: "Full account backup: trades, fills, tags, cash, and the playbook setups catalog.",
+      }),
+    },
+  ];
   return (
-    <Card title="Supported formats" className="self-start lg:sticky lg:top-6">
+    <Card
+      title={tr({ id: "imports.supported", message: "Supported formats" })}
+      className="self-start lg:sticky lg:top-6"
+    >
       <div className="flex flex-col gap-4">
         <FormatList items={IMPORT_FORMATS} />
 
@@ -208,7 +232,7 @@ function ImportGuidance({
             className="w-full"
           >
             <Building2 size={13} strokeWidth={1.75} aria-hidden />
-            Find my broker
+            {tr({ id: "imports.findBroker", message: "Find my broker" })}
           </Button>
         ) : null}
 
@@ -222,7 +246,7 @@ function ImportGuidance({
             )}
           >
             <FileText size={13} strokeWidth={1.75} aria-hidden />
-            Sample CSV
+            {tr({ id: "imports.sampleCsv", message: "Sample CSV" })}
           </a>
           <a
             href="/sample-json-import.json"
@@ -233,12 +257,15 @@ function ImportGuidance({
             )}
           >
             <FileJson size={13} strokeWidth={1.75} aria-hidden />
-            Sample JSON
+            {tr({ id: "imports.sampleJson", message: "Sample JSON" })}
           </a>
         </div>
 
         <p className="text-[11px] leading-relaxed text-muted-foreground">
-          Your file stays on your server. Nothing is sent to third parties.
+          {tr({
+            id: "imports.privacy",
+            message: "Your file stays on your server. Nothing is sent to third parties.",
+          })}
         </p>
 
         {onLogTrade ? (
@@ -248,7 +275,7 @@ function ImportGuidance({
             onClick={onLogTrade}
             className="h-auto w-fit px-0 text-[11px] text-muted-foreground hover:text-foreground"
           >
-            Log a trade manually instead →
+            {tr({ id: "imports.manual", message: "Log a trade manually instead →" })}
           </Button>
         ) : null}
       </div>
@@ -267,13 +294,20 @@ function BrokerGuidance({
   broker: NonNullable<ReturnType<typeof findBroker>>;
   onChangeBroker?: () => void;
 }) {
+  const { t: tr } = useLinguiMacro();
   return (
-    <Card title={`Export from ${broker.name}`} className="self-start lg:sticky lg:top-6">
+    <Card
+      title={tr({ id: "imports.brokerExport", message: `Export from ${broker.name}` })}
+      className="self-start lg:sticky lg:top-6"
+    >
       <div className="flex flex-col gap-4">
         <BrokerSteps broker={broker} />
 
         <p className="text-[11px] leading-relaxed text-muted-foreground">
-          Your file stays on your server. Nothing is sent to third parties.
+          {tr({
+            id: "imports.privacy",
+            message: "Your file stays on your server. Nothing is sent to third parties.",
+          })}
         </p>
 
         {onChangeBroker ? (
@@ -283,7 +317,7 @@ function BrokerGuidance({
             onClick={onChangeBroker}
             className="h-auto w-fit px-0 text-[11px] text-muted-foreground hover:text-foreground"
           >
-            Pick a different broker →
+            {tr({ id: "imports.otherBroker", message: "Pick a different broker →" })}
           </Button>
         ) : null}
       </div>
@@ -312,6 +346,7 @@ function Step1Upload({
   error,
   loading,
 }: Step1Props) {
+  const { t: tr } = useLinguiMacro();
   const [accountId, setAccountId] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [jsonAccountName, setJsonAccountName] = useState<string | null>(null);
@@ -347,30 +382,39 @@ function Step1Upload({
   }
 
   return (
-    <Card title="Upload file" fill>
+    <Card title={tr({ id: "imports.uploadFile", message: "Upload file" })} fill>
       <div className="flex min-h-0 flex-1 flex-col gap-4">
         {accountsLoading ? (
           <Skeleton height="36px" />
         ) : canBypassAccount && accounts.length === 0 ? (
           <Field
-            label="Account"
+            label={tr({ id: "imports.account", message: "Account" })}
             description={
               jsonAccountName
-                ? `Will create “${jsonAccountName}” from the JSON file on confirm.`
-                : "Will create or match an account from the JSON file on confirm."
+                ? tr({
+                    id: "imports.createJsonAccount",
+                    message: `Will create “${jsonAccountName}” from the JSON file on confirm.`,
+                  })
+                : tr({
+                    id: "imports.jsonAccount",
+                    message: "Will create or match an account from the JSON file on confirm.",
+                  })
             }
             className="w-full sm:max-w-xs"
           >
             <p className="w-full rounded-lg bg-muted px-3 py-2 text-[13px] text-foreground">
-              {jsonAccountName ?? "From JSON backup"}
+              {jsonAccountName ?? tr({ id: "imports.fromBackup", message: "From JSON backup" })}
             </p>
           </Field>
         ) : (
           <Field
-            label="Account"
+            label={tr({ id: "imports.account", message: "Account" })}
             description={
               canBypassAccount
-                ? `JSON includes “${jsonAccountName}” — select an account to override.`
+                ? tr({
+                    id: "imports.overrideJsonAccount",
+                    message: `JSON includes “${jsonAccountName}” — select an account to override.`,
+                  })
                 : undefined
             }
             className="w-full sm:max-w-xs"
@@ -378,12 +422,15 @@ function Step1Upload({
             <NativeSelect
               value={effectiveAccountId}
               onChange={(event) => setAccountId(event.target.value)}
-              aria-label="Account select"
+              aria-label={tr({ id: "imports.accountSelect", message: "Account select" })}
               wrapperClassName="w-full"
             >
               {accounts.length === 0 ? (
                 <NativeSelectOption value="" disabled>
-                  No accounts — create one in Settings
+                  {tr({
+                    id: "imports.noAccounts",
+                    message: "No accounts — create one in Settings",
+                  })}
                 </NativeSelectOption>
               ) : (
                 accounts.map((a) => (
@@ -396,7 +443,10 @@ function Step1Upload({
           </Field>
         )}
 
-        <Field label="File" className="min-h-0 w-full flex-1">
+        <Field
+          label={tr({ id: "imports.file", message: "File" })}
+          className="min-h-0 w-full flex-1"
+        >
           <CsvDropZone
             file={file}
             onFileChange={(f) => void handleFileChange(f)}
@@ -418,21 +468,28 @@ function Step1Upload({
             {loading ? (
               <>
                 <RefreshCw size={13} strokeWidth={1.5} className="animate-spin" />
-                Processing…
+                {tr({ id: "imports.processing", message: "Processing…" })}
               </>
             ) : (
               <>
-                Preview import
+                {tr({ id: "imports.preview", message: "Preview import" })}
                 <ArrowRight size={13} strokeWidth={1.5} />
               </>
             )}
           </Button>
           <span className="text-[12px] text-muted-foreground">
             {file && !canSubmit && !canBypassAccount && accounts.length === 0
-              ? "Create an account in Settings, or upload a JSON backup that includes account details"
+              ? tr({
+                  id: "imports.needAccount",
+                  message:
+                    "Create an account in Settings, or upload a JSON backup that includes account details",
+                })
               : file
                 ? null
-                : "Select a CSV or JSON file to continue"}
+                : tr({
+                    id: "imports.selectFile",
+                    message: "Select a CSV or JSON file to continue",
+                  })}
           </span>
         </div>
       </div>
@@ -451,6 +508,7 @@ function JournalSummaryStrip({
   summary: JournalPreviewSummary;
   currency: string;
 }) {
+  const { t: tr } = useLinguiMacro();
   usePrivacyMode();
   const locale = intlLocale();
   const netPnl = fmtSignedMoney(summary.net_pnl, currency, locale);
@@ -458,23 +516,23 @@ function JournalSummaryStrip({
 
   const cells: { label: string; value: string; sub?: string; valueClass?: string }[] = [
     {
-      label: "Trades",
+      label: tr({ id: "imports.trades", message: "Trades" }),
       value: String(summary.trade_count),
-      sub: "round-trips",
+      sub: tr({ id: "imports.roundTrips", message: "round-trips" }),
     },
     {
-      label: "Markets",
+      label: tr({ id: "imports.markets", message: "Markets" }),
       value: `${summary.stock_trades} / ${summary.option_trades}`,
-      sub: "stk / opt",
+      sub: tr({ id: "imports.stkOpt", message: "stk / opt" }),
       valueClass: "text-primary",
     },
     {
-      label: "Fills",
+      label: tr({ id: "imports.fills", message: "Fills" }),
       value: String(summary.execution_count),
-      sub: "executions",
+      sub: tr({ id: "imports.executions", message: "executions" }),
     },
     {
-      label: "Est. net P&L",
+      label: tr({ id: "imports.estimatedNet", message: "Est. net P&L" }),
       value: netPnl,
       valueClass: pnlTone,
     },
@@ -506,7 +564,10 @@ function JournalSummaryStrip({
       </div>
       {summary.error_count > 0 ? (
         <p className="rounded-md bg-destructive/10 px-3 py-2 text-[11px] text-destructive">
-          {summary.error_count} row(s) could not be parsed — they will be skipped on import.
+          {tr({
+            id: "imports.parseErrors",
+            message: `${summary.error_count} row(s) could not be parsed — they will be skipped on import.`,
+          })}
         </p>
       ) : null}
     </div>
@@ -526,31 +587,29 @@ function JournalTradePreviewTable({
   optionOverrides: Record<number, OptionRightOverride>;
   onOptionRightChange: (row: number, right: OptionRightOverride) => void;
 }) {
+  "use no memo";
+  useLingui();
   const openImportTradePreview = useUI((s) => s.openImportTradePreview);
   const displayTrades = useMemo(
     () => mergeOptionOverrides(trades, optionOverrides),
     [trades, optionOverrides],
   );
 
-  const columns = useMemo(
-    () =>
-      journalTradePreviewColumns(
+  const columns = journalTradePreviewColumns(
+    currency,
+    (trade) => {
+      const detail = tradeDetailFromJournalPreview(trade, {
+        accountId: accountId || "pending",
+        optionRight: effectiveOptionRight(trade, optionOverrides),
         currency,
-        (trade) => {
-          const detail = tradeDetailFromJournalPreview(trade, {
-            accountId: accountId || "pending",
-            optionRight: effectiveOptionRight(trade, optionOverrides),
-            currency,
-          });
-          openImportTradePreview(detail, (optionRight) => {
-            if (optionRight === "call" || optionRight === "put") {
-              onOptionRightChange(trade.row, optionRight);
-            }
-          });
-        },
-        optionOverrides,
-      ),
-    [currency, accountId, optionOverrides, onOptionRightChange, openImportTradePreview],
+      });
+      openImportTradePreview(detail, (optionRight) => {
+        if (optionRight === "call" || optionRight === "put") {
+          onOptionRightChange(trade.row, optionRight);
+        }
+      });
+    },
+    optionOverrides,
   );
 
   return <DataTable columns={columns} data={displayTrades} dense maxHeight="min(60vh, 520px)" />;
@@ -583,6 +642,8 @@ interface Step2Props {
 }
 
 function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loading }: Step2Props) {
+  const { _ } = useLingui();
+  const { t: tr } = useLinguiMacro();
   const isJournal = preview.format === "journal_trades";
   const isCash = preview.format === "cash_transactions";
   // MetaTrader statements are parsed positionally — no column mapping, but the
@@ -631,17 +692,27 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
         className="h-auto w-fit gap-1 px-2 py-1 text-[11px] text-muted-foreground hover:bg-accent hover:text-muted-foreground"
       >
         <ArrowLeft size={12} strokeWidth={1.75} />
-        Back
+        {tr({ id: "imports.back", message: "Back" })}
       </Button>
 
-      <Card title={skipMapping ? (isJournal ? "Review journal" : "Review import") : "Map columns"}>
+      <Card
+        title={
+          skipMapping
+            ? isJournal
+              ? tr({ id: "imports.reviewJournal", message: "Review journal" })
+              : tr({ id: "imports.reviewImport", message: "Review import" })
+            : tr({ id: "imports.mapColumns", message: "Map columns" })
+        }
+      >
         <div className="flex flex-col gap-5">
           {isJournal ? (
             <div className="flex flex-col gap-4">
               <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
-                Closed-trade journal export — each row becomes one round-trip (2 fills). Setup,
-                tags, and journal fields apply automatically. Dir shows side and call/put when
-                present; use <span className="font-medium text-foreground">Edit</span> to fill gaps.
+                {tr({
+                  id: "imports.journalReviewHint",
+                  message:
+                    "Closed-trade journal export — each row becomes one round-trip (2 fills). Setup, tags, and journal fields apply automatically. Direction shows side and call/put when present; use Edit to fill gaps.",
+                })}
               </p>
               {preview.journal_summary ? (
                 <JournalSummaryStrip summary={preview.journal_summary} currency={currency} />
@@ -652,40 +723,62 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
               {preview.detected_broker ? (
                 <p className="m-0 text-[12px] leading-relaxed">
                   <span className="rounded-md bg-primary/10 px-1.5 py-0.5 font-medium text-primary">
-                    Detected: {preview.detected_broker}
+                    {tr({
+                      id: "imports.detected",
+                      message: `Detected: ${preview.detected_broker}`,
+                    })}
                   </span>
                 </p>
               ) : null}
               <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
-                Statement parsed directly — no column mapping needed. Times in MetaTrader reports
-                are the broker server&apos;s clock (usually EET); confirm the timezone below before
-                importing.
+                {tr({
+                  id: "imports.statementDirect",
+                  message:
+                    "Statement parsed directly — no column mapping needed. Times in MetaTrader reports are the broker server's clock (usually EET); confirm the timezone below before importing.",
+                })}
               </p>
             </div>
           ) : isCash ? (
             <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
-              SBI cash transactions import directly into the cash ledger — no column mapping needed.
+              {tr({
+                id: "imports.cashDirect",
+                message:
+                  "SBI cash transactions import directly into the cash ledger — no column mapping needed.",
+              })}
             </p>
           ) : skipMapping ? (
             <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
-              TraderMemos JSON execution export — fills import directly, no column mapping needed.
+              {tr({
+                id: "imports.jsonDirect",
+                message:
+                  "TraderMemos JSON execution export — fills import directly, no column mapping needed.",
+              })}
             </p>
           ) : (
             <div className="flex flex-col gap-2">
               {preview.detected_broker ? (
                 <p className="m-0 text-[12px] leading-relaxed">
                   <span className="rounded-md bg-primary/10 px-1.5 py-0.5 font-medium text-primary">
-                    Detected: {preview.detected_broker}
+                    {tr({
+                      id: "imports.detected",
+                      message: `Detected: ${preview.detected_broker}`,
+                    })}
                   </span>{" "}
                   <span className="text-muted-foreground">
-                    Columns are pre-mapped from this broker&apos;s export format — review and adjust
-                    if needed.
+                    {tr({
+                      id: "imports.premapped",
+                      message:
+                        "Columns are pre-mapped from this broker's export format — review and adjust if needed.",
+                    })}
                   </span>
                 </p>
               ) : null}
               <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
-                Match each field to a CSV column. Instrument type is optional — map Market/Asset
-                Type for mixed files, or skip to infer from each symbol.
+                {tr({
+                  id: "imports.mapHint",
+                  message:
+                    "Match each field to a CSV column. Instrument type is optional — map Market/Asset Type for mixed files, or skip to infer from each symbol.",
+                })}
               </p>
             </div>
           )}
@@ -700,7 +793,7 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
               ).map((field) => (
                 <Field
                   key={field}
-                  label={field.replace(/_/g, " ")}
+                  label={fieldLabel(field, _)}
                   // `items-stretch` overrides the Field default `items-start` so
                   // each trigger fills its grid column and the rows stay aligned.
                   className="w-full items-stretch capitalize"
@@ -708,16 +801,22 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
                   <OptionsSelect
                     value={mapping[field] ?? ""}
                     onValueChange={(v) => setField(field, v)}
-                    ariaLabel={`Map ${field}`}
+                    ariaLabel={tr({
+                      id: "imports.mapField",
+                      message: `Map ${fieldLabel(field, _)}`,
+                    })}
                     options={[
-                      { value: "", label: "(skip)" },
+                      { value: "", label: tr({ id: "imports.skip", message: "(skip)" }) },
                       // Broker presets can pin a constant (e.g. "=future");
                       // surface it as a selectable option so it isn't blank.
                       ...(mapping[field]?.startsWith("=")
                         ? [
                             {
                               value: mapping[field],
-                              label: `always "${mapping[field].slice(1)}"`,
+                              label: tr({
+                                id: "imports.constant",
+                                message: `always "${mapping[field].slice(1)}"`,
+                              }),
                             },
                           ]
                         : []),
@@ -732,11 +831,14 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
 
           {(!skipMapping || isStatement) && (
             <div className="flex flex-col gap-1.5">
-              <Field label="Timestamps timezone" className="w-full items-stretch sm:max-w-xs">
+              <Field
+                label={tr({ id: "imports.zone", message: "Timestamps timezone" })}
+                className="w-full items-stretch sm:max-w-xs"
+              >
                 <OptionsSelect
                   value={sourceTz}
                   onValueChange={setSourceTz}
-                  ariaLabel="Timestamps timezone"
+                  ariaLabel={tr({ id: "imports.zone", message: "Timestamps timezone" })}
                   options={marketTimezoneSelectOptions().map((o) => ({
                     value: o.value,
                     label: o.label,
@@ -746,8 +848,16 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
               </Field>
               <p className="m-0 text-[11px] leading-relaxed text-muted-foreground">
                 {isStatement
-                  ? "Zone your broker's MetaTrader server runs in — most use EET (Athens), never UTC."
-                  : "Zone the file's times were exported in — most US broker exports are Eastern. Times that carry their own offset are unaffected."}
+                  ? tr({
+                      id: "imports.statementZone",
+                      message:
+                        "Zone your broker's MetaTrader server runs in — most use EET (Athens), never UTC.",
+                    })
+                  : tr({
+                      id: "imports.fileZone",
+                      message:
+                        "Zone the file's times were exported in — most US broker exports are Eastern. Times that carry their own offset are unaffected.",
+                    })}
               </p>
             </div>
           )}
@@ -756,10 +866,10 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
 
           {preview.pending_account ? (
             <p className="m-0 rounded-md bg-muted px-3 py-2.5 text-[12px] leading-relaxed text-muted-foreground">
-              Account{" "}
-              <span className="font-medium text-foreground">“{preview.pending_account.name}”</span>
-              {preview.pending_account.broker ? ` · ${preview.pending_account.broker}` : ""} will be
-              created when you confirm.
+              {tr({
+                id: "imports.pendingAccount",
+                message: `Account “${preview.pending_account.name}” (${preview.pending_account.broker || "—"}) will be created when you confirm.`,
+              })}
             </p>
           ) : null}
         </div>
@@ -768,7 +878,10 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
       {isJournal && preview.sample_trades && preview.sample_trades.length > 0 ? (
         <Card
           flush
-          title={`Trade preview (${preview.journal_summary?.trade_count ?? preview.sample_trades.length})`}
+          title={tr({
+            id: "imports.tradePreview",
+            message: `Trade preview (${preview.journal_summary?.trade_count ?? preview.sample_trades.length})`,
+          })}
         >
           <JournalTradePreviewTable
             trades={preview.sample_trades}
@@ -779,7 +892,7 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
           />
         </Card>
       ) : (
-        <Card flush title="Sample rows">
+        <Card flush title={tr({ id: "imports.sampleRows", message: "Sample rows" })}>
           <CsvSamplePreviewTable headers={preview.headers} rows={preview.sample_rows} />
         </Card>
       )}
@@ -795,10 +908,10 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
           {loading ? (
             <>
               <RefreshCw size={13} strokeWidth={1.5} className="animate-spin" />
-              Importing…
+              {tr({ id: "imports.importing", message: "Importing…" })}
             </>
           ) : (
-            "Confirm import"
+            tr({ id: "imports.confirm", message: "Confirm import" })
           )}
         </Button>
       </div>
@@ -817,8 +930,9 @@ interface Step3Props {
 }
 
 function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
+  const { t: tr } = useLinguiMacro();
   return (
-    <Card title="Import complete">
+    <Card title={tr({ id: "imports.complete", message: "Import complete" })}>
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
           <span
@@ -827,33 +941,55 @@ function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
           >
             <Check size={15} strokeWidth={2} />
           </span>
-          <span className="text-[13px] font-semibold text-foreground">Import finished</span>
+          <span className="text-[13px] font-semibold text-foreground">
+            {tr({ id: "imports.finished", message: "Import finished" })}
+          </span>
         </div>
 
         <div className="rounded-md bg-muted px-4 py-3">
           <div className="flex flex-col gap-2">
             {result.format === "journal_trades" && typeof result.trades === "number" ? (
-              <Row label="Trades created" value={String(result.trades)} highlight="pos" />
+              <Row
+                label={tr({ id: "imports.createdTrades", message: "Trades created" })}
+                value={String(result.trades)}
+                highlight="pos"
+              />
             ) : null}
             {result.format !== "cash_transactions" ? (
               <Row
-                label={result.format === "journal_trades" ? "Fills inserted" : "Inserted"}
+                label={
+                  result.format === "journal_trades"
+                    ? tr({ id: "imports.insertedFills", message: "Fills inserted" })
+                    : tr({ id: "imports.inserted", message: "Inserted" })
+                }
                 value={String(result.inserted)}
                 highlight={result.format === "journal_trades" ? undefined : "pos"}
               />
             ) : null}
-            <Row label="Skipped (duplicates)" value={String(result.skipped)} />
+            <Row
+              label={tr({ id: "imports.skipped", message: "Skipped (duplicates)" })}
+              value={String(result.skipped)}
+            />
             {typeof result.annotated === "number" && (
-              <Row label="Journal annotated" value={String(result.annotated)} />
+              <Row
+                label={tr({ id: "imports.annotated", message: "Journal annotated" })}
+                value={String(result.annotated)}
+              />
             )}
             {typeof result.setups_upserted === "number" && result.setups_upserted > 0 ? (
-              <Row label="Setups restored" value={String(result.setups_upserted)} />
+              <Row
+                label={tr({ id: "imports.restoredSetups", message: "Setups restored" })}
+                value={String(result.setups_upserted)}
+              />
             ) : null}
             {typeof result.cash_inserted === "number" && result.cash_inserted > 0 ? (
-              <Row label="Cash transactions" value={String(result.cash_inserted)} />
+              <Row
+                label={tr({ id: "imports.cash", message: "Cash transactions" })}
+                value={String(result.cash_inserted)}
+              />
             ) : null}
             <Row
-              label="Errors"
+              label={tr({ id: "imports.errors", message: "Errors" })}
               value={String(result.errors.length)}
               highlight={result.errors.length > 0 ? "neg" : undefined}
             />
@@ -862,10 +998,12 @@ function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
 
         {result.errors.length > 0 && (
           <div className="rounded-md bg-destructive/10 px-3.5 py-2.5">
-            <p className="mb-1.5 text-[11px] font-semibold text-destructive">Row errors</p>
+            <p className="mb-1.5 text-[11px] font-semibold text-destructive">
+              {tr({ id: "imports.rowErrors", message: "Row errors" })}
+            </p>
             {result.errors.map((e, i) => (
               <p key={i} className="text-[11px] text-destructive">
-                Row {e.row}: {e.message}
+                {tr({ id: "imports.rowError", message: `Row ${e.row}: ${e.message}` })}
               </p>
             ))}
           </div>
@@ -874,7 +1012,7 @@ function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
         <div className="mt-2 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
           <Button type="button" variant="default" onClick={onDone} className="w-full sm:w-auto">
             <Check size={13} strokeWidth={1.5} />
-            Go to Home
+            {tr({ id: "imports.home", message: "Go to Home" })}
           </Button>
           <Button
             type="button"
@@ -883,7 +1021,7 @@ function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
             className="w-full sm:w-auto"
           >
             <Upload size={13} strokeWidth={1.5} />
-            Import another
+            {tr({ id: "imports.another", message: "Import another" })}
           </Button>
         </div>
       </div>
@@ -928,6 +1066,38 @@ interface ExportPanelProps {
 }
 
 function ExportPanel({ accounts, accountsLoading, defaultAccountId }: ExportPanelProps) {
+  const { t: tr } = useLinguiMacro();
+
+  const EXPORT_FORMATS: (FormatNote & { value: ExportFormat })[] = [
+    {
+      value: "json",
+      icon: FileJson,
+      name: "JSON",
+      body: tr({
+        id: "imports.exportJsonHint",
+        message:
+          "Canonical backup — trades, fills, journal, cash, and playbook setups. Re-import on this page.",
+      }),
+    },
+    {
+      value: "csv",
+      icon: FileText,
+      name: "CSV",
+      body: tr({
+        id: "imports.exportCsvHint",
+        message: "Journal spreadsheet of closed trades, in spreadsheet-friendly encoding.",
+      }),
+    },
+    {
+      value: "zip",
+      icon: FileArchive,
+      name: "ZIP",
+      body: tr({
+        id: "imports.exportZipHint",
+        message: "export.json plus trade screenshots under attachments/.",
+      }),
+    },
+  ];
   const [accountId, setAccountId] = useState("");
   const [format, setFormat] = useState<ExportFormat>("json");
   const [omitAccount, setOmitAccount] = useState(false);
@@ -958,28 +1128,41 @@ function ExportPanel({ accounts, accountsLoading, defaultAccountId }: ExportPane
         omitAccount: showOmitAccount && omitAccount,
       });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Export failed. Please try again.");
+      setError(
+        e instanceof Error
+          ? e.message
+          : tr({ id: "imports.exportFailed", message: "Export failed. Please try again." }),
+      );
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <Card title="Export account">
+    <Card title={tr({ id: "imports.exportAccount", message: "Export account" })}>
       <div className="flex flex-col gap-5">
         {accountsLoading ? (
           <Skeleton height="36px" />
         ) : (
-          <Field label="Account" className="w-full sm:max-w-xs">
+          <Field
+            label={tr({ id: "imports.account", message: "Account" })}
+            className="w-full sm:max-w-xs"
+          >
             <NativeSelect
               value={effectiveAccountId}
               onChange={(event) => setAccountId(event.target.value)}
-              aria-label="Export account select"
+              aria-label={tr({
+                id: "imports.exportAccountSelect",
+                message: "Export account select",
+              })}
               wrapperClassName="w-full"
             >
               {accounts.length === 0 ? (
                 <NativeSelectOption value="" disabled>
-                  No accounts — create one in Settings
+                  {tr({
+                    id: "imports.noAccounts",
+                    message: "No accounts — create one in Settings",
+                  })}
                 </NativeSelectOption>
               ) : (
                 accounts.map((account) => (
@@ -992,7 +1175,7 @@ function ExportPanel({ accounts, accountsLoading, defaultAccountId }: ExportPane
           </Field>
         )}
 
-        <Field label="Format" className="w-full">
+        <Field label={tr({ id: "imports.format", message: "Format" })} className="w-full">
           <div className="grid w-full gap-2 sm:grid-cols-3">
             {EXPORT_FORMATS.map((option) => {
               const isActive = option.value === format;
@@ -1043,15 +1226,15 @@ function ExportPanel({ accounts, accountsLoading, defaultAccountId }: ExportPane
               variant="outline"
               size="sm"
               tone="accent"
-              aria-label="Omit account details"
+              aria-label={tr({ id: "imports.omitDetails", message: "Omit account details" })}
             >
-              Omit account
+              {tr({ id: "imports.omit", message: "Omit account" })}
             </ToneToggle>
             <ControlledPopover
               open={omitInfoOpen}
               onOpenChange={setOmitInfoOpen}
               align="start"
-              triggerAriaLabel="About omit account"
+              triggerAriaLabel={tr({ id: "imports.aboutOmit", message: "About omit account" })}
               triggerClassName={cn(
                 buttonVariants({ variant: "ghost", size: "icon-sm" }),
                 "text-muted-foreground hover:text-foreground",
@@ -1060,11 +1243,15 @@ function ExportPanel({ accounts, accountsLoading, defaultAccountId }: ExportPane
               className="max-w-[17rem] p-3"
               trigger={<Info size={14} strokeWidth={1.75} aria-hidden />}
             >
-              <p className="m-0 text-[12px] font-medium text-foreground">Omit account</p>
+              <p className="m-0 text-[12px] font-medium text-foreground">
+                {tr({ id: "imports.omit", message: "Omit account" })}
+              </p>
               <p className="mt-2 m-0 text-[12px] leading-relaxed text-muted-foreground">
-                Strips account name, broker, and IDs from the export — including on trades and
-                fills. Use this for portable trade data; re-import requires selecting or creating an
-                account.
+                {tr({
+                  id: "imports.omitHint",
+                  message:
+                    "Strips account name, broker, and IDs from the export — including on trades and fills. Use this for portable trade data; re-import requires selecting or creating an account.",
+                })}
               </p>
             </ControlledPopover>
           </div>
@@ -1072,8 +1259,16 @@ function ExportPanel({ accounts, accountsLoading, defaultAccountId }: ExportPane
 
         <p className="text-[11px] leading-relaxed text-muted-foreground">
           {showOmitAccount && omitAccount
-            ? "Account name, broker, and IDs are stripped — re-import requires selecting or creating an account."
-            : "Exports are generated on your server and downloaded straight to this device."}
+            ? tr({
+                id: "imports.omitActive",
+                message:
+                  "Account name, broker, and IDs are stripped — re-import requires selecting or creating an account.",
+              })
+            : tr({
+                id: "imports.exportPrivacy",
+                message:
+                  "Exports are generated on your server and downloaded straight to this device.",
+              })}
         </p>
 
         {error ? <p className="text-[12px] text-destructive">{error}</p> : null}
@@ -1089,12 +1284,12 @@ function ExportPanel({ accounts, accountsLoading, defaultAccountId }: ExportPane
             {loading ? (
               <>
                 <RefreshCw size={13} strokeWidth={1.5} className="animate-spin" />
-                Preparing…
+                {tr({ id: "imports.preparing", message: "Preparing…" })}
               </>
             ) : (
               <>
                 <Download size={13} strokeWidth={1.5} />
-                Download export
+                {tr({ id: "imports.download", message: "Download export" })}
               </>
             )}
           </Button>
@@ -1132,20 +1327,29 @@ export interface ImportViewProps {
 function describeImportFailure(e: unknown, stage: "preview" | "commit") {
   if (e instanceof ApiError) {
     return {
-      title: stage === "preview" ? "Could not read that file" : "Import failed",
+      title:
+        stage === "preview"
+          ? tr({ id: "imports.readFailed", message: "Could not read that file" })
+          : tr({ id: "imports.failed", message: "Import failed" }),
       description: e.message,
     };
   }
   if (stage === "preview") {
     return {
-      title: "Could not read that file",
-      description: e instanceof Error ? e.message : "Check the file and try again.",
+      title: tr({ id: "imports.readFailed", message: "Could not read that file" }),
+      description:
+        e instanceof Error
+          ? e.message
+          : tr({ id: "imports.checkFile", message: "Check the file and try again." }),
     };
   }
   return {
-    title: "Lost contact with the server",
-    description:
-      "The import may still be finishing in the background. Check your trades in a minute before importing again — re-importing the same file is safe, duplicate fills are skipped.",
+    title: tr({ id: "imports.connectionLost", message: "Lost contact with the server" }),
+    description: tr({
+      id: "imports.connectionHint",
+      message:
+        "The import may still be finishing in the background. Check your trades in a minute before importing again — re-importing the same file is safe, duplicate fills are skipped.",
+    }),
   };
 }
 
@@ -1160,6 +1364,7 @@ export function ImportView({
   brokerKey,
   onChangeBroker,
 }: ImportViewProps) {
+  const { t: tr } = useLinguiMacro();
   const broker = findBroker(brokerKey);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [dataMode, setDataMode] = useState<"import" | "export">("import");
@@ -1246,30 +1451,36 @@ export function ImportView({
       <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
         <div className="min-w-0">
           <h1 className="text-[22px] font-semibold tracking-tight text-foreground">
-            Import & export
+            {tr({ id: "imports.heading", message: "Import & export" })}
           </h1>
           {dataMode === "import" && broker ? (
             <div className="mt-1.5 flex items-center gap-2">
               <BrokerMark broker={broker} size="sm" />
               <span className="text-[13px] text-muted-foreground">
-                Importing from <span className="font-medium text-foreground">{broker.name}</span>
+                {tr({ id: "imports.importFrom", message: `Importing from ${broker.name}` })}
               </span>
             </div>
           ) : (
             <p className="mt-1 max-w-xl text-[13px] leading-relaxed text-muted-foreground">
               {dataMode === "import"
-                ? "Upload broker history to populate your journal and analytics."
-                : "Download your trades or fills for backup and portability."}
+                ? tr({
+                    id: "imports.importHint",
+                    message: "Upload broker history to populate your journal and analytics.",
+                  })
+                : tr({
+                    id: "imports.exportHint",
+                    message: "Download your trades or fills for backup and portability.",
+                  })}
             </p>
           )}
         </div>
         <SegmentedControl
-          ariaLabel="Import or export"
+          ariaLabel={tr({ id: "imports.mode", message: "Import or export" })}
           value={dataMode}
           onChange={(v) => setDataMode(v as "import" | "export")}
           options={[
-            { value: "import", label: "Import" },
-            { value: "export", label: "Export" },
+            { value: "import", label: tr({ id: "imports.import", message: "Import" }) },
+            { value: "export", label: tr({ id: "imports.export", message: "Export" }) },
           ]}
         />
       </header>

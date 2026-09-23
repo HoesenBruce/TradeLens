@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import {
   CircleAlertIcon,
   CloudUploadIcon,
@@ -50,6 +51,7 @@ function toFile(entry: FileWithPreview): File | null {
 }
 
 export function CsvDropZone({ file, onFileChange, disabled, fill, className }: CsvDropZoneProps) {
+  const { t: tr } = useLinguiMacro();
   const [
     { isDragging, errors },
     {
@@ -95,7 +97,10 @@ export function CsvDropZone({ file, onFileChange, disabled, fill, className }: C
         )}
       >
         <input
-          {...getInputProps({ disabled, "aria-label": "Import file input" })}
+          {...getInputProps({
+            disabled,
+            "aria-label": tr({ id: "imports.fileInput", message: "Import file input" }),
+          })}
           className="sr-only"
         />
 
@@ -111,18 +116,21 @@ export function CsvDropZone({ file, onFileChange, disabled, fill, className }: C
 
         <div className="space-y-2">
           <p className="m-0 text-sm font-medium">
-            Drop a file here or{" "}
+            {tr({ id: "imports.drop", message: "Drop a file here or" })}{" "}
             <button
               type="button"
               onClick={openFileDialog}
               disabled={disabled}
               className="cursor-pointer text-primary underline-offset-4 hover:underline"
             >
-              browse files
+              {tr({ id: "imports.browse", message: "browse files" })}
             </button>
           </p>
           <p className="m-0 text-xs text-muted-foreground">
-            CSV, JSON, or MT4/MT5 statement · maximum file size {formatBytes(MAX_SIZE)}
+            {tr({
+              id: "imports.fileHint",
+              message: `CSV, JSON, or MT4/MT5 statement · maximum file size ${formatBytes(MAX_SIZE)}`,
+            })}
           </p>
         </div>
       </div>
@@ -134,13 +142,19 @@ export function CsvDropZone({ file, onFileChange, disabled, fill, className }: C
               <TableRow className="text-xs">
                 {/* `w-full` + `max-w-0` on Name: it absorbs the leftover width and
                     truncates, while the fixed columns size to their content. */}
-                <TableHead className="h-9 w-full ps-4">Name</TableHead>
+                <TableHead className="h-9 w-full ps-4">
+                  {tr({ id: "imports.name", message: "Name" })}
+                </TableHead>
                 {/* The extension is already in the name — drop the chip on phones. */}
                 <TableHead className="hidden h-9 w-px whitespace-nowrap sm:table-cell">
-                  Type
+                  {tr({ id: "imports.type", message: "Type" })}
                 </TableHead>
-                <TableHead className="h-9 w-px whitespace-nowrap">Size</TableHead>
-                <TableHead className="h-9 w-px whitespace-nowrap ps-4">Actions</TableHead>
+                <TableHead className="h-9 w-px whitespace-nowrap">
+                  {tr({ id: "imports.size", message: "Size" })}
+                </TableHead>
+                <TableHead className="h-9 w-px whitespace-nowrap ps-4">
+                  {tr({ id: "imports.actions", message: "Actions" })}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -153,7 +167,9 @@ export function CsvDropZone({ file, onFileChange, disabled, fill, className }: C
                 </TableCell>
                 <TableCell className="hidden py-2 sm:table-cell">
                   <Badge variant="secondary" className="text-xs">
-                    {kind === "file" ? "File" : kind?.toUpperCase()}
+                    {kind === "file"
+                      ? tr({ id: "imports.file", message: "File" })
+                      : kind?.toUpperCase()}
                   </Badge>
                 </TableCell>
                 <TableCell className="py-2 text-sm whitespace-nowrap tabular-nums text-muted-foreground">
@@ -170,7 +186,7 @@ export function CsvDropZone({ file, onFileChange, disabled, fill, className }: C
                     disabled={disabled}
                     variant="ghost"
                     size="icon-sm"
-                    aria-label="Remove file"
+                    aria-label={tr({ id: "imports.removeFile", message: "Remove file" })}
                     className="text-muted-foreground hover:text-destructive"
                   >
                     <Trash2Icon className="size-3.5" />
@@ -194,14 +210,14 @@ export function CsvDropZone({ file, onFileChange, disabled, fill, className }: C
           className="w-full sm:w-fit"
         >
           <CloudUploadIcon className="size-4" />
-          Choose a different file
+          {tr({ id: "imports.replaceFile", message: "Choose a different file" })}
         </Button>
       ) : null}
 
       {errors.length > 0 ? (
         <Alert variant="destructive">
           <CircleAlertIcon />
-          <AlertTitle>File upload error</AlertTitle>
+          <AlertTitle>{tr({ id: "imports.uploadError", message: "File upload error" })}</AlertTitle>
           <AlertDescription>
             {errors.map((error) => (
               <p key={error} className="last:mb-0">
