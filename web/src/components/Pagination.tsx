@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
@@ -55,12 +56,13 @@ function PageButton({
   active: boolean;
   onClick: () => void;
 }) {
+  const { t: tr } = useLinguiMacro();
   return (
     <Button
       type="button"
       variant={active ? "soft" : "ghost"}
       size="icon"
-      aria-label={`Page ${page}`}
+      aria-label={tr({ id: "market.page", message: `Page ${page}` })}
       aria-current={active ? "page" : undefined}
       tooltip={false}
       onClick={onClick}
@@ -89,6 +91,8 @@ export function Pagination({
   className,
   alwaysShow = false,
 }: PaginationProps) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
   if (total <= 0) return null;
   if (!alwaysShow && pageCount <= 1 && !onPageSizeChange) return null;
 
@@ -99,14 +103,16 @@ export function Pagination({
 
   return (
     <nav
-      aria-label="Pagination"
+      aria-label={tr({ id: "market.pagination", message: "Pagination" })}
       className={cn(
         "flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-2.5",
         className,
       )}
     >
       <p className="text-[11px] tabular-nums text-muted-foreground">
-        <span className="text-muted-foreground">Showing </span>
+        <span className="text-muted-foreground">
+          {tr({ id: "market.showing", message: "Showing" })}{" "}
+        </span>
         {pageRangeLabel(page, pageSize, total)}
       </p>
 
@@ -116,12 +122,12 @@ export function Pagination({
         {onPageSizeChange ? (
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-              Rows
+              {tr({ id: "market.rows", message: "Rows" })}
             </span>
             <NativeSelect
               variant="ghost"
               size="sm"
-              aria-label="Rows per page"
+              aria-label={tr({ id: "market.rowsPerPage", message: "Rows per page" })}
               value={String(pageSize)}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
               wrapperClassName="h-9 w-fit sm:h-7.5"
@@ -140,7 +146,7 @@ export function Pagination({
           <div className="flex basis-full justify-center sm:basis-auto sm:justify-end">
             <div className="flex items-center gap-0.5 rounded-md bg-muted/60 p-0.5">
               <NavButton
-                label="Previous page"
+                label={tr({ id: "market.previousPage", message: "Previous page" })}
                 disabled={!canPrev}
                 onClick={() => onPageChange(page - 1)}
               >
@@ -157,7 +163,9 @@ export function Pagination({
                         className="text-muted-foreground"
                         aria-hidden
                       />
-                      <span className="sr-only">More pages</span>
+                      <span className="sr-only">
+                        {tr({ id: "market.morePages", message: "More pages" })}
+                      </span>
                     </li>
                   ) : (
                     <li key={item}>
@@ -172,7 +180,7 @@ export function Pagination({
               </ul>
 
               <NavButton
-                label="Next page"
+                label={tr({ id: "market.nextPage", message: "Next page" })}
                 disabled={!canNext}
                 onClick={() => onPageChange(page + 1)}
               >

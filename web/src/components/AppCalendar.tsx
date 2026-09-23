@@ -1,3 +1,6 @@
+import { useLingui } from "@lingui/react";
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
+import { enUS, ja, ko, zhCN, zhHK } from "date-fns/locale";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import type { ComponentProps } from "react";
 import { type DateRange, DayPicker } from "react-day-picker";
@@ -124,8 +127,22 @@ export function AppCalendar({
   showOutsideDays = true,
   ...props
 }: ComponentProps<typeof DayPicker>) {
+  const { i18n } = useLingui();
+  const { t: tr } = useLinguiMacro();
+  const locale =
+    ({ en: enUS, ja, ko, "zh-CN": zhCN, "zh-HK": zhHK } as const)[i18n.locale as "en"] ?? enUS;
   return (
     <DayPicker
+      locale={locale}
+      labels={{
+        labelNav: () => tr({ id: "market.calendarNav", message: "Navigation bar" }),
+        labelPrevious: () =>
+          tr({ id: "market.previousMonth", message: "Go to the Previous Month" }),
+        labelNext: () => tr({ id: "market.nextMonth", message: "Go to the Next Month" }),
+        labelMonthDropdown: () => tr({ id: "market.chooseMonth", message: "Choose the Month" }),
+        labelYearDropdown: () => tr({ id: "market.chooseYear", message: "Choose the Year" }),
+        ...props.labels,
+      }}
       showOutsideDays={showOutsideDays}
       className={cn("app-calendar", className)}
       classNames={{

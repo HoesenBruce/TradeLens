@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import type { OnChangeFn, VisibilityState } from "@/lib/table";
 import { Settings2 } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -30,6 +31,8 @@ export function ViewOptions({
   onColumnVisibilityChange: OnChangeFn<VisibilityState>;
   className?: string;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   function isVisible(id: string) {
     return columnVisibility[id] !== false;
   }
@@ -49,14 +52,16 @@ export function ViewOptions({
           "h-8 !bg-transparent hover:!bg-transparent aria-expanded:!bg-transparent",
           className,
         )}
-        aria-label="Toggle columns"
+        aria-label={tr({ id: "market.columns", message: "Toggle columns" })}
       >
         <Settings2 size={14} strokeWidth={1.75} />
-        View
+        {tr({ id: "market.view", message: "View" })}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuGroup>
-          <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            {tr({ id: "market.columns", message: "Toggle columns" })}
+          </DropdownMenuLabel>
           {columns.map((column) => (
             <DropdownMenuCheckboxItem
               key={column.id}

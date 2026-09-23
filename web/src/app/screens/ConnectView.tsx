@@ -1,3 +1,5 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
+import { t as tr } from "@lingui/core/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ArrowRight, Check, PenLine, RefreshCw, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -34,7 +36,7 @@ function plural(count: number, noun: string): string {
 /** The steps card answers a different question per connection kind. */
 const STEPS_TITLE: Record<BrokerConnectKind, (broker: BrokerDef) => string> = {
   sync: () => "Where to find these",
-  file: (broker) => `Export from ${broker.name}`,
+  file: (broker) => tr({ id: "market.exportBroker", message: `Export from ${broker.name}` }),
   manual: () => "How this works",
 };
 
@@ -84,12 +86,19 @@ function AccountPanel({
   loading: boolean;
   busy: boolean;
 }) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
+
   const set = (patch: Partial<AccountChoice>) => onChange({ ...choice, ...patch });
 
   return (
     <Card
-      title="Account"
-      description="Where these trades land. One account per broker account keeps balances and filters honest."
+      title={tr({ id: "market.account", message: "Account" })}
+      description={tr({
+        id: "market.accountHint",
+        message:
+          "Where these trades land. One account per broker account keeps balances and filters honest.",
+      })}
     >
       {loading ? (
         <Skeleton height="36px" />
@@ -97,22 +106,31 @@ function AccountPanel({
         <div className="flex flex-col gap-4">
           {accounts.length > 0 ? (
             <SegmentedControl
-              ariaLabel="Use an existing account or create one"
+              ariaLabel={tr({
+                id: "market.accountChoice",
+                message: "Use an existing account or create one",
+              })}
               value={choice.mode}
               onChange={(value) => set({ mode: value as AccountChoice["mode"] })}
               options={[
-                { value: "existing", label: "Existing account" },
-                { value: "new", label: "New account" },
+                {
+                  value: "existing",
+                  label: tr({ id: "market.existingAccount", message: "Existing account" }),
+                },
+                { value: "new", label: tr({ id: "market.newAccount", message: "New account" }) },
               ]}
             />
           ) : null}
 
           {choice.mode === "existing" && accounts.length > 0 ? (
-            <Field label="Account" className="w-full sm:max-w-xs">
+            <Field
+              label={tr({ id: "market.account", message: "Account" })}
+              className="w-full sm:max-w-xs"
+            >
               <NativeSelect
                 value={choice.existingId}
                 onChange={(event) => set({ existingId: event.target.value })}
-                aria-label="Account"
+                aria-label={tr({ id: "market.account", message: "Account" })}
                 disabled={busy}
                 wrapperClassName="w-full"
               >
@@ -125,16 +143,22 @@ function AccountPanel({
             </Field>
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="Account name" htmlFor="connect-account-name">
+              <Field
+                label={tr({ id: "accounts.accountName", message: "Account name" })}
+                htmlFor="connect-account-name"
+              >
                 <FormInput
                   id="connect-account-name"
                   value={choice.name}
                   onChange={(event) => set({ name: event.target.value })}
-                  placeholder="e.g. Main Account"
+                  placeholder={tr({ id: "accounts.accountExample", message: "e.g. Main Account" })}
                   disabled={busy}
                 />
               </Field>
-              <Field label="Base currency" htmlFor="connect-account-currency">
+              <Field
+                label={tr({ id: "accounts.baseCurrency", message: "Base currency" })}
+                htmlFor="connect-account-currency"
+              >
                 <FormInput
                   id="connect-account-currency"
                   value={choice.currency}
@@ -143,24 +167,35 @@ function AccountPanel({
                   disabled={busy}
                 />
               </Field>
-              <Field label="Account type">
+              <Field label={tr({ id: "accounts.accountType", message: "Account type" })}>
                 <NativeSelect
                   value={choice.accountType}
                   onChange={(event) => set({ accountType: event.target.value })}
-                  aria-label="Account type"
+                  aria-label={tr({ id: "accounts.accountType", message: "Account type" })}
                   disabled={busy}
                   wrapperClassName="w-full"
                 >
-                  <NativeSelectOption value="cash">Cash</NativeSelectOption>
-                  <NativeSelectOption value="margin">Margin</NativeSelectOption>
-                  <NativeSelectOption value="prop">Prop</NativeSelectOption>
-                  <NativeSelectOption value="backtest">Backtest (paper)</NativeSelectOption>
+                  <NativeSelectOption value="cash">
+                    {tr({ id: "accounts.cash", message: "Cash" })}
+                  </NativeSelectOption>
+                  <NativeSelectOption value="margin">
+                    {tr({ id: "accounts.margin", message: "Margin" })}
+                  </NativeSelectOption>
+                  <NativeSelectOption value="prop">
+                    {tr({ id: "accounts.prop", message: "Prop" })}
+                  </NativeSelectOption>
+                  <NativeSelectOption value="backtest">
+                    {tr({ id: "accounts.backtest", message: "Backtest (paper)" })}
+                  </NativeSelectOption>
                 </NativeSelect>
               </Field>
               <Field
-                label="Starting balance"
+                label={tr({ id: "accounts.startingBalance", message: "Starting balance" })}
                 htmlFor="connect-account-balance"
-                description="Saved as the first deposit in the cash ledger."
+                description={tr({
+                  id: "accounts.startingHint",
+                  message: "Saved as the first deposit in the cash ledger.",
+                })}
               >
                 <AmountInput
                   id="connect-account-balance"
@@ -200,6 +235,9 @@ function BrokerSetup({
   onLogTrade,
   onDone,
 }: SetupProps) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
+
   const accountsQ = useAccounts();
   const accounts = accountsQ.data ?? [];
   const createAccount = useCreateAccount();
@@ -338,7 +376,7 @@ function BrokerSetup({
         </div>
         <Button type="button" variant="outline" size="sm" onClick={onBack} disabled={busy}>
           <ArrowLeft size={13} strokeWidth={1.75} aria-hidden />
-          All brokers
+          {tr({ id: "market.allBrokers", message: "All brokers" })}
         </Button>
       </header>
 
@@ -482,8 +520,11 @@ function BrokerSetup({
 
           {broker.kind === "file" ? (
             <Card
-              title="Import the export"
-              description="The next screen previews the file before anything is written."
+              title={tr({ id: "market.importExport", message: "Import the export" })}
+              description={tr({
+                id: "market.previewFirst",
+                message: "The next screen previews the file before anything is written.",
+              })}
             >
               <div className="flex flex-col gap-3">
                 {error ? <p className="text-[12px] text-destructive">{error}</p> : null}
@@ -492,18 +533,18 @@ function BrokerSetup({
                     {busy ? (
                       <>
                         <RefreshCw size={13} strokeWidth={1.5} className="animate-spin" />
-                        Preparing…
+                        {tr({ id: "market.preparing", message: "Preparing…" })}
                       </>
                     ) : (
                       <>
                         <Upload size={13} strokeWidth={1.5} />
-                        Continue to upload
+                        {tr({ id: "market.continueUpload", message: "Continue to upload" })}
                       </>
                     )}
                   </Button>
                   {onLogTrade ? (
                     <Button type="button" variant="ghost" onClick={handleManual} disabled={!canAct}>
-                      Log a trade by hand instead
+                      {tr({ id: "market.manualInstead", message: "Log a trade by hand instead" })}
                     </Button>
                   ) : null}
                 </div>
@@ -577,6 +618,9 @@ export function ConnectView({
   onLogTrade,
   onDone,
 }: ConnectViewProps) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
+
   const broker = findBroker(brokerKey);
 
   return (
@@ -595,11 +639,14 @@ export function ConnectView({
         <>
           <header className="min-w-0">
             <h1 className="text-[22px] font-semibold tracking-tight text-foreground">
-              Connect a broker
+              {tr({ id: "market.connectTitle", message: "Connect a broker" })}
             </h1>
             <p className="mt-1 max-w-xl text-[13px] leading-relaxed text-muted-foreground">
-              Pick where you trade. We&apos;ll show you how to get the data out and set the account
-              up for it.
+              {tr({
+                id: "market.connectHint",
+                message:
+                  "Pick where you trade. We'll show you how to get the data out and set the account up for it.",
+              })}
             </p>
           </header>
           <BrokerPicker onSelect={(key) => onSelectBroker(key)} />

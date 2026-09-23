@@ -1,3 +1,4 @@
+import { t as tr } from "@lingui/core/macro";
 /**
  * The broker catalogue behind the Connect flow.
  *
@@ -53,13 +54,29 @@ export const BROKERS: BrokerDef[] = [
     recognised: true,
     brand: "#E60012",
     monogram: "SBI",
-    formats: "Execution History CSV",
-    steps: [
-      "Open the SBI Securities execution history page.",
-      "Set the period and export the execution history as CSV.",
-      "Upload the original CSV — CP932 encoding and the report header are handled automatically.",
-    ],
-    note: "Cash, margin, and 現引 position conversions are supported.",
+    get formats() {
+      return tr({ id: "market.sbiFormat", message: "Execution History CSV" });
+    },
+    get steps() {
+      return [
+        tr({ id: "market.sbi1", message: "Open the SBI Securities execution history page." }),
+        tr({
+          id: "market.sbi2",
+          message: "Set the period and export the execution history as CSV.",
+        }),
+        tr({
+          id: "market.sbi3",
+          message:
+            "Upload the original CSV — CP932 encoding and the report header are handled automatically.",
+        }),
+      ];
+    },
+    get note() {
+      return tr({
+        id: "market.sbiNote",
+        message: "Cash, margin, and 現引 position conversions are supported.",
+      });
+    },
     aliases: ["sbi", "sbisec", "sbi証券", "エスビーアイ"],
   },
   {
@@ -361,9 +378,15 @@ export function searchBrokers(query: string): BrokerDef[] {
 }
 
 export const KIND_LABEL: Record<BrokerConnectKind, string> = {
-  sync: "Auto-sync",
-  file: "File import",
-  manual: "Manual",
+  get sync() {
+    return tr({ id: "market.autoSync", message: "Auto-sync" });
+  },
+  get file() {
+    return tr({ id: "market.fileImport", message: "File import" });
+  },
+  get manual() {
+    return tr({ id: "market.manual", message: "Manual" });
+  },
 };
 
 /** Ordered so the picker's groups read best-effort-first. */

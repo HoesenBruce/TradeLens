@@ -1,16 +1,31 @@
+import { t as tr } from "@lingui/core/macro";
 import { normalizeFilterDate } from "./filters";
 import { intlLocale } from "./locale";
 
 export type DateRangePreset = "7d" | "30d" | "90d" | "mtd" | "ytd" | "all" | "custom";
 
 export const PRESET_LABELS: Record<DateRangePreset, string> = {
-  "7d": "Last 7 days",
-  "30d": "Last 30 days",
-  "90d": "Last 90 days",
-  mtd: "MTD",
-  ytd: "YTD",
-  all: "All time",
-  custom: "Custom range",
+  get "7d"() {
+    return tr({ id: "market.last7", message: "Last 7 days" });
+  },
+  get "30d"() {
+    return tr({ id: "market.last30", message: "Last 30 days" });
+  },
+  get "90d"() {
+    return tr({ id: "market.last90", message: "Last 90 days" });
+  },
+  get mtd() {
+    return tr({ id: "market.mtd", message: "MTD" });
+  },
+  get ytd() {
+    return tr({ id: "market.ytd", message: "YTD" });
+  },
+  get all() {
+    return tr({ id: "market.allTime", message: "All time" });
+  },
+  get custom() {
+    return tr({ id: "market.customRange", message: "Custom range" });
+  },
 };
 
 /** Calendar date in the user's local timezone (YYYY-MM-DD). */

@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import type { Column, RowData } from "@/lib/table";
 import { ChevronDown, ChevronsUpDown, ChevronUp, EyeOff, X } from "lucide-react";
 import type { ReactNode } from "react";
@@ -29,6 +30,8 @@ export function ColumnHeader<TData extends RowData, TValue>({
   alignRight?: boolean;
   comfortable?: boolean;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const canSort = column.getCanSort();
   const canHide = column.getCanHide();
   const sorted = column.getIsSorted();
@@ -86,7 +89,7 @@ export function ColumnHeader<TData extends RowData, TValue>({
                 className="text-muted-foreground"
                 aria-hidden
               />
-              Asc
+              {tr({ id: "market.asc", message: "Asc" })}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
               <ChevronDown
@@ -95,12 +98,12 @@ export function ColumnHeader<TData extends RowData, TValue>({
                 className="text-muted-foreground"
                 aria-hidden
               />
-              Desc
+              {tr({ id: "market.desc", message: "Desc" })}
             </DropdownMenuItem>
             {sorted ? (
               <DropdownMenuItem onClick={() => column.clearSorting()}>
                 <X size={14} strokeWidth={1.75} className="text-muted-foreground" aria-hidden />
-                Reset
+                {tr({ id: "market.reset", message: "Reset" })}
               </DropdownMenuItem>
             ) : null}
           </>
@@ -109,7 +112,7 @@ export function ColumnHeader<TData extends RowData, TValue>({
         {canHide ? (
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
             <EyeOff size={14} strokeWidth={1.75} className="text-muted-foreground" aria-hidden />
-            Hide
+            {tr({ id: "market.hide", message: "Hide" })}
           </DropdownMenuItem>
         ) : null}
       </DropdownMenuContent>

@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { useRouterState } from "@tanstack/react-router";
 import { Eye, EyeOff, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -59,6 +60,8 @@ function StatDivider() {
 }
 
 function SymbolFilterChip({ symbols, onClear }: { symbols: string[]; onClear: () => void }) {
+  const { t: tr } = useLinguiMacro();
+
   const label = symbols.length <= 2 ? symbols.join(", ") : `${symbols[0]} +${symbols.length - 1}`;
   return (
     <span className="inline-flex h-8 shrink-0 items-center gap-1 rounded-md border border-primary/25 bg-primary/10 px-2 text-[11px] text-primary">
@@ -68,7 +71,7 @@ function SymbolFilterChip({ symbols, onClear }: { symbols: string[]; onClear: ()
         variant="ghost"
         size="icon-xs"
         onClick={onClear}
-        aria-label="Clear symbol filter"
+        aria-label={tr({ id: "market.clearSymbol", message: "Clear symbol filter" })}
         className="rounded-md text-primary/70 hover:bg-primary/10 hover:text-primary"
       >
         <X size={12} strokeWidth={2} />
@@ -116,6 +119,8 @@ export function DisplayCurrencySelect({
   /** Popover side; defaults to `right` for rail, `bottom` for header. */
   side?: "top" | "right" | "bottom" | "left";
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const [open, setOpen] = useState(false);
   const displayCurrency = useDisplayPrefs((s) => s.displayCurrency);
   const setDisplayCurrency = useDisplayPrefs((s) => s.setDisplayCurrency);
@@ -127,14 +132,19 @@ export function DisplayCurrencySelect({
   const popoverSide = side ?? (variant === "rail" ? "right" : "bottom");
   const tipSide = popoverSide === "right" ? "right" : "bottom";
   const tipLabel = usingAccount
-    ? `Display currency · ${activeCode} (account)`
-    : `Display currency · ${activeCode}`;
+    ? tr({ id: "market.currencyAccount", message: `Display currency · ${activeCode} (account)` })
+    : tr({ id: "market.currency", message: `Display currency · ${activeCode}` });
 
   const convertible = DISPLAY_CURRENCIES.filter((code) => code !== base);
   const options = [
     {
       value: AUTO_VALUE,
-      label: <CurrencyOptionLabel code={base} detail="Account" />,
+      label: (
+        <CurrencyOptionLabel
+          code={base}
+          detail={tr({ id: "market.account", message: "Account" })}
+        />
+      ),
       shortLabel: <CurrencyOptionLabel code={base} />,
     },
     ...convertible.map((code) => ({
@@ -161,7 +171,10 @@ export function DisplayCurrencySelect({
           <TooltipTrigger
             render={
               <MenuTrigger
-                aria-label={`Show amounts in (account ledger is ${base})`}
+                aria-label={tr({
+                  id: "market.showIn",
+                  message: `Show amounts in (account ledger is ${base})`,
+                })}
                 className={cn(
                   "group relative flex size-8 cursor-pointer items-center justify-center rounded-md outline-none",
                   "pointer-coarse:size-11",
@@ -194,11 +207,15 @@ export function DisplayCurrencySelect({
             onValueChange={(value) => applyCurrency(String(value))}
           >
             <MenuGroup>
-              <MenuGroupLabel>Account currency</MenuGroupLabel>
+              <MenuGroupLabel>
+                {tr({ id: "market.accountCurrency", message: "Account currency" })}
+              </MenuGroupLabel>
               <CurrencyMenuItem value={AUTO_VALUE} code={base} />
             </MenuGroup>
             <MenuGroup>
-              <MenuGroupLabel className="pt-2.5">Convert to</MenuGroupLabel>
+              <MenuGroupLabel className="pt-2.5">
+                {tr({ id: "market.convert", message: "Convert to" })}
+              </MenuGroupLabel>
               {convertible.map((code) => (
                 <CurrencyMenuItem key={code} value={code} code={code} />
               ))}
@@ -214,7 +231,10 @@ export function DisplayCurrencySelect({
       value={usingAccount ? AUTO_VALUE : displayCurrency!}
       onValueChange={applyCurrency}
       options={options}
-      ariaLabel={`Show amounts in (account ledger is ${base})`}
+      ariaLabel={tr({
+        id: "market.showIn",
+        message: `Show amounts in (account ledger is ${base})`,
+      })}
       ghost
       triggerClassName={cn(filterChipClass, "min-w-[5.25rem] gap-1.5 tabular-nums")}
     />
@@ -222,6 +242,8 @@ export function DisplayCurrencySelect({
 }
 
 function PrivacyToggle() {
+  const { t: tr } = useLinguiMacro();
+
   const privacyMode = useDisplayPrefs((s) => s.privacyMode);
   const togglePrivacyMode = useDisplayPrefs((s) => s.togglePrivacyMode);
   const Icon = privacyMode ? EyeOff : Eye;
@@ -233,8 +255,16 @@ function PrivacyToggle() {
       size="icon"
       onClick={togglePrivacyMode}
       aria-pressed={privacyMode}
-      aria-label={privacyMode ? "Show sensitive amounts" : "Hide sensitive amounts"}
-      title={privacyMode ? "Show amounts" : "Hide amounts"}
+      aria-label={
+        privacyMode
+          ? tr({ id: "market.showSensitive", message: "Show sensitive amounts" })
+          : tr({ id: "market.hideSensitive", message: "Hide sensitive amounts" })
+      }
+      title={
+        privacyMode
+          ? tr({ id: "market.showAmounts", message: "Show amounts" })
+          : tr({ id: "market.hideAmounts", message: "Hide amounts" })
+      }
       className={cn(
         "pointer-coarse:size-11",
         "transition-[background-color,color,border-color] duration-200 ease-[cubic-bezier(0.16, 1, 0.3, 1)]",
@@ -247,6 +277,8 @@ function PrivacyToggle() {
 }
 
 export function HeaderBar() {
+  const { t: tr } = useLinguiMacro();
+
   const paletteLabel = useHotkeyLabel("palette");
   usePrivacyMode();
   const filters = useFilterParams();
@@ -334,15 +366,18 @@ export function HeaderBar() {
         </div>
         <div aria-hidden className="hidden h-7 w-px shrink-0 bg-border md:block" />
         <div className="hidden min-w-0 items-center gap-2 md:flex">
-          <HeaderStat label="WR" value={summary ? fmtPct(summary.win_rate, intlLocale()) : "—"} />
+          <HeaderStat
+            label={tr({ id: "market.wr", message: "WR" })}
+            value={summary ? fmtPct(summary.win_rate, intlLocale()) : "—"}
+          />
           <StatDivider />
           <HeaderStat
-            label="PF"
+            label={tr({ id: "market.pf", message: "PF" })}
             value={summary?.profit_factor != null ? summary.profit_factor.toFixed(2) : "—"}
           />
           <StatDivider />
           <HeaderStat
-            label="Balance"
+            label={tr({ id: "market.balance", message: "Balance" })}
             value={fmtMoney(toDisplay(stats.cash), currency, intlLocale())}
           />
         </div>
@@ -361,7 +396,9 @@ export function HeaderBar() {
           className="w-[150px] justify-start bg-transparent px-2.5 text-foreground hover:bg-accent hover:text-foreground"
         >
           <Search size={14} strokeWidth={1.75} aria-hidden data-icon="inline-start" />
-          <span className="min-w-0 flex-1 truncate text-left">Search…</span>
+          <span className="min-w-0 flex-1 truncate text-left">
+            {tr({ id: "market.searchHint", message: "Search…" })}
+          </span>
           <Kbd data-icon="inline-end">{paletteLabel}</Kbd>
         </Button>
       </div>
@@ -372,7 +409,7 @@ export function HeaderBar() {
           variant="ghost"
           size="icon"
           onClick={openCommandPalette}
-          aria-label="Search"
+          aria-label={tr({ id: "market.search", message: "Search" })}
           aria-keyshortcuts="Meta+K Control+K"
           className="pointer-coarse:size-11 text-muted-foreground hover:bg-accent hover:text-foreground lg:hidden"
         >

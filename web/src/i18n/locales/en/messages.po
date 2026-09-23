@@ -5857,3 +5857,892 @@ msgstr "Worst trade"
 #: src/components/AnnualGoalCard.tsx:354
 msgid "accounts.ytd"
 msgstr "YTD"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/components/charts/TradeChartSection.tsx:134
+msgid "market.chartTitle"
+msgstr "{0} chart"
+
+#. js-lingui-explicit-id
+#: src/lib/pagination.ts:44
+msgid "market.pageRange"
+msgstr "{start}–{end} of {total}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:96
+#: src/app/screens/ConnectView.tsx:116
+#: src/app/screens/ConnectView.tsx:120
+#: src/components/HeaderBar.tsx:145
+msgid "market.account"
+msgstr "Account"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:211
+msgid "market.accountCurrency"
+msgstr "Account currency"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:149
+msgid "market.addSort"
+msgstr "Add sort"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:89
+msgid "market.addSortHint"
+msgstr "Add sorting to organize your rows."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:68
+#: src/lib/tools.ts:88
+msgid "market.advanced"
+msgstr "Advanced chart"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:349
+msgid "market.allBrokers"
+msgstr "All brokers"
+
+#. js-lingui-explicit-id
+#: src/components/ToolsPopover.tsx:133
+msgid "market.allCommands"
+msgstr "All commands"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:24
+msgid "market.allTime"
+msgstr "All time"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:92
+#: src/components/SortList.tsx:114
+msgid "market.asc"
+msgstr "Asc"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:381
+msgid "market.autoSync"
+msgstr "Auto-sync"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:321
+msgid "market.liveBar"
+msgstr "Back to live bar"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:380
+msgid "market.balance"
+msgstr "Balance"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: replay.cursor + 1
+#. placeholder {1}: bars?.length ?? 0
+#: src/app/screens/ReplayView.tsx:246
+msgid "market.barProgress"
+msgstr "Bar {0} of {1} · {timeLabel}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:163
+msgid "market.barInterval"
+msgstr "Bar interval"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:352
+#: src/app/screens/ReplayView.tsx:436
+msgid "market.buy"
+msgstr "Buy"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:31
+msgid "market.calculators"
+msgstr "Calculators"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:75
+msgid "market.sbiNote"
+msgstr "Cash, margin, and 現引 position conversions are supported."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:232
+msgid "market.changeSetup"
+msgstr "Change setup"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:330
+msgid "market.chart"
+msgstr "Chart"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:121
+msgid "market.mismatch"
+msgstr "Chart data disagrees with the recorded fill prices — in-flight replay P&L is marked to the chart and may look off; the final figure comes from the fills."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:214
+msgid "market.chartUnavailableTitle"
+msgstr "Chart data unavailable"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:132
+msgid "market.chartUnavailable"
+msgstr "Chart data unavailable."
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChartSection.tsx:89
+msgid "market.unsupported"
+msgstr "Chart unavailable for this symbol."
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:142
+msgid "market.chooseMonth"
+msgstr "Choose the Month"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:143
+msgid "market.chooseYear"
+msgstr "Choose the Year"
+
+#. js-lingui-explicit-id
+#: src/components/CreatedAtFilter.tsx:52
+msgid "market.clearCreated"
+msgstr "Clear Created At filter"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:74
+msgid "market.clearSymbol"
+msgstr "Clear symbol filter"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:47
+msgid "market.customHint"
+msgstr "Click two dates for a custom range"
+
+#. js-lingui-explicit-id
+#: src/components/Dialog.tsx:72
+#: src/components/Modal.tsx:52
+msgid "market.close"
+msgstr "Close"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:368
+msgid "market.closePosition"
+msgstr "Close position"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:20
+msgid "market.closed"
+msgstr "Closed"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:48
+msgid "market.columnsAuto"
+msgstr "Columns map themselves"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:609
+msgid "market.connectTitle"
+msgstr "Connect a broker"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:19
+msgid "market.syncGroup"
+msgstr "Connect once — new fills arrive on their own."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:508
+msgid "market.continueUpload"
+msgstr "Continue to upload"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:217
+msgid "market.convert"
+msgstr "Convert to"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:508
+msgid "market.saveError"
+msgstr "Could not save the session."
+
+#. js-lingui-explicit-id
+#: src/components/CreatedAtFilter.tsx:39
+#: src/components/CreatedAtFilter.tsx:73
+msgid "market.createdAt"
+msgstr "Created At"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:70
+msgid "market.fx"
+msgstr "Currency converter"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:27
+msgid "market.customRange"
+msgstr "Custom range"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:155
+#: src/components/DateRangePicker.tsx:38
+#: src/components/DateRangePicker.tsx:77
+msgid "market.dateRange"
+msgstr "Date range"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:101
+#: src/components/SortList.tsx:115
+msgid "market.desc"
+msgstr "Desc"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:136
+msgid "market.currency"
+msgstr "Display currency · {activeCode}"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:135
+msgid "market.currencyAccount"
+msgstr "Display currency · {activeCode} (account)"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:106
+msgid "market.econ"
+msgstr "Economic calendar"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:65
+msgid "market.endSession"
+msgstr "End session"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:257
+msgid "market.entry"
+msgstr "Entry"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:58
+msgid "market.sbiFormat"
+msgstr "Execution History CSV"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:109
+msgid "market.existingAccount"
+msgstr "Existing account"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:349
+msgid "market.exitReplay"
+msgstr "Exit replay"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:366
+msgid "market.expand"
+msgstr "Expand chart"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:20
+msgid "market.fileGroup"
+msgstr "Export a file from the broker; we read the columns for you."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ConnectView.tsx:39
+msgid "market.exportBroker"
+msgstr "Export from {0}"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:382
+msgid "market.fileImport"
+msgstr "File import"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:402
+#: src/components/charts/ReplayControls.tsx:21
+msgid "market.flat"
+msgstr "Flat"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:145
+msgid "market.from"
+msgstr "From"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:141
+msgid "market.nextMonth"
+msgstr "Go to the Next Month"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:140
+msgid "market.previousMonth"
+msgstr "Go to the Previous Month"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:115
+msgid "market.hide"
+msgstr "Hide"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:266
+msgid "market.hideAmounts"
+msgstr "Hide amounts"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:261
+msgid "market.hideSensitive"
+msgstr "Hide sensitive amounts"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:493
+msgid "market.importExport"
+msgstr "Import the export"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:161
+msgid "market.interval"
+msgstr "Interval"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:175
+msgid "market.historyHint"
+msgstr "Intraday history is limited by the data provider — minute bars reach back roughly a month, hourly about two. Daily bars replay any year."
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:43
+msgid "market.journal"
+msgstr "Journal"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:535
+msgid "market.keepReplay"
+msgstr "Keep replaying"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:61
+msgid "market.kelly"
+msgstr "Kelly criterion"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:12
+msgid "market.last30"
+msgstr "Last 30 days"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:9
+msgid "market.last7"
+msgstr "Last 7 days"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:15
+msgid "market.last90"
+msgstr "Last 90 days"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:84
+msgid "market.load"
+msgstr "Load"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:115
+msgid "market.pickHint"
+msgstr "Load any ticker's candles — independent of your trades."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:514
+msgid "market.manualInstead"
+msgstr "Log a trade by hand instead"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: pnl.position
+#: src/app/screens/ReplayView.tsx:399
+#: src/components/charts/ReplayControls.tsx:14
+msgid "market.longQty"
+msgstr "Long {0}"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:383
+msgid "market.manual"
+msgstr "Manual"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:37
+msgid "market.markets"
+msgstr "Markets"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:88
+msgid "market.modifySort"
+msgstr "Modify sorting to organize your rows."
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:164
+msgid "market.morePages"
+msgstr "More pages"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:18
+msgid "market.mtd"
+msgstr "MTD"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:138
+msgid "market.calendarNav"
+msgstr "Navigation bar"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:110
+msgid "market.newAccount"
+msgstr "New account"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:179
+msgid "market.nextPage"
+msgstr "Next page"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:215
+msgid "market.noBarsTitle"
+msgstr "No bars for this window"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:136
+msgid "market.noBars"
+msgstr "No bars for this window."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: query.trim()
+#: src/components/BrokerPicker.tsx:101
+msgid "market.noBroker"
+msgstr "No broker matches “{0}”"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:388
+msgid "market.noChartLabel"
+msgstr "No chart data"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:134
+msgid "market.noChart"
+msgstr "No chart data."
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:21
+msgid "market.manualGroup"
+msgstr "No export needed."
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChartSection.tsx:91
+msgid "market.noMarket"
+msgstr "No market data for this window."
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:84
+msgid "market.noSort"
+msgstr "No sorting applied"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:62
+msgid "market.sbi1"
+msgstr "Open the SBI Securities execution history page."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:330
+msgid "market.orderEntry"
+msgstr "Order entry"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:331
+msgid "market.orderHint"
+msgstr "Orders fill at the current bar's close."
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:65
+msgid "market.page"
+msgstr "Page {page}"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:106
+msgid "market.pagination"
+msgstr "Pagination"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:290
+msgid "market.pause"
+msgstr "Pause"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:74
+msgid "market.pauseReplay"
+msgstr "Pause replay"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:375
+msgid "market.pf"
+msgstr "PF"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:102
+msgid "market.otherBrokerHint"
+msgstr "Pick “Other broker” to map any CSV by hand, or start a manual account."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:114
+msgid "market.pickSymbol"
+msgstr "Pick a symbol"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:612
+msgid "market.connectHint"
+msgstr "Pick where you trade. We'll show you how to get the data out and set the account up for it."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:291
+msgid "market.play"
+msgstr "Play"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:75
+msgid "market.playReplay"
+msgstr "Play replay"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:52
+msgid "market.size"
+msgstr "Position size"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:503
+msgid "market.preparing"
+msgstr "Preparing…"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:147
+msgid "market.previousPage"
+msgstr "Previous page"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:339
+msgid "market.quantity"
+msgstr "Quantity"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:161
+msgid "market.quickRange"
+msgstr "Quick range"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: labelById.get(sort.id) ?? sort.id
+#: src/components/SortList.tsx:125
+msgid "market.removeSort"
+msgstr "Remove {0} sort"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:61
+#: src/lib/tools.ts:97
+msgid "market.replay"
+msgstr "Replay"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:125
+msgid "market.sessionHint"
+msgstr "Replay any symbol bar by bar — the chart reveals nothing ahead of you. Orders fill at the current bar's close and save into a separate backtest account that stays out of your real stats."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:155
+msgid "market.endDay"
+msgstr "Replay end day"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:50
+msgid "market.replayPosition"
+msgstr "Replay position"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:313
+#: src/components/charts/ReplayControls.tsx:96
+msgid "market.speed"
+msgstr "Replay speed"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:147
+msgid "market.startDay"
+msgstr "Replay start day"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:350
+msgid "market.replayTrade"
+msgstr "Replay trade"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:106
+msgid "market.reset"
+msgstr "Reset"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:153
+msgid "market.resetSort"
+msgstr "Reset sorting"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:123
+msgid "market.rows"
+msgstr "Rows"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:128
+msgid "market.rowsPerPage"
+msgstr "Rows per page"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: replay.fills.length
+#: src/app/screens/ReplayView.tsx:563
+msgid "market.saveFills"
+msgstr "Save {0} fills"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:562
+msgid "market.saveOne"
+msgstr "Save 1 fill"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:544
+#: src/app/screens/ReplayView.tsx:560
+msgid "market.saveSession"
+msgstr "Save session"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:515
+msgid "market.saved"
+msgstr "Saved"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:558
+msgid "market.saving"
+msgstr "Saving…"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:412
+msgid "market.search"
+msgstr "Search"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:93
+msgid "market.searchBrokers"
+msgstr "Search brokers"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:92
+msgid "market.searchBrokerHint"
+msgstr "Search brokers and platforms"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:400
+msgid "market.searchHint"
+msgstr "Search…"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:32
+msgid "market.endDate"
+msgstr "Select end date"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:360
+#: src/app/screens/ReplayView.tsx:437
+msgid "market.sell"
+msgstr "Sell"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:124
+msgid "market.session"
+msgstr "Session"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:63
+msgid "market.sbi2"
+msgstr "Set the period and export the execution history as CSV."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: Math.abs(pnl.position)
+#: src/app/screens/ReplayView.tsx:401
+#: src/components/charts/ReplayControls.tsx:16
+msgid "market.shortQty"
+msgstr "Short {0}"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:265
+msgid "market.showAmounts"
+msgstr "Show amounts"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:174
+#: src/components/HeaderBar.tsx:234
+msgid "market.showIn"
+msgstr "Show amounts in (account ledger is {base})"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:260
+msgid "market.showSensitive"
+msgstr "Show sensitive amounts"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:113
+msgid "market.showing"
+msgstr "Showing"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:68
+#: src/components/SortList.tsx:71
+msgid "market.sort"
+msgstr "Sort"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:83
+msgid "market.sortBy"
+msgstr "Sort by"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:106
+msgid "market.sortColumn"
+msgstr "Sort column"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:117
+msgid "market.sortDirection"
+msgstr "Sort direction"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:171
+msgid "market.startReplay"
+msgstr "Start replay"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:279
+#: src/components/charts/ReplayControls.tsx:63
+msgid "market.back"
+msgstr "Step back"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:305
+#: src/components/charts/ReplayControls.tsx:89
+msgid "market.forward"
+msgstr "Step forward"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:277
+msgid "market.stop"
+msgstr "Stop"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:72
+#: src/app/screens/ReplayView.tsx:134
+msgid "market.symbol"
+msgstr "Symbol"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:267
+msgid "market.target"
+msgstr "Target"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:99
+#: src/app/screens/ReplayView.tsx:219
+#: src/components/charts/TradeChartSection.tsx:93
+msgid "market.requestFailed"
+msgstr "The market data request failed — check the symbol and try again."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:494
+msgid "market.previewFirst"
+msgstr "The next screen previews the file before anything is written."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:223
+msgid "market.emptyHint"
+msgstr "The provider returned no data — try a coarser interval or a more recent range."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:518
+msgid "market.savedHint"
+msgstr "The session is in your Backtest account — select it in the account switcher to see its analytics."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:153
+msgid "market.to"
+msgstr "To"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:79
+msgid "market.today"
+msgstr "Today"
+
+#. js-lingui-explicit-id
+#: src/components/ViewOptions.tsx:55
+#: src/components/ViewOptions.tsx:63
+msgid "market.columns"
+msgstr "Toggle columns"
+
+#. js-lingui-explicit-id
+#: src/components/ToolsPopover.tsx:53
+#: src/components/ToolsPopover.tsx:54
+#: src/components/ToolsPopover.tsx:77
+#: src/components/ToolsPopover.tsx:79
+#: src/components/ToolsPopover.tsx:96
+msgid "market.tools"
+msgstr "Tools"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:67
+msgid "market.sbi3"
+msgstr "Upload the original CSV — CP932 encoding and the report header are handled automatically."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:105
+msgid "market.accountChoice"
+msgstr "Use an existing account or create one"
+
+#. js-lingui-explicit-id
+#: src/components/ViewOptions.tsx:58
+msgid "market.view"
+msgstr "View"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:531
+msgid "market.viewTrade"
+msgstr "View trade →"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerSteps.tsx:30
+msgid "market.recognised"
+msgstr "We recognise this export's layout — the column mapping fills itself in."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:97
+msgid "market.accountHint"
+msgstr "Where these trades land. One account per broker account keeps balances and filters honest."
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:370
+msgid "market.wr"
+msgstr "WR"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:545
+msgid "market.saveHint"
+msgstr "Writes the fills into your Backtest paper account. Backtest trades never mix into your real stats — select the account explicitly to analyze them."
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:115
+msgid "market.wrapped"
+msgstr "Year Wrapped"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:373
+msgid "market.reviewHint"
+msgstr "You're reviewing an earlier bar — orders fill only at the live bar."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:567
+msgid "market.openHint"
+msgstr "Your position is still open — it will be saved as an open trade unless you close it first."
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:21
+msgid "market.ytd"
+msgstr "YTD"

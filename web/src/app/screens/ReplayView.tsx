@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
 import { History, Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { type FormEvent, useMemo, useState } from "react";
@@ -48,16 +49,20 @@ function defaultFrom(): string {
 
 /** Bar replay backtester: pick a window, step blind, trade the closes. */
 export function ReplayView({ symbol, interval, from, to, onSetupChange }: ReplayViewProps) {
+  const { t: tr } = useLinguiMacro();
+
   const [session, setSession] = useState<SessionSpec | null>(null);
 
   return (
     <Page>
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-[20px] font-bold tracking-[-0.02em] text-foreground">Replay</h1>
+          <h1 className="text-[20px] font-bold tracking-[-0.02em] text-foreground">
+            {tr({ id: "market.replay", message: "Replay" })}
+          </h1>
           {session && (
             <Button variant="ghost" onClick={() => setSession(null)}>
-              End session
+              {tr({ id: "market.endSession", message: "End session" })}
             </Button>
           )}
         </div>
@@ -98,6 +103,8 @@ function SetupCard({
   to: string;
   onStart: (spec: SessionSpec) => void;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const [input, setInput] = useState(symbol);
   const [iv, setIv] = useState<BarInterval>(interval);
   const [fromDay, setFromDay] = useState(from);
@@ -114,13 +121,17 @@ function SetupCard({
 
   return (
     <Card
-      title="Session"
-      description="Replay any symbol bar by bar — the chart reveals nothing ahead of you. Orders fill at the current bar's close and save into a separate backtest account that stays out of your real stats."
+      title={tr({ id: "market.session", message: "Session" })}
+      description={tr({
+        id: "market.sessionHint",
+        message:
+          "Replay any symbol bar by bar — the chart reveals nothing ahead of you. Orders fill at the current bar's close and save into a separate backtest account that stays out of your real stats.",
+      })}
     >
       <form className="flex flex-col gap-4" onSubmit={onSubmit}>
         <div className="flex flex-wrap items-end gap-3">
           <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
-            Symbol
+            {tr({ id: "market.symbol", message: "Symbol" })}
             <input
               className={`${fieldInputClass} w-36 uppercase`}
               value={input}
@@ -131,17 +142,25 @@ function SetupCard({
             />
           </label>
           <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
-            From
-            <DatePicker aria-label="Replay start day" value={fromDay} onChange={setFromDay} />
+            {tr({ id: "market.from", message: "From" })}
+            <DatePicker
+              aria-label={tr({ id: "market.startDay", message: "Replay start day" })}
+              value={fromDay}
+              onChange={setFromDay}
+            />
           </label>
           <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
-            To
-            <DatePicker aria-label="Replay end day" value={toDay} onChange={setToDay} />
+            {tr({ id: "market.to", message: "To" })}
+            <DatePicker
+              aria-label={tr({ id: "market.endDay", message: "Replay end day" })}
+              value={toDay}
+              onChange={setToDay}
+            />
           </label>
           <div className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
-            Interval
+            {tr({ id: "market.interval", message: "Interval" })}
             <SegmentedControl
-              ariaLabel="Bar interval"
+              ariaLabel={tr({ id: "market.barInterval", message: "Bar interval" })}
               size="sm"
               value={iv}
               onChange={(v) => setIv(v as BarInterval)}
@@ -149,12 +168,15 @@ function SetupCard({
             />
           </div>
           <Button type="submit" disabled={!valid}>
-            Start replay
+            {tr({ id: "market.startReplay", message: "Start replay" })}
           </Button>
         </div>
         <p className="text-xs text-muted-foreground">
-          Intraday history is limited by the data provider — minute bars reach back roughly a month,
-          hourly about two. Daily bars replay any year.
+          {tr({
+            id: "market.historyHint",
+            message:
+              "Intraday history is limited by the data provider — minute bars reach back roughly a month, hourly about two. Daily bars replay any year.",
+          })}
         </p>
       </form>
     </Card>
@@ -162,6 +184,8 @@ function SetupCard({
 }
 
 function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void }) {
+  const { t: tr } = useLinguiMacro();
+
   const range = useMemo(
     () => ({
       from: snapChartTime(`${spec.from}T00:00:00.000Z`),
@@ -185,16 +209,27 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
   if (!barsQ.isLoading && (!bars || bars.length < 2)) {
     return (
       <EmptyState
-        title={barsQ.isError ? "Chart data unavailable" : "No bars for this window"}
+        title={
+          barsQ.isError
+            ? tr({ id: "market.chartUnavailableTitle", message: "Chart data unavailable" })
+            : tr({ id: "market.noBarsTitle", message: "No bars for this window" })
+        }
         hint={
           barsQ.isError
-            ? "The market data request failed — check the symbol and try again."
-            : "The provider returned no data — try a coarser interval or a more recent range."
+            ? tr({
+                id: "market.requestFailed",
+                message: "The market data request failed — check the symbol and try again.",
+              })
+            : tr({
+                id: "market.emptyHint",
+                message:
+                  "The provider returned no data — try a coarser interval or a more recent range.",
+              })
         }
         icon={<History aria-hidden />}
         actions={
           <Button variant="soft" onClick={onExit}>
-            Change setup
+            {tr({ id: "market.changeSetup", message: "Change setup" })}
           </Button>
         }
       />
@@ -208,7 +243,10 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
     <>
       <Card
         title={`${spec.symbol} · ${BAR_INTERVALS.find((i) => i.value === spec.interval)?.label}`}
-        description={`Bar ${replay.cursor + 1} of ${bars?.length ?? 0} · ${timeLabel}`}
+        description={tr({
+          id: "market.barProgress",
+          message: `Bar ${replay.cursor + 1} of ${bars?.length ?? 0} · ${timeLabel}`,
+        })}
       >
         <div className="flex flex-col gap-3">
           <TradeChart
@@ -238,7 +276,7 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
                 type="button"
                 variant="ghost"
                 size="icon"
-                aria-label="Step back"
+                aria-label={tr({ id: "market.back", message: "Step back" })}
                 onClick={replay.stepBack}
               >
                 <SkipBack size={14} strokeWidth={1.5} aria-hidden />
@@ -247,7 +285,11 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
                 type="button"
                 variant="ghost"
                 size="icon"
-                aria-label={replay.playing ? "Pause" : "Play"}
+                aria-label={
+                  replay.playing
+                    ? tr({ id: "market.pause", message: "Pause" })
+                    : tr({ id: "market.play", message: "Play" })
+                }
                 onClick={replay.toggle}
               >
                 {replay.playing ? (
@@ -260,7 +302,7 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
                 type="button"
                 variant="ghost"
                 size="icon"
-                aria-label="Step forward"
+                aria-label={tr({ id: "market.forward", message: "Step forward" })}
                 onClick={replay.stepForward}
                 disabled={replay.atEnd}
               >
@@ -268,7 +310,7 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
               </Button>
             </div>
             <SegmentedControl
-              ariaLabel="Replay speed"
+              ariaLabel={tr({ id: "market.speed", message: "Replay speed" })}
               size="xs"
               value={replay.speed}
               onChange={(v) => replay.setSpeed(v as ReplaySpeed)}
@@ -276,7 +318,7 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
             />
             {!replay.atFrontier && (
               <Button type="button" variant="ghost" size="sm" onClick={replay.seekToFrontier}>
-                Back to live bar
+                {tr({ id: "market.liveBar", message: "Back to live bar" })}
               </Button>
             )}
             <ReplayReadout replay={replay} />
@@ -284,11 +326,17 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
         </div>
       </Card>
 
-      <Card title="Order entry" description="Orders fill at the current bar's close.">
+      <Card
+        title={tr({ id: "market.orderEntry", message: "Order entry" })}
+        description={tr({
+          id: "market.orderHint",
+          message: "Orders fill at the current bar's close.",
+        })}
+      >
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-end gap-3">
             <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
-              Quantity
+              {tr({ id: "market.quantity", message: "Quantity" })}
               <input
                 className={`${fieldInputClass} w-28`}
                 inputMode="decimal"
@@ -301,7 +349,7 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
               disabled={!canOrder}
               onClick={() => replay.placeOrder("buy", quantity)}
             >
-              Buy
+              {tr({ id: "market.buy", message: "Buy" })}
             </Button>
             <Button
               type="button"
@@ -309,7 +357,7 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
               disabled={!canOrder}
               onClick={() => replay.placeOrder("sell", quantity)}
             >
-              Sell
+              {tr({ id: "market.sell", message: "Sell" })}
             </Button>
             <Button
               type="button"
@@ -317,12 +365,15 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
               disabled={!replay.atFrontier || !replay.pnl || replay.pnl.position === 0}
               onClick={replay.closePosition}
             >
-              Close position
+              {tr({ id: "market.closePosition", message: "Close position" })}
             </Button>
           </div>
           {!replay.atFrontier && (
             <p className="text-xs text-muted-foreground">
-              You're reviewing an earlier bar — orders fill only at the live bar.
+              {tr({
+                id: "market.reviewHint",
+                message: "You're reviewing an earlier bar — orders fill only at the live bar.",
+              })}
             </p>
           )}
           {replay.fills.length > 0 && <FillsList replay={replay} interval={spec.interval} />}
@@ -335,6 +386,8 @@ function ReplaySession({ spec, onExit }: { spec: SessionSpec; onExit: () => void
 }
 
 function ReplayReadout({ replay }: { replay: ReturnType<typeof useBacktestReplay> }) {
+  const { t: tr } = useLinguiMacro();
+
   const pnl = replay.pnl;
   const net = pnl?.net ?? 0;
   return (
@@ -343,10 +396,10 @@ function ReplayReadout({ replay }: { replay: ReturnType<typeof useBacktestReplay
         <>
           <span className="text-muted-foreground">
             {pnl.position > 0
-              ? `Long ${pnl.position}`
+              ? tr({ id: "market.longQty", message: `Long ${pnl.position}` })
               : pnl.position < 0
-                ? `Short ${Math.abs(pnl.position)}`
-                : "Flat"}
+                ? tr({ id: "market.shortQty", message: `Short ${Math.abs(pnl.position)}` })
+                : tr({ id: "market.flat", message: "Flat" })}
           </span>
           <span
             className={cn(
@@ -369,6 +422,8 @@ function FillsList({
   replay: ReturnType<typeof useBacktestReplay>;
   interval: BarInterval;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   return (
     <ul className="flex flex-col text-xs tabular-nums">
       {replay.fills.map((f) => (
@@ -377,7 +432,9 @@ function FillsList({
           className="flex items-center gap-3 rounded-md px-2 py-1.5 hover:bg-accent"
         >
           <span className={cn("w-8 font-medium", f.side === "buy" ? "text-profit" : "text-loss")}>
-            {f.side === "buy" ? "Buy" : "Sell"}
+            {f.side === "buy"
+              ? tr({ id: "market.buy", message: "Buy" })
+              : tr({ id: "market.sell", message: "Sell" })}
           </span>
           <span className="w-16 text-right">{f.quantity}</span>
           <span className="w-20 text-right">
@@ -407,6 +464,8 @@ function SaveCard({
   replay: ReturnType<typeof useBacktestReplay>;
   spec: SessionSpec;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const accounts = useAccounts();
   const createAccount = useCreateAccount();
   const createExecutions = useCreateExecutions();
@@ -443,17 +502,24 @@ function SaveCard({
       setSaved(res.tradeIds);
       replay.reset();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not save the session.");
+      setError(
+        e instanceof Error
+          ? e.message
+          : tr({ id: "market.saveError", message: "Could not save the session." }),
+      );
     }
   }
 
   if (saved) {
     return (
-      <Card title="Saved">
+      <Card title={tr({ id: "market.saved", message: "Saved" })}>
         <div className="flex flex-wrap items-center gap-3 text-sm">
           <span className="text-muted-foreground">
-            The session is in your Backtest account — select it in the account switcher to see its
-            analytics.
+            {tr({
+              id: "market.savedHint",
+              message:
+                "The session is in your Backtest account — select it in the account switcher to see its analytics.",
+            })}
           </span>
           {saved.map((id) => (
             <Link
@@ -462,11 +528,11 @@ function SaveCard({
               params={{ id }}
               className="font-medium text-primary hover:underline"
             >
-              View trade →
+              {tr({ id: "market.viewTrade", message: "View trade →" })}
             </Link>
           ))}
           <Button variant="soft" size="sm" onClick={() => setSaved(null)}>
-            Keep replaying
+            {tr({ id: "market.keepReplay", message: "Keep replaying" })}
           </Button>
         </div>
       </Card>
@@ -475,8 +541,12 @@ function SaveCard({
 
   return (
     <Card
-      title="Save session"
-      description="Writes the fills into your Backtest paper account. Backtest trades never mix into your real stats — select the account explicitly to analyze them."
+      title={tr({ id: "market.saveSession", message: "Save session" })}
+      description={tr({
+        id: "market.saveHint",
+        message:
+          "Writes the fills into your Backtest paper account. Backtest trades never mix into your real stats — select the account explicitly to analyze them.",
+      })}
     >
       <div className="flex flex-wrap items-center gap-3">
         <Button
@@ -485,17 +555,20 @@ function SaveCard({
           onClick={() => void save()}
         >
           {saving
-            ? "Saving…"
+            ? tr({ id: "market.saving", message: "Saving…" })
             : replay.fills.length === 0
-              ? "Save session"
+              ? tr({ id: "market.saveSession", message: "Save session" })
               : replay.fills.length === 1
-                ? "Save 1 fill"
-                : `Save ${replay.fills.length} fills`}
+                ? tr({ id: "market.saveOne", message: "Save 1 fill" })
+                : tr({ id: "market.saveFills", message: `Save ${replay.fills.length} fills` })}
         </Button>
         {replay.pnl && replay.pnl.position !== 0 && (
           <span className="text-xs text-muted-foreground">
-            Your position is still open — it will be saved as an open trade unless you close it
-            first.
+            {tr({
+              id: "market.openHint",
+              message:
+                "Your position is still open — it will be saved as an open trade unless you close it first.",
+            })}
           </span>
         )}
         {error && <span className="text-xs text-destructive">{error}</span>}

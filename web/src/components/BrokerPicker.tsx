@@ -1,3 +1,5 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
+import { t as tr } from "@lingui/core/macro";
 import { Search, Sparkles } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BrokerMark } from "@/components/BrokerMark";
@@ -14,12 +16,27 @@ import {
 import { cn } from "@/lib/cn";
 
 const GROUP_HINT: Record<BrokerConnectKind, string> = {
-  sync: "Connect once — new fills arrive on their own.",
-  file: "Export a file from the broker; we read the columns for you.",
-  manual: "No export needed.",
+  get sync() {
+    return tr({
+      id: "market.syncGroup",
+      message: "Connect once \u2014 new fills arrive on their own.",
+    });
+  },
+  get file() {
+    return tr({
+      id: "market.fileGroup",
+      message: "Export a file from the broker; we read the columns for you.",
+    });
+  },
+  get manual() {
+    return tr({ id: "market.manualGroup", message: "No export needed." });
+  },
 };
 
 function BrokerCard({ broker, onSelect }: { broker: BrokerDef; onSelect: (key: string) => void }) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
+
   return (
     <button
       type="button"
@@ -40,7 +57,7 @@ function BrokerCard({ broker, onSelect }: { broker: BrokerDef; onSelect: (key: s
             <Sparkles
               size={12}
               strokeWidth={1.75}
-              aria-label="Columns map themselves"
+              aria-label={tr({ id: "market.columnsAuto", message: "Columns map themselves" })}
               className="shrink-0 text-primary"
             />
           ) : null}
@@ -61,6 +78,9 @@ function BrokerCard({ broker, onSelect }: { broker: BrokerDef; onSelect: (key: s
  * name is how they find their row within that.
  */
 export function BrokerPicker({ onSelect }: { onSelect: (key: string) => void }) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
+
   const [query, setQuery] = useState("");
   const matches = useMemo(() => searchBrokers(query), [query]);
 
@@ -81,8 +101,11 @@ export function BrokerPicker({ onSelect }: { onSelect: (key: string) => void }) 
         <Input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search brokers and platforms"
-          aria-label="Search brokers"
+          placeholder={tr({
+            id: "market.searchBrokerHint",
+            message: "Search brokers and platforms",
+          })}
+          aria-label={tr({ id: "market.searchBrokers", message: "Search brokers" })}
           className="w-full *:data-[slot=input]:ps-9"
         />
       </div>
@@ -90,8 +113,11 @@ export function BrokerPicker({ onSelect }: { onSelect: (key: string) => void }) 
       {groups.length === 0 ? (
         <Card>
           <EmptyState
-            title={`No broker matches “${query.trim()}”`}
-            hint="Pick “Other broker” to map any CSV by hand, or start a manual account."
+            title={tr({ id: "market.noBroker", message: `No broker matches “${query.trim()}”` })}
+            hint={tr({
+              id: "market.otherBrokerHint",
+              message: "Pick “Other broker” to map any CSV by hand, or start a manual account.",
+            })}
             icon={<Search size={28} strokeWidth={1.5} />}
           />
         </Card>
