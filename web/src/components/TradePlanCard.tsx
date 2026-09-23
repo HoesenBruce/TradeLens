@@ -31,12 +31,14 @@ function PlanBar({
   const width = scale > 0 ? Math.min(100, (Math.abs(amount) / scale) * 100) : 0;
   const fill =
     tone === "risk"
-      ? "bg-destructive/50"
+      ? "bg-loss/50"
       : tone === "reward"
         ? "bg-profit/50"
-        : amount >= 0
+        : amount > 0
           ? "bg-profit"
-          : "bg-destructive";
+          : amount < 0
+            ? "bg-loss"
+            : "bg-flat";
 
   return (
     <div className="grid grid-cols-[4.5rem_1fr_auto] items-center gap-x-3 gap-y-1 sm:grid-cols-[5.5rem_1fr_auto]">

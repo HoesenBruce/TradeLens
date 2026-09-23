@@ -224,6 +224,10 @@ export type SettingsLabelKey =
   | "themeLight"
   | "themeDark"
   | "themeSystem"
+  | "priceColorConvention"
+  | "priceColorSelector"
+  | "redUpGreenDown"
+  | "greenUpRedDown"
   | "timezone"
   | "timezoneFooter"
   | "timezoneSelector"
@@ -420,6 +424,10 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     themeLight: "Light",
     themeDark: "Dark",
     themeSystem: "System",
+    priceColorConvention: "Price color convention",
+    priceColorSelector: "Price color convention",
+    redUpGreenDown: "Red up, green down",
+    greenUpRedDown: "Green up, red down",
     timezone: "Timezone",
     timezoneFooter:
       "Applies to displayed times (trade timestamps, charts). Doesn’t change how trades are grouped into days — that follows the Market timezone below.",
@@ -569,6 +577,10 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     themeLight: "浅色",
     themeDark: "深色",
     themeSystem: "跟随系统",
+    priceColorConvention: "涨跌颜色",
+    priceColorSelector: "选择涨跌颜色",
+    redUpGreenDown: "红涨绿跌",
+    greenUpRedDown: "红跌绿涨",
     timezone: "显示时区",
     timezoneFooter: "用于交易时间和图表显示，不改变交易日归属；交易日由市场时区决定。",
     timezoneSelector: "选择显示时区",
@@ -672,6 +684,10 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     themeLight: "淺色",
     themeDark: "深色",
     themeSystem: "系統",
+    priceColorConvention: "漲跌顏色",
+    priceColorSelector: "選擇漲跌顏色",
+    redUpGreenDown: "紅漲綠跌",
+    greenUpRedDown: "紅跌綠漲",
     timezone: "時區",
     timezoneFooter:
       "套用到顯示時間（交易時間戳、圖表）。不會改變交易日分組——分組依下方的市場時區。",
@@ -865,6 +881,10 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     themeLight: "ライト",
     themeDark: "ダーク",
     themeSystem: "システム",
+    priceColorConvention: "価格変動の色",
+    priceColorSelector: "価格変動の色を選択",
+    redUpGreenDown: "上昇は赤、下落は緑",
+    greenUpRedDown: "上昇は緑、下落は赤",
     timezone: "タイムゾーン",
     timezoneFooter:
       "表示される時刻（トレード時刻、チャート）に適用。取引日の集計は変わりません——下のマーケットタイムゾーンに従います。",
@@ -1054,6 +1074,10 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     themeLight: "라이트",
     themeDark: "다크",
     themeSystem: "시스템",
+    priceColorConvention: "가격 변동 색상",
+    priceColorSelector: "가격 변동 색상 선택",
+    redUpGreenDown: "상승 빨강, 하락 초록",
+    greenUpRedDown: "상승 초록, 하락 빨강",
     timezone: "시간대",
     timezoneFooter:
       "표시되는 시간(거래 타임스탬프, 차트)에 적용됩니다. 거래일 그룹화는 바꾸지 않으며 아래의 시장 시간대를 따릅니다.",

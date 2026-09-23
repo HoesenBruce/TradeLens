@@ -29,7 +29,12 @@ export function ReplayHeartbeat({
 
   if (cursor <= 0) return null;
   const shown = series.slice(0, cursor + 1);
-  const color = (shown[shown.length - 1]?.net ?? 0) >= 0 ? "var(--profit)" : "var(--loss)";
+  const color =
+    (shown[shown.length - 1]?.net ?? 0) > 0
+      ? "var(--profit)"
+      : (shown[shown.length - 1]?.net ?? 0) < 0
+        ? "var(--loss)"
+        : "var(--flat)";
 
   return (
     <ResponsiveContainer width="100%" height={72}>

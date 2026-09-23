@@ -12,13 +12,13 @@ const VARIANT_META: Record<ToastVariant, { icon: LucideIcon; accent: string; wel
   },
   success: {
     icon: Check,
-    accent: "text-profit",
-    well: "bg-[color-mix(in oklch, var(--profit) 12%, transparent)] text-profit",
+    accent: "text-success",
+    well: "bg-success/10 text-success",
   },
   error: {
     icon: AlertCircle,
     accent: "text-destructive",
-    well: "bg-[color-mix(in oklch, var(--loss) 12%, transparent)] text-destructive",
+    well: "bg-destructive/10 text-destructive",
   },
   warning: {
     icon: AlertTriangle,

@@ -58,7 +58,7 @@ function StatCell({
         className={cn(
           "mt-1 truncate text-[20px] font-semibold leading-none tracking-[-0.02em] tabular-nums",
           tone === "pos" && "text-profit",
-          tone === "neg" && "text-destructive",
+          tone === "neg" && "text-loss",
           tone === "muted" && "text-muted-foreground",
           !tone && "text-foreground",
         )}
@@ -178,8 +178,8 @@ export function YearWrappedView({
             className={cn(
               "mt-4 text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[52px]",
               pnlColor(wrapped.netPnl),
-              wrapped.netPnl > 0 && "drop-shadow-[0_0_32px_rgba(74,222,128,0.3)]",
-              wrapped.netPnl < 0 && "drop-shadow-[0_0_32px_rgba(251,113,133,0.24)]",
+              wrapped.netPnl > 0 && "drop-shadow-[0_0_32px_var(--profit)]",
+              wrapped.netPnl < 0 && "drop-shadow-[0_0_32px_var(--loss)]",
             )}
           >
             {money(wrapped.netPnl)}
@@ -277,7 +277,13 @@ export function YearWrappedView({
                 <div
                   className={cn(
                     "w-full rounded-sm",
-                    m.trades === 0 ? "bg-muted" : m.pnl >= 0 ? "bg-profit" : "bg-loss",
+                    m.trades === 0
+                      ? "bg-muted"
+                      : m.pnl > 0
+                        ? "bg-profit"
+                        : m.pnl < 0
+                          ? "bg-loss"
+                          : "bg-flat",
                   )}
                   style={{
                     height: `${m.trades === 0 ? 4 : Math.max(8, (m.trades / maxMonthTrades) * 72)}px`,

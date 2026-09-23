@@ -591,8 +591,7 @@ export function AccountRow({
     currency || null,
   ].filter(Boolean) as string[];
 
-  const pnlTone =
-    netPnl > 0 ? "text-profit" : netPnl < 0 ? "text-destructive" : "text-muted-foreground";
+  const pnlTone = netPnl > 0 ? "text-profit" : netPnl < 0 ? "text-loss" : "text-muted-foreground";
 
   const footerMeta = [
     ...metaParts,

@@ -96,7 +96,7 @@ function IntradayCurve({
     cum += (t.net_pnl ?? 0) * fxRate;
     return { ts: new Date(String(t.closed_at)).getTime(), pnl: cum, symbol: t.symbol };
   });
-  const stroke = cum >= 0 ? "var(--profit)" : "var(--loss)";
+  const stroke = cum > 0 ? "var(--profit)" : cum < 0 ? "var(--loss)" : "var(--flat)";
 
   return (
     <ChartFrame>

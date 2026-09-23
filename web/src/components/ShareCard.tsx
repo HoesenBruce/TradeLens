@@ -6,6 +6,7 @@ import { Modal } from "@/components/Modal";
 import { useToastManager } from "@/components/Toast";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { useDisplayPrefs } from "@/lib/displayPrefs";
 
 export const SHARE_CARD_WIDTH = 1200;
 export const SHARE_CARD_HEIGHT = 630;
@@ -55,7 +56,9 @@ export function ShareCardSvg({
   data: ShareCardData;
   svgRef?: React.Ref<SVGSVGElement>;
 }) {
-  const tone = CARD[data.tone];
+  const reverse = useDisplayPrefs((s) => s.priceColorConvention === "red-up-green-down");
+  const card = reverse ? { ...CARD, profit: CARD.loss, loss: CARD.profit } : CARD;
+  const tone = card[data.tone];
   let chipX = 80;
   return (
     <svg
@@ -66,7 +69,7 @@ export function ShareCardSvg({
       aria-label={data.ariaLabel}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect width={SHARE_CARD_WIDTH} height={SHARE_CARD_HEIGHT} fill={CARD.bg} />
+      <rect width={SHARE_CARD_WIDTH} height={SHARE_CARD_HEIGHT} fill={card.bg} />
       <circle cx={1080} cy={560} r={330} fill={tone} opacity={0.055} />
       <circle cx={1180} cy={80} r={180} fill={CARD.brand} opacity={0.05} />
 
@@ -92,7 +95,7 @@ export function ShareCardSvg({
       {data.chips.map((chip) => {
         const x = chipX;
         chipX += chipWidth(chip.text) + 14;
-        return <Chip key={chip.text} x={x} y={272} text={chip.text} color={CARD[chip.tone]} />;
+        return <Chip key={chip.text} x={x} y={272} text={chip.text} color={card[chip.tone]} />;
       })}
 
       <text

@@ -53,7 +53,7 @@ function StatCell({
         className={cn(
           "mt-1 truncate text-[20px] font-semibold leading-none tracking-[-0.02em] tabular-nums",
           tone === "pos" && "text-profit",
-          tone === "neg" && "text-destructive",
+          tone === "neg" && "text-loss",
           tone === "muted" && "text-muted-foreground",
           !tone && "text-foreground",
         )}
@@ -82,8 +82,8 @@ function ShareEquityLine({ data }: { data: PublicShareSummary }) {
     .map((v, i) => `${i === 0 ? "M" : "L"}${(i * step).toFixed(1)} ${y(v).toFixed(1)}`)
     .join(" ");
   const last = values[values.length - 1];
-  const lineClass = last >= 0 ? "stroke-profit" : "stroke-loss";
-  const fillClass = last >= 0 ? "fill-profit" : "fill-loss";
+  const lineClass = last > 0 ? "stroke-profit" : last < 0 ? "stroke-loss" : "stroke-flat";
+  const fillClass = last > 0 ? "fill-profit" : last < 0 ? "fill-loss" : "fill-flat";
   return (
     <svg
       viewBox={`0 0 ${w} ${h}`}
@@ -183,10 +183,8 @@ export function PublicShareView({ token }: PublicShareViewProps) {
             className={cn(
               "mt-4 text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[52px]",
               showAmounts ? pnlColor(s.net_pnl ?? 0) : "text-foreground",
-              showAmounts && (s.net_pnl ?? 0) > 0 && "drop-shadow-[0_0_32px_rgba(74,222,128,0.3)]",
-              showAmounts &&
-                (s.net_pnl ?? 0) < 0 &&
-                "drop-shadow-[0_0_32px_rgba(251,113,133,0.24)]",
+              showAmounts && (s.net_pnl ?? 0) > 0 && "drop-shadow-[0_0_32px_var(--profit)]",
+              showAmounts && (s.net_pnl ?? 0) < 0 && "drop-shadow-[0_0_32px_var(--loss)]",
             )}
           >
             {showAmounts ? money(s.net_pnl ?? 0) : fmtPct(s.win_rate, locale)}
@@ -213,7 +211,7 @@ export function PublicShareView({ token }: PublicShareViewProps) {
                 <span
                   className={cn(
                     "text-[22px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[24px]",
-                    pf >= 1 ? "text-profit" : pf > 0 ? "text-destructive" : "text-muted-foreground",
+                    pf >= 1 ? "text-profit" : pf > 0 ? "text-loss" : "text-muted-foreground",
                   )}
                 >
                   {pf > 0 ? pf.toFixed(2) : "0.00"}
