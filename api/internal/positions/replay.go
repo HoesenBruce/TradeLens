@@ -2,6 +2,7 @@ package positions
 
 import (
 	"encoding/json"
+	"math"
 	"sort"
 	"strings"
 	"time"
@@ -69,6 +70,7 @@ type positionKey struct {
 
 type state struct {
 	positions map[positionKey]Position
+	basisDay  map[positionKey]string
 	accounts  map[string]*AccountSnapshot
 	warnings  []Warning
 }
@@ -101,7 +103,7 @@ func ReplayWithSplits(executions []store.Execution, dates []time.Time, splits []
 	splits = append([]Split(nil), splits...)
 	sort.SliceStable(splits, func(i, j int) bool { return splits[i].EffectiveDate.Before(splits[j].EffectiveDate) })
 
-	s := state{positions: map[positionKey]Position{}, accounts: map[string]*AccountSnapshot{}}
+	s := state{positions: map[positionKey]Position{}, basisDay: map[positionKey]string{}, accounts: map[string]*AccountSnapshot{}}
 	out := make([]Snapshot, 0, len(dates))
 	nextExecution := 0
 	nextSplit := 0
@@ -155,6 +157,10 @@ func (s *state) apply(ex store.Execution) {
 
 	key := positionKey{ex.AccountID, ex.Symbol, ex.InstrumentType, lot, kind}
 	position, open := s.positions[key]
+	sbiCash := lot == "sbi:cash"
+	if sbiCash && open && s.basisDay[key] != tokyoDate(ex.ExecutedAt).Format(time.DateOnly) {
+		position.AverageCost = math.Ceil(position.AverageCost - epsilon)
+	}
 	if ex.Side == openingSide {
 		if open && abs(position.Multiplier-multiplier) > epsilon {
 			s.warn(ex, "invalid_execution_sequence", "position multiplier changed while open")
@@ -166,10 +172,15 @@ func (s *state) apply(ex store.Execution) {
 				Kind: kind, Lot: lot, Multiplier: multiplier,
 			}
 		}
-		position.AverageCost = (position.AverageCost*position.Quantity + ex.Price*ex.Quantity) / (position.Quantity + ex.Quantity)
+		buyCost := ex.Price * ex.Quantity
+		if sbiCash {
+			buyCost += ex.Fees + ex.Commission
+			s.basisDay[key] = tokyoDate(ex.ExecutedAt).Format(time.DateOnly)
+		}
+		position.AverageCost = (position.AverageCost*position.Quantity + buyCost) / (position.Quantity + ex.Quantity)
 		position.Quantity += ex.Quantity
 		s.positions[key] = position
-		s.bookOpen(ex, kind, multiplier)
+		s.bookOpen(ex, kind, multiplier, sbiCash)
 		return
 	}
 
@@ -180,6 +191,9 @@ func (s *state) apply(ex store.Execution) {
 	if abs(position.Multiplier-multiplier) > epsilon {
 		s.warn(ex, "invalid_execution_sequence", "position multiplier changed while open")
 		return
+	}
+	if sbiCash {
+		position.AverageCost = math.Ceil(position.AverageCost - epsilon)
 	}
 	gross := (ex.Price - position.AverageCost) * ex.Quantity * multiplier
 	if kind == MarginShort {
@@ -197,16 +211,19 @@ func (s *state) apply(ex store.Execution) {
 	position.Quantity -= ex.Quantity
 	if position.Quantity < epsilon {
 		delete(s.positions, key)
+		delete(s.basisDay, key)
 	} else {
 		s.positions[key] = position
 	}
 }
 
-func (s *state) bookOpen(ex store.Execution, kind Kind, multiplier float64) {
+func (s *state) bookOpen(ex store.Execution, kind Kind, multiplier float64, sbiCash bool) {
 	fees := ex.Fees + ex.Commission
 	account := s.account(ex.AccountID)
 	account.Fees += fees
-	account.RealizedPnL -= fees
+	if !sbiCash {
+		account.RealizedPnL -= fees
+	}
 	account.CashDelta -= fees
 	if kind == CashLong {
 		account.CashDelta -= ex.Price * ex.Quantity * multiplier
@@ -248,7 +265,11 @@ func (s *state) snapshot(date time.Time) Snapshot {
 		}
 	}
 	for _, position := range s.positions {
-		position.AverageCost = money.Round2(position.AverageCost)
+		if position.Lot == "sbi:cash" {
+			position.AverageCost = math.Ceil(position.AverageCost - epsilon)
+		} else {
+			position.AverageCost = money.Round2(position.AverageCost)
+		}
 		position.Quantity = money.Round2(position.Quantity)
 		account := accounts[position.AccountID]
 		account.Positions = append(account.Positions, position)
