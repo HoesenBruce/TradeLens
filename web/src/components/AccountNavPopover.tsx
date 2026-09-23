@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { CircleUser, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -53,6 +54,8 @@ function AccountMenuItem({
 }
 
 export function AccountNavPopover({ variant = "rail" }: { variant?: "rail" | "header" }) {
+  const { t: tr } = useLinguiMacro();
+
   const [open, setOpen] = useState(false);
   const signOut = useAuth((s) => s.signOut);
   const { data: accounts, isLoading } = useAccounts();
@@ -63,13 +66,14 @@ export function AccountNavPopover({ variant = "rail" }: { variant?: "rail" | "he
   const selected = accountIds ?? [];
   const selectedLabel = selected.length
     ? selected.length === 1
-      ? (items.find((a) => a.id === selected[0])?.name ?? "Account")
-      : `${selected.length} accounts`
-    : "All accounts";
+      ? (items.find((a) => a.id === selected[0])?.name ??
+        tr({ id: "accounts.account", message: "Account" }))
+      : tr({ id: "accounts.selectedCount", message: `${selected.length} accounts` })
+    : tr({ id: "accounts.all", message: "All accounts" });
   const filterActive = selected.length > 0;
   const isRail = variant === "rail";
   const allAccountsHint = items.length
-    ? `${items.length} ${items.length === 1 ? "account" : "accounts"}`
+    ? tr({ id: "accounts.accountCount", message: `${items.length} accounts` })
     : undefined;
 
   // Portfolio selections must share one base currency — mixed sums are
@@ -87,7 +91,7 @@ export function AccountNavPopover({ variant = "rail" }: { variant?: "rail" | "he
     <Menu open={open} onOpenChange={setOpen}>
       <MenuTrigger
         title={selectedLabel}
-        aria-label={`Account: ${selectedLabel}`}
+        aria-label={tr({ id: "accounts.accountScope", message: `Account: ${selectedLabel}` })}
         className={cn(
           "group relative flex cursor-pointer items-center justify-center rounded-md outline-none",
           isRail ? "size-9" : "size-8",
@@ -114,15 +118,17 @@ export function AccountNavPopover({ variant = "rail" }: { variant?: "rail" | "he
         className="w-56"
       >
         {isLoading ? (
-          <p className="m-0 px-2 py-1.5 text-sm text-muted-foreground">Loading…</p>
+          <p className="m-0 px-2 py-1.5 text-sm text-muted-foreground">
+            {tr({ id: "accounts.loading", message: "Loading…" })}
+          </p>
         ) : (
           <MenuGroup>
-            <MenuGroupLabel>Account</MenuGroupLabel>
+            <MenuGroupLabel>{tr({ id: "accounts.account", message: "Account" })}</MenuGroupLabel>
             <AccountMenuItem
               checked={!filterActive}
               closeOnClick
               onCheckedChange={() => setAccounts(undefined)}
-              label="All accounts"
+              label={tr({ id: "accounts.all", message: "All accounts" })}
               hint={allAccountsHint}
             />
             {items.map((account) => {
@@ -147,7 +153,7 @@ export function AccountNavPopover({ variant = "rail" }: { variant?: "rail" | "he
         <MenuSeparator />
         <MenuItem onClick={signOut}>
           <LogOut aria-hidden />
-          Sign out
+          {tr({ id: "accounts.signOut", message: "Sign out" })}
         </MenuItem>
       </MenuPopup>
     </Menu>

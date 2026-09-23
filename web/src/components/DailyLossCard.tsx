@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { useRiskRules } from "@/lib/hooks/useRiskRules";
 import { usePrivacyMode } from "@/lib/displayPrefs";
 import { fmtMoney, fmtSignedMoney } from "@/lib/format";
@@ -18,6 +19,8 @@ export interface DailyLossCardProps {
  * a tracker with no limit is just another P&L number.
  */
 export function DailyLossCard({ todayNetPnl, currency, fxRate = 1 }: DailyLossCardProps) {
+  const { t: tr } = useLinguiMacro();
+
   usePrivacyMode();
   const locale = intlLocale();
   const { data: rules } = useRiskRules();
@@ -32,7 +35,7 @@ export function DailyLossCard({ todayNetPnl, currency, fxRate = 1 }: DailyLossCa
   const warning = !breached && usedPct >= 70;
 
   return (
-    <Card title="Daily loss limit">
+    <Card title={tr({ id: "accounts.limit", message: "Daily loss limit" })}>
       <div className="flex flex-col gap-2.5">
         <div className="flex items-baseline justify-between gap-3">
           <span
@@ -44,7 +47,10 @@ export function DailyLossCard({ todayNetPnl, currency, fxRate = 1 }: DailyLossCa
             {fmtSignedMoney(net, currency, locale)}
           </span>
           <span className="text-[11px] tabular-nums text-muted-foreground">
-            limit {fmtMoney(cap, currency, locale)}
+            {tr({
+              id: "accounts.limitAmount",
+              message: `limit ${fmtMoney(cap, currency, locale)}`,
+            })}
           </span>
         </div>
         <span className="h-2 overflow-hidden rounded-full bg-muted/60">
@@ -58,10 +64,17 @@ export function DailyLossCard({ todayNetPnl, currency, fxRate = 1 }: DailyLossCa
         </span>
         <p className="m-0 text-[11px] leading-relaxed text-muted-foreground">
           {breached
-            ? "Daily loss limit hit — flat is a position. Step away and journal the day."
+            ? tr({
+                id: "accounts.limitHit",
+                message:
+                  "Daily loss limit hit — flat is a position. Step away and journal the day.",
+              })
             : net < 0
-              ? `${fmtMoney(cap - spent, currency, locale)} of loss budget left today.`
-              : "Loss budget untouched today."}
+              ? tr({
+                  id: "accounts.lossLeft",
+                  message: `${fmtMoney(cap - spent, currency, locale)} of loss budget left today.`,
+                })
+              : tr({ id: "accounts.limitUntouched", message: "Loss budget untouched today." })}
         </p>
       </div>
     </Card>

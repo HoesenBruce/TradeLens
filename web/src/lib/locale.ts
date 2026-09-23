@@ -535,6 +535,8 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     apiTokenRevokeFailed: "Could not revoke token",
   },
   "zh-CN": {
+    accountsTitle: "账户与资金",
+    accountsDescription: "管理券商账户、初始余额和资金流水。",
     configExported: "已导出应用配置",
     configExportedDescription: "已将本地偏好设置下载为 JSON 文件。",
     configImported: "已导入应用配置",

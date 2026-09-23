@@ -4292,3 +4292,1568 @@ msgstr "Zone the file's times were exported in — most US broker exports are Ea
 #: src/app/screens/ImportView.tsx:840
 msgid "imports.statementZone"
 msgstr "Zone your broker's MetaTrader server runs in — most use EET (Athens), never UTC."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(st.floor_distance, currency, locale)
+#: src/components/PropStatusCard.tsx:122
+msgid "accounts.floorDistance"
+msgstr "{0} above the floor"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: warnings.length
+#: src/app/screens/HomeView.tsx:385
+msgid "accounts.valueIssues"
+msgstr "{0} account value issues"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: selected.length
+#: src/components/AccountNavPopover.tsx:71
+msgid "accounts.selectedCount"
+msgstr "{0} accounts"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: items.length
+#: src/components/AccountNavPopover.tsx:76
+msgid "accounts.accountCount"
+msgstr "{0} accounts"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: warningToIgnore?.instrument
+#. placeholder {1}: warningToIgnore?.date
+#: src/app/screens/HomeView.tsx:841
+msgid "accounts.ignoreDetails"
+msgstr "{0} has no unadjusted closing price for {1}. TraderMemos will use the previous available market close for this date."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: res.inserted
+#. placeholder {1}: res.skipped
+#: src/app/screens/AccountDetailView.tsx:195
+msgid "accounts.syncResult"
+msgstr "{0} new executions, {1} duplicates"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtSignedMoney(st.realized_pnl, currency, locale)
+#. placeholder {1}: fmtMoney(st.profit_target, currency, locale)
+#: src/components/PropStatusCard.tsx:108
+msgid "accounts.targetProgress"
+msgstr "{0} of {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(cap - spent, currency, locale)
+#: src/components/DailyLossCard.tsx:73
+msgid "accounts.lossLeft"
+msgstr "{0} of loss budget left today."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: batch.row_count
+#: src/app/screens/settings/import-history.tsx:169
+msgid "accounts.rowCount"
+msgstr "{0} rows"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: batch.row_count
+#: src/app/screens/settings/import-history.tsx:38
+msgid "accounts.removedRows"
+msgstr "{0} rows removed"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: summary.total_trades
+#: src/lib/homeInsights.ts:277
+msgid "accounts.insightCount"
+msgstr "{0} trades"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trades.length
+#: src/app/screens/HomeView.tsx:823
+msgid "accounts.totalTrades"
+msgstr "{0} trades"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: (st.best_day_share * 100).toFixed(0)
+#: src/components/PropStatusCard.tsx:93
+msgid "accounts.profitShare"
+msgstr "{0}% of profit"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:21
+msgid "accounts.required"
+msgstr "{label} is required."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:366
+#: src/app/screens/settings/settings-sections.tsx:703
+msgid "accounts.tradeCount"
+msgstr "{tradeCount} trades"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:281
+#: src/components/AnnualGoalCard.tsx:348
+msgid "accounts.goalProgress"
+msgstr "{year} goal progress"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:133
+msgid "accounts.goalYear"
+msgstr "{year} P&L goal"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtPct((progress.progressPct - 100) / 100, locale)
+#: src/components/AnnualGoalCard.tsx:328
+msgid "accounts.overGoal"
+msgstr "+{0} over goal"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:822
+msgid "accounts.oneTrade"
+msgstr "1 trade"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:526
+msgid "accounts.range30"
+msgstr "30D"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:527
+msgid "accounts.range90"
+msgstr "90D"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:849
+#: src/components/AccountMultiSelect.tsx:61
+#: src/components/AccountNavPopover.tsx:70
+#: src/components/AccountNavPopover.tsx:126
+#: src/components/HomeAccountContribution.tsx:44
+msgid "accounts.account"
+msgstr "Account"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:36
+msgid "accounts.contribution"
+msgstr "Account contribution"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:488
+msgid "accounts.deleted"
+msgstr "Account deleted"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:569
+msgid "accounts.fundedHint"
+msgstr "Account funded — import history or log your first trade to see P&L light up here."
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:59
+msgid "accounts.accountRequired"
+msgstr "Account is required."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:495
+msgid "accounts.accountName"
+msgstr "Account name"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:324
+msgid "accounts.notFound"
+msgstr "Account not found"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:584
+#: src/app/screens/settings/settings-sections.tsx:588
+msgid "accounts.accountType"
+msgstr "Account type"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:87
+msgid "accounts.updated"
+msgstr "Account updated"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:660
+msgid "accounts.valueRange"
+msgstr "Account value range"
+
+#. js-lingui-explicit-id
+#: src/components/AccountNavPopover.tsx:94
+msgid "accounts.accountScope"
+msgstr "Account: {selectedLabel}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:417
+msgid "accounts.accounts"
+msgstr "Accounts"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:968
+msgid "accounts.addFunding"
+msgstr "Add a deposit or withdrawal to track balance changes."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:434
+#: src/app/screens/settings/settings-sections.tsx:447
+msgid "accounts.addAccount"
+msgstr "Add account"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:500
+msgid "accounts.lastAccountShort"
+msgstr "Add another account before deleting this one"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:470
+msgid "accounts.lastAccount"
+msgstr "Add another account before deleting this one."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:786
+#: src/app/screens/settings/settings-sections.tsx:805
+#: src/app/screens/settings/settings-sections.tsx:826
+msgid "accounts.addTransaction"
+msgstr "Add transaction"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:825
+msgid "accounts.adding"
+msgstr "Adding…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:206
+msgid "accounts.adjustment"
+msgstr "Adjustment"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:27
+msgid "accounts.ahead"
+msgstr "Ahead of pace"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:528
+msgid "accounts.allRange"
+msgstr "ALL"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:329
+#: src/app/screens/AccountDetailView.tsx:386
+#: src/components/AccountNavPopover.tsx:72
+#: src/components/AccountNavPopover.tsx:131
+msgid "accounts.all"
+msgstr "All accounts"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:896
+#: src/app/screens/settings/settings-sections.tsx:1074
+msgid "accounts.amount"
+msgstr "Amount"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:35
+msgid "accounts.positiveAmount"
+msgstr "Amount must be a positive number."
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:201
+msgid "accounts.annualTitle"
+msgstr "Annual P&L Goal · {year}"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:178
+msgid "accounts.goalAmount"
+msgstr "Annual P&L goal amount"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:275
+msgid "accounts.averageHold"
+msgstr "Average hold"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:139
+msgid "accounts.avgLoss"
+msgstr "Avg loss"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:134
+msgid "accounts.avgWin"
+msgstr "Avg win"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:361
+#: src/app/screens/settings/settings-sections.tsx:601
+msgid "accounts.backtest"
+msgstr "Backtest (paper)"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:610
+msgid "accounts.baseCurrency"
+msgstr "Base currency"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:146
+msgid "accounts.noImportsHint"
+msgstr "Batches appear here after a sync or file import."
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:29
+msgid "accounts.behind"
+msgstr "Behind pace"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:89
+#: src/lib/homeInsights.ts:254
+msgid "accounts.bestDay"
+msgstr "Best day"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:245
+msgid "accounts.bestStreak"
+msgstr "Best streak"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:215
+msgid "accounts.bestTrade"
+msgstr "Best trade"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:421
+msgid "accounts.dangerHint"
+msgstr "Both actions ask before doing anything."
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:86
+msgid "accounts.breakdown"
+msgstr "Breakdown"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:89
+msgid "accounts.breakdownDimension"
+msgstr "Breakdown dimension"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:143
+#: src/app/screens/settings/settings-sections.tsx:534
+#: src/app/screens/settings/settings-sections.tsx:545
+msgid "accounts.broker"
+msgstr "Broker"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:418
+msgid "accounts.accountsHint"
+msgstr "Broker accounts used for trade grouping and filters."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:213
+msgid "accounts.connection"
+msgstr "Broker connection"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:519
+#: src/app/screens/settings/settings-sections.tsx:523
+msgid "accounts.brokerRequired"
+msgstr "Broker is required."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:164
+msgid "accounts.brokerName"
+msgstr "Broker name"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:124
+#: src/app/screens/HomeView.tsx:849
+#: src/app/screens/settings/import-history.tsx:75
+#: src/app/screens/settings/settings-sections.tsx:463
+#: src/app/screens/settings/settings-sections.tsx:817
+#: src/app/screens/settings/settings-sections.tsx:1047
+#: src/app/screens/settings/settings-ui.tsx:769
+#: src/app/screens/settings/settings-ui.tsx:838
+#: src/app/screens/settings/settings-ui.tsx:939
+#: src/components/AnnualGoalCard.tsx:158
+msgid "accounts.cancel"
+msgstr "Cancel"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:358
+#: src/app/screens/settings/settings-sections.tsx:592
+msgid "accounts.cash"
+msgstr "Cash"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:855
+msgid "accounts.cashAccount"
+msgstr "Cash account"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:873
+#: src/app/screens/settings/settings-sections.tsx:1062
+msgid "accounts.cashType"
+msgstr "Cash type"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:141
+msgid "accounts.checkServer"
+msgstr "Check the server and try again."
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:146
+msgid "accounts.clear"
+msgstr "Clear"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:430
+msgid "accounts.clearHistory"
+msgstr "Clear trade history"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:828
+#: src/app/screens/settings/settings-ui.tsx:850
+msgid "accounts.clearTrades"
+msgstr "Clear trades"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:833
+msgid "accounts.clearQuestion"
+msgstr "Clear trades for {accountName}?"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:774
+msgid "accounts.clearFilterHint"
+msgstr "Click the stat chip again to clear the filter."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:240
+msgid "accounts.configure"
+msgstr "Configure"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:252
+#: src/app/screens/settings/settings-sections.tsx:682
+msgid "accounts.connect"
+msgstr "Connect broker"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:151
+msgid "accounts.consistencyOk"
+msgstr "consistency ok"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:146
+msgid "accounts.consistencyRisk"
+msgstr "consistency rule at risk"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:310
+#: src/app/screens/HomeView.tsx:326
+#: src/app/screens/HomeView.tsx:684
+msgid "accounts.capital"
+msgstr "Contributed Capital"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:463
+msgid "accounts.corporateAction"
+msgstr "Corporate action review required"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:124
+msgid "accounts.goalClearError"
+msgstr "Could not clear goal"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:456
+msgid "accounts.clearError"
+msgstr "Could not clear trades"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:494
+msgid "accounts.deleteError"
+msgstr "Could not delete account"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:140
+msgid "accounts.historyError"
+msgstr "Could not load history"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:257
+msgid "accounts.transactionRemoveError"
+msgstr "Could not remove transaction"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:46
+msgid "accounts.rollbackError"
+msgstr "Could not roll back"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:109
+msgid "accounts.goalSaveError"
+msgstr "Could not save goal"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:93
+msgid "accounts.saveError"
+msgstr "Could not save the account. Try again."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:320
+msgid "accounts.transactionUpdateError"
+msgstr "Could not update transaction"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:472
+msgid "accounts.create"
+msgstr "Create"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:471
+msgid "accounts.creating"
+msgstr "Creating…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:560
+msgid "accounts.customBroker"
+msgstr "Custom broker"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: st.daily_loss_hits
+#: src/components/PropStatusCard.tsx:141
+msgid "accounts.dailyHits"
+msgstr "daily loss ×{0}"
+
+#. js-lingui-explicit-id
+#: src/components/DailyLossCard.tsx:38
+msgid "accounts.limit"
+msgstr "Daily loss limit"
+
+#. js-lingui-explicit-id
+#: src/components/DailyLossCard.tsx:67
+msgid "accounts.limitHit"
+msgstr "Daily loss limit hit — flat is a position. Step away and journal the day."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:420
+msgid "accounts.danger"
+msgstr "Danger zone"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:913
+#: src/app/screens/settings/settings-sections.tsx:915
+#: src/app/screens/settings/settings-sections.tsx:1084
+#: src/app/screens/settings/settings-sections.tsx:1086
+msgid "accounts.date"
+msgstr "Date"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:293
+msgid "accounts.dateRequired"
+msgstr "Date is required."
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:51
+msgid "accounts.day"
+msgstr "Day"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:54
+msgid "accounts.riskPercent"
+msgstr "Default risk % must be between 0 and 100."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:766
+msgid "accounts.delete"
+msgstr "Delete"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:924
+msgid "accounts.deleteName"
+msgstr "Delete {accountName}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:934
+msgid "accounts.deleteQuestion"
+msgstr "Delete {accountName}?"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:781
+msgid "accounts.deleteLabel"
+msgstr "Delete {label}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:466
+#: src/app/screens/AccountDetailView.tsx:483
+#: src/app/screens/settings/settings-ui.tsx:922
+#: src/app/screens/settings/settings-ui.tsx:951
+msgid "accounts.deleteAccount"
+msgstr "Delete account"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:123
+msgid "accounts.deletedAccount"
+msgstr "Deleted account"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:438
+msgid "accounts.clearHint"
+msgstr "Deletes every trade and execution in this account."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:434
+msgid "accounts.deleteTradesCount"
+msgstr "Deletes the {tradeCount} trades and every execution in this account."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:201
+msgid "accounts.deposit"
+msgstr "Deposit"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:398
+msgid "accounts.deposited"
+msgstr "Deposited"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:778
+msgid "accounts.funding"
+msgstr "Deposits & withdrawals"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:204
+msgid "accounts.dividend"
+msgstr "Dividend"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: st.drawdown_mode === "static" ? tr({ id: "accounts.static", message: "static" }) : st.drawdown_mode === "eod" ? tr({ id: "accounts.eod", message: "end-of-day trailing" }) : tr({ id: "accounts.trailing", message: "trailing" })
+#: src/components/PropStatusCard.tsx:116
+msgid "accounts.drawdownMode"
+msgstr "Drawdown ({0})"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:137
+msgid "accounts.floorHit"
+msgstr "drawdown floor hit"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:504
+msgid "accounts.accountExample"
+msgstr "e.g. Main Account"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:114
+msgid "accounts.edit"
+msgstr "Edit"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: account.name
+#: src/app/screens/AccountDetailView.tsx:119
+msgid "accounts.editName"
+msgstr "Edit {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: CASH_TYPE_OPTIONS.find((o) => o.value === tx.type)?.label ?? tx.type
+#: src/app/screens/settings/settings-sections.tsx:1016
+msgid "accounts.editCash"
+msgstr "Edit {0} transaction"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:210
+msgid "accounts.editGoal"
+msgstr "Edit annual goal"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:1042
+msgid "accounts.editTransaction"
+msgstr "Edit transaction"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:118
+msgid "accounts.eod"
+msgstr "end-of-day trailing"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:98
+msgid "accounts.goalPositive"
+msgstr "Enter a goal greater than zero."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:289
+msgid "accounts.validAmount"
+msgstr "Enter a valid amount."
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:43
+#: src/lib/settingsFormSchema.ts:52
+msgid "accounts.validNumber"
+msgstr "Enter a valid number, or leave blank."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:402
+#: src/app/screens/HomeView.tsx:213
+#: src/components/PropStatusCard.tsx:76
+msgid "accounts.equity"
+msgstr "Equity"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:608
+msgid "accounts.curve"
+msgstr "Equity curve"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:613
+msgid "accounts.curveRange"
+msgstr "Equity range"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:309
+#: src/app/screens/HomeView.tsx:317
+#: src/app/screens/HomeView.tsx:680
+msgid "accounts.estimated"
+msgstr "Estimated Account Value"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:467
+msgid "accounts.previousClose"
+msgstr "Estimated using previous close"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:132
+msgid "accounts.historyHint"
+msgstr "Every batch of imported executions — scheduled syncs, manual syncs, and file imports. Rolling one back deletes its executions."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: warning.execution_id
+#: src/app/screens/HomeView.tsx:446
+msgid "accounts.executionId"
+msgstr "Execution {0}"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:87
+msgid "accounts.expect"
+msgstr "Expect"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:208
+msgid "accounts.expectancy"
+msgstr "Expectancy"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:347
+msgid "accounts.createFailed"
+msgstr "Failed to create account."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:374
+msgid "accounts.transactionCreateFailed"
+msgstr "Failed to create transaction."
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:264
+msgid "accounts.valueError"
+msgstr "Failed to load account value."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:663
+msgid "accounts.accountsError"
+msgstr "Failed to load accounts."
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:102
+msgid "accounts.breakdownError"
+msgstr "Failed to load breakdown."
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:86
+msgid "accounts.dailyError"
+msgstr "Failed to load daily P&L."
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:171
+msgid "accounts.equityError"
+msgstr "Failed to load equity curve."
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:624
+msgid "accounts.summaryError"
+msgstr "Failed to load summary."
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:763
+msgid "accounts.tradesError"
+msgstr "Failed to load trades."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:948
+msgid "accounts.transactionsError"
+msgstr "Failed to load transactions."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:314
+msgid "accounts.transactionUpdateFailed"
+msgstr "Failed to update transaction."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:203
+msgid "accounts.fee"
+msgstr "Fee"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:79
+msgid "accounts.fees"
+msgstr "Fees"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:21
+msgid "accounts.fileSource"
+msgstr "File import"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: filteredAccount.name
+#: src/app/screens/settings/settings-sections.tsx:793
+msgid "accounts.filtered"
+msgstr "Filtered to {0}"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:74
+msgid "accounts.fullCalendar"
+msgstr "Full calendar"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:361
+msgid "accounts.goal"
+msgstr "Goal"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:25
+msgid "accounts.goalReached"
+msgstr "Goal reached"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:74
+msgid "accounts.gross"
+msgstr "Gross"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:271
+msgid "accounts.healthy"
+msgstr "Healthy"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:389
+msgid "accounts.hide"
+msgstr "Hide"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:657
+msgid "accounts.historical"
+msgstr "Historical account value"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:19
+msgid "accounts.flexSource"
+msgstr "IBKR Flex sync"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:454
+msgid "accounts.ignore"
+msgstr "Ignore"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:858
+msgid "accounts.ignoreAction"
+msgstr "Ignore and use previous close"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:838
+msgid "accounts.ignoreQuestion"
+msgstr "Ignore missing market data?"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:574
+msgid "accounts.startHint"
+msgstr "Import broker history or log your first trade to start tracking performance."
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:554
+msgid "accounts.importCsv"
+msgstr "Import CSV"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:271
+msgid "accounts.noValueHint"
+msgstr "Import executions or cash activity."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:37
+msgid "accounts.rolledBackToast"
+msgstr "Import rolled back"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:363
+#: src/app/screens/HomeView.tsx:468
+msgid "accounts.incomplete"
+msgstr "Incomplete reconstruction"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:261
+msgid "accounts.flex"
+msgstr "Interactive Brokers · Flex sync"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:205
+msgid "accounts.interest"
+msgstr "Interest"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:325
+msgid "accounts.notFoundHint"
+msgstr "It may have been deleted."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: new Date(s.last_synced_at).toLocaleString(intlLocale())
+#. placeholder {1}: s.last_status || "—"
+#: src/app/screens/AccountDetailView.tsx:277
+msgid "accounts.lastSync"
+msgstr "Last sync {0} — {1}"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:377
+msgid "accounts.left"
+msgstr "Left"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoneyCompact(money(progress.remaining), currency, locale)
+#: src/components/AnnualGoalCard.tsx:293
+msgid "accounts.leftAmount"
+msgstr "Left {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(cap, currency, locale)
+#: src/components/DailyLossCard.tsx:50
+msgid "accounts.limitAmount"
+msgstr "limit {0}"
+
+#. js-lingui-explicit-id
+#: src/components/AccountNavPopover.tsx:122
+#: src/components/HomeMiniCalendar.tsx:82
+msgid "accounts.loading"
+msgstr "Loading…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:558
+msgid "accounts.logTrade"
+msgstr "Log trade"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:286
+msgid "accounts.lossHold"
+msgstr "Losing hold"
+
+#. js-lingui-explicit-id
+#: src/components/DailyLossCard.tsx:77
+msgid "accounts.limitUntouched"
+msgstr "Loss budget untouched today."
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:106
+msgid "accounts.losses"
+msgstr "Losses"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:266
+msgid "accounts.mainLeak"
+msgstr "Main leak"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:272
+msgid "accounts.manualOnly"
+msgstr "Manual only"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:359
+#: src/app/screens/settings/settings-sections.tsx:595
+msgid "accounts.margin"
+msgstr "Margin"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:225
+msgid "accounts.maxDrawdown"
+msgstr "Max drawdown"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:465
+msgid "accounts.missingData"
+msgstr "Missing market data"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:62
+msgid "accounts.month"
+msgstr "Month"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:294
+msgid "accounts.mostTraded"
+msgstr "most traded"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:171
+msgid "accounts.myBroker"
+msgstr "My broker"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:135
+#: src/lib/settingsFormSchema.ts:19
+msgid "accounts.name"
+msgstr "Name"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:77
+msgid "accounts.nameFirst"
+msgstr "Name the account first."
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:59
+msgid "accounts.net"
+msgstr "Net"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:134
+msgid "accounts.netPnl"
+msgstr "Net P&L"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:281
+msgid "accounts.neverSynced"
+msgstr "Never synced yet."
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:270
+msgid "accounts.noValue"
+msgstr "No account value data"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:669
+msgid "accounts.noAccounts"
+msgstr "No accounts yet"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:106
+msgid "accounts.noBreakdown"
+msgstr "No breakdown data yet."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:287
+msgid "accounts.noConnection"
+msgstr "No broker connected. Connect Interactive Brokers to sync fills on a schedule, or import statements by file."
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:176
+msgid "accounts.noEquity"
+msgstr "No equity data"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:74
+msgid "accounts.noSetup"
+msgstr "No setup"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:770
+msgid "accounts.noRangeTrades"
+msgstr "No trades in this range"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:769
+msgid "accounts.noMatch"
+msgstr "No trades match this filter"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:566
+msgid "accounts.noTrades"
+msgstr "No trades yet"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:956
+msgid "accounts.noAccountTransactions"
+msgstr "No transactions for this account"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:960
+msgid "accounts.noTransactions"
+msgstr "No transactions yet"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:267
+msgid "accounts.noneTagged"
+msgstr "None tagged"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:926
+#: src/app/screens/settings/settings-sections.tsx:1092
+msgid "accounts.note"
+msgstr "Note"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:145
+msgid "accounts.noImports"
+msgstr "Nothing imported yet"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoneyCompact(money(progress.goal), currency, locale)
+#: src/components/AnnualGoalCard.tsx:271
+msgid "accounts.ofGoal"
+msgstr "of {0}"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:31
+msgid "accounts.onTrack"
+msgstr "On track"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:114
+msgid "accounts.open"
+msgstr "Open"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:932
+#: src/app/screens/settings/settings-sections.tsx:1097
+msgid "accounts.optionalNote"
+msgstr "Optional note"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:554
+msgid "accounts.other"
+msgstr "Other"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:158
+msgid "accounts.otherDots"
+msgstr "Other…"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:370
+msgid "accounts.over"
+msgstr "Over"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoneyCompact(money(progress.overBy), currency, locale)
+#: src/components/AnnualGoalCard.tsx:289
+msgid "accounts.overBy"
+msgstr "Over by {0}"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:56
+msgid "accounts.pnl"
+msgstr "P&L"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:211
+msgid "accounts.perTrade"
+msgstr "per trade"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:56
+msgid "accounts.performance"
+msgstr "Performance"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:957
+msgid "accounts.permanentDelete"
+msgstr "Permanently removes this account and all linked trades, executions, cash transactions, and attachments. This cannot be undone."
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:83
+msgid "accounts.pf"
+msgstr "PF"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:206
+msgid "accounts.quality"
+msgstr "PnL quality"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:378
+#: src/app/screens/settings/settings-sections.tsx:720
+#: src/components/AccountMultiSelect.tsx:97
+msgid "accounts.primary"
+msgstr "Primary"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:231
+msgid "accounts.profitFactor"
+msgstr "Profit factor"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:105
+msgid "accounts.profitTarget"
+msgstr "Profit target"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:184
+msgid "accounts.progressHint"
+msgstr "Progress uses calendar-year net P&L for {year}, respecting your account filter."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:360
+#: src/app/screens/settings/settings-sections.tsx:598
+msgid "accounts.prop"
+msgstr "Prop"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:72
+msgid "accounts.propProgram"
+msgstr "Prop program"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:228
+msgid "accounts.pullback"
+msgstr "pullback"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:214
+msgid "accounts.connectionHint"
+msgstr "Pulls new fills into this account automatically."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:406
+#: src/components/PropStatusCard.tsx:80
+msgid "accounts.realized"
+msgstr "Realized P&L"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:755
+msgid "accounts.recent"
+msgstr "Recent trades"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:53
+msgid "accounts.record"
+msgstr "Record"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:964
+msgid "accounts.recordFunding"
+msgstr "Record a deposit or withdrawal for this account."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:856
+msgid "accounts.clearDetails"
+msgstr "Removes {tradeCount} trades and all executions. Keeps account, cash ledger, setups, and tags."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:474
+msgid "accounts.deleteHint"
+msgstr "Removes the account with its trades, cash transactions and attachments."
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:159
+msgid "accounts.reports"
+msgstr "Reports"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:264
+msgid "accounts.requestFailed"
+msgstr "Request failed"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:65
+#: src/app/screens/settings/import-history.tsx:85
+msgid "accounts.rollback"
+msgstr "Roll back"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:70
+msgid "accounts.rollbackQuestion"
+msgstr "Roll back this import?"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:50
+msgid "accounts.rollbackFailed"
+msgstr "Rollback failed"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:162
+msgid "accounts.rolledBack"
+msgstr "Rolled back"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:84
+msgid "accounts.rollingBack"
+msgstr "Rolling back…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:129
+#: src/app/screens/settings/settings-sections.tsx:1052
+msgid "accounts.save"
+msgstr "Save"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:163
+msgid "accounts.saveGoal"
+msgstr "Save goal"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:634
+msgid "accounts.startingHint"
+msgstr "Saved as the first deposit in the cash ledger."
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:128
+#: src/app/screens/settings/settings-sections.tsx:1051
+#: src/components/AnnualGoalCard.tsx:162
+msgid "accounts.saving"
+msgstr "Saving…"
+
+#. js-lingui-explicit-id
+#: src/components/AccountMultiSelect.tsx:44
+msgid "accounts.selectAccount"
+msgstr "Select account"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:243
+msgid "accounts.setHint"
+msgstr "Set a {year} net P&L target to track progress here."
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:249
+msgid "accounts.setGoal"
+msgstr "Set annual goal"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:52
+msgid "accounts.setup"
+msgstr "Setup"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:390
+#: src/app/screens/settings/settings-sections.tsx:796
+msgid "accounts.showAll"
+msgstr "Show all"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: recentTrades.length
+#. placeholder {1}: trades.length
+#: src/app/screens/HomeView.tsx:817
+msgid "accounts.recentCount"
+msgstr "Showing {0} of {1} trades"
+
+#. js-lingui-explicit-id
+#: src/components/AccountNavPopover.tsx:156
+msgid "accounts.signOut"
+msgstr "Sign out"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:366
+msgid "accounts.incompleteHint"
+msgstr "Some account values are unavailable for this range."
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:237
+msgid "accounts.stability"
+msgstr "Stability"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:670
+msgid "accounts.noAccountsHint"
+msgstr "Start from your broker — we'll show you how to get the trades out of it."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:632
+msgid "accounts.startingBalance"
+msgstr "Starting balance"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:28
+msgid "accounts.balanceNumber"
+msgstr "Starting balance must be a number."
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:118
+msgid "accounts.static"
+msgstr "static"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:53
+msgid "accounts.symbol"
+msgstr "Symbol"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:131
+msgid "accounts.history"
+msgstr "Sync & import history"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:194
+msgid "accounts.syncComplete"
+msgstr "Sync complete"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:202
+#: src/app/screens/AccountDetailView.tsx:206
+msgid "accounts.syncFailed"
+msgstr "Sync failed"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:269
+#: src/app/screens/settings/settings-sections.tsx:734
+msgid "accounts.syncFailing"
+msgstr "Sync failing"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:235
+msgid "accounts.syncNow"
+msgstr "Sync now"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:737
+msgid "accounts.syncOff"
+msgstr "Sync off"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:736
+msgid "accounts.syncOn"
+msgstr "Sync on"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:234
+msgid "accounts.syncing"
+msgstr "Syncing…"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:172
+msgid "accounts.targetNet"
+msgstr "Target net P&L ({currency})"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:133
+msgid "accounts.targetReached"
+msgstr "target reached"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: batch.row_count
+#: src/app/screens/settings/import-history.tsx:91
+msgid "accounts.rollbackDetails"
+msgstr "The {0} executions imported into {accountName} by this batch will be deleted and trades regrouped. A later sync can import them again."
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:273
+msgid "accounts.time"
+msgstr "Time"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:291
+msgid "accounts.topSymbol"
+msgstr "Top symbol"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:170
+msgid "accounts.total"
+msgstr "Total"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:779
+msgid "accounts.fundingHint"
+msgstr "Track cash flows that affect your equity curve and header cash stat."
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:47
+msgid "accounts.trades"
+msgstr "Trades"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:451
+msgid "accounts.cleared"
+msgstr "Trades cleared"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:85
+msgid "accounts.tradingDays"
+msgstr "Trading days"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:118
+msgid "accounts.trailing"
+msgstr "trailing"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:253
+msgid "accounts.transactionRemoved"
+msgstr "Transaction removed"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:307
+msgid "accounts.transactionUpdated"
+msgstr "Transaction updated"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:457
+#: src/app/screens/AccountDetailView.tsx:495
+msgid "accounts.retry"
+msgstr "Try again."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:869
+#: src/app/screens/settings/settings-sections.tsx:1058
+msgid "accounts.type"
+msgstr "Type"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:863
+#: src/app/screens/settings/settings-ui.tsx:872
+#: src/app/screens/settings/settings-ui.tsx:968
+#: src/app/screens/settings/settings-ui.tsx:977
+msgid "accounts.typeConfirm"
+msgstr "Type {accountName} to confirm"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:569
+msgid "accounts.brokerPlaceholder"
+msgstr "Type broker name"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:594
+msgid "accounts.viewTrades"
+msgstr "View all trades"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:337
+msgid "accounts.versusPace"
+msgstr "vs linear pace"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:122
+msgid "accounts.wash"
+msgstr "Wash"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:50
+#: src/lib/homeInsights.ts:239
+msgid "accounts.winRate"
+msgstr "Win rate"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:281
+msgid "accounts.winHold"
+msgstr "Winning hold"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:98
+msgid "accounts.wins"
+msgstr "Wins"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:202
+msgid "accounts.withdrawal"
+msgstr "Withdrawal"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:260
+msgid "accounts.worstDay"
+msgstr "Worst day"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:249
+msgid "accounts.worstStreak"
+msgstr "Worst streak"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:220
+msgid "accounts.worstTrade"
+msgstr "Worst trade"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:354
+msgid "accounts.ytd"
+msgstr "YTD"

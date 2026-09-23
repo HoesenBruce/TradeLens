@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import type { Account } from "@/lib/api/types";
@@ -32,13 +33,15 @@ export function AccountMultiSelect({
   onChange: (ids: string[]) => void;
   disabled?: boolean;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const [open, setOpen] = useState(false);
 
   const selected = value.filter((id) => accounts.some((account) => account.id === id));
   const nameOf = (id: string) => accounts.find((account) => account.id === id)?.name ?? "";
   const label =
     selected.length === 0
-      ? "Select account"
+      ? tr({ id: "accounts.selectAccount", message: "Select account" })
       : selected.length === 1
         ? nameOf(selected[0])
         : // The primary stays legible rather than collapsing to a bare count —
@@ -55,7 +58,7 @@ export function AccountMultiSelect({
     <Menu open={open} onOpenChange={setOpen}>
       <MenuTrigger
         disabled={disabled}
-        aria-label="Account"
+        aria-label={tr({ id: "accounts.account", message: "Account" })}
         // Field chrome copied from `NativeSelect` so this sits on the same
         // baseline as the inputs beside it and reads as the same control.
         className={cn(
@@ -90,7 +93,9 @@ export function AccountMultiSelect({
               <span className="flex w-full items-center gap-2">
                 <span className="min-w-0 flex-1 truncate">{account.name}</span>
                 <span className="shrink-0 text-[11px] text-muted-foreground">
-                  {account.id === selected[0] ? "Primary" : account.base_currency}
+                  {account.id === selected[0]
+                    ? tr({ id: "accounts.primary", message: "Primary" })
+                    : account.base_currency}
                 </span>
               </span>
             </MenuCheckboxItem>

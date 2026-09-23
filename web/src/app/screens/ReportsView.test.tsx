@@ -1,4 +1,5 @@
-import { render, screen, within } from "@testing-library/react";
+import { render } from "@/test/render";
+import { screen, within } from "@testing-library/react";
 import type { CellContext } from "@/lib/table";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vite-plus/test";

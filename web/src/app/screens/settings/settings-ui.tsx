@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import type { LucideIcon } from "lucide-react";
 import { Eraser, Trash2 } from "lucide-react";
 import { useId, useState, type ReactNode } from "react";
@@ -736,6 +737,8 @@ export function DeleteButton({
   detail?: string;
   disabled?: boolean;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const [confirm, setConfirm] = useState(false);
 
   if (disabled) {
@@ -760,10 +763,10 @@ export function DeleteButton({
               onDelete();
             }}
           >
-            Delete
+            {tr({ id: "accounts.delete", message: "Delete" })}
           </Button>
           <Button type="button" variant="outline" size="xs" onClick={() => setConfirm(false)}>
-            Cancel
+            {tr({ id: "accounts.cancel", message: "Cancel" })}
           </Button>
         </span>
       </span>
@@ -775,7 +778,7 @@ export function DeleteButton({
       type="button"
       variant="ghost"
       size="icon-xs"
-      aria-label={`Delete ${label}`}
+      aria-label={tr({ id: "accounts.deleteLabel", message: `Delete ${label}` })}
       onClick={() => setConfirm(true)}
       className="hover:text-destructive"
     >
@@ -795,6 +798,8 @@ export function ClearTradesButton({
   onClear: () => void;
   disabled?: boolean;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState("");
   const inputId = useId();
@@ -820,17 +825,17 @@ export function ClearTradesButton({
         className="border-border bg-transparent text-destructive hover:bg-destructive/10 hover:text-destructive"
       >
         <Eraser size={14} strokeWidth={1.5} />
-        Clear trades
+        {tr({ id: "accounts.clearTrades", message: "Clear trades" })}
       </Button>
       <Modal
         open={open}
         onOpenChange={handleOpenChange}
-        title={`Clear trades for ${accountName}?`}
+        title={tr({ id: "accounts.clearQuestion", message: `Clear trades for ${accountName}?` })}
         className="max-w-[min(336px,94vw)]"
         footer={
           <>
             <Button type="button" variant="ghost" onClick={() => handleOpenChange(false)}>
-              Cancel
+              {tr({ id: "accounts.cancel", message: "Cancel" })}
             </Button>
             <Button
               type="button"
@@ -842,20 +847,20 @@ export function ClearTradesButton({
               }}
               className="border-transparent bg-destructive/15 hover:bg-destructive/25"
             >
-              Clear trades
+              {tr({ id: "accounts.clearTrades", message: "Clear trades" })}
             </Button>
           </>
         }
       >
         <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-          Removes <span className="font-semibold text-destructive tabular-nums">{tradeCount}</span>{" "}
-          trade
-          {tradeCount === 1 ? "" : "s"} and all executions. Keeps account, cash ledger, setups, and
-          tags.
+          {tr({
+            id: "accounts.clearDetails",
+            message: `Removes ${tradeCount} trades and all executions. Keeps account, cash ledger, setups, and tags.`,
+          })}
         </p>
         <div>
           <label htmlFor={inputId} className="mb-1.5 block text-[11px] text-muted-foreground">
-            Type <span className="font-medium text-foreground">{accountName}</span> to confirm
+            {tr({ id: "accounts.typeConfirm", message: `Type ${accountName} to confirm` })}
           </label>
           <FormInput
             id={inputId}
@@ -864,7 +869,10 @@ export function ClearTradesButton({
             autoFocus
             autoComplete="off"
             spellCheck={false}
-            aria-label={`Type ${accountName} to confirm`}
+            aria-label={tr({
+              id: "accounts.typeConfirm",
+              message: `Type ${accountName} to confirm`,
+            })}
           />
         </div>
       </Modal>
@@ -888,6 +896,8 @@ export function DeleteAccountButton({
   /** Render a labelled trigger instead of the icon-only one (detail page). */
   label?: string;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState("");
   const inputId = useId();
@@ -906,8 +916,12 @@ export function DeleteAccountButton({
         variant="outline"
         size={label ? "sm" : "icon-sm"}
         disabled={disabled}
-        title={disabled ? disabledReason : "Delete account"}
-        aria-label={`Delete ${accountName}`}
+        title={
+          disabled
+            ? disabledReason
+            : tr({ id: "accounts.deleteAccount", message: "Delete account" })
+        }
+        aria-label={tr({ id: "accounts.deleteName", message: `Delete ${accountName}` })}
         onClick={() => setOpen(true)}
         className="border-border bg-transparent text-destructive hover:bg-destructive/10 hover:text-destructive disabled:opacity-40"
       >
@@ -917,12 +931,12 @@ export function DeleteAccountButton({
       <Modal
         open={open}
         onOpenChange={handleOpenChange}
-        title={`Delete ${accountName}?`}
+        title={tr({ id: "accounts.deleteQuestion", message: `Delete ${accountName}?` })}
         className="max-w-[min(336px,94vw)]"
         footer={
           <>
             <Button type="button" variant="ghost" onClick={() => handleOpenChange(false)}>
-              Cancel
+              {tr({ id: "accounts.cancel", message: "Cancel" })}
             </Button>
             <Button
               type="button"
@@ -934,21 +948,24 @@ export function DeleteAccountButton({
               }}
               className="border-transparent bg-destructive/15 hover:bg-destructive/25"
             >
-              Delete account
+              {tr({ id: "accounts.deleteAccount", message: "Delete account" })}
             </Button>
           </>
         }
       >
         <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-          Permanently removes this account and all linked trades, executions, cash transactions, and
-          attachments. This cannot be undone.
+          {tr({
+            id: "accounts.permanentDelete",
+            message:
+              "Permanently removes this account and all linked trades, executions, cash transactions, and attachments. This cannot be undone.",
+          })}
         </p>
         {detail ? (
           <p className="m-0 text-[12px] leading-snug text-muted-foreground">{detail}</p>
         ) : null}
         <div>
           <label htmlFor={inputId} className="mb-1.5 block text-[11px] text-muted-foreground">
-            Type <span className="font-medium text-foreground">{accountName}</span> to confirm
+            {tr({ id: "accounts.typeConfirm", message: `Type ${accountName} to confirm` })}
           </label>
           <FormInput
             id={inputId}
@@ -957,7 +974,10 @@ export function DeleteAccountButton({
             autoFocus
             autoComplete="off"
             spellCheck={false}
-            aria-label={`Type ${accountName} to confirm`}
+            aria-label={tr({
+              id: "accounts.typeConfirm",
+              message: `Type ${accountName} to confirm`,
+            })}
           />
         </div>
       </Modal>
