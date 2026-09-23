@@ -81,8 +81,8 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 		}
 		id := uuid.New().String()
 		details := sql.NullString{}
-		if pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" {
-			payload := map[string]string{}
+		if pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" || pe.ReportedRealizedPnl != nil {
+			payload := map[string]any{}
 			if pe.LotKey != "" {
 				payload["lot"] = pe.LotKey
 			}
@@ -103,6 +103,10 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 			}
 			if pe.PositionEffect != "" {
 				payload["position_effect"] = pe.PositionEffect
+			}
+			if pe.ReportedRealizedPnl != nil {
+				payload["broker_reported_realized_pnl"] = *pe.ReportedRealizedPnl
+				payload["realized_pnl_source"] = "broker_reported"
 			}
 			if b, err := json.Marshal(payload); err == nil {
 				details = sql.NullString{String: string(b), Valid: true}

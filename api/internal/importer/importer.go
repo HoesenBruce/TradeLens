@@ -12,23 +12,24 @@ const (
 
 // ParsedExecution is a broker-agnostic fill produced by an Importer.
 type ParsedExecution struct {
-	ExternalID     string
-	DedupKey       string // optional broker-stable identity when fill fields are not unique
-	Symbol         string
-	StockName      string // broker-provided company/security name, when available
-	InstrumentType string
-	OptionRight    string // call|put when instrument is option
-	Strike         string // option strike, decimal string ("120", "37.5")
-	Expiry         string // option expiry, YYYY-MM-DD
-	Side           string // buy|sell
-	PositionType   string // cash|margin_long|margin_short when source supplies it
-	PositionEffect string // increase|reduce when source supplies it
-	Quantity       float64
-	Price          float64
-	Fees           float64
-	Commission     float64
-	ExecutedAt     time.Time
-	Multiplier     float64 // 1 stock, 100 option; 0 means "default to 1"
+	ExternalID          string
+	DedupKey            string // optional broker-stable identity when fill fields are not unique
+	Symbol              string
+	StockName           string // broker-provided company/security name, when available
+	InstrumentType      string
+	OptionRight         string   // call|put when instrument is option
+	Strike              string   // option strike, decimal string ("120", "37.5")
+	Expiry              string   // option expiry, YYYY-MM-DD
+	Side                string   // buy|sell
+	PositionType        string   // cash|margin_long|margin_short when source supplies it
+	PositionEffect      string   // increase|reduce when source supplies it
+	ReportedRealizedPnl *float64 // broker-reported close result, when the source identifies one
+	Quantity            float64
+	Price               float64
+	Fees                float64
+	Commission          float64
+	ExecutedAt          time.Time
+	Multiplier          float64 // 1 stock, 100 option; 0 means "default to 1"
 	// LotKey isolates overlapping same-symbol round-trips (journal imports).
 	// Stored in executions.details as {"lot":"..."}.
 	LotKey string
