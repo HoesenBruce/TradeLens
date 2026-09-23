@@ -9,6 +9,8 @@ import { useDisplayPrefs } from "@/lib/displayPrefs";
 import { navLabel } from "@/lib/locale";
 import { isRouteActive, MAIN_ROUTES, PRIMARY_NAV, SECONDARY_NAV } from "@/lib/navItems";
 import { useLocale } from "@/i18n";
+import appIconLight from "@/assets/app-icon-light.svg";
+import { BRAND } from "@/lib/brand";
 import { AppLogo } from "./AppLogo";
 import { CreateMenu } from "./CreateMenu";
 import { RailTooltip } from "./RailTooltip";
@@ -126,9 +128,16 @@ export function AppNav() {
     >
       {/* Logo band — same 52px + border as HeaderBar */}
       <div className="flex h-[52px] w-full shrink-0 items-center justify-center bg-background">
+        <img
+          src={appIconLight}
+          width={36}
+          height={36}
+          alt={BRAND.name}
+          className="shrink-0 select-none transition-transform duration-150 ease-out hover:scale-105 motion-reduce:transition-none dark:hidden"
+        />
         <AppLogo
-          size={24}
-          className="transition-transform duration-150 ease-out hover:scale-105 motion-reduce:transition-none"
+          size={36}
+          className="hidden transition-transform duration-150 ease-out hover:scale-105 motion-reduce:transition-none dark:block"
         />
       </div>
 
