@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import type { Account } from "@/lib/api/types";
 import { usePropStatus } from "@/lib/hooks/useProp";
 import { cn } from "@/lib/cn";
@@ -55,6 +56,8 @@ function RuleBar({
  * Renders only when a single prop account is selected and has rules saved.
  */
 export function PropStatusCard({ accounts, selectedAccountId }: PropStatusCardProps) {
+  const { t: tr } = useLinguiMacro();
+
   usePrivacyMode();
   const locale = intlLocale();
   const account = accounts.find((a) => a.id === selectedAccountId);
@@ -66,22 +69,31 @@ export function PropStatusCard({ accounts, selectedAccountId }: PropStatusCardPr
   const currency = account.base_currency;
 
   return (
-    <Card title="Prop program">
+    <Card title={tr({ id: "accounts.propProgram", message: "Prop program" })}>
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
-          <StatCard label="Equity" value={fmtMoney(st.equity, currency, locale)} />
           <StatCard
-            label="Realized P&L"
+            label={tr({ id: "accounts.equity", message: "Equity" })}
+            value={fmtMoney(st.equity, currency, locale)}
+          />
+          <StatCard
+            label={tr({ id: "accounts.realized", message: "Realized P&L" })}
             value={fmtSignedMoney(st.realized_pnl, currency, locale)}
             accent={st.realized_pnl >= 0 ? "pos" : "neg"}
           />
-          <StatCard label="Trading days" value={String(st.trading_days)} />
           <StatCard
-            label="Best day"
+            label={tr({ id: "accounts.tradingDays", message: "Trading days" })}
+            value={String(st.trading_days)}
+          />
+          <StatCard
+            label={tr({ id: "accounts.bestDay", message: "Best day" })}
             value={fmtSignedMoney(st.best_day_pnl, currency, locale)}
             hint={
               st.best_day_share != null
-                ? `${(st.best_day_share * 100).toFixed(0)}% of profit`
+                ? tr({
+                    id: "accounts.profitShare",
+                    message: `${(st.best_day_share * 100).toFixed(0)}% of profit`,
+                  })
                 : undefined
             }
           />
@@ -90,28 +102,55 @@ export function PropStatusCard({ accounts, selectedAccountId }: PropStatusCardPr
         <div className="flex max-w-2xl flex-col gap-3">
           {st.profit_target != null && st.profit_target > 0 && (
             <RuleBar
-              label="Profit target"
+              label={tr({ id: "accounts.profitTarget", message: "Profit target" })}
               value={st.target_pct ?? 0}
               max
-              note={`${fmtSignedMoney(st.realized_pnl, currency, locale)} of ${fmtMoney(st.profit_target, currency, locale)}`}
+              note={tr({
+                id: "accounts.targetProgress",
+                message: `${fmtSignedMoney(st.realized_pnl, currency, locale)} of ${fmtMoney(st.profit_target, currency, locale)}`,
+              })}
             />
           )}
           {st.max_drawdown != null && st.max_drawdown > 0 && st.floor_distance != null && (
             <RuleBar
-              label={`Drawdown (${st.drawdown_mode ?? "trailing"})`}
+              label={tr({
+                id: "accounts.drawdownMode",
+                message: `Drawdown (${st.drawdown_mode === "static" ? tr({ id: "accounts.static", message: "static" }) : st.drawdown_mode === "eod" ? tr({ id: "accounts.eod", message: "end-of-day trailing" }) : tr({ id: "accounts.trailing", message: "trailing" })})`,
+              })}
               value={1 - st.floor_distance / st.max_drawdown}
               danger={st.drawdown_hit || st.floor_distance <= st.max_drawdown * 0.25}
-              note={`${fmtMoney(st.floor_distance, currency, locale)} above the floor`}
+              note={tr({
+                id: "accounts.floorDistance",
+                message: `${fmtMoney(st.floor_distance, currency, locale)} above the floor`,
+              })}
             />
           )}
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
-          {st.target_reached && <Pill tone="pos">target reached</Pill>}
-          {st.drawdown_hit && <Pill tone="neg">drawdown floor hit</Pill>}
-          {st.daily_loss_hits > 0 && <Pill tone="neg">daily loss ×{st.daily_loss_hits}</Pill>}
-          {st.consistency_ok === false && <Pill tone="amber">consistency rule at risk</Pill>}
-          {st.consistency_ok === true && <Pill tone="pos">consistency ok</Pill>}
+          {st.target_reached && (
+            <Pill tone="pos">
+              {tr({ id: "accounts.targetReached", message: "target reached" })}
+            </Pill>
+          )}
+          {st.drawdown_hit && (
+            <Pill tone="neg">{tr({ id: "accounts.floorHit", message: "drawdown floor hit" })}</Pill>
+          )}
+          {st.daily_loss_hits > 0 && (
+            <Pill tone="neg">
+              {tr({ id: "accounts.dailyHits", message: `daily loss ×${st.daily_loss_hits}` })}
+            </Pill>
+          )}
+          {st.consistency_ok === false && (
+            <Pill tone="amber">
+              {tr({ id: "accounts.consistencyRisk", message: "consistency rule at risk" })}
+            </Pill>
+          )}
+          {st.consistency_ok === true && (
+            <Pill tone="pos">
+              {tr({ id: "accounts.consistencyOk", message: "consistency ok" })}
+            </Pill>
+          )}
         </div>
       </div>
     </Card>

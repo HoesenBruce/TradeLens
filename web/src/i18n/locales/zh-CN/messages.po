@@ -4078,3 +4078,1568 @@ msgstr "文件导出时间使用的时区，多数美国券商使用美东时间
 #: src/app/screens/ImportView.tsx:840
 msgid "imports.statementZone"
 msgstr "券商 MetaTrader 服务器使用的时区，多数为 EET（雅典），不是 UTC。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(st.floor_distance, currency, locale)
+#: src/components/PropStatusCard.tsx:122
+msgid "accounts.floorDistance"
+msgstr "距底线 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: warnings.length
+#: src/app/screens/HomeView.tsx:385
+msgid "accounts.valueIssues"
+msgstr "{0} 项账户价值问题"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: selected.length
+#: src/components/AccountNavPopover.tsx:71
+msgid "accounts.selectedCount"
+msgstr "{0} 个账户"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: items.length
+#: src/components/AccountNavPopover.tsx:76
+msgid "accounts.accountCount"
+msgstr "{0} 个账户"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: warningToIgnore?.instrument
+#. placeholder {1}: warningToIgnore?.date
+#: src/app/screens/HomeView.tsx:841
+msgid "accounts.ignoreDetails"
+msgstr "{0} 在 {1} 缺少未复权收盘价。TraderMemos 将使用此前可用的收盘价。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: res.inserted
+#. placeholder {1}: res.skipped
+#: src/app/screens/AccountDetailView.tsx:195
+msgid "accounts.syncResult"
+msgstr "新增 {0} 笔成交，{1} 笔重复"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtSignedMoney(st.realized_pnl, currency, locale)
+#. placeholder {1}: fmtMoney(st.profit_target, currency, locale)
+#: src/components/PropStatusCard.tsx:108
+msgid "accounts.targetProgress"
+msgstr "{0} / {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(cap - spent, currency, locale)
+#: src/components/DailyLossCard.tsx:73
+msgid "accounts.lossLeft"
+msgstr "今日剩余亏损额度 {0}。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: batch.row_count
+#: src/app/screens/settings/import-history.tsx:169
+msgid "accounts.rowCount"
+msgstr "{0} 行"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: batch.row_count
+#: src/app/screens/settings/import-history.tsx:38
+msgid "accounts.removedRows"
+msgstr "已移除 {0} 行"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: summary.total_trades
+#: src/lib/homeInsights.ts:277
+msgid "accounts.insightCount"
+msgstr "{0} 笔交易"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trades.length
+#: src/app/screens/HomeView.tsx:823
+msgid "accounts.totalTrades"
+msgstr "{0} 笔交易"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: (st.best_day_share * 100).toFixed(0)
+#: src/components/PropStatusCard.tsx:93
+msgid "accounts.profitShare"
+msgstr "占盈利的 {0}%"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:21
+msgid "accounts.required"
+msgstr "请填写{label}。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:366
+#: src/app/screens/settings/settings-sections.tsx:703
+msgid "accounts.tradeCount"
+msgstr "{tradeCount} 笔交易"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:281
+#: src/components/AnnualGoalCard.tsx:348
+msgid "accounts.goalProgress"
+msgstr "{year} 年目标进度"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:133
+msgid "accounts.goalYear"
+msgstr "{year} 年盈亏目标"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtPct((progress.progressPct - 100) / 100, locale)
+#: src/components/AnnualGoalCard.tsx:328
+msgid "accounts.overGoal"
+msgstr "超出目标 +{0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:822
+msgid "accounts.oneTrade"
+msgstr "1 笔交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:526
+msgid "accounts.range30"
+msgstr "30天"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:527
+msgid "accounts.range90"
+msgstr "90天"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:849
+#: src/components/AccountMultiSelect.tsx:61
+#: src/components/AccountNavPopover.tsx:70
+#: src/components/AccountNavPopover.tsx:126
+#: src/components/HomeAccountContribution.tsx:44
+msgid "accounts.account"
+msgstr "账户"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:36
+msgid "accounts.contribution"
+msgstr "账户贡献"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:488
+msgid "accounts.deleted"
+msgstr "账户已删除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:569
+msgid "accounts.fundedHint"
+msgstr "账户已有资金。导入历史记录或添加首笔交易，即可查看盈亏。"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:59
+msgid "accounts.accountRequired"
+msgstr "请选择账户。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:495
+msgid "accounts.accountName"
+msgstr "账户名称"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:324
+msgid "accounts.notFound"
+msgstr "未找到账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:584
+#: src/app/screens/settings/settings-sections.tsx:588
+msgid "accounts.accountType"
+msgstr "账户类型"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:87
+msgid "accounts.updated"
+msgstr "账户已更新"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:660
+msgid "accounts.valueRange"
+msgstr "账户价值时间范围"
+
+#. js-lingui-explicit-id
+#: src/components/AccountNavPopover.tsx:94
+msgid "accounts.accountScope"
+msgstr "账户：{selectedLabel}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:417
+msgid "accounts.accounts"
+msgstr "账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:968
+msgid "accounts.addFunding"
+msgstr "添加入金或出金以跟踪余额变化。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:434
+#: src/app/screens/settings/settings-sections.tsx:447
+msgid "accounts.addAccount"
+msgstr "添加账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:500
+msgid "accounts.lastAccountShort"
+msgstr "请先添加另一个账户，再删除此账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:470
+msgid "accounts.lastAccount"
+msgstr "请先添加另一个账户，再删除此账户。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:786
+#: src/app/screens/settings/settings-sections.tsx:805
+#: src/app/screens/settings/settings-sections.tsx:826
+msgid "accounts.addTransaction"
+msgstr "添加流水"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:825
+msgid "accounts.adding"
+msgstr "添加中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:206
+msgid "accounts.adjustment"
+msgstr "调整"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:27
+msgid "accounts.ahead"
+msgstr "领先进度"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:528
+msgid "accounts.allRange"
+msgstr "全部"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:329
+#: src/app/screens/AccountDetailView.tsx:386
+#: src/components/AccountNavPopover.tsx:72
+#: src/components/AccountNavPopover.tsx:131
+msgid "accounts.all"
+msgstr "全部账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:896
+#: src/app/screens/settings/settings-sections.tsx:1074
+msgid "accounts.amount"
+msgstr "金额"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:35
+msgid "accounts.positiveAmount"
+msgstr "金额必须为正数。"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:201
+msgid "accounts.annualTitle"
+msgstr "年度盈亏目标 · {year}"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:178
+msgid "accounts.goalAmount"
+msgstr "年度盈亏目标金额"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:275
+msgid "accounts.averageHold"
+msgstr "平均持仓时间"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:139
+msgid "accounts.avgLoss"
+msgstr "平均亏损"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:134
+msgid "accounts.avgWin"
+msgstr "平均盈利"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:361
+#: src/app/screens/settings/settings-sections.tsx:601
+msgid "accounts.backtest"
+msgstr "回测（模拟）"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:610
+msgid "accounts.baseCurrency"
+msgstr "基础货币"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:146
+msgid "accounts.noImportsHint"
+msgstr "同步或文件导入后，批次将显示在此处。"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:29
+msgid "accounts.behind"
+msgstr "落后进度"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:89
+#: src/lib/homeInsights.ts:254
+msgid "accounts.bestDay"
+msgstr "最佳交易日"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:245
+msgid "accounts.bestStreak"
+msgstr "最长连赢"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:215
+msgid "accounts.bestTrade"
+msgstr "最佳交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:421
+msgid "accounts.dangerHint"
+msgstr "两项操作均需确认后执行。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:86
+msgid "accounts.breakdown"
+msgstr "分组分析"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:89
+msgid "accounts.breakdownDimension"
+msgstr "分组维度"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:143
+#: src/app/screens/settings/settings-sections.tsx:534
+#: src/app/screens/settings/settings-sections.tsx:545
+msgid "accounts.broker"
+msgstr "券商"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:418
+msgid "accounts.accountsHint"
+msgstr "用于交易分组与筛选的券商账户。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:213
+msgid "accounts.connection"
+msgstr "券商连接"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:519
+#: src/app/screens/settings/settings-sections.tsx:523
+msgid "accounts.brokerRequired"
+msgstr "请选择券商。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:164
+msgid "accounts.brokerName"
+msgstr "券商名称"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:124
+#: src/app/screens/HomeView.tsx:849
+#: src/app/screens/settings/import-history.tsx:75
+#: src/app/screens/settings/settings-sections.tsx:463
+#: src/app/screens/settings/settings-sections.tsx:817
+#: src/app/screens/settings/settings-sections.tsx:1047
+#: src/app/screens/settings/settings-ui.tsx:769
+#: src/app/screens/settings/settings-ui.tsx:838
+#: src/app/screens/settings/settings-ui.tsx:939
+#: src/components/AnnualGoalCard.tsx:158
+msgid "accounts.cancel"
+msgstr "取消"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:358
+#: src/app/screens/settings/settings-sections.tsx:592
+msgid "accounts.cash"
+msgstr "现金"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:855
+msgid "accounts.cashAccount"
+msgstr "资金账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:873
+#: src/app/screens/settings/settings-sections.tsx:1062
+msgid "accounts.cashType"
+msgstr "流水类型"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:141
+msgid "accounts.checkServer"
+msgstr "请检查服务器后重试。"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:146
+msgid "accounts.clear"
+msgstr "清除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:430
+msgid "accounts.clearHistory"
+msgstr "清空交易历史"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:828
+#: src/app/screens/settings/settings-ui.tsx:850
+msgid "accounts.clearTrades"
+msgstr "清空交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:833
+msgid "accounts.clearQuestion"
+msgstr "清空 {accountName} 的交易？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:774
+msgid "accounts.clearFilterHint"
+msgstr "再次点击统计项可清除筛选。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:240
+msgid "accounts.configure"
+msgstr "配置"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:252
+#: src/app/screens/settings/settings-sections.tsx:682
+msgid "accounts.connect"
+msgstr "连接券商"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:151
+msgid "accounts.consistencyOk"
+msgstr "符合一致性规则"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:146
+msgid "accounts.consistencyRisk"
+msgstr "一致性规则存在风险"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:310
+#: src/app/screens/HomeView.tsx:326
+#: src/app/screens/HomeView.tsx:684
+msgid "accounts.capital"
+msgstr "投入本金"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:463
+msgid "accounts.corporateAction"
+msgstr "需要核对公司行动"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:124
+msgid "accounts.goalClearError"
+msgstr "无法清除目标"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:456
+msgid "accounts.clearError"
+msgstr "无法清空交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:494
+msgid "accounts.deleteError"
+msgstr "无法删除账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:140
+msgid "accounts.historyError"
+msgstr "无法加载历史记录"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:257
+msgid "accounts.transactionRemoveError"
+msgstr "无法删除流水"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:46
+msgid "accounts.rollbackError"
+msgstr "无法回滚"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:109
+msgid "accounts.goalSaveError"
+msgstr "无法保存目标"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:93
+msgid "accounts.saveError"
+msgstr "无法保存账户，请重试。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:320
+msgid "accounts.transactionUpdateError"
+msgstr "无法更新流水"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:472
+msgid "accounts.create"
+msgstr "创建"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:471
+msgid "accounts.creating"
+msgstr "创建中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:560
+msgid "accounts.customBroker"
+msgstr "自定义券商"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: st.daily_loss_hits
+#: src/components/PropStatusCard.tsx:141
+msgid "accounts.dailyHits"
+msgstr "日亏损触线 ×{0}"
+
+#. js-lingui-explicit-id
+#: src/components/DailyLossCard.tsx:38
+msgid "accounts.limit"
+msgstr "每日亏损限额"
+
+#. js-lingui-explicit-id
+#: src/components/DailyLossCard.tsx:67
+msgid "accounts.limitHit"
+msgstr "已达到每日亏损限额。空仓也是一种选择，休息并复盘今天的交易。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:420
+msgid "accounts.danger"
+msgstr "危险操作"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:913
+#: src/app/screens/settings/settings-sections.tsx:915
+#: src/app/screens/settings/settings-sections.tsx:1084
+#: src/app/screens/settings/settings-sections.tsx:1086
+msgid "accounts.date"
+msgstr "日期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:293
+msgid "accounts.dateRequired"
+msgstr "请填写日期。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:51
+msgid "accounts.day"
+msgstr "星期"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:54
+msgid "accounts.riskPercent"
+msgstr "默认风险百分比必须在 0 到 100 之间。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:766
+msgid "accounts.delete"
+msgstr "删除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:924
+msgid "accounts.deleteName"
+msgstr "删除 {accountName}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:934
+msgid "accounts.deleteQuestion"
+msgstr "删除 {accountName}？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:781
+msgid "accounts.deleteLabel"
+msgstr "删除 {label}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:466
+#: src/app/screens/AccountDetailView.tsx:483
+#: src/app/screens/settings/settings-ui.tsx:922
+#: src/app/screens/settings/settings-ui.tsx:951
+msgid "accounts.deleteAccount"
+msgstr "删除账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:123
+msgid "accounts.deletedAccount"
+msgstr "已删除账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:438
+msgid "accounts.clearHint"
+msgstr "删除此账户的所有交易及成交记录。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:434
+msgid "accounts.deleteTradesCount"
+msgstr "删除此账户的 {tradeCount} 笔交易及所有成交记录。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:201
+msgid "accounts.deposit"
+msgstr "入金"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:398
+msgid "accounts.deposited"
+msgstr "投入资金"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:778
+msgid "accounts.funding"
+msgstr "入金与出金"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:204
+msgid "accounts.dividend"
+msgstr "分红"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: st.drawdown_mode === "static" ? tr({ id: "accounts.static", message: "static" }) : st.drawdown_mode === "eod" ? tr({ id: "accounts.eod", message: "end-of-day trailing" }) : tr({ id: "accounts.trailing", message: "trailing" })
+#: src/components/PropStatusCard.tsx:116
+msgid "accounts.drawdownMode"
+msgstr "回撤（{0}）"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:137
+msgid "accounts.floorHit"
+msgstr "已触及回撤底线"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:504
+msgid "accounts.accountExample"
+msgstr "例如：主账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:114
+msgid "accounts.edit"
+msgstr "编辑"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: account.name
+#: src/app/screens/AccountDetailView.tsx:119
+msgid "accounts.editName"
+msgstr "编辑 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: CASH_TYPE_OPTIONS.find((o) => o.value === tx.type)?.label ?? tx.type
+#: src/app/screens/settings/settings-sections.tsx:1016
+msgid "accounts.editCash"
+msgstr "编辑{0}流水"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:210
+msgid "accounts.editGoal"
+msgstr "编辑年度目标"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:1042
+msgid "accounts.editTransaction"
+msgstr "编辑流水"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:118
+msgid "accounts.eod"
+msgstr "日终追踪"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:98
+msgid "accounts.goalPositive"
+msgstr "请输入大于零的目标。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:289
+msgid "accounts.validAmount"
+msgstr "请输入有效金额。"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:43
+#: src/lib/settingsFormSchema.ts:52
+msgid "accounts.validNumber"
+msgstr "请输入有效数字，或留空。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:402
+#: src/app/screens/HomeView.tsx:213
+#: src/components/PropStatusCard.tsx:76
+msgid "accounts.equity"
+msgstr "权益"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:608
+msgid "accounts.curve"
+msgstr "权益曲线"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:613
+msgid "accounts.curveRange"
+msgstr "权益时间范围"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:309
+#: src/app/screens/HomeView.tsx:317
+#: src/app/screens/HomeView.tsx:680
+msgid "accounts.estimated"
+msgstr "估算账户价值"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:467
+msgid "accounts.previousClose"
+msgstr "使用前收盘价估算"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:132
+msgid "accounts.historyHint"
+msgstr "包含定时同步、手动同步及文件导入的所有批次。回滚将删除该批次的成交记录。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: warning.execution_id
+#: src/app/screens/HomeView.tsx:446
+msgid "accounts.executionId"
+msgstr "成交 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:87
+msgid "accounts.expect"
+msgstr "期望收益"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:208
+msgid "accounts.expectancy"
+msgstr "期望收益"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:347
+msgid "accounts.createFailed"
+msgstr "创建账户失败。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:374
+msgid "accounts.transactionCreateFailed"
+msgstr "创建流水失败。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:264
+msgid "accounts.valueError"
+msgstr "账户价值加载失败。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:663
+msgid "accounts.accountsError"
+msgstr "账户加载失败。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:102
+msgid "accounts.breakdownError"
+msgstr "分组数据加载失败。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:86
+msgid "accounts.dailyError"
+msgstr "每日盈亏加载失败。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:171
+msgid "accounts.equityError"
+msgstr "权益曲线加载失败。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:624
+msgid "accounts.summaryError"
+msgstr "统计摘要加载失败。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:763
+msgid "accounts.tradesError"
+msgstr "交易加载失败。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:948
+msgid "accounts.transactionsError"
+msgstr "资金流水加载失败。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:314
+msgid "accounts.transactionUpdateFailed"
+msgstr "更新流水失败。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:203
+msgid "accounts.fee"
+msgstr "费用"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:79
+msgid "accounts.fees"
+msgstr "费用"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:21
+msgid "accounts.fileSource"
+msgstr "文件导入"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: filteredAccount.name
+#: src/app/screens/settings/settings-sections.tsx:793
+msgid "accounts.filtered"
+msgstr "已筛选：{0}"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:74
+msgid "accounts.fullCalendar"
+msgstr "完整日历"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:361
+msgid "accounts.goal"
+msgstr "目标"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:25
+msgid "accounts.goalReached"
+msgstr "目标已达成"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:74
+msgid "accounts.gross"
+msgstr "毛盈亏"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:271
+msgid "accounts.healthy"
+msgstr "正常"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:389
+msgid "accounts.hide"
+msgstr "隐藏"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:657
+msgid "accounts.historical"
+msgstr "历史账户价值"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:19
+msgid "accounts.flexSource"
+msgstr "IBKR Flex 同步"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:454
+msgid "accounts.ignore"
+msgstr "忽略"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:858
+msgid "accounts.ignoreAction"
+msgstr "忽略并使用前收盘价"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:838
+msgid "accounts.ignoreQuestion"
+msgstr "忽略缺失的行情数据？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:574
+msgid "accounts.startHint"
+msgstr "导入券商历史记录或添加首笔交易，开始跟踪交易表现。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:554
+msgid "accounts.importCsv"
+msgstr "导入 CSV"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:271
+msgid "accounts.noValueHint"
+msgstr "请导入成交或资金流水。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:37
+msgid "accounts.rolledBackToast"
+msgstr "导入已回滚"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:363
+#: src/app/screens/HomeView.tsx:468
+msgid "accounts.incomplete"
+msgstr "重建不完整"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:261
+msgid "accounts.flex"
+msgstr "盈透证券 · Flex 同步"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:205
+msgid "accounts.interest"
+msgstr "利息"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:325
+msgid "accounts.notFoundHint"
+msgstr "账户可能已被删除。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: new Date(s.last_synced_at).toLocaleString(intlLocale())
+#. placeholder {1}: s.last_status || "—"
+#: src/app/screens/AccountDetailView.tsx:277
+msgid "accounts.lastSync"
+msgstr "上次同步 {0} — {1}"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:377
+msgid "accounts.left"
+msgstr "剩余"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoneyCompact(money(progress.remaining), currency, locale)
+#: src/components/AnnualGoalCard.tsx:293
+msgid "accounts.leftAmount"
+msgstr "剩余 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(cap, currency, locale)
+#: src/components/DailyLossCard.tsx:50
+msgid "accounts.limitAmount"
+msgstr "限额 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/AccountNavPopover.tsx:122
+#: src/components/HomeMiniCalendar.tsx:82
+msgid "accounts.loading"
+msgstr "加载中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:558
+msgid "accounts.logTrade"
+msgstr "记录交易"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:286
+msgid "accounts.lossHold"
+msgstr "亏损持仓时间"
+
+#. js-lingui-explicit-id
+#: src/components/DailyLossCard.tsx:77
+msgid "accounts.limitUntouched"
+msgstr "今日尚未消耗亏损额度。"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:106
+msgid "accounts.losses"
+msgstr "亏损"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:266
+msgid "accounts.mainLeak"
+msgstr "主要失误"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:272
+msgid "accounts.manualOnly"
+msgstr "仅手动"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:359
+#: src/app/screens/settings/settings-sections.tsx:595
+msgid "accounts.margin"
+msgstr "保证金"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:225
+msgid "accounts.maxDrawdown"
+msgstr "最大回撤"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:465
+msgid "accounts.missingData"
+msgstr "缺少行情数据"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:62
+msgid "accounts.month"
+msgstr "月度"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:294
+msgid "accounts.mostTraded"
+msgstr "交易最频繁"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:171
+msgid "accounts.myBroker"
+msgstr "我的券商"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:135
+#: src/lib/settingsFormSchema.ts:19
+msgid "accounts.name"
+msgstr "名称"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:77
+msgid "accounts.nameFirst"
+msgstr "请先填写账户名称。"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:59
+msgid "accounts.net"
+msgstr "净盈亏"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:134
+msgid "accounts.netPnl"
+msgstr "净盈亏"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:281
+msgid "accounts.neverSynced"
+msgstr "尚未同步。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:270
+msgid "accounts.noValue"
+msgstr "暂无账户价值数据"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:669
+msgid "accounts.noAccounts"
+msgstr "暂无账户"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:106
+msgid "accounts.noBreakdown"
+msgstr "暂无分组数据。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:287
+msgid "accounts.noConnection"
+msgstr "尚未连接券商。可连接盈透证券定时同步成交，或通过文件导入对账单。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:176
+msgid "accounts.noEquity"
+msgstr "暂无权益数据"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:74
+msgid "accounts.noSetup"
+msgstr "无策略"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:770
+msgid "accounts.noRangeTrades"
+msgstr "此时间范围内没有交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:769
+msgid "accounts.noMatch"
+msgstr "没有符合筛选的交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:566
+msgid "accounts.noTrades"
+msgstr "暂无交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:956
+msgid "accounts.noAccountTransactions"
+msgstr "此账户暂无流水"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:960
+msgid "accounts.noTransactions"
+msgstr "暂无资金流水"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:267
+msgid "accounts.noneTagged"
+msgstr "未标记"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:926
+#: src/app/screens/settings/settings-sections.tsx:1092
+msgid "accounts.note"
+msgstr "备注"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:145
+msgid "accounts.noImports"
+msgstr "暂无导入记录"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoneyCompact(money(progress.goal), currency, locale)
+#: src/components/AnnualGoalCard.tsx:271
+msgid "accounts.ofGoal"
+msgstr "目标 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:31
+msgid "accounts.onTrack"
+msgstr "符合进度"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:114
+msgid "accounts.open"
+msgstr "持仓"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:932
+#: src/app/screens/settings/settings-sections.tsx:1097
+msgid "accounts.optionalNote"
+msgstr "备注（可选）"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:554
+msgid "accounts.other"
+msgstr "其他"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:158
+msgid "accounts.otherDots"
+msgstr "其他…"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:370
+msgid "accounts.over"
+msgstr "超出"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoneyCompact(money(progress.overBy), currency, locale)
+#: src/components/AnnualGoalCard.tsx:289
+msgid "accounts.overBy"
+msgstr "超出 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:56
+msgid "accounts.pnl"
+msgstr "盈亏"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:211
+msgid "accounts.perTrade"
+msgstr "每笔交易"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:56
+msgid "accounts.performance"
+msgstr "交易表现"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:957
+msgid "accounts.permanentDelete"
+msgstr "永久删除此账户及所有关联交易、成交记录、资金流水和附件。此操作无法撤销。"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:83
+msgid "accounts.pf"
+msgstr "盈利因子"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:206
+msgid "accounts.quality"
+msgstr "盈亏质量"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:378
+#: src/app/screens/settings/settings-sections.tsx:720
+#: src/components/AccountMultiSelect.tsx:97
+msgid "accounts.primary"
+msgstr "主账户"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:231
+msgid "accounts.profitFactor"
+msgstr "盈利因子"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:105
+msgid "accounts.profitTarget"
+msgstr "盈利目标"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:184
+msgid "accounts.progressHint"
+msgstr "进度按 {year} 自然年度净盈亏计算，并遵循账户筛选。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:360
+#: src/app/screens/settings/settings-sections.tsx:598
+msgid "accounts.prop"
+msgstr "资管考核"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:72
+msgid "accounts.propProgram"
+msgstr "资管考核计划"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:228
+msgid "accounts.pullback"
+msgstr "回撤"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:214
+msgid "accounts.connectionHint"
+msgstr "自动将新的成交记录同步到此账户。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:406
+#: src/components/PropStatusCard.tsx:80
+msgid "accounts.realized"
+msgstr "已实现盈亏"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:755
+msgid "accounts.recent"
+msgstr "最近交易"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:53
+msgid "accounts.record"
+msgstr "盈亏记录"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:964
+msgid "accounts.recordFunding"
+msgstr "为此账户记录一笔入金或出金。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:856
+msgid "accounts.clearDetails"
+msgstr "删除 {tradeCount} 笔交易及所有成交记录，保留账户、资金账本、策略和标签。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:474
+msgid "accounts.deleteHint"
+msgstr "删除账户及其交易、资金流水和附件。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:159
+msgid "accounts.reports"
+msgstr "报表"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:264
+msgid "accounts.requestFailed"
+msgstr "请求失败"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:65
+#: src/app/screens/settings/import-history.tsx:85
+msgid "accounts.rollback"
+msgstr "回滚"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:70
+msgid "accounts.rollbackQuestion"
+msgstr "回滚此次导入？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:50
+msgid "accounts.rollbackFailed"
+msgstr "回滚失败"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:162
+msgid "accounts.rolledBack"
+msgstr "已回滚"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:84
+msgid "accounts.rollingBack"
+msgstr "回滚中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:129
+#: src/app/screens/settings/settings-sections.tsx:1052
+msgid "accounts.save"
+msgstr "保存"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:163
+msgid "accounts.saveGoal"
+msgstr "保存目标"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:634
+msgid "accounts.startingHint"
+msgstr "保存为资金账本的首笔入金。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:128
+#: src/app/screens/settings/settings-sections.tsx:1051
+#: src/components/AnnualGoalCard.tsx:162
+msgid "accounts.saving"
+msgstr "保存中…"
+
+#. js-lingui-explicit-id
+#: src/components/AccountMultiSelect.tsx:44
+msgid "accounts.selectAccount"
+msgstr "选择账户"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:243
+msgid "accounts.setHint"
+msgstr "设置 {year} 年净盈亏目标，在此跟踪进度。"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:249
+msgid "accounts.setGoal"
+msgstr "设置年度目标"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:52
+msgid "accounts.setup"
+msgstr "策略"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:390
+#: src/app/screens/settings/settings-sections.tsx:796
+msgid "accounts.showAll"
+msgstr "显示全部"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: recentTrades.length
+#. placeholder {1}: trades.length
+#: src/app/screens/HomeView.tsx:817
+msgid "accounts.recentCount"
+msgstr "显示 {1} 笔交易中的 {0} 笔"
+
+#. js-lingui-explicit-id
+#: src/components/AccountNavPopover.tsx:156
+msgid "accounts.signOut"
+msgstr "退出登录"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:366
+msgid "accounts.incompleteHint"
+msgstr "此时间范围内部分账户价值不可用。"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:237
+msgid "accounts.stability"
+msgstr "稳定性"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:670
+msgid "accounts.noAccountsHint"
+msgstr "从券商开始，我们会说明如何导出交易记录。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:632
+msgid "accounts.startingBalance"
+msgstr "初始余额"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:28
+msgid "accounts.balanceNumber"
+msgstr "初始余额必须为数字。"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:118
+msgid "accounts.static"
+msgstr "固定"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:53
+msgid "accounts.symbol"
+msgstr "代码"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:131
+msgid "accounts.history"
+msgstr "同步与导入历史"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:194
+msgid "accounts.syncComplete"
+msgstr "同步完成"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:202
+#: src/app/screens/AccountDetailView.tsx:206
+msgid "accounts.syncFailed"
+msgstr "同步失败"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:269
+#: src/app/screens/settings/settings-sections.tsx:734
+msgid "accounts.syncFailing"
+msgstr "同步异常"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:235
+msgid "accounts.syncNow"
+msgstr "立即同步"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:737
+msgid "accounts.syncOff"
+msgstr "同步已关闭"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:736
+msgid "accounts.syncOn"
+msgstr "同步已开启"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:234
+msgid "accounts.syncing"
+msgstr "同步中…"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:172
+msgid "accounts.targetNet"
+msgstr "目标净盈亏（{currency}）"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:133
+msgid "accounts.targetReached"
+msgstr "盈利目标已达成"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: batch.row_count
+#: src/app/screens/settings/import-history.tsx:91
+msgid "accounts.rollbackDetails"
+msgstr "此批次导入 {accountName} 的 {0} 笔成交将被删除，并重新归组交易。后续同步可以再次导入。"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:273
+msgid "accounts.time"
+msgstr "时间"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:291
+msgid "accounts.topSymbol"
+msgstr "最常交易代码"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:170
+msgid "accounts.total"
+msgstr "合计"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:779
+msgid "accounts.fundingHint"
+msgstr "记录影响权益曲线和顶部资金统计的资金流水。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:47
+msgid "accounts.trades"
+msgstr "交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:451
+msgid "accounts.cleared"
+msgstr "交易已清空"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:85
+msgid "accounts.tradingDays"
+msgstr "交易日数"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:118
+msgid "accounts.trailing"
+msgstr "追踪"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:253
+msgid "accounts.transactionRemoved"
+msgstr "流水已删除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:307
+msgid "accounts.transactionUpdated"
+msgstr "流水已更新"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:457
+#: src/app/screens/AccountDetailView.tsx:495
+msgid "accounts.retry"
+msgstr "请重试。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:869
+#: src/app/screens/settings/settings-sections.tsx:1058
+msgid "accounts.type"
+msgstr "类型"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:863
+#: src/app/screens/settings/settings-ui.tsx:872
+#: src/app/screens/settings/settings-ui.tsx:968
+#: src/app/screens/settings/settings-ui.tsx:977
+msgid "accounts.typeConfirm"
+msgstr "输入 {accountName} 以确认"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:569
+msgid "accounts.brokerPlaceholder"
+msgstr "输入券商名称"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:594
+msgid "accounts.viewTrades"
+msgstr "查看全部交易"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:337
+msgid "accounts.versusPace"
+msgstr "相对线性进度"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:122
+msgid "accounts.wash"
+msgstr "保本"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:50
+#: src/lib/homeInsights.ts:239
+msgid "accounts.winRate"
+msgstr "胜率"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:281
+msgid "accounts.winHold"
+msgstr "盈利持仓时间"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:98
+msgid "accounts.wins"
+msgstr "盈利"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:202
+msgid "accounts.withdrawal"
+msgstr "出金"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:260
+msgid "accounts.worstDay"
+msgstr "最差交易日"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:249
+msgid "accounts.worstStreak"
+msgstr "最长连亏"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:220
+msgid "accounts.worstTrade"
+msgstr "最差交易"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:354
+msgid "accounts.ytd"
+msgstr "年初至今"

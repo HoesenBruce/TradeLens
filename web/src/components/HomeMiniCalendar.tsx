@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { ArrowRight } from "lucide-react";
 import { type DayRecord, monthGrid } from "@/lib/calendar";
 import { cn } from "@/lib/cn";
@@ -7,8 +8,6 @@ import { CalendarDayHoverCard } from "./CalendarDayHoverCard";
 import { pnlBgTint, pnlColor } from "./theme-tokens";
 import { Button } from "./ui/button";
 import { usePrivacyMode } from "@/lib/displayPrefs";
-
-const DOW = ["S", "M", "T", "W", "T", "F", "S"];
 
 export interface HomeMiniCalendarProps {
   year: number;
@@ -41,8 +40,16 @@ export function HomeMiniCalendar({
   error,
   onOpenCalendar,
 }: HomeMiniCalendarProps) {
+  const { t: tr } = useLinguiMacro();
+
   usePrivacyMode();
   const locale = intlLocale();
+  const DOW = Array.from({ length: 7 }, (_, i) =>
+    new Date(Date.UTC(2026, 0, 4 + i)).toLocaleDateString(locale, {
+      weekday: "narrow",
+      timeZone: "UTC",
+    }),
+  );
   const grid = monthGrid(year, month, dailyPnl);
   const now = new Date();
   const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
@@ -51,7 +58,9 @@ export function HomeMiniCalendar({
     <section className="flex h-full flex-col rounded-lg bg-card">
       <header className="flex items-start justify-between gap-3 px-4 py-3">
         <div>
-          <h2 className="text-[10px] font-semibold tracking-wide text-chart-3">Month</h2>
+          <h2 className="text-[10px] font-semibold tracking-wide text-chart-3">
+            {tr({ id: "accounts.month", message: "Month" })}
+          </h2>
           <p className="mt-1 text-[13px] font-medium text-foreground">
             {monthLabel(year, month, locale)}
           </p>
@@ -62,7 +71,7 @@ export function HomeMiniCalendar({
           onClick={onOpenCalendar}
           className="h-auto gap-1 text-[11px] font-medium"
         >
-          Full calendar
+          {tr({ id: "accounts.fullCalendar", message: "Full calendar" })}
           <ArrowRight size={12} strokeWidth={2} aria-hidden />
         </Button>
       </header>
@@ -70,10 +79,12 @@ export function HomeMiniCalendar({
       <div className="flex flex-1 flex-col px-3 pb-3">
         {loading ? (
           <div className="flex flex-1 items-center justify-center text-[12px] text-muted-foreground">
-            Loading…
+            {tr({ id: "accounts.loading", message: "Loading…" })}
           </div>
         ) : error ? (
-          <p className="px-1 text-xs text-destructive">Failed to load daily P&L.</p>
+          <p className="px-1 text-xs text-destructive">
+            {tr({ id: "accounts.dailyError", message: "Failed to load daily P&L." })}
+          </p>
         ) : (
           <>
             <div className="mb-1 grid grid-cols-7 gap-0.5">
@@ -156,7 +167,7 @@ export function HomeMiniCalendar({
               })}
             </div>
             <p className="mt-2 text-center text-[11px] tabular-nums text-muted-foreground">
-              Total{" "}
+              {tr({ id: "accounts.total", message: "Total" })}{" "}
               <span className={cn("font-medium", pnlColor(grid.monthTotal * fxRate))}>
                 {fmtSignedMoneyCompact(grid.monthTotal * fxRate, currency, locale)}
               </span>

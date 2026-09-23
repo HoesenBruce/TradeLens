@@ -4293,3 +4293,1568 @@ msgstr "ファイル内の時刻のタイムゾーン。米国の証券会社は
 #: src/app/screens/ImportView.tsx:840
 msgid "imports.statementZone"
 msgstr "MetaTrader サーバーのタイムゾーン。通常は EET（アテネ）で、UTC ではありません。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(st.floor_distance, currency, locale)
+#: src/components/PropStatusCard.tsx:122
+msgid "accounts.floorDistance"
+msgstr "下限まで {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: warnings.length
+#: src/app/screens/HomeView.tsx:385
+msgid "accounts.valueIssues"
+msgstr "口座評価額の問題 {0} 件"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: selected.length
+#: src/components/AccountNavPopover.tsx:71
+msgid "accounts.selectedCount"
+msgstr "{0} 口座"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: items.length
+#: src/components/AccountNavPopover.tsx:76
+msgid "accounts.accountCount"
+msgstr "{0} 口座"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: warningToIgnore?.instrument
+#. placeholder {1}: warningToIgnore?.date
+#: src/app/screens/HomeView.tsx:841
+msgid "accounts.ignoreDetails"
+msgstr "{0} の {1} の未調整終値がありません。その日には直前の利用可能な終値を使用します。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: res.inserted
+#. placeholder {1}: res.skipped
+#: src/app/screens/AccountDetailView.tsx:195
+msgid "accounts.syncResult"
+msgstr "新規約定 {0} 件、重複 {1} 件"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtSignedMoney(st.realized_pnl, currency, locale)
+#. placeholder {1}: fmtMoney(st.profit_target, currency, locale)
+#: src/components/PropStatusCard.tsx:108
+msgid "accounts.targetProgress"
+msgstr "{0} / {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(cap - spent, currency, locale)
+#: src/components/DailyLossCard.tsx:73
+msgid "accounts.lossLeft"
+msgstr "今日の損失枠は残り {0} です。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: batch.row_count
+#: src/app/screens/settings/import-history.tsx:169
+msgid "accounts.rowCount"
+msgstr "{0} 行"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: batch.row_count
+#: src/app/screens/settings/import-history.tsx:38
+msgid "accounts.removedRows"
+msgstr "{0} 行を削除しました"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: summary.total_trades
+#: src/lib/homeInsights.ts:277
+msgid "accounts.insightCount"
+msgstr "{0} 件の取引"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trades.length
+#: src/app/screens/HomeView.tsx:823
+msgid "accounts.totalTrades"
+msgstr "{0} 件の取引"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: (st.best_day_share * 100).toFixed(0)
+#: src/components/PropStatusCard.tsx:93
+msgid "accounts.profitShare"
+msgstr "利益の {0}%"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:21
+msgid "accounts.required"
+msgstr "{label}は必須です。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:366
+#: src/app/screens/settings/settings-sections.tsx:703
+msgid "accounts.tradeCount"
+msgstr "{tradeCount} 件の取引"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:281
+#: src/components/AnnualGoalCard.tsx:348
+msgid "accounts.goalProgress"
+msgstr "{year} 年の目標進捗"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:133
+msgid "accounts.goalYear"
+msgstr "{year} 年の損益目標"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtPct((progress.progressPct - 100) / 100, locale)
+#: src/components/AnnualGoalCard.tsx:328
+msgid "accounts.overGoal"
+msgstr "目標を +{0} 超過"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:822
+msgid "accounts.oneTrade"
+msgstr "1 件の取引"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:526
+msgid "accounts.range30"
+msgstr "30日"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:527
+msgid "accounts.range90"
+msgstr "90日"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:849
+#: src/components/AccountMultiSelect.tsx:61
+#: src/components/AccountNavPopover.tsx:70
+#: src/components/AccountNavPopover.tsx:126
+#: src/components/HomeAccountContribution.tsx:44
+msgid "accounts.account"
+msgstr "口座"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:36
+msgid "accounts.contribution"
+msgstr "口座別の貢献"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:488
+msgid "accounts.deleted"
+msgstr "口座を削除しました"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:569
+msgid "accounts.fundedHint"
+msgstr "口座に入金済みです。履歴をインポートするか最初の取引を記録すると、損益が表示されます。"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:59
+msgid "accounts.accountRequired"
+msgstr "口座は必須です。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:495
+msgid "accounts.accountName"
+msgstr "口座名"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:324
+msgid "accounts.notFound"
+msgstr "口座が見つかりません"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:584
+#: src/app/screens/settings/settings-sections.tsx:588
+msgid "accounts.accountType"
+msgstr "口座種別"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:87
+msgid "accounts.updated"
+msgstr "口座を更新しました"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:660
+msgid "accounts.valueRange"
+msgstr "口座評価額の期間"
+
+#. js-lingui-explicit-id
+#: src/components/AccountNavPopover.tsx:94
+msgid "accounts.accountScope"
+msgstr "口座：{selectedLabel}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:417
+msgid "accounts.accounts"
+msgstr "口座"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:968
+msgid "accounts.addFunding"
+msgstr "入出金を追加すると残高の変化を追跡できます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:434
+#: src/app/screens/settings/settings-sections.tsx:447
+msgid "accounts.addAccount"
+msgstr "口座を追加"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:500
+msgid "accounts.lastAccountShort"
+msgstr "この口座を削除する前に別の口座を追加してください"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:470
+msgid "accounts.lastAccount"
+msgstr "この口座を削除する前に別の口座を追加してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:786
+#: src/app/screens/settings/settings-sections.tsx:805
+#: src/app/screens/settings/settings-sections.tsx:826
+msgid "accounts.addTransaction"
+msgstr "資金取引を追加"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:825
+msgid "accounts.adding"
+msgstr "追加中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:206
+msgid "accounts.adjustment"
+msgstr "調整"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:27
+msgid "accounts.ahead"
+msgstr "計画を上回っています"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:528
+msgid "accounts.allRange"
+msgstr "全期間"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:329
+#: src/app/screens/AccountDetailView.tsx:386
+#: src/components/AccountNavPopover.tsx:72
+#: src/components/AccountNavPopover.tsx:131
+msgid "accounts.all"
+msgstr "すべての口座"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:896
+#: src/app/screens/settings/settings-sections.tsx:1074
+msgid "accounts.amount"
+msgstr "金額"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:35
+msgid "accounts.positiveAmount"
+msgstr "金額は正の数で入力してください。"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:201
+msgid "accounts.annualTitle"
+msgstr "年間損益目標 · {year}"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:178
+msgid "accounts.goalAmount"
+msgstr "年間損益目標額"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:275
+msgid "accounts.averageHold"
+msgstr "平均保有時間"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:139
+msgid "accounts.avgLoss"
+msgstr "平均損失"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:134
+msgid "accounts.avgWin"
+msgstr "平均利益"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:361
+#: src/app/screens/settings/settings-sections.tsx:601
+msgid "accounts.backtest"
+msgstr "バックテスト（デモ）"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:610
+msgid "accounts.baseCurrency"
+msgstr "基準通貨"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:146
+msgid "accounts.noImportsHint"
+msgstr "同期やファイルインポート後にバッチが表示されます。"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:29
+msgid "accounts.behind"
+msgstr "計画を下回っています"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:89
+#: src/lib/homeInsights.ts:254
+msgid "accounts.bestDay"
+msgstr "最高損益日"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:245
+msgid "accounts.bestStreak"
+msgstr "最大連勝"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:215
+msgid "accounts.bestTrade"
+msgstr "最高利益取引"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:421
+msgid "accounts.dangerHint"
+msgstr "いずれの操作も実行前に確認します。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:86
+msgid "accounts.breakdown"
+msgstr "内訳"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:89
+msgid "accounts.breakdownDimension"
+msgstr "集計軸"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:143
+#: src/app/screens/settings/settings-sections.tsx:534
+#: src/app/screens/settings/settings-sections.tsx:545
+msgid "accounts.broker"
+msgstr "証券会社"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:418
+msgid "accounts.accountsHint"
+msgstr "取引のグループ化と絞り込みに使う証券口座です。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:213
+msgid "accounts.connection"
+msgstr "証券会社との接続"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:519
+#: src/app/screens/settings/settings-sections.tsx:523
+msgid "accounts.brokerRequired"
+msgstr "証券会社は必須です。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:164
+msgid "accounts.brokerName"
+msgstr "証券会社名"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:124
+#: src/app/screens/HomeView.tsx:849
+#: src/app/screens/settings/import-history.tsx:75
+#: src/app/screens/settings/settings-sections.tsx:463
+#: src/app/screens/settings/settings-sections.tsx:817
+#: src/app/screens/settings/settings-sections.tsx:1047
+#: src/app/screens/settings/settings-ui.tsx:769
+#: src/app/screens/settings/settings-ui.tsx:838
+#: src/app/screens/settings/settings-ui.tsx:939
+#: src/components/AnnualGoalCard.tsx:158
+msgid "accounts.cancel"
+msgstr "キャンセル"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:358
+#: src/app/screens/settings/settings-sections.tsx:592
+msgid "accounts.cash"
+msgstr "現金"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:855
+msgid "accounts.cashAccount"
+msgstr "資金口座"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:873
+#: src/app/screens/settings/settings-sections.tsx:1062
+msgid "accounts.cashType"
+msgstr "資金取引の種類"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:141
+msgid "accounts.checkServer"
+msgstr "サーバーを確認して再試行してください。"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:146
+msgid "accounts.clear"
+msgstr "クリア"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:430
+msgid "accounts.clearHistory"
+msgstr "取引履歴を消去"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:828
+#: src/app/screens/settings/settings-ui.tsx:850
+msgid "accounts.clearTrades"
+msgstr "取引を消去"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:833
+msgid "accounts.clearQuestion"
+msgstr "{accountName} の取引を消去しますか？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:774
+msgid "accounts.clearFilterHint"
+msgstr "集計項目をもう一度クリックすると絞り込みを解除します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:240
+msgid "accounts.configure"
+msgstr "設定"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:252
+#: src/app/screens/settings/settings-sections.tsx:682
+msgid "accounts.connect"
+msgstr "証券会社に接続"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:151
+msgid "accounts.consistencyOk"
+msgstr "一貫性ルール適合"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:146
+msgid "accounts.consistencyRisk"
+msgstr "一貫性ルールに抵触する恐れ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:310
+#: src/app/screens/HomeView.tsx:326
+#: src/app/screens/HomeView.tsx:684
+msgid "accounts.capital"
+msgstr "拠出元本"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:463
+msgid "accounts.corporateAction"
+msgstr "コーポレートアクションの確認が必要です"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:124
+msgid "accounts.goalClearError"
+msgstr "目標をクリアできませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:456
+msgid "accounts.clearError"
+msgstr "取引を消去できませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:494
+msgid "accounts.deleteError"
+msgstr "口座を削除できませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:140
+msgid "accounts.historyError"
+msgstr "履歴を読み込めませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:257
+msgid "accounts.transactionRemoveError"
+msgstr "資金取引を削除できませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:46
+msgid "accounts.rollbackError"
+msgstr "取り消せませんでした"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:109
+msgid "accounts.goalSaveError"
+msgstr "目標を保存できませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:93
+msgid "accounts.saveError"
+msgstr "口座を保存できませんでした。再試行してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:320
+msgid "accounts.transactionUpdateError"
+msgstr "資金取引を更新できませんでした"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:472
+msgid "accounts.create"
+msgstr "作成"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:471
+msgid "accounts.creating"
+msgstr "作成中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:560
+msgid "accounts.customBroker"
+msgstr "その他の証券会社"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: st.daily_loss_hits
+#: src/components/PropStatusCard.tsx:141
+msgid "accounts.dailyHits"
+msgstr "日次損失超過 ×{0}"
+
+#. js-lingui-explicit-id
+#: src/components/DailyLossCard.tsx:38
+msgid "accounts.limit"
+msgstr "日次損失上限"
+
+#. js-lingui-explicit-id
+#: src/components/DailyLossCard.tsx:67
+msgid "accounts.limitHit"
+msgstr "日次損失上限に達しました。取引を休み、今日の記録を振り返りましょう。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:420
+msgid "accounts.danger"
+msgstr "危険な操作"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:913
+#: src/app/screens/settings/settings-sections.tsx:915
+#: src/app/screens/settings/settings-sections.tsx:1084
+#: src/app/screens/settings/settings-sections.tsx:1086
+msgid "accounts.date"
+msgstr "日付"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:293
+msgid "accounts.dateRequired"
+msgstr "日付は必須です。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:51
+msgid "accounts.day"
+msgstr "曜日"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:54
+msgid "accounts.riskPercent"
+msgstr "既定のリスク率は 0～100 の範囲で入力してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:766
+msgid "accounts.delete"
+msgstr "削除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:924
+msgid "accounts.deleteName"
+msgstr "{accountName} を削除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:934
+msgid "accounts.deleteQuestion"
+msgstr "{accountName} を削除しますか？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:781
+msgid "accounts.deleteLabel"
+msgstr "{label} を削除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:466
+#: src/app/screens/AccountDetailView.tsx:483
+#: src/app/screens/settings/settings-ui.tsx:922
+#: src/app/screens/settings/settings-ui.tsx:951
+msgid "accounts.deleteAccount"
+msgstr "口座を削除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:123
+msgid "accounts.deletedAccount"
+msgstr "削除済み口座"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:438
+msgid "accounts.clearHint"
+msgstr "この口座のすべての取引と約定を削除します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:434
+msgid "accounts.deleteTradesCount"
+msgstr "この口座の {tradeCount} 件の取引とすべての約定を削除します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:201
+msgid "accounts.deposit"
+msgstr "入金"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:398
+msgid "accounts.deposited"
+msgstr "入金額"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:778
+msgid "accounts.funding"
+msgstr "入出金"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:204
+msgid "accounts.dividend"
+msgstr "配当"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: st.drawdown_mode === "static" ? tr({ id: "accounts.static", message: "static" }) : st.drawdown_mode === "eod" ? tr({ id: "accounts.eod", message: "end-of-day trailing" }) : tr({ id: "accounts.trailing", message: "trailing" })
+#: src/components/PropStatusCard.tsx:116
+msgid "accounts.drawdownMode"
+msgstr "ドローダウン（{0}）"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:137
+msgid "accounts.floorHit"
+msgstr "ドローダウン下限に到達"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:504
+msgid "accounts.accountExample"
+msgstr "例：メイン口座"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:114
+msgid "accounts.edit"
+msgstr "編集"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: account.name
+#: src/app/screens/AccountDetailView.tsx:119
+msgid "accounts.editName"
+msgstr "{0} を編集"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: CASH_TYPE_OPTIONS.find((o) => o.value === tx.type)?.label ?? tx.type
+#: src/app/screens/settings/settings-sections.tsx:1016
+msgid "accounts.editCash"
+msgstr "{0}を編集"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:210
+msgid "accounts.editGoal"
+msgstr "年間目標を編集"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:1042
+msgid "accounts.editTransaction"
+msgstr "資金取引を編集"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:118
+msgid "accounts.eod"
+msgstr "日末追随"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:98
+msgid "accounts.goalPositive"
+msgstr "ゼロより大きい目標を入力してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:289
+msgid "accounts.validAmount"
+msgstr "有効な金額を入力してください。"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:43
+#: src/lib/settingsFormSchema.ts:52
+msgid "accounts.validNumber"
+msgstr "有効な数値を入力するか、空欄にしてください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:402
+#: src/app/screens/HomeView.tsx:213
+#: src/components/PropStatusCard.tsx:76
+msgid "accounts.equity"
+msgstr "純資産"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:608
+msgid "accounts.curve"
+msgstr "資産推移"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:613
+msgid "accounts.curveRange"
+msgstr "資産推移の期間"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:309
+#: src/app/screens/HomeView.tsx:317
+#: src/app/screens/HomeView.tsx:680
+msgid "accounts.estimated"
+msgstr "推定口座評価額"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:467
+msgid "accounts.previousClose"
+msgstr "前回終値で推定"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:132
+msgid "accounts.historyHint"
+msgstr "定期同期、手動同期、ファイルインポートの全バッチです。取り消すと該当する約定が削除されます。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: warning.execution_id
+#: src/app/screens/HomeView.tsx:446
+msgid "accounts.executionId"
+msgstr "約定 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:87
+msgid "accounts.expect"
+msgstr "期待値"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:208
+msgid "accounts.expectancy"
+msgstr "期待値"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:347
+msgid "accounts.createFailed"
+msgstr "口座の作成に失敗しました。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:374
+msgid "accounts.transactionCreateFailed"
+msgstr "資金取引の作成に失敗しました。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:264
+msgid "accounts.valueError"
+msgstr "口座評価額を読み込めませんでした。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:663
+msgid "accounts.accountsError"
+msgstr "口座を読み込めませんでした。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:102
+msgid "accounts.breakdownError"
+msgstr "内訳を読み込めませんでした。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:86
+msgid "accounts.dailyError"
+msgstr "日次損益を読み込めませんでした。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:171
+msgid "accounts.equityError"
+msgstr "資産推移を読み込めませんでした。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:624
+msgid "accounts.summaryError"
+msgstr "集計を読み込めませんでした。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:763
+msgid "accounts.tradesError"
+msgstr "取引を読み込めませんでした。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:948
+msgid "accounts.transactionsError"
+msgstr "資金取引を読み込めませんでした。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:314
+msgid "accounts.transactionUpdateFailed"
+msgstr "資金取引の更新に失敗しました。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:203
+msgid "accounts.fee"
+msgstr "手数料"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:79
+msgid "accounts.fees"
+msgstr "手数料"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:21
+msgid "accounts.fileSource"
+msgstr "ファイルインポート"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: filteredAccount.name
+#: src/app/screens/settings/settings-sections.tsx:793
+msgid "accounts.filtered"
+msgstr "絞り込み：{0}"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:74
+msgid "accounts.fullCalendar"
+msgstr "カレンダーを開く"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:361
+msgid "accounts.goal"
+msgstr "目標"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:25
+msgid "accounts.goalReached"
+msgstr "目標達成"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:74
+msgid "accounts.gross"
+msgstr "総損益"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:271
+msgid "accounts.healthy"
+msgstr "正常"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:389
+msgid "accounts.hide"
+msgstr "非表示"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:657
+msgid "accounts.historical"
+msgstr "過去の口座評価額"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:19
+msgid "accounts.flexSource"
+msgstr "IBKR Flex 同期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:454
+msgid "accounts.ignore"
+msgstr "無視"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:858
+msgid "accounts.ignoreAction"
+msgstr "無視して前回終値を使用"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:838
+msgid "accounts.ignoreQuestion"
+msgstr "価格データの欠損を無視しますか？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:574
+msgid "accounts.startHint"
+msgstr "証券会社の履歴をインポートするか、最初の取引を記録して成績を確認しましょう。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:554
+msgid "accounts.importCsv"
+msgstr "CSV をインポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:271
+msgid "accounts.noValueHint"
+msgstr "約定または資金取引をインポートしてください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:37
+msgid "accounts.rolledBackToast"
+msgstr "インポートを取り消しました"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:363
+#: src/app/screens/HomeView.tsx:468
+msgid "accounts.incomplete"
+msgstr "再構築が不完全です"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:261
+msgid "accounts.flex"
+msgstr "Interactive Brokers · Flex 同期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:205
+msgid "accounts.interest"
+msgstr "利息"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:325
+msgid "accounts.notFoundHint"
+msgstr "削除された可能性があります。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: new Date(s.last_synced_at).toLocaleString(intlLocale())
+#. placeholder {1}: s.last_status || "—"
+#: src/app/screens/AccountDetailView.tsx:277
+msgid "accounts.lastSync"
+msgstr "最終同期 {0} — {1}"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:377
+msgid "accounts.left"
+msgstr "残り"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoneyCompact(money(progress.remaining), currency, locale)
+#: src/components/AnnualGoalCard.tsx:293
+msgid "accounts.leftAmount"
+msgstr "残り {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(cap, currency, locale)
+#: src/components/DailyLossCard.tsx:50
+msgid "accounts.limitAmount"
+msgstr "上限 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/AccountNavPopover.tsx:122
+#: src/components/HomeMiniCalendar.tsx:82
+msgid "accounts.loading"
+msgstr "読み込み中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:558
+msgid "accounts.logTrade"
+msgstr "取引を記録"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:286
+msgid "accounts.lossHold"
+msgstr "損失取引の保有時間"
+
+#. js-lingui-explicit-id
+#: src/components/DailyLossCard.tsx:77
+msgid "accounts.limitUntouched"
+msgstr "今日は損失枠を使用していません。"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:106
+msgid "accounts.losses"
+msgstr "損失"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:266
+msgid "accounts.mainLeak"
+msgstr "主な課題"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:272
+msgid "accounts.manualOnly"
+msgstr "手動のみ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:359
+#: src/app/screens/settings/settings-sections.tsx:595
+msgid "accounts.margin"
+msgstr "信用"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:225
+msgid "accounts.maxDrawdown"
+msgstr "最大ドローダウン"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:465
+msgid "accounts.missingData"
+msgstr "価格データがありません"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:62
+msgid "accounts.month"
+msgstr "月間"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:294
+msgid "accounts.mostTraded"
+msgstr "取引回数最多"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:171
+msgid "accounts.myBroker"
+msgstr "証券会社名"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:135
+#: src/lib/settingsFormSchema.ts:19
+msgid "accounts.name"
+msgstr "名前"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:77
+msgid "accounts.nameFirst"
+msgstr "先に口座名を入力してください。"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:59
+msgid "accounts.net"
+msgstr "純損益"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:134
+msgid "accounts.netPnl"
+msgstr "純損益"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:281
+msgid "accounts.neverSynced"
+msgstr "まだ同期していません。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:270
+msgid "accounts.noValue"
+msgstr "口座評価額データがありません"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:669
+msgid "accounts.noAccounts"
+msgstr "まだ口座がありません"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:106
+msgid "accounts.noBreakdown"
+msgstr "内訳データがありません。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:287
+msgid "accounts.noConnection"
+msgstr "証券会社に未接続です。Interactive Brokers に接続して約定を定期同期するか、ファイルで明細をインポートしてください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:176
+msgid "accounts.noEquity"
+msgstr "資産データがありません"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:74
+msgid "accounts.noSetup"
+msgstr "セットアップなし"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:770
+msgid "accounts.noRangeTrades"
+msgstr "この期間に取引がありません"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:769
+msgid "accounts.noMatch"
+msgstr "条件に一致する取引がありません"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:566
+msgid "accounts.noTrades"
+msgstr "まだ取引がありません"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:956
+msgid "accounts.noAccountTransactions"
+msgstr "この口座に資金取引がありません"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:960
+msgid "accounts.noTransactions"
+msgstr "まだ資金取引がありません"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:267
+msgid "accounts.noneTagged"
+msgstr "タグなし"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:926
+#: src/app/screens/settings/settings-sections.tsx:1092
+msgid "accounts.note"
+msgstr "メモ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:145
+msgid "accounts.noImports"
+msgstr "まだインポートしていません"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoneyCompact(money(progress.goal), currency, locale)
+#: src/components/AnnualGoalCard.tsx:271
+msgid "accounts.ofGoal"
+msgstr "目標 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:31
+msgid "accounts.onTrack"
+msgstr "計画どおり"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:114
+msgid "accounts.open"
+msgstr "未決済"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:932
+#: src/app/screens/settings/settings-sections.tsx:1097
+msgid "accounts.optionalNote"
+msgstr "メモ（任意）"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:554
+msgid "accounts.other"
+msgstr "その他"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:158
+msgid "accounts.otherDots"
+msgstr "その他…"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:370
+msgid "accounts.over"
+msgstr "超過"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoneyCompact(money(progress.overBy), currency, locale)
+#: src/components/AnnualGoalCard.tsx:289
+msgid "accounts.overBy"
+msgstr "超過 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:56
+msgid "accounts.pnl"
+msgstr "損益"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:211
+msgid "accounts.perTrade"
+msgstr "取引あたり"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:56
+msgid "accounts.performance"
+msgstr "取引成績"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:957
+msgid "accounts.permanentDelete"
+msgstr "この口座と関連するすべての取引、約定、資金取引、添付ファイルを完全に削除します。元には戻せません。"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:83
+msgid "accounts.pf"
+msgstr "プロフィットファクター"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:206
+msgid "accounts.quality"
+msgstr "損益の質"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:378
+#: src/app/screens/settings/settings-sections.tsx:720
+#: src/components/AccountMultiSelect.tsx:97
+msgid "accounts.primary"
+msgstr "メイン"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:231
+msgid "accounts.profitFactor"
+msgstr "プロフィットファクター"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:105
+msgid "accounts.profitTarget"
+msgstr "利益目標"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:184
+msgid "accounts.progressHint"
+msgstr "進捗は口座の絞り込みを反映した {year} 暦年の純損益に基づきます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:360
+#: src/app/screens/settings/settings-sections.tsx:598
+msgid "accounts.prop"
+msgstr "プロップ"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:72
+msgid "accounts.propProgram"
+msgstr "プロッププログラム"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:228
+msgid "accounts.pullback"
+msgstr "下落幅"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:214
+msgid "accounts.connectionHint"
+msgstr "新しい約定をこの口座に自動で取り込みます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:406
+#: src/components/PropStatusCard.tsx:80
+msgid "accounts.realized"
+msgstr "実現損益"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:755
+msgid "accounts.recent"
+msgstr "最近の取引"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:53
+msgid "accounts.record"
+msgstr "勝敗"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:964
+msgid "accounts.recordFunding"
+msgstr "この口座の入出金を記録してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:856
+msgid "accounts.clearDetails"
+msgstr "{tradeCount} 件の取引とすべての約定を削除します。口座、資金台帳、セットアップ、タグは残ります。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:474
+msgid "accounts.deleteHint"
+msgstr "口座とその取引、資金取引、添付ファイルを削除します。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:159
+msgid "accounts.reports"
+msgstr "レポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:264
+msgid "accounts.requestFailed"
+msgstr "リクエストに失敗しました"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:65
+#: src/app/screens/settings/import-history.tsx:85
+msgid "accounts.rollback"
+msgstr "取り消す"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:70
+msgid "accounts.rollbackQuestion"
+msgstr "このインポートを取り消しますか？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:50
+msgid "accounts.rollbackFailed"
+msgstr "取り消しに失敗しました"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:162
+msgid "accounts.rolledBack"
+msgstr "取り消し済み"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:84
+msgid "accounts.rollingBack"
+msgstr "取り消し中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:129
+#: src/app/screens/settings/settings-sections.tsx:1052
+msgid "accounts.save"
+msgstr "保存"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:163
+msgid "accounts.saveGoal"
+msgstr "目標を保存"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:634
+msgid "accounts.startingHint"
+msgstr "資金台帳の最初の入金として保存します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:128
+#: src/app/screens/settings/settings-sections.tsx:1051
+#: src/components/AnnualGoalCard.tsx:162
+msgid "accounts.saving"
+msgstr "保存中…"
+
+#. js-lingui-explicit-id
+#: src/components/AccountMultiSelect.tsx:44
+msgid "accounts.selectAccount"
+msgstr "口座を選択"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:243
+msgid "accounts.setHint"
+msgstr "{year} 年の純損益目標を設定すると、ここで進捗を確認できます。"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:249
+msgid "accounts.setGoal"
+msgstr "年間目標を設定"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:52
+msgid "accounts.setup"
+msgstr "セットアップ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:390
+#: src/app/screens/settings/settings-sections.tsx:796
+msgid "accounts.showAll"
+msgstr "すべて表示"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: recentTrades.length
+#. placeholder {1}: trades.length
+#: src/app/screens/HomeView.tsx:817
+msgid "accounts.recentCount"
+msgstr "{1} 件中 {0} 件の取引を表示"
+
+#. js-lingui-explicit-id
+#: src/components/AccountNavPopover.tsx:156
+msgid "accounts.signOut"
+msgstr "サインアウト"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:366
+msgid "accounts.incompleteHint"
+msgstr "この期間の一部の口座評価額は利用できません。"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:237
+msgid "accounts.stability"
+msgstr "安定性"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:670
+msgid "accounts.noAccountsHint"
+msgstr "証券会社を選ぶと、取引履歴の取得方法をご案内します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:632
+msgid "accounts.startingBalance"
+msgstr "開始残高"
+
+#. js-lingui-explicit-id
+#: src/lib/settingsFormSchema.ts:28
+msgid "accounts.balanceNumber"
+msgstr "開始残高は数値で入力してください。"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:118
+msgid "accounts.static"
+msgstr "固定"
+
+#. js-lingui-explicit-id
+#: src/components/HomeBreakdownChart.tsx:53
+msgid "accounts.symbol"
+msgstr "銘柄"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:131
+msgid "accounts.history"
+msgstr "同期・インポート履歴"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:194
+msgid "accounts.syncComplete"
+msgstr "同期完了"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:202
+#: src/app/screens/AccountDetailView.tsx:206
+msgid "accounts.syncFailed"
+msgstr "同期失敗"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:269
+#: src/app/screens/settings/settings-sections.tsx:734
+msgid "accounts.syncFailing"
+msgstr "同期エラー"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:235
+msgid "accounts.syncNow"
+msgstr "今すぐ同期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:737
+msgid "accounts.syncOff"
+msgstr "同期オフ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:736
+msgid "accounts.syncOn"
+msgstr "同期オン"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:234
+msgid "accounts.syncing"
+msgstr "同期中…"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:172
+msgid "accounts.targetNet"
+msgstr "目標純損益（{currency}）"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:133
+msgid "accounts.targetReached"
+msgstr "利益目標達成"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: batch.row_count
+#: src/app/screens/settings/import-history.tsx:91
+msgid "accounts.rollbackDetails"
+msgstr "このバッチで {accountName} に取り込んだ {0} 件の約定を削除し、取引を再集計します。後で再同期できます。"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:273
+msgid "accounts.time"
+msgstr "時間"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:291
+msgid "accounts.topSymbol"
+msgstr "最多取引銘柄"
+
+#. js-lingui-explicit-id
+#: src/components/HomeMiniCalendar.tsx:170
+msgid "accounts.total"
+msgstr "合計"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:779
+msgid "accounts.fundingHint"
+msgstr "資産推移とヘッダーの資金集計に反映される資金移動を記録します。"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:47
+msgid "accounts.trades"
+msgstr "取引"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:451
+msgid "accounts.cleared"
+msgstr "取引を消去しました"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:85
+msgid "accounts.tradingDays"
+msgstr "取引日数"
+
+#. js-lingui-explicit-id
+#: src/components/PropStatusCard.tsx:118
+msgid "accounts.trailing"
+msgstr "追随"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:253
+msgid "accounts.transactionRemoved"
+msgstr "資金取引を削除しました"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:307
+msgid "accounts.transactionUpdated"
+msgstr "資金取引を更新しました"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AccountDetailView.tsx:457
+#: src/app/screens/AccountDetailView.tsx:495
+msgid "accounts.retry"
+msgstr "再試行してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:869
+#: src/app/screens/settings/settings-sections.tsx:1058
+msgid "accounts.type"
+msgstr "種類"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-ui.tsx:863
+#: src/app/screens/settings/settings-ui.tsx:872
+#: src/app/screens/settings/settings-ui.tsx:968
+#: src/app/screens/settings/settings-ui.tsx:977
+msgid "accounts.typeConfirm"
+msgstr "確認のため {accountName} と入力"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:569
+msgid "accounts.brokerPlaceholder"
+msgstr "証券会社名を入力"
+
+#. js-lingui-explicit-id
+#: src/app/screens/HomeView.tsx:594
+msgid "accounts.viewTrades"
+msgstr "すべての取引を表示"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:337
+msgid "accounts.versusPace"
+msgstr "均等ペースとの差"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:122
+msgid "accounts.wash"
+msgstr "損益ゼロ"
+
+#. js-lingui-explicit-id
+#: src/components/HomeAccountContribution.tsx:50
+#: src/lib/homeInsights.ts:239
+msgid "accounts.winRate"
+msgstr "勝率"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:281
+msgid "accounts.winHold"
+msgstr "利益取引の保有時間"
+
+#. js-lingui-explicit-id
+#: src/components/PerformanceStrip.tsx:98
+msgid "accounts.wins"
+msgstr "利益"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/settings-sections.tsx:202
+msgid "accounts.withdrawal"
+msgstr "出金"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:260
+msgid "accounts.worstDay"
+msgstr "最低損益日"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:249
+msgid "accounts.worstStreak"
+msgstr "最大連敗"
+
+#. js-lingui-explicit-id
+#: src/lib/homeInsights.ts:220
+msgid "accounts.worstTrade"
+msgstr "最大損失取引"
+
+#. js-lingui-explicit-id
+#: src/components/AnnualGoalCard.tsx:354
+msgid "accounts.ytd"
+msgstr "年初来"

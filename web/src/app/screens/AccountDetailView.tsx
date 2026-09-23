@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Pencil, RefreshCw } from "lucide-react";
 import { useState } from "react";
@@ -57,6 +58,8 @@ function Stat({ label, value, className }: { label: string; value: string; class
 }
 
 function EditAccountButton({ account }: { account: Account }) {
+  const { t: tr } = useLinguiMacro();
+
   const [open, setOpen] = useState(false);
   const toast = useToastManager();
   const update = useUpdateAccount();
@@ -71,7 +74,7 @@ function EditAccountButton({ account }: { account: Account }) {
   function handleSave() {
     const broker = brokerChoice === OTHER_BROKER_VALUE ? brokerCustom.trim() : brokerChoice;
     if (!name.trim()) {
-      setError("Name the account first.");
+      setError(tr({ id: "accounts.nameFirst", message: "Name the account first." }));
       return;
     }
     update.mutate(
@@ -80,44 +83,66 @@ function EditAccountButton({ account }: { account: Account }) {
         onSuccess: () => {
           setOpen(false);
           setError(null);
-          toast.add({ title: "Account updated", description: name.trim() });
+          toast.add({
+            title: tr({ id: "accounts.updated", message: "Account updated" }),
+            description: name.trim(),
+          });
         },
-        onError: () => setError("Could not save the account. Try again."),
+        onError: () =>
+          setError(
+            tr({ id: "accounts.saveError", message: "Could not save the account. Try again." }),
+          ),
       },
     );
   }
 
   return (
     <>
-      <Button type="button" variant="outline" size="sm" onClick={() => setOpen(true)}>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={() => {
+          setName(account.name);
+          setBrokerChoice(knownBroker ? account.broker : OTHER_BROKER_VALUE);
+          setBrokerCustom(knownBroker ? "" : account.broker);
+          setError(null);
+          setOpen(true);
+        }}
+      >
         <Pencil size={13} strokeWidth={1.5} />
-        Edit
+        {tr({ id: "accounts.edit", message: "Edit" })}
       </Button>
       <Modal
         open={open}
         onOpenChange={setOpen}
-        title={`Edit ${account.name}`}
+        title={tr({ id: "accounts.editName", message: `Edit ${account.name}` })}
         className="max-w-[min(440px,94vw)]"
         footer={
           <>
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
-              Cancel
+              {tr({ id: "accounts.cancel", message: "Cancel" })}
             </Button>
             <Button type="button" onClick={handleSave} disabled={update.isPending}>
-              {update.isPending ? "Saving…" : "Save"}
+              {update.isPending
+                ? tr({ id: "accounts.saving", message: "Saving…" })
+                : tr({ id: "accounts.save", message: "Save" })}
             </Button>
           </>
         }
       >
         <div className="flex flex-col gap-3">
-          <Field label="Name" htmlFor="account-detail-name">
+          <Field label={tr({ id: "accounts.name", message: "Name" })} htmlFor="account-detail-name">
             <FormInput
               id="account-detail-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </Field>
-          <Field label="Broker" htmlFor="account-detail-broker">
+          <Field
+            label={tr({ id: "accounts.broker", message: "Broker" })}
+            htmlFor="account-detail-broker"
+          >
             <NativeSelect
               id="account-detail-broker"
               value={brokerChoice}
@@ -129,16 +154,21 @@ function EditAccountButton({ account }: { account: Account }) {
                   {b}
                 </NativeSelectOption>
               ))}
-              <NativeSelectOption value={OTHER_BROKER_VALUE}>Other…</NativeSelectOption>
+              <NativeSelectOption value={OTHER_BROKER_VALUE}>
+                {tr({ id: "accounts.otherDots", message: "Other…" })}
+              </NativeSelectOption>
             </NativeSelect>
           </Field>
           {brokerChoice === OTHER_BROKER_VALUE ? (
-            <Field label="Broker name" htmlFor="account-detail-broker-custom">
+            <Field
+              label={tr({ id: "accounts.brokerName", message: "Broker name" })}
+              htmlFor="account-detail-broker-custom"
+            >
               <FormInput
                 id="account-detail-broker-custom"
                 value={brokerCustom}
                 onChange={(e) => setBrokerCustom(e.target.value)}
-                placeholder="My broker"
+                placeholder={tr({ id: "accounts.myBroker", message: "My broker" })}
               />
             </Field>
           ) : null}
@@ -150,6 +180,8 @@ function EditAccountButton({ account }: { account: Account }) {
 }
 
 function ConnectionCard({ account }: { account: Account }) {
+  const { t: tr } = useLinguiMacro();
+
   const toast = useToastManager();
   const settingsQ = useFlexSync(account.id);
   const run = useRunFlexSync(account.id);
@@ -159,21 +191,30 @@ function ConnectionCard({ account }: { account: Account }) {
     run.mutate(undefined, {
       onSuccess: (res) =>
         toast.add({
-          title: "Sync complete",
-          description: `${res.inserted} new execution${res.inserted === 1 ? "" : "s"}, ${res.skipped} duplicate${res.skipped === 1 ? "" : "s"}`,
+          title: tr({ id: "accounts.syncComplete", message: "Sync complete" }),
+          description: tr({
+            id: "accounts.syncResult",
+            message: `${res.inserted} new executions, ${res.skipped} duplicates`,
+          }),
         }),
       onError: (err) =>
         toast.add({
-          title: "Sync failed",
-          description: err instanceof Error ? err.message : "Sync failed",
+          title: tr({ id: "accounts.syncFailed", message: "Sync failed" }),
+          description:
+            err instanceof Error
+              ? err.message
+              : tr({ id: "accounts.syncFailed", message: "Sync failed" }),
         }),
     });
   }
 
   return (
     <Card
-      title="Broker connection"
-      description="Pulls new fills into this account automatically."
+      title={tr({ id: "accounts.connection", message: "Broker connection" })}
+      description={tr({
+        id: "accounts.connectionHint",
+        message: "Pulls new fills into this account automatically.",
+      })}
       action={
         s?.configured ? (
           <div className="flex items-center gap-1.5">
@@ -189,9 +230,15 @@ function ConnectionCard({ account }: { account: Account }) {
                 strokeWidth={1.5}
                 className={run.isPending ? "animate-spin" : ""}
               />
-              {run.isPending ? "Syncing…" : "Sync now"}
+              {run.isPending
+                ? tr({ id: "accounts.syncing", message: "Syncing…" })
+                : tr({ id: "accounts.syncNow", message: "Sync now" })}
             </Button>
-            <FlexSyncButton accountId={account.id} accountName={account.name} label="Configure" />
+            <FlexSyncButton
+              accountId={account.id}
+              accountName={account.name}
+              label={tr({ id: "accounts.configure", message: "Configure" })}
+            />
           </div>
         ) : (
           <Button
@@ -202,7 +249,7 @@ function ConnectionCard({ account }: { account: Account }) {
               <Link to="/connect" search={{ account: account.id }} className="no-underline" />
             }
           >
-            Connect broker
+            {tr({ id: "accounts.connect", message: "Connect broker" })}
           </Button>
         )
       }
@@ -210,26 +257,38 @@ function ConnectionCard({ account }: { account: Account }) {
       {s?.configured ? (
         <div className="flex flex-col gap-1.5">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[13px] font-medium">Interactive Brokers · Flex sync</span>
+            <span className="text-[13px] font-medium">
+              {tr({ id: "accounts.flex", message: "Interactive Brokers · Flex sync" })}
+            </span>
             <Badge
               variant={
                 flexSyncFailed(s) ? "destructive-light" : s.enabled ? "success-light" : "secondary"
               }
             >
-              {flexSyncFailed(s) ? "Sync failing" : s.enabled ? "Healthy" : "Manual only"}
+              {flexSyncFailed(s)
+                ? tr({ id: "accounts.syncFailing", message: "Sync failing" })
+                : s.enabled
+                  ? tr({ id: "accounts.healthy", message: "Healthy" })
+                  : tr({ id: "accounts.manualOnly", message: "Manual only" })}
             </Badge>
           </div>
           <p className="m-0 text-[12px] text-muted-foreground">
             {s.last_synced_at
-              ? `Last sync ${new Date(s.last_synced_at).toLocaleString()} — ${s.last_status || "done"}`
-              : "Never synced yet."}
+              ? tr({
+                  id: "accounts.lastSync",
+                  message: `Last sync ${new Date(s.last_synced_at).toLocaleString(intlLocale())} — ${s.last_status || "—"}`,
+                })
+              : tr({ id: "accounts.neverSynced", message: "Never synced yet." })}
           </p>
           {s.last_error ? <p className="m-0 text-[12px] text-destructive">{s.last_error}</p> : null}
         </div>
       ) : (
         <p className="m-0 text-[13px] text-muted-foreground">
-          No broker connected. Connect Interactive Brokers to sync fills on a schedule, or import
-          statements by file.
+          {tr({
+            id: "accounts.noConnection",
+            message:
+              "No broker connected. Connect Interactive Brokers to sync fills on a schedule, or import statements by file.",
+          })}
         </p>
       )}
     </Card>
@@ -245,6 +304,8 @@ export function AccountDetailView({
   onBack: () => void;
   onDeleted: () => void;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   usePrivacyMode();
   const toast = useToastManager();
   const accountsQ = useAccounts();
@@ -260,12 +321,12 @@ export function AccountDetailView({
     return (
       <Page>
         <EmptyState
-          title="Account not found"
-          hint="It may have been deleted."
+          title={tr({ id: "accounts.notFound", message: "Account not found" })}
+          hint={tr({ id: "accounts.notFoundHint", message: "It may have been deleted." })}
           actions={
             <Button type="button" variant="outline" size="sm" onClick={onBack}>
               <ArrowLeft size={13} strokeWidth={1.5} />
-              All accounts
+              {tr({ id: "accounts.all", message: "All accounts" })}
             </Button>
           }
         />
@@ -292,10 +353,17 @@ export function AccountDetailView({
   const metaParts = [
     account.broker || null,
     account.account_type
-      ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1)
+      ? ((
+          {
+            cash: tr({ id: "accounts.cash", message: "Cash" }),
+            margin: tr({ id: "accounts.margin", message: "Margin" }),
+            prop: tr({ id: "accounts.prop", message: "Prop" }),
+            backtest: tr({ id: "accounts.backtest", message: "Backtest (paper)" }),
+          } as Record<string, string>
+        )[account.account_type] ?? account.account_type)
       : null,
     account.base_currency || null,
-    tradeCount > 0 ? `${tradeCount} ${tradeCount === 1 ? "trade" : "trades"}` : null,
+    tradeCount > 0 ? tr({ id: "accounts.tradeCount", message: `${tradeCount} trades` }) : null,
   ].filter(Boolean);
 
   return (
@@ -306,14 +374,16 @@ export function AccountDetailView({
             <h1 className="m-0 truncate text-[22px] font-semibold tracking-tight text-foreground">
               {account.name}
             </h1>
-            {isPrimary ? <Pill tone="amber">Primary</Pill> : null}
+            {isPrimary ? (
+              <Pill tone="amber">{tr({ id: "accounts.primary", message: "Primary" })}</Pill>
+            ) : null}
           </div>
           <p className="m-0 mt-1 text-[12px] text-muted-foreground">{metaParts.join(" · ")}</p>
         </div>
         <div className="flex items-center gap-1.5">
           <Button type="button" variant="outline" size="sm" onClick={onBack}>
             <ArrowLeft size={13} strokeWidth={1.5} />
-            All accounts
+            {tr({ id: "accounts.all", message: "All accounts" })}
           </Button>
           {account.account_type === "prop" ? (
             <PropRulesButton accountId={account.id} accountName={account.name} />
@@ -324,10 +394,16 @@ export function AccountDetailView({
 
       <Card>
         <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
-          <Stat label="Deposited" value={fmtMoney(balance, account.base_currency, locale)} />
-          <Stat label="Equity" value={fmtMoney(equity, account.base_currency, locale)} />
           <Stat
-            label="Realized P&L"
+            label={tr({ id: "accounts.deposited", message: "Deposited" })}
+            value={fmtMoney(balance, account.base_currency, locale)}
+          />
+          <Stat
+            label={tr({ id: "accounts.equity", message: "Equity" })}
+            value={fmtMoney(equity, account.base_currency, locale)}
+          />
+          <Stat
+            label={tr({ id: "accounts.realized", message: "Realized P&L" })}
             value={`${fmtSignedMoney(netPnl, account.base_currency, locale)}${pnlPct ? ` (${pnlPct})` : ""}`}
             className={
               netPnl > 0 ? "text-profit" : netPnl < 0 ? "text-destructive" : "text-muted-foreground"
@@ -340,15 +416,29 @@ export function AccountDetailView({
 
       <ImportHistorySection accounts={accounts} accountId={account.id} />
 
-      <Card title="Danger zone" description="Both actions ask before doing anything.">
+      <Card
+        title={tr({ id: "accounts.danger", message: "Danger zone" })}
+        description={tr({
+          id: "accounts.dangerHint",
+          message: "Both actions ask before doing anything.",
+        })}
+      >
         <div className="flex flex-col divide-y divide-border/40">
           <div className="flex flex-wrap items-center gap-3 py-3 first:pt-0 last:pb-0">
             <div className="min-w-0 flex-1">
-              <p className="m-0 text-[13px] font-medium text-foreground">Clear trade history</p>
+              <p className="m-0 text-[13px] font-medium text-foreground">
+                {tr({ id: "accounts.clearHistory", message: "Clear trade history" })}
+              </p>
               <p className="m-0 mt-0.5 text-[12px] text-muted-foreground">
                 {tradeCount > 0
-                  ? `Deletes the ${tradeCount} trade${tradeCount === 1 ? "" : "s"} and every execution in this account.`
-                  : "Deletes every trade and execution in this account."}
+                  ? tr({
+                      id: "accounts.deleteTradesCount",
+                      message: `Deletes the ${tradeCount} trades and every execution in this account.`,
+                    })
+                  : tr({
+                      id: "accounts.clearHint",
+                      message: "Deletes every trade and execution in this account.",
+                    })}
               </p>
             </div>
             <ClearTradesButton
@@ -357,36 +447,60 @@ export function AccountDetailView({
               onClear={async () => {
                 try {
                   await clearTrades.mutateAsync(account.id);
-                  toast.add({ title: "Trades cleared", description: account.name });
+                  toast.add({
+                    title: tr({ id: "accounts.cleared", message: "Trades cleared" }),
+                    description: account.name,
+                  });
                 } catch {
-                  toast.add({ title: "Could not clear trades", description: "Try again." });
+                  toast.add({
+                    title: tr({ id: "accounts.clearError", message: "Could not clear trades" }),
+                    description: tr({ id: "accounts.retry", message: "Try again." }),
+                  });
                 }
               }}
             />
           </div>
           <div className="flex flex-wrap items-center gap-3 py-3 first:pt-0 last:pb-0">
             <div className="min-w-0 flex-1">
-              <p className="m-0 text-[13px] font-medium text-foreground">Delete account</p>
+              <p className="m-0 text-[13px] font-medium text-foreground">
+                {tr({ id: "accounts.deleteAccount", message: "Delete account" })}
+              </p>
               <p className="m-0 mt-0.5 text-[12px] text-muted-foreground">
                 {isOnlyAccount
-                  ? "Add another account before deleting this one."
-                  : "Removes the account with its trades, cash transactions and attachments."}
+                  ? tr({
+                      id: "accounts.lastAccount",
+                      message: "Add another account before deleting this one.",
+                    })
+                  : tr({
+                      id: "accounts.deleteHint",
+                      message:
+                        "Removes the account with its trades, cash transactions and attachments.",
+                    })}
               </p>
             </div>
             <DeleteAccountButton
               accountName={account.name}
-              label="Delete account"
+              label={tr({ id: "accounts.deleteAccount", message: "Delete account" })}
               onDelete={async () => {
                 try {
                   await deleteAccount.mutateAsync(account.id);
-                  toast.add({ title: "Account deleted", description: account.name });
+                  toast.add({
+                    title: tr({ id: "accounts.deleted", message: "Account deleted" }),
+                    description: account.name,
+                  });
                   onDeleted();
                 } catch {
-                  toast.add({ title: "Could not delete account", description: "Try again." });
+                  toast.add({
+                    title: tr({ id: "accounts.deleteError", message: "Could not delete account" }),
+                    description: tr({ id: "accounts.retry", message: "Try again." }),
+                  });
                 }
               }}
               disabled={isOnlyAccount}
-              disabledReason="Add another account before deleting this one"
+              disabledReason={tr({
+                id: "accounts.lastAccountShort",
+                message: "Add another account before deleting this one",
+              })}
             />
           </div>
         </div>

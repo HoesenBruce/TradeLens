@@ -1,3 +1,4 @@
+import { t as tr } from "@lingui/core/macro";
 import { isoToWallClock } from "./displayPrefs";
 import { parseAmountToNumber } from "./amountInput";
 import type { RiskRules } from "./api/settings";
@@ -13,27 +14,33 @@ export function parseOptionalAmount(raw: string): number | null {
   return parseAmountToNumber(t);
 }
 
-export function validateRequiredName(value: string, label = "Name"): string | undefined {
-  if (!value.trim()) return `${label} is required.`;
+export function validateRequiredName(
+  value: string,
+  label = tr({ id: "accounts.name", message: "Name" }),
+): string | undefined {
+  if (!value.trim()) return tr({ id: "accounts.required", message: `${label} is required.` });
   return undefined;
 }
 
 export function validateStartingBalance(value: string): string | undefined {
   const n = parseAmountToNumber(value);
-  if (n == null) return "Starting balance must be a number.";
+  if (n == null)
+    return tr({ id: "accounts.balanceNumber", message: "Starting balance must be a number." });
   return undefined;
 }
 
 export function validatePositiveAmount(value: string): string | undefined {
   const n = parseAmountToNumber(value);
-  if (n == null || n <= 0) return "Amount must be a positive number.";
+  if (n == null || n <= 0)
+    return tr({ id: "accounts.positiveAmount", message: "Amount must be a positive number." });
   return undefined;
 }
 
 export function validateOptionalAmountField(value: string): string | undefined {
   const t = value.trim();
   if (!t) return undefined;
-  if (parseAmountToNumber(t) == null) return "Enter a valid number, or leave blank.";
+  if (parseAmountToNumber(t) == null)
+    return tr({ id: "accounts.validNumber", message: "Enter a valid number, or leave blank." });
   return undefined;
 }
 
@@ -41,13 +48,15 @@ export function validateRiskPercent(value: string): string | undefined {
   const t = value.trim();
   if (!t) return undefined;
   const n = parseAmountToNumber(t);
-  if (n == null) return "Enter a valid number, or leave blank.";
-  if (n < 0 || n > 100) return "Default risk % must be between 0 and 100.";
+  if (n == null)
+    return tr({ id: "accounts.validNumber", message: "Enter a valid number, or leave blank." });
+  if (n < 0 || n > 100)
+    return tr({ id: "accounts.riskPercent", message: "Default risk % must be between 0 and 100." });
   return undefined;
 }
 
 export function validateAccountId(value: string): string | undefined {
-  if (!value) return "Account is required.";
+  if (!value) return tr({ id: "accounts.accountRequired", message: "Account is required." });
   return undefined;
 }
 

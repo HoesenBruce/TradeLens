@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { StatBar } from "./StatBar";
 import { pnlColor } from "./theme-tokens";
 import type { Summary, Trade } from "@/lib/api/types";
@@ -34,6 +35,8 @@ export function PerformanceStrip({
   tradeStatusFilter,
   onToggleTradeStatus,
 }: PerformanceStripProps) {
+  const { t: tr } = useLinguiMacro();
+
   usePrivacyMode();
   const locale = intlLocale();
   const total = Math.max(summary.total_trades, 1);
@@ -50,10 +53,10 @@ export function PerformanceStrip({
       {/* Net hero */}
       <section className="flex min-h-[133px] flex-1 flex-col rounded-lg bg-card p-5">
         <p className="self-start text-[12px] font-semibold tracking-wide text-chart-3">
-          Performance
+          {tr({ id: "accounts.performance", message: "Performance" })}
         </p>
         <p className="mt-3 self-start text-[12px] font-medium tracking-wide text-muted-foreground">
-          Net
+          {tr({ id: "accounts.net", message: "Net" })}
         </p>
         <div className="mt-3 flex flex-1 flex-col items-center justify-center text-center">
           <p
@@ -68,17 +71,20 @@ export function PerformanceStrip({
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1.5">
             <Meta
-              label="Gross"
+              label={tr({ id: "accounts.gross", message: "Gross" })}
               value={fmtSignedMoney(money(gross), currency, locale)}
               className={pnlColor(gross)}
             />
-            <Meta label="Fees" value={fmtMoney(money(summary.total_fees), currency, locale)} />
             <Meta
-              label="PF"
+              label={tr({ id: "accounts.fees", message: "Fees" })}
+              value={fmtMoney(money(summary.total_fees), currency, locale)}
+            />
+            <Meta
+              label={tr({ id: "accounts.pf", message: "PF" })}
               value={summary.profit_factor != null ? summary.profit_factor.toFixed(2) : "—"}
             />
             <Meta
-              label="Expect"
+              label={tr({ id: "accounts.expect", message: "Expect" })}
               value={fmtSignedMoney(money(summary.expectancy), currency, locale)}
               className={pnlColor(summary.expectancy)}
             />
@@ -89,7 +95,7 @@ export function PerformanceStrip({
       {/* Outcome filters */}
       <div className="grid min-h-[91px] flex-[0.85] grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
         <StatBar
-          label="Wins"
+          label={tr({ id: "accounts.wins", message: "Wins" })}
           value={String(summary.wins)}
           sub={fmtPct(summary.win_rate, locale)}
           tone="pos"
@@ -97,7 +103,7 @@ export function PerformanceStrip({
           onClick={toggle ? () => toggle("win") : undefined}
         />
         <StatBar
-          label="Losses"
+          label={tr({ id: "accounts.losses", message: "Losses" })}
           value={String(summary.losses)}
           sub={fmtPct(summary.losses / total, locale)}
           tone="neg"
@@ -105,7 +111,7 @@ export function PerformanceStrip({
           onClick={toggle ? () => toggle("loss") : undefined}
         />
         <StatBar
-          label="Open"
+          label={tr({ id: "accounts.open", message: "Open" })}
           value={String(openCount)}
           sub={fmtPct(openCount / allTotal, locale)}
           tone="accent"
@@ -113,7 +119,7 @@ export function PerformanceStrip({
           onClick={toggle ? () => toggle("open") : undefined}
         />
         <StatBar
-          label="Wash"
+          label={tr({ id: "accounts.wash", message: "Wash" })}
           value={String(summary.breakeven)}
           sub={fmtPct(summary.breakeven / total, locale)}
           tone="amber"
@@ -125,12 +131,12 @@ export function PerformanceStrip({
       {/* Avg edge */}
       <div className="grid min-h-[91px] flex-[0.85] grid-cols-2 gap-3">
         <StatBar
-          label="Avg win"
+          label={tr({ id: "accounts.avgWin", message: "Avg win" })}
           value={fmtMoney(money(summary.avg_win), currency, locale)}
           tone="pos"
         />
         <StatBar
-          label="Avg loss"
+          label={tr({ id: "accounts.avgLoss", message: "Avg loss" })}
           value={fmtMoney(money(summary.avg_loss), currency, locale)}
           tone="neg"
         />
