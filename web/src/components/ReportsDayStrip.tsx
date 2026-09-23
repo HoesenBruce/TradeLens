@@ -74,6 +74,8 @@ export function ReportsDayStrip({ trades, loading, onDayClick }: ReportsDayStrip
           const isWeekend = dow === 0 || dow === 6;
           const label = fmtDayShort(`${d.date}T12:00:00Z`, locale);
           const CardTag = onDayClick ? "button" : "div";
+          const pnlText = money.format(d.pnl);
+          const compact = pnlText.length >= 13;
           return (
             <CardTag
               key={d.date}
@@ -89,12 +91,16 @@ export function ReportsDayStrip({ trades, loading, onDayClick }: ReportsDayStrip
             >
               <p className="text-[10px] font-medium text-muted-foreground">{label}</p>
               <p
+                title={pnlText}
                 className={cn(
-                  "mt-1.5 text-[13px] font-semibold leading-none tabular-nums tracking-[-0.02em]",
+                  "mt-1.5 min-w-0 max-w-full whitespace-nowrap font-semibold leading-none tabular-nums",
+                  pnlText.length >= 11
+                    ? "text-[9px] tracking-[-0.06em]"
+                    : "text-[13px] tracking-[-0.02em]",
                   pnlColor(d.pnl),
                 )}
               >
-                {money.format(d.pnl)}
+                {compact ? money.formatCompact(d.pnl) : pnlText}
               </p>
               <p className="mt-1 text-[9px] text-muted-foreground">
                 {d.trades} {d.trades === 1 ? "trade" : "trades"}
