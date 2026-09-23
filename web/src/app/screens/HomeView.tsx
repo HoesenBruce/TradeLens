@@ -1,3 +1,6 @@
+import { useLingui } from "@lingui/react";
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
+import { t as tr } from "@lingui/core/macro";
 import { AlertTriangle, ArrowRight, Plus, TrendingUp, Upload } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
@@ -121,12 +124,6 @@ export interface HomeViewProps {
   onClearGoal: () => Promise<void>;
 }
 
-const RANGES = [
-  { value: "30D", label: "30D" },
-  { value: "90D", label: "90D" },
-  { value: "ALL", label: "ALL" },
-];
-
 /** Recent trades shown on the overview — full log lives on Trades. */
 export const HOME_RECENT_LIMIT = 10;
 
@@ -151,6 +148,8 @@ function EquityCurveChart({
   fxRate?: number;
   range: string;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   usePrivacyMode();
   useDisplayTimePrefs();
   const cutoff = rangeCutoff(range);
@@ -167,10 +166,14 @@ function EquityCurveChart({
     return <Skeleton className="min-h-[240px] w-full flex-1 sm:min-h-[280px]" />;
   }
   if (equityError) {
-    return <p className="text-xs text-destructive">Failed to load equity curve.</p>;
+    return (
+      <p className="text-xs text-destructive">
+        {tr({ id: "accounts.equityError", message: "Failed to load equity curve." })}
+      </p>
+    );
   }
   if (visible.length === 0) {
-    return <EmptyState title="No equity data" />;
+    return <EmptyState title={tr({ id: "accounts.noEquity", message: "No equity data" })} />;
   }
 
   return (
@@ -207,7 +210,7 @@ function EquityCurveChart({
               labelFormatter={(label) => String(label ?? "").slice(0, 10)}
               formatter={(value) => [
                 fmtMoney(Number(value ?? 0), currency, intlLocale()),
-                "Equity",
+                tr({ id: "accounts.equity", message: "Equity" }),
               ]}
               cursor={{ fill: chartTheme.cursorFill }}
             />
@@ -240,6 +243,8 @@ function AccountValueChart({
   currency: string;
   fxRate: number;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const points = useMemo(
     () =>
       (data?.points ?? []).map((point) => ({
@@ -253,9 +258,19 @@ function AccountValueChart({
   );
 
   if (loading) return <Skeleton className="min-h-[240px] w-full" />;
-  if (error) return <p className="text-xs text-destructive">Failed to load account value.</p>;
+  if (error)
+    return (
+      <p className="text-xs text-destructive">
+        {tr({ id: "accounts.valueError", message: "Failed to load account value." })}
+      </p>
+    );
   if (points.length === 0) {
-    return <EmptyState title="No account value data" hint="Import executions or cash activity." />;
+    return (
+      <EmptyState
+        title={tr({ id: "accounts.noValue", message: "No account value data" })}
+        hint={tr({ id: "accounts.noValueHint", message: "Import executions or cash activity." })}
+      />
+    );
   }
 
   return (
@@ -291,15 +306,15 @@ function AccountValueChart({
               formatter={(value, name) => [
                 fmtMoney(Number(value ?? 0), currency, intlLocale()),
                 name === "estimated_account_value"
-                  ? "Estimated Account Value"
-                  : "Contributed Capital",
+                  ? tr({ id: "accounts.estimated", message: "Estimated Account Value" })
+                  : tr({ id: "accounts.capital", message: "Contributed Capital" }),
               ]}
               cursor={{ stroke: chartTheme.gridColor }}
             />
             <Line
               type="monotone"
               dataKey="estimated_account_value"
-              name="Estimated Account Value"
+              name={tr({ id: "accounts.estimated", message: "Estimated Account Value" })}
               stroke={chartTheme.accentStroke}
               strokeWidth={2}
               dot={false}
@@ -308,7 +323,7 @@ function AccountValueChart({
             <Line
               type="stepAfter"
               dataKey="contributed_capital"
-              name="Contributed Capital"
+              name={tr({ id: "accounts.capital", message: "Contributed Capital" })}
               stroke="var(--color-chart-2)"
               strokeWidth={1.5}
               strokeDasharray="5 4"
@@ -328,6 +343,8 @@ function AccountValueWarnings({
   points: AccountValuePoint[];
   onIgnore: (warning: AccountValueWarning) => void;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const [open, setOpen] = useState(false);
   const warningMap = new Map<string, AccountValueWarning>();
   for (const warning of points.flatMap((point) => point.warnings ?? [])) {
@@ -342,8 +359,15 @@ function AccountValueWarnings({
     return (
       <Alert variant="warning">
         <AlertTriangle />
-        <AlertTitle>Incomplete reconstruction</AlertTitle>
-        <AlertDescription>Some account values are unavailable for this range.</AlertDescription>
+        <AlertTitle>
+          {tr({ id: "accounts.incomplete", message: "Incomplete reconstruction" })}
+        </AlertTitle>
+        <AlertDescription>
+          {tr({
+            id: "accounts.incompleteHint",
+            message: "Some account values are unavailable for this range.",
+          })}
+        </AlertDescription>
       </Alert>
     );
   }
@@ -357,8 +381,14 @@ function AccountValueWarnings({
       <AlertTriangle />
       <Collapsible open={open} onOpenChange={setOpen}>
         <CollapsibleTrigger className="w-full">
-          <span className="font-medium">{warnings.length} account value issues</span>
-          <span className="text-xs text-muted-foreground">{open ? "Hide" : "Show all"}</span>
+          <span className="font-medium">
+            {tr({ id: "accounts.valueIssues", message: `${warnings.length} account value issues` })}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            {open
+              ? tr({ id: "accounts.hide", message: "Hide" })
+              : tr({ id: "accounts.showAll", message: "Show all" })}
+          </span>
           <CollapsibleChevron />
         </CollapsibleTrigger>
         <CollapsibleContent className="pt-2">
@@ -384,6 +414,8 @@ function AccountValueWarningAlert({
   warning: AccountValueWarning;
   onIgnore: (warning: AccountValueWarning) => void;
 }) {
+  "use no memo";
+  useLingui();
   return (
     <Alert variant="warning">
       <AlertTriangle />
@@ -402,13 +434,16 @@ function AccountValueWarningDetail({
   warning: AccountValueWarning;
   onIgnore: (warning: AccountValueWarning) => void;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   return (
     <p className="flex items-center gap-2">
       <span className="font-medium text-foreground">
         {[
           warning.instrument,
           warning.date,
-          warning.execution_id && `Execution ${warning.execution_id}`,
+          warning.execution_id &&
+            tr({ id: "accounts.executionId", message: `Execution ${warning.execution_id}` }),
         ]
           .filter(Boolean)
           .join(" · ")}
@@ -416,7 +451,7 @@ function AccountValueWarningDetail({
       {warning.message ? ` — ${warning.message}` : null}
       {warning.code === "missing_price" && warning.instrument ? (
         <Button type="button" variant="outline" size="sm" onClick={() => onIgnore(warning)}>
-          Ignore
+          {tr({ id: "accounts.ignore", message: "Ignore" })}
         </Button>
       ) : null}
     </p>
@@ -424,10 +459,13 @@ function AccountValueWarningDetail({
 }
 
 function accountValueWarningTitle(code: string) {
-  if (code === "unsupported_corporate_action") return "Corporate action review required";
-  if (code === "missing_price") return "Missing market data";
-  if (code === "carried_forward_suspension_price") return "Estimated using previous close";
-  return "Incomplete reconstruction";
+  if (code === "unsupported_corporate_action")
+    return tr({ id: "accounts.corporateAction", message: "Corporate action review required" });
+  if (code === "missing_price")
+    return tr({ id: "accounts.missingData", message: "Missing market data" });
+  if (code === "carried_forward_suspension_price")
+    return tr({ id: "accounts.previousClose", message: "Estimated using previous close" });
+  return tr({ id: "accounts.incomplete", message: "Incomplete reconstruction" });
 }
 
 export function HomeView({
@@ -482,6 +520,14 @@ export function HomeView({
   onSaveGoal,
   onClearGoal,
 }: HomeViewProps) {
+  const { t: tr } = useLinguiMacro();
+
+  const RANGES = [
+    { value: "30D", label: tr({ id: "accounts.range30", message: "30D" }) },
+    { value: "90D", label: tr({ id: "accounts.range90", message: "90D" }) },
+    { value: "ALL", label: tr({ id: "accounts.allRange", message: "ALL" }) },
+  ];
+
   const baseCurrency = accountBaseCurrency(accounts, selectedAccountIds);
   const { currency, rate } = useMoneyFx(baseCurrency);
   const fxRate = rate ?? 1;
@@ -505,11 +551,11 @@ export function HomeView({
       <>
         <Button type="button" variant="default" onClick={onImport}>
           <Upload size={13} strokeWidth={1.75} />
-          Import CSV
+          {tr({ id: "accounts.importCsv", message: "Import CSV" })}
         </Button>
         <Button type="button" variant="outline" onClick={onNewTrade}>
           <Plus size={13} strokeWidth={1.75} />
-          Log trade
+          {tr({ id: "accounts.logTrade", message: "Log trade" })}
         </Button>
       </>
     );
@@ -517,11 +563,19 @@ export function HomeView({
     return (
       <Page fill className="items-center justify-center">
         <EmptyState
-          title="No trades yet"
+          title={tr({ id: "accounts.noTrades", message: "No trades yet" })}
           hint={
             accountFunded
-              ? "Account funded — import history or log your first trade to see P&L light up here."
-              : "Import broker history or log your first trade to start tracking performance."
+              ? tr({
+                  id: "accounts.fundedHint",
+                  message:
+                    "Account funded — import history or log your first trade to see P&L light up here.",
+                })
+              : tr({
+                  id: "accounts.startHint",
+                  message:
+                    "Import broker history or log your first trade to start tracking performance.",
+                })
           }
           icon={<TrendingUp size={40} strokeWidth={1.5} />}
           actions={emptyActions}
@@ -537,7 +591,7 @@ export function HomeView({
       onClick={onViewAllTrades}
       className="h-auto gap-1 rounded-md text-[11px] font-medium"
     >
-      View all trades
+      {tr({ id: "accounts.viewTrades", message: "View all trades" })}
       <ArrowRight size={12} strokeWidth={2} aria-hidden />
     </Button>
   );
@@ -551,12 +605,12 @@ export function HomeView({
           spills out and overlaps the goal card below. minmax() floors without capping. */}
       <div className="grid gap-4 lg:grid-cols-5 lg:grid-rows-[minmax(320px,auto)] lg:items-stretch">
         <Card
-          title="Equity curve"
+          title={tr({ id: "accounts.curve", message: "Equity curve" })}
           className="h-full lg:col-span-3"
           fill
           action={
             <SegmentedControl
-              ariaLabel="Equity range"
+              ariaLabel={tr({ id: "accounts.curveRange", message: "Equity range" })}
               options={RANGES}
               value={range}
               onChange={setRange}
@@ -566,7 +620,9 @@ export function HomeView({
           {summaryLoading ? (
             <Skeleton className="min-h-[160px] w-full flex-1" />
           ) : summaryError ? (
-            <p className="text-xs text-destructive">Failed to load summary.</p>
+            <p className="text-xs text-destructive">
+              {tr({ id: "accounts.summaryError", message: "Failed to load summary." })}
+            </p>
           ) : !summary ? null : (
             <EquityCurveChart
               equityLoading={equityLoading}
@@ -598,10 +654,10 @@ export function HomeView({
       </div>
 
       <Card
-        title="Historical account value"
+        title={tr({ id: "accounts.historical", message: "Historical account value" })}
         action={
           <SegmentedControl
-            ariaLabel="Account value range"
+            ariaLabel={tr({ id: "accounts.valueRange", message: "Account value range" })}
             options={RANGES}
             value={accountValueRange}
             onChange={onAccountValueRangeChange}
@@ -621,11 +677,11 @@ export function HomeView({
             <div className="flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-muted-foreground">
               <span>
                 <span className="mr-1.5 inline-block h-0.5 w-4 bg-primary" />
-                Estimated Account Value
+                {tr({ id: "accounts.estimated", message: "Estimated Account Value" })}
               </span>
               <span>
                 <span className="mr-1.5 inline-block w-4 border-t border-dashed border-chart-2" />
-                Contributed Capital
+                {tr({ id: "accounts.capital", message: "Contributed Capital" })}
               </span>
             </div>
           ) : null}
@@ -695,15 +751,32 @@ export function HomeView({
         </div>
       </div>
 
-      <Card title="Recent trades" action={recentAction} flush>
+      <Card
+        title={tr({ id: "accounts.recent", message: "Recent trades" })}
+        action={recentAction}
+        flush
+      >
         {tradesLoading ? (
           <TableSkeleton rows={5} columns={4} className="m-1" />
         ) : tradesError ? (
-          <p className="p-4 text-xs text-destructive">Failed to load trades.</p>
+          <p className="p-4 text-xs text-destructive">
+            {tr({ id: "accounts.tradesError", message: "Failed to load trades." })}
+          </p>
         ) : trades.length === 0 ? (
           <EmptyState
-            title={tradeStatusFilter ? "No trades match this filter" : "No trades in this range"}
-            hint={tradeStatusFilter ? "Click the stat chip again to clear the filter." : undefined}
+            title={
+              tradeStatusFilter
+                ? tr({ id: "accounts.noMatch", message: "No trades match this filter" })
+                : tr({ id: "accounts.noRangeTrades", message: "No trades in this range" })
+            }
+            hint={
+              tradeStatusFilter
+                ? tr({
+                    id: "accounts.clearFilterHint",
+                    message: "Click the stat chip again to clear the filter.",
+                  })
+                : undefined
+            }
           />
         ) : (
           <>
@@ -741,8 +814,13 @@ export function HomeView({
             )}
             <p className="shrink-0 py-2 text-center text-xs text-muted-foreground">
               {hasMoreTrades
-                ? `Showing ${recentTrades.length} of ${trades.length} trades`
-                : `${trades.length} ${trades.length === 1 ? "trade" : "trades"}`}
+                ? tr({
+                    id: "accounts.recentCount",
+                    message: `Showing ${recentTrades.length} of ${trades.length} trades`,
+                  })
+                : trades.length === 1
+                  ? tr({ id: "accounts.oneTrade", message: "1 trade" })
+                  : tr({ id: "accounts.totalTrades", message: `${trades.length} trades` })}
             </p>
           </>
         )}
@@ -756,16 +834,19 @@ export function HomeView({
       >
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Ignore missing market data?</DialogTitle>
+            <DialogTitle>
+              {tr({ id: "accounts.ignoreQuestion", message: "Ignore missing market data?" })}
+            </DialogTitle>
             <DialogDescription>
-              {warningToIgnore?.instrument} has no unadjusted closing price for{" "}
-              {warningToIgnore?.date}. TraderMemos will use the previous available market close for
-              this date.
+              {tr({
+                id: "accounts.ignoreDetails",
+                message: `${warningToIgnore?.instrument} has no unadjusted closing price for ${warningToIgnore?.date}. TraderMemos will use the previous available market close for this date.`,
+              })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setWarningToIgnore(null)}>
-              Cancel
+              {tr({ id: "accounts.cancel", message: "Cancel" })}
             </Button>
             <Button
               type="button"
@@ -774,7 +855,7 @@ export function HomeView({
                 setWarningToIgnore(null);
               }}
             >
-              Ignore and use previous close
+              {tr({ id: "accounts.ignoreAction", message: "Ignore and use previous close" })}
             </Button>
           </DialogFooter>
         </DialogContent>

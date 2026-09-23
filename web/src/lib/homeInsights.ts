@@ -1,3 +1,4 @@
+import { t as tr } from "@lingui/core/macro";
 import type { Summary, Trade } from "./api/types";
 import { fmtTradeDay } from "./format";
 
@@ -202,86 +203,96 @@ export function buildInsightPanels(
 
   return [
     {
-      title: "PnL quality",
+      title: tr({ id: "accounts.quality", message: "PnL quality" }),
       hero: {
-        label: "Expectancy",
+        label: tr({ id: "accounts.expectancy", message: "Expectancy" }),
         value: signed(summary.expectancy),
         tone: summary.expectancy >= 0 ? "pos" : "neg",
-        hint: "per trade",
+        hint: tr({ id: "accounts.perTrade", message: "per trade" }),
       },
       cells: [
         {
-          label: "Best trade",
+          label: tr({ id: "accounts.bestTrade", message: "Best trade" }),
           value: summary.largest_win > 0 ? signed(summary.largest_win) : "—",
           tone: "pos",
         },
         {
-          label: "Worst trade",
+          label: tr({ id: "accounts.worstTrade", message: "Worst trade" }),
           value: summary.largest_loss > 0 ? signed(-summary.largest_loss) : "—",
           tone: "neg",
         },
         {
-          label: "Max drawdown",
+          label: tr({ id: "accounts.maxDrawdown", message: "Max drawdown" }),
           value: maxDrawdown != null && maxDrawdown > 0 ? signed(-maxDrawdown) : "—",
           tone: "neg",
-          hint: "pullback",
+          hint: tr({ id: "accounts.pullback", message: "pullback" }),
         },
         {
-          label: "Profit factor",
+          label: tr({ id: "accounts.profitFactor", message: "Profit factor" }),
           value: summary.profit_factor > 0 ? summary.profit_factor.toFixed(2) : "—",
         },
       ],
     },
     {
-      title: "Stability",
+      title: tr({ id: "accounts.stability", message: "Stability" }),
       hero: {
-        label: "Win rate",
+        label: tr({ id: "accounts.winRate", message: "Win rate" }),
         value: pct(summary.win_rate),
         hint: `${summary.wins}W / ${summary.losses}L`,
       },
       cells: [
         {
-          label: "Best streak",
+          label: tr({ id: "accounts.bestStreak", message: "Best streak" }),
           value: insights.bestStreak > 0 ? String(insights.bestStreak) : "—",
         },
         {
-          label: "Worst streak",
+          label: tr({ id: "accounts.worstStreak", message: "Worst streak" }),
           value: insights.worstStreak > 0 ? String(insights.worstStreak) : "—",
           tone: insights.worstStreak > 0 ? "neg" : undefined,
         },
         {
-          label: "Best day",
+          label: tr({ id: "accounts.bestDay", message: "Best day" }),
           value: insights.bestDay ? signed(insights.bestDay.pnl) : "—",
           tone: insights.bestDay && insights.bestDay.pnl > 0 ? "pos" : undefined,
           hint: insights.bestDay?.date,
         },
         {
-          label: "Worst day",
+          label: tr({ id: "accounts.worstDay", message: "Worst day" }),
           value: insights.worstDay ? signed(insights.worstDay.pnl) : "—",
           tone: insights.worstDay && insights.worstDay.pnl < 0 ? "neg" : undefined,
           hint: insights.worstDay?.date,
         },
         {
-          label: "Main leak",
-          value: insights.mainMistake ?? "None tagged",
+          label: tr({ id: "accounts.mainLeak", message: "Main leak" }),
+          value: insights.mainMistake ?? tr({ id: "accounts.noneTagged", message: "None tagged" }),
           tone: insights.mainMistake ? "neg" : "muted",
         },
       ],
     },
     {
-      title: "Time",
+      title: tr({ id: "accounts.time", message: "Time" }),
       hero: {
-        label: "Average hold",
+        label: tr({ id: "accounts.averageHold", message: "Average hold" }),
         value: duration(insights.avgHoldSecs),
-        hint: `${summary.total_trades} trades`,
+        hint: tr({ id: "accounts.insightCount", message: `${summary.total_trades} trades` }),
       },
       cells: [
-        { label: "Winning hold", value: duration(insights.winHoldSecs), tone: "pos" },
-        { label: "Losing hold", value: duration(insights.lossHoldSecs), tone: "neg" },
         {
-          label: "Top symbol",
+          label: tr({ id: "accounts.winHold", message: "Winning hold" }),
+          value: duration(insights.winHoldSecs),
+          tone: "pos",
+        },
+        {
+          label: tr({ id: "accounts.lossHold", message: "Losing hold" }),
+          value: duration(insights.lossHoldSecs),
+          tone: "neg",
+        },
+        {
+          label: tr({ id: "accounts.topSymbol", message: "Top symbol" }),
           value: insights.topSymbol ?? "—",
-          hint: insights.topSymbol ? "most traded" : undefined,
+          hint: insights.topSymbol
+            ? tr({ id: "accounts.mostTraded", message: "most traded" })
+            : undefined,
         },
       ],
     },

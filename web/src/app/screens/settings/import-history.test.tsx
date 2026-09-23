@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@/test/render";
+import { screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactElement } from "react";
 import { describe, expect, it, vi } from "vite-plus/test";
@@ -62,4 +63,18 @@ describe("ImportHistorySection", () => {
     renderSection(<ImportHistorySection accounts={accounts} />);
     expect(screen.getByText(/Deleted account/)).toBeInTheDocument();
   });
+});
+
+it("keeps account names and row counts in the correct Japanese sentence positions", async () => {
+  const { loadLocale } = await import("@/i18n");
+  const { act, fireEvent } = await import("@testing-library/react");
+  state.imports = [batch];
+  try {
+    await act(() => loadLocale("ja"));
+    renderSection(<ImportHistorySection accounts={accounts} />);
+    fireEvent.click(screen.getByRole("button", { name: /^取り消す$/ }));
+    expect(await screen.findByText(/IB Main に取り込んだ 4 件の約定/)).toBeInTheDocument();
+  } finally {
+    await act(() => loadLocale("en"));
+  }
 });

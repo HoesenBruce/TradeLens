@@ -1,3 +1,6 @@
+import { useLingui } from "@lingui/react";
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
+import { t as tr } from "@lingui/core/macro";
 import { Pencil, Target, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { AmountInput } from "@/components/AmountInput";
@@ -19,13 +22,13 @@ import { intlLocale } from "@/lib/locale";
 export function paceLabel(status: GoalPaceStatus): string {
   switch (status) {
     case "over":
-      return "Goal reached";
+      return tr({ id: "accounts.goalReached", message: "Goal reached" });
     case "ahead":
-      return "Ahead of pace";
+      return tr({ id: "accounts.ahead", message: "Ahead of pace" });
     case "behind":
-      return "Behind pace";
+      return tr({ id: "accounts.behind", message: "Behind pace" });
     default:
-      return "On track";
+      return tr({ id: "accounts.onTrack", message: "On track" });
   }
 }
 
@@ -68,6 +71,10 @@ export function AnnualGoalCard({
   onSave,
   onClear,
 }: AnnualGoalCardProps) {
+  "use no memo";
+  useLingui();
+  const { t: tr } = useLinguiMacro();
+
   usePrivacyMode();
   const locale = intlLocale();
   const [editOpen, setEditOpen] = useState(false);
@@ -88,7 +95,7 @@ export function AnnualGoalCard({
   async function handleSave() {
     const parsed = Number(draft.replace(/,/g, ""));
     if (!Number.isFinite(parsed) || parsed <= 0) {
-      setError("Enter a goal greater than zero.");
+      setError(tr({ id: "accounts.goalPositive", message: "Enter a goal greater than zero." }));
       return;
     }
     setError(null);
@@ -96,7 +103,11 @@ export function AnnualGoalCard({
       await onSave(parsed);
       setEditOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not save goal");
+      setError(
+        err instanceof Error
+          ? err.message
+          : tr({ id: "accounts.goalSaveError", message: "Could not save goal" }),
+      );
     }
   }
 
@@ -107,7 +118,11 @@ export function AnnualGoalCard({
       await onClear();
       setEditOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not clear goal");
+      setError(
+        err instanceof Error
+          ? err.message
+          : tr({ id: "accounts.goalClearError", message: "Could not clear goal" }),
+      );
     }
   }
 
@@ -115,7 +130,7 @@ export function AnnualGoalCard({
     <Modal
       open={editOpen}
       onOpenChange={setEditOpen}
-      title={`${year} P&L goal`}
+      title={tr({ id: "accounts.goalYear", message: `${year} P&L goal` })}
       footer={
         <div className="flex w-full items-center justify-between gap-2">
           {hasGoal && onClear ? (
@@ -128,7 +143,7 @@ export function AnnualGoalCard({
               className="text-destructive hover:text-destructive"
             >
               <Trash2 size={14} strokeWidth={1.5} />
-              Clear
+              {tr({ id: "accounts.clear", message: "Clear" })}
             </Button>
           ) : (
             <span />
@@ -140,10 +155,12 @@ export function AnnualGoalCard({
               disabled={saving}
               onClick={() => setEditOpen(false)}
             >
-              Cancel
+              {tr({ id: "accounts.cancel", message: "Cancel" })}
             </Button>
             <Button type="button" disabled={saving} onClick={() => void handleSave()}>
-              {saving ? "Saving…" : "Save goal"}
+              {saving
+                ? tr({ id: "accounts.saving", message: "Saving…" })
+                : tr({ id: "accounts.saveGoal", message: "Save goal" })}
             </Button>
           </div>
         </div>
@@ -152,19 +169,22 @@ export function AnnualGoalCard({
       <div className="flex flex-col gap-3">
         <label className="flex flex-col gap-1.5">
           <span className="text-[12px] font-medium text-muted-foreground">
-            Target net P&L ({currency})
+            {tr({ id: "accounts.targetNet", message: `Target net P&L (${currency})` })}
           </span>
           <AmountInput
             value={draft}
             onValueChange={setDraft}
             placeholder="100000"
-            aria-label="Annual P&L goal amount"
+            aria-label={tr({ id: "accounts.goalAmount", message: "Annual P&L goal amount" })}
             autoFocus
           />
         </label>
         {error ? <p className="m-0 text-[12px] text-destructive">{error}</p> : null}
         <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
-          Progress uses calendar-year net P&L for {year}, respecting your account filter.
+          {tr({
+            id: "accounts.progressHint",
+            message: `Progress uses calendar-year net P&L for ${year}, respecting your account filter.`,
+          })}
         </p>
       </div>
     </Modal>
@@ -178,7 +198,7 @@ export function AnnualGoalCard({
   // heading survives the move onto Card (whose string titles are muted grey).
   const cardTitle = (
     <h2 className="m-0 text-[12px] font-semibold tracking-wide text-chart-3">
-      Annual P&L Goal · {year}
+      {tr({ id: "accounts.annualTitle", message: `Annual P&L Goal · ${year}` })}
     </h2>
   );
 
@@ -187,7 +207,7 @@ export function AnnualGoalCard({
       type="button"
       variant="ghost"
       size="icon-sm"
-      aria-label="Edit annual goal"
+      aria-label={tr({ id: "accounts.editGoal", message: "Edit annual goal" })}
       onClick={openEditor}
       className="size-7 text-muted-foreground"
     >
@@ -220,10 +240,13 @@ export function AnnualGoalCard({
           className={cardClass}
         >
           <p className="m-0 text-[13px] text-muted-foreground">
-            Set a {year} net P&L target to track progress here.
+            {tr({
+              id: "accounts.setHint",
+              message: `Set a ${year} net P&L target to track progress here.`,
+            })}
           </p>
           <Button type="button" variant="outline" size="sm" className="mt-4" onClick={openEditor}>
-            Set annual goal
+            {tr({ id: "accounts.setGoal", message: "Set annual goal" })}
           </Button>
         </Card>
         {editModal}
@@ -245,14 +268,17 @@ export function AnnualGoalCard({
               {fmtMoneyCompact(money(progress.ytdNetPnl), currency, locale)}
             </span>
             <span className="text-[13px] font-medium text-muted-foreground">
-              of {fmtMoneyCompact(money(progress.goal), currency, locale)}
+              {tr({
+                id: "accounts.ofGoal",
+                message: `of ${fmtMoneyCompact(money(progress.goal), currency, locale)}`,
+              })}
             </span>
           </p>
           <GoalProgressBar
             progress={progress.progress}
             className="mt-3 h-4"
             tone={barTone}
-            aria-label={`${year} goal progress`}
+            aria-label={tr({ id: "accounts.goalProgress", message: `${year} goal progress` })}
           />
           <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[12px]">
             <span className={cn("font-medium tabular-nums", paceTone(progress.paceStatus))}>
@@ -260,8 +286,14 @@ export function AnnualGoalCard({
             </span>
             <span className="tabular-nums text-muted-foreground">
               {progress.overBy > 0
-                ? `Over by ${fmtMoneyCompact(money(progress.overBy), currency, locale)}`
-                : `Left ${fmtMoneyCompact(money(progress.remaining), currency, locale)}`}
+                ? tr({
+                    id: "accounts.overBy",
+                    message: `Over by ${fmtMoneyCompact(money(progress.overBy), currency, locale)}`,
+                  })
+                : tr({
+                    id: "accounts.leftAmount",
+                    message: `Left ${fmtMoneyCompact(money(progress.remaining), currency, locale)}`,
+                  })}
             </span>
           </div>
         </Card>
@@ -292,11 +324,18 @@ export function AnnualGoalCard({
               )}
             >
               {progress.paceStatus === "over" ? (
-                <>+{fmtPct((progress.progressPct - 100) / 100, locale)} over goal</>
+                <>
+                  {tr({
+                    id: "accounts.overGoal",
+                    message: `+${fmtPct((progress.progressPct - 100) / 100, locale)} over goal`,
+                  })}
+                </>
               ) : (
                 <>
                   {fmtSignedMoney(money(progress.paceDelta), currency, locale)}
-                  <span className="ml-1 font-normal text-muted-foreground">vs linear pace</span>
+                  <span className="ml-1 font-normal text-muted-foreground">
+                    {tr({ id: "accounts.versusPace", message: "vs linear pace" })}
+                  </span>
                 </>
               )}
             </p>
@@ -306,18 +345,20 @@ export function AnnualGoalCard({
             <GoalProgressBar
               progress={progress.progress}
               tone={barTone}
-              aria-label={`${year} goal progress`}
+              aria-label={tr({ id: "accounts.goalProgress", message: `${year} goal progress` })}
             />
 
             <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-[13px] tabular-nums">
               <p className="m-0">
-                <span className="font-medium text-muted-foreground">YTD </span>
+                <span className="font-medium text-muted-foreground">
+                  {tr({ id: "accounts.ytd", message: "YTD" })}{" "}
+                </span>
                 <span className={cn("font-semibold", pnlColor(progress.ytdNetPnl))}>
                   {fmtMoney(money(progress.ytdNetPnl), currency, locale)}
                 </span>
               </p>
               <p className="m-0 text-muted-foreground">
-                Goal{" "}
+                {tr({ id: "accounts.goal", message: "Goal" })}{" "}
                 <span className="font-semibold text-foreground">
                   {fmtMoney(money(progress.goal), currency, locale)}
                 </span>
@@ -326,14 +367,14 @@ export function AnnualGoalCard({
                 </span>
                 {progress.overBy > 0 ? (
                   <>
-                    Over{" "}
+                    {tr({ id: "accounts.over", message: "Over" })}{" "}
                     <span className="font-semibold text-profit">
                       {fmtMoney(money(progress.overBy), currency, locale)}
                     </span>
                   </>
                 ) : (
                   <>
-                    Left{" "}
+                    {tr({ id: "accounts.left", message: "Left" })}{" "}
                     <span className="font-semibold text-foreground">
                       {fmtMoney(money(progress.remaining), currency, locale)}
                     </span>
