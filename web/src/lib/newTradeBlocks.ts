@@ -208,7 +208,7 @@ export function symbolTradeFromDetail(trade: TradeDetail): SymbolTradeBlock {
     rows,
     setupIds,
     session: journal.session,
-    entryReason: journal.entryReason || journal.legacy,
+    entryReason: journal.entryReason || (/^##\s+/m.test(trade.notes ?? "") ? "" : journal.legacy),
     exitReason: journal.exitReason,
     reviewNotes: journal.reviewNotes,
     emotionalStates: parseEmotionalStates(trade.emotional_state),

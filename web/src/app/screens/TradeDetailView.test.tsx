@@ -713,6 +713,40 @@ function renderJournal(tradeId: string, initial: JournalFormState = emptyJournal
 describe("JournalPanel drafts", () => {
   afterEach(() => localStorage.clear());
 
+  it.each(["long", "short", ""])(
+    "keeps %s planned direction and unknown metadata when saving a memo",
+    async (direction) => {
+      const onSave = vi.fn<(value: JournalFormState) => void>();
+      const notes = [
+        direction ? `## Planned direction\n${direction}` : "",
+        "## Broker metadata\nuntouched",
+        "## Review notes\nold memo",
+      ]
+        .filter(Boolean)
+        .join("\n\n");
+      render(
+        <JournalPanel
+          tradeId={`plan-${direction || "none"}`}
+          initialState={{ ...emptyJournal, notes }}
+          setups={[]}
+          customTags={[]}
+          mistakeTags={[]}
+          currency="USD"
+          saving={false}
+          onSave={onSave}
+        />,
+      );
+      await userEvent.clear(screen.getByLabelText("Review notes"));
+      await userEvent.type(screen.getByLabelText("Review notes"), "new memo");
+      await userEvent.click(screen.getByRole("button", { name: "Save" }));
+      const saved = onSave.mock.calls[0]![0].notes;
+      expect(saved).toContain("## Broker metadata\nuntouched");
+      expect(saved).toContain("## Review notes\nnew memo");
+      expect(saved.includes("## Planned direction")).toBe(Boolean(direction));
+      if (direction) expect(saved).toContain(`## Planned direction\n${direction}`);
+    },
+  );
+
   it("restores a differing draft on mount and discards it on request", () => {
     localStorage.setItem(
       journalDraftKey("t1"),

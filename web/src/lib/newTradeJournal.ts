@@ -26,4 +26,8 @@ export function weightedAvgEntry(
 }
 
 export { EMOTIONAL_STATES } from "./tradeGrades";
-export { buildStructuredJournalNotes, parseJournalNotes } from "./journalNotes";
+export {
+  buildStructuredJournalNotes,
+  parseJournalNotes,
+  updateStructuredJournalNotes,
+} from "./journalNotes";

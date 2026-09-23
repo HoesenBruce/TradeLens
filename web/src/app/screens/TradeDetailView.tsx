@@ -47,7 +47,7 @@ import type { Setup, Tag, TradeDetail } from "@/lib/api/types";
 import { fmtDateTime, fmtMoney } from "@/lib/format";
 
 import {
-  buildStructuredJournalNotes,
+  updateStructuredJournalNotes,
   EMOTIONAL_STATES,
   parseJournalNotes,
 } from "@/lib/newTradeJournal";
@@ -403,7 +403,7 @@ export function hydrateJournalForm(form: JournalFormState): JournalFormState {
     session: parsed.session,
     entry_reason: parsed.entryReason,
     exit_reason: parsed.exitReason,
-    review_notes: parsed.reviewNotes || parsed.legacy,
+    review_notes: parsed.reviewNotes || (/^##\s+/m.test(form.notes) ? "" : parsed.legacy),
     setup_id,
     setup_ids,
   };
@@ -412,7 +412,7 @@ export function hydrateJournalForm(form: JournalFormState): JournalFormState {
 function withBuiltNotes(form: JournalFormState): JournalFormState {
   return {
     ...form,
-    notes: buildStructuredJournalNotes({
+    notes: updateStructuredJournalNotes(form.notes, {
       session: form.session,
       entryReason: form.entry_reason,
       exitReason: form.exit_reason,
