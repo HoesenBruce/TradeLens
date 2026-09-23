@@ -66,3 +66,17 @@ func TestSBICashFeesRoundAcquisitionCostUp(t *testing.T) {
 	require.Equal(t, 60.0, result.RealizedCloses[0].RemainingQty)
 	require.Equal(t, 7260.0, result.RealizedCloses[0].RemainingCostBasis)
 }
+
+func TestConvertedCashUsesRemainingAcquisitionBasis(t *testing.T) {
+	opening := ex("open", "buy", 100, 900, "2026-09-01T01:00:00Z", 1)
+	sale := ex("sale", "sell", 50, 950, "2026-09-02T01:00:00Z", 1)
+	conversion := ex("conversion", "buy", 100, 1005, "2026-09-03T01:00:00Z", 1)
+	for _, f := range []*Execution{&opening, &sale, &conversion} {
+		f.LotKey = "sbi:cash"
+	}
+	conversion.ConversionType = "genbiki"
+	result := SBICashAccounting([]Execution{opening, sale, conversion})
+	require.Equal(t, 150.0, result.Trades[0].QtyRemaining)
+	require.Equal(t, 970.0, result.Trades[0].AvgEntryPrice)
+	require.Equal(t, 2500.0, *result.Trades[0].NetPnl)
+}
