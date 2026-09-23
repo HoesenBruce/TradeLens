@@ -1,13 +1,21 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-const STEPS = [
-  { step: 1 as const, label: "Upload" },
-  { step: 2 as const, labelDefault: "Map columns", labelJournal: "Review" },
-  { step: 3 as const, label: "Result" },
-];
+function useImportSteps() {
+  const { t: tr } = useLinguiMacro();
+  return [
+    { step: 1 as const, label: tr({ id: "imports.upload", message: "Upload" }) },
+    {
+      step: 2 as const,
+      labelDefault: tr({ id: "imports.mapColumns", message: "Map columns" }),
+      labelJournal: tr({ id: "imports.review", message: "Review" }),
+    },
+    { step: 3 as const, label: tr({ id: "imports.result", message: "Result" }) },
+  ];
+}
 
-function stepLabel(item: (typeof STEPS)[number], format?: string): string {
+function stepLabel(item: ReturnType<typeof useImportSteps>[number], format?: string): string {
   if (item.step === 2) {
     return format === "journal_trades" ? item.labelJournal : item.labelDefault;
   }
@@ -15,8 +23,10 @@ function stepLabel(item: (typeof STEPS)[number], format?: string): string {
 }
 
 export function ImportStepIndicator({ current, format }: { current: 1 | 2 | 3; format?: string }) {
+  const { t: tr } = useLinguiMacro();
+  const STEPS = useImportSteps();
   return (
-    <nav aria-label="Import progress">
+    <nav aria-label={tr({ id: "imports.progress", message: "Import progress" })}>
       <ol className="flex w-full items-center gap-2 sm:gap-3">
         {STEPS.map((item, index) => {
           const isActive = item.step === current;

@@ -1,4 +1,5 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render } from "@/test/render";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vite-plus/test";
 import { Toaster } from "@/components/Toaster";
@@ -301,7 +302,7 @@ describe("ImportView - MetaTrader statement preview", () => {
     await waitFor(() => expect(screen.getByText(/Detected: MetaTrader 5/)).toBeInTheDocument());
 
     // No mapping selects, but the server-timezone choice stays.
-    expect(screen.queryByLabelText("Map symbol")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Map Symbol")).not.toBeInTheDocument();
     expect(screen.getByLabelText("Timestamps timezone")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /confirm import/i }));
@@ -346,7 +347,7 @@ describe("ImportView - SBI cash preview", () => {
     await waitFor(() =>
       expect(screen.getByText(/SBI cash transactions import directly/)).toBeInTheDocument(),
     );
-    expect(screen.queryByLabelText("Map symbol")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Map Symbol")).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /confirm import/i }));
     await waitFor(() => expect(screen.getByText("Cash transactions")).toBeInTheDocument());
@@ -404,4 +405,42 @@ describe("ImportView - JSON account bypass", () => {
     expect(screen.getByText(/from the json file/i)).toBeInTheDocument();
     expect(screen.getByText(/on confirm/i)).toBeInTheDocument();
   });
+});
+
+it("localizes mapping labels without changing the submitted CSV mapping", async () => {
+  const { loadLocale } = await import("@/i18n");
+  const { act } = await import("@testing-library/react");
+  const user = (await import("@testing-library/user-event")).default.setup();
+  const onCommit = vi
+    .fn<ComponentProps<typeof ImportView>["onCommit"]>()
+    .mockResolvedValue(mockResult);
+  try {
+    await act(() => loadLocale("zh-CN"));
+    renderImportView({
+      accounts,
+      accountsLoading: false,
+      onPreview: vi
+        .fn<ComponentProps<typeof ImportView>["onPreview"]>()
+        .mockResolvedValue(mockPreview),
+      onCommit,
+      onDone: vi.fn<() => void>(),
+    });
+    fireEvent.change(screen.getByLabelText("导入文件输入"), {
+      target: {
+        files: [new File(["Date,Symbol\n2026-01-02,AAPL\n"], "fills.csv", { type: "text/csv" })],
+      },
+    });
+    await user.click(await screen.findByRole("button", { name: "预览导入" }));
+    expect(await screen.findByLabelText("映射代码")).toHaveTextContent("Symbol");
+    await act(() => loadLocale("ja"));
+    expect(screen.getByLabelText("銘柄の割り当て")).toHaveTextContent("Symbol");
+    await user.click(screen.getByRole("button", { name: "インポートを確定" }));
+    await waitFor(() => expect(onCommit).toHaveBeenCalledOnce());
+    const form = onCommit.mock.calls[0][1] as FormData;
+    expect(JSON.parse(form.get("column_mapping") as string)).toMatchObject(
+      mockPreview.suggested_mapping,
+    );
+  } finally {
+    await act(() => loadLocale("en"));
+  }
 });

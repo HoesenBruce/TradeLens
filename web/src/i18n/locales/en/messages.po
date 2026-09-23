@@ -3533,3 +3533,762 @@ msgstr "Wins"
 #: src/components/TradeJournalCard.tsx:64
 msgid "trades.writeReview"
 msgstr "Write review"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:798
+msgid "imports.skip"
+msgstr "(skip)"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: summary.error_count
+#: src/app/screens/ImportView.tsx:561
+msgid "imports.parseErrors"
+msgstr "{0} row(s) could not be parsed — they will be skipped on import."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1226
+msgid "imports.aboutOmit"
+msgstr "About omit account"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:385
+#: src/app/screens/ImportView.tsx:405
+#: src/app/screens/ImportView.tsx:1137
+msgid "imports.account"
+msgstr "Account"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.pending_account.name
+#. placeholder {1}: preview.pending_account.broker || "—"
+#: src/app/screens/ImportView.tsx:858
+msgid "imports.pendingAccount"
+msgstr "Account “{0}” ({1}) will be created when you confirm."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1251
+msgid "imports.omitActive"
+msgstr "Account name, broker, and IDs are stripped — re-import requires selecting or creating an account."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:419
+msgid "imports.accountSelect"
+msgstr "Account select"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:157
+msgid "imports.actions"
+msgstr "Actions"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: mapping[field].slice(1)
+#: src/app/screens/ImportView.tsx:805
+msgid "imports.constant"
+msgstr "always \"{0}\""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:687
+msgid "imports.back"
+msgstr "Back"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:180
+msgid "imports.fillHint"
+msgstr "Broker execution exports. Map a Market/Asset Type column for mixed stock/option files, or let us infer it from the symbol."
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:127
+msgid "imports.browse"
+msgstr "browse files"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1065
+msgid "imports.exportJsonHint"
+msgstr "Canonical backup — trades, fills, journal, cash, and playbook setups. Re-import on this page."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:976
+msgid "imports.cash"
+msgstr "Cash transactions"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1332
+msgid "imports.checkFile"
+msgstr "Check the file and try again."
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:214
+msgid "imports.replaceFile"
+msgstr "Choose a different file"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:90
+msgid "imports.fieldClosePrice"
+msgstr "Close price"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:89
+msgid "imports.fieldCloseTime"
+msgstr "Close time"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:189
+msgid "imports.journalHint"
+msgstr "Closed trades with Entry/Exit columns — setup and tags are preserved."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:703
+msgid "imports.journalReviewHint"
+msgstr "Closed-trade journal export — each row becomes one round-trip (2 fills). Setup, tags, and journal fields apply automatically. Direction shows side and call/put when present; use Edit to fill gaps."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:760
+msgid "imports.premapped"
+msgstr "Columns are pre-mapped from this broker's export format — review and adjust if needed."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:86
+msgid "imports.fieldCommission"
+msgstr "Commission"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:903
+msgid "imports.confirm"
+msgstr "Confirm import"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1321
+#: src/app/screens/ImportView.tsx:1328
+msgid "imports.readFailed"
+msgstr "Could not read that file"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:476
+msgid "imports.needAccount"
+msgstr "Create an account in Settings, or upload a JSON backup that includes account details"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(MAX_SIZE)
+#: src/components/CsvDropZone.tsx:131
+msgid "imports.fileHint"
+msgstr "CSV, JSON, or MT4/MT5 statement · maximum file size {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.detected_broker
+#: src/app/screens/ImportView.tsx:718
+#: src/app/screens/ImportView.tsx:754
+msgid "imports.detected"
+msgstr "Detected: {0}"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:55
+msgid "imports.dir"
+msgstr "Dir"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:65
+msgid "imports.direction"
+msgstr "Direction"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:66
+msgid "imports.directionHint"
+msgstr "Direction — long/short, call/put when option"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1281
+msgid "imports.download"
+msgstr "Download export"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1459
+msgid "imports.exportHint"
+msgstr "Download your trades or fills for backup and portability."
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:120
+msgid "imports.drop"
+msgstr "Drop a file here or"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: info.row.original.symbol
+#: src/components/importPreviewColumns.tsx:121
+msgid "imports.editSymbol"
+msgstr "Edit {0}"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:122
+msgid "imports.editTrade"
+msgstr "Edit trade"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:92
+msgid "imports.entry"
+msgstr "Entry"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:981
+msgid "imports.errors"
+msgstr "Errors"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:529
+msgid "imports.estimatedNet"
+msgstr "Est. net P&L"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:82
+msgid "imports.fieldExecutedAt"
+msgstr "Executed at"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:526
+msgid "imports.executions"
+msgstr "executions"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:98
+msgid "imports.exit"
+msgstr "Exit"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1472
+msgid "imports.export"
+msgstr "Export"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1131
+msgid "imports.exportAccount"
+msgstr "Export account"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1143
+msgid "imports.exportAccountSelect"
+msgstr "Export account select"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1123
+msgid "imports.exportFailed"
+msgstr "Export failed. Please try again."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ImportView.tsx:294
+msgid "imports.brokerExport"
+msgstr "Export from {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1084
+msgid "imports.exportZipHint"
+msgstr "export.json plus trade screenshots under attachments/."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1256
+msgid "imports.exportPrivacy"
+msgstr "Exports are generated on your server and downloaded straight to this device."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:85
+msgid "imports.fieldFees"
+msgstr "Fees"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:441
+#: src/components/CsvDropZone.tsx:172
+msgid "imports.file"
+msgstr "File"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: file.name
+#. placeholder {1}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:94
+#: src/hooks/use-file-upload.ts:101
+msgid "imports.uploadSize"
+msgstr "File \"{0}\" exceeds the maximum size of {1}."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: file instanceof File ? file.name : file.name
+#: src/hooks/use-file-upload.ts:125
+msgid "imports.uploadType"
+msgstr "File \"{0}\" is not an accepted file type."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:231
+msgid "imports.fileSize"
+msgstr "File exceeds the maximum size of {0}."
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:221
+msgid "imports.uploadError"
+msgstr "File upload error"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:179
+msgid "imports.fillCsv"
+msgstr "Fill CSV"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:524
+msgid "imports.fills"
+msgstr "Fills"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:951
+msgid "imports.insertedFills"
+msgstr "Fills inserted"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:229
+msgid "imports.findBroker"
+msgstr "Find my broker"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1167
+msgid "imports.format"
+msgstr "Format"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:400
+msgid "imports.fromBackup"
+msgstr "From JSON backup"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:206
+msgid "imports.jsonHint"
+msgstr "Full account backup: trades, fills, tags, cash, and the playbook setups catalog."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1004
+msgid "imports.home"
+msgstr "Go to Home"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1471
+msgid "imports.import"
+msgstr "Import"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1443
+msgid "imports.heading"
+msgstr "Import & export"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1013
+msgid "imports.another"
+msgstr "Import another"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:924
+msgid "imports.complete"
+msgstr "Import complete"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1322
+msgid "imports.failed"
+msgstr "Import failed"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:103
+msgid "imports.fileInput"
+msgstr "Import file input"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:934
+msgid "imports.finished"
+msgstr "Import finished"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1467
+msgid "imports.mode"
+msgstr "Import or export"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:29
+msgid "imports.progress"
+msgstr "Import progress"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ImportView.tsx:1449
+msgid "imports.importFrom"
+msgstr "Importing from {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:900
+msgid "imports.importing"
+msgstr "Importing…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:952
+msgid "imports.inserted"
+msgstr "Inserted"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:83
+msgid "imports.fieldInstrumentType"
+msgstr "Instrument type"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:964
+msgid "imports.annotated"
+msgstr "Journal annotated"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:188
+msgid "imports.journalExport"
+msgstr "Journal export"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1075
+msgid "imports.exportCsvHint"
+msgstr "Journal spreadsheet of closed trades, in spreadsheet-friendly encoding."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:205
+msgid "imports.jsonExport"
+msgstr "JSON export"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:408
+msgid "imports.overrideJsonAccount"
+msgstr "JSON includes “{jsonAccountName}” — select an account to override."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:272
+msgid "imports.manual"
+msgstr "Log a trade manually instead →"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1336
+msgid "imports.connectionLost"
+msgstr "Lost contact with the server"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fieldLabel(field, _)
+#: src/app/screens/ImportView.tsx:796
+msgid "imports.mapField"
+msgstr "Map {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:696
+#: src/components/ImportStepIndicator.tsx:11
+msgid "imports.mapColumns"
+msgstr "Map columns"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:45
+msgid "imports.market"
+msgstr "Market"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:518
+msgid "imports.markets"
+msgstr "Markets"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:769
+msgid "imports.mapHint"
+msgstr "Match each field to a CSV column. Instrument type is optional — map Market/Asset Type for mixed files, or skip to infer from each symbol."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:197
+msgid "imports.statementHint"
+msgstr "MetaTrader Trade History Report (.xlsx or .html) or MT4 Statement (.html). Deals import as fills in broker server time (EET) — adjust the timezone before confirming if your broker differs."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:196
+msgid "imports.statement"
+msgstr "MT4 / MT5 statement"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:147
+msgid "imports.name"
+msgstr "Name"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:424
+#: src/app/screens/ImportView.tsx:1151
+msgid "imports.noAccounts"
+msgstr "No accounts — create one in Settings"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1220
+#: src/app/screens/ImportView.tsx:1236
+msgid "imports.omit"
+msgstr "Omit account"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1218
+msgid "imports.omitDetails"
+msgstr "Omit account details"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:88
+msgid "imports.fieldOpenPrice"
+msgstr "Open price"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:87
+msgid "imports.fieldOpenTime"
+msgstr "Open time"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:84
+msgid "imports.fieldOptionRight"
+msgstr "Option right"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:104
+msgid "imports.pnl"
+msgstr "P&L"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:314
+msgid "imports.otherBroker"
+msgstr "Pick a different broker →"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1276
+msgid "imports.preparing"
+msgstr "Preparing…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:469
+msgid "imports.preview"
+msgstr "Preview import"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:81
+msgid "imports.fieldPrice"
+msgstr "Price"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:465
+msgid "imports.processing"
+msgstr "Processing…"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:86
+msgid "imports.qty"
+msgstr "Qty"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:80
+msgid "imports.fieldQuantity"
+msgstr "Quantity"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:190
+msgid "imports.removeFile"
+msgstr "Remove file"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:14
+msgid "imports.result"
+msgstr "Result"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:12
+msgid "imports.review"
+msgstr "Review"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:695
+msgid "imports.reviewImport"
+msgstr "Review import"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:694
+msgid "imports.reviewJournal"
+msgstr "Review journal"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:515
+msgid "imports.roundTrips"
+msgstr "round-trips"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: e.row
+#. placeholder {1}: e.message
+#: src/app/screens/ImportView.tsx:995
+msgid "imports.rowError"
+msgstr "Row {0}: {1}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:991
+msgid "imports.rowErrors"
+msgstr "Row errors"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:243
+msgid "imports.sampleCsv"
+msgstr "Sample CSV"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:254
+msgid "imports.sampleJson"
+msgstr "Sample JSON"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:884
+msgid "imports.sampleRows"
+msgstr "Sample rows"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:735
+msgid "imports.cashDirect"
+msgstr "SBI cash transactions import directly into the cash ledger — no column mapping needed."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:483
+msgid "imports.selectFile"
+msgstr "Select a CSV or JSON file to continue"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:970
+msgid "imports.restoredSetups"
+msgstr "Setups restored"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:79
+msgid "imports.fieldSide"
+msgstr "Side"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:154
+msgid "imports.size"
+msgstr "Size"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:959
+msgid "imports.skipped"
+msgstr "Skipped (duplicates)"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:227
+msgid "imports.someSize"
+msgstr "Some files exceed the maximum size of {0}."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:726
+msgid "imports.statementDirect"
+msgstr "Statement parsed directly — no column mapping needed. Times in MetaTrader reports are the broker server's clock (usually EET); confirm the timezone below before importing."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:520
+msgid "imports.stkOpt"
+msgstr "stk / opt"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:78
+msgid "imports.fieldStockName"
+msgstr "Stock name"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1239
+msgid "imports.omitHint"
+msgstr "Strips account name, broker, and IDs from the export — including on trades and fills. Use this for portable trade data; re-import requires selecting or creating an account."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:214
+msgid "imports.supported"
+msgstr "Supported formats"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:91
+msgid "imports.fieldSwap"
+msgstr "Swap"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:38
+msgid "imports.symbol"
+msgstr "Symbol"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:77
+msgid "imports.fieldSymbol"
+msgstr "Symbol"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1337
+msgid "imports.connectionHint"
+msgstr "The import may still be finishing in the background. Check your trades in a minute before importing again — re-importing the same file is safe, duplicate fills are skipped."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:824
+#: src/app/screens/ImportView.tsx:830
+msgid "imports.zone"
+msgstr "Timestamps timezone"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.journal_summary?.trade_count ?? preview.sample_trades.length
+#: src/app/screens/ImportView.tsx:870
+msgid "imports.tradePreview"
+msgstr "Trade preview ({0})"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:743
+msgid "imports.jsonDirect"
+msgstr "TraderMemos JSON execution export — fills import directly, no column mapping needed."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:513
+msgid "imports.trades"
+msgstr "Trades"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:942
+msgid "imports.createdTrades"
+msgstr "Trades created"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:151
+msgid "imports.type"
+msgstr "Type"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:8
+msgid "imports.upload"
+msgstr "Upload"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1455
+msgid "imports.importHint"
+msgstr "Upload broker history to populate your journal and analytics."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:379
+msgid "imports.uploadFile"
+msgstr "Upload file"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:388
+msgid "imports.createJsonAccount"
+msgstr "Will create “{jsonAccountName}” from the JSON file on confirm."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:392
+msgid "imports.jsonAccount"
+msgstr "Will create or match an account from the JSON file on confirm."
+
+#. js-lingui-explicit-id
+#: src/hooks/use-file-upload.ts:197
+msgid "imports.maxFiles"
+msgstr "You can only upload a maximum of {maxFiles} files."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:259
+#: src/app/screens/ImportView.tsx:301
+msgid "imports.privacy"
+msgstr "Your file stays on your server. Nothing is sent to third parties."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:845
+msgid "imports.fileZone"
+msgstr "Zone the file's times were exported in — most US broker exports are Eastern. Times that carry their own offset are unaffected."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:840
+msgid "imports.statementZone"
+msgstr "Zone your broker's MetaTrader server runs in — most use EET (Athens), never UTC."

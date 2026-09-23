@@ -3534,3 +3534,762 @@ msgstr ""
 #: src/components/TradeJournalCard.tsx:64
 msgid "trades.writeReview"
 msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:798
+msgid "imports.skip"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: summary.error_count
+#: src/app/screens/ImportView.tsx:561
+msgid "imports.parseErrors"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1226
+msgid "imports.aboutOmit"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:385
+#: src/app/screens/ImportView.tsx:405
+#: src/app/screens/ImportView.tsx:1137
+msgid "imports.account"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.pending_account.name
+#. placeholder {1}: preview.pending_account.broker || "—"
+#: src/app/screens/ImportView.tsx:858
+msgid "imports.pendingAccount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1251
+msgid "imports.omitActive"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:419
+msgid "imports.accountSelect"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:157
+msgid "imports.actions"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: mapping[field].slice(1)
+#: src/app/screens/ImportView.tsx:805
+msgid "imports.constant"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:687
+msgid "imports.back"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:180
+msgid "imports.fillHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:127
+msgid "imports.browse"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1065
+msgid "imports.exportJsonHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:976
+msgid "imports.cash"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1332
+msgid "imports.checkFile"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:214
+msgid "imports.replaceFile"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:90
+msgid "imports.fieldClosePrice"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:89
+msgid "imports.fieldCloseTime"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:189
+msgid "imports.journalHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:703
+msgid "imports.journalReviewHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:760
+msgid "imports.premapped"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:86
+msgid "imports.fieldCommission"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:903
+msgid "imports.confirm"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1321
+#: src/app/screens/ImportView.tsx:1328
+msgid "imports.readFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:476
+msgid "imports.needAccount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(MAX_SIZE)
+#: src/components/CsvDropZone.tsx:131
+msgid "imports.fileHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.detected_broker
+#: src/app/screens/ImportView.tsx:718
+#: src/app/screens/ImportView.tsx:754
+msgid "imports.detected"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:55
+msgid "imports.dir"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:65
+msgid "imports.direction"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:66
+msgid "imports.directionHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1281
+msgid "imports.download"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1459
+msgid "imports.exportHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:120
+msgid "imports.drop"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: info.row.original.symbol
+#: src/components/importPreviewColumns.tsx:121
+msgid "imports.editSymbol"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:122
+msgid "imports.editTrade"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:92
+msgid "imports.entry"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:981
+msgid "imports.errors"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:529
+msgid "imports.estimatedNet"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:82
+msgid "imports.fieldExecutedAt"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:526
+msgid "imports.executions"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:98
+msgid "imports.exit"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1472
+msgid "imports.export"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1131
+msgid "imports.exportAccount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1143
+msgid "imports.exportAccountSelect"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1123
+msgid "imports.exportFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ImportView.tsx:294
+msgid "imports.brokerExport"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1084
+msgid "imports.exportZipHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1256
+msgid "imports.exportPrivacy"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:85
+msgid "imports.fieldFees"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:441
+#: src/components/CsvDropZone.tsx:172
+msgid "imports.file"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: file.name
+#. placeholder {1}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:94
+#: src/hooks/use-file-upload.ts:101
+msgid "imports.uploadSize"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: file instanceof File ? file.name : file.name
+#: src/hooks/use-file-upload.ts:125
+msgid "imports.uploadType"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:231
+msgid "imports.fileSize"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:221
+msgid "imports.uploadError"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:179
+msgid "imports.fillCsv"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:524
+msgid "imports.fills"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:951
+msgid "imports.insertedFills"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:229
+msgid "imports.findBroker"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1167
+msgid "imports.format"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:400
+msgid "imports.fromBackup"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:206
+msgid "imports.jsonHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1004
+msgid "imports.home"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1471
+msgid "imports.import"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1443
+msgid "imports.heading"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1013
+msgid "imports.another"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:924
+msgid "imports.complete"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1322
+msgid "imports.failed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:103
+msgid "imports.fileInput"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:934
+msgid "imports.finished"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1467
+msgid "imports.mode"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:29
+msgid "imports.progress"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ImportView.tsx:1449
+msgid "imports.importFrom"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:900
+msgid "imports.importing"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:952
+msgid "imports.inserted"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:83
+msgid "imports.fieldInstrumentType"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:964
+msgid "imports.annotated"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:188
+msgid "imports.journalExport"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1075
+msgid "imports.exportCsvHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:205
+msgid "imports.jsonExport"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:408
+msgid "imports.overrideJsonAccount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:272
+msgid "imports.manual"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1336
+msgid "imports.connectionLost"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fieldLabel(field, _)
+#: src/app/screens/ImportView.tsx:796
+msgid "imports.mapField"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:696
+#: src/components/ImportStepIndicator.tsx:11
+msgid "imports.mapColumns"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:45
+msgid "imports.market"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:518
+msgid "imports.markets"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:769
+msgid "imports.mapHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:197
+msgid "imports.statementHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:196
+msgid "imports.statement"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:147
+msgid "imports.name"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:424
+#: src/app/screens/ImportView.tsx:1151
+msgid "imports.noAccounts"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1220
+#: src/app/screens/ImportView.tsx:1236
+msgid "imports.omit"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1218
+msgid "imports.omitDetails"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:88
+msgid "imports.fieldOpenPrice"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:87
+msgid "imports.fieldOpenTime"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:84
+msgid "imports.fieldOptionRight"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:104
+msgid "imports.pnl"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:314
+msgid "imports.otherBroker"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1276
+msgid "imports.preparing"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:469
+msgid "imports.preview"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:81
+msgid "imports.fieldPrice"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:465
+msgid "imports.processing"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:86
+msgid "imports.qty"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:80
+msgid "imports.fieldQuantity"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:190
+msgid "imports.removeFile"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:14
+msgid "imports.result"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:12
+msgid "imports.review"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:695
+msgid "imports.reviewImport"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:694
+msgid "imports.reviewJournal"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:515
+msgid "imports.roundTrips"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: e.row
+#. placeholder {1}: e.message
+#: src/app/screens/ImportView.tsx:995
+msgid "imports.rowError"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:991
+msgid "imports.rowErrors"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:243
+msgid "imports.sampleCsv"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:254
+msgid "imports.sampleJson"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:884
+msgid "imports.sampleRows"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:735
+msgid "imports.cashDirect"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:483
+msgid "imports.selectFile"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:970
+msgid "imports.restoredSetups"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:79
+msgid "imports.fieldSide"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:154
+msgid "imports.size"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:959
+msgid "imports.skipped"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:227
+msgid "imports.someSize"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:726
+msgid "imports.statementDirect"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:520
+msgid "imports.stkOpt"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:78
+msgid "imports.fieldStockName"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1239
+msgid "imports.omitHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:214
+msgid "imports.supported"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:91
+msgid "imports.fieldSwap"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:38
+msgid "imports.symbol"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:77
+msgid "imports.fieldSymbol"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1337
+msgid "imports.connectionHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:824
+#: src/app/screens/ImportView.tsx:830
+msgid "imports.zone"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.journal_summary?.trade_count ?? preview.sample_trades.length
+#: src/app/screens/ImportView.tsx:870
+msgid "imports.tradePreview"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:743
+msgid "imports.jsonDirect"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:513
+msgid "imports.trades"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:942
+msgid "imports.createdTrades"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:151
+msgid "imports.type"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:8
+msgid "imports.upload"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1455
+msgid "imports.importHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:379
+msgid "imports.uploadFile"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:388
+msgid "imports.createJsonAccount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:392
+msgid "imports.jsonAccount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/hooks/use-file-upload.ts:197
+msgid "imports.maxFiles"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:259
+#: src/app/screens/ImportView.tsx:301
+msgid "imports.privacy"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:845
+msgid "imports.fileZone"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:840
+msgid "imports.statementZone"
+msgstr ""

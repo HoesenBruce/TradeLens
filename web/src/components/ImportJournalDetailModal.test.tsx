@@ -1,3 +1,4 @@
+import "@/i18n";
 import { describe, expect, it, vi } from "vite-plus/test";
 import { journalTradePreviewColumns } from "./importPreviewColumns";
 import type { JournalTradePreview } from "@/lib/api/types";

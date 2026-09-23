@@ -3319,3 +3319,762 @@ msgstr "盈利"
 #: src/components/TradeJournalCard.tsx:64
 msgid "trades.writeReview"
 msgstr "撰写复盘"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:798
+msgid "imports.skip"
+msgstr "（跳过）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: summary.error_count
+#: src/app/screens/ImportView.tsx:561
+msgid "imports.parseErrors"
+msgstr "{0} 行无法解析，导入时将跳过。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1226
+msgid "imports.aboutOmit"
+msgstr "关于省略账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:385
+#: src/app/screens/ImportView.tsx:405
+#: src/app/screens/ImportView.tsx:1137
+msgid "imports.account"
+msgstr "账户"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.pending_account.name
+#. placeholder {1}: preview.pending_account.broker || "—"
+#: src/app/screens/ImportView.tsx:858
+msgid "imports.pendingAccount"
+msgstr "确认后将创建账户“{0}”（{1}）。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1251
+msgid "imports.omitActive"
+msgstr "账户名称、券商和 ID 将被移除，重新导入时需选择或创建账户。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:419
+msgid "imports.accountSelect"
+msgstr "选择账户"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:157
+msgid "imports.actions"
+msgstr "操作"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: mapping[field].slice(1)
+#: src/app/screens/ImportView.tsx:805
+msgid "imports.constant"
+msgstr "固定为“{0}”"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:687
+msgid "imports.back"
+msgstr "返回"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:180
+msgid "imports.fillHint"
+msgstr "券商成交导出。股票/期权混合文件可映射市场或资产类型列，也可按代码自动推断。"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:127
+msgid "imports.browse"
+msgstr "浏览文件"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1065
+msgid "imports.exportJsonHint"
+msgstr "标准备份：交易、成交、日志、资金和策略，可在本页重新导入。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:976
+msgid "imports.cash"
+msgstr "资金流水"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1332
+msgid "imports.checkFile"
+msgstr "请检查文件后重试。"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:214
+msgid "imports.replaceFile"
+msgstr "选择其他文件"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:90
+msgid "imports.fieldClosePrice"
+msgstr "平仓价格"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:89
+msgid "imports.fieldCloseTime"
+msgstr "平仓时间"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:189
+msgid "imports.journalHint"
+msgstr "带入场/出场列的已平仓交易，保留策略与标签。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:703
+msgid "imports.journalReviewHint"
+msgstr "已平仓交易日志：每行生成一笔完整交易（两笔成交）。策略、标签和日志字段会自动应用。方向会显示买卖及看涨/看跌类型，可通过编辑补全。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:760
+msgid "imports.premapped"
+msgstr "已根据此券商的导出格式预映射字段，请核对并按需调整。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:86
+msgid "imports.fieldCommission"
+msgstr "佣金"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:903
+msgid "imports.confirm"
+msgstr "确认导入"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1321
+#: src/app/screens/ImportView.tsx:1328
+msgid "imports.readFailed"
+msgstr "无法读取此文件"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:476
+msgid "imports.needAccount"
+msgstr "请在设置中创建账户，或上传包含账户信息的 JSON 备份"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(MAX_SIZE)
+#: src/components/CsvDropZone.tsx:131
+msgid "imports.fileHint"
+msgstr "CSV、JSON 或 MT4/MT5 对账单 · 文件最大 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.detected_broker
+#: src/app/screens/ImportView.tsx:718
+#: src/app/screens/ImportView.tsx:754
+msgid "imports.detected"
+msgstr "已识别：{0}"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:55
+msgid "imports.dir"
+msgstr "方向"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:65
+msgid "imports.direction"
+msgstr "方向"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:66
+msgid "imports.directionHint"
+msgstr "方向：做多/做空，期权显示看涨/看跌"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1281
+msgid "imports.download"
+msgstr "下载导出文件"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1459
+msgid "imports.exportHint"
+msgstr "下载交易或成交记录，用于备份与迁移。"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:120
+msgid "imports.drop"
+msgstr "将文件拖到此处，或"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: info.row.original.symbol
+#: src/components/importPreviewColumns.tsx:121
+msgid "imports.editSymbol"
+msgstr "编辑 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:122
+msgid "imports.editTrade"
+msgstr "编辑交易"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:92
+msgid "imports.entry"
+msgstr "入场"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:981
+msgid "imports.errors"
+msgstr "错误"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:529
+msgid "imports.estimatedNet"
+msgstr "预计净盈亏"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:82
+msgid "imports.fieldExecutedAt"
+msgstr "成交时间"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:526
+msgid "imports.executions"
+msgstr "成交记录"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:98
+msgid "imports.exit"
+msgstr "出场"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1472
+msgid "imports.export"
+msgstr "导出"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1131
+msgid "imports.exportAccount"
+msgstr "导出账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1143
+msgid "imports.exportAccountSelect"
+msgstr "选择导出账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1123
+msgid "imports.exportFailed"
+msgstr "导出失败，请重试。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ImportView.tsx:294
+msgid "imports.brokerExport"
+msgstr "从 {0} 导出"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1084
+msgid "imports.exportZipHint"
+msgstr "包含 export.json 和 attachments/ 下的交易截图。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1256
+msgid "imports.exportPrivacy"
+msgstr "导出文件在你的服务器上生成，并直接下载到当前设备。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:85
+msgid "imports.fieldFees"
+msgstr "费用"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:441
+#: src/components/CsvDropZone.tsx:172
+msgid "imports.file"
+msgstr "文件"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: file.name
+#. placeholder {1}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:94
+#: src/hooks/use-file-upload.ts:101
+msgid "imports.uploadSize"
+msgstr "文件“{0}”超过最大大小 {1}。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: file instanceof File ? file.name : file.name
+#: src/hooks/use-file-upload.ts:125
+msgid "imports.uploadType"
+msgstr "不支持文件“{0}”的类型。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:231
+msgid "imports.fileSize"
+msgstr "文件超过最大大小 {0}。"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:221
+msgid "imports.uploadError"
+msgstr "文件上传错误"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:179
+msgid "imports.fillCsv"
+msgstr "成交 CSV"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:524
+msgid "imports.fills"
+msgstr "成交"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:951
+msgid "imports.insertedFills"
+msgstr "已写入成交"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:229
+msgid "imports.findBroker"
+msgstr "查找我的券商"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1167
+msgid "imports.format"
+msgstr "格式"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:400
+msgid "imports.fromBackup"
+msgstr "来自 JSON 备份"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:206
+msgid "imports.jsonHint"
+msgstr "完整账户备份：交易、成交、标签、资金和策略库。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1004
+msgid "imports.home"
+msgstr "前往首页"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1471
+msgid "imports.import"
+msgstr "导入"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1443
+msgid "imports.heading"
+msgstr "导入与导出"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1013
+msgid "imports.another"
+msgstr "继续导入"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:924
+msgid "imports.complete"
+msgstr "导入完成"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1322
+msgid "imports.failed"
+msgstr "导入失败"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:103
+msgid "imports.fileInput"
+msgstr "导入文件输入"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:934
+msgid "imports.finished"
+msgstr "导入已完成"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1467
+msgid "imports.mode"
+msgstr "导入或导出"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:29
+msgid "imports.progress"
+msgstr "导入进度"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ImportView.tsx:1449
+msgid "imports.importFrom"
+msgstr "从 {0} 导入"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:900
+msgid "imports.importing"
+msgstr "正在导入…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:952
+msgid "imports.inserted"
+msgstr "已写入"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:83
+msgid "imports.fieldInstrumentType"
+msgstr "品种类型"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:964
+msgid "imports.annotated"
+msgstr "已补充日志"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:188
+msgid "imports.journalExport"
+msgstr "交易日志导出"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1075
+msgid "imports.exportCsvHint"
+msgstr "已平仓交易日志表格，采用兼容电子表格的编码。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:205
+msgid "imports.jsonExport"
+msgstr "JSON 导出"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:408
+msgid "imports.overrideJsonAccount"
+msgstr "JSON 包含“{jsonAccountName}”，可选择账户进行替换。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:272
+msgid "imports.manual"
+msgstr "改为手动记录交易 →"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1336
+msgid "imports.connectionLost"
+msgstr "与服务器的连接中断"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fieldLabel(field, _)
+#: src/app/screens/ImportView.tsx:796
+msgid "imports.mapField"
+msgstr "映射{0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:696
+#: src/components/ImportStepIndicator.tsx:11
+msgid "imports.mapColumns"
+msgstr "映射字段"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:45
+msgid "imports.market"
+msgstr "市场"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:518
+msgid "imports.markets"
+msgstr "市场"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:769
+msgid "imports.mapHint"
+msgstr "为每个字段选择 CSV 列。品种类型可选：混合文件可映射市场/资产类型，也可跳过并按代码推断。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:197
+msgid "imports.statementHint"
+msgstr "支持 MetaTrader 交易历史报告（.xlsx 或 .html）及 MT4 对账单（.html）。按券商服务器时区（EET）导入成交，如不一致请在确认前调整。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:196
+msgid "imports.statement"
+msgstr "MT4 / MT5 对账单"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:147
+msgid "imports.name"
+msgstr "名称"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:424
+#: src/app/screens/ImportView.tsx:1151
+msgid "imports.noAccounts"
+msgstr "尚无账户，请在设置中创建"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1220
+#: src/app/screens/ImportView.tsx:1236
+msgid "imports.omit"
+msgstr "省略账户"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1218
+msgid "imports.omitDetails"
+msgstr "省略账户信息"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:88
+msgid "imports.fieldOpenPrice"
+msgstr "开仓价格"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:87
+msgid "imports.fieldOpenTime"
+msgstr "开仓时间"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:84
+msgid "imports.fieldOptionRight"
+msgstr "期权类型"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:104
+msgid "imports.pnl"
+msgstr "盈亏"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:314
+msgid "imports.otherBroker"
+msgstr "选择其他券商 →"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1276
+msgid "imports.preparing"
+msgstr "准备中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:469
+msgid "imports.preview"
+msgstr "预览导入"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:81
+msgid "imports.fieldPrice"
+msgstr "价格"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:465
+msgid "imports.processing"
+msgstr "处理中…"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:86
+msgid "imports.qty"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:80
+msgid "imports.fieldQuantity"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:190
+msgid "imports.removeFile"
+msgstr "移除文件"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:14
+msgid "imports.result"
+msgstr "结果"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:12
+msgid "imports.review"
+msgstr "核对"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:695
+msgid "imports.reviewImport"
+msgstr "核对导入"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:694
+msgid "imports.reviewJournal"
+msgstr "核对交易日志"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:515
+msgid "imports.roundTrips"
+msgstr "完整交易"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: e.row
+#. placeholder {1}: e.message
+#: src/app/screens/ImportView.tsx:995
+msgid "imports.rowError"
+msgstr "第 {0} 行：{1}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:991
+msgid "imports.rowErrors"
+msgstr "行错误"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:243
+msgid "imports.sampleCsv"
+msgstr "CSV 示例"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:254
+msgid "imports.sampleJson"
+msgstr "JSON 示例"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:884
+msgid "imports.sampleRows"
+msgstr "示例数据"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:735
+msgid "imports.cashDirect"
+msgstr "SBI 资金流水直接导入资金账本，无需映射字段。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:483
+msgid "imports.selectFile"
+msgstr "选择 CSV 或 JSON 文件以继续"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:970
+msgid "imports.restoredSetups"
+msgstr "已恢复策略"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:79
+msgid "imports.fieldSide"
+msgstr "买卖方向"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:154
+msgid "imports.size"
+msgstr "大小"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:959
+msgid "imports.skipped"
+msgstr "已跳过（重复）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: formatBytes(maxSize)
+#: src/hooks/use-file-upload.ts:227
+msgid "imports.someSize"
+msgstr "部分文件超过最大大小 {0}。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:726
+msgid "imports.statementDirect"
+msgstr "对账单可直接解析，无需映射字段。MetaTrader 报告使用券商服务器时钟（通常为 EET），请在导入前确认下方时区。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:520
+msgid "imports.stkOpt"
+msgstr "股票 / 期权"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:78
+msgid "imports.fieldStockName"
+msgstr "证券名称"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1239
+msgid "imports.omitHint"
+msgstr "从导出中移除账户名称、券商和 ID，包括交易与成交中的相关信息。适用于迁移交易数据，重新导入时需选择或创建账户。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:214
+msgid "imports.supported"
+msgstr "支持的格式"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:91
+msgid "imports.fieldSwap"
+msgstr "隔夜利息"
+
+#. js-lingui-explicit-id
+#: src/components/importPreviewColumns.tsx:38
+msgid "imports.symbol"
+msgstr "代码"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:77
+msgid "imports.fieldSymbol"
+msgstr "代码"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1337
+msgid "imports.connectionHint"
+msgstr "导入可能仍在后台进行。请稍后检查交易再重试；重复导入同一文件是安全的，重复成交会被跳过。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:824
+#: src/app/screens/ImportView.tsx:830
+msgid "imports.zone"
+msgstr "时间戳时区"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.journal_summary?.trade_count ?? preview.sample_trades.length
+#: src/app/screens/ImportView.tsx:870
+msgid "imports.tradePreview"
+msgstr "交易预览（{0}）"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:743
+msgid "imports.jsonDirect"
+msgstr "TraderMemos JSON 成交导出可直接导入，无需映射字段。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:513
+msgid "imports.trades"
+msgstr "交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:942
+msgid "imports.createdTrades"
+msgstr "已创建交易"
+
+#. js-lingui-explicit-id
+#: src/components/CsvDropZone.tsx:151
+msgid "imports.type"
+msgstr "类型"
+
+#. js-lingui-explicit-id
+#: src/components/ImportStepIndicator.tsx:8
+msgid "imports.upload"
+msgstr "上传"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:1455
+msgid "imports.importHint"
+msgstr "上传券商历史记录，用于交易日志和分析。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:379
+msgid "imports.uploadFile"
+msgstr "上传文件"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:388
+msgid "imports.createJsonAccount"
+msgstr "确认后将从 JSON 文件创建“{jsonAccountName}”。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:392
+msgid "imports.jsonAccount"
+msgstr "确认时将按 JSON 文件创建或匹配账户。"
+
+#. js-lingui-explicit-id
+#: src/hooks/use-file-upload.ts:197
+msgid "imports.maxFiles"
+msgstr "最多可上传 {maxFiles} 个文件。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:259
+#: src/app/screens/ImportView.tsx:301
+msgid "imports.privacy"
+msgstr "文件仅保留在你的服务器上，不会发送给第三方。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:845
+msgid "imports.fileZone"
+msgstr "文件导出时间使用的时区，多数美国券商使用美东时间。自带时区偏移的时间不受影响。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx:840
+msgid "imports.statementZone"
+msgstr "券商 MetaTrader 服务器使用的时区，多数为 EET（雅典），不是 UTC。"
