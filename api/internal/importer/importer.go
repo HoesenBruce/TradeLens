@@ -24,6 +24,9 @@ type ParsedExecution struct {
 	PositionType        string   // cash|margin_long|margin_short when source supplies it
 	PositionEffect      string   // increase|reduce when source supplies it
 	ReportedRealizedPnl *float64 // broker-reported close result, when the source identifies one
+	EventType           string   // position_conversion when the source identifies a conversion
+	ConversionType      string   // broker conversion kind, e.g. genbiki
+	ConversionID        string   // links the source and destination legs of one conversion
 	Quantity            float64
 	Price               float64
 	Fees                float64

@@ -127,19 +127,35 @@ func TestReplaySBIMarginPartialAndCompleteReportedSettlements(t *testing.T) {
 }
 
 func TestReplayGenbikiMovesMarginLongToCashOnce(t *testing.T) {
-	open := execution("1", "a", "5401", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 900)
-	closeMargin := execution("2", "a", "5401", "sbi:margin-long", "sell", "2026-09-02T01:00:00Z", 100, 920)
-	closeMargin.Fees = 20
-	openCash := execution("3", "a", "5401", "sbi:cash", "buy", "2026-09-02T01:00:00.000001Z", 100, 920)
+	open := execution("1", "a", "5401", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 1000)
+	closeMargin := execution("2", "a", "5401", "sbi:margin-long", "sell", "2026-09-02T01:00:00Z", 100, 1090)
+	closeMargin.Fees = 500
+	closeMargin.Details = sql.NullString{String: `{"lot":"sbi:margin-long","event_type":"position_conversion","conversion_type":"genbiki","conversion_id":"c1"}`, Valid: true}
+	openCash := execution("3", "a", "5401", "sbi:cash", "buy", "2026-09-02T01:00:00.000001Z", 100, 1090)
+	openCash.Details = sql.NullString{String: `{"lot":"sbi:cash","event_type":"position_conversion","conversion_type":"genbiki","conversion_id":"c1"}`, Valid: true}
 
 	snapshot := Replay([]store.Execution{openCash, closeMargin, open}, []time.Time{day("2026-09-02")})[0]
 	require.Equal(t, []Position{{
 		AccountID: "a", Symbol: "5401", InstrumentType: "stock", Kind: CashLong,
-		Lot: "sbi:cash", Quantity: 100, AverageCost: 920, Multiplier: 1,
+		Lot: "sbi:cash", Quantity: 100, AverageCost: 1005, Multiplier: 1,
 	}}, snapshot.Accounts[0].Positions)
-	require.Equal(t, 1980.0, snapshot.Accounts[0].RealizedPnL)
-	require.Equal(t, -90020.0, snapshot.Accounts[0].CashDelta)
-	require.Equal(t, 20.0, snapshot.Accounts[0].Fees)
+	require.Zero(t, snapshot.Accounts[0].RealizedPnL)
+	require.Equal(t, -500.0, snapshot.Accounts[0].CashDelta)
+	require.Equal(t, 500.0, snapshot.Accounts[0].Fees)
+}
+
+func TestReplayGenbikiMergesIntoExistingCashAtAverageCost(t *testing.T) {
+	cash := execution("0", "a", "5401", "sbi:cash", "buy", "2026-08-31T01:00:00Z", 100, 900)
+	open := execution("1", "a", "5401", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 1000)
+	close := execution("2", "a", "5401", "sbi:margin-long", "sell", "2026-09-02T01:00:00Z", 100, 1090)
+	close.Fees = 500
+	close.Details = sql.NullString{String: `{"lot":"sbi:margin-long","conversion_type":"genbiki","conversion_id":"c1"}`, Valid: true}
+	converted := execution("3", "a", "5401", "sbi:cash", "buy", "2026-09-02T01:00:00.000001Z", 100, 1090)
+	converted.Details = sql.NullString{String: `{"lot":"sbi:cash","conversion_type":"genbiki","conversion_id":"c1"}`, Valid: true}
+	snapshot := Replay([]store.Execution{converted, close, open, cash}, []time.Time{day("2026-09-02")})[0]
+	require.Equal(t, 200.0, snapshot.Accounts[0].Positions[0].Quantity)
+	require.Equal(t, 953.0, snapshot.Accounts[0].Positions[0].AverageCost)
+	require.Zero(t, snapshot.Accounts[0].RealizedPnL)
 }
 
 func TestReplayIsolatesAccountsInstrumentsAndRejectsOverClose(t *testing.T) {
