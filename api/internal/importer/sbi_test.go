@@ -3,10 +3,12 @@ package importer
 import (
 	"bytes"
 	"os"
+	"strconv"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
+	"github.com/tradermemos/api/internal/trades"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 )
@@ -68,6 +70,32 @@ func TestSBIRowsUseConfirmedMapping(t *testing.T) {
 	require.Empty(t, result.Errors)
 	require.Len(t, result.Executions, 1)
 	require.Equal(t, "日本製鉄", result.Executions[0].StockName)
+}
+
+func TestSBIDateOnlyRowsCashAccountingKeepsMarginSeparate(t *testing.T) {
+	rows := []map[string]string{
+		{"約定日": "2026/09/01", "銘柄コード": "5401", "銘柄": "A", "取引": "株式現物買", "約定数量": "100", "約定単価": "1000"},
+		{"約定日": "2026/09/01", "銘柄コード": "5401", "銘柄": "A", "取引": "株式現物売", "約定数量": "100", "約定単価": "1100"},
+		{"約定日": "2026/09/01", "銘柄コード": "5401", "銘柄": "A", "取引": "株式現物買", "約定数量": "100", "約定単価": "1200"},
+		{"約定日": "2026/09/01", "銘柄コード": "5401", "銘柄": "A", "取引": "信用新規買", "約定数量": "100", "約定単価": "500"},
+	}
+	parsed := ParseSBIRows(rows, nil, "")
+	require.Empty(t, parsed.Errors)
+	var cash []trades.Execution
+	for i, fill := range parsed.Executions {
+		if fill.LotKey != "sbi:cash" {
+			continue
+		}
+		cash = append(cash, trades.Execution{
+			ID: strconv.Itoa(i + 1), Symbol: fill.Symbol, InstrumentType: fill.InstrumentType,
+			Side: fill.Side, Quantity: fill.Quantity, Price: fill.Price, ExecutedAt: fill.ExecutedAt,
+			LotKey: fill.LotKey,
+		})
+	}
+	result := trades.Account(cash, map[string]trades.AccountingStrategy{"sbi:cash": trades.SBICashAccounting})
+	require.Equal(t, 0.0, result.RealizedCloses[0].Pnl)
+	require.Equal(t, 100.0, result.RealizedCloses[0].RemainingQty)
+	require.Equal(t, 110000.0, result.RealizedCloses[0].RemainingCostBasis)
 }
 
 func TestSBISemanticLabels(t *testing.T) {
