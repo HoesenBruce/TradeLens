@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"strings"
@@ -31,11 +32,13 @@ func (s *Server) accountRoutes(g *echo.Group) {
 }
 
 type createAccountReq struct {
-	Name            string  `json:"name"`
-	Broker          string  `json:"broker"`
-	AccountType     string  `json:"account_type"`
-	BaseCurrency    string  `json:"base_currency"`
-	StartingBalance float64 `json:"starting_balance"`
+	Name            string   `json:"name"`
+	Broker          string   `json:"broker"`
+	AccountType     string   `json:"account_type"`
+	AccountKind     string   `json:"account_kind"`
+	Capabilities    []string `json:"capabilities"`
+	BaseCurrency    string   `json:"base_currency"`
+	StartingBalance float64  `json:"starting_balance"`
 }
 
 func (s *Server) handleCreateAccount(c *echo.Context) error {
@@ -48,12 +51,17 @@ func (s *Server) handleCreateAccount(c *echo.Context) error {
 	if in.AccountType == "" {
 		in.AccountType = "cash"
 	}
+	kind, capabilities, legacyType, ok := accountMetadata(in.AccountKind, in.Capabilities, in.AccountType)
+	if !ok {
+		return Fail(http.StatusBadRequest, "bad_request", "invalid account kind or capabilities", nil)
+	}
 	if in.BaseCurrency == "" {
 		in.BaseCurrency = "USD"
 	}
 	acc, err := s.deps.Store.CreateAccount(ctx, store.CreateAccountParams{
 		ID: uuid.New().String(), UserID: uid, Name: in.Name, Broker: in.Broker,
-		AccountType: in.AccountType, BaseCurrency: in.BaseCurrency, StartingBalance: in.StartingBalance,
+		AccountType: legacyType, AccountKind: kind, Capabilities: capabilities,
+		BaseCurrency: in.BaseCurrency, StartingBalance: in.StartingBalance,
 	})
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not create account", nil)
@@ -120,11 +128,13 @@ func (s *Server) handleGetAccount(c *echo.Context) error {
 }
 
 type updateAccountReq struct {
-	Name            *string  `json:"name"`
-	Broker          *string  `json:"broker"`
-	AccountType     *string  `json:"account_type"`
-	BaseCurrency    *string  `json:"base_currency"`
-	StartingBalance *float64 `json:"starting_balance"`
+	Name            *string   `json:"name"`
+	Broker          *string   `json:"broker"`
+	AccountType     *string   `json:"account_type"`
+	AccountKind     *string   `json:"account_kind"`
+	Capabilities    *[]string `json:"capabilities"`
+	BaseCurrency    *string   `json:"base_currency"`
+	StartingBalance *float64  `json:"starting_balance"`
 }
 
 func (s *Server) handleUpdateAccount(c *echo.Context) error {
@@ -166,6 +176,27 @@ func (s *Server) handleUpdateAccount(c *echo.Context) error {
 			accountType = "cash"
 		}
 	}
+	kind := acc.AccountKind
+	if in.AccountKind != nil {
+		kind = *in.AccountKind
+	}
+	var caps []string
+	if in.Capabilities != nil {
+		caps = *in.Capabilities
+	} else {
+		_ = json.Unmarshal([]byte(acc.Capabilities), &caps)
+	}
+	if in.AccountType != nil && in.Capabilities == nil && in.AccountKind == nil {
+		kind = ""
+		caps = nil
+	}
+	if in.AccountKind != nil || in.Capabilities != nil || in.AccountType != nil {
+		var ok bool
+		kind, acc.Capabilities, accountType, ok = accountMetadata(kind, caps, accountType)
+		if !ok {
+			return Fail(http.StatusBadRequest, "bad_request", "invalid account kind or capabilities", nil)
+		}
+	}
 	if in.BaseCurrency != nil {
 		baseCurrency = strings.TrimSpace(*in.BaseCurrency)
 		if baseCurrency == "" {
@@ -178,6 +209,7 @@ func (s *Server) handleUpdateAccount(c *echo.Context) error {
 
 	updated, err := s.deps.Store.UpdateAccount(ctx, store.UpdateAccountParams{
 		Name: name, Broker: broker, AccountType: accountType,
+		AccountKind: kind, Capabilities: acc.Capabilities,
 		BaseCurrency: baseCurrency, StartingBalance: startingBalance,
 		ID: id, UserID: uid,
 	})
@@ -185,6 +217,52 @@ func (s *Server) handleUpdateAccount(c *echo.Context) error {
 		return Fail(http.StatusInternalServerError, "internal", "could not update account", nil)
 	}
 	return c.JSON(http.StatusOK, updated)
+}
+
+func accountMetadata(kind string, caps []string, legacy string) (string, string, string, bool) {
+	if kind == "" {
+		switch legacy {
+		case "prop", "paper", "backtest":
+			kind = legacy
+		default:
+			kind = "brokerage"
+		}
+	}
+	switch kind {
+	case "brokerage":
+		if caps == nil {
+			if legacy == "margin" {
+				caps = []string{"margin"}
+			} else {
+				caps = []string{"cash"}
+			}
+		}
+		if len(caps) == 0 {
+			return "", "", "", false
+		}
+		seen := map[string]bool{}
+		for _, cap := range caps {
+			if cap != "cash" && cap != "margin" || seen[cap] {
+				return "", "", "", false
+			}
+			seen[cap] = true
+		}
+		if seen["cash"] {
+			legacy = "cash"
+		} else {
+			legacy = "margin"
+		}
+	case "prop", "paper", "backtest":
+		if len(caps) != 0 {
+			return "", "", "", false
+		}
+		caps = []string{}
+		legacy = kind
+	default:
+		return "", "", "", false
+	}
+	b, _ := json.Marshal(caps)
+	return kind, string(b), legacy, true
 }
 
 func (s *Server) handleClearAccountTrades(c *echo.Context) error {

@@ -156,6 +156,8 @@ export interface AccountsTabProps {
     name: string;
     broker: string;
     account_type: string;
+    account_kind: string;
+    capabilities: string[];
     base_currency: string;
     starting_balance: number;
   }) => Promise<void>;
@@ -332,11 +334,22 @@ export function AccountsTab({
     defaultValues: defaultAccountFormValues(),
     onSubmit: async ({ value }) => {
       setAccountFormError(null);
+      if (value.accountKind === "brokerage" && !value.cashCapability && !value.marginCapability) {
+        setAccountFormError("Select at least one trading capability.");
+        return;
+      }
       try {
         await onCreateAccount({
           name: value.name.trim(),
           broker: value.broker.trim(),
           account_type: value.accountType,
+          account_kind: value.accountKind,
+          capabilities:
+            value.accountKind === "brokerage"
+              ? [value.cashCapability && "cash", value.marginCapability && "margin"].filter(
+                  (x): x is string => Boolean(x),
+                )
+              : [],
           base_currency: value.baseCurrency.trim() || "USD",
           starting_balance: parseAmountToNumber(value.startingBalance) ?? 0,
         });
@@ -579,24 +592,20 @@ export function AccountsTab({
               }}
             </accountForm.Field>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              <accountForm.Field name="accountType">
+              <accountForm.Field name="accountKind">
                 {(field) => (
-                  <Field label={tr({ id: "accounts.accountType", message: "Account type" })}>
+                  <Field label="Account kind">
                     <NativeSelect
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      aria-label={tr({ id: "accounts.accountType", message: "Account type" })}
+                      aria-label="Account kind"
                       wrapperClassName="w-full"
                     >
-                      <NativeSelectOption value="cash">
-                        {tr({ id: "accounts.cash", message: "Cash" })}
-                      </NativeSelectOption>
-                      <NativeSelectOption value="margin">
-                        {tr({ id: "accounts.margin", message: "Margin" })}
-                      </NativeSelectOption>
+                      <NativeSelectOption value="brokerage">Brokerage</NativeSelectOption>
                       <NativeSelectOption value="prop">
                         {tr({ id: "accounts.prop", message: "Prop" })}
                       </NativeSelectOption>
+                      <NativeSelectOption value="paper">Paper</NativeSelectOption>
                       <NativeSelectOption value="backtest">
                         {tr({ id: "accounts.backtest", message: "Backtest (paper)" })}
                       </NativeSelectOption>
@@ -604,6 +613,39 @@ export function AccountsTab({
                   </Field>
                 )}
               </accountForm.Field>
+              <accountForm.Subscribe selector={(state) => state.values.accountKind}>
+                {(kind) =>
+                  kind === "brokerage" ? (
+                    <fieldset className="flex flex-col gap-1" aria-label="Trading capabilities">
+                      <legend className="text-sm">Trading capabilities</legend>
+                      <accountForm.Field name="cashCapability">
+                        {(field) => (
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={field.state.value}
+                              onChange={(e) => field.handleChange(e.target.checked)}
+                            />{" "}
+                            Cash
+                          </label>
+                        )}
+                      </accountForm.Field>
+                      <accountForm.Field name="marginCapability">
+                        {(field) => (
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={field.state.value}
+                              onChange={(e) => field.handleChange(e.target.checked)}
+                            />{" "}
+                            Margin
+                          </label>
+                        )}
+                      </accountForm.Field>
+                    </fieldset>
+                  ) : null
+                }
+              </accountForm.Subscribe>
               <accountForm.Field name="baseCurrency">
                 {(field) => (
                   <Field

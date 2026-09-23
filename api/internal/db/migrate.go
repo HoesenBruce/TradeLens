@@ -59,9 +59,44 @@ func migrateSQLite(conn *sql.DB) error {
 	// This rewinds one version, so every up migration must be safe to re-run
 	// against a database that already has it (CREATE TABLE/INDEX IF NOT EXISTS).
 	if ver, dirty, vErr := drv.Version(); vErr == nil && dirty {
-		prev := max(ver-1, 0)
-		if err := drv.SetVersion(prev, false); err != nil {
-			return fmt.Errorf("dirty migration at version %d: could not reset: %w", ver, err)
+		if ver == 50 {
+			var count int
+			if err := conn.QueryRow("SELECT count(*) FROM pragma_table_info('accounts') WHERE name IN ('account_kind', 'capabilities')").Scan(&count); err != nil {
+				return err
+			}
+			if count == 1 {
+				var existing string
+				if err := conn.QueryRow("SELECT name FROM pragma_table_info('accounts') WHERE name IN ('account_kind', 'capabilities')").Scan(&existing); err != nil {
+					return err
+				}
+				stmt := `ALTER TABLE accounts ADD COLUMN capabilities TEXT NOT NULL DEFAULT '["cash"]'`
+				if existing == "capabilities" {
+					stmt = "ALTER TABLE accounts ADD COLUMN account_kind TEXT NOT NULL DEFAULT 'brokerage'"
+				}
+				if _, err := conn.Exec(stmt); err != nil {
+					return err
+				}
+				if _, err := conn.Exec(`UPDATE accounts SET account_kind = CASE WHEN account_type IN ('prop', 'backtest', 'paper') THEN account_type ELSE 'brokerage' END, capabilities = CASE account_type WHEN 'margin' THEN '["margin"]' WHEN 'prop' THEN '[]' WHEN 'backtest' THEN '[]' WHEN 'paper' THEN '[]' ELSE '["cash"]' END`); err != nil {
+					return err
+				}
+				count = 2
+			}
+			if count == 2 {
+				// Finish a migration interrupted after both ALTERs but before its backfill.
+				if _, err := conn.Exec(`UPDATE accounts SET account_kind = CASE WHEN account_type IN ('prop','backtest','paper') THEN account_type ELSE account_kind END, capabilities = CASE account_type WHEN 'margin' THEN '["margin"]' WHEN 'prop' THEN '[]' WHEN 'backtest' THEN '[]' WHEN 'paper' THEN '[]' ELSE capabilities END WHERE (account_type = 'margin' AND capabilities = '["cash"]') OR (account_type IN ('prop','backtest','paper') AND account_kind = 'brokerage')`); err != nil {
+					return err
+				}
+				if err := drv.SetVersion(ver, false); err != nil {
+					return err
+				}
+				dirty = false
+			}
+		}
+		if dirty {
+			prev := max(ver-1, 0)
+			if err := drv.SetVersion(prev, false); err != nil {
+				return fmt.Errorf("dirty migration at version %d: could not reset: %w", ver, err)
+			}
 		}
 	}
 

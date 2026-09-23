@@ -298,6 +298,7 @@ func (s *Server) createAccountFromJSONMeta(ctx context.Context, userID string, m
 	if accountType == "" {
 		accountType = "cash"
 	}
+	kind, caps, _, _ := accountMetadata("", nil, accountType)
 	baseCurrency := strings.TrimSpace(meta.BaseCurrency)
 	if baseCurrency == "" {
 		baseCurrency = "USD"
@@ -308,7 +309,8 @@ func (s *Server) createAccountFromJSONMeta(ctx context.Context, userID string, m
 	}
 	acc, err := s.deps.Store.CreateAccount(ctx, store.CreateAccountParams{
 		ID: uuid.New().String(), UserID: userID, Name: name, Broker: broker,
-		AccountType: accountType, BaseCurrency: baseCurrency, StartingBalance: startingBalance,
+		AccountType: accountType, AccountKind: kind, Capabilities: caps,
+		BaseCurrency: baseCurrency, StartingBalance: startingBalance,
 	})
 	if err != nil {
 		return store.Account{}, Fail(http.StatusInternalServerError, "internal", "could not create account from import", nil)
@@ -621,8 +623,13 @@ func (s *Server) applyJSONAccountMeta(ctx context.Context, q store.Querier, user
 	if !changed {
 		return nil
 	}
+	kind, caps := acc.AccountKind, acc.Capabilities
+	if meta.AccountType != "" && meta.AccountType != acc.AccountType {
+		kind, caps, _, _ = accountMetadata("", nil, accountType)
+	}
 	_, err = q.UpdateAccount(ctx, store.UpdateAccountParams{
 		Name: name, Broker: broker, AccountType: accountType,
+		AccountKind: kind, Capabilities: caps,
 		BaseCurrency: baseCurrency, StartingBalance: startingBalance,
 		ID: accountID, UserID: userID,
 	})

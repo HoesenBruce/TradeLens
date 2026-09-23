@@ -69,6 +69,18 @@ function EditAccountButton({ account }: { account: Account }) {
     knownBroker ? account.broker : OTHER_BROKER_VALUE,
   );
   const [brokerCustom, setBrokerCustom] = useState(knownBroker ? "" : account.broker);
+  const [kind, setKind] = useState(
+    account.account_kind ??
+      (account.account_type === "prop" || account.account_type === "backtest"
+        ? account.account_type
+        : "brokerage"),
+  );
+  const [cash, setCash] = useState(
+    account.capabilities?.includes("cash") ?? account.account_type === "cash",
+  );
+  const [margin, setMargin] = useState(
+    account.capabilities?.includes("margin") ?? account.account_type === "margin",
+  );
   const [error, setError] = useState<string | null>(null);
 
   function handleSave() {
@@ -77,8 +89,23 @@ function EditAccountButton({ account }: { account: Account }) {
       setError(tr({ id: "accounts.nameFirst", message: "Name the account first." }));
       return;
     }
+    if (kind === "brokerage" && !cash && !margin) {
+      setError("Select at least one trading capability.");
+      return;
+    }
     update.mutate(
-      { id: account.id, body: { name: name.trim(), broker } },
+      {
+        id: account.id,
+        body: {
+          name: name.trim(),
+          broker,
+          account_kind: kind,
+          capabilities:
+            kind === "brokerage"
+              ? [cash && "cash", margin && "margin"].filter((x): x is string => Boolean(x))
+              : [],
+        },
+      },
       {
         onSuccess: () => {
           setOpen(false);
@@ -106,6 +133,14 @@ function EditAccountButton({ account }: { account: Account }) {
           setName(account.name);
           setBrokerChoice(knownBroker ? account.broker : OTHER_BROKER_VALUE);
           setBrokerCustom(knownBroker ? "" : account.broker);
+          setKind(
+            account.account_kind ??
+              (account.account_type === "prop" || account.account_type === "backtest"
+                ? account.account_type
+                : "brokerage"),
+          );
+          setCash(account.capabilities?.includes("cash") ?? account.account_type === "cash");
+          setMargin(account.capabilities?.includes("margin") ?? account.account_type === "margin");
           setError(null);
           setOpen(true);
         }}
@@ -171,6 +206,36 @@ function EditAccountButton({ account }: { account: Account }) {
                 placeholder={tr({ id: "accounts.myBroker", message: "My broker" })}
               />
             </Field>
+          ) : null}
+          <Field label="Account kind">
+            <NativeSelect
+              value={kind}
+              onChange={(e) => setKind(e.target.value as NonNullable<Account["account_kind"]>)}
+              aria-label="Account kind"
+              wrapperClassName="w-full"
+            >
+              <NativeSelectOption value="brokerage">Brokerage</NativeSelectOption>
+              <NativeSelectOption value="prop">Prop</NativeSelectOption>
+              <NativeSelectOption value="paper">Paper</NativeSelectOption>
+              <NativeSelectOption value="backtest">Backtest</NativeSelectOption>
+            </NativeSelect>
+          </Field>
+          {kind === "brokerage" ? (
+            <fieldset className="flex flex-col gap-1">
+              <legend>Trading capabilities</legend>
+              <label>
+                <input type="checkbox" checked={cash} onChange={(e) => setCash(e.target.checked)} />{" "}
+                Cash
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={margin}
+                  onChange={(e) => setMargin(e.target.checked)}
+                />{" "}
+                Margin
+              </label>
+            </fieldset>
           ) : null}
           {error ? <p className="m-0 text-[12px] text-destructive">{error}</p> : null}
         </div>
@@ -352,16 +417,17 @@ export function AccountDetailView({
       : null;
   const metaParts = [
     account.broker || null,
-    account.account_type
+    account.account_kind
       ? ((
           {
-            cash: tr({ id: "accounts.cash", message: "Cash" }),
-            margin: tr({ id: "accounts.margin", message: "Margin" }),
+            brokerage: "Brokerage",
             prop: tr({ id: "accounts.prop", message: "Prop" }),
+            paper: "Paper",
             backtest: tr({ id: "accounts.backtest", message: "Backtest (paper)" }),
           } as Record<string, string>
-        )[account.account_type] ?? account.account_type)
+        )[account.account_kind] ?? account.account_kind)
       : null,
+    account.account_kind === "brokerage" ? account.capabilities?.join(" + ") : null,
     account.base_currency || null,
     tradeCount > 0 ? tr({ id: "accounts.tradeCount", message: `${tradeCount} trades` }) : null,
   ].filter(Boolean);
