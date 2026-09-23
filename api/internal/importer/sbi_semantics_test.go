@@ -84,4 +84,38 @@ func TestSBIMixedPositionSemanticsPersistAndRegroup(t *testing.T) {
 	for _, trade := range trades {
 		require.Equal(t, "closed", trade.Status)
 	}
+
+	conversion := importer.ParseSBIRows([]map[string]string{
+		{"約定日": "2026/09/01", "銘柄コード": "7203", "銘柄": "匿名B", "取引": "信用新規買", "約定数量": "100", "約定単価": "1000"},
+		{"約定日": "2026/09/03", "銘柄コード": "7203", "銘柄": "匿名B", "取引": "現引", "約定数量": "100", "約定単価": "1090", "手数料/諸経費等": "500"},
+	}, nil, "")
+	require.Empty(t, conversion.Errors)
+	_, err = importer.Commit(ctx, q, user.ID, account.ID, sql.NullString{}, conversion)
+	require.NoError(t, err)
+	fills, err = q.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: user.ID, AccountID: account.ID})
+	require.NoError(t, err)
+	var conversionIDs []string
+	for _, fill := range fills {
+		if fill.Symbol != "7203" || !fill.Details.Valid {
+			continue
+		}
+		var details map[string]any
+		require.NoError(t, json.Unmarshal([]byte(fill.Details.String), &details))
+		if details["event_type"] == "position_conversion" {
+			conversionIDs = append(conversionIDs, details["conversion_id"].(string))
+		}
+	}
+	require.Len(t, conversionIDs, 2)
+	require.Equal(t, conversionIDs[0], conversionIDs[1])
+	trades, err = q.ListTrades(ctx, store.ListTradesParams{UserID: user.ID})
+	require.NoError(t, err)
+	closedConversion := false
+	for _, trade := range trades {
+		if trade.Symbol == "7203" && trade.Status == "closed" {
+			closedConversion = true
+			require.True(t, trade.NetPnl.Valid)
+			require.Zero(t, trade.NetPnl.Float64)
+		}
+	}
+	require.True(t, closedConversion)
 }

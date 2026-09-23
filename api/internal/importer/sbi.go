@@ -221,6 +221,10 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 			row[fields["price"]], row[fields["fees"]], row["市場"],
 		}, "|")
 		occurrences[key]++
+		conversionID := ""
+		if transaction == "現引" {
+			conversionID = fmt.Sprintf("sbi|genbiki|%s|%d", key, occurrences[key])
+		}
 
 		for legIndex, leg := range legs {
 			legRow := maps.Clone(row)
@@ -237,6 +241,11 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 
 			execution := parsed.Executions[0]
 			execution.PositionType, execution.PositionEffect, _ = sbiSemantics(leg)
+			if conversionID != "" {
+				execution.EventType = "position_conversion"
+				execution.ConversionType = "genbiki"
+				execution.ConversionID = conversionID
+			}
 			if transaction == leg && execution.PositionEffect == PositionReduce && execution.PositionType != PositionCash {
 				raw := strings.TrimSpace(strings.ReplaceAll(row["受渡金額/決済損益"], ",", ""))
 				if raw != "" && raw != "--" && raw != "-" {
