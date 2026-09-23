@@ -1,3 +1,4 @@
+import { t as tr } from "@lingui/core/macro";
 import {
   Calculator,
   CalendarDays,
@@ -24,64 +25,95 @@ export interface ToolItem {
 
 /** Section order for the tools menu — headings turn ten icons into three short lists. */
 export const TOOL_GROUPS: { id: ToolGroupId; label: string }[] = [
-  { id: "calculators", label: "Calculators" },
-  { id: "markets", label: "Markets" },
-  { id: "journal", label: "Journal" },
+  {
+    id: "calculators",
+    get label() {
+      return tr({ id: "market.calculators", message: "Calculators" });
+    },
+  },
+  {
+    id: "markets",
+    get label() {
+      return tr({ id: "market.markets", message: "Markets" });
+    },
+  },
+  {
+    id: "journal",
+    get label() {
+      return tr({ id: "market.journal", message: "Journal" });
+    },
+  },
 ];
 
 export const TOOL_ITEMS: ToolItem[] = [
   {
     id: "size",
-    label: "Position size",
+    get label() {
+      return tr({ id: "market.size", message: "Position size" });
+    },
     icon: Calculator,
     keywords: ["calculator", "risk", "shares", "qty"],
     group: "calculators",
   },
   {
     id: "kelly",
-    label: "Kelly criterion",
+    get label() {
+      return tr({ id: "market.kelly", message: "Kelly criterion" });
+    },
     icon: Scale,
     keywords: ["kelly", "sizing"],
     group: "calculators",
   },
   {
     id: "fx",
-    label: "Currency converter",
+    get label() {
+      return tr({ id: "market.fx", message: "Currency converter" });
+    },
     icon: RefreshCw,
     keywords: ["forex", "fx", "currency"],
     group: "calculators",
   },
   {
     id: "today",
-    label: "Today",
+    get label() {
+      return tr({ id: "market.today", message: "Today" });
+    },
     icon: CalendarDays,
     keywords: ["calendar", "now"],
     group: "journal",
   },
   {
     id: "chart",
-    label: "Advanced chart",
+    get label() {
+      return tr({ id: "market.advanced", message: "Advanced chart" });
+    },
     icon: ChartLine,
     keywords: ["chart", "technical"],
     group: "markets",
   },
   {
     id: "replay",
-    label: "Replay",
+    get label() {
+      return tr({ id: "market.replay", message: "Replay" });
+    },
     icon: History,
     keywords: ["backtest", "replay", "practice", "paper", "simulator"],
     group: "markets",
   },
   {
     id: "econ",
-    label: "Economic calendar",
+    get label() {
+      return tr({ id: "market.econ", message: "Economic calendar" });
+    },
     icon: Globe,
     keywords: ["news", "events", "macro"],
     group: "markets",
   },
   {
     id: "wrapped",
-    label: "Year Wrapped",
+    get label() {
+      return tr({ id: "market.wrapped", message: "Year Wrapped" });
+    },
     icon: PartyPopper,
     keywords: ["recap", "annual", "year", "review"],
     group: "journal",

@@ -1,3 +1,5 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
+import { t as tr } from "@lingui/core/macro";
 import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { Button } from "@/components/ui/button";
@@ -9,11 +11,14 @@ import type { ReplayPnl } from "./replayPnl";
 import { REPLAY_SPEEDS, type ReplayController } from "./useReplayController";
 
 function positionLabel(pnl: ReplayPnl, fillTotal: number): string {
-  if (pnl.position > 0) return `Long ${pnl.position}`;
-  if (pnl.position < 0) return `Short ${Math.abs(pnl.position)}`;
+  if (pnl.position > 0) return tr({ id: "market.longQty", message: `Long ${pnl.position}` });
+  if (pnl.position < 0)
+    return tr({ id: "market.shortQty", message: `Short ${Math.abs(pnl.position)}` });
   // Zero position: distinguish "closed out" (all fills consumed) from flat
   // moments before entry or between round trips.
-  return pnl.fillCount > 0 && pnl.fillCount >= fillTotal ? "Closed" : "Flat";
+  return pnl.fillCount > 0 && pnl.fillCount >= fillTotal
+    ? tr({ id: "market.closed", message: "Closed" })
+    : tr({ id: "market.flat", message: "Flat" });
 }
 
 export function ReplayControls({
@@ -33,13 +38,16 @@ export function ReplayControls({
   currency: string;
   priceMismatch?: boolean;
 }) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
+
   const { cursor, playing, speed } = controller;
   const net = pnl?.net ?? 0;
 
   return (
     <div className="flex flex-col gap-2">
       <Slider
-        aria-label="Replay position"
+        aria-label={tr({ id: "market.replayPosition", message: "Replay position" })}
         min={0}
         max={Math.max(barCount - 1, 1)}
         step={1}
@@ -52,7 +60,7 @@ export function ReplayControls({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label="Step back"
+            aria-label={tr({ id: "market.back", message: "Step back" })}
             onClick={controller.stepBack}
           >
             <SkipBack size={14} strokeWidth={1.5} aria-hidden />
@@ -61,7 +69,11 @@ export function ReplayControls({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label={playing ? "Pause replay" : "Play replay"}
+            aria-label={
+              playing
+                ? tr({ id: "market.pauseReplay", message: "Pause replay" })
+                : tr({ id: "market.playReplay", message: "Play replay" })
+            }
             onClick={controller.toggle}
           >
             {playing ? (
@@ -74,14 +86,14 @@ export function ReplayControls({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label="Step forward"
+            aria-label={tr({ id: "market.forward", message: "Step forward" })}
             onClick={controller.stepForward}
           >
             <SkipForward size={14} strokeWidth={1.5} aria-hidden />
           </Button>
         </div>
         <SegmentedControl
-          ariaLabel="Replay speed"
+          ariaLabel={tr({ id: "market.speed", message: "Replay speed" })}
           size="xs"
           value={speed}
           onChange={(v) => controller.setSpeed(v as typeof speed)}
@@ -106,8 +118,11 @@ export function ReplayControls({
       </div>
       {priceMismatch && (
         <p className="text-right text-[11px] text-warning">
-          Chart data disagrees with the recorded fill prices — in-flight replay P&amp;L is marked to
-          the chart and may look off; the final figure comes from the fills.
+          {tr({
+            id: "market.mismatch",
+            message:
+              "Chart data disagrees with the recorded fill prices — in-flight replay P&L is marked to the chart and may look off; the final figure comes from the fills.",
+          })}
         </p>
       )}
     </div>

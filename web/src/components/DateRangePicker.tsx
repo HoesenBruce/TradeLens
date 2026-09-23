@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { CalendarDays, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { formatRangeLabel } from "@/lib/dateRangePresets";
@@ -17,6 +18,9 @@ export function DateRangePicker({
   /** Popover side; defaults to `right` for rail, `bottom` for header. */
   side?: "top" | "right" | "bottom" | "left";
 }) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
+
   const { from, to } = useFilters();
   const [open, setOpen] = useState(false);
   const label = formatRangeLabel(from, to);
@@ -31,7 +35,7 @@ export function DateRangePicker({
           <TooltipTrigger
             render={
               <PopoverTrigger
-                aria-label="Date range"
+                aria-label={tr({ id: "market.dateRange", message: "Date range" })}
                 className={cn(
                   "group relative flex size-8 cursor-pointer items-center justify-center rounded-md outline-none",
                   "pointer-coarse:size-11",
@@ -70,7 +74,7 @@ export function DateRangePicker({
       open={open}
       onOpenChange={setOpen}
       align="end"
-      triggerAriaLabel="Date range"
+      triggerAriaLabel={tr({ id: "market.dateRange", message: "Date range" })}
       className="overflow-hidden p-0"
       triggerClassName={cn(
         filterChipClass,

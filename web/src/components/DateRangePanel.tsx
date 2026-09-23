@@ -1,4 +1,6 @@
-import { format, isSameDay } from "date-fns";
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
+import { intlLocale } from "@/lib/locale";
+import { isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { cn } from "@/lib/cn";
@@ -14,15 +16,6 @@ import { useFilters } from "@/lib/filters";
 import { AppCalendar } from "./AppCalendar";
 import { Button } from "./ui/button";
 
-const PRESETS: { key: DateRangePreset; label: string }[] = [
-  { key: "7d", label: PRESET_LABELS["7d"] },
-  { key: "30d", label: PRESET_LABELS["30d"] },
-  { key: "90d", label: PRESET_LABELS["90d"] },
-  { key: "mtd", label: PRESET_LABELS.mtd },
-  { key: "ytd", label: PRESET_LABELS.ytd },
-  { key: "all", label: PRESET_LABELS.all },
-];
-
 function toDraft(from?: string, to?: string): DateRange | undefined {
   const fromDate = parseFilterDay(from);
   const toDate = parseFilterDay(to);
@@ -31,26 +24,42 @@ function toDraft(from?: string, to?: string): DateRange | undefined {
 }
 
 function RangeFooter({ draft }: { draft: DateRange | undefined }) {
+  const { t: tr } = useLinguiMacro();
+
   if (draft?.from && !draft.to) {
     return (
-      <p className="m-0 text-[10px] uppercase tracking-widest text-chart-3">Select end date</p>
+      <p className="m-0 text-[10px] uppercase tracking-widest text-chart-3">
+        {tr({ id: "market.endDate", message: "Select end date" })}
+      </p>
     );
   }
   if (draft?.from && draft.to) {
     return (
       <p className="m-0 text-[11px] tabular-nums text-muted-foreground">
-        {format(draft.from, "MMM d, yyyy")}
+        {draft.from.toLocaleDateString(intlLocale(), { dateStyle: "medium" })}
         <span className="text-muted-foreground"> – </span>
-        {format(draft.to, "MMM d, yyyy")}
+        {draft.to.toLocaleDateString(intlLocale(), { dateStyle: "medium" })}
       </p>
     );
   }
   return (
-    <p className="m-0 text-[11px] text-muted-foreground">Click two dates for a custom range</p>
+    <p className="m-0 text-[11px] text-muted-foreground">
+      {tr({ id: "market.customHint", message: "Click two dates for a custom range" })}
+    </p>
   );
 }
 
 export function DateRangePanel({ onApplied }: { onApplied?: () => void }) {
+  const { t: tr } = useLinguiMacro();
+
+  const PRESETS: { key: DateRangePreset; label: string }[] = [
+    { key: "7d", label: PRESET_LABELS["7d"] },
+    { key: "30d", label: PRESET_LABELS["30d"] },
+    { key: "90d", label: PRESET_LABELS["90d"] },
+    { key: "mtd", label: PRESET_LABELS.mtd },
+    { key: "ytd", label: PRESET_LABELS.ytd },
+    { key: "all", label: PRESET_LABELS.all },
+  ];
   const { from, to, setRange } = useFilters();
   const [draft, setDraft] = useState<DateRange | undefined>(() => toDraft(from, to));
 
@@ -143,13 +152,13 @@ export function DateRangePanel({ onApplied }: { onApplied?: () => void }) {
         "flex max-h-[min(100dvh-2rem,100%)] w-[min(100vw-2rem,448px)] flex-col overflow-y-auto overscroll-contain rounded-md",
         "pb-[env(safe-area-inset-bottom)] sm:w-[448px] sm:flex-row sm:overflow-x-hidden sm:pb-0",
       )}
-      aria-label="Date range"
+      aria-label={tr({ id: "market.dateRange", message: "Date range" })}
     >
       {/* Stacked on a phone the two surfaces read as unrelated bands, so the
           panel goes single-surface there and only splits on sm+. */}
       <aside className="flex shrink-0 flex-col rounded-md max-sm:pt-1 sm:w-[148px] sm:bg-background">
         <p className="m-0 px-3 pt-3 pb-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground max-sm:px-2 max-sm:pt-0 max-sm:pb-1.5">
-          Quick range
+          {tr({ id: "market.quickRange", message: "Quick range" })}
         </p>
         {presetList}
       </aside>

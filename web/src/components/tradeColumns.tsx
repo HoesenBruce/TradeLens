@@ -434,7 +434,7 @@ export function tradeColumns(
         return (
           <span
             className={`tabular-nums font-semibold ${pnlColor(v)}`}
-            title={`${sign}${v.toFixed(2)}R — net P&L ÷ planned risk`}
+            title={`${sign}${v.toFixed(2)}R — ${tr({ id: "trades.riskHint", message: "Net P&L ÷ planned risk (initial risk)" })}`}
           >
             {sign}
             {v.toFixed(2)}R
