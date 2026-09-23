@@ -96,8 +96,8 @@ msgid "It may have expired or been revoked by its owner."
 msgstr "만료되었거나 소유자가 철회했을 수 있습니다."
 
 #: src/app/screens/PublicShareView.tsx:385
-msgid "Journaled with <0>TraderMemos</0> — the self-hosted trading journal"
-msgstr "<0>TraderMemos</0>로 기록 — 셀프호스팅 트레이딩 저널"
+msgid "Journaled with <0>{0}</0> — the self-hosted trading journal"
+msgstr "<0>{0}</0>로 기록 — 셀프호스팅 트레이딩 저널"
 
 #: src/app/screens/PublicShareView.tsx:255
 msgid "Kelly"

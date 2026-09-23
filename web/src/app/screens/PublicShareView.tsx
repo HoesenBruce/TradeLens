@@ -3,6 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { Link2Off } from "lucide-react";
 import { type ReactNode, useId } from "react";
 import { AppLogo } from "@/components/AppLogo";
+import { BRAND } from "@/lib/brand";
 import { DonutRing } from "@/components/charts/DonutRing";
 import { GaugeArc } from "@/components/charts/GaugeArc";
 import { Skeleton } from "@/components/Skeleton";
@@ -123,7 +124,7 @@ export function PublicShareView({ token }: PublicShareViewProps) {
     <header className="mx-auto flex w-full max-w-2xl items-center gap-2.5">
       <AppLogo size={26} />
       <div className="min-w-0">
-        <p className="text-[14px] font-bold tracking-[-0.01em] text-foreground">TraderMemos</p>
+        <p className="text-[14px] font-bold tracking-[-0.01em] text-foreground">{BRAND.name}</p>
         <p className="text-[11px] text-muted-foreground">{t`Shared performance record`}</p>
       </div>
     </header>
@@ -383,7 +384,7 @@ export function PublicShareView({ token }: PublicShareViewProps) {
           <AppLogo size={16} />
           <span>
             <Trans>
-              Journaled with <span className="font-semibold text-foreground">TraderMemos</span> —
+              Journaled with <span className="font-semibold text-foreground">{BRAND.name}</span> —
               the self-hosted trading journal
             </Trans>
           </span>

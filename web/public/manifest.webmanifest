@@ -1,7 +1,7 @@
 {
-  "name": "TraderMemos",
-  "short_name": "TraderMemos",
-  "description": "Self-hosted trading journal",
+  "name": "TradeLens",
+  "short_name": "TradeLens",
+  "description": "Record. Review. Improve.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#161616",
