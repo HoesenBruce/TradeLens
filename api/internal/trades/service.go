@@ -51,7 +51,7 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 	upserts := []store.UpsertTradeParams{}
 	links := []store.LinkTradeExecutionParams{}
 	for _, g := range groups {
-		for _, tr := range Group(g) {
+		for _, tr := range Account(g, nil).Trades {
 			id := tr.ExecutionIDs[0] // opening fill = stable id
 			upserts = append(upserts, toUpsertParams(id, userID, accountID, acc.BaseCurrency, tr))
 			for _, eid := range tr.ExecutionIDs {
