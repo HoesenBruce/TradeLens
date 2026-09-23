@@ -107,6 +107,20 @@ export function buildStructuredJournalNotes(parts: {
   return chunks.join("\n\n").trim();
 }
 
+/** Update fields owned by a journal editor while retaining other saved sections. */
+export function updateStructuredJournalNotes(
+  existing: string,
+  changes: Parameters<typeof buildStructuredJournalNotes>[0],
+): string {
+  const saved = parseJournalNotes(existing);
+  return buildStructuredJournalNotes({
+    ...changes,
+    plannedDirection: changes.plannedDirection ?? saved.plannedDirection,
+    // Plain legacy notes are loaded into the entry/review field by existing editors.
+    legacy: /^##\s+/m.test(existing) ? saved.legacy : undefined,
+  });
+}
+
 export function isTradeSession(value: string): value is TradeSession {
   return (TRADE_SESSIONS as readonly string[]).includes(value);
 }

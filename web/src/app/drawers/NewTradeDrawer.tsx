@@ -85,6 +85,7 @@ import {
   buildStructuredJournalNotes,
   computeInitialRisk,
   parseJournalNotes,
+  updateStructuredJournalNotes,
   weightedAvgEntry,
 } from "@/lib/newTradeJournal";
 import {
@@ -1641,7 +1642,7 @@ export function NewTradeDrawer() {
           const block = value.trades[0];
           if (block && tradeId) {
             await tradesApi.patch(tradeId, {
-              notes: buildStructuredJournalNotes({
+              notes: updateStructuredJournalNotes(editSource?.notes ?? "", {
                 session: block.session,
                 plannedDirection: block.plannedSide,
                 entryReason: block.entryReason,
