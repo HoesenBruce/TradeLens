@@ -29,6 +29,29 @@ For ordinary fork development:
 
 See `docs/FORK_DEVELOPMENT.md` for the canonical scope and upstream-compatibility policy.
 
+
+## Broker/accounting change guardrail
+
+For importer, trade-grouping, position, or P&L work, preserve upstream/default behavior for
+non-target brokers unless the issue explicitly authorizes a semantic change.
+
+Before changing shared accounting code:
+
+- identify the exact broker/source + execution/position semantic that needs special handling;
+- keep unknown and non-opted-in brokers on the existing upstream/default path;
+- do not select accounting rules from account `cash`/`margin` labels or capabilities alone;
+- do not assume an SBI rule applies to IBKR, other non-Japanese brokers, or every Japanese broker;
+- prefer an isolated broker-specific strategy/resolver seam over a global engine rewrite;
+- add regression tests for representative non-target broker behavior when shared code is touched;
+- preserve existing default partial-close `trade.net_pnl` semantics unless the issue explicitly
+  changes them;
+- do not fix unrelated inherited frontend/backend P&L differences as incidental work.
+
+Any intentional change to an existing broker's accounting semantics needs explicit issue scope,
+before/after examples, and a note about historical-statistics/recalculation impact.
+
+The canonical policy and examples are in `docs/FORK_DEVELOPMENT.md`.
+
 ## Web UI features ship only after a full end-to-end run
 
 **Any new or changed Web UI must be driven end to end before the work is called done or a PR
