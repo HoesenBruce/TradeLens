@@ -116,6 +116,57 @@ func TestReplayOrdersSBIOpensBeforeSameDayCloses(t *testing.T) {
 	require.Equal(t, 100.0, snapshot.Accounts[0].RealizedPnL)
 }
 
+func TestReplaySBICashDailyCostBasis(t *testing.T) {
+	tests := []struct {
+		name              string
+		fills             []store.Execution
+		pnl, qty, average float64
+	}{
+		{"multi-day partial", []store.Execution{
+			execution("1", "a", "AAA", "sbi:cash", "buy", "2026-09-01T01:00:00Z", 100, 1000),
+			execution("2", "a", "AAA", "sbi:cash", "buy", "2026-09-02T01:00:00Z", 100, 1100),
+			execution("3", "a", "AAA", "sbi:cash", "sell", "2026-09-03T01:00:00Z", 100, 1090),
+		}, 4000, 100, 1050},
+		{"buy sell buy", []store.Execution{
+			execution("1", "a", "AAA", "sbi:cash", "buy", "2026-09-03T00:10:00Z", 100, 1000),
+			execution("2", "a", "AAA", "sbi:cash", "sell", "2026-09-03T01:30:00Z", 100, 1100),
+			execution("3", "a", "AAA", "sbi:cash", "buy", "2026-09-03T05:00:00Z", 100, 1200),
+		}, 0, 100, 1100},
+		{"previous holding sell buy", []store.Execution{
+			execution("1", "a", "AAA", "sbi:cash", "buy", "2026-09-02T01:00:00Z", 100, 900),
+			execution("2", "a", "AAA", "sbi:cash", "sell", "2026-09-03T00:10:00Z", 100, 1100),
+			execution("3", "a", "AAA", "sbi:cash", "buy", "2026-09-03T05:00:00Z", 100, 1200),
+		}, 5000, 100, 1050},
+		{"multiple buys sells", []store.Execution{
+			execution("1", "a", "AAA", "sbi:cash", "buy", "2026-09-03T00:10:00Z", 100, 1000),
+			execution("2", "a", "AAA", "sbi:cash", "sell", "2026-09-03T01:00:00Z", 50, 1100),
+			execution("3", "a", "AAA", "sbi:cash", "buy", "2026-09-03T02:00:00Z", 100, 1200),
+			execution("4", "a", "AAA", "sbi:cash", "sell", "2026-09-03T05:00:00Z", 50, 1300),
+		}, 10000, 100, 1100},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			snapshot := Replay(tc.fills, []time.Time{day("2026-09-03")})[0]
+			require.Empty(t, snapshot.Warnings)
+			require.Equal(t, tc.pnl, snapshot.Accounts[0].RealizedPnL)
+			require.Equal(t, tc.qty, snapshot.Accounts[0].Positions[0].Quantity)
+			require.Equal(t, tc.average, snapshot.Accounts[0].Positions[0].AverageCost)
+		})
+	}
+}
+
+func TestReplaySBICashAcquisitionFeesAndRounding(t *testing.T) {
+	buy := execution("buy", "a", "AAA", "sbi:cash", "buy", "2026-09-01T01:00:00Z", 100, 120)
+	buy.Fees = 55
+	sell := execution("sell", "a", "AAA", "sbi:cash", "sell", "2026-09-02T01:00:00Z", 40, 123)
+	sell.Fees = 10
+	snapshot := Replay([]store.Execution{sell, buy}, []time.Time{day("2026-09-02")})[0]
+	require.Equal(t, 121.0, snapshot.Accounts[0].Positions[0].AverageCost)
+	require.Equal(t, 70.0, snapshot.Accounts[0].RealizedPnL)
+	require.Equal(t, 65.0, snapshot.Accounts[0].Fees)
+	require.Equal(t, -7145.0, snapshot.Accounts[0].CashDelta)
+}
+
 func TestReplayAppliesExplicitSplitBeforeEffectiveDateExecutions(t *testing.T) {
 	snapshot := ReplayWithSplits([]store.Execution{
 		execution("open", "a", "7013", "sbi:margin-long", "buy", "2025-09-25T01:00:00Z", 100, 17500),
