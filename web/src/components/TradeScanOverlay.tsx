@@ -254,8 +254,10 @@ function ScanBlockSummary({
     commission: parseAmountToNumber(r.commission) ?? 0,
   }));
   const multiplier = blockMultiplier(block);
-  const preview = previewTradePnl(block.side, parsedRows, multiplier, null);
-  const fillPnls = previewFillNetPnls(block.side, parsedRows, multiplier);
+  const side =
+    parsedRows.find((row) => row.quantity > 0 && row.price > 0)?.side === "sell" ? "short" : "long";
+  const preview = previewTradePnl(side, parsedRows, multiplier, null);
+  const fillPnls = previewFillNetPnls(side, parsedRows, multiplier);
   // Rows the model returned blank carry nothing to review, and a "— @ —" line
   // is exactly the dash placeholder the design rules ban.
   const priced = block.rows
@@ -263,7 +265,7 @@ function ScanBlockSummary({
     .filter(({ index }) => parsedRows[index]!.quantity > 0 || parsedRows[index]!.price > 0);
   const shown = priced.slice(0, 6);
   const hidden = priced.length - shown.length;
-  const long = block.side === "long";
+  const long = side === "long";
   const contract = contractLine(block);
 
   return (

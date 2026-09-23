@@ -15,6 +15,7 @@ describe("journalNotes", () => {
   it("round-trips structured sections", () => {
     const raw = buildStructuredJournalNotes({
       session: "New York AM",
+      plannedDirection: "short",
       entryReason: "delta flip at VWAP",
       exitReason: "scaled at +45",
       reviewNotes: "clean A+",
@@ -22,6 +23,7 @@ describe("journalNotes", () => {
     expect(raw).toContain("## Session");
     const parsed = parseJournalNotes(raw);
     expect(parsed.session).toBe("New York AM");
+    expect(parsed.plannedDirection).toBe("short");
     expect(parsed.entryReason).toBe("delta flip at VWAP");
     expect(parsed.exitReason).toBe("scaled at +45");
     expect(parsed.reviewNotes).toBe("clean A+");
@@ -31,5 +33,6 @@ describe("journalNotes", () => {
     const parsed = parseJournalNotes("just a scribbled note");
     expect(parsed.legacy).toBe("just a scribbled note");
     expect(parsed.entryReason).toBe("");
+    expect(parsed.plannedDirection).toBe("");
   });
 });

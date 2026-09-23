@@ -36,7 +36,7 @@ export interface SymbolTradeBlock {
   option_strike: string;
   option_expiry: string;
   symbol: string;
-  side: "long" | "short";
+  plannedSide: "long" | "short" | "";
   target: string;
   stop: string;
   rows: ExecutionRow[];
@@ -105,7 +105,7 @@ export function emptyExecutionRow(
 export function emptySymbolTrade(
   partial?: Partial<Omit<SymbolTradeBlock, "key" | "rows">> & { rows?: ExecutionRow[] },
 ): SymbolTradeBlock {
-  const side = partial?.side ?? "long";
+  const plannedSide = partial?.plannedSide ?? "long";
   return {
     key: nextTradeBlockKey(),
     market: partial?.market ?? "stock",
@@ -115,10 +115,10 @@ export function emptySymbolTrade(
     option_strike: partial?.option_strike ?? "",
     option_expiry: partial?.option_expiry ?? "",
     symbol: partial?.symbol ?? "",
-    side,
+    plannedSide,
     target: partial?.target ?? "",
     stop: partial?.stop ?? "",
-    rows: partial?.rows ?? [emptyExecutionRow(side === "long" ? "buy" : "sell")],
+    rows: partial?.rows ?? [emptyExecutionRow(plannedSide === "short" ? "sell" : "buy")],
     setupIds: partial?.setupIds ?? [],
     session: partial?.session ?? "",
     emotionalStates: partial?.emotionalStates ?? [],

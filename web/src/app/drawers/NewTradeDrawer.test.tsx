@@ -161,6 +161,38 @@ describe("NewTradeDrawer", () => {
     expect(first).toHaveTextContent("BUY");
   });
 
+  it("saves planned direction without changing existing fills or P&L", async () => {
+    const user = userEvent.setup();
+    wrap(<NewTradeDrawer />);
+    await user.type(screen.getByLabelText("Symbol"), "AAPL");
+    await user.type(screen.getByLabelText("Qty row 1"), "10");
+    await user.type(screen.getByLabelText("Price row 1"), "100");
+    const result = screen.getByTestId("trade-result-preview").textContent;
+    await user.click(
+      within(screen.getByRole("group", { name: "Side symbol 1" })).getByRole("button", {
+        name: "↘ SHORT",
+      }),
+    );
+    expect(screen.getByTestId("trade-result-preview").textContent).toBe(result);
+    expect(screen.getByRole("button", { name: "Toggle action symbol 1 row 1" })).toHaveTextContent(
+      "BUY",
+    );
+    await user.click(screen.getByRole("button", { name: "Add execution row symbol 1" }));
+    expect(screen.getByRole("button", { name: "Toggle action symbol 1 row 2" })).toHaveTextContent(
+      "SELL",
+    );
+    await user.type(screen.getByLabelText("Qty row 2"), "10");
+    await user.type(screen.getByLabelText("Price row 2"), "110");
+    await user.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() =>
+      expect(mockedPatch).toHaveBeenCalledWith(
+        "t1",
+        expect.objectContaining({ notes: expect.stringContaining("## Planned direction\nshort") }),
+      ),
+    );
+    expect(mockedCreate).toHaveBeenCalledWith(expect.objectContaining({ side: "buy" }));
+  });
+
   it("keeps an existing trade's P&L preview stable when its direction control changes", async () => {
     const user = userEvent.setup();
     const detail = tradeDetailFromJournalPreview(
@@ -185,11 +217,15 @@ describe("NewTradeDrawer", () => {
     detail.fills[1]!.side = "buy";
     detail.fills[1]!.price = 3829.6;
     detail.fills[1]!.fees = 81;
+    detail.net_pnl = 77;
+    detail.target_price = 3800;
     useUI.getState().openTradeEdit(detail);
     wrap(<NewTradeDrawer />);
     const result = await screen.findByTestId("trade-result-preview");
     expect(result).toHaveTextContent("$3,829.60");
     expect(result).toHaveTextContent("$3,846.10");
+    expect(result).toHaveTextContent("+$77.00");
+    expect(screen.getByTestId("target-comparison")).toHaveTextContent("$46.10");
     expect(screen.getByLabelText("P&L symbol 1 row 2: empty")).toBeVisible();
     const baseline = result.textContent;
 
