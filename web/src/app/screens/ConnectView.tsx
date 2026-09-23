@@ -470,7 +470,7 @@ function BrokerSetup({
                 </Field>
 
                 {synced ? (
-                  <p className="rounded-md bg-profit/10 px-3 py-2 text-[12px] text-profit">
+                  <p className="rounded-md bg-success/10 px-3 py-2 text-[12px] text-success">
                     {`Connected — ${plural(synced.inserted, "execution")} imported, ${plural(
                       synced.skipped,
                       "duplicate",

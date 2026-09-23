@@ -214,7 +214,7 @@ export function TradeExcursionChart({ trade }: TradeExcursionChartProps) {
           x={last.time}
           y={last.equity}
           r={3.5}
-          fill={last.equity >= 0 ? "var(--profit)" : "var(--loss)"}
+          fill={last.equity > 0 ? "var(--profit)" : last.equity < 0 ? "var(--loss)" : "var(--flat)"}
           stroke="var(--card)"
           strokeWidth={1.5}
         />

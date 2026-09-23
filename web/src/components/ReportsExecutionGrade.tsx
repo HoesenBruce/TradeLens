@@ -47,7 +47,7 @@ export function ReportsExecutionGrade({ breakdown, loading, error }: ReportsExec
           {rows.map(({ g, label }) => {
             const pnl = money.pnl(g.summary);
             const pct = (Math.abs(pnl) / maxAbs) * 100;
-            const barColor = pnl >= 0 ? "var(--profit)" : "var(--loss)";
+            const barColor = pnl > 0 ? "var(--profit)" : pnl < 0 ? "var(--loss)" : "var(--flat)";
             return (
               <li key={g.key} data-testid="exec-grade-row" className="flex flex-col gap-1">
                 <div className="flex items-baseline justify-between gap-3">

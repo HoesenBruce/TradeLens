@@ -7,10 +7,14 @@ export const tradeChartTheme = {
   down: "#eb4b68",
   buyMarker: "#4fa5ff",
   sellMarker: "#8a92a6",
-  targetLine: "#52ca96",
-  stopLine: "#eb4b68",
   entryLine: "#4fa5ff",
 } as const;
+
+export function candleColors(redUp: boolean) {
+  return redUp
+    ? { up: tradeChartTheme.down, down: tradeChartTheme.up }
+    : { up: tradeChartTheme.up, down: tradeChartTheme.down };
+}
 
 export const BAR_INTERVALS = [
   { value: "1" as const, label: "1m" },

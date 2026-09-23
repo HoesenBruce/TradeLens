@@ -41,7 +41,7 @@ function RuleBar({
         <span
           className={cn(
             "block h-full rounded-full transition-[width] duration-300",
-            danger ? "bg-destructive" : max ? "bg-profit" : "bg-chart-3",
+            danger ? "bg-destructive" : max ? "bg-success" : "bg-chart-3",
           )}
           style={{ width: `${pct}%` }}
         />

@@ -512,7 +512,8 @@ function JournalSummaryStrip({
   usePrivacyMode();
   const locale = intlLocale();
   const netPnl = fmtSignedMoney(summary.net_pnl, currency, locale);
-  const pnlTone = summary.net_pnl >= 0 ? "text-profit" : "text-destructive";
+  const pnlTone =
+    summary.net_pnl > 0 ? "text-profit" : summary.net_pnl < 0 ? "text-loss" : "text-flat";
 
   const cells: { label: string; value: string; sub?: string; valueClass?: string }[] = [
     {
@@ -936,7 +937,7 @@ function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
           <span
-            className="flex size-7 items-center justify-center rounded-full bg-profit/12 text-profit"
+            className="flex size-7 items-center justify-center rounded-full bg-success/12 text-success"
             aria-hidden
           >
             <Check size={15} strokeWidth={2} />
@@ -1045,7 +1046,7 @@ function Row({
         className={cn(
           "tabular-nums font-semibold",
           highlight === "pos" && "text-profit",
-          highlight === "neg" && "text-destructive",
+          highlight === "neg" && "text-loss",
           !highlight && "text-foreground",
         )}
       >

@@ -107,8 +107,8 @@ export function TradeResultPreview({
             <span
               className={cn(
                 pnlColor(preview.net),
-                preview.net > 0 && "drop-shadow-[0_0_18px_rgba(74,222,128,0.28)]",
-                preview.net < 0 && "drop-shadow-[0_0_18px_rgba(251,113,133,0.22)]",
+                preview.net > 0 && "drop-shadow-[0_0_18px_var(--profit)]",
+                preview.net < 0 && "drop-shadow-[0_0_18px_var(--loss)]",
               )}
             >
               {fmtSignedMoney(preview.net, currency, locale)}
@@ -122,10 +122,10 @@ export function TradeResultPreview({
         </BentoCell>
         <BentoCell label={tr({ id: "trades.position", message: "Position" })}>
           {preview.closed ? (
-            <span className="inline-flex items-center gap-1.5 text-profit">
+            <span className="inline-flex items-center gap-1.5 text-success">
               <span>0</span>
               <span
-                className="inline-flex size-4 items-center justify-center rounded-full bg-profit/15"
+                className="inline-flex size-4 items-center justify-center rounded-full bg-success/15"
                 aria-label={tr({ id: "trades.closed", message: "Closed" })}
               >
                 <Check size={11} strokeWidth={2.75} aria-hidden />
@@ -210,8 +210,8 @@ export function AfterSaveResultPreview({
             <span
               className={cn(
                 pnlColor(preview.net),
-                preview.net > 0 && "drop-shadow-[0_0_18px_rgba(74,222,128,0.28)]",
-                preview.net < 0 && "drop-shadow-[0_0_18px_rgba(251,113,133,0.22)]",
+                preview.net > 0 && "drop-shadow-[0_0_18px_var(--profit)]",
+                preview.net < 0 && "drop-shadow-[0_0_18px_var(--loss)]",
               )}
             >
               {fmtSignedMoney(preview.net, currency, locale)}
@@ -334,8 +334,8 @@ export function BatchTradeResultPreview({
               className={cn(
                 "mt-1.5 m-0 text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums",
                 pnlColor(batch.net),
-                batch.net > 0 && "drop-shadow-[0_0_28px_rgba(74,222,128,0.35)]",
-                batch.net < 0 && "drop-shadow-[0_0_28px_rgba(251,113,133,0.28)]",
+                batch.net > 0 && "drop-shadow-[0_0_28px_var(--profit)]",
+                batch.net < 0 && "drop-shadow-[0_0_28px_var(--loss)]",
               )}
             >
               {fmtSignedMoney(batch.net, currency, locale)}
@@ -364,12 +364,12 @@ export function BatchTradeResultPreview({
           </BatchMeta>
           <BatchMeta label={tr({ id: "trades.closed", message: "Closed" })}>
             {allClosed ? (
-              <span className="inline-flex items-center gap-1.5 text-profit">
+              <span className="inline-flex items-center gap-1.5 text-success">
                 <span>
                   {batch.closedCount}/{batch.symbolCount}
                 </span>
                 <span
-                  className="inline-flex size-4 items-center justify-center rounded-full bg-profit/15"
+                  className="inline-flex size-4 items-center justify-center rounded-full bg-success/15"
                   aria-label={tr({ id: "trades.allClosed", message: "All closed" })}
                 >
                   <Check size={11} strokeWidth={2.75} aria-hidden />
@@ -389,7 +389,7 @@ export function BatchTradeResultPreview({
           className={cn(
             "flex flex-wrap items-end justify-between gap-x-4 gap-y-2 rounded-md px-3 py-2.5",
             extTotal != null && extTotal > 0 && "bg-profit/10",
-            extTotal != null && extTotal < 0 && "bg-destructive/10",
+            extTotal != null && extTotal < 0 && "bg-loss/10",
             (extTotal == null || extTotal === 0) && "bg-sidebar",
           )}
           data-testid="batch-ext-total"
@@ -409,8 +409,8 @@ export function BatchTradeResultPreview({
                   className={cn(
                     "text-[15px] font-semibold leading-none tracking-[-0.03em] tabular-nums",
                     pnlColor(extTotal),
-                    extTotal > 0 && "drop-shadow-[0_0_16px_rgba(74,222,128,0.28)]",
-                    extTotal < 0 && "drop-shadow-[0_0_16px_rgba(251,113,133,0.22)]",
+                    extTotal > 0 && "drop-shadow-[0_0_16px_var(--profit)]",
+                    extTotal < 0 && "drop-shadow-[0_0_16px_var(--loss)]",
                   )}
                 >
                   {fmtSignedMoney(extTotal, currency, locale)}

@@ -117,7 +117,7 @@ export function BehaviorOverconfidenceCard({
                   <span
                     className={
                       ev.net_pnl >= 0
-                        ? "tabular-nums font-medium text-profit"
+                        ? "tabular-nums font-medium text-success"
                         : "tabular-nums font-medium text-destructive"
                     }
                   >

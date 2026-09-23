@@ -13,7 +13,22 @@ import {
   useDisplayPrefs,
   wallClockToIso,
   isoToWallClock,
+  PRICE_COLOR_DEFAULT,
 } from "./displayPrefs";
+
+describe("price color convention", () => {
+  it("defaults to the existing green-up mapping and persists either choice", () => {
+    useDisplayPrefs.getState().setPriceColorConvention(PRICE_COLOR_DEFAULT);
+    expect(useDisplayPrefs.getState().priceColorConvention).toBe("green-up-red-down");
+    useDisplayPrefs.getState().setPriceColorConvention("red-up-green-down");
+    expect(
+      JSON.parse(localStorage.getItem(DISPLAY_PREFS_STORAGE_KEY)!).state.priceColorConvention,
+    ).toBe("red-up-green-down");
+    useDisplayPrefs.persist.rehydrate();
+    expect(useDisplayPrefs.getState().priceColorConvention).toBe("red-up-green-down");
+    useDisplayPrefs.getState().setPriceColorConvention("green-up-red-down");
+  });
+});
 
 describe("accountBaseCurrency", () => {
   const accounts = [

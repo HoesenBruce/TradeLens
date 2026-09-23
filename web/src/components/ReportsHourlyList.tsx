@@ -57,7 +57,10 @@ export function ReportsHourlyList({ breakdown, loading, error }: ReportsHourlyLi
                   </div>
                   <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
                     <div
-                      className={cn("h-full rounded-full", pnl >= 0 ? "bg-profit" : "bg-loss")}
+                      className={cn(
+                        "h-full rounded-full",
+                        pnl > 0 ? "bg-profit" : pnl < 0 ? "bg-loss" : "bg-flat",
+                      )}
                       style={{ width: `${width}%`, opacity: 0.7 }}
                     />
                   </div>

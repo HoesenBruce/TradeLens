@@ -433,9 +433,7 @@ function TradeDetailSheetBody({
                     }
                     className={cn(
                       "flex size-4 items-center justify-center rounded-md text-[10px] font-bold",
-                      f.side === "buy"
-                        ? "bg-profit/10 text-profit"
-                        : "bg-destructive/10 text-destructive",
+                      f.side === "buy" ? "bg-profit/10 text-profit" : "bg-loss/10 text-loss",
                     )}
                   >
                     {f.side === "buy" ? "B" : "S"}
