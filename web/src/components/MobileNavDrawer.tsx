@@ -10,6 +10,7 @@ import { ToolsPopover } from "./ToolsPopover";
 import { Button } from "./ui/button";
 import { useAppUpdate } from "@/lib/appUpdate";
 import { useAuth } from "@/lib/auth";
+import { BRAND } from "@/lib/brand";
 import { cn } from "@/lib/cn";
 import { accountBaseCurrency, useDisplayPrefs } from "@/lib/displayPrefs";
 import { useFilters } from "@/lib/filters";
@@ -214,7 +215,7 @@ export function MobileNavDrawer() {
         <DrawerHeader>
           <div className="flex items-center gap-2">
             <AppLogo size={22} />
-            <DrawerTitle>TraderMemos</DrawerTitle>
+            <DrawerTitle>{BRAND.name}</DrawerTitle>
           </div>
           <DrawerClose
             aria-label="Close menu"
