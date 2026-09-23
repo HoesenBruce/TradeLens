@@ -1,3 +1,4 @@
+import { t as tr } from "@lingui/core/macro";
 /** Build a compact page list with ellipsis gaps (1 … 4 5 6 … 20). */
 export function pageItems(
   page: number,
@@ -40,5 +41,5 @@ export function pageRangeLabel(page: number, pageSize: number, total: number): s
   if (total <= 0) return "0 of 0";
   const start = (Math.max(1, page) - 1) * pageSize + 1;
   const end = Math.min(page * pageSize, total);
-  return `${start}–${end} of ${total}`;
+  return tr({ id: "market.pageRange", message: `${start}–${end} of ${total}` });
 }

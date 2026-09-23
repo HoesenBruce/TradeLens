@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { Info, X } from "lucide-react";
 import type { ReactNode } from "react";
 import {
@@ -32,6 +33,8 @@ export function Modal({
   overlayClassName?: string;
   bodyClassName?: string;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange} modal>
       <DialogContent
@@ -46,7 +49,7 @@ export function Modal({
           <div className="relative z-[1] ml-auto flex items-center gap-2">
             {headerActions}
             <DialogClose
-              aria-label="Close"
+              aria-label={tr({ id: "market.close", message: "Close" })}
               className="flex cursor-pointer border-none bg-transparent p-1 text-muted-foreground transition-colors hover:text-foreground"
             >
               <X size={18} strokeWidth={1.5} />

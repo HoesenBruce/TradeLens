@@ -1,4 +1,5 @@
-import { render } from "@testing-library/react";
+import { render } from "@/test/render";
+
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import type { Execution } from "@/lib/api/types";
 import type { MarketBar } from "@/lib/api/market";

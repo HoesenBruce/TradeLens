@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { X } from "lucide-react";
 import type { ComponentProps } from "react";
@@ -47,6 +48,7 @@ function DialogContent({
   /** Stack above drawers (z-50) when nesting, e.g. chart expand. */
   overlayClassName?: string;
 }) {
+  const { t: tr } = useLinguiMacro();
   return (
     <DialogPortal>
       <DialogOverlay className={overlayClassName} />
@@ -67,7 +69,7 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
-            aria-label="Close"
+            aria-label={tr({ id: "market.close", message: "Close" })}
             className={cn(
               buttonVariants({ variant: "ghost", size: "icon-sm" }),
               "absolute top-4 right-5",

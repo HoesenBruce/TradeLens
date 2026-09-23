@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { ChartLine } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { TradeChart } from "@/components/charts/TradeChart";
@@ -33,6 +34,8 @@ export function AdvancedChartView({
   onSymbolChange,
   onIntervalChange,
 }: AdvancedChartViewProps) {
+  const { t: tr } = useLinguiMacro();
+
   const [input, setInput] = useState(symbol);
   useEffect(() => setInput(symbol), [symbol]);
 
@@ -62,11 +65,11 @@ export function AdvancedChartView({
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 className="text-[20px] font-bold tracking-[-0.02em] text-foreground">
-            Advanced chart
+            {tr({ id: "market.advanced", message: "Advanced chart" })}
           </h1>
           <form className="flex items-center gap-2" onSubmit={onSubmit}>
             <label className="sr-only" htmlFor="chart-symbol">
-              Symbol
+              {tr({ id: "market.symbol", message: "Symbol" })}
             </label>
             <input
               id="chart-symbol"
@@ -78,7 +81,7 @@ export function AdvancedChartView({
               spellCheck={false}
             />
             <Button type="submit" variant="soft" disabled={!input.trim()}>
-              Load
+              {tr({ id: "market.load", message: "Load" })}
             </Button>
           </form>
         </div>
@@ -91,7 +94,15 @@ export function AdvancedChartView({
               fills={[]}
               loading={barsQ.isLoading}
               error={barsQ.isError}
-              errorMessage={barsQ.error instanceof Error ? barsQ.error.message : undefined}
+              errorMessage={
+                barsQ.error instanceof Error
+                  ? tr({
+                      id: "market.requestFailed",
+                      message:
+                        "The market data request failed \u2014 check the symbol and try again.",
+                    })
+                  : undefined
+              }
               interval={interval}
               onIntervalChange={onIntervalChange}
               height={480}
@@ -100,8 +111,11 @@ export function AdvancedChartView({
           </section>
         ) : (
           <EmptyState
-            title="Pick a symbol"
-            hint="Load any ticker's candles — independent of your trades."
+            title={tr({ id: "market.pickSymbol", message: "Pick a symbol" })}
+            hint={tr({
+              id: "market.pickHint",
+              message: "Load any ticker's candles — independent of your trades.",
+            })}
             icon={<ChartLine aria-hidden />}
           />
         )}

@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { useEffect, useMemo, useState } from "react";
 import type { BarInterval } from "@/lib/api/market";
 import type { TradeDetail } from "@/lib/api/types";
@@ -26,6 +27,8 @@ function modalChartHeight(): number {
 }
 
 export function TradeChartSection({ trade }: { trade: TradeDetail }) {
+  const { t: tr } = useLinguiMacro();
+
   const range = useMemo(
     () => chartWindowFromTrade(trade.opened_at, trade.closed_at),
     [trade.opened_at, trade.closed_at],
@@ -83,11 +86,14 @@ export function TradeChartSection({ trade }: { trade: TradeDetail }) {
     loading: barsQ.isLoading,
     error: barsQ.isError,
     errorMessage: showUnavailable
-      ? "Chart unavailable for this symbol."
+      ? tr({ id: "market.unsupported", message: "Chart unavailable for this symbol." })
       : showEmpty
-        ? "No market data for this window."
+        ? tr({ id: "market.noMarket", message: "No market data for this window." })
         : barsQ.error instanceof Error
-          ? barsQ.error.message
+          ? tr({
+              id: "market.requestFailed",
+              message: "The market data request failed \u2014 check the symbol and try again.",
+            })
           : undefined,
     targetPrice: trade.target_price,
     stopPrice: trade.stop_price,
@@ -125,7 +131,7 @@ export function TradeChartSection({ trade }: { trade: TradeDetail }) {
       <Modal
         open={expanded}
         onOpenChange={setExpanded}
-        title={`${trade.symbol} chart`}
+        title={tr({ id: "market.chartTitle", message: `${trade.symbol} chart` })}
         className="z-[70] max-h-[min(92vh,920px)] max-w-[min(1100px,96vw)]"
         overlayClassName="z-[60]"
         bodyClassName="p-4"

@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@/test/render";
+import { screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vite-plus/test";
 import { Modal, ModalBanner } from "./Modal";
 import { Button } from "./ui/button";

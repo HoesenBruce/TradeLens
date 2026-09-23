@@ -5643,3 +5643,892 @@ msgstr "最差交易"
 #: src/components/AnnualGoalCard.tsx:354
 msgid "accounts.ytd"
 msgstr "年初至今"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/components/charts/TradeChartSection.tsx:134
+msgid "market.chartTitle"
+msgstr "{0} 图表"
+
+#. js-lingui-explicit-id
+#: src/lib/pagination.ts:44
+msgid "market.pageRange"
+msgstr "{start}–{end}，共 {total} 条"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:96
+#: src/app/screens/ConnectView.tsx:116
+#: src/app/screens/ConnectView.tsx:120
+#: src/components/HeaderBar.tsx:145
+msgid "market.account"
+msgstr "账户"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:211
+msgid "market.accountCurrency"
+msgstr "账户货币"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:149
+msgid "market.addSort"
+msgstr "添加排序"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:89
+msgid "market.addSortHint"
+msgstr "添加排序以调整行的顺序。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:68
+#: src/lib/tools.ts:88
+msgid "market.advanced"
+msgstr "高级图表"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:349
+msgid "market.allBrokers"
+msgstr "全部券商"
+
+#. js-lingui-explicit-id
+#: src/components/ToolsPopover.tsx:133
+msgid "market.allCommands"
+msgstr "全部命令"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:24
+msgid "market.allTime"
+msgstr "全部时间"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:92
+#: src/components/SortList.tsx:114
+msgid "market.asc"
+msgstr "升序"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:381
+msgid "market.autoSync"
+msgstr "自动同步"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:321
+msgid "market.liveBar"
+msgstr "返回当前回放进度"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:380
+msgid "market.balance"
+msgstr "余额"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: replay.cursor + 1
+#. placeholder {1}: bars?.length ?? 0
+#: src/app/screens/ReplayView.tsx:246
+msgid "market.barProgress"
+msgstr "第 {0}/{1} 根 K 线 · {timeLabel}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:163
+msgid "market.barInterval"
+msgstr "K 线周期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:352
+#: src/app/screens/ReplayView.tsx:436
+msgid "market.buy"
+msgstr "买入"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:31
+msgid "market.calculators"
+msgstr "计算工具"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:75
+msgid "market.sbiNote"
+msgstr "支持现货、信用交易及「現引」持仓转换。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:232
+msgid "market.changeSetup"
+msgstr "修改设置"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:330
+msgid "market.chart"
+msgstr "图表"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:121
+msgid "market.mismatch"
+msgstr "行情与记录的成交价不一致：回放期间的盈亏按图表价格估算，可能存在偏差；最终盈亏以成交记录为准。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:214
+msgid "market.chartUnavailableTitle"
+msgstr "行情数据不可用"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:132
+msgid "market.chartUnavailable"
+msgstr "行情数据不可用。"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChartSection.tsx:89
+msgid "market.unsupported"
+msgstr "此代码不支持图表。"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:142
+msgid "market.chooseMonth"
+msgstr "选择月份"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:143
+msgid "market.chooseYear"
+msgstr "选择年份"
+
+#. js-lingui-explicit-id
+#: src/components/CreatedAtFilter.tsx:52
+msgid "market.clearCreated"
+msgstr "清除交易日期筛选"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:74
+msgid "market.clearSymbol"
+msgstr "清除代码筛选"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:47
+msgid "market.customHint"
+msgstr "点击两个日期以设置自定义范围"
+
+#. js-lingui-explicit-id
+#: src/components/Dialog.tsx:72
+#: src/components/Modal.tsx:52
+msgid "market.close"
+msgstr "关闭"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:368
+msgid "market.closePosition"
+msgstr "平仓"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:20
+msgid "market.closed"
+msgstr "已平仓"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:48
+msgid "market.columnsAuto"
+msgstr "自动映射列"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:609
+msgid "market.connectTitle"
+msgstr "连接券商"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:19
+msgid "market.syncGroup"
+msgstr "连接一次，后续成交自动同步。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:508
+msgid "market.continueUpload"
+msgstr "继续上传"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:217
+msgid "market.convert"
+msgstr "换算为"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:508
+msgid "market.saveError"
+msgstr "无法保存回放记录。"
+
+#. js-lingui-explicit-id
+#: src/components/CreatedAtFilter.tsx:39
+#: src/components/CreatedAtFilter.tsx:73
+msgid "market.createdAt"
+msgstr "交易日期"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:70
+msgid "market.fx"
+msgstr "汇率换算"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:27
+msgid "market.customRange"
+msgstr "自定义范围"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:155
+#: src/components/DateRangePicker.tsx:38
+#: src/components/DateRangePicker.tsx:77
+msgid "market.dateRange"
+msgstr "日期范围"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:101
+#: src/components/SortList.tsx:115
+msgid "market.desc"
+msgstr "降序"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:136
+msgid "market.currency"
+msgstr "显示货币 · {activeCode}"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:135
+msgid "market.currencyAccount"
+msgstr "显示货币 · {activeCode}（账户）"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:106
+msgid "market.econ"
+msgstr "经济日历"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:65
+msgid "market.endSession"
+msgstr "结束回放"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:257
+msgid "market.entry"
+msgstr "入场"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:58
+msgid "market.sbiFormat"
+msgstr "成交履历 CSV"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:109
+msgid "market.existingAccount"
+msgstr "已有账户"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:349
+msgid "market.exitReplay"
+msgstr "退出回放"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:366
+msgid "market.expand"
+msgstr "展开图表"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:20
+msgid "market.fileGroup"
+msgstr "从券商导出文件，系统自动识别列。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ConnectView.tsx:39
+msgid "market.exportBroker"
+msgstr "从 {0} 导出"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:382
+msgid "market.fileImport"
+msgstr "文件导入"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:402
+#: src/components/charts/ReplayControls.tsx:21
+msgid "market.flat"
+msgstr "空仓"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:145
+msgid "market.from"
+msgstr "开始"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:141
+msgid "market.nextMonth"
+msgstr "下个月"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:140
+msgid "market.previousMonth"
+msgstr "上个月"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:115
+msgid "market.hide"
+msgstr "隐藏"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:266
+msgid "market.hideAmounts"
+msgstr "隐藏金额"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:261
+msgid "market.hideSensitive"
+msgstr "隐藏敏感金额"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:493
+msgid "market.importExport"
+msgstr "导入导出文件"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:161
+msgid "market.interval"
+msgstr "周期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:175
+msgid "market.historyHint"
+msgstr "日内历史范围受数据提供方限制：分钟线约可回溯一个月，小时线约两个月。日线可回放任意年份。"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:43
+msgid "market.journal"
+msgstr "日志"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:535
+msgid "market.keepReplay"
+msgstr "继续回放"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:61
+msgid "market.kelly"
+msgstr "凯利公式"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:12
+msgid "market.last30"
+msgstr "最近 30 天"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:9
+msgid "market.last7"
+msgstr "最近 7 天"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:15
+msgid "market.last90"
+msgstr "最近 90 天"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:84
+msgid "market.load"
+msgstr "加载"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:115
+msgid "market.pickHint"
+msgstr "查看任意代码的 K 线，无需已有交易。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:514
+msgid "market.manualInstead"
+msgstr "改为手动记录交易"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: pnl.position
+#: src/app/screens/ReplayView.tsx:399
+#: src/components/charts/ReplayControls.tsx:14
+msgid "market.longQty"
+msgstr "多头 {0}"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:383
+msgid "market.manual"
+msgstr "手动"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:37
+msgid "market.markets"
+msgstr "行情"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:88
+msgid "market.modifySort"
+msgstr "修改排序以调整行的顺序。"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:164
+msgid "market.morePages"
+msgstr "更多页"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:18
+msgid "market.mtd"
+msgstr "本月至今"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:138
+msgid "market.calendarNav"
+msgstr "日历导航"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:110
+msgid "market.newAccount"
+msgstr "新建账户"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:179
+msgid "market.nextPage"
+msgstr "下一页"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:215
+msgid "market.noBarsTitle"
+msgstr "此时间范围内没有 K 线"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:136
+msgid "market.noBars"
+msgstr "此时间范围内没有 K 线。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: query.trim()
+#: src/components/BrokerPicker.tsx:101
+msgid "market.noBroker"
+msgstr "未找到“{0}”对应的券商"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:388
+msgid "market.noChartLabel"
+msgstr "暂无图表数据"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:134
+msgid "market.noChart"
+msgstr "暂无图表数据。"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:21
+msgid "market.manualGroup"
+msgstr "无需导出文件。"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChartSection.tsx:91
+msgid "market.noMarket"
+msgstr "此时间范围内没有行情数据。"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:84
+msgid "market.noSort"
+msgstr "未设置排序"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:62
+msgid "market.sbi1"
+msgstr "打开 SBI 证券的成交履历页面。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:330
+msgid "market.orderEntry"
+msgstr "模拟下单"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:331
+msgid "market.orderHint"
+msgstr "模拟订单按当前 K 线收盘价成交。"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:65
+msgid "market.page"
+msgstr "第 {page} 页"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:106
+msgid "market.pagination"
+msgstr "分页"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:290
+msgid "market.pause"
+msgstr "暂停"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:74
+msgid "market.pauseReplay"
+msgstr "暂停回放"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:375
+msgid "market.pf"
+msgstr "盈利因子"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:102
+msgid "market.otherBrokerHint"
+msgstr "选择“其他券商”手动映射 CSV，或创建手动账户。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:114
+msgid "market.pickSymbol"
+msgstr "选择代码"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:612
+msgid "market.connectHint"
+msgstr "选择交易平台，查看数据导出方法并设置对应账户。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:291
+msgid "market.play"
+msgstr "播放"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:75
+msgid "market.playReplay"
+msgstr "播放回放"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:52
+msgid "market.size"
+msgstr "仓位计算"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:503
+msgid "market.preparing"
+msgstr "准备中…"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:147
+msgid "market.previousPage"
+msgstr "上一页"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:339
+msgid "market.quantity"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:161
+msgid "market.quickRange"
+msgstr "快捷范围"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: labelById.get(sort.id) ?? sort.id
+#: src/components/SortList.tsx:125
+msgid "market.removeSort"
+msgstr "移除 {0} 排序"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:61
+#: src/lib/tools.ts:97
+msgid "market.replay"
+msgstr "回放"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:125
+msgid "market.sessionHint"
+msgstr "逐根回放任意代码的 K 线，不提前显示未来行情。模拟订单按当前 K 线收盘价成交，并保存至独立回测账户，不计入真实交易统计。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:155
+msgid "market.endDay"
+msgstr "回放结束日期"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:50
+msgid "market.replayPosition"
+msgstr "回放位置"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:313
+#: src/components/charts/ReplayControls.tsx:96
+msgid "market.speed"
+msgstr "回放速度"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:147
+msgid "market.startDay"
+msgstr "回放开始日期"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:350
+msgid "market.replayTrade"
+msgstr "交易回放"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:106
+msgid "market.reset"
+msgstr "重置"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:153
+msgid "market.resetSort"
+msgstr "重置排序"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:123
+msgid "market.rows"
+msgstr "行数"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:128
+msgid "market.rowsPerPage"
+msgstr "每页行数"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: replay.fills.length
+#: src/app/screens/ReplayView.tsx:563
+msgid "market.saveFills"
+msgstr "保存 {0} 笔成交"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:562
+msgid "market.saveOne"
+msgstr "保存 1 笔成交"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:544
+#: src/app/screens/ReplayView.tsx:560
+msgid "market.saveSession"
+msgstr "保存回放"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:515
+msgid "market.saved"
+msgstr "已保存"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:558
+msgid "market.saving"
+msgstr "保存中…"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:412
+msgid "market.search"
+msgstr "搜索"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:93
+msgid "market.searchBrokers"
+msgstr "搜索券商"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:92
+msgid "market.searchBrokerHint"
+msgstr "搜索券商和平台"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:400
+msgid "market.searchHint"
+msgstr "搜索…"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:32
+msgid "market.endDate"
+msgstr "选择结束日期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:360
+#: src/app/screens/ReplayView.tsx:437
+msgid "market.sell"
+msgstr "卖出"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:124
+msgid "market.session"
+msgstr "回放设置"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:63
+msgid "market.sbi2"
+msgstr "设置期间，并将成交履历导出为 CSV。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: Math.abs(pnl.position)
+#: src/app/screens/ReplayView.tsx:401
+#: src/components/charts/ReplayControls.tsx:16
+msgid "market.shortQty"
+msgstr "空头 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:265
+msgid "market.showAmounts"
+msgstr "显示金额"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:174
+#: src/components/HeaderBar.tsx:234
+msgid "market.showIn"
+msgstr "金额显示货币（账户记账货币为 {base}）"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:260
+msgid "market.showSensitive"
+msgstr "显示敏感金额"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:113
+msgid "market.showing"
+msgstr "显示"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:68
+#: src/components/SortList.tsx:71
+msgid "market.sort"
+msgstr "排序"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:83
+msgid "market.sortBy"
+msgstr "排序依据"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:106
+msgid "market.sortColumn"
+msgstr "排序列"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:117
+msgid "market.sortDirection"
+msgstr "排序方向"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:171
+msgid "market.startReplay"
+msgstr "开始回放"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:279
+#: src/components/charts/ReplayControls.tsx:63
+msgid "market.back"
+msgstr "后退一步"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:305
+#: src/components/charts/ReplayControls.tsx:89
+msgid "market.forward"
+msgstr "前进一步"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:277
+msgid "market.stop"
+msgstr "止损"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:72
+#: src/app/screens/ReplayView.tsx:134
+msgid "market.symbol"
+msgstr "代码"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:267
+msgid "market.target"
+msgstr "目标"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:99
+#: src/app/screens/ReplayView.tsx:219
+#: src/components/charts/TradeChartSection.tsx:93
+msgid "market.requestFailed"
+msgstr "行情请求失败，请检查代码后重试。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:494
+msgid "market.previewFirst"
+msgstr "下一步先预览文件，确认后才写入数据。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:223
+msgid "market.emptyHint"
+msgstr "数据提供方未返回数据，请尝试更长周期或更近的时间范围。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:518
+msgid "market.savedHint"
+msgstr "回放记录已保存至 Backtest 账户，可通过账户切换查看分析。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:153
+msgid "market.to"
+msgstr "结束"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:79
+msgid "market.today"
+msgstr "今天"
+
+#. js-lingui-explicit-id
+#: src/components/ViewOptions.tsx:55
+#: src/components/ViewOptions.tsx:63
+msgid "market.columns"
+msgstr "显示或隐藏列"
+
+#. js-lingui-explicit-id
+#: src/components/ToolsPopover.tsx:53
+#: src/components/ToolsPopover.tsx:54
+#: src/components/ToolsPopover.tsx:77
+#: src/components/ToolsPopover.tsx:79
+#: src/components/ToolsPopover.tsx:96
+msgid "market.tools"
+msgstr "工具"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:67
+msgid "market.sbi3"
+msgstr "上传原始 CSV；系统会自动处理 CP932 编码和报告表头。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:105
+msgid "market.accountChoice"
+msgstr "使用已有账户或新建账户"
+
+#. js-lingui-explicit-id
+#: src/components/ViewOptions.tsx:58
+msgid "market.view"
+msgstr "视图"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:531
+msgid "market.viewTrade"
+msgstr "查看交易 →"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerSteps.tsx:30
+msgid "market.recognised"
+msgstr "已识别此导出格式，列映射会自动填写。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:97
+msgid "market.accountHint"
+msgstr "选择交易记录归属的账户。每个券商账户单独建账，确保余额和筛选准确。"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:370
+msgid "market.wr"
+msgstr "胜率"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:545
+msgid "market.saveHint"
+msgstr "将成交记录写入 Backtest 模拟账户。回测交易不计入真实交易统计，需单独选择该账户进行分析。"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:115
+msgid "market.wrapped"
+msgstr "年度回顾"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:373
+msgid "market.reviewHint"
+msgstr "当前正在查看较早的 K 线，只能在回放的最新进度下单。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:567
+msgid "market.openHint"
+msgstr "当前仍有持仓；若不先平仓，将保存为未平仓交易。"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:21
+msgid "market.ytd"
+msgstr "今年至今"
