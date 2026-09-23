@@ -4,49 +4,1181 @@ msgstr ""
 "Language: zh-CN\n"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: row.original.sample_count
+#. placeholder {1}: row.original.correct
+#: src/routes/news.performance.tsx:81
+msgid "news.sampleCount"
+msgstr "· n={0}（{1} 个正确）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: p.source === "user" ? t({ id: "news.user", message: "User" }) : "AI"
+#. placeholder {1}: p.id
+#: src/components/NewsPredictions.tsx:296
+msgid "news.predictionAria"
+msgstr "{0} 预测 {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: row.original.key
+#: src/routes/news.performance.tsx:60
+msgid "news.groupDays"
+msgstr "{0}个交易日"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:345
+#: src/components/NewsPredictions.tsx:210
+#: src/components/NewsPredictions.tsx:312
+#: src/components/NewsPredictions.tsx:354
+#: src/components/NewsTable.tsx:146
+#: src/routes/news.performance.tsx:186
+msgid "news.days"
+msgstr "{h}个交易日"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:37
+#: src/routes/news.performance.tsx:126
+msgid "news.back"
+msgstr "← 返回新闻"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:43
 msgid "news.export.missing"
 msgstr "某条新闻观点已不可用，请刷新列表后重试。"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: i + 1
+#: src/components/NewsAnalysisReview.tsx:230
+msgid "news.acceptAsset"
+msgstr "采用资产 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:188
+msgid "news.acceptCategory"
+msgstr "采用分类"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:187
+msgid "news.acceptSummary"
+msgstr "采用摘要"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:67
+msgid "news.actions"
+msgstr "操作"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:282
+msgid "news.predictionAssetHint"
+msgstr "请先添加相关资产，再创建预测。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:324
+msgid "news.addAsset"
+msgstr "添加资产"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:390
+msgid "news.addManualAsset"
+msgstr "手动添加资产"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:277
+msgid "news.addPrediction"
+msgstr "添加预测"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:281
+msgid "news.performanceEmptyHint"
+msgstr "添加预测或重置筛选以查看表现。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:136
+#: src/components/NewsPredictions.tsx:138
+msgid "news.affectedAsset"
+msgstr "相关资产"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:339
+msgid "news.assetNumber"
+msgstr "相关资产 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:311
+#: src/components/NewsTable.tsx:62
+msgid "news.assets"
+msgstr "相关资产"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:141
+msgid "news.assetsPredictions"
+msgstr "相关资产与预测"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:133
+msgid "news.assetsPredictionsAria"
+msgstr "相关资产与预测"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:295
+msgid "news.aiUser"
+msgstr "AI / 用户"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:166
+msgid "news.allAssets"
+msgstr "全部资产"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:605
+msgid "news.allDirections"
+msgstr "全部方向"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:182
+msgid "news.allHorizons"
+msgstr "全部周期"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:151
+msgid "news.allSources"
+msgstr "全部来源"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:586
+msgid "news.allStatuses"
+msgstr "全部状态"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:80
+msgid "news.analysisFailed"
+msgstr "分析失败。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:132
+msgid "news.analyze"
+msgstr "使用 AI 分析"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:158
+msgid "news.analyzing"
+msgstr "正在分析新闻…尚未保存任何数据。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:399
+msgid "news.assetName"
+msgstr "资产 {0} 名称"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:412
+msgid "news.assetRelation"
+msgstr "资产 {0} 关联"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:366
+msgid "news.assetSymbol"
+msgstr "资产 {0} 代码"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:343
+msgid "news.assetTypeNumber"
+msgstr "资产 {0} 类型"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: asset.source === "ai" ? "AI" : t({ id: "news.user", message: "User" })
+#: src/routes/news.$id.tsx:173
+msgid "news.assetSource"
+msgstr "资产来源：{0}"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:159
+#: src/routes/news.performance.tsx:161
+msgid "news.assetType"
+msgstr "资产类型"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:542
+#: src/components/NewsAnalysisReview.tsx:41
+#: src/components/NewsPredictions.tsx:57
+#: src/components/NewsPredictions.tsx:164
+#: src/components/NewsPredictions.tsx:252
+#: src/components/NewsTable.tsx:36
+msgid "news.bearish"
+msgstr "看跌"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:541
+#: src/components/NewsAnalysisReview.tsx:40
+#: src/components/NewsPredictions.tsx:56
+#: src/components/NewsPredictions.tsx:161
+#: src/components/NewsPredictions.tsx:251
+#: src/components/NewsTable.tsx:35
+msgid "news.bullish"
+msgstr "看涨"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:307
+msgid "news.byAsset"
+msgstr "按资产"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:317
+msgid "news.byCategory"
+msgstr "按分类"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:302
+msgid "news.byHorizon"
+msgstr "按周期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:447
+#: src/app/screens/NewsView.tsx:500
+#: src/components/NewsAnalysisReview.tsx:398
+#: src/components/NewsPredictions.tsx:228
+#: src/components/NewsPredictions.tsx:427
+msgid "news.cancel"
+msgstr "取消"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:35
+#: src/components/NewsPredictions.tsx:53
+#: src/components/NewsPredictions.tsx:248
+msgid "news.catalysts"
+msgstr "催化因素"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:242
+#: src/app/screens/NewsView.tsx:247
+#: src/routes/news.performance.tsx:198
+#: src/routes/news.performance.tsx:200
+msgid "news.category"
+msgstr "分类"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:694
+msgid "news.noMatchesHint"
+msgstr "更改或重置筛选以查看其他记录。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:654
+#: src/routes/news.$id.tsx:58
+msgid "news.connectionHint"
+msgstr "请检查 API 连接后重试。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:241
+msgid "news.performanceRetryHint"
+msgstr "请检查 API 连接或重置筛选。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:259
+msgid "news.tagsHint"
+msgstr "使用逗号分隔。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:214
+msgid "news.sourceExample"
+msgstr "公司公告、路透社、手动记录…"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:64
+msgid "news.confidence"
+msgstr "置信度"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:295
+#: src/components/NewsAnalysisReview.tsx:301
+#: src/components/NewsPredictions.tsx:172
+#: src/components/NewsPredictions.tsx:176
+msgid "news.confidencePercent"
+msgstr "置信度 (%)"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:92
+msgid "news.confidenceInvalid"
+msgstr "置信度必须为 0 到 100 的整数。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:308
+msgid "news.confidenceUnset"
+msgstr "未设置置信度"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:76
+msgid "news.aiUnavailable"
+msgstr "请先在设置中配置并启用 AI 教练。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:515
+msgid "news.deleteFailed"
+msgstr "无法删除记录。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:441
+msgid "news.deletePredictionFailed"
+msgstr "无法删除预测。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:47
 msgid "news.export.failed"
 msgstr "导出失败，请检查网络和所选记录后重试。"
 
 #. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:652
+msgid "news.loadFailed"
+msgstr "无法加载新闻"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:49
+msgid "news.detailLoadFailed"
+msgstr "无法加载新闻观点"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:237
+msgid "news.performanceFailed"
+msgstr "无法加载表现"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:190
+msgid "news.couldNotSave"
+msgstr "无法保存"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:160
+msgid "news.saveFailed"
+msgstr "无法保存新闻记录。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:108
+msgid "news.savePredictionFailed"
+msgstr "无法保存预测。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:117
+msgid "news.reviewFailed"
+msgstr "无法保存审核结果。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:452
+msgid "news.createEntry"
+msgstr "创建记录"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtDateTime(news.created_at)
+#. placeholder {0}: fmtDateTime(p.created_at)
+#. placeholder {1}: fmtDateTime(news.updated_at)
+#. placeholder {1}: fmtDateTime(p.updated_at)
+#: src/components/NewsPredictions.tsx:319
+#: src/routes/news.$id.tsx:126
+msgid "news.timestamps"
+msgstr "创建于 {0} · 更新于 {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: baseline[field] || t({ id: "news.notRecorded", message: "Not recorded" })
+#: src/components/NewsAnalysisReview.tsx:191
+msgid "news.current"
+msgstr "当前：{0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:522
+#: src/components/NewsPredictions.tsx:451
+msgid "news.delete"
+msgstr "删除"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: n.title
+#: src/components/NewsTable.tsx:176
+msgid "news.deleteNamedEntry"
+msgstr "删除 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:479
+msgid "news.deleteTitle"
+msgstr "删除新闻观点？"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:384
+msgid "news.deletePrediction"
+msgstr "删除预测"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:408
+msgid "news.deletePredictionTitle"
+msgstr "删除用户预测？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:596
+#: src/components/NewsAnalysisReview.tsx:277
+#: src/components/NewsAnalysisReview.tsx:279
+#: src/components/NewsPredictions.tsx:152
+#: src/components/NewsPredictions.tsx:154
+msgid "news.direction"
+msgstr "方向"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:598
+msgid "news.directionFilter"
+msgstr "方向筛选"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:75
+msgid "news.hitRate"
+msgstr "方向命中率"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:33
+msgid "news.display_name"
+msgstr "显示名称"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:28
 msgid "news.export.started"
 msgstr "已请求下载，请查看浏览器下载列表。"
 
 #. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:250
+msgid "news.categoryExample"
+msgstr "财报、政策、新品发布…"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: n.title
+#: src/components/NewsTable.tsx:168
+msgid "news.editTitle"
+msgstr "编辑 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:174
+#: src/routes/news.$id.tsx:85
+msgid "news.edit"
+msgstr "编辑新闻观点"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:374
+msgid "news.editPrediction"
+msgstr "编辑预测"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:121
+msgid "news.editUserPrediction"
+msgstr "编辑用户预测"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: filtered.length
+#: src/app/screens/NewsView.tsx:680
+msgid "news.entryCount"
+msgstr "记录数：{0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:124
+msgid "news.assetRequired"
+msgstr "每项相关资产都需要代码。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:388
+#: src/components/NewsAnalysisReview.tsx:32
+msgid "news.exchange"
+msgstr "交易所"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:68
 msgid "news.export.filtered"
 msgstr "导出筛选结果"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:63
 msgid "news.export.single"
 msgstr "导出 Markdown"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:71
 msgid "news.export.selected"
 msgstr "导出所选（{count}）"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:38
 msgid "news.export.denied"
 msgstr "无法导出，请登录并确认访问权限。"
 
 #. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:76
 msgid "news.export.loading"
 msgstr "正在导出…"
 
 #. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:619
+msgid "news.from"
+msgstr "起始日期"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:57
+msgid "news.group"
+msgstr "分组"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:65
+#: src/routes/news.performance.tsx:175
+#: src/routes/news.performance.tsx:177
+msgid "news.horizon"
+msgstr "周期"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:272
+msgid "news.includePrediction"
+msgstr "包含预测"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:49
+#: src/routes/news.performance.tsx:105
+msgid "news.incomplete"
+msgstr "不完整"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:360
+#: src/components/NewsAnalysisReview.tsx:39
+#: src/components/NewsPredictions.tsx:61
+#: src/components/NewsPredictions.tsx:256
+#: src/components/NewsTable.tsx:40
+#: src/routes/news.$id.tsx:25
+#: src/routes/news.performance.tsx:52
+#: src/routes/news.performance.tsx:108
+msgid "news.index"
+msgstr "指数"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:55
+#: src/components/NewsPredictions.tsx:250
+msgid "news.invalidation"
+msgstr "失效条件"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:266
+msgid "news.tagsExample"
+msgstr "日本, ETF"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:229
+msgid "news.loadingPerformance"
+msgstr "正在加载表现"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:558
+msgid "news.subtitle"
+msgstr "记录催化事件及可能受影响的资产。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:379
+#: src/components/NewsAnalysisReview.tsx:31
+msgid "news.market"
+msgstr "市场"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:397
+msgid "news.name"
+msgstr "名称"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:543
+#: src/components/NewsAnalysisReview.tsx:42
+#: src/components/NewsPredictions.tsx:58
+#: src/components/NewsPredictions.tsx:167
+#: src/components/NewsPredictions.tsx:253
+#: src/components/NewsTable.tsx:37
+msgid "news.neutral"
+msgstr "中性"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:570
+#: src/app/screens/NewsView.tsx:674
+msgid "news.newEntry"
+msgstr "新建记录"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:175
+msgid "news.new"
+msgstr "新建新闻观点"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:122
+msgid "news.newUserPrediction"
+msgstr "新建用户预测"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:90
+msgid "news.newsSource"
+msgstr "新闻 / 来源"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:576
+msgid "news.filters"
+msgstr "新闻筛选"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:55
+msgid "news.table"
+msgstr "新闻观点"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:555
+msgid "news.heading"
+msgstr "新闻观点"
+
+#. js-lingui-explicit-id
+#: src/routes/news.index.tsx:41
+msgid "news.created"
+msgstr "新闻观点已创建"
+
+#. js-lingui-explicit-id
+#: src/routes/news.index.tsx:57
+msgid "news.deleted"
+msgstr "新闻观点已删除"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:48
+msgid "news.missing"
+msgstr "未找到新闻观点"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:130
+msgid "news.performanceTitle"
+msgstr "新闻观点表现"
+
+#. js-lingui-explicit-id
+#: src/routes/news.index.tsx:34
+msgid "news.updated"
+msgstr "新闻观点已更新"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:329
+msgid "news.noAssets"
+msgstr "尚无相关资产。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:154
+msgid "news.addAssetDetail"
+msgstr "尚无相关资产，请编辑新闻观点添加。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:209
+msgid "news.noSuggestions"
+msgstr "暂无资产建议，可手动添加资产。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:280
+msgid "news.noMatchingPredictions"
+msgstr "没有符合条件的预测"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:693
+msgid "news.noMatches"
+msgstr "没有符合条件的观点"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:666
+msgid "news.empty"
+msgstr "尚无新闻观点"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:128
+msgid "news.noPrediction"
+msgstr "无预测"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:290
+msgid "news.noPredictions"
+msgstr "尚无预测。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:36
+#: src/components/NewsExportActions.tsx:89
 msgid "news.export.empty"
 msgstr "没有可导出的新闻观点。"
 
 #. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:359
+#: src/routes/news.performance.tsx:79
+msgid "news.notAvailable"
+msgstr "暂无数据"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:193
+#: src/components/NewsPredictions.tsx:331
+#: src/routes/news.$id.tsx:120
+#: src/routes/news.$id.tsx:184
+msgid "news.notRecorded"
+msgstr "未记录"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:135
+msgid "news.notSet"
+msgstr "未设置"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:294
+#: src/app/screens/NewsView.tsx:299
+#: src/routes/news.$id.tsx:114
+msgid "news.notes"
+msgstr "笔记 / 观点"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:133
+msgid "news.sampleHint"
+msgstr "每个样本为一项预测 × 一个交易日周期。仅已完成的结果计入命中率。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:98
+msgid "news.openSource"
+msgstr "打开来源"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:407
+msgid "news.optional"
+msgstr "选填"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:230
+msgid "news.urlHint"
+msgstr "选填 HTTP(S) 来源链接。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:173
+msgid "news.confidenceHint"
+msgstr "选填，0–100。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:272
+#: src/app/screens/NewsView.tsx:277
+#: src/routes/news.$id.tsx:112
+msgid "news.originalText"
+msgstr "原文"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:280
+msgid "news.excerptHint"
+msgstr "粘贴相关原文。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:589
+#: src/routes/news.performance.tsx:46
+#: src/routes/news.performance.tsx:102
+msgid "news.pending"
+msgstr "待验证"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:356
+#: src/components/NewsPredictions.tsx:368
+#: src/components/NewsTable.tsx:153
+msgid "news.pendingValidation"
+msgstr "待验证"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:271
+msgid "news.statisticsWarning"
+msgstr "待验证、不可用及不完整的结果不计入命中率分母。n 为已完成的样本数。小样本无法证明准确率可靠，价格方向也不能证明新闻的因果关系。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:256
+msgid "news.performanceCounts"
+msgstr "表现统计"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:141
+msgid "news.performanceFilters"
+msgstr "表现筛选"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:566
+msgid "news.performance"
+msgstr "表现报告"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:63
+msgid "news.predictionSource"
+msgstr "预测 / 来源"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:265
+msgid "news.predictionHorizons"
+msgstr "预测与周期组合"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:269
+#: src/components/NewsTable.tsx:163
+msgid "news.predictions"
+msgstr "预测"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: news.title
+#: src/components/NewsPredictions.tsx:264
+msgid "news.predictionsFor"
+msgstr "{0} 的预测"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:60
+msgid "news.published"
+msgstr "发布时间"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:621
+msgid "news.publishedFrom"
+msgstr "发布起始日期"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:205
+#: src/routes/news.performance.tsx:207
+msgid "news.fromUtc"
+msgstr "发布起始日期 (UTC)"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:220
+#: src/app/screens/NewsView.tsx:222
+msgid "news.publishedTime"
+msgstr "发布时间"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:630
+msgid "news.publishedTo"
+msgstr "发布结束日期"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:213
+#: src/routes/news.performance.tsx:215
+msgid "news.toUtc"
+msgstr "发布结束日期 (UTC)"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:34
+#: src/components/NewsPredictions.tsx:52
+#: src/components/NewsPredictions.tsx:247
+msgid "news.reasoning"
+msgstr "推理依据"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:667
+msgid "news.emptyHint"
+msgstr "记录催化事件，并关联可能受影响的股票、ETF 和指数。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:178
+msgid "news.formHint"
+msgstr "记录来源、笔记及相关股票、ETF 或指数。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:360
+msgid "news.rejectSuggestion"
+msgstr "拒绝建议"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:410
+msgid "news.relation"
+msgstr "关联"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: asset.relation || t({ id: "news.notRecorded", message: "Not recorded" })
+#: src/routes/news.$id.tsx:182
+msgid "news.relationValue"
+msgstr "关联：{0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/screens/NewsView.tsx:428
+msgid "news.removeAsset"
+msgstr "移除资产 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:638
+#: src/app/screens/NewsView.tsx:700
+#: src/routes/news.performance.tsx:222
+#: src/routes/news.performance.tsx:287
+msgid "news.resetFilters"
+msgstr "重置筛选"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:348
+msgid "news.result"
+msgstr "结果"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:168
+msgid "news.retryAnalysis"
+msgstr "重新分析"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:144
+msgid "news.review"
+msgstr "审核 AI 建议"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:36
+#: src/components/NewsPredictions.tsx:54
+#: src/components/NewsPredictions.tsx:249
+msgid "news.risks"
+msgstr "风险"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:451
+msgid "news.saveChanges"
+msgstr "保存修改"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:231
+msgid "news.savePrediction"
+msgstr "保存预测"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:410
+msgid "news.saveSuggestions"
+msgstr "保存所选建议"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:58
 msgid "news.export.select"
 msgstr "选择"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: n.title
+#: src/components/NewsTable.tsx:80
 msgid "news.export.selectTitle"
 msgstr "选择 {0}"
 
 #. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:94
+msgid "news.reviewHorizonRequired"
+msgstr "请为每项接受的预测选择至少一个周期。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:83
+msgid "news.horizonRequired"
+msgstr "请至少选择一个交易日周期。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsExportActions.tsx:81
 msgid "news.export.selectionHint"
 msgstr "选择仅限当前页；翻页、更改每页条数或筛选条件会清空选择。筛选导出包含所有匹配页面。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:207
+#: src/app/screens/NewsView.tsx:210
+#: src/routes/news.performance.tsx:65
+#: src/routes/news.performance.tsx:144
+#: src/routes/news.performance.tsx:146
+msgid "news.source"
+msgstr "来源"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:347
+msgid "news.status"
+msgstr "状态"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:356
+#: src/components/NewsAnalysisReview.tsx:37
+#: src/components/NewsPredictions.tsx:59
+#: src/components/NewsPredictions.tsx:254
+#: src/components/NewsTable.tsx:38
+#: src/routes/news.$id.tsx:23
+#: src/routes/news.performance.tsx:50
+#: src/routes/news.performance.tsx:106
+msgid "news.stock"
+msgstr "股票"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:314
+msgid "news.assetHint"
+msgstr "股票、ETF 和指数。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:200
+msgid "news.suggestedCategory"
+msgstr "建议分类"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:199
+msgid "news.suggestedSummary"
+msgstr "建议摘要"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: i + 1
+#: src/components/NewsAnalysisReview.tsx:218
+msgid "news.suggestionNumber"
+msgstr "建议 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:147
+msgid "news.reviewHint"
+msgstr "建议可能有误，请仅选择要保存的内容。编辑后的 AI 建议仍标记为 AI；手动添加的内容标记为用户记录。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:284
+#: src/app/screens/NewsView.tsx:287
+#: src/routes/news.$id.tsx:113
+msgid "news.summary"
+msgstr "摘要"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:420
+msgid "news.relationHint"
+msgstr "供应商、同行…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:364
+#: src/app/screens/NewsView.tsx:611
+#: src/components/NewsAnalysisReview.tsx:30
+#: src/routes/news.performance.tsx:191
+#: src/routes/news.performance.tsx:193
+msgid "news.symbol"
+msgstr "代码"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:613
+msgid "news.symbolFilter"
+msgstr "代码筛选"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:257
+#: src/app/screens/NewsView.tsx:263
+msgid "news.tags"
+msgstr "标签"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:482
+msgid "news.deleteWarning"
+msgstr "相关资产和预测也会删除，此操作无法撤销。"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:53
+msgid "news.missingHint"
+msgstr "此记录可能已删除，或当前账户无权访问。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:411
+msgid "news.deletePredictionWarning"
+msgstr "预测及其周期将被删除，此操作无法撤销。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:196
+#: src/app/screens/NewsView.tsx:199
+msgid "news.title"
+msgstr "标题"
+
+#. js-lingui-explicit-id
+#: src/components/NewsTable.tsx:61
+msgid "news.titleSource"
+msgstr "标题 / 来源"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:118
+msgid "news.required"
+msgstr "请填写标题、来源和发布时间。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:628
+msgid "news.to"
+msgstr "结束日期"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:45
+#: src/routes/news.performance.tsx:101
+msgid "news.total"
+msgstr "总计"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:345
+msgid "news.tradingHorizon"
+msgstr "交易日周期"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:329
+#: src/components/NewsPredictions.tsx:193
+msgid "news.horizons"
+msgstr "交易日周期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:658
+#: src/routes/news.$id.tsx:66
+#: src/routes/news.performance.tsx:248
+msgid "news.retry"
+msgstr "重试"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:341
+#: src/components/NewsAnalysisReview.tsx:234
+#: src/components/NewsAnalysisReview.tsx:236
+msgid "news.type"
+msgstr "类型"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:48
+#: src/routes/news.performance.tsx:104
+msgid "news.unavailable"
+msgstr "不可用"
+
+#. js-lingui-explicit-id
+#: src/routes/news.performance.tsx:61
+msgid "news.uncategorized"
+msgstr "未分类"
+
+#. js-lingui-explicit-id
+#: src/components/NewsAnalysisReview.tsx:231
+#: src/components/NewsPredictions.tsx:298
+#: src/components/NewsPredictions.tsx:303
+#: src/components/NewsPredictions.tsx:339
+#: src/components/NewsTable.tsx:125
+#: src/routes/news.$id.tsx:175
+#: src/routes/news.performance.tsx:67
+#: src/routes/news.performance.tsx:154
+#: src/routes/news.performance.tsx:298
+msgid "news.user"
+msgstr "用户"
+
+#. js-lingui-explicit-id
+#: src/routes/news.$id.tsx:144
+msgid "news.judgmentHint"
+msgstr "用户与 AI 判断分别记录。AI 预测在可用时显示；验证结果仍为待验证状态。"
+
+#. js-lingui-explicit-id
+#: src/components/NewsPredictions.tsx:125
+msgid "news.userJudgment"
+msgstr "用户判断"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:592
+#: src/routes/news.performance.tsx:47
+#: src/routes/news.performance.tsx:103
+msgid "news.validated"
+msgstr "已验证"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:579
+#: src/components/NewsTable.tsx:66
+msgid "news.validation"
+msgstr "验证"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:581
+msgid "news.validationFilter"
+msgstr "验证状态筛选"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: p.source === "user" ? t({ id: "news.user", message: "User" }) : "AI"
+#: src/components/NewsPredictions.tsx:337
+msgid "news.validationAria"
+msgstr "{0} 预测的验证周期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:290
+msgid "news.summaryHint"
+msgstr "有什么变化？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:204
+msgid "news.whatHappened"
+msgstr "发生了什么？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/NewsView.tsx:302
+msgid "news.notesHint"
+msgstr "为什么值得关注？"

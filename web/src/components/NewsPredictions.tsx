@@ -1,3 +1,6 @@
+import { fmtPct } from "@/lib/format";
+import { intlLocale } from "@/lib/locale";
+import { useLingui } from "@lingui/react/macro";
 import { useState, type FormEvent } from "react";
 import {
   Dialog,
@@ -44,6 +47,19 @@ export function PredictionForm({
   onClose: () => void;
   onSave: PredictionActions["onSavePrediction"];
 }) {
+  const { t } = useLingui();
+  const labels = {
+    reasoning: t({ id: "news.reasoning", message: "Reasoning" }),
+    catalysts: t({ id: "news.catalysts", message: "Catalysts" }),
+    risks: t({ id: "news.risks", message: "Risks" }),
+    invalidation: t({ id: "news.invalidation", message: "Invalidation" }),
+    bullish: t({ id: "news.bullish", message: "Bullish" }),
+    bearish: t({ id: "news.bearish", message: "Bearish" }),
+    neutral: t({ id: "news.neutral", message: "Neutral" }),
+    stock: t({ id: "news.stock", message: "Stock" }),
+    etf: "ETF",
+    index: t({ id: "news.index", message: "Index" }),
+  };
   const [body, setBody] = useState<PredictionBody>(() =>
     prediction
       ? { ...prediction }
@@ -63,14 +79,21 @@ export function PredictionForm({
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (!body.horizons.length) {
-      setError("Select at least one trading-day horizon.");
+      setError(
+        t({ id: "news.horizonRequired", message: "Select at least one trading-day horizon." }),
+      );
       return;
     }
     if (
       body.confidence !== null &&
       (!Number.isInteger(body.confidence) || body.confidence < 0 || body.confidence > 100)
     ) {
-      setError("Confidence must be an integer from 0 to 100.");
+      setError(
+        t({
+          id: "news.confidenceInvalid",
+          message: "Confidence must be an integer from 0 to 100.",
+        }),
+      );
       return;
     }
     setSaving(true);
@@ -79,7 +102,11 @@ export function PredictionForm({
       await onSave(news.id, body, prediction);
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not save prediction.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : t({ id: "news.savePredictionFailed", message: "Could not save prediction." }),
+      );
     } finally {
       setSaving(false);
     }
@@ -89,8 +116,14 @@ export function PredictionForm({
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <div>
-            <DialogTitle>{prediction ? "Edit User prediction" : "New User prediction"}</DialogTitle>
-            <DialogDescription>{news.title} · User judgment</DialogDescription>
+            <DialogTitle>
+              {prediction
+                ? t({ id: "news.editUserPrediction", message: "Edit User prediction" })
+                : t({ id: "news.newUserPrediction", message: "New User prediction" })}
+            </DialogTitle>
+            <DialogDescription>
+              {news.title} · {t({ id: "news.userJudgment", message: `User judgment` })}
+            </DialogDescription>
           </div>
         </DialogHeader>
         <DialogBody>
@@ -100,9 +133,9 @@ export function PredictionForm({
                 {error}
               </p>
             )}
-            <Field label="Affected asset">
+            <Field label={t({ id: "news.affectedAsset", message: "Affected asset" })}>
               <NativeSelect
-                aria-label="Affected asset"
+                aria-label={t({ id: "news.affectedAsset", message: "Affected asset" })}
                 value={body.news_asset_id}
                 disabled={!!prediction}
                 required
@@ -110,28 +143,37 @@ export function PredictionForm({
               >
                 {news.assets.map((a) => (
                   <NativeSelectOption key={a.id} value={a.id}>
-                    {a.symbol} · {a.asset_type} · {a.market || a.exchange || a.display_name}
+                    {a.symbol} · {labels[a.asset_type]} · {a.market || a.exchange || a.display_name}
                   </NativeSelectOption>
                 ))}
               </NativeSelect>
             </Field>
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Direction">
+              <Field label={t({ id: "news.direction", message: "Direction" })}>
                 <NativeSelect
-                  aria-label="Direction"
+                  aria-label={t({ id: "news.direction", message: "Direction" })}
                   value={body.direction}
                   onChange={(e) =>
                     setBody({ ...body, direction: e.target.value as PredictionBody["direction"] })
                   }
                 >
-                  <NativeSelectOption value="bullish">Bullish</NativeSelectOption>
-                  <NativeSelectOption value="bearish">Bearish</NativeSelectOption>
-                  <NativeSelectOption value="neutral">Neutral</NativeSelectOption>
+                  <NativeSelectOption value="bullish">
+                    {t({ id: "news.bullish", message: "Bullish" })}
+                  </NativeSelectOption>
+                  <NativeSelectOption value="bearish">
+                    {t({ id: "news.bearish", message: "Bearish" })}
+                  </NativeSelectOption>
+                  <NativeSelectOption value="neutral">
+                    {t({ id: "news.neutral", message: "Neutral" })}
+                  </NativeSelectOption>
                 </NativeSelect>
               </Field>
-              <Field label="Confidence (%)" description="Optional, 0–100.">
+              <Field
+                label={t({ id: "news.confidencePercent", message: "Confidence (%)" })}
+                description={t({ id: "news.confidenceHint", message: "Optional, 0–100." })}
+              >
                 <FormInput
-                  aria-label="Confidence (%)"
+                  aria-label={t({ id: "news.confidencePercent", message: "Confidence (%)" })}
                   type="number"
                   min={0}
                   max={100}
@@ -147,7 +189,9 @@ export function PredictionForm({
               </Field>
             </div>
             <fieldset>
-              <legend className="mb-2 text-sm font-medium">Trading-day horizons</legend>
+              <legend className="mb-2 text-sm font-medium">
+                {t({ id: "news.horizons", message: "Trading-day horizons" })}
+              </legend>
               <div className="flex flex-wrap gap-4">
                 {[1, 3, 5, 10, 20].map((h) => (
                   <label key={h} className="flex items-center gap-2 text-sm">
@@ -163,15 +207,15 @@ export function PredictionForm({
                         })
                       }
                     />
-                    {h}D
+                    {t({ id: "news.days", message: `${h}D` })}
                   </label>
                 ))}
               </div>
             </fieldset>
             {(["reasoning", "catalysts", "risks", "invalidation"] as const).map((key) => (
-              <Field key={key} label={key[0].toUpperCase() + key.slice(1)}>
+              <Field key={key} label={labels[key]}>
                 <FormTextarea
-                  aria-label={key[0].toUpperCase() + key.slice(1)}
+                  aria-label={labels[key]}
                   value={body[key]}
                   onChange={(e) => setBody({ ...body, [key]: e.target.value })}
                 />
@@ -181,10 +225,10 @@ export function PredictionForm({
         </DialogBody>
         <DialogFooter>
           <Button variant="outline" disabled={saving} onClick={onClose}>
-            Cancel
+            {t({ id: "news.cancel", message: "Cancel" })}
           </Button>
           <Button type="submit" form="prediction-form" loading={saving}>
-            Save prediction
+            {t({ id: "news.savePrediction", message: "Save prediction" })}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -198,86 +242,136 @@ export function NewsPredictions({
   onDeletePrediction,
   detail = false,
 }: { news: News; detail?: boolean } & PredictionActions) {
+  const { t } = useLingui();
+  const labels = {
+    reasoning: t({ id: "news.reasoning", message: "Reasoning" }),
+    catalysts: t({ id: "news.catalysts", message: "Catalysts" }),
+    risks: t({ id: "news.risks", message: "Risks" }),
+    invalidation: t({ id: "news.invalidation", message: "Invalidation" }),
+    bullish: t({ id: "news.bullish", message: "Bullish" }),
+    bearish: t({ id: "news.bearish", message: "Bearish" }),
+    neutral: t({ id: "news.neutral", message: "Neutral" }),
+    stock: t({ id: "news.stock", message: "Stock" }),
+    etf: "ETF",
+    index: t({ id: "news.index", message: "Index" }),
+  };
   const [editing, setEditing] = useState<Prediction | null | undefined>();
   const [deleting, setDeleting] = useState<Prediction>();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   return (
-    <section aria-label={`Predictions for ${news.title}`} className="mt-4 space-y-3 border-t pt-3">
+    <section
+      aria-label={t({ id: "news.predictionsFor", message: `Predictions for ${news.title}` })}
+      className="mt-4 space-y-3 border-t pt-3"
+    >
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-semibold">Predictions</h3>
+        <h3 className="text-sm font-semibold">
+          {t({ id: "news.predictions", message: "Predictions" })}
+        </h3>
         <Button
           size="sm"
           variant="outline"
           disabled={!news.assets.length}
           onClick={() => setEditing(null)}
         >
-          Add prediction
+          {t({ id: "news.addPrediction", message: "Add prediction" })}
         </Button>
       </div>
       {!news.assets.length && (
         <p className="text-xs text-muted-foreground">
-          Add an affected asset before making a prediction.
+          {t({
+            id: "news.predictionAssetHint",
+            message: "Add an affected asset before making a prediction.",
+          })}
         </p>
       )}
       {!(news.predictions ?? []).length && (
-        <p className="text-xs text-muted-foreground">No predictions yet.</p>
+        <p className="text-xs text-muted-foreground">
+          {t({ id: "news.noPredictions", message: "No predictions yet." })}
+        </p>
       )}
       {(news.predictions ?? []).map((p) => (
         <article
           key={p.id}
-          aria-label={`${p.source === "user" ? "User" : "AI"} prediction ${p.id}`}
+          aria-label={t({
+            id: "news.predictionAria",
+            message: `${p.source === "user" ? t({ id: "news.user", message: "User" }) : "AI"} prediction ${p.id}`,
+          })}
           className="rounded-md bg-muted/40 p-3 text-sm"
         >
           <div className="flex flex-wrap items-center gap-2">
-            <Pill>{p.source === "user" ? "User" : "AI"}</Pill>
+            <Pill>{p.source === "user" ? t({ id: "news.user", message: "User" }) : "AI"}</Pill>
             <strong>{news.assets.find((a) => a.id === p.news_asset_id)?.symbol}</strong>
-            <span className="capitalize">{p.direction}</span>
-            <span>{p.confidence === null ? "Confidence not set" : `${p.confidence}%`}</span>
-            <span>{p.horizons.map((h) => `${h}D`).join(" / ")}</span>
+            <span className="capitalize">{labels[p.direction]}</span>
+            <span>
+              {p.confidence === null
+                ? t({ id: "news.confidenceUnset", message: "Confidence not set" })
+                : fmtPct(p.confidence / 100, intlLocale())}
+            </span>
+            <span>
+              {p.horizons.map((h) => `${t({ id: "news.days", message: `${h}D` })}`).join(" / ")}
+            </span>
           </div>
           {p.reasoning && <p className="mt-2 whitespace-pre-wrap">{p.reasoning}</p>}
           {detail ? (
             <div className="mt-3 space-y-3">
               <p className="text-xs text-muted-foreground">
-                Created {fmtDateTime(p.created_at)} · Updated {fmtDateTime(p.updated_at)}
+                {t({
+                  id: "news.timestamps",
+                  message: `Created ${fmtDateTime(p.created_at)} · Updated ${fmtDateTime(p.updated_at)}`,
+                })}
               </p>
               <dl className="grid gap-3 sm:grid-cols-2">
                 {(["catalysts", "risks", "invalidation"] as const).map((field) => (
                   <div key={field}>
                     <dt className="text-xs font-medium capitalize text-muted-foreground">
-                      {field}
+                      {labels[field]}
                     </dt>
-                    <dd className="mt-1 whitespace-pre-wrap">{p[field] || "Not recorded"}</dd>
+                    <dd className="mt-1 whitespace-pre-wrap">
+                      {p[field] || t({ id: "news.notRecorded", message: "Not recorded" })}
+                    </dd>
                   </div>
                 ))}
               </dl>
-              <Table aria-label={`Validation horizons for ${p.source} prediction`}>
+              <Table
+                aria-label={t({
+                  id: "news.validationAria",
+                  message: `Validation horizons for ${p.source === "user" ? t({ id: "news.user", message: "User" }) : "AI"} prediction`,
+                })}
+              >
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Trading-day horizon</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Result</TableHead>
+                    <TableHead>
+                      {t({ id: "news.tradingHorizon", message: "Trading-day horizon" })}
+                    </TableHead>
+                    <TableHead>{t({ id: "news.status", message: "Status" })}</TableHead>
+                    <TableHead>{t({ id: "news.result", message: "Result" })}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {p.horizons.map((h) => (
                     <TableRow key={h}>
-                      <TableCell>{h}D</TableCell>
-                      <TableCell>Pending validation</TableCell>
-                      <TableCell>Not available</TableCell>
+                      <TableCell>{t({ id: "news.days", message: `${h}D` })}</TableCell>
+                      <TableCell>
+                        {t({ id: "news.pendingValidation", message: "Pending validation" })}
+                      </TableCell>
+                      <TableCell>
+                        {t({ id: "news.notAvailable", message: "Not available" })}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </div>
           ) : (
-            <p className="mt-2 text-xs text-muted-foreground">Pending validation</p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {t({ id: "news.pendingValidation", message: "Pending validation" })}
+            </p>
           )}
           {p.source === "user" && (
             <div className="mt-2 flex gap-2">
               <Button size="sm" variant="ghost" onClick={() => setEditing(p)}>
-                Edit prediction
+                {t({ id: "news.editPrediction", message: "Edit prediction" })}
               </Button>
               <Button
                 size="sm"
@@ -287,7 +381,7 @@ export function NewsPredictions({
                   setError("");
                 }}
               >
-                Delete prediction
+                {t({ id: "news.deletePrediction", message: "Delete prediction" })}
               </Button>
             </div>
           )}
@@ -310,9 +404,14 @@ export function NewsPredictions({
           <DialogContent className="max-w-md">
             <DialogHeader>
               <div>
-                <DialogTitle>Delete User prediction?</DialogTitle>
+                <DialogTitle>
+                  {t({ id: "news.deletePredictionTitle", message: "Delete User prediction?" })}
+                </DialogTitle>
                 <DialogDescription>
-                  This removes the prediction and its horizons. This cannot be undone.
+                  {t({
+                    id: "news.deletePredictionWarning",
+                    message: "This removes the prediction and its horizons. This cannot be undone.",
+                  })}
                 </DialogDescription>
               </div>
             </DialogHeader>
@@ -325,7 +424,7 @@ export function NewsPredictions({
             </DialogBody>
             <DialogFooter>
               <Button variant="outline" disabled={busy} onClick={() => setDeleting(undefined)}>
-                Cancel
+                {t({ id: "news.cancel", message: "Cancel" })}
               </Button>
               <Button
                 variant="destructive"
@@ -336,13 +435,20 @@ export function NewsPredictions({
                     await onDeletePrediction(news.id, deleting);
                     setDeleting(undefined);
                   } catch (err) {
-                    setError(err instanceof Error ? err.message : "Could not delete prediction.");
+                    setError(
+                      err instanceof Error
+                        ? err.message
+                        : t({
+                            id: "news.deletePredictionFailed",
+                            message: "Could not delete prediction.",
+                          }),
+                    );
                   } finally {
                     setBusy(false);
                   }
                 }}
               >
-                Delete
+                {t({ id: "news.delete", message: "Delete" })}
               </Button>
             </DialogFooter>
           </DialogContent>

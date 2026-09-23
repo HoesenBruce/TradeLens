@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { NewsFormDialog } from "@/app/screens/NewsView";
@@ -17,6 +18,12 @@ import { useNewsDetail, usePredictionActions, useUpdateNews } from "@/lib/hooks/
 export const Route = createFileRoute("/news/$id")({ component: NewsDetailPage });
 
 function NewsDetailPage() {
+  const { t } = useLingui();
+  const labels = {
+    stock: t({ id: "news.stock", message: "Stock" }),
+    etf: "ETF",
+    index: t({ id: "news.index", message: "Index" }),
+  };
   const { id } = Route.useParams();
   const query = useNewsDetail(id);
   const update = useUpdateNews();
@@ -27,7 +34,7 @@ function NewsDetailPage() {
   return (
     <Page>
       <Button variant="ghost" className="self-start" render={<Link to="/news" />}>
-        ← Back to news
+        {t({ id: "news.back", message: "← Back to news" })}
       </Button>
       {query.isLoading ? (
         <Card>
@@ -36,16 +43,27 @@ function NewsDetailPage() {
       ) : query.isError || !news ? (
         <Card>
           <EmptyState
-            title={missing ? "News thesis not found" : "Could not load news thesis"}
+            title={
+              missing
+                ? t({ id: "news.missing", message: "News thesis not found" })
+                : t({ id: "news.detailLoadFailed", message: "Could not load news thesis" })
+            }
             hint={
               missing
-                ? "This entry may have been deleted or is not available to your account."
-                : "Check the API connection and try again."
+                ? t({
+                    id: "news.missingHint",
+                    message:
+                      "This entry may have been deleted or is not available to your account.",
+                  })
+                : t({
+                    id: "news.connectionHint",
+                    message: "Check the API connection and try again.",
+                  })
             }
             actions={
               !missing ? (
                 <Button variant="outline" onClick={() => void query.refetch()}>
-                  Try again
+                  {t({ id: "news.retry", message: "Try again" })}
                 </Button>
               ) : undefined
             }
@@ -63,11 +81,13 @@ function NewsDetailPage() {
             <div className="flex flex-wrap gap-2">
               <NewsExportActions key={news.id} id={news.id} />
               <NewsAnalysisReview key={news.id} news={news} />
-              <Button onClick={() => setEditing(true)}>Edit news thesis</Button>
+              <Button onClick={() => setEditing(true)}>
+                {t({ id: "news.edit", message: "Edit news thesis" })}
+              </Button>
             </div>
           </header>
           <Card
-            title="News / source"
+            title={t({ id: "news.newsSource", message: "News / source" })}
             action={
               news.url ? (
                 <Button
@@ -75,7 +95,7 @@ function NewsDetailPage() {
                   size="sm"
                   render={<a href={news.url} target="_blank" rel="noreferrer" />}
                 >
-                  Open source
+                  {t({ id: "news.openSource", message: "Open source" })}
                 </Button>
               ) : undefined
             }
@@ -89,33 +109,52 @@ function NewsDetailPage() {
             <dl className="grid gap-4 sm:grid-cols-2">
               {(
                 [
-                  ["Original text", news.original_text],
-                  ["Summary", news.summary],
-                  ["Notes / thesis", news.notes],
+                  [t({ id: "news.originalText", message: "Original text" }), news.original_text],
+                  [t({ id: "news.summary", message: "Summary" }), news.summary],
+                  [t({ id: "news.notes", message: "Notes / thesis" }), news.notes],
                 ] as const
               ).map(([label, value]) => (
                 <div key={label}>
                   <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
-                  <dd className="mt-1 whitespace-pre-wrap text-sm">{value || "Not recorded"}</dd>
+                  <dd className="mt-1 whitespace-pre-wrap text-sm">
+                    {value || t({ id: "news.notRecorded", message: "Not recorded" })}
+                  </dd>
                 </div>
               ))}
             </dl>
             <p className="mt-4 text-xs text-muted-foreground">
-              Created {fmtDateTime(news.created_at)} · Updated {fmtDateTime(news.updated_at)}
+              {t({
+                id: "news.timestamps",
+                message: `Created ${fmtDateTime(news.created_at)} · Updated ${fmtDateTime(news.updated_at)}`,
+              })}
             </p>
           </Card>
-          <section aria-label="Affected assets and predictions" className="space-y-4">
+          <section
+            aria-label={t({
+              id: "news.assetsPredictionsAria",
+              message: "Affected assets and predictions",
+            })}
+            className="space-y-4"
+          >
             <div>
-              <h2 className="font-semibold">Affected assets & predictions</h2>
+              <h2 className="font-semibold">
+                {t({ id: "news.assetsPredictions", message: "Affected assets & predictions" })}
+              </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                User and AI judgments are separate records. AI predictions appear when available;
-                validation results remain pending.
+                {t({
+                  id: "news.judgmentHint",
+                  message:
+                    "User and AI judgments are separate records. AI predictions appear when available; validation results remain pending.",
+                })}
               </p>
             </div>
             {!news.assets.length && (
               <Card>
                 <p className="text-sm text-muted-foreground">
-                  No affected assets yet. Edit the news thesis to add one.
+                  {t({
+                    id: "news.addAssetDetail",
+                    message: "No affected assets yet. Edit the news thesis to add one.",
+                  })}
                 </p>
               </Card>
             )}
@@ -128,16 +167,22 @@ function NewsDetailPage() {
                   </h3>
                 }
                 description={[
-                  asset.asset_type.toUpperCase(),
+                  labels[asset.asset_type],
                   asset.market,
                   asset.exchange,
-                  `Asset source: ${asset.source === "ai" ? "AI" : "User"}`,
+                  t({
+                    id: "news.assetSource",
+                    message: `Asset source: ${asset.source === "ai" ? "AI" : t({ id: "news.user", message: "User" })}`,
+                  }),
                 ]
                   .filter(Boolean)
                   .join(" · ")}
               >
                 <p className="text-sm text-muted-foreground">
-                  Relation: {asset.relation || "Not recorded"}
+                  {t({
+                    id: "news.relationValue",
+                    message: `Relation: ${asset.relation || t({ id: "news.notRecorded", message: "Not recorded" })}`,
+                  })}
                 </p>
                 <NewsPredictions
                   detail
