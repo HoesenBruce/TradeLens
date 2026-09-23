@@ -442,9 +442,7 @@ describe("SettingsView", () => {
   it("opens the about tab from the URL hash", async () => {
     window.location.hash = "#about";
     renderSettings({ ...baseProps });
-    expect(
-      await screen.findByRole("heading", { name: "TraderMemos", level: 2 }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "TradeLens", level: 2 })).toBeInTheDocument();
     expect(screen.getByText(/open-source performance journal/i)).toBeInTheDocument();
     expect(screen.getByText("sinhong2011")).toBeInTheDocument();
     expect(screen.getByText("Backend API")).toBeInTheDocument();

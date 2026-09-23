@@ -55,7 +55,7 @@ describe("locale", () => {
     expect(settingsLabel("en", "ai")).toBe("AI");
     expect(settingsLabel("en", "aiTitle")).toBe("AI & LLM");
     expect(settingsLabel("en", "about")).toBe("About");
-    expect(settingsLabel("ja", "aboutTitle")).toBe("TraderMemos について");
+    expect(settingsLabel("ja", "aboutTitle")).toBe("TradeLens について");
   });
 
   it("exposes all language options", () => {

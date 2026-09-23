@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { BRAND } from "@/lib/brand";
 import appIcon from "@/assets/app-icon.png";
 import appIconSmall from "@/assets/app-icon-small.png";
 
@@ -14,7 +15,7 @@ type AppLogoProps = {
  * web/public icons and brand/app-icon-1024.png cut from the same source
  * (brand/app-icon-source.png).
  */
-export function AppLogo({ size = 32, className, title = "TraderMemos" }: AppLogoProps) {
+export function AppLogo({ size = 32, className, title = BRAND.name }: AppLogoProps) {
   return (
     <img
       src={size <= 32 ? appIconSmall : appIcon}
