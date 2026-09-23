@@ -6532,3 +6532,55 @@ msgstr "当前仍有持仓；若不先平仓，将保存为未平仓交易。"
 #: src/lib/dateRangePresets.ts:21
 msgid "market.ytd"
 msgstr "今年至今"
+
+#. js-lingui-explicit-id
+msgid "trades.basicInfo"
+msgstr "基本信息"
+
+#. js-lingui-explicit-id
+msgid "trades.tradePlan"
+msgstr "交易计划"
+
+#. js-lingui-explicit-id
+msgid "trades.plannedDirection"
+msgstr "计划方向"
+
+#. js-lingui-explicit-id
+msgid "trades.planDirectionHint"
+msgstr "仅用于记录交易计划，不影响实际成交与盈亏计算。"
+
+#. js-lingui-explicit-id
+msgid "trades.executionsHint"
+msgstr "实际发生的成交用于计算持仓与盈亏。"
+
+#. js-lingui-explicit-id
+msgid "trades.targetComparison"
+msgstr "目标价对比"
+
+#. js-lingui-explicit-id
+msgid "trades.actualExit"
+msgstr "实际出场价"
+
+#. js-lingui-explicit-id
+msgid "trades.targetDifference"
+msgstr "差额"
+
+#. js-lingui-explicit-id
+msgid "trades.targetReached"
+msgstr "达到目标"
+
+#. js-lingui-explicit-id
+msgid "trades.targetMissed"
+msgstr "未达到目标"
+
+#. js-lingui-explicit-id
+msgid "trades.reviewResult"
+msgstr "复盘结果"
+
+#. js-lingui-explicit-id
+msgid "trades.actualPnl"
+msgstr "实际盈亏"
+
+#. js-lingui-explicit-id
+msgid "trades.savedAccountingResult"
+msgstr "已保存的记账结果；成交修改会在保存后更新。"

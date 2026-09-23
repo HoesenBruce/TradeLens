@@ -6747,3 +6747,55 @@ msgstr "未決済のポジションがあります。先に決済しなければ
 #: src/lib/dateRangePresets.ts:21
 msgid "market.ytd"
 msgstr "年初から"
+
+#. js-lingui-explicit-id
+msgid "trades.basicInfo"
+msgstr "基本情報"
+
+#. js-lingui-explicit-id
+msgid "trades.tradePlan"
+msgstr "取引計画"
+
+#. js-lingui-explicit-id
+msgid "trades.plannedDirection"
+msgstr "予定方向"
+
+#. js-lingui-explicit-id
+msgid "trades.planDirectionHint"
+msgstr "取引計画の記録用です。実際の約定や損益には影響しません。"
+
+#. js-lingui-explicit-id
+msgid "trades.executionsHint"
+msgstr "実際の約定から建玉と損益を計算します。"
+
+#. js-lingui-explicit-id
+msgid "trades.targetComparison"
+msgstr "目標価格との比較"
+
+#. js-lingui-explicit-id
+msgid "trades.actualExit"
+msgstr "実際の決済価格"
+
+#. js-lingui-explicit-id
+msgid "trades.targetDifference"
+msgstr "差額"
+
+#. js-lingui-explicit-id
+msgid "trades.targetReached"
+msgstr "目標達成"
+
+#. js-lingui-explicit-id
+msgid "trades.targetMissed"
+msgstr "目標未達"
+
+#. js-lingui-explicit-id
+msgid "trades.reviewResult"
+msgstr "振り返り・結果"
+
+#. js-lingui-explicit-id
+msgid "trades.actualPnl"
+msgstr "実際の損益"
+
+#. js-lingui-explicit-id
+msgid "trades.savedAccountingResult"
+msgstr "保存済みの計算結果です。約定の変更は保存後に反映されます。"

@@ -193,7 +193,7 @@ export function symbolTradeFromDetail(trade: TradeDetail): SymbolTradeBlock {
 
   return emptySymbolTrade({
     symbol: trade.symbol,
-    side,
+    plannedSide: journal.plannedDirection,
     market,
     futuresPresetId:
       market === "future" || market === "futures"
@@ -243,7 +243,7 @@ export function symbolTradeFromOcr(
         : "";
   return emptySymbolTrade({
     symbol: scoped.symbol || symbol,
-    side,
+    plannedSide: side,
     market,
     futuresPresetId:
       market === "future" || market === "futures"

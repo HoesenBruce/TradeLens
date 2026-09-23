@@ -6746,3 +6746,55 @@ msgstr "Your position is still open — it will be saved as an open trade unless
 #: src/lib/dateRangePresets.ts:21
 msgid "market.ytd"
 msgstr "YTD"
+
+#. js-lingui-explicit-id
+msgid "trades.basicInfo"
+msgstr "Basic information"
+
+#. js-lingui-explicit-id
+msgid "trades.tradePlan"
+msgstr "Trade plan"
+
+#. js-lingui-explicit-id
+msgid "trades.plannedDirection"
+msgstr "Planned direction"
+
+#. js-lingui-explicit-id
+msgid "trades.planDirectionHint"
+msgstr "For your trade plan only. Does not change actual executions or P&L."
+
+#. js-lingui-explicit-id
+msgid "trades.executionsHint"
+msgstr "Actual executions determine position and P&L."
+
+#. js-lingui-explicit-id
+msgid "trades.targetComparison"
+msgstr "Target comparison"
+
+#. js-lingui-explicit-id
+msgid "trades.actualExit"
+msgstr "Actual exit"
+
+#. js-lingui-explicit-id
+msgid "trades.targetDifference"
+msgstr "Difference"
+
+#. js-lingui-explicit-id
+msgid "trades.targetReached"
+msgstr "Target reached"
+
+#. js-lingui-explicit-id
+msgid "trades.targetMissed"
+msgstr "Target missed"
+
+#. js-lingui-explicit-id
+msgid "trades.reviewResult"
+msgstr "Review / Result"
+
+#. js-lingui-explicit-id
+msgid "trades.actualPnl"
+msgstr "Actual P&L"
+
+#. js-lingui-explicit-id
+msgid "trades.savedAccountingResult"
+msgstr "Saved accounting result; changes to executions appear after saving."
