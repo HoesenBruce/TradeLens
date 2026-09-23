@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { i18n, loadLocale } from "@/i18n";
 import { executionsApi } from "@/lib/api/executions";
+import { tradeDetailFromJournalPreview } from "@/lib/importTradePreview";
 import { ocrApi } from "@/lib/api/ocr";
 import { tradesApi } from "@/lib/api/trades";
 import { useUI } from "@/lib/ui";
@@ -158,6 +159,47 @@ describe("NewTradeDrawer", () => {
       }),
     );
     expect(first).toHaveTextContent("BUY");
+  });
+
+  it("keeps an existing trade's P&L preview stable when its direction control changes", async () => {
+    const user = userEvent.setup();
+    const detail = tradeDetailFromJournalPreview(
+      {
+        row: 1,
+        symbol: "5801",
+        market: "STOCK",
+        instrument_type: "stock",
+        side: "LONG",
+        qty: 100,
+        entry: 3829.6,
+        exit: 3846.1,
+        return_usd: 0,
+        open_date: "2026-08-26T00:00:00Z",
+        close_date: "2026-09-01T00:00:00Z",
+      },
+      { accountId: "a1", currency: "USD" },
+    );
+    detail.id = "sbi-edit-preview";
+    detail.fills[0]!.side = "sell";
+    detail.fills[0]!.price = 3846.1;
+    detail.fills[1]!.side = "buy";
+    detail.fills[1]!.price = 3829.6;
+    detail.fills[1]!.fees = 81;
+    useUI.getState().openTradeEdit(detail);
+    wrap(<NewTradeDrawer />);
+    const result = await screen.findByTestId("trade-result-preview");
+    expect(result).toHaveTextContent("$3,829.60");
+    expect(result).toHaveTextContent("$3,846.10");
+    expect(screen.getByLabelText("P&L symbol 1 row 2: empty")).toBeVisible();
+    const baseline = result.textContent;
+
+    const direction = screen.getByRole("group", { name: "Side symbol 1" });
+    await user.click(within(direction).getByRole("button", { name: "↘ SHORT" }));
+    expect(result.textContent).toBe(baseline);
+    expect(screen.getByLabelText("P&L symbol 1 row 2: empty")).toBeVisible();
+    await user.click(within(direction).getByRole("button", { name: "↗ LONG" }));
+    expect(result.textContent).toBe(baseline);
+    expect(screen.getByLabelText("P&L symbol 1 row 2: empty")).toBeVisible();
   });
 
   it("embeds journal and dividend controls on each symbol card", async () => {

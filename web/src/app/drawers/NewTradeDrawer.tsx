@@ -449,7 +449,7 @@ function blockMultiplier(block: SymbolTradeBlock) {
     : num(block.multiplier) || (block.market === "option" ? 100 : 1);
 }
 
-function blockRisk(block: SymbolTradeBlock) {
+function blockRisk(block: SymbolTradeBlock, side: "long" | "short" = block.side) {
   const parsed = block.rows.reduce<
     Array<{ side: "buy" | "sell"; quantity: number; price: number }>
   >((rows, row) => {
@@ -458,18 +458,12 @@ function blockRisk(block: SymbolTradeBlock) {
     if (quantity != null && price != null) rows.push({ side: row.side, quantity, price });
     return rows;
   }, []);
-  const entry = weightedAvgEntry(parsed, block.side);
+  const entry = weightedAvgEntry(parsed, side);
   if (!entry) return null;
-  return computeInitialRisk(
-    block.side,
-    entry.avg,
-    entry.qty,
-    num(block.stop),
-    blockMultiplier(block),
-  );
+  return computeInitialRisk(side, entry.avg, entry.qty, num(block.stop), blockMultiplier(block));
 }
 
-function blockPnlPreview(block: SymbolTradeBlock) {
+function blockPnlPreview(block: SymbolTradeBlock, side: "long" | "short" = block.side) {
   const parsedRows = block.rows.map((r) => ({
     side: r.side,
     quantity: num(r.quantity) ?? 0,
@@ -477,14 +471,14 @@ function blockPnlPreview(block: SymbolTradeBlock) {
     fees: num(r.fees) ?? 0,
     commission: num(r.commission) ?? 0,
   }));
-  const risk = blockRisk(block);
+  const risk = blockRisk(block, side);
   const multiplier = blockMultiplier(block);
-  const openSide = block.side === "short" ? "sell" : "buy";
+  const openSide = side === "short" ? "sell" : "buy";
   const entryTotal = parsedRows
     .filter((r) => r.side === openSide)
     .reduce((s, r) => s + r.quantity * r.price * multiplier, 0);
   return {
-    preview: previewTradePnl(block.side, parsedRows, multiplier, risk),
+    preview: previewTradePnl(side, parsedRows, multiplier, risk),
     initialRisk: risk,
     entryTotal: entryTotal > 0 ? entryTotal : null,
   };
@@ -493,6 +487,7 @@ function blockPnlPreview(block: SymbolTradeBlock) {
 function SymbolCard({
   form,
   block,
+  previewSide,
   index,
   currency,
   locale,
@@ -509,6 +504,7 @@ function SymbolCard({
 }: {
   form: NewTradeFormApi;
   block: SymbolTradeBlock;
+  previewSide?: "long" | "short";
   index: number;
   currency: string;
   locale: string;
@@ -551,21 +547,20 @@ function SymbolCard({
     [block.rows],
   );
   const multiplier = blockMultiplier(block);
-  const entry = useMemo(() => weightedAvgEntry(parsedRows, block.side), [parsedRows, block.side]);
+  const pnlSide = previewSide ?? block.side;
+  const entry = useMemo(() => weightedAvgEntry(parsedRows, pnlSide), [parsedRows, pnlSide]);
   const risk = useMemo(
     () =>
-      entry
-        ? computeInitialRisk(block.side, entry.avg, entry.qty, num(block.stop), multiplier)
-        : null,
-    [entry, block.side, block.stop, multiplier],
+      entry ? computeInitialRisk(pnlSide, entry.avg, entry.qty, num(block.stop), multiplier) : null,
+    [entry, pnlSide, block.stop, multiplier],
   );
   const preview = useMemo(
-    () => previewTradePnl(block.side, parsedRows, multiplier, risk),
-    [block.side, parsedRows, multiplier, risk],
+    () => previewTradePnl(pnlSide, parsedRows, multiplier, risk),
+    [pnlSide, parsedRows, multiplier, risk],
   );
   const fillPnls = useMemo(
-    () => previewFillNetPnls(block.side, parsedRows, multiplier),
-    [block.side, parsedRows, multiplier],
+    () => previewFillNetPnls(pnlSide, parsedRows, multiplier),
+    [pnlSide, parsedRows, multiplier],
   );
   const optionStrategy = useMemo(
     () =>
@@ -1455,6 +1450,8 @@ export function NewTradeDrawer() {
   const editTradeQ = useTradeDetail(editTradeId ?? "");
   /** Prefer the snapshot passed at open; fall back to query cache/network. */
   const editSource = editTradeDetail ?? editTradeQ.data;
+  const editPreviewSide =
+    isEditMode && editSource ? (editSource.direction === "short" ? "short" : "long") : undefined;
   const { data: ocrSettings, isLoading: ocrSettingsLoading } = useOcrSettings();
   const visionReady = isOcrVisionReady(ocrSettings);
   const toast = useToastManager();
@@ -1582,7 +1579,7 @@ export function NewTradeDrawer() {
               confidence: intFromGrade(block.setupGrade),
               trade_quality: intFromGrade(block.executionGrade),
               tag_ids: [...block.selectedTagIds, ...block.selectedMistakeIds],
-              initial_risk: blockRisk(block) ?? undefined,
+              initial_risk: blockRisk(block, editPreviewSide) ?? undefined,
               target_price: num(block.target) ?? undefined,
               stop_price: num(block.stop) ?? undefined,
             });
@@ -1664,7 +1661,7 @@ export function NewTradeDrawer() {
               confidence: intFromGrade(block.setupGrade),
               trade_quality: intFromGrade(block.executionGrade),
               tag_ids: [...block.selectedTagIds, ...block.selectedMistakeIds],
-              initial_risk: blockRisk(block) ?? undefined,
+              initial_risk: blockRisk(block, editPreviewSide) ?? undefined,
               target_price: num(block.target) ?? undefined,
               stop_price: num(block.stop) ?? undefined,
             });
@@ -1758,19 +1755,19 @@ export function NewTradeDrawer() {
   const batchPreview = useMemo(
     () =>
       values.trades.length > 1
-        ? aggregateTradePnlPreviews(values.trades.map(blockPnlPreview))
+        ? aggregateTradePnlPreviews(values.trades.map((block) => blockPnlPreview(block)))
         : null,
     [values.trades],
   );
   const singleFooter = useMemo(() => {
     if (values.trades.length !== 1) return null;
-    const result = blockPnlPreview(values.trades[0]!);
+    const result = blockPnlPreview(values.trades[0]!, editPreviewSide);
     return {
       preview: result.preview,
       risk: result.initialRisk,
       entryTotal: result.entryTotal,
     };
-  }, [values.trades]);
+  }, [values.trades, editPreviewSide]);
 
   /** Commit the deferred removal once the card has finished animating out. */
   function commitRemoval() {
@@ -2202,6 +2199,7 @@ export function NewTradeDrawer() {
                       <SymbolCard
                         form={form}
                         block={block}
+                        previewSide={editPreviewSide}
                         index={index}
                         currency={currency}
                         locale={locale}
