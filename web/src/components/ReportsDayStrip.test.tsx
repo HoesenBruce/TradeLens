@@ -74,6 +74,37 @@ describe("ReportsDayStrip", () => {
     expect(screen.getByText("1 trade")).toBeInTheDocument();
   });
 
+  it("keeps long JPY gains and losses readable with the full value in the title", () => {
+    render(
+      <ReportsDisplayProvider
+        value={{ pnlMode: "net", unitMode: "abs", denominator: 0, currency: "JPY", fxRate: 1 }}
+      >
+        <ReportsDayStrip
+          trades={[
+            trade({
+              id: "1",
+              net_pnl: 377879,
+              closed_at: "2024-05-06T15:00:00Z",
+              status: "closed",
+            }),
+            trade({
+              id: "2",
+              net_pnl: -1234567,
+              closed_at: "2024-05-07T15:00:00Z",
+              status: "closed",
+            }),
+          ]}
+        />
+      </ReportsDisplayProvider>,
+    );
+    const amounts = screen.getAllByTitle(/[¥￥]/);
+    expect(amounts).toHaveLength(2);
+    expect(amounts[0]).toHaveClass("whitespace-nowrap", "tabular-nums");
+    expect(amounts[1]).toHaveClass("whitespace-nowrap", "tabular-nums");
+    expect(amounts[0].getAttribute("title")).toMatch(/-.*1,234,567/);
+    expect(amounts[1].getAttribute("title")).toMatch(/\+.*377,879/);
+  });
+
   it("shows gross daily P&L when pnlMode is gross", () => {
     render(
       <ReportsDisplayProvider
