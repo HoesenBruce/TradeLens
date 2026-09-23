@@ -27,7 +27,7 @@ func SBIMarginAccounting(fills []Execution) AccountingResult {
 			(fill.LotKey == "sbi:margin-short" && fill.Side == "sell")
 		if opening {
 			qty += fill.Quantity
-			entry = fill.Price
+			entry = (entry*(qty-fill.Quantity) + fill.Price*fill.Quantity) / qty
 			openFees += fill.Fees + fill.Commission
 			openings++
 			continue
@@ -41,14 +41,14 @@ func SBIMarginAccounting(fills []Execution) AccountingResult {
 		openFees -= allocatedFees
 		qty = remaining
 		if fill.ConversionType == "genbiki" {
-			zeroConversionTrade(result.Trades, fill.ID)
+			// Reconcile conversion-containing trades after all closes.
 			result.RealizedCloses = append(result.RealizedCloses, RealizedClose{
 				ExecutionID: fill.ID, Date: fill.ExecutedAt, Pnl: 0,
 				RemainingQty: qty, RemainingCostBasis: entry * qty, Source: "position_conversion",
 			})
 		} else if fill.BrokerReportedPnl != nil {
 			result.RealizedCloses = append(result.RealizedCloses, RealizedClose{
-				ExecutionID: fill.ID, Date: fill.ExecutedAt, Pnl: *fill.BrokerReportedPnl,
+				ExecutionID: fill.ID, Date: fill.ExecutedAt, Pnl: *fill.BrokerReportedPnl, Fees: allocatedFees + fill.Fees + fill.Commission,
 				RemainingQty: qty, Source: "broker_reported",
 			})
 		} else if openings == 1 {
@@ -63,7 +63,7 @@ func SBIMarginAccounting(fills []Execution) AccountingResult {
 			result.RealizedCloses = append(result.RealizedCloses, RealizedClose{
 				ExecutionID: fill.ID, Date: fill.ExecutedAt,
 				Pnl:          money.Round2((fill.Price-entry)*fill.Quantity*sign*mult - allocatedFees - fill.Fees - fill.Commission),
-				RemainingQty: qty, RemainingCostBasis: entry * qty, Source: "calculated_single_opening",
+				RemainingQty: qty, RemainingCostBasis: entry * qty, Fees: allocatedFees + fill.Fees + fill.Commission, Source: "calculated_single_opening",
 			})
 		} else {
 			result.UnavailableCloseIDs = append(result.UnavailableCloseIDs, fill.ID)
@@ -72,17 +72,57 @@ func SBIMarginAccounting(fills []Execution) AccountingResult {
 			qty, openFees, openings = 0, 0, 0
 		}
 	}
+	reconcileConversionTrades(fills, &result)
 	return result
 }
 
-func zeroConversionTrade(trades []Trade, executionID string) {
-	for i := range trades {
-		for _, id := range trades[i].ExecutionIDs {
-			if id == executionID {
-				zero := 0.0
-				trades[i].GrossPnl, trades[i].NetPnl, trades[i].ReturnPct = &zero, &zero, &zero
-				return
-			}
+func reconcileConversionTrades(fills []Execution, result *AccountingResult) {
+	// Only conversion-containing trades opt in; genuine partial closes survive.
+	conversions := map[string]bool{}
+	closes := map[string]RealizedClose{}
+	unavailableIDs := map[string]bool{}
+	for _, fill := range fills {
+		if fill.ConversionType == "genbiki" {
+			conversions[fill.ID] = true
 		}
+	}
+	if len(conversions) == 0 {
+		return
+	}
+	for _, close := range result.RealizedCloses {
+		closes[close.ExecutionID] = close
+	}
+	for _, id := range result.UnavailableCloseIDs {
+		unavailableIDs[id] = true
+	}
+	for i := range result.Trades {
+		tr := &result.Trades[i]
+		conversion, unavailable := false, false
+		net, fees := 0.0, 0.0
+		for _, id := range tr.ExecutionIDs {
+			conversion = conversion || conversions[id]
+			unavailable = unavailable || unavailableIDs[id]
+			net += closes[id].Pnl
+			fees += closes[id].Fees
+		}
+		if !conversion {
+			continue
+		}
+		if unavailable {
+			tr.NetPnl, tr.GrossPnl, tr.ReturnPct = nil, nil, nil
+			continue
+		}
+		net = money.Round2(net)
+		tr.NetPnl = &net
+		if len(fills) > 0 && fills[0].LotKey == "sbi:margin-long" {
+			tr.FeesTotal = money.Round2(fees)
+		}
+		gross := money.Round2(net + tr.FeesTotal)
+		tr.GrossPnl = &gross
+		ret := 0.0
+		if tr.AvgEntryPrice*tr.QtyOpened != 0 {
+			ret = money.Round2(net / (tr.AvgEntryPrice * tr.QtyOpened) * 100)
+		}
+		tr.ReturnPct = &ret
 	}
 }

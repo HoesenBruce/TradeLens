@@ -37,3 +37,17 @@ func TestSBIMarginAccountingGenbikiRealizesZero(t *testing.T) {
 	require.Equal(t, "position_conversion", result.RealizedCloses[0].Source)
 	require.Equal(t, 0.0, *result.Trades[0].NetPnl)
 }
+
+func TestGenbikiPreservesOrdinaryPartialClose(t *testing.T) {
+	opening := ex("open", "buy", 200, 1000, "2026-09-01T01:00:00Z", 1)
+	sale := ex("sale", "sell", 100, 1100, "2026-09-02T01:00:00Z", 1)
+	conversion := ex("conversion", "sell", 100, 800, "2026-09-03T01:00:00Z", 1)
+	for _, f := range []*Execution{&opening, &sale, &conversion} {
+		f.LotKey = "sbi:margin-long"
+	}
+	conversion.ConversionType = "genbiki"
+	conversion.Fees = 500
+	result := SBIMarginAccounting([]Execution{opening, sale, conversion})
+	require.Equal(t, 10000.0, *result.Trades[0].NetPnl)
+	require.Zero(t, result.RealizedCloses[1].Pnl)
+}

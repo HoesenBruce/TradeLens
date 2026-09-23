@@ -67,6 +67,9 @@ func main() {
 	if err := importer.NormalizeOptionExecutions(context.Background(), q, logger); err != nil {
 		logger.Warn("could not normalize option executions", "err", err)
 	}
+	if err := importer.NormalizeGenbiki(context.Background(), q); err != nil {
+		logger.Warn("could not normalize SBI genbiki executions; affected account history needs review", "err", err)
+	}
 	jwt := auth.NewJWT(cfg.JWTSecret)
 	attachDir := cfg.AttachDir
 	if attachDir == "" {
