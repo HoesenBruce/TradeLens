@@ -53,6 +53,7 @@ describe("formatters", () => {
   });
   it("formats percent", () => {
     expect(fmtPct(0.58, "en-US")).toBe("58%");
+    expect(fmtPct(0.583, "ja-JP", 1)).toBe("58.3%");
   });
 });
 

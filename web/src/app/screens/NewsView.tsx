@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { AlertCircle, Newspaper, Plus, RefreshCw, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { Card } from "@/components/Card";
@@ -89,6 +90,7 @@ export function NewsFormDialog({
   onClose: () => void;
   onSave: (value: NewsFormValue, item?: News) => Promise<void>;
 }) {
+  const { t } = useLingui();
   const [title, setTitle] = useState(item?.title ?? "");
   const [source, setSource] = useState(item?.source ?? "");
   const [url, setURL] = useState(item?.url ?? "");
@@ -112,11 +114,15 @@ export function NewsFormDialog({
     event.preventDefault();
     setSaveError("");
     if (!title.trim() || !source.trim() || !publishedAt) {
-      setSaveError("Title, source, and published time are required.");
+      setSaveError(
+        t({ id: "news.required", message: "Title, source, and published time are required." }),
+      );
       return;
     }
     if (assets.some((asset) => !asset.symbol.trim())) {
-      setSaveError("Every affected asset needs a symbol.");
+      setSaveError(
+        t({ id: "news.assetRequired", message: "Every affected asset needs a symbol." }),
+      );
       return;
     }
     setSaving(true);
@@ -148,7 +154,11 @@ export function NewsFormDialog({
       );
       onClose();
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : "Could not save news entry.");
+      setSaveError(
+        err instanceof Error
+          ? err.message
+          : t({ id: "news.saveFailed", message: "Could not save news entry." }),
+      );
     } finally {
       setSaving(false);
     }
@@ -159,9 +169,16 @@ export function NewsFormDialog({
       <DialogContent className="max-w-[min(860px,94vw)]">
         <DialogHeader className="pr-12">
           <div>
-            <DialogTitle>{item ? "Edit news thesis" : "New news thesis"}</DialogTitle>
+            <DialogTitle>
+              {item
+                ? t({ id: "news.edit", message: "Edit news thesis" })
+                : t({ id: "news.new", message: "New news thesis" })}
+            </DialogTitle>
             <DialogDescription className="mt-1">
-              Record the source, your notes, and every affected stock, ETF, or index.
+              {t({
+                id: "news.formHint",
+                message: "Record the source, your notes, and every affected stock, ETF, or index.",
+              })}
             </DialogDescription>
           </div>
         </DialogHeader>
@@ -170,41 +187,48 @@ export function NewsFormDialog({
             {saveError ? (
               <Alert variant="error">
                 <AlertCircle aria-hidden />
-                <AlertTitle>Could not save</AlertTitle>
+                <AlertTitle>{t({ id: "news.couldNotSave", message: "Could not save" })}</AlertTitle>
                 <AlertDescription>{saveError}</AlertDescription>
               </Alert>
             ) : null}
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Title" htmlFor="news-title">
+              <Field label={t({ id: "news.title", message: "Title" })} htmlFor="news-title">
                 <FormInput
                   id="news-title"
-                  aria-label="Title"
+                  aria-label={t({ id: "news.title", message: "Title" })}
                   autoFocus
                   required
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
-                  placeholder="What happened?"
+                  placeholder={t({ id: "news.whatHappened", message: "What happened?" })}
                 />
               </Field>
-              <Field label="Source" htmlFor="news-source">
+              <Field label={t({ id: "news.source", message: "Source" })} htmlFor="news-source">
                 <FormInput
                   id="news-source"
-                  aria-label="Source"
+                  aria-label={t({ id: "news.source", message: "Source" })}
                   required
                   value={source}
                   onChange={(event) => setSource(event.target.value)}
-                  placeholder="Company filing, Reuters, manual…"
+                  placeholder={t({
+                    id: "news.sourceExample",
+                    message: "Company filing, Reuters, manual…",
+                  })}
                 />
               </Field>
-              <Field label="Published time">
+              <Field label={t({ id: "news.publishedTime", message: "Published time" })}>
                 <DateTimePicker
-                  aria-label="Published time"
+                  aria-label={t({ id: "news.publishedTime", message: "Published time" })}
                   value={publishedAt}
                   onChange={setPublishedAt}
                 />
               </Field>
-              <Field label="URL" htmlFor="news-url" description="Optional HTTP(S) source link.">
+              <Field
+                label="URL"
+                htmlFor="news-url"
+                description={t({ id: "news.urlHint", message: "Optional HTTP(S) source link." })}
+              >
                 <FormInput
                   id="news-url"
                   aria-label="URL"
@@ -214,52 +238,68 @@ export function NewsFormDialog({
                   placeholder="https://…"
                 />
               </Field>
-              <Field label="Category" htmlFor="news-category">
+              <Field
+                label={t({ id: "news.category", message: "Category" })}
+                htmlFor="news-category"
+              >
                 <FormInput
                   id="news-category"
-                  aria-label="Category"
+                  aria-label={t({ id: "news.category", message: "Category" })}
                   value={category}
                   onChange={(event) => setCategory(event.target.value)}
-                  placeholder="Earnings, policy, launch…"
+                  placeholder={t({
+                    id: "news.categoryExample",
+                    message: "Earnings, policy, launch…",
+                  })}
                 />
               </Field>
-              <Field label="Tags" htmlFor="news-tags" description="Comma-separated.">
+              <Field
+                label={t({ id: "news.tags", message: "Tags" })}
+                htmlFor="news-tags"
+                description={t({ id: "news.tagsHint", message: "Comma-separated." })}
+              >
                 <FormInput
                   id="news-tags"
-                  aria-label="Tags"
+                  aria-label={t({ id: "news.tags", message: "Tags" })}
                   value={tags}
                   onChange={(event) => setTags(event.target.value)}
-                  placeholder="Japan, ETF"
+                  placeholder={t({ id: "news.tagsExample", message: "Japan, ETF" })}
                 />
               </Field>
             </div>
 
-            <Field label="Original text" htmlFor="news-original">
+            <Field
+              label={t({ id: "news.originalText", message: "Original text" })}
+              htmlFor="news-original"
+            >
               <FormTextarea
                 id="news-original"
-                aria-label="Original text"
+                aria-label={t({ id: "news.originalText", message: "Original text" })}
                 value={originalText}
                 onChange={(event) => setOriginalText(event.target.value)}
-                placeholder="Paste the relevant excerpt."
+                placeholder={t({ id: "news.excerptHint", message: "Paste the relevant excerpt." })}
               />
             </Field>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Summary" htmlFor="news-summary">
+              <Field label={t({ id: "news.summary", message: "Summary" })} htmlFor="news-summary">
                 <FormTextarea
                   id="news-summary"
-                  aria-label="Summary"
+                  aria-label={t({ id: "news.summary", message: "Summary" })}
                   value={summary}
                   onChange={(event) => setSummary(event.target.value)}
-                  placeholder="What changed?"
+                  placeholder={t({ id: "news.summaryHint", message: "What changed?" })}
                 />
               </Field>
-              <Field label="Notes / thesis" htmlFor="news-notes">
+              <Field
+                label={t({ id: "news.notes", message: "Notes / thesis" })}
+                htmlFor="news-notes"
+              >
                 <FormTextarea
                   id="news-notes"
-                  aria-label="Notes / thesis"
+                  aria-label={t({ id: "news.notes", message: "Notes / thesis" })}
                   value={notes}
                   onChange={(event) => setNotes(event.target.value)}
-                  placeholder="Why could this matter?"
+                  placeholder={t({ id: "news.notesHint", message: "Why could this matter?" })}
                 />
               </Field>
             </div>
@@ -267,8 +307,12 @@ export function NewsFormDialog({
             <section className="flex flex-col gap-3 rounded-lg bg-muted/45 p-3">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h3 className="text-sm font-semibold">Affected assets</h3>
-                  <p className="text-xs text-muted-foreground">Stocks, ETFs, and indices.</p>
+                  <h3 className="text-sm font-semibold">
+                    {t({ id: "news.assets", message: "Affected assets" })}
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    {t({ id: "news.assetHint", message: "Stocks, ETFs, and indices." })}
+                  </p>
                 </div>
                 <Button
                   type="button"
@@ -276,12 +320,13 @@ export function NewsFormDialog({
                   size="sm"
                   onClick={() => setAssets((a) => [...a, emptyAsset()])}
                 >
-                  <Plus aria-hidden /> Add asset
+                  <Plus aria-hidden />
+                  {t({ id: "news.addAsset", message: "Add asset" })}
                 </Button>
               </div>
               {assets.length === 0 ? (
                 <p className="rounded-md bg-background px-3 py-4 text-center text-xs text-muted-foreground">
-                  No affected assets yet.
+                  {t({ id: "news.noAssets", message: "No affected assets yet." })}
                 </p>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -290,10 +335,15 @@ export function NewsFormDialog({
                       key={asset.key}
                       className="grid gap-2 rounded-md bg-background p-3 md:grid-cols-2 xl:grid-cols-[7rem_8rem_7rem_7rem_1fr_1fr_auto]"
                     >
-                      <legend className="sr-only">Affected asset {index + 1}</legend>
-                      <Field label="Type">
+                      <legend className="sr-only">
+                        {t({ id: "news.assetNumber", message: `Affected asset ${index + 1}` })}
+                      </legend>
+                      <Field label={t({ id: "news.type", message: "Type" })}>
                         <NativeSelect
-                          aria-label={`Asset ${index + 1} type`}
+                          aria-label={t({
+                            id: "news.assetTypeNumber",
+                            message: `Asset ${index + 1} type`,
+                          })}
                           value={asset.asset_type}
                           onChange={(event) =>
                             updateAsset(asset.key, {
@@ -302,14 +352,21 @@ export function NewsFormDialog({
                           }
                           wrapperClassName="w-full"
                         >
-                          <NativeSelectOption value="stock">Stock</NativeSelectOption>
+                          <NativeSelectOption value="stock">
+                            {t({ id: "news.stock", message: "Stock" })}
+                          </NativeSelectOption>
                           <NativeSelectOption value="etf">ETF</NativeSelectOption>
-                          <NativeSelectOption value="index">Index</NativeSelectOption>
+                          <NativeSelectOption value="index">
+                            {t({ id: "news.index", message: "Index" })}
+                          </NativeSelectOption>
                         </NativeSelect>
                       </Field>
-                      <Field label="Symbol">
+                      <Field label={t({ id: "news.symbol", message: "Symbol" })}>
                         <FormInput
-                          aria-label={`Asset ${index + 1} symbol`}
+                          aria-label={t({
+                            id: "news.assetSymbol",
+                            message: `Asset ${index + 1} symbol`,
+                          })}
                           required
                           value={asset.symbol}
                           onChange={(event) =>
@@ -319,7 +376,7 @@ export function NewsFormDialog({
                           className="uppercase"
                         />
                       </Field>
-                      <Field label="Market">
+                      <Field label={t({ id: "news.market", message: "Market" })}>
                         <FormInput
                           value={asset.market ?? ""}
                           onChange={(event) =>
@@ -328,7 +385,7 @@ export function NewsFormDialog({
                           placeholder="JP"
                         />
                       </Field>
-                      <Field label="Exchange">
+                      <Field label={t({ id: "news.exchange", message: "Exchange" })}>
                         <FormInput
                           value={asset.exchange ?? ""}
                           onChange={(event) =>
@@ -337,24 +394,30 @@ export function NewsFormDialog({
                           placeholder="TSE"
                         />
                       </Field>
-                      <Field label="Name">
+                      <Field label={t({ id: "news.name", message: "Name" })}>
                         <FormInput
-                          aria-label={`Asset ${index + 1} name`}
+                          aria-label={t({
+                            id: "news.assetName",
+                            message: `Asset ${index + 1} name`,
+                          })}
                           value={asset.display_name ?? ""}
                           onChange={(event) =>
                             updateAsset(asset.key, { display_name: event.target.value })
                           }
-                          placeholder="Optional"
+                          placeholder={t({ id: "news.optional", message: "Optional" })}
                         />
                       </Field>
-                      <Field label="Relation">
+                      <Field label={t({ id: "news.relation", message: "Relation" })}>
                         <FormInput
-                          aria-label={`Asset ${index + 1} relation`}
+                          aria-label={t({
+                            id: "news.assetRelation",
+                            message: `Asset ${index + 1} relation`,
+                          })}
                           value={asset.relation ?? ""}
                           onChange={(event) =>
                             updateAsset(asset.key, { relation: event.target.value })
                           }
-                          placeholder="Supplier, peer…"
+                          placeholder={t({ id: "news.relationHint", message: "Supplier, peer…" })}
                         />
                       </Field>
                       <Button
@@ -362,7 +425,10 @@ export function NewsFormDialog({
                         variant="ghost"
                         size="icon-sm"
                         className="self-end text-muted-foreground hover:text-destructive"
-                        aria-label={`Remove asset ${index + 1}`}
+                        aria-label={t({
+                          id: "news.removeAsset",
+                          message: `Remove asset ${index + 1}`,
+                        })}
                         onClick={() =>
                           setAssets((current) => current.filter((row) => row.key !== asset.key))
                         }
@@ -378,10 +444,12 @@ export function NewsFormDialog({
         </DialogBody>
         <DialogFooter>
           <Button variant="outline" onClick={onClose} disabled={saving}>
-            Cancel
+            {t({ id: "news.cancel", message: "Cancel" })}
           </Button>
           <Button type="submit" form="news-form" loading={saving}>
-            {item ? "Save changes" : "Create entry"}
+            {item
+              ? t({ id: "news.saveChanges", message: "Save changes" })
+              : t({ id: "news.createEntry", message: "Create entry" })}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -398,6 +466,7 @@ function DeleteNewsDialog({
   onClose: () => void;
   onDelete: (item: News) => Promise<void>;
 }) {
+  const { t } = useLingui();
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
 
@@ -406,9 +475,15 @@ function DeleteNewsDialog({
       <DialogContent className="max-w-md">
         <DialogHeader className="pr-12">
           <div>
-            <DialogTitle>Delete news thesis?</DialogTitle>
+            <DialogTitle>
+              {t({ id: "news.deleteTitle", message: "Delete news thesis?" })}
+            </DialogTitle>
             <DialogDescription className="mt-1">
-              This also removes its affected assets and predictions. This cannot be undone.
+              {t({
+                id: "news.deleteWarning",
+                message:
+                  "This also removes its affected assets and predictions. This cannot be undone.",
+              })}
             </DialogDescription>
           </div>
         </DialogHeader>
@@ -422,7 +497,7 @@ function DeleteNewsDialog({
         </DialogBody>
         <DialogFooter>
           <Button variant="outline" onClick={onClose} disabled={deleting}>
-            Cancel
+            {t({ id: "news.cancel", message: "Cancel" })}
           </Button>
           <Button
             variant="destructive"
@@ -434,13 +509,17 @@ function DeleteNewsDialog({
                 await onDelete(item);
                 onClose();
               } catch (err) {
-                setError(err instanceof Error ? err.message : "Could not delete entry.");
+                setError(
+                  err instanceof Error
+                    ? err.message
+                    : t({ id: "news.deleteFailed", message: "Could not delete entry." }),
+                );
               } finally {
                 setDeleting(false);
               }
             }}
           >
-            Delete
+            {t({ id: "news.delete", message: "Delete" })}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -457,6 +536,12 @@ export function NewsView({
   onDelete,
   predictionActions,
 }: NewsViewProps) {
+  const { t } = useLingui();
+  const labels = {
+    bullish: t({ id: "news.bullish", message: "Bullish" }),
+    bearish: t({ id: "news.bearish", message: "Bearish" }),
+    neutral: t({ id: "news.neutral", message: "Neutral" }),
+  };
   const [editing, setEditing] = useState<News | null | undefined>(undefined);
   const [deleting, setDeleting] = useState<News>();
   const { filters, setFilters, reset } = useNewsFilters();
@@ -466,69 +551,83 @@ export function NewsView({
     <Page>
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">News thesis</h1>
+          <h1 className="text-xl font-semibold tracking-tight">
+            {t({ id: "news.heading", message: "News thesis" })}
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Manual catalysts and the assets they may affect.
+            {t({
+              id: "news.subtitle",
+              message: "Manual catalysts and the assets they may affect.",
+            })}
           </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" render={<a href="/news/performance" />}>
-            Performance report
+            {t({ id: "news.performance", message: "Performance report" })}
           </Button>
           <Button onClick={() => setEditing(null)}>
-            <Plus aria-hidden /> New entry
+            <Plus aria-hidden />
+            {t({ id: "news.newEntry", message: "New entry" })}
           </Button>
         </div>
       </header>
 
       <section
-        aria-label="News filters"
+        aria-label={t({ id: "news.filters", message: "News filters" })}
         className="flex flex-wrap items-end gap-3 rounded-lg bg-card p-3"
       >
-        <Field label="Validation">
+        <Field label={t({ id: "news.validation", message: "Validation" })}>
           <NativeSelect
-            aria-label="Validation filter"
+            aria-label={t({ id: "news.validationFilter", message: "Validation filter" })}
             value={filters.status}
             onChange={(e) => setFilters({ status: e.target.value as typeof filters.status })}
           >
-            <NativeSelectOption value="all">All statuses</NativeSelectOption>
-            <NativeSelectOption value="pending">Pending</NativeSelectOption>
-            <NativeSelectOption value="validated">Validated</NativeSelectOption>
+            <NativeSelectOption value="all">
+              {t({ id: "news.allStatuses", message: "All statuses" })}
+            </NativeSelectOption>
+            <NativeSelectOption value="pending">
+              {t({ id: "news.pending", message: "Pending" })}
+            </NativeSelectOption>
+            <NativeSelectOption value="validated">
+              {t({ id: "news.validated", message: "Validated" })}
+            </NativeSelectOption>
           </NativeSelect>
         </Field>
-        <Field label="Direction">
+        <Field label={t({ id: "news.direction", message: "Direction" })}>
           <NativeSelect
-            aria-label="Direction filter"
+            aria-label={t({ id: "news.directionFilter", message: "Direction filter" })}
             value={filters.direction}
             onChange={(e) => setFilters({ direction: e.target.value as typeof filters.direction })}
           >
             {["all", "bullish", "bearish", "neutral"].map((d) => (
               <NativeSelectOption key={d} value={d}>
-                {d === "all" ? "All directions" : d[0].toUpperCase() + d.slice(1)}
+                {d === "all"
+                  ? t({ id: "news.allDirections", message: "All directions" })
+                  : labels[d as keyof typeof labels]}
               </NativeSelectOption>
             ))}
           </NativeSelect>
         </Field>
-        <Field label="Symbol">
+        <Field label={t({ id: "news.symbol", message: "Symbol" })}>
           <FormInput
-            aria-label="Symbol filter"
+            aria-label={t({ id: "news.symbolFilter", message: "Symbol filter" })}
             placeholder="285A"
             value={filters.symbol}
             onChange={(e) => setFilters({ symbol: e.target.value })}
           />
         </Field>
-        <Field label="From">
+        <Field label={t({ id: "news.from", message: "From" })}>
           <FormInput
-            aria-label="Published from"
+            aria-label={t({ id: "news.publishedFrom", message: "Published from" })}
             type="date"
             value={filters.from}
             max={filters.to || undefined}
             onChange={(e) => setFilters({ from: e.target.value })}
           />
         </Field>
-        <Field label="To">
+        <Field label={t({ id: "news.to", message: "To" })}>
           <FormInput
-            aria-label="Published to"
+            aria-label={t({ id: "news.publishedTo", message: "Published to" })}
             type="date"
             value={filters.to}
             min={filters.from || undefined}
@@ -536,7 +635,7 @@ export function NewsView({
           />
         </Field>
         <Button variant="outline" onClick={reset}>
-          Reset filters
+          {t({ id: "news.resetFilters", message: "Reset filters" })}
         </Button>
       </section>
 
@@ -550,10 +649,13 @@ export function NewsView({
         <Card>
           <Alert variant="error">
             <AlertCircle aria-hidden />
-            <AlertTitle>Could not load news</AlertTitle>
-            <AlertDescription>Check the API connection and try again.</AlertDescription>
+            <AlertTitle>{t({ id: "news.loadFailed", message: "Could not load news" })}</AlertTitle>
+            <AlertDescription>
+              {t({ id: "news.connectionHint", message: "Check the API connection and try again." })}
+            </AlertDescription>
             <Button variant="outline" size="sm" onClick={onRetry}>
-              <RefreshCw aria-hidden /> Try again
+              <RefreshCw aria-hidden />
+              {t({ id: "news.retry", message: "Try again" })}
             </Button>
           </Alert>
         </Card>
@@ -561,17 +663,21 @@ export function NewsView({
         <Card>
           <EmptyState
             icon={<Newspaper aria-hidden />}
-            title="No news theses yet"
-            hint="Record a catalyst and connect the stocks, ETFs, and indices it may affect."
+            title={t({ id: "news.empty", message: "No news theses yet" })}
+            hint={t({
+              id: "news.emptyHint",
+              message: "Record a catalyst and connect the stocks, ETFs, and indices it may affect.",
+            })}
             actions={
               <Button onClick={() => setEditing(null)}>
-                <Plus aria-hidden /> New entry
+                <Plus aria-hidden />
+                {t({ id: "news.newEntry", message: "New entry" })}
               </Button>
             }
           />
         </Card>
       ) : (
-        <Card title={`${filtered.length} ${filtered.length === 1 ? "entry" : "entries"}`} flush>
+        <Card title={t({ id: "news.entryCount", message: `Entries: ${filtered.length}` })} flush>
           {filtered.length ? (
             <NewsTable
               key={JSON.stringify(filters)}
@@ -584,11 +690,14 @@ export function NewsView({
             <div className="p-6">
               <EmptyState
                 icon={<Newspaper aria-hidden />}
-                title="No matching theses"
-                hint="Change or reset filters to see more entries."
+                title={t({ id: "news.noMatches", message: "No matching theses" })}
+                hint={t({
+                  id: "news.noMatchesHint",
+                  message: "Change or reset filters to see more entries.",
+                })}
                 actions={
                   <Button variant="outline" onClick={reset}>
-                    Reset filters
+                    {t({ id: "news.resetFilters", message: "Reset filters" })}
                   </Button>
                 }
               />

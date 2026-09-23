@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { createFileRoute } from "@tanstack/react-router";
 import { NewsView, type NewsFormValue } from "@/app/screens/NewsView";
 import { useToastManager } from "@/components/Toast";
@@ -13,6 +14,7 @@ import {
 export const Route = createFileRoute("/news/")({ component: NewsPage });
 
 function NewsPage() {
+  const { t } = useLingui();
   const predictionActions = usePredictionActions();
   const toast = useToastManager();
   const newsQ = useNews();
@@ -28,11 +30,17 @@ function NewsPage() {
         previousAssetIds: item.assets.map((asset) => asset.id),
         assets: value.assets,
       });
-      toast.add({ title: "News thesis updated", description: value.body.title });
+      toast.add({
+        title: t({ id: "news.updated", message: "News thesis updated" }),
+        description: value.body.title,
+      });
       return;
     }
     await createM.mutateAsync({ ...value.body, assets: value.assets });
-    toast.add({ title: "News thesis created", description: value.body.title });
+    toast.add({
+      title: t({ id: "news.created", message: "News thesis created" }),
+      description: value.body.title,
+    });
   };
 
   return (
@@ -45,7 +53,10 @@ function NewsPage() {
       onSave={save}
       onDelete={async (item) => {
         await deleteM.mutateAsync(item.id);
-        toast.add({ title: "News thesis deleted", description: item.title });
+        toast.add({
+          title: t({ id: "news.deleted", message: "News thesis deleted" }),
+          description: item.title,
+        });
       }}
     />
   );

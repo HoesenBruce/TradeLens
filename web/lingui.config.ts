@@ -8,6 +8,7 @@ export default defineConfig({
     {
       path: "src/i18n/locales/{locale}/messages",
       include: ["src"],
+      exclude: ["**/*.test.*", "**/*.spec.*"],
     },
   ],
 });

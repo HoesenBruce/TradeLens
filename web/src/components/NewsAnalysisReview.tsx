@@ -1,3 +1,5 @@
+import { ApiError } from "@/lib/api/client";
+import { useLingui } from "@lingui/react/macro";
 import { useState, type FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -23,6 +25,22 @@ import {
 type DraftAsset = NewsAnalysisReview["assets"][number] & { accepted: boolean };
 
 export function NewsAnalysisReview({ news }: { news: News }) {
+  const { t } = useLingui();
+  const labels = {
+    symbol: t({ id: "news.symbol", message: "Symbol" }),
+    market: t({ id: "news.market", message: "Market" }),
+    exchange: t({ id: "news.exchange", message: "Exchange" }),
+    display_name: t({ id: "news.display_name", message: "Display name" }),
+    reasoning: t({ id: "news.reasoning", message: "Reasoning" }),
+    catalysts: t({ id: "news.catalysts", message: "Catalysts" }),
+    risks: t({ id: "news.risks", message: "Risks" }),
+    stock: t({ id: "news.stock", message: "Stock" }),
+    etf: "ETF",
+    index: t({ id: "news.index", message: "Index" }),
+    bullish: t({ id: "news.bullish", message: "Bullish" }),
+    bearish: t({ id: "news.bearish", message: "Bearish" }),
+    neutral: t({ id: "news.neutral", message: "Neutral" }),
+  };
   const client = useQueryClient();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -53,7 +71,14 @@ export function NewsAnalysisReview({ news }: { news: News }) {
         })),
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Analysis failed.");
+      setError(
+        err instanceof ApiError && err.code === "ai_unavailable"
+          ? t({
+              id: "news.aiUnavailable",
+              message: "Configure and enable AI Coach in Settings first.",
+            })
+          : t({ id: "news.analysisFailed", message: "Analysis failed." }),
+      );
     } finally {
       setBusy(false);
     }
@@ -65,7 +90,12 @@ export function NewsAnalysisReview({ news }: { news: News }) {
     if (!analysis) return;
     const selected = assets.filter((a) => a.accepted);
     if (selected.some((a) => a.include_prediction && !a.horizons.length)) {
-      setError("Select at least one horizon for every accepted prediction.");
+      setError(
+        t({
+          id: "news.reviewHorizonRequired",
+          message: "Select at least one horizon for every accepted prediction.",
+        }),
+      );
       return;
     }
     setSaving(true);
@@ -81,7 +111,11 @@ export function NewsAnalysisReview({ news }: { news: News }) {
       await client.invalidateQueries({ queryKey: ["news"] });
       setOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not save review.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : t({ id: "news.reviewFailed", message: "Could not save review." }),
+      );
     } finally {
       setSaving(false);
     }
@@ -95,7 +129,7 @@ export function NewsAnalysisReview({ news }: { news: News }) {
           void start();
         }}
       >
-        Analyze with AI
+        {t({ id: "news.analyze", message: "Analyze with AI" })}
       </Button>
       {open && (
         <Dialog
@@ -106,21 +140,34 @@ export function NewsAnalysisReview({ news }: { news: News }) {
           <DialogContent className="max-w-3xl">
             <DialogHeader>
               <div>
-                <DialogTitle>Review AI suggestions</DialogTitle>
+                <DialogTitle>
+                  {t({ id: "news.review", message: "Review AI suggestions" })}
+                </DialogTitle>
                 <DialogDescription>
-                  Suggestions may be wrong. Select only what you want to save. Edited AI suggestions
-                  retain AI identity; manual additions are User records.
+                  {t({
+                    id: "news.reviewHint",
+                    message:
+                      "Suggestions may be wrong. Select only what you want to save. Edited AI suggestions retain AI identity; manual additions are User records.",
+                  })}
                 </DialogDescription>
               </div>
             </DialogHeader>
             <DialogBody>
-              {busy && <p role="status">Analyzing news… No data has been saved.</p>}
+              {busy && (
+                <p role="status">
+                  {t({ id: "news.analyzing", message: "Analyzing news… No data has been saved." })}
+                </p>
+              )}
               {error && (
                 <p role="alert" className="mb-3 text-sm text-destructive">
                   {error}
                 </p>
               )}
-              {!busy && !analysis && <Button onClick={() => void start()}>Retry analysis</Button>}
+              {!busy && !analysis && (
+                <Button onClick={() => void start()}>
+                  {t({ id: "news.retryAnalysis", message: "Retry analysis" })}
+                </Button>
+              )}
               {analysis && (
                 <form id="news-analysis-review" onSubmit={submit} className="space-y-5">
                   <fieldset disabled={saving} className="space-y-5">
@@ -136,23 +183,42 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                                 : setAcceptCategory(e.target.checked)
                             }
                           />
-                          Accept {field}
+                          {field === "summary"
+                            ? t({ id: "news.acceptSummary", message: "Accept summary" })
+                            : t({ id: "news.acceptCategory", message: "Accept category" })}
                         </label>
                         <p className="text-xs text-muted-foreground">
-                          Current: {baseline[field] || "Not recorded"}
+                          {t({
+                            id: "news.current",
+                            message: `Current: ${baseline[field] || t({ id: "news.notRecorded", message: "Not recorded" })}`,
+                          })}
                         </p>
                         <FormTextarea
-                          aria-label={`Suggested ${field}`}
+                          aria-label={
+                            field === "summary"
+                              ? t({ id: "news.suggestedSummary", message: "Suggested summary" })
+                              : t({ id: "news.suggestedCategory", message: "Suggested category" })
+                          }
                           value={analysis[field]}
                           onChange={(e) => setAnalysis({ ...analysis, [field]: e.target.value })}
                         />
                       </div>
                     ))}
-                    {!assets.length && <p>No asset suggestions. You can add a manual asset.</p>}
+                    {!assets.length && (
+                      <p>
+                        {t({
+                          id: "news.noSuggestions",
+                          message: "No asset suggestions. You can add a manual asset.",
+                        })}
+                      </p>
+                    )}
                     {assets.map((a, i) => (
                       <section
                         key={i}
-                        aria-label={`Suggestion ${i + 1}`}
+                        aria-label={t({
+                          id: "news.suggestionNumber",
+                          message: `Suggestion ${i + 1}`,
+                        })}
                         className="space-y-3 rounded-lg border p-4"
                       >
                         <label className="flex items-center gap-2 text-sm font-semibold">
@@ -161,12 +227,13 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                             checked={a.accepted}
                             onChange={(e) => updateAsset(i, { accepted: e.target.checked })}
                           />
-                          Accept asset {i + 1} · {a.source === "ai" ? "AI" : "User"}
+                          {t({ id: "news.acceptAsset", message: `Accept asset ${i + 1}` })} ·{" "}
+                          {a.source === "ai" ? "AI" : t({ id: "news.user", message: "User" })}
                         </label>
                         <div className="grid gap-3 sm:grid-cols-2">
-                          <Field label="Type">
+                          <Field label={t({ id: "news.type", message: "Type" })}>
                             <NativeSelect
-                              aria-label="Type"
+                              aria-label={t({ id: "news.type", message: "Type" })}
                               value={a.asset_type}
                               onChange={(e) =>
                                 updateAsset(i, {
@@ -176,16 +243,16 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                             >
                               {["stock", "etf", "index"].map((v) => (
                                 <NativeSelectOption key={v} value={v}>
-                                  {v.toUpperCase()}
+                                  {labels[v as keyof typeof labels]}
                                 </NativeSelectOption>
                               ))}
                             </NativeSelect>
                           </Field>
                           {(["symbol", "market", "exchange", "display_name"] as const).map(
                             (field) => (
-                              <Field key={field} label={field.replace("_", " ")}>
+                              <Field key={field} label={labels[field]}>
                                 <FormInput
-                                  aria-label={field}
+                                  aria-label={labels[field]}
                                   required={field === "symbol" && a.accepted}
                                   value={a[field]}
                                   onChange={(e) => updateAsset(i, { [field]: e.target.value })}
@@ -202,14 +269,14 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                               updateAsset(i, { include_prediction: e.target.checked })
                             }
                           />
-                          Include prediction
+                          {t({ id: "news.includePrediction", message: "Include prediction" })}
                         </label>
                         {a.include_prediction && (
                           <div className="space-y-3">
                             <div className="grid grid-cols-2 gap-3">
-                              <Field label="Direction">
+                              <Field label={t({ id: "news.direction", message: "Direction" })}>
                                 <NativeSelect
-                                  aria-label="Direction"
+                                  aria-label={t({ id: "news.direction", message: "Direction" })}
                                   value={a.direction}
                                   onChange={(e) =>
                                     updateAsset(i, {
@@ -219,14 +286,22 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                                 >
                                   {["bullish", "bearish", "neutral"].map((v) => (
                                     <NativeSelectOption key={v} value={v}>
-                                      {v}
+                                      {labels[v as keyof typeof labels]}
                                     </NativeSelectOption>
                                   ))}
                                 </NativeSelect>
                               </Field>
-                              <Field label="Confidence (%)">
+                              <Field
+                                label={t({
+                                  id: "news.confidencePercent",
+                                  message: "Confidence (%)",
+                                })}
+                              >
                                 <FormInput
-                                  aria-label="Confidence (%)"
+                                  aria-label={t({
+                                    id: "news.confidencePercent",
+                                    message: "Confidence (%)",
+                                  })}
                                   type="number"
                                   min={0}
                                   max={100}
@@ -240,9 +315,9 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                               </Field>
                             </div>
                             {(["reasoning", "catalysts", "risks"] as const).map((field) => (
-                              <Field key={field} label={field}>
+                              <Field key={field} label={labels[field]}>
                                 <FormTextarea
-                                  aria-label={field}
+                                  aria-label={labels[field]}
                                   required={field === "reasoning" && a.accepted}
                                   value={a[field]}
                                   onChange={(e) => updateAsset(i, { [field]: e.target.value })}
@@ -250,7 +325,9 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                               </Field>
                             ))}
                             <fieldset>
-                              <legend className="mb-2 text-sm">Trading-day horizons</legend>
+                              <legend className="mb-2 text-sm">
+                                {t({ id: "news.horizons", message: "Trading-day horizons" })}
+                              </legend>
                               <div className="flex gap-4">
                                 {[1, 3, 5, 10, 20].map((h) => (
                                   <label key={h} className="flex items-center gap-1 text-sm">
@@ -265,7 +342,7 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                                         })
                                       }
                                     />
-                                    {h}D
+                                    {t({ id: "news.days", message: `${h}D` })}
                                   </label>
                                 ))}
                               </div>
@@ -280,7 +357,7 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                             setAssets((current) => current.filter((_, index) => index !== i))
                           }
                         >
-                          Reject suggestion
+                          {t({ id: "news.rejectSuggestion", message: "Reject suggestion" })}
                         </Button>
                       </section>
                     ))}
@@ -310,7 +387,7 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                         ])
                       }
                     >
-                      Add manual asset
+                      {t({ id: "news.addManualAsset", message: "Add manual asset" })}
                     </Button>
                   </fieldset>
                 </form>
@@ -318,7 +395,7 @@ export function NewsAnalysisReview({ news }: { news: News }) {
             </DialogBody>
             <DialogFooter>
               <Button variant="outline" disabled={busy || saving} onClick={() => setOpen(false)}>
-                Cancel
+                {t({ id: "news.cancel", message: "Cancel" })}
               </Button>
               <Button
                 type="submit"
@@ -330,7 +407,7 @@ export function NewsAnalysisReview({ news }: { news: News }) {
                   (!acceptSummary && !acceptCategory && !assets.some((a) => a.accepted))
                 }
               >
-                Save selected suggestions
+                {t({ id: "news.saveSuggestions", message: "Save selected suggestions" })}
               </Button>
             </DialogFooter>
           </DialogContent>
