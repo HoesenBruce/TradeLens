@@ -67,6 +67,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { attachmentsApi } from "@/lib/api/attachments";
 import { cashApi } from "@/lib/api/cash";
 import type { TradeExtract } from "@/lib/api/ocr";
+import type { TradeDetail } from "@/lib/api/types";
 import { tradesApi } from "@/lib/api/trades";
 import { parseAmountToNumber } from "@/lib/amountInput";
 import { cn } from "@/lib/cn";
@@ -449,7 +450,14 @@ function blockMultiplier(block: SymbolTradeBlock) {
     : num(block.multiplier) || (block.market === "option" ? 100 : 1);
 }
 
-function blockRisk(block: SymbolTradeBlock, side: "long" | "short" = block.side) {
+function executionDirection(block: SymbolTradeBlock): "long" | "short" {
+  return block.rows.find((row) => num(row.quantity) != null && num(row.price) != null)?.side ===
+    "sell"
+    ? "short"
+    : "long";
+}
+
+function blockRisk(block: SymbolTradeBlock, side: "long" | "short" = executionDirection(block)) {
   const parsed = block.rows.reduce<
     Array<{ side: "buy" | "sell"; quantity: number; price: number }>
   >((rows, row) => {
@@ -463,7 +471,10 @@ function blockRisk(block: SymbolTradeBlock, side: "long" | "short" = block.side)
   return computeInitialRisk(side, entry.avg, entry.qty, num(block.stop), blockMultiplier(block));
 }
 
-function blockPnlPreview(block: SymbolTradeBlock, side: "long" | "short" = block.side) {
+function blockPnlPreview(
+  block: SymbolTradeBlock,
+  side: "long" | "short" = executionDirection(block),
+) {
   const parsedRows = block.rows.map((r) => ({
     side: r.side,
     quantity: num(r.quantity) ?? 0,
@@ -488,6 +499,7 @@ function SymbolCard({
   form,
   block,
   previewSide,
+  actualTrade,
   index,
   currency,
   locale,
@@ -505,6 +517,7 @@ function SymbolCard({
   form: NewTradeFormApi;
   block: SymbolTradeBlock;
   previewSide?: "long" | "short";
+  actualTrade?: TradeDetail;
   index: number;
   currency: string;
   locale: string;
@@ -547,7 +560,7 @@ function SymbolCard({
     [block.rows],
   );
   const multiplier = blockMultiplier(block);
-  const pnlSide = previewSide ?? block.side;
+  const pnlSide = previewSide ?? executionDirection(block);
   const entry = useMemo(() => weightedAvgEntry(parsedRows, pnlSide), [parsedRows, pnlSide]);
   const risk = useMemo(
     () =>
@@ -558,6 +571,19 @@ function SymbolCard({
     () => previewTradePnl(pnlSide, parsedRows, multiplier, risk),
     [pnlSide, parsedRows, multiplier, risk],
   );
+  const result = actualTrade
+    ? {
+        avgEntry: actualTrade.avg_entry_price > 0 ? actualTrade.avg_entry_price : null,
+        avgExit: actualTrade.avg_exit_price,
+        positionQty: Math.abs(actualTrade.qty_remaining),
+        gross: actualTrade.gross_pnl,
+        feesTotal: actualTrade.fees_total,
+        net: actualTrade.net_pnl,
+        rMultiple: actualTrade.r_multiple,
+        closed: actualTrade.status === "closed",
+      }
+    : preview;
+  const targetPrice = num(block.target);
   const fillPnls = useMemo(
     () => previewFillNetPnls(pnlSide, parsedRows, multiplier),
     [pnlSide, parsedRows, multiplier],
@@ -565,9 +591,9 @@ function SymbolCard({
   const optionStrategy = useMemo(
     () =>
       block.market === "option"
-        ? detectOptionStrategy(block.side, [block.option_right || "call"])
+        ? detectOptionStrategy(pnlSide, [block.option_right || "call"])
         : null,
-    [block.market, block.side, block.option_right],
+    [block.market, pnlSide, block.option_right],
   );
   const set = <K extends keyof SymbolTradeBlock>(key: K, value: SymbolTradeBlock[K]) =>
     form.setFieldValue(`${base}.${key}` as never, value as never);
@@ -619,11 +645,13 @@ function SymbolCard({
   const suffix = index ? ` ${index + 1}` : "";
   const [open, setOpen] = useState(true);
   const collapsedSummary = [
-    block.side === "long"
+    block.plannedSide === "long"
       ? tr({ id: "trades.long", message: "Long" })
-      : tr({ id: "trades.short", message: "Short" }),
+      : block.plannedSide === "short"
+        ? tr({ id: "trades.short", message: "Short" })
+        : "",
     tr({ id: "trades.fillCount", message: `Fills: ${block.rows.length}` }),
-    preview.net != null ? fmtSignedMoney(preview.net, currency, locale) : "",
+    result.net != null ? fmtSignedMoney(result.net, currency, locale) : "",
   ]
     .filter(Boolean)
     .join(" ·");
@@ -674,6 +702,9 @@ function SymbolCard({
       </div>
       <CollapsibleContent animation="fade">
         <div className="relative z-[1] flex flex-col gap-4">
+          <span className={labelClass}>
+            {tr({ id: "trades.basicInfo", message: "Basic information" })}
+          </span>
           <div className="grid grid-cols-2 items-start gap-3 @min-[38rem]/symbol:grid-cols-4">
             <Field label={tr({ id: "trades.market", message: "Market" })}>
               <NativeSelect
@@ -764,20 +795,6 @@ function SymbolCard({
                 </Field>
               )}
             </form.Field>
-            <Field label={tr({ id: "trades.side", message: "Side" })}>
-              <SegmentedControl
-                ariaLabel={tr({ id: "trades.sideSymbol", message: `Side symbol ${index + 1}` })}
-                size="md"
-                fullWidth
-                options={[
-                  { value: "long", label: tr({ id: "trades.longChoice", message: "↗ LONG" }) },
-                  { value: "short", label: tr({ id: "trades.shortChoice", message: "↘ SHORT" }) },
-                ]}
-                tones={{ long: "pos", short: "neg" }}
-                value={block.side}
-                onChange={(side) => set("side", side as "long" | "short")}
-              />
-            </Field>
           </div>
           {block.market === "option" && (
             <div className="grid grid-cols-2 items-start gap-3 @min-[38rem]/symbol:grid-cols-4">
@@ -848,6 +865,33 @@ function SymbolCard({
               )}
             </div>
           )}
+          <div className="space-y-2">
+            <span className={labelClass}>
+              {tr({ id: "trades.tradePlan", message: "Trade plan" })}
+            </span>
+            <p className="text-[11px] text-muted-foreground">
+              {tr({
+                id: "trades.planDirectionHint",
+                message: "For your trade plan only. Does not change actual executions or P&L.",
+              })}
+            </p>
+          </div>
+          <div className="max-w-[12rem]">
+            <Field label={tr({ id: "trades.plannedDirection", message: "Planned direction" })}>
+              <SegmentedControl
+                ariaLabel={tr({ id: "trades.sideSymbol", message: `Side symbol ${index + 1}` })}
+                size="md"
+                fullWidth
+                options={[
+                  { value: "long", label: tr({ id: "trades.longChoice", message: "↗ LONG" }) },
+                  { value: "short", label: tr({ id: "trades.shortChoice", message: "↘ SHORT" }) },
+                ]}
+                tones={{ long: "pos", short: "neg" }}
+                value={block.plannedSide}
+                onChange={(side) => set("plannedSide", side as "long" | "short")}
+              />
+            </Field>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <Field label={tr({ id: "trades.target", message: "Target" })}>
               <AmountInput
@@ -879,6 +923,12 @@ function SymbolCard({
                     ? tr({ id: "trades.executionsSymbol", message: `Executions · ${block.symbol}` })
                     : tr({ id: "trades.executions", message: "Executions" })}
                 </span>
+                <p className="text-[11px] text-muted-foreground">
+                  {tr({
+                    id: "trades.executionsHint",
+                    message: "Actual executions determine position and P&L.",
+                  })}
+                </p>
                 <div
                   className={cn(
                     "hidden gap-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground @min-[46rem]/symbol:grid",
@@ -1114,7 +1164,7 @@ function SymbolCard({
                   })}
                   onClick={() =>
                     rowsField.pushValue(
-                      emptyExecutionRow(block.side === "long" ? "buy" : "sell", {
+                      emptyExecutionRow(block.plannedSide === "short" ? "sell" : "buy", {
                         option_right: block.option_right,
                         strike: block.option_strike,
                         expiry: block.option_expiry,
@@ -1129,11 +1179,35 @@ function SymbolCard({
             )}
           </form.Field>
           <TradeResultPreview
-            preview={preview}
+            preview={result}
             currency={currency}
             locale={locale}
             initialRisk={risk}
+            actual={!!actualTrade}
           />
+          {result.closed && result.avgExit != null && targetPrice != null && (
+            <p className="text-xs text-muted-foreground" data-testid="target-comparison">
+              {tr({ id: "trades.targetComparison", message: "Target comparison" })}:{" "}
+              {fmtMoney(targetPrice, currency, locale)} ·{" "}
+              {tr({ id: "trades.actualExit", message: "Actual exit" })}:{" "}
+              {fmtMoney(result.avgExit, currency, locale)} ·{" "}
+              {tr({ id: "trades.targetDifference", message: "Difference" })}:{" "}
+              {fmtSignedMoney(result.avgExit - targetPrice, currency, locale)}
+              {block.plannedSide && (
+                <>
+                  {" "}
+                  ·{" "}
+                  {(
+                    block.plannedSide === "short"
+                      ? result.avgExit <= targetPrice
+                      : result.avgExit >= targetPrice
+                  )
+                    ? tr({ id: "trades.targetReached", message: "Target reached" })
+                    : tr({ id: "trades.targetMissed", message: "Target missed" })}
+                </>
+              )}
+            </p>
+          )}
 
           <SymbolExtrasAccordion
             journalSummary={
@@ -1569,6 +1643,7 @@ export function NewTradeDrawer() {
             await tradesApi.patch(tradeId, {
               notes: buildStructuredJournalNotes({
                 session: block.session,
+                plannedDirection: block.plannedSide,
                 entryReason: block.entryReason,
                 exitReason: block.exitReason,
                 reviewNotes: block.reviewNotes,
@@ -1593,7 +1668,10 @@ export function NewTradeDrawer() {
               await cashApi.create({
                 account_id: accountId,
                 type: "dividend",
-                amount: block.side === "short" ? -Math.abs(amount) : Math.abs(amount),
+                amount:
+                  (editPreviewSide ?? executionDirection(block)) === "short"
+                    ? -Math.abs(amount)
+                    : Math.abs(amount),
                 currency: accounts.find((a) => a.id === accountId)?.base_currency ?? "USD",
                 occurred_at: new Date(`${block.dividendDate}T12:00:00`).toISOString(),
                 note:
@@ -1651,6 +1729,7 @@ export function NewTradeDrawer() {
             await tradesApi.patch(id, {
               notes: buildStructuredJournalNotes({
                 session: block.session,
+                plannedDirection: block.plannedSide,
                 entryReason: block.entryReason,
                 exitReason: block.exitReason,
                 reviewNotes: block.reviewNotes,
@@ -1675,7 +1754,8 @@ export function NewTradeDrawer() {
               await cashApi.create({
                 account_id: accountId,
                 type: "dividend",
-                amount: block.side === "short" ? -Math.abs(amount) : Math.abs(amount),
+                amount:
+                  executionDirection(block) === "short" ? -Math.abs(amount) : Math.abs(amount),
                 currency: accounts.find((a) => a.id === accountId)?.base_currency ?? "USD",
                 occurred_at: new Date(`${block.dividendDate}T12:00:00`).toISOString(),
                 note:
@@ -1760,14 +1840,14 @@ export function NewTradeDrawer() {
     [values.trades],
   );
   const singleFooter = useMemo(() => {
-    if (values.trades.length !== 1) return null;
+    if (isEditMode || values.trades.length !== 1) return null;
     const result = blockPnlPreview(values.trades[0]!, editPreviewSide);
     return {
       preview: result.preview,
       risk: result.initialRisk,
       entryTotal: result.entryTotal,
     };
-  }, [values.trades, editPreviewSide]);
+  }, [values.trades, editPreviewSide, isEditMode]);
 
   /** Commit the deferred removal once the card has finished animating out. */
   function commitRemoval() {
@@ -1837,7 +1917,7 @@ export function NewTradeDrawer() {
       form.setFieldValue("trades", [
         emptySymbolTrade({
           symbol: draft.symbol,
-          side: draft.side || "long",
+          plannedSide: draft.side || "long",
           target: draft.target,
           stop: draft.stop,
           rows: [emptyExecutionRow(draft.side === "short" ? "sell" : "buy")],
@@ -1876,7 +1956,7 @@ export function NewTradeDrawer() {
       emptySymbolTrade({
         market: template.market,
         symbol: template.symbol,
-        side: template.side,
+        plannedSide: journal.plannedDirection || template.side,
         target: template.target,
         stop: template.stop,
         multiplier: template.market === "option" ? "100" : "1",
@@ -1904,13 +1984,14 @@ export function NewTradeDrawer() {
       name: name.trim(),
       market: block.market,
       symbol: block.symbol,
-      side: block.side,
+      side: block.plannedSide || executionDirection(block),
       target: block.target,
       stop: block.stop,
       rows: block.rows.map(({ side, quantity, price, fees }) => ({ side, quantity, price, fees })),
       setupId: block.setupIds[0] ?? "",
       notes: buildStructuredJournalNotes({
         session: block.session,
+        plannedDirection: block.plannedSide,
         entryReason: block.entryReason,
         exitReason: block.exitReason,
         reviewNotes: block.reviewNotes,
@@ -2200,6 +2281,7 @@ export function NewTradeDrawer() {
                         form={form}
                         block={block}
                         previewSide={editPreviewSide}
+                        actualTrade={isEditMode ? editSource : undefined}
                         index={index}
                         currency={currency}
                         locale={locale}

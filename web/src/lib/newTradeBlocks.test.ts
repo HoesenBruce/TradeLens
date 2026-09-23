@@ -128,7 +128,7 @@ describe("symbolTradeFromDetail", () => {
     expect(block.market).toBe("option");
     expect(block.option_right).toBe("call");
     expect(block.option_strike).toBe("360");
-    expect(block.side).toBe("long");
+    expect(block.plannedSide).toBe("");
     expect(block.session).toBe("New York AM");
     expect(block.reviewNotes).toBe("clean exit");
     expect(block.setupGrade).toBe("A");

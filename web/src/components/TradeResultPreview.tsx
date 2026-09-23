@@ -13,6 +13,7 @@ export interface TradeResultPreviewProps {
   locale: string;
   /** Optional planned risk shown as a quiet footnote. */
   initialRisk?: number | null;
+  actual?: boolean;
   className?: string;
 }
 
@@ -49,6 +50,7 @@ export function TradeResultPreview({
   currency,
   locale,
   initialRisk,
+  actual = false,
   className,
 }: TradeResultPreviewProps) {
   useLingui();
@@ -66,7 +68,9 @@ export function TradeResultPreview({
     >
       <div className="flex items-baseline justify-between gap-3">
         <p className="m-0 text-[10px] font-semibold uppercase tracking-widest text-chart-3">
-          {tr({ id: "trades.result", message: "Result" })}
+          {actual
+            ? tr({ id: "trades.reviewResult", message: "Review / Result" })
+            : tr({ id: "trades.result", message: "Result" })}
         </p>
         {initialRisk != null && initialRisk > 0 ? (
           <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
@@ -74,6 +78,14 @@ export function TradeResultPreview({
           </p>
         ) : null}
       </div>
+      {actual && (
+        <p className="text-[11px] text-muted-foreground">
+          {tr({
+            id: "trades.savedAccountingResult",
+            message: "Saved accounting result; changes to executions appear after saving.",
+          })}
+        </p>
+      )}
 
       <div className="grid grid-cols-2 gap-3 @min-[32rem]/result:grid-cols-4">
         <BentoCell label={tr({ id: "trades.avgEntryShort", message: "Avg Entry" })}>
@@ -82,7 +94,13 @@ export function TradeResultPreview({
         <BentoCell label={tr({ id: "trades.avgExitShort", message: "Avg Exit" })}>
           {money(preview.avgExit)}
         </BentoCell>
-        <BentoCell label={tr({ id: "trades.estimatedPnl", message: "Est. P&L" })}>
+        <BentoCell
+          label={
+            actual
+              ? tr({ id: "trades.actualPnl", message: "Actual P&L" })
+              : tr({ id: "trades.estimatedPnl", message: "Est. P&L" })
+          }
+        >
           {preview.net == null ? (
             <span className="text-muted-foreground">—</span>
           ) : (

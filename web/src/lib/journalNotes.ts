@@ -5,9 +5,11 @@ const SECTION_ENTRY = "Entry reason";
 const SECTION_EXIT = "Exit reason";
 const SECTION_REVIEW = "Review notes";
 const SECTION_SESSION = "Session";
+const SECTION_PLAN_DIRECTION = "Planned direction";
 
 export interface StructuredJournalNotes {
   session: string;
+  plannedDirection: "long" | "short" | "";
   entryReason: string;
   exitReason: string;
   reviewNotes: string;
@@ -31,20 +33,36 @@ function extractSection(src: string, title: string): { body: string; rest: strin
 export function parseJournalNotes(raw: string): StructuredJournalNotes {
   let rest = (raw ?? "").trim();
   if (!rest) {
-    return { session: "", entryReason: "", exitReason: "", reviewNotes: "", legacy: "" };
+    return {
+      session: "",
+      plannedDirection: "",
+      entryReason: "",
+      exitReason: "",
+      reviewNotes: "",
+      legacy: "",
+    };
   }
 
   const hasSections = /^##\s+/m.test(rest);
   if (!hasSections) {
-    return { session: "", entryReason: "", exitReason: "", reviewNotes: "", legacy: rest };
+    return {
+      session: "",
+      plannedDirection: "",
+      entryReason: "",
+      exitReason: "",
+      reviewNotes: "",
+      legacy: rest,
+    };
   }
 
   let session = "";
+  let direction = "";
   let entryReason = "";
   let exitReason = "";
   let reviewNotes = "";
 
   ({ body: session, rest } = extractSection(rest, SECTION_SESSION));
+  ({ body: direction, rest } = extractSection(rest, SECTION_PLAN_DIRECTION));
   ({ body: entryReason, rest } = extractSection(rest, SECTION_ENTRY));
   ({ body: exitReason, rest } = extractSection(rest, SECTION_EXIT));
   ({ body: reviewNotes, rest } = extractSection(rest, SECTION_REVIEW));
@@ -55,6 +73,7 @@ export function parseJournalNotes(raw: string): StructuredJournalNotes {
 
   return {
     session,
+    plannedDirection: direction === "long" || direction === "short" ? direction : "",
     entryReason,
     exitReason,
     reviewNotes,
@@ -64,6 +83,7 @@ export function parseJournalNotes(raw: string): StructuredJournalNotes {
 
 export function buildStructuredJournalNotes(parts: {
   session?: string;
+  plannedDirection?: "long" | "short" | "";
   entryReason?: string;
   exitReason?: string;
   reviewNotes?: string;
@@ -77,6 +97,8 @@ export function buildStructuredJournalNotes(parts: {
   const legacy = parts.legacy?.trim();
 
   if (session) chunks.push(`## ${SECTION_SESSION}\n${session}`);
+  if (parts.plannedDirection)
+    chunks.push(`## ${SECTION_PLAN_DIRECTION}\n${parts.plannedDirection}`);
   if (entry) chunks.push(`## ${SECTION_ENTRY}\n${entry}`);
   if (exit) chunks.push(`## ${SECTION_EXIT}\n${exit}`);
   if (review) chunks.push(`## ${SECTION_REVIEW}\n${review}`);
