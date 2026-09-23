@@ -1,5 +1,29 @@
 # Agent rules
 
+## Git workflow guardrail
+
+Follow the canonical Git workflow in `CONTRIBUTING.md`.
+
+For development work:
+
+- never implement feature work directly on `main`;
+- keep `main` runnable;
+- create a short-lived branch using the repository naming convention;
+- use one branch / pull request for one coherent change by default;
+- prefer separate Git worktrees for concurrently developed issues;
+- do not introduce a long-lived `develop` branch unless the repository policy is explicitly
+  changed.
+
+Allowed branch prefixes:
+
+- `feat/*` — new features;
+- `fix/*` — bug fixes;
+- `refactor/*` — refactoring;
+- `docs/*` — documentation;
+- `chore/*` — tooling, CI, dependencies, build, and maintenance.
+
+When an issue exists, prefer including its number in the branch name.
+
 ## Private-fork platform policy
 
 This repository currently follows a **Web-first, mobile-preserving** development policy.
