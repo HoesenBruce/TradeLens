@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render } from "@/test/render";
+import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it } from "vite-plus/test";
 import type { Trade } from "@/lib/api/types";
 import { ReportsRollingWinRate } from "./ReportsRollingWinRate";

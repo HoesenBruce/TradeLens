@@ -1,3 +1,4 @@
+import "@/i18n";
 import { describe, expect, it } from "vite-plus/test";
 import { clampPage, pageCountFor, pageItems, pageRangeLabel, slicePage } from "./pagination";
 

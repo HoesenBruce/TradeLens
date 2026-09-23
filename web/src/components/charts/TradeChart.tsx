@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import {
   CandlestickSeries,
   ColorType,
@@ -12,6 +13,7 @@ import { ChartCandlestick, Maximize2, Play, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Execution } from "@/lib/api/types";
 import type { MarketBar, BarInterval } from "@/lib/api/market";
+import { intlLocale } from "@/lib/locale";
 import { cn } from "@/lib/cn";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { Skeleton } from "@/components/Skeleton";
@@ -111,6 +113,9 @@ export function TradeChart({
   onToggleReplay,
   replayActive = false,
 }: TradeChartProps) {
+  const { t: tr } = useLinguiMacro();
+
+  const locale = intlLocale();
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
@@ -124,11 +129,11 @@ export function TradeChart({
   const overlayMessage = loading
     ? null
     : error
-      ? (errorMessage ?? "Chart data unavailable.")
+      ? (errorMessage ?? tr({ id: "market.chartUnavailable", message: "Chart data unavailable." }))
       : empty
-        ? (errorMessage ?? "No chart data.")
+        ? (errorMessage ?? tr({ id: "market.noChart", message: "No chart data." }))
         : bars && bars.length === 0
-          ? "No bars for this window."
+          ? tr({ id: "market.noBars", message: "No bars for this window." })
           : null;
 
   useEffect(() => {
@@ -190,6 +195,10 @@ export function TradeChart({
   }, [height]);
 
   useEffect(() => {
+    chartRef.current?.applyOptions({ localization: { locale } });
+  }, [locale, ready]);
+
+  useEffect(() => {
     const series = seriesRef.current;
     const chart = chartRef.current;
     if (!ready || !series || !chart) return;
@@ -245,7 +254,7 @@ export function TradeChart({
         lineWidth: 1,
         lineStyle: 2,
         axisLabelVisible: true,
-        title: "Entry",
+        title: tr({ id: "market.entry", message: "Entry" }),
       });
     }
     if (targetPrice != null) {
@@ -255,7 +264,7 @@ export function TradeChart({
         lineWidth: 1,
         lineStyle: 2,
         axisLabelVisible: true,
-        title: "Target",
+        title: tr({ id: "market.target", message: "Target" }),
       });
     }
     if (stopPrice != null) {
@@ -265,7 +274,7 @@ export function TradeChart({
         lineWidth: 1,
         lineStyle: 2,
         axisLabelVisible: true,
-        title: "Stop",
+        title: tr({ id: "market.stop", message: "Stop" }),
       });
     }
     for (const fill of visibleFills) {
@@ -300,6 +309,8 @@ export function TradeChart({
     }
   }, [
     ready,
+    locale,
+    tr,
     bars,
     fills,
     interval,
@@ -315,7 +326,9 @@ export function TradeChart({
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        {!hideHeaderLabel && <span className={sectionLabelClass}>Chart</span>}
+        {!hideHeaderLabel && (
+          <span className={sectionLabelClass}>{tr({ id: "market.chart", message: "Chart" })}</span>
+        )}
         <div
           className={cn("flex items-center gap-1.5", hideHeaderLabel && "w-full justify-between")}
         >
@@ -331,7 +344,11 @@ export function TradeChart({
               type="button"
               variant="ghost"
               size="icon"
-              aria-label={replayActive ? "Exit replay" : "Replay trade"}
+              aria-label={
+                replayActive
+                  ? tr({ id: "market.exitReplay", message: "Exit replay" })
+                  : tr({ id: "market.replayTrade", message: "Replay trade" })
+              }
               onClick={onToggleReplay}
             >
               {replayActive ? (
@@ -346,7 +363,7 @@ export function TradeChart({
               type="button"
               variant="ghost"
               size="icon"
-              aria-label="Expand chart"
+              aria-label={tr({ id: "market.expand", message: "Expand chart" })}
               onClick={onExpand}
             >
               <Maximize2 size={14} strokeWidth={1.5} aria-hidden />
@@ -368,7 +385,7 @@ export function TradeChart({
                 strokeWidth={1.5}
                 className="text-muted-foreground"
                 role="img"
-                aria-label="No chart data"
+                aria-label={tr({ id: "market.noChartLabel", message: "No chart data" })}
               />
               <p className="m-0 text-center text-xs text-muted-foreground">{overlayMessage}</p>
             </div>

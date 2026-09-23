@@ -5858,3 +5858,892 @@ msgstr ""
 #: src/components/AnnualGoalCard.tsx:354
 msgid "accounts.ytd"
 msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/components/charts/TradeChartSection.tsx:134
+msgid "market.chartTitle"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/pagination.ts:44
+msgid "market.pageRange"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:96
+#: src/app/screens/ConnectView.tsx:116
+#: src/app/screens/ConnectView.tsx:120
+#: src/components/HeaderBar.tsx:145
+msgid "market.account"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:211
+msgid "market.accountCurrency"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:149
+msgid "market.addSort"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:89
+msgid "market.addSortHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:68
+#: src/lib/tools.ts:88
+msgid "market.advanced"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:349
+msgid "market.allBrokers"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ToolsPopover.tsx:133
+msgid "market.allCommands"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:24
+msgid "market.allTime"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:92
+#: src/components/SortList.tsx:114
+msgid "market.asc"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:381
+msgid "market.autoSync"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:321
+msgid "market.liveBar"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:380
+msgid "market.balance"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: replay.cursor + 1
+#. placeholder {1}: bars?.length ?? 0
+#: src/app/screens/ReplayView.tsx:246
+msgid "market.barProgress"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:163
+msgid "market.barInterval"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:352
+#: src/app/screens/ReplayView.tsx:436
+msgid "market.buy"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:31
+msgid "market.calculators"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:75
+msgid "market.sbiNote"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:232
+msgid "market.changeSetup"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:330
+msgid "market.chart"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:121
+msgid "market.mismatch"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:214
+msgid "market.chartUnavailableTitle"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:132
+msgid "market.chartUnavailable"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChartSection.tsx:89
+msgid "market.unsupported"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:142
+msgid "market.chooseMonth"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:143
+msgid "market.chooseYear"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CreatedAtFilter.tsx:52
+msgid "market.clearCreated"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:74
+msgid "market.clearSymbol"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:47
+msgid "market.customHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/Dialog.tsx:72
+#: src/components/Modal.tsx:52
+msgid "market.close"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:368
+msgid "market.closePosition"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:20
+msgid "market.closed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:48
+msgid "market.columnsAuto"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:609
+msgid "market.connectTitle"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:19
+msgid "market.syncGroup"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:508
+msgid "market.continueUpload"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:217
+msgid "market.convert"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:508
+msgid "market.saveError"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/CreatedAtFilter.tsx:39
+#: src/components/CreatedAtFilter.tsx:73
+msgid "market.createdAt"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:70
+msgid "market.fx"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:27
+msgid "market.customRange"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:155
+#: src/components/DateRangePicker.tsx:38
+#: src/components/DateRangePicker.tsx:77
+msgid "market.dateRange"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:101
+#: src/components/SortList.tsx:115
+msgid "market.desc"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:136
+msgid "market.currency"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:135
+msgid "market.currencyAccount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:106
+msgid "market.econ"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:65
+msgid "market.endSession"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:257
+msgid "market.entry"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:58
+msgid "market.sbiFormat"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:109
+msgid "market.existingAccount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:349
+msgid "market.exitReplay"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:366
+msgid "market.expand"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:20
+msgid "market.fileGroup"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ConnectView.tsx:39
+msgid "market.exportBroker"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:382
+msgid "market.fileImport"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:402
+#: src/components/charts/ReplayControls.tsx:21
+msgid "market.flat"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:145
+msgid "market.from"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:141
+msgid "market.nextMonth"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:140
+msgid "market.previousMonth"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:115
+msgid "market.hide"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:266
+msgid "market.hideAmounts"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:261
+msgid "market.hideSensitive"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:493
+msgid "market.importExport"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:161
+msgid "market.interval"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:175
+msgid "market.historyHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:43
+msgid "market.journal"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:535
+msgid "market.keepReplay"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:61
+msgid "market.kelly"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:12
+msgid "market.last30"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:9
+msgid "market.last7"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:15
+msgid "market.last90"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:84
+msgid "market.load"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:115
+msgid "market.pickHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:514
+msgid "market.manualInstead"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: pnl.position
+#: src/app/screens/ReplayView.tsx:399
+#: src/components/charts/ReplayControls.tsx:14
+msgid "market.longQty"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:383
+msgid "market.manual"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:37
+msgid "market.markets"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:88
+msgid "market.modifySort"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:164
+msgid "market.morePages"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:18
+msgid "market.mtd"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:138
+msgid "market.calendarNav"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:110
+msgid "market.newAccount"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:179
+msgid "market.nextPage"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:215
+msgid "market.noBarsTitle"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:136
+msgid "market.noBars"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: query.trim()
+#: src/components/BrokerPicker.tsx:101
+msgid "market.noBroker"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:388
+msgid "market.noChartLabel"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:134
+msgid "market.noChart"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:21
+msgid "market.manualGroup"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChartSection.tsx:91
+msgid "market.noMarket"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:84
+msgid "market.noSort"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:62
+msgid "market.sbi1"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:330
+msgid "market.orderEntry"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:331
+msgid "market.orderHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:65
+msgid "market.page"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:106
+msgid "market.pagination"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:290
+msgid "market.pause"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:74
+msgid "market.pauseReplay"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:375
+msgid "market.pf"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:102
+msgid "market.otherBrokerHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:114
+msgid "market.pickSymbol"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:612
+msgid "market.connectHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:291
+msgid "market.play"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:75
+msgid "market.playReplay"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:52
+msgid "market.size"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:503
+msgid "market.preparing"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:147
+msgid "market.previousPage"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:339
+msgid "market.quantity"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:161
+msgid "market.quickRange"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: labelById.get(sort.id) ?? sort.id
+#: src/components/SortList.tsx:125
+msgid "market.removeSort"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:61
+#: src/lib/tools.ts:97
+msgid "market.replay"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:125
+msgid "market.sessionHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:155
+msgid "market.endDay"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:50
+msgid "market.replayPosition"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:313
+#: src/components/charts/ReplayControls.tsx:96
+msgid "market.speed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:147
+msgid "market.startDay"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:350
+msgid "market.replayTrade"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:106
+msgid "market.reset"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:153
+msgid "market.resetSort"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:123
+msgid "market.rows"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:128
+msgid "market.rowsPerPage"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: replay.fills.length
+#: src/app/screens/ReplayView.tsx:563
+msgid "market.saveFills"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:562
+msgid "market.saveOne"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:544
+#: src/app/screens/ReplayView.tsx:560
+msgid "market.saveSession"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:515
+msgid "market.saved"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:558
+msgid "market.saving"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:412
+msgid "market.search"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:93
+msgid "market.searchBrokers"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:92
+msgid "market.searchBrokerHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:400
+msgid "market.searchHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:32
+msgid "market.endDate"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:360
+#: src/app/screens/ReplayView.tsx:437
+msgid "market.sell"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:124
+msgid "market.session"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:63
+msgid "market.sbi2"
+msgstr ""
+
+#. js-lingui-explicit-id
+#. placeholder {0}: Math.abs(pnl.position)
+#: src/app/screens/ReplayView.tsx:401
+#: src/components/charts/ReplayControls.tsx:16
+msgid "market.shortQty"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:265
+msgid "market.showAmounts"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:174
+#: src/components/HeaderBar.tsx:234
+msgid "market.showIn"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:260
+msgid "market.showSensitive"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:113
+msgid "market.showing"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:68
+#: src/components/SortList.tsx:71
+msgid "market.sort"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:83
+msgid "market.sortBy"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:106
+msgid "market.sortColumn"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:117
+msgid "market.sortDirection"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:171
+msgid "market.startReplay"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:279
+#: src/components/charts/ReplayControls.tsx:63
+msgid "market.back"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:305
+#: src/components/charts/ReplayControls.tsx:89
+msgid "market.forward"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:277
+msgid "market.stop"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:72
+#: src/app/screens/ReplayView.tsx:134
+msgid "market.symbol"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:267
+msgid "market.target"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:99
+#: src/app/screens/ReplayView.tsx:219
+#: src/components/charts/TradeChartSection.tsx:93
+msgid "market.requestFailed"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:494
+msgid "market.previewFirst"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:223
+msgid "market.emptyHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:518
+msgid "market.savedHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:153
+msgid "market.to"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:79
+msgid "market.today"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ViewOptions.tsx:55
+#: src/components/ViewOptions.tsx:63
+msgid "market.columns"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ToolsPopover.tsx:53
+#: src/components/ToolsPopover.tsx:54
+#: src/components/ToolsPopover.tsx:77
+#: src/components/ToolsPopover.tsx:79
+#: src/components/ToolsPopover.tsx:96
+msgid "market.tools"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:67
+msgid "market.sbi3"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:105
+msgid "market.accountChoice"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/ViewOptions.tsx:58
+msgid "market.view"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:531
+msgid "market.viewTrade"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/BrokerSteps.tsx:30
+msgid "market.recognised"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:97
+msgid "market.accountHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:370
+msgid "market.wr"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:545
+msgid "market.saveHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:115
+msgid "market.wrapped"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:373
+msgid "market.reviewHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:567
+msgid "market.openHint"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:21
+msgid "market.ytd"
+msgstr ""

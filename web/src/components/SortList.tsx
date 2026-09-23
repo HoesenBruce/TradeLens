@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import type { OnChangeFn, SortingState } from "@/lib/table";
 import { ArrowDownUp, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -28,6 +29,8 @@ export function SortList({
   columns: readonly SortColumnOption[];
   className?: string;
 }) {
+  const { t: tr } = useLinguiMacro();
+
   const [open, setOpen] = useState(false);
 
   const usedIds = new Set(sorting.map((s) => s.id));
@@ -62,10 +65,10 @@ export function SortList({
           className,
           iconOnly && "w-8",
         )}
-        aria-label="Sort"
+        aria-label={tr({ id: "market.sort", message: "Sort" })}
       >
         <ArrowDownUp size={14} strokeWidth={1.75} />
-        {iconOnly ? null : "Sort"}
+        {iconOnly ? null : tr({ id: "market.sort", message: "Sort" })}
         {sorting.length > 0 ? (
           <span className="rounded-md bg-accent px-1.5 py-0.5 text-[10px] font-medium tabular-nums text-muted-foreground">
             {sorting.length}
@@ -76,12 +79,14 @@ export function SortList({
         <div className="flex flex-col gap-3 p-3">
           <div>
             <p className="m-0 text-[12px] font-medium text-foreground">
-              {sorting.length > 0 ? "Sort by" : "No sorting applied"}
+              {sorting.length > 0
+                ? tr({ id: "market.sortBy", message: "Sort by" })
+                : tr({ id: "market.noSort", message: "No sorting applied" })}
             </p>
             <p className="m-0 mt-0.5 text-[11px] text-muted-foreground">
               {sorting.length > 0
-                ? "Modify sorting to organize your rows."
-                : "Add sorting to organize your rows."}
+                ? tr({ id: "market.modifySort", message: "Modify sorting to organize your rows." })
+                : tr({ id: "market.addSortHint", message: "Add sorting to organize your rows." })}
             </p>
           </div>
 
@@ -98,7 +103,7 @@ export function SortList({
                       value={sort.id}
                       onValueChange={(id) => updateSort(sort.id, { id })}
                       options={columnOptions}
-                      ariaLabel="Sort column"
+                      ariaLabel={tr({ id: "market.sortColumn", message: "Sort column" })}
                       className="min-w-0 flex-1"
                       triggerClassName="h-8"
                     />
@@ -106,10 +111,10 @@ export function SortList({
                       value={sort.desc ? "desc" : "asc"}
                       onValueChange={(dir) => updateSort(sort.id, { desc: dir === "desc" })}
                       options={[
-                        { value: "asc", label: "Asc" },
-                        { value: "desc", label: "Desc" },
+                        { value: "asc", label: tr({ id: "market.asc", message: "Asc" }) },
+                        { value: "desc", label: tr({ id: "market.desc", message: "Desc" }) },
                       ]}
-                      ariaLabel="Sort direction"
+                      ariaLabel={tr({ id: "market.sortDirection", message: "Sort direction" })}
                       className="w-[5.5rem] shrink-0"
                       triggerClassName="h-8"
                     />
@@ -117,7 +122,10 @@ export function SortList({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label={`Remove ${labelById.get(sort.id) ?? sort.id} sort`}
+                      aria-label={tr({
+                        id: "market.removeSort",
+                        message: `Remove ${labelById.get(sort.id) ?? sort.id} sort`,
+                      })}
                       onClick={() => removeSort(sort.id)}
                       className="shrink-0 text-muted-foreground hover:text-foreground"
                     >
@@ -138,11 +146,11 @@ export function SortList({
               disabled={available.length === 0}
               className="h-8"
             >
-              Add sort
+              {tr({ id: "market.addSort", message: "Add sort" })}
             </Button>
             {sorting.length > 0 ? (
               <Button type="button" variant="outline" size="sm" onClick={reset} className="h-8">
-                Reset sorting
+                {tr({ id: "market.resetSort", message: "Reset sorting" })}
               </Button>
             ) : null}
           </div>

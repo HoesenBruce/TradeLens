@@ -1,3 +1,4 @@
+import "@/i18n";
 import { describe, expect, it } from "vite-plus/test";
 import { BROKERS, findBroker, KIND_ORDER, searchBrokers } from "./brokers";
 

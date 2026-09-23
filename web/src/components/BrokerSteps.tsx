@@ -1,7 +1,11 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import type { BrokerDef } from "@/lib/brokers";
 
 /** A broker's export instructions, in its own menu vocabulary. */
 export function BrokerSteps({ broker }: { broker: BrokerDef }) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
+
   return (
     <div className="flex flex-col gap-3">
       <ol className="flex flex-col gap-2">
@@ -23,7 +27,10 @@ export function BrokerSteps({ broker }: { broker: BrokerDef }) {
           for the trader to bind. */}
       {broker.recognised && broker.kind === "file" ? (
         <p className="text-[11px] leading-relaxed text-muted-foreground">
-          We recognise this export&apos;s layout — the column mapping fills itself in.
+          {tr({
+            id: "market.recognised",
+            message: "We recognise this export's layout — the column mapping fills itself in.",
+          })}
         </p>
       ) : null}
     </div>

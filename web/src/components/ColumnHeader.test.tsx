@@ -1,5 +1,6 @@
+import { render } from "@/test/render";
 import type { Column } from "@/lib/table";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vite-plus/test";
 import { ColumnHeader } from "./ColumnHeader";

@@ -1,3 +1,4 @@
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { CalendarDays, XCircle } from "lucide-react";
 import { useState, type MouseEvent } from "react";
 import { formatRangeLabel } from "@/lib/dateRangePresets";
@@ -19,6 +20,8 @@ export function CreatedAtFilter({
   /** Drop the label to the accessible name only — compact toolbars. */
   iconOnly?: boolean;
 }) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
   const { from, to, setRange } = useFilters();
   const [open, setOpen] = useState(false);
   const active = !!(from || to);
@@ -33,7 +36,7 @@ export function CreatedAtFilter({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
-        aria-label="Created At"
+        aria-label={tr({ id: "market.createdAt", message: "Created At" })}
         className={cn(
           buttonVariants({ variant: "outline", size: "sm" }),
           "h-8 border-border !bg-transparent font-normal hover:!bg-transparent aria-expanded:!bg-transparent",
@@ -46,7 +49,7 @@ export function CreatedAtFilter({
           <span
             role="button"
             tabIndex={0}
-            aria-label="Clear Created At filter"
+            aria-label={tr({ id: "market.clearCreated", message: "Clear Created At filter" })}
             onClick={clear}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -67,7 +70,7 @@ export function CreatedAtFilter({
             aria-hidden
           />
         )}
-        {iconOnly ? null : <span>Created At</span>}
+        {iconOnly ? null : <span>{tr({ id: "market.createdAt", message: "Created At" })}</span>}
         {active ? (
           <>
             <span aria-hidden className="mx-0.5 h-4 w-px shrink-0 bg-border" />

@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react";
+import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { Command, Wrench } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
@@ -13,6 +15,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 /** Tool row — icon, full name. The icon picks up brand colour as the row lights. */
 function ToolRow({ tool, onRun }: { tool: ToolItem; onRun: (tool: ToolItem) => void }) {
+  "use no memo";
+  useLingui();
   const Icon = tool.icon;
   return (
     <Button
@@ -34,6 +38,9 @@ function ToolRow({ tool, onRun }: { tool: ToolItem; onRun: (tool: ToolItem) => v
 }
 
 export function ToolsPopover({ variant = "rail" }: { variant?: "rail" | "header" }) {
+  "use no memo";
+  const { t: tr } = useLinguiMacro();
+
   const paletteLabel = useHotkeyLabel("palette");
   const [open, setOpen] = useState(false);
   const runTool = useToolRunner();
@@ -43,8 +50,8 @@ export function ToolsPopover({ variant = "rail" }: { variant?: "rail" | "header"
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
-        title="Tools"
-        aria-label="Tools"
+        title={tr({ id: "market.tools", message: "Tools" })}
+        aria-label={tr({ id: "market.tools", message: "Tools" })}
         className={cn(
           "group relative flex cursor-pointer items-center justify-center rounded-md outline-none",
           "transition-[background-color,color,transform] duration-150 ease-out",
@@ -66,7 +73,11 @@ export function ToolsPopover({ variant = "rail" }: { variant?: "rail" | "header"
             isHeader && "shrink-0 text-muted-foreground",
           )}
         />
-        {isHeader ? <span>Tools</span> : <RailTooltip label="Tools" />}
+        {isHeader ? (
+          <span>{tr({ id: "market.tools", message: "Tools" })}</span>
+        ) : (
+          <RailTooltip label={tr({ id: "market.tools", message: "Tools" })} />
+        )}
       </PopoverTrigger>
       <PopoverContent
         side={isHeader ? "bottom" : "right"}
@@ -82,7 +93,7 @@ export function ToolsPopover({ variant = "rail" }: { variant?: "rail" | "header"
       >
         <p className="m-0 flex items-center gap-1.5 px-2.5 pt-1 pb-1.5 text-[10px] font-semibold tracking-widest text-chart-3 uppercase">
           <Wrench size={11} strokeWidth={2} aria-hidden />
-          Tools
+          {tr({ id: "market.tools", message: "Tools" })}
         </p>
 
         {TOOL_GROUPS.map((group) => (
@@ -119,7 +130,7 @@ export function ToolsPopover({ variant = "rail" }: { variant?: "rail" | "header"
           >
             <span className="flex items-center gap-2.5">
               <Command className="size-4 shrink-0 opacity-100" strokeWidth={1.75} aria-hidden />
-              All commands
+              {tr({ id: "market.allCommands", message: "All commands" })}
             </span>
             <Kbd>{paletteLabel}</Kbd>
           </Button>

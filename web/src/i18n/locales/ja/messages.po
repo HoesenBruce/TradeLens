@@ -5858,3 +5858,892 @@ msgstr "最大損失取引"
 #: src/components/AnnualGoalCard.tsx:354
 msgid "accounts.ytd"
 msgstr "年初来"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/components/charts/TradeChartSection.tsx:134
+msgid "market.chartTitle"
+msgstr "{0} チャート"
+
+#. js-lingui-explicit-id
+#: src/lib/pagination.ts:44
+msgid "market.pageRange"
+msgstr "{start}–{end} / {total} 件"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:96
+#: src/app/screens/ConnectView.tsx:116
+#: src/app/screens/ConnectView.tsx:120
+#: src/components/HeaderBar.tsx:145
+msgid "market.account"
+msgstr "口座"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:211
+msgid "market.accountCurrency"
+msgstr "口座通貨"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:149
+msgid "market.addSort"
+msgstr "並べ替えを追加"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:89
+msgid "market.addSortHint"
+msgstr "並べ替え条件を追加して行を整理します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:68
+#: src/lib/tools.ts:88
+msgid "market.advanced"
+msgstr "詳細チャート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:349
+msgid "market.allBrokers"
+msgstr "すべての証券会社"
+
+#. js-lingui-explicit-id
+#: src/components/ToolsPopover.tsx:133
+msgid "market.allCommands"
+msgstr "すべてのコマンド"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:24
+msgid "market.allTime"
+msgstr "全期間"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:92
+#: src/components/SortList.tsx:114
+msgid "market.asc"
+msgstr "昇順"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:381
+msgid "market.autoSync"
+msgstr "自動同期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:321
+msgid "market.liveBar"
+msgstr "進行中の足に戻る"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:380
+msgid "market.balance"
+msgstr "残高"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: replay.cursor + 1
+#. placeholder {1}: bars?.length ?? 0
+#: src/app/screens/ReplayView.tsx:246
+msgid "market.barProgress"
+msgstr "{0}/{1} 本目 · {timeLabel}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:163
+msgid "market.barInterval"
+msgstr "ローソク足の期間"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:352
+#: src/app/screens/ReplayView.tsx:436
+msgid "market.buy"
+msgstr "買い"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:31
+msgid "market.calculators"
+msgstr "計算ツール"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:75
+msgid "market.sbiNote"
+msgstr "現物・信用取引と現引による建玉振替に対応しています。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:232
+msgid "market.changeSetup"
+msgstr "設定を変更"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:330
+msgid "market.chart"
+msgstr "チャート"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:121
+msgid "market.mismatch"
+msgstr "チャートと記録された約定価格が一致しません。リプレイ中の損益はチャート価格で評価するため差が生じますが、最終損益は約定記録に基づきます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:214
+msgid "market.chartUnavailableTitle"
+msgstr "チャートデータを利用できません"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:132
+msgid "market.chartUnavailable"
+msgstr "チャートデータを利用できません。"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChartSection.tsx:89
+msgid "market.unsupported"
+msgstr "この銘柄のチャートは利用できません。"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:142
+msgid "market.chooseMonth"
+msgstr "月を選択"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:143
+msgid "market.chooseYear"
+msgstr "年を選択"
+
+#. js-lingui-explicit-id
+#: src/components/CreatedAtFilter.tsx:52
+msgid "market.clearCreated"
+msgstr "取引日フィルターを解除"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:74
+msgid "market.clearSymbol"
+msgstr "銘柄フィルターを解除"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:47
+msgid "market.customHint"
+msgstr "2つの日付を選んで範囲を指定"
+
+#. js-lingui-explicit-id
+#: src/components/Dialog.tsx:72
+#: src/components/Modal.tsx:52
+msgid "market.close"
+msgstr "閉じる"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:368
+msgid "market.closePosition"
+msgstr "ポジションを決済"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:20
+msgid "market.closed"
+msgstr "決済済み"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:48
+msgid "market.columnsAuto"
+msgstr "列を自動対応付け"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:609
+msgid "market.connectTitle"
+msgstr "証券会社を接続"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:19
+msgid "market.syncGroup"
+msgstr "一度接続すると新しい約定が自動で届きます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:508
+msgid "market.continueUpload"
+msgstr "アップロードへ"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:217
+msgid "market.convert"
+msgstr "換算先"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:508
+msgid "market.saveError"
+msgstr "セッションを保存できませんでした。"
+
+#. js-lingui-explicit-id
+#: src/components/CreatedAtFilter.tsx:39
+#: src/components/CreatedAtFilter.tsx:73
+msgid "market.createdAt"
+msgstr "取引日"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:70
+msgid "market.fx"
+msgstr "通貨換算"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:27
+msgid "market.customRange"
+msgstr "期間を指定"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:155
+#: src/components/DateRangePicker.tsx:38
+#: src/components/DateRangePicker.tsx:77
+msgid "market.dateRange"
+msgstr "日付範囲"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:101
+#: src/components/SortList.tsx:115
+msgid "market.desc"
+msgstr "降順"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:136
+msgid "market.currency"
+msgstr "表示通貨 · {activeCode}"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:135
+msgid "market.currencyAccount"
+msgstr "表示通貨 · {activeCode}（口座）"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:106
+msgid "market.econ"
+msgstr "経済カレンダー"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:65
+msgid "market.endSession"
+msgstr "セッションを終了"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:257
+msgid "market.entry"
+msgstr "エントリー"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:58
+msgid "market.sbiFormat"
+msgstr "約定履歴CSV"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:109
+msgid "market.existingAccount"
+msgstr "既存口座"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:349
+msgid "market.exitReplay"
+msgstr "リプレイを終了"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:366
+msgid "market.expand"
+msgstr "チャートを拡大"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:20
+msgid "market.fileGroup"
+msgstr "証券会社の出力ファイルから列を読み取ります。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: broker.name
+#: src/app/screens/ConnectView.tsx:39
+msgid "market.exportBroker"
+msgstr "{0} から出力"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:382
+msgid "market.fileImport"
+msgstr "ファイル取込"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:402
+#: src/components/charts/ReplayControls.tsx:21
+msgid "market.flat"
+msgstr "ポジションなし"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:145
+msgid "market.from"
+msgstr "開始"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:141
+msgid "market.nextMonth"
+msgstr "次の月へ"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:140
+msgid "market.previousMonth"
+msgstr "前の月へ"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:115
+msgid "market.hide"
+msgstr "非表示"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:266
+msgid "market.hideAmounts"
+msgstr "金額を非表示"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:261
+msgid "market.hideSensitive"
+msgstr "機密金額を非表示"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:493
+msgid "market.importExport"
+msgstr "出力ファイルをインポート"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:161
+msgid "market.interval"
+msgstr "足種"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:175
+msgid "market.historyHint"
+msgstr "日中データの期間は提供元の制限を受けます。分足は約1か月、時間足は約2か月までです。日足は任意の年をリプレイできます。"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:43
+msgid "market.journal"
+msgstr "ジャーナル"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:535
+msgid "market.keepReplay"
+msgstr "リプレイを続ける"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:61
+msgid "market.kelly"
+msgstr "ケリー基準"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:12
+msgid "market.last30"
+msgstr "過去30日間"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:9
+msgid "market.last7"
+msgstr "過去7日間"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:15
+msgid "market.last90"
+msgstr "過去90日間"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:84
+msgid "market.load"
+msgstr "読み込む"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:115
+msgid "market.pickHint"
+msgstr "取引記録とは独立して、任意の銘柄のローソク足を読み込めます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:514
+msgid "market.manualInstead"
+msgstr "手動で取引を記録"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: pnl.position
+#: src/app/screens/ReplayView.tsx:399
+#: src/components/charts/ReplayControls.tsx:14
+msgid "market.longQty"
+msgstr "買い {0}"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:383
+msgid "market.manual"
+msgstr "手動"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:37
+msgid "market.markets"
+msgstr "市場"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:88
+msgid "market.modifySort"
+msgstr "並べ替え条件を変更して行を整理します。"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:164
+msgid "market.morePages"
+msgstr "その他のページ"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:18
+msgid "market.mtd"
+msgstr "月初から"
+
+#. js-lingui-explicit-id
+#: src/components/AppCalendar.tsx:138
+msgid "market.calendarNav"
+msgstr "カレンダー操作"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:110
+msgid "market.newAccount"
+msgstr "新規口座"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:179
+msgid "market.nextPage"
+msgstr "次のページ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:215
+msgid "market.noBarsTitle"
+msgstr "この期間のローソク足がありません"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:136
+msgid "market.noBars"
+msgstr "この期間のローソク足がありません。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: query.trim()
+#: src/components/BrokerPicker.tsx:101
+msgid "market.noBroker"
+msgstr "「{0}」に一致する証券会社がありません"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:388
+msgid "market.noChartLabel"
+msgstr "チャートデータなし"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:134
+msgid "market.noChart"
+msgstr "チャートデータがありません。"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:21
+msgid "market.manualGroup"
+msgstr "ファイルの出力は不要です。"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChartSection.tsx:91
+msgid "market.noMarket"
+msgstr "この期間の市場データがありません。"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:84
+msgid "market.noSort"
+msgstr "並べ替え未設定"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:62
+msgid "market.sbi1"
+msgstr "SBI証券の約定履歴ページを開きます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:330
+msgid "market.orderEntry"
+msgstr "模擬注文"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:331
+msgid "market.orderHint"
+msgstr "模擬注文は現在の足の終値で約定します。"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:65
+msgid "market.page"
+msgstr "{page} ページ"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:106
+msgid "market.pagination"
+msgstr "ページ送り"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:290
+msgid "market.pause"
+msgstr "一時停止"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:74
+msgid "market.pauseReplay"
+msgstr "リプレイを一時停止"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:375
+msgid "market.pf"
+msgstr "PF"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:102
+msgid "market.otherBrokerHint"
+msgstr "「その他の証券会社」でCSVを手動対応付けするか、手動口座を作成します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:114
+msgid "market.pickSymbol"
+msgstr "銘柄を選択"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:612
+msgid "market.connectHint"
+msgstr "取引先を選び、データの出力方法と口座の設定を確認します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:291
+msgid "market.play"
+msgstr "再生"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:75
+msgid "market.playReplay"
+msgstr "リプレイを再生"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:52
+msgid "market.size"
+msgstr "ポジションサイズ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:503
+msgid "market.preparing"
+msgstr "準備中…"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:147
+msgid "market.previousPage"
+msgstr "前のページ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:339
+msgid "market.quantity"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:161
+msgid "market.quickRange"
+msgstr "期間を選択"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: labelById.get(sort.id) ?? sort.id
+#: src/components/SortList.tsx:125
+msgid "market.removeSort"
+msgstr "{0} の並べ替えを削除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:61
+#: src/lib/tools.ts:97
+msgid "market.replay"
+msgstr "リプレイ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:125
+msgid "market.sessionHint"
+msgstr "任意の銘柄を1本ずつリプレイし、未来の値動きを隠します。模擬注文は現在の足の終値で約定し、実取引の統計に含まれない専用バックテスト口座に保存されます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:155
+msgid "market.endDay"
+msgstr "リプレイ終了日"
+
+#. js-lingui-explicit-id
+#: src/components/charts/ReplayControls.tsx:50
+msgid "market.replayPosition"
+msgstr "リプレイ位置"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:313
+#: src/components/charts/ReplayControls.tsx:96
+msgid "market.speed"
+msgstr "リプレイ速度"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:147
+msgid "market.startDay"
+msgstr "リプレイ開始日"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:350
+msgid "market.replayTrade"
+msgstr "トレードをリプレイ"
+
+#. js-lingui-explicit-id
+#: src/components/ColumnHeader.tsx:106
+msgid "market.reset"
+msgstr "リセット"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:153
+msgid "market.resetSort"
+msgstr "並べ替えをリセット"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:123
+msgid "market.rows"
+msgstr "行数"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:128
+msgid "market.rowsPerPage"
+msgstr "1ページの行数"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: replay.fills.length
+#: src/app/screens/ReplayView.tsx:563
+msgid "market.saveFills"
+msgstr "{0} 件の約定を保存"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:562
+msgid "market.saveOne"
+msgstr "1 件の約定を保存"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:544
+#: src/app/screens/ReplayView.tsx:560
+msgid "market.saveSession"
+msgstr "セッションを保存"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:515
+msgid "market.saved"
+msgstr "保存済み"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:558
+msgid "market.saving"
+msgstr "保存中…"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:412
+msgid "market.search"
+msgstr "検索"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:93
+msgid "market.searchBrokers"
+msgstr "証券会社を検索"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerPicker.tsx:92
+msgid "market.searchBrokerHint"
+msgstr "証券会社・プラットフォームを検索"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:400
+msgid "market.searchHint"
+msgstr "検索…"
+
+#. js-lingui-explicit-id
+#: src/components/DateRangePanel.tsx:32
+msgid "market.endDate"
+msgstr "終了日を選択"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:360
+#: src/app/screens/ReplayView.tsx:437
+msgid "market.sell"
+msgstr "売り"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:124
+msgid "market.session"
+msgstr "セッション"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:63
+msgid "market.sbi2"
+msgstr "期間を指定し、約定履歴をCSVで出力します。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: Math.abs(pnl.position)
+#: src/app/screens/ReplayView.tsx:401
+#: src/components/charts/ReplayControls.tsx:16
+msgid "market.shortQty"
+msgstr "売り {0}"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:265
+msgid "market.showAmounts"
+msgstr "金額を表示"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:174
+#: src/components/HeaderBar.tsx:234
+msgid "market.showIn"
+msgstr "金額の表示通貨（口座の記帳通貨は {base}）"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:260
+msgid "market.showSensitive"
+msgstr "機密金額を表示"
+
+#. js-lingui-explicit-id
+#: src/components/Pagination.tsx:113
+msgid "market.showing"
+msgstr "表示"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:68
+#: src/components/SortList.tsx:71
+msgid "market.sort"
+msgstr "並べ替え"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:83
+msgid "market.sortBy"
+msgstr "並べ替え条件"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:106
+msgid "market.sortColumn"
+msgstr "並べ替え列"
+
+#. js-lingui-explicit-id
+#: src/components/SortList.tsx:117
+msgid "market.sortDirection"
+msgstr "並べ替え方向"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:171
+msgid "market.startReplay"
+msgstr "リプレイを開始"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:279
+#: src/components/charts/ReplayControls.tsx:63
+msgid "market.back"
+msgstr "1本戻る"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:305
+#: src/components/charts/ReplayControls.tsx:89
+msgid "market.forward"
+msgstr "1本進む"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:277
+msgid "market.stop"
+msgstr "損切り"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:72
+#: src/app/screens/ReplayView.tsx:134
+msgid "market.symbol"
+msgstr "銘柄コード"
+
+#. js-lingui-explicit-id
+#: src/components/charts/TradeChart.tsx:267
+msgid "market.target"
+msgstr "目標"
+
+#. js-lingui-explicit-id
+#: src/app/screens/AdvancedChartView.tsx:99
+#: src/app/screens/ReplayView.tsx:219
+#: src/components/charts/TradeChartSection.tsx:93
+msgid "market.requestFailed"
+msgstr "市場データの取得に失敗しました。銘柄コードを確認して再試行してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:494
+msgid "market.previewFirst"
+msgstr "次の画面でファイルをプレビューしてから保存します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:223
+msgid "market.emptyHint"
+msgstr "提供元からデータが返されませんでした。長い足種または最近の期間を試してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:518
+msgid "market.savedHint"
+msgstr "セッションを Backtest 口座に保存しました。口座切替で選択すると分析を確認できます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:153
+msgid "market.to"
+msgstr "終了"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:79
+msgid "market.today"
+msgstr "今日"
+
+#. js-lingui-explicit-id
+#: src/components/ViewOptions.tsx:55
+#: src/components/ViewOptions.tsx:63
+msgid "market.columns"
+msgstr "列の表示切替"
+
+#. js-lingui-explicit-id
+#: src/components/ToolsPopover.tsx:53
+#: src/components/ToolsPopover.tsx:54
+#: src/components/ToolsPopover.tsx:77
+#: src/components/ToolsPopover.tsx:79
+#: src/components/ToolsPopover.tsx:96
+msgid "market.tools"
+msgstr "ツール"
+
+#. js-lingui-explicit-id
+#: src/lib/brokers.ts:67
+msgid "market.sbi3"
+msgstr "元のCSVをアップロードします。CP932文字コードとレポートのヘッダーは自動処理されます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:105
+msgid "market.accountChoice"
+msgstr "既存口座を使うか新規作成"
+
+#. js-lingui-explicit-id
+#: src/components/ViewOptions.tsx:58
+msgid "market.view"
+msgstr "表示"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:531
+msgid "market.viewTrade"
+msgstr "トレードを見る →"
+
+#. js-lingui-explicit-id
+#: src/components/BrokerSteps.tsx:30
+msgid "market.recognised"
+msgstr "このエクスポート形式を認識しているため、列の対応付けは自動で設定されます。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ConnectView.tsx:97
+msgid "market.accountHint"
+msgstr "取引の保存先です。証券口座ごとに分けることで、残高と絞り込みを正しく管理できます。"
+
+#. js-lingui-explicit-id
+#: src/components/HeaderBar.tsx:370
+msgid "market.wr"
+msgstr "勝率"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:545
+msgid "market.saveHint"
+msgstr "約定を Backtest 模擬口座に保存します。実取引の統計には含まれず、分析するにはその口座を明示的に選択します。"
+
+#. js-lingui-explicit-id
+#: src/lib/tools.ts:115
+msgid "market.wrapped"
+msgstr "年間振り返り"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:373
+msgid "market.reviewHint"
+msgstr "過去の足を確認中です。注文はリプレイの最新の足でのみ約定します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReplayView.tsx:567
+msgid "market.openHint"
+msgstr "未決済のポジションがあります。先に決済しなければ未決済トレードとして保存されます。"
+
+#. js-lingui-explicit-id
+#: src/lib/dateRangePresets.ts:21
+msgid "market.ytd"
+msgstr "年初から"
