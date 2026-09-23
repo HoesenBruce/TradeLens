@@ -1,4 +1,5 @@
 import { i18n } from "@lingui/core";
+import { BRAND } from "./brand";
 
 export const LOCALE_STORAGE_KEY = "tm-locale";
 
@@ -405,13 +406,13 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     sharingRevoked: "Share link revoked",
     sharingRevokeFailed: "Could not revoke the share link",
     sharingRevokeConfirm: "Anyone with the link will immediately lose access.",
-    aboutTitle: "About TraderMemos",
+    aboutTitle: `About ${BRAND.name}`,
     aboutDescription: "Project info, features, and links to docs and source.",
     shortcutsTitle: "Keyboard shortcuts",
     shortcutsDescription:
       "Rebind any command. Two-key sequences are typed in order, like G then H.",
     language: "Language",
-    languageFooter: "Interface language for TraderMemos.",
+    languageFooter: `Interface language for ${BRAND.name}.`,
     languageSelector: "Language selector",
     theme: "Appearance",
     themeFooter: "Light, dark, or match the system preference.",
@@ -560,7 +561,7 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     syncedPrefsNote:
       "时区、时间格式、显示货币和截图上限跟随账户，在登录的设备间同步。语言和主题仅保存在当前设备。",
     language: "语言",
-    languageFooter: "TraderMemos 界面语言。",
+    languageFooter: `${BRAND.name} 界面语言。`,
     languageSelector: "选择语言",
     theme: "外观",
     themeFooter: "选择浅色、深色或跟随系统。",
@@ -658,12 +659,12 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     sharingRevoked: "已撤銷分享連結",
     sharingRevokeFailed: "無法撤銷分享連結",
     sharingRevokeConfirm: "任何人持有呢條連結都會即時失去存取權。",
-    aboutTitle: "關於 TraderMemos",
+    aboutTitle: `關於 ${BRAND.name}`,
     aboutDescription: "專案資訊、功能概覽，以及文件與原始碼連結。",
     shortcutsTitle: "鍵盤快捷鍵",
     shortcutsDescription: "重新設定任何指令。兩鍵組合須依序按下，例如先按 G 再按 H。",
     language: "語言",
-    languageFooter: "TraderMemos 的介面語言。",
+    languageFooter: `${BRAND.name} 的介面語言。`,
     languageSelector: "語言選擇器",
     theme: "外觀",
     themeFooter: "淺色、深色，或跟隨系統設定。",
@@ -850,13 +851,13 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     sharingRevoked: "共有リンクを取り消しました",
     sharingRevokeFailed: "共有リンクを取り消せませんでした",
     sharingRevokeConfirm: "このリンクを知っている人は直ちにアクセスできなくなります。",
-    aboutTitle: "TraderMemos について",
+    aboutTitle: `${BRAND.name} について`,
     aboutDescription: "プロジェクト情報、機能、ドキュメントとソースへのリンク。",
     shortcutsTitle: "キーボードショートカット",
     shortcutsDescription:
       "任意のコマンドを再割り当てできます。2 キーの組み合わせは G → H のように順番に押します。",
     language: "言語",
-    languageFooter: "TraderMemos の表示言語。",
+    languageFooter: `${BRAND.name} の表示言語。`,
     languageSelector: "言語セレクター",
     theme: "外観",
     themeFooter: "ライト、ダーク、またはシステム設定に合わせます。",
@@ -1039,13 +1040,13 @@ const SETTINGS_LABELS: Record<AppLocale, Partial<Record<SettingsLabelKey, string
     sharingRevoked: "공유 링크를 철회했습니다",
     sharingRevokeFailed: "공유 링크를 철회할 수 없습니다",
     sharingRevokeConfirm: "이 링크를 가진 누구나 즉시 접근할 수 없게 됩니다.",
-    aboutTitle: "TraderMemos 정보",
+    aboutTitle: `${BRAND.name} 정보`,
     aboutDescription: "프로젝트 정보, 기능, 문서 및 소스 링크.",
     shortcutsTitle: "키보드 단축키",
     shortcutsDescription:
       "모든 명령을 다시 지정할 수 있습니다. 두 키 조합은 G 다음 H처럼 순서대로 누릅니다.",
     language: "언어",
-    languageFooter: "TraderMemos 인터페이스 언어입니다.",
+    languageFooter: `${BRAND.name} 인터페이스 언어입니다.`,
     languageSelector: "언어 선택",
     theme: "모양",
     themeFooter: "라이트, 다크, 또는 시스템 설정을 따릅니다.",

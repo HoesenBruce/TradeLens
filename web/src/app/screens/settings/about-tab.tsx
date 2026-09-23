@@ -11,6 +11,7 @@ import { Github } from "@/components/icons/github";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { AppLogo } from "@/components/AppLogo";
+import { BRAND } from "@/lib/brand";
 import { Pill } from "@/components/Pill";
 import { Skeleton } from "@/components/Skeleton";
 import { Button } from "@/components/ui/button";
@@ -246,16 +247,16 @@ export function AboutTab() {
           <AppLogo
             size={64}
             className="shrink-0 shadow-[0_0_32px_color-mix(in oklch, var(--primary) 35%, transparent)]"
-            title="TraderMemos"
+            title={BRAND.name}
           />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
               <h2 className="m-0 text-[26px] font-bold tracking-[-0.03em] text-foreground">
-                TraderMemos
+                {BRAND.name}
               </h2>
               <Pill tone="muted">{formatVersion(APP_VERSION, APP_BUILD || undefined)}</Pill>
             </div>
-            <p className="m-0 mt-0.5 text-[13px] text-muted-foreground">{content.tagline}</p>
+            <p className="m-0 mt-0.5 text-[13px] text-muted-foreground">{BRAND.tagline}</p>
             <p className="m-0 mt-3 max-w-2xl text-[13px] leading-relaxed text-muted-foreground">
               {content.intro}
             </p>

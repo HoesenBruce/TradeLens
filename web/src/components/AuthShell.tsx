@@ -1,5 +1,6 @@
 import { type ReactNode, useId } from "react";
 import { AppLogo } from "@/components/AppLogo";
+import { BRAND } from "@/lib/brand";
 import { cn } from "@/lib/cn";
 
 /**
@@ -173,7 +174,7 @@ export function AuthShell({
 
         <div className="relative flex items-center gap-2.5">
           <AppLogo size={30} />
-          <p className="text-base font-semibold tracking-tight text-foreground">TraderMemos</p>
+          <p className="text-base font-semibold tracking-tight text-foreground">{BRAND.name}</p>
         </div>
 
         <div className="relative flex flex-col gap-10">
@@ -202,7 +203,7 @@ export function AuthShell({
         />
         <div className="relative mb-8 flex flex-col items-center gap-2.5 lg:hidden">
           <AppLogo size={36} />
-          <p className="text-base font-semibold tracking-tight text-foreground">TraderMemos</p>
+          <p className="text-base font-semibold tracking-tight text-foreground">{BRAND.name}</p>
         </div>
         <section
           data-auth-surface
