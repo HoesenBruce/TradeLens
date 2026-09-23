@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react";
+import { t as tr } from "@lingui/core/macro";
 import { ImageIcon, Loader2, Upload, X } from "lucide-react";
 import { type ReactNode, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import Lightbox from "yet-another-react-lightbox";
@@ -126,10 +128,11 @@ export function JournalScreenshotUpload({
   accept = "image/*",
   multiple = true,
   inputTestId = "journal-screenshot-input",
-  addLabel = "Add screenshots",
-  addDescription = "PNG, JPG · click to browse",
+  addLabel = tr({ id: "trades.addShots", message: "Add screenshots" }),
+  addDescription = tr({ id: "trades.shotFormatsShort", message: "PNG, JPG · click to browse" }),
   className,
 }: JournalScreenshotUploadProps) {
+  useLingui();
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
   const atLimit = maxCount != null && items.length >= maxCount;
@@ -217,7 +220,7 @@ export function JournalScreenshotUpload({
         accept={accept}
         multiple={multiple}
         disabled={pickerDisabled}
-        aria-label="Upload journal screenshots"
+        aria-label={tr({ id: "trades.uploadShots", message: "Upload journal screenshots" })}
         data-testid={inputTestId}
         className="hidden"
         onChange={(e) => {
@@ -257,7 +260,9 @@ export function JournalScreenshotUpload({
             )}
           </AttachmentMedia>
           <AttachmentContent>
-            <AttachmentTitle>{uploading ? "Uploading…" : addLabel}</AttachmentTitle>
+            <AttachmentTitle>
+              {uploading ? tr({ id: "trades.uploading", message: "Uploading…" }) : addLabel}
+            </AttachmentTitle>
             <AttachmentDescription>
               {atLimit && maxCount != null ? `Maximum ${maxCount} screenshots` : addDescription}
             </AttachmentDescription>
@@ -308,7 +313,7 @@ export function JournalScreenshotUpload({
       ) : onAddFiles ? null : (
         <div className="flex flex-col items-center justify-center gap-2 rounded-md border border-dashed border-border py-8 text-xs text-muted-foreground">
           <ImageIcon size={20} strokeWidth={1.5} className="opacity-40" aria-hidden />
-          No screenshots yet
+          {tr({ id: "trades.noScreenshots", message: "No screenshots yet" })}
         </div>
       )}
 

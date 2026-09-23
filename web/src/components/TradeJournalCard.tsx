@@ -1,3 +1,6 @@
+import { emotionLabel, sessionLabel } from "@/lib/tradeLabels";
+import { useLingui } from "@lingui/react";
+import { t as tr } from "@lingui/core/macro";
 import { NotebookPen, Zap } from "lucide-react";
 import type { ReactNode } from "react";
 import { Card } from "./Card";
@@ -36,6 +39,7 @@ export interface TradeJournalCardProps {
  * so there is one form, not two.
  */
 export function TradeJournalCard({ trade, onEdit }: TradeJournalCardProps) {
+  useLingui();
   const journal = parseJournalNotes(trade.notes ?? "");
   const setupGrade = gradeFromInt(trade.confidence);
   const execGrade = gradeFromInt(trade.trade_quality);
@@ -55,23 +59,29 @@ export function TradeJournalCard({ trade, onEdit }: TradeJournalCardProps) {
 
   const editAction = onEdit ? (
     <Button type="button" variant="link" onClick={onEdit} className="h-auto text-xs">
-      {hasContext || hasNarrative ? "Edit journal" : "Write review"}
+      {hasContext || hasNarrative
+        ? tr({ id: "trades.editJournal", message: "Edit journal" })
+        : tr({ id: "trades.writeReview", message: "Write review" })}
     </Button>
   ) : undefined;
 
   if (!hasContext && !hasNarrative) {
     return (
-      <Card title="Journal" action={editAction}>
+      <Card title={tr({ id: "trades.journal", message: "Journal" })} action={editAction}>
         <p className="m-0 flex items-center gap-2 text-[13px] leading-relaxed text-muted-foreground">
           <NotebookPen size={15} strokeWidth={1.5} aria-hidden />
-          Nothing written yet — record why you entered and exited while it is still fresh.
+          {tr({
+            id: "trades.emptyJournal",
+            message:
+              "Nothing written yet — record why you entered and exited while it is still fresh.",
+          })}
         </p>
       </Card>
     );
   }
 
   return (
-    <Card title="Journal" action={editAction}>
+    <Card title={tr({ id: "trades.journal", message: "Journal" })} action={editAction}>
       <div className="flex flex-col gap-4">
         {hasContext && (
           <div className="flex flex-wrap items-center gap-1.5">
@@ -81,10 +91,25 @@ export function TradeJournalCard({ trade, onEdit }: TradeJournalCardProps) {
                 {trade.setup.name}
               </Pill>
             ) : null}
-            {journal.session ? <Pill tone="muted">{journal.session}</Pill> : null}
-            {emotion ? <Pill tone="muted">{emotion}</Pill> : null}
-            {setupGrade ? <Pill tone="accent">Setup {setupGrade}</Pill> : null}
-            {execGrade ? <Pill tone="accent">Exec {execGrade}</Pill> : null}
+            {journal.session ? <Pill tone="muted">{sessionLabel(journal.session)}</Pill> : null}
+            {emotion ? (
+              <Pill tone="muted">
+                {emotion
+                  .split(",")
+                  .map((value) => emotionLabel(value.trim()))
+                  .join(", ")}
+              </Pill>
+            ) : null}
+            {setupGrade ? (
+              <Pill tone="accent">
+                {tr({ id: "trades.setup", message: "Setup" })} {setupGrade}
+              </Pill>
+            ) : null}
+            {execGrade ? (
+              <Pill tone="accent">
+                {tr({ id: "trades.exec", message: "Exec" })} {execGrade}
+              </Pill>
+            ) : null}
             {tags.map((tag) => (
               <Pill key={tag.id} tone={tag.kind === "mistake" ? "neg" : "muted"}>
                 {tag.name}
@@ -94,16 +119,26 @@ export function TradeJournalCard({ trade, onEdit }: TradeJournalCardProps) {
         )}
 
         {journal.entryReason ? (
-          <JournalBlock label="Entry reason">{journal.entryReason}</JournalBlock>
+          <JournalBlock label={tr({ id: "trades.entryReason", message: "Entry reason" })}>
+            {journal.entryReason}
+          </JournalBlock>
         ) : null}
         {journal.exitReason ? (
-          <JournalBlock label="Exit reason">{journal.exitReason}</JournalBlock>
+          <JournalBlock label={tr({ id: "trades.exitReason", message: "Exit reason" })}>
+            {journal.exitReason}
+          </JournalBlock>
         ) : null}
         {journal.reviewNotes ? (
-          <JournalBlock label="Review notes">{journal.reviewNotes}</JournalBlock>
+          <JournalBlock label={tr({ id: "trades.reviewNotes", message: "Review notes" })}>
+            {journal.reviewNotes}
+          </JournalBlock>
         ) : null}
         {/* Notes written before the structured template still have to show up. */}
-        {journal.legacy ? <JournalBlock label="Notes">{journal.legacy}</JournalBlock> : null}
+        {journal.legacy ? (
+          <JournalBlock label={tr({ id: "trades.notes", message: "Notes" })}>
+            {journal.legacy}
+          </JournalBlock>
+        ) : null}
       </div>
     </Card>
   );

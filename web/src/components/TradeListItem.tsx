@@ -1,3 +1,6 @@
+import { useLingui } from "@lingui/react";
+import { t } from "@lingui/core/macro";
+import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { ArrowDownRight, ArrowUpRight, NotebookPen } from "lucide-react";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
@@ -83,6 +86,7 @@ export function TradeListItem({
   showDate = false,
   className,
 }: TradeListItemProps) {
+  useLingui();
   usePrivacyMode();
   const status = tradeStatus(trade);
   const dir = resolveTradeDirection({
@@ -95,7 +99,9 @@ export function TradeListItem({
     markMissingOptionRight: true,
   });
   const DirIcon = dir.arrowUp ? ArrowUpRight : ArrowDownRight;
-  const side = dir.long ? "LONG" : "SHORT";
+  const side = dir.long
+    ? t({ id: "trades.longUpper", message: "LONG" })
+    : t({ id: "trades.shortUpper", message: "SHORT" });
   const optionRight =
     dir.tag === "LC" || dir.tag === "SC"
       ? "CALL"
@@ -152,7 +158,7 @@ export function TradeListItem({
                 LC/SP. Neutral chip, with tone on the arrow and the call/put word
                 — the parts that carry the bias — so green/red elsewhere in the
                 row still means outcome. */}
-            <Pill className="shrink-0 px-2" tone="muted" title={dir.detail}>
+            <Pill className="shrink-0 px-2" tone="muted" title={directionLabel(dir)}>
               <DirIcon size={11} strokeWidth={2.75} className={dirClass} aria-hidden />
               {side}
               {optionRight ? <span className={dirClass}>{optionRight}</span> : null}
@@ -161,16 +167,20 @@ export function TradeListItem({
                   <span className="opacity-70" aria-hidden>
                     ?
                   </span>
-                  <span className="sr-only">{dir.label}</span>
+                  <span className="sr-only">{directionLabel(dir)}</span>
                 </>
               ) : null}
             </Pill>
             <Pill
               className="shrink-0"
               tone={status.tone}
-              title={status.label === "BE" ? "Break-even" : undefined}
+              title={
+                status.label === "BE"
+                  ? t({ id: "trades.breakEven", message: "Break-even" })
+                  : undefined
+              }
             >
-              {status.label}
+              {tradeStatusLabel(status.label)}
             </Pill>
           </ItemTitle>
           <span
@@ -230,7 +240,7 @@ export function TradeListItem({
                   size={13}
                   strokeWidth={1.75}
                   className="text-muted-foreground"
-                  aria-label="Has notes"
+                  aria-label={t({ id: "trades.hasNotes", message: "Has notes" })}
                 />
               ) : null}
               {shownTags.map((t) => (

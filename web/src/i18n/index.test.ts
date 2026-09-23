@@ -39,3 +39,14 @@ it("translates news labels and interpolated values in all required locales", asy
     expect(i18n._("news.current", { 0: "QA" })).toBe(current);
   }
 });
+
+it("preserves trade label interpolation in Chinese and Japanese", async () => {
+  for (const [locale, amount, field] of [
+    ["zh-CN", "金额（JPY）", "分红金额 2"],
+    ["ja", "金額（JPY）", "配当額 2"],
+  ]) {
+    await loadLocale(locale);
+    expect(i18n._("trades.currencyAmount", { currency: "JPY" })).toBe(amount);
+    expect(i18n._("trades.dividendAmountField", { suffix: " 2" })).toBe(field);
+  }
+});

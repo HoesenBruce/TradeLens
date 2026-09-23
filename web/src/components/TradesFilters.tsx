@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { ChartCandlestick, CircleDot, ListFilterPlus, Search, Tags } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -14,31 +15,6 @@ import type {
   TagFacetOption,
   TradeStatusFilter,
 } from "@/lib/tradeFilters";
-
-const STATUS_OPTIONS = [
-  { value: "win", label: "Wins" },
-  { value: "loss", label: "Losses" },
-  { value: "open", label: "Open" },
-  { value: "wash", label: "Wash" },
-] as const;
-
-/** Scalar facets (one value per trade) — only OR / NOT OR make sense. */
-const SCALAR_MULTI_OPS: FilterOperator[] = [
-  { value: "is_any_of", label: "is any of" },
-  { value: "is_not_any_of", label: "is not any of" },
-];
-
-/** Tag facets (many per trade) — OR, NOT OR, and AND. */
-const TAG_MULTI_OPS: FilterOperator[] = [
-  { value: "is_any_of", label: "is any of" },
-  { value: "is_not_any_of", label: "is not any of" },
-  { value: "includes_all", label: "includes all" },
-];
-
-const STATUS_OPS: FilterOperator[] = [
-  { value: "is", label: "is" },
-  { value: "is_not", label: "is not" },
-];
 
 type TradesFilterValue = string;
 
@@ -95,13 +71,39 @@ export function TradesFilters({
 }) {
   // Persist operators so choosing "is not any of" / "includes all" doesn't snap back.
   // Values live in the parent store; operators are UI-only until the data layer grows modes.
+  const { t: tr } = useLingui();
   const [ops, setOps] = useState<Record<string, string>>({});
 
   const fields = useMemo(() => {
+    const STATUS_OPTIONS = [
+      { value: "win", label: tr({ id: "trades.wins", message: "Wins" }) },
+      { value: "loss", label: tr({ id: "trades.losses", message: "Losses" }) },
+      { value: "open", label: tr({ id: "trades.open", message: "Open" }) },
+      { value: "wash", label: tr({ id: "trades.wash", message: "Wash" }) },
+    ] as const;
+
+    /** Scalar facets (one value per trade) — only OR / NOT OR make sense. */
+    const SCALAR_MULTI_OPS: FilterOperator[] = [
+      { value: "is_any_of", label: tr({ id: "trades.anyOf", message: "is any of" }) },
+      { value: "is_not_any_of", label: tr({ id: "trades.notAnyOf", message: "is not any of" }) },
+    ];
+
+    /** Tag facets (many per trade) — OR, NOT OR, and AND. */
+    const TAG_MULTI_OPS: FilterOperator[] = [
+      { value: "is_any_of", label: tr({ id: "trades.anyOf", message: "is any of" }) },
+      { value: "is_not_any_of", label: tr({ id: "trades.notAnyOf", message: "is not any of" }) },
+      { value: "includes_all", label: tr({ id: "trades.includesAll", message: "includes all" }) },
+    ];
+
+    const STATUS_OPS: FilterOperator[] = [
+      { value: "is", label: tr({ id: "trades.is", message: "is" }) },
+      { value: "is_not", label: tr({ id: "trades.isNot", message: "is not" }) },
+    ];
+
     const next: FilterFieldConfig<TradesFilterValue>[] = [
       {
         key: "symbol",
-        label: "Symbol",
+        label: tr({ id: "trades.symbol", message: "Symbol" }),
         type: "multiselect",
         icon: <Search className="size-3.5" strokeWidth={1.75} />,
         searchable: true,
@@ -116,7 +118,7 @@ export function TradesFilters({
     if (onToggleTradeStatus) {
       next.push({
         key: "status",
-        label: "Status",
+        label: tr({ id: "trades.status", message: "Status" }),
         type: "select",
         icon: <CircleDot className="size-3.5" strokeWidth={1.75} />,
         searchable: false,
@@ -128,7 +130,7 @@ export function TradesFilters({
     if (onMarketsChange && marketOptions && marketOptions.length > 0) {
       next.push({
         key: "market",
-        label: "Market",
+        label: tr({ id: "trades.market", message: "Market" }),
         type: "multiselect",
         icon: <ChartCandlestick className="size-3.5" strokeWidth={1.75} />,
         searchable: true,
@@ -140,7 +142,7 @@ export function TradesFilters({
     if (onTagIdsChange && tagOptions && tagOptions.length > 0) {
       next.push({
         key: "tags",
-        label: "Tags",
+        label: tr({ id: "trades.tags", message: "Tags" }),
         type: "multiselect",
         icon: <Tags className="size-3.5" strokeWidth={1.75} />,
         searchable: true,
@@ -151,6 +153,7 @@ export function TradesFilters({
 
     return next;
   }, [
+    tr,
     symbolOptions,
     onToggleTradeStatus,
     marketOptions,
@@ -225,17 +228,17 @@ export function TradesFilters({
           type="button"
           variant="outline"
           size="sm"
-          aria-label="Add filter"
+          aria-label={tr({ id: "trades.addFilter", message: "Add filter" })}
           className={cn(triggerClassName, iconOnly && "w-8 px-0 [&>svg]:mx-0")}
         >
           <ListFilterPlus size={14} strokeWidth={1.75} />
-          {iconOnly ? null : "Add filter"}
+          {iconOnly ? null : tr({ id: "trades.addFilter", message: "Add filter" })}
         </Button>
       }
       i18n={{
-        addFilter: "Add filter",
-        searchFields: "Search filters…",
-        noResultsFound: "No symbols found.",
+        addFilter: tr({ id: "trades.addFilter", message: "Add filter" }),
+        searchFields: tr({ id: "trades.searchFilters", message: "Search filters…" }),
+        noResultsFound: tr({ id: "trades.noSymbols", message: "No symbols found." }),
       }}
     />
   );

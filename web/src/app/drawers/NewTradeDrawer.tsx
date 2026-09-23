@@ -1,4 +1,6 @@
-import { Trans } from "@lingui/react/macro";
+import { emotionLabel, sessionLabel, instrumentLabel } from "@/lib/tradeLabels";
+import { useLingui } from "@lingui/react";
+import { t as tr } from "@lingui/core/macro";
 import { useForm, useStore } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import {
@@ -143,7 +145,7 @@ const MARKETS = [
   { value: "future", label: "FUTURES" },
   { value: "forex", label: "FOREX" },
 ];
-const EMOTION_OPTIONS: MultiSelectOption[] = EMOTIONAL_STATES.map((s) => ({ value: s, label: s }));
+
 /**
  * Fill rows become a table only once the card can show every column in full —
  * 46rem is where Date / Time (the one flexible track) still fits a whole
@@ -243,6 +245,7 @@ function FillAmountCell({
   locale: string;
   emptyLabel?: string;
 }) {
+  useLingui();
   const amount = quantity > 0 && price > 0 ? quantity * price * multiplier : null;
   const empty = amount == null;
   return (
@@ -253,7 +256,9 @@ function FillAmountCell({
         empty ? "justify-center text-muted-foreground" : "font-medium",
       )}
       aria-label={empty ? emptyLabel : undefined}
-      title={empty ? undefined : "Qty × price × multiplier"}
+      title={
+        empty ? undefined : tr({ id: "trades.amountCalc", message: "Qty × price × multiplier" })
+      }
     >
       {empty ? (
         <CircleDashed size={14} strokeWidth={1.75} aria-hidden />
@@ -335,6 +340,7 @@ function FillActionToggle({
   onToggle: () => void;
   "aria-label": string;
 }) {
+  useLingui();
   const reduceMotion = useReducedMotion();
   const isBuy = side === "buy";
   const Icon = isBuy ? ArrowUpRight : ArrowDownRight;
@@ -374,7 +380,9 @@ function FillActionToggle({
           >
             <Icon size={14} strokeWidth={2.25} aria-hidden />
           </motion.span>
-          {side.toUpperCase()}
+          {isBuy
+            ? tr({ id: "trades.buyUpper", message: "BUY" })
+            : tr({ id: "trades.sellUpper", message: "SELL" })}
         </motion.span>
       </AnimatePresence>
     </Button>
@@ -393,12 +401,15 @@ function SymbolExtrasAccordion({
   journal: ReactNode;
   dividend: ReactNode;
 }) {
+  useLingui();
   return (
     <Accordion multiple className="relative z-[1] flex flex-col gap-2">
       <AccordionItem value="journal" className={cn(cossPanelClass, "last:border-b")}>
         <AccordionTrigger className="group/acc-trigger relative z-[1] px-3 py-2.5 text-foreground hover:no-underline">
           <span className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
-            <span className="text-[12px] font-semibold tracking-wide">Journal</span>
+            <span className="text-[12px] font-semibold tracking-wide">
+              {tr({ id: "trades.journal", message: "Journal" })}
+            </span>
             {journalSummary ? (
               <span className="truncate text-[10px] font-normal text-muted-foreground group-data-panel-open/acc-trigger:hidden">
                 {journalSummary}
@@ -414,7 +425,9 @@ function SymbolExtrasAccordion({
       <AccordionItem value="dividend" className={cn(cossPanelClass, "last:border-b")}>
         <AccordionTrigger className="group/acc-trigger relative z-[1] px-3 py-2.5 text-foreground hover:no-underline">
           <span className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
-            <span className="text-[12px] font-semibold tracking-wide">Dividend</span>
+            <span className="text-[12px] font-semibold tracking-wide">
+              {tr({ id: "trades.dividend", message: "Dividend" })}
+            </span>
             {dividendSummary ? (
               <span className="truncate text-[10px] font-normal text-muted-foreground group-data-panel-open/acc-trigger:hidden">
                 {dividendSummary}
@@ -510,6 +523,7 @@ function SymbolCard({
   onRemoveScreenshot: (fileIndex: number) => void;
   onRemove: () => void;
 }) {
+  useLingui();
   const base = `trades[${index}]` as const;
   const reduceMotion = useReducedMotion();
   /**
@@ -610,8 +624,10 @@ function SymbolCard({
   const suffix = index ? ` ${index + 1}` : "";
   const [open, setOpen] = useState(true);
   const collapsedSummary = [
-    block.side.toUpperCase(),
-    `${block.rows.length} fill${block.rows.length === 1 ? "" : "s"}`,
+    block.side === "long"
+      ? tr({ id: "trades.long", message: "Long" })
+      : tr({ id: "trades.short", message: "Short" }),
+    tr({ id: "trades.fillCount", message: `Fills: ${block.rows.length}` }),
     preview.net != null ? fmtSignedMoney(preview.net, currency, locale) : "",
   ]
     .filter(Boolean)
@@ -621,21 +637,28 @@ function SymbolCard({
       open={open}
       onOpenChange={(next) => setOpen(next)}
       className={cn("relative z-[1] gap-4 p-3 @container/symbol sm:p-4", cossPanelClass)}
-      render={<section aria-label={`Symbol trade ${index + 1}`} />}
+      render={
+        <section
+          aria-label={tr({ id: "trades.symbolTrade", message: `Symbol trade ${index + 1}` })}
+        />
+      }
     >
       <div className="relative z-[1] flex items-center gap-2">
         <CollapsibleTrigger
           className="min-w-0 flex-1 items-center gap-2.5"
-          aria-label={`Toggle symbol ${index + 1}`}
+          aria-label={tr({ id: "trades.toggleSymbol", message: `Toggle symbol ${index + 1}` })}
         >
           <span className="flex min-w-0 flex-1 flex-col gap-0.5 text-left">
             <span className="truncate text-[15px] font-semibold leading-none tracking-[-0.02em] text-foreground">
-              {block.symbol || "Untitled"}
+              {block.symbol || tr({ id: "trades.untitled", message: "Untitled" })}
             </span>
             <span className="truncate text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
               {collapsedSummary && !open
-                ? `Symbol ${index + 1} · ${collapsedSummary}`
-                : `Symbol ${index + 1}`}
+                ? tr({
+                    id: "trades.symbolSummary",
+                    message: `Symbol ${index + 1} · ${collapsedSummary}`,
+                  })
+                : tr({ id: "trades.symbolIndex", message: `Symbol ${index + 1}` })}
             </span>
           </span>
           <CollapsibleChevron />
@@ -645,7 +668,7 @@ function SymbolCard({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label={`Remove symbol ${index + 1}`}
+            aria-label={tr({ id: "trades.removeSymbol", message: `Remove symbol ${index + 1}` })}
             disabled={pending}
             className="shrink-0 text-destructive"
             onClick={onRemove}
@@ -657,9 +680,12 @@ function SymbolCard({
       <CollapsibleContent animation="fade">
         <div className="relative z-[1] flex flex-col gap-4">
           <div className="grid grid-cols-2 items-start gap-3 @min-[38rem]/symbol:grid-cols-4">
-            <Field label="Market">
+            <Field label={tr({ id: "trades.market", message: "Market" })}>
               <NativeSelect
-                aria-label={`Market symbol ${index + 1}`}
+                aria-label={tr({
+                  id: "trades.marketSymbol",
+                  message: `Market symbol ${index + 1}`,
+                })}
                 value={block.market}
                 onChange={(e) => {
                   const market = e.target.value;
@@ -683,19 +709,25 @@ function SymbolCard({
               >
                 {MARKETS.map((m) => (
                   <NativeSelectOption key={m.value} value={m.value}>
-                    {m.label}
+                    {instrumentLabel(m.value)}
                   </NativeSelectOption>
                 ))}
               </NativeSelect>
             </Field>
             {block.market === "future" && (
-              <Field label="Contract">
+              <Field label={tr({ id: "trades.contract", message: "Contract" })}>
                 <OptionsSelect
-                  ariaLabel={`Contract symbol ${index + 1}`}
+                  ariaLabel={tr({
+                    id: "trades.contractSymbol",
+                    message: `Contract symbol ${index + 1}`,
+                  })}
                   value={block.futuresPresetId}
                   options={[
                     ...FUTURES_PRESETS.map((p) => ({ value: p.id, label: p.label })),
-                    { value: CUSTOM_PRESET_ID, label: "Custom" },
+                    {
+                      value: CUSTOM_PRESET_ID,
+                      label: tr({ id: "trades.custom", message: "Custom" }),
+                    },
                   ]}
                   onValueChange={(id) => {
                     set("futuresPresetId", id);
@@ -710,12 +742,20 @@ function SymbolCard({
             )}
             <form.Field
               name={`${base}.symbol` as never}
-              validators={{ onBlur: ({ value }) => (value ? undefined : "Symbol is required.") }}
+              validators={{
+                onBlur: ({ value }) =>
+                  value
+                    ? undefined
+                    : tr({ id: "trades.symbolRequired", message: "Symbol is required." }),
+              }}
             >
               {(field) => (
-                <Field label="Symbol" error={fieldError(field.state.meta.errors)}>
+                <Field
+                  label={tr({ id: "trades.symbol", message: "Symbol" })}
+                  error={fieldError(field.state.meta.errors)}
+                >
                   <FormInput
-                    aria-label={`Symbol${suffix}`}
+                    aria-label={tr({ id: "trades.symbolField", message: `Symbol${suffix}` })}
                     value={field.state.value as string}
                     onChange={(e) => {
                       field.handleChange(e.target.value.toUpperCase() as never);
@@ -723,20 +763,20 @@ function SymbolCard({
                         set("futuresPresetId", presetIdForSymbol(e.target.value));
                     }}
                     onBlur={field.handleBlur}
-                    placeholder="Ticker"
+                    placeholder={tr({ id: "trades.ticker", message: "Ticker" })}
                     className={cn("uppercase", fieldTextClass)}
                   />
                 </Field>
               )}
             </form.Field>
-            <Field label="Side">
+            <Field label={tr({ id: "trades.side", message: "Side" })}>
               <SegmentedControl
-                ariaLabel={`Side symbol ${index + 1}`}
+                ariaLabel={tr({ id: "trades.sideSymbol", message: `Side symbol ${index + 1}` })}
                 size="md"
                 fullWidth
                 options={[
-                  { value: "long", label: "↗ LONG" },
-                  { value: "short", label: "↘ SHORT" },
+                  { value: "long", label: tr({ id: "trades.longChoice", message: "↗ LONG" }) },
+                  { value: "short", label: tr({ id: "trades.shortChoice", message: "↘ SHORT" }) },
                 ]}
                 tones={{ long: "pos", short: "neg" }}
                 value={block.side}
@@ -755,18 +795,24 @@ function SymbolCard({
           </div>
           {block.market === "option" && (
             <div className="grid grid-cols-2 items-start gap-3 @min-[38rem]/symbol:grid-cols-4">
-              <Field label="Multiplier">
+              <Field label={tr({ id: "trades.multiplier", message: "Multiplier" })}>
                 <AmountInput
-                  aria-label={`Multiplier symbol ${index + 1}`}
+                  aria-label={tr({
+                    id: "trades.multiplierSymbol",
+                    message: `Multiplier symbol ${index + 1}`,
+                  })}
                   value={block.multiplier}
                   onValueChange={(v) => set("multiplier", v)}
                   placeholder="100"
                   className={fieldTextClass}
                 />
               </Field>
-              <Field label="Right">
+              <Field label={tr({ id: "trades.right", message: "Right" })}>
                 <SegmentedControl
-                  ariaLabel={`Option right symbol ${index + 1}`}
+                  ariaLabel={tr({
+                    id: "trades.optionRightSymbol",
+                    message: `Option right symbol ${index + 1}`,
+                  })}
                   size="md"
                   options={[
                     { value: "call", label: "CALL" },
@@ -781,9 +827,12 @@ function SymbolCard({
                   }}
                 />
               </Field>
-              <Field label="Strike">
+              <Field label={tr({ id: "trades.strike", message: "Strike" })}>
                 <AmountInput
-                  aria-label={`Strike symbol ${index + 1}`}
+                  aria-label={tr({
+                    id: "trades.strikeSymbol",
+                    message: `Strike symbol ${index + 1}`,
+                  })}
                   value={block.option_strike}
                   onValueChange={(v) => {
                     set("option_strike", v);
@@ -793,9 +842,12 @@ function SymbolCard({
                   className={fieldTextClass}
                 />
               </Field>
-              <Field label="Expiry">
+              <Field label={tr({ id: "trades.expiry", message: "Expiry" })}>
                 <DatePicker
-                  aria-label={`Expiry symbol ${index + 1}`}
+                  aria-label={tr({
+                    id: "trades.expirySymbol",
+                    message: `Expiry symbol ${index + 1}`,
+                  })}
                   value={block.option_expiry}
                   onChange={(v) => {
                     set("option_expiry", v);
@@ -811,21 +863,24 @@ function SymbolCard({
             </div>
           )}
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Target">
+            <Field label={tr({ id: "trades.target", message: "Target" })}>
               <AmountInput
-                aria-label={`Target symbol ${index + 1}`}
+                aria-label={tr({
+                  id: "trades.targetSymbol",
+                  message: `Target symbol ${index + 1}`,
+                })}
                 value={block.target}
                 onValueChange={(v) => set("target", v)}
-                placeholder="Optional"
+                placeholder={tr({ id: "trades.optional", message: "Optional" })}
                 className={fieldTextClass}
               />
             </Field>
-            <Field label="Stop">
+            <Field label={tr({ id: "trades.stop", message: "Stop" })}>
               <AmountInput
-                aria-label={`Stop symbol ${index + 1}`}
+                aria-label={tr({ id: "trades.stopSymbol", message: `Stop symbol ${index + 1}` })}
                 value={block.stop}
                 onValueChange={(v) => set("stop", v)}
-                placeholder="Optional"
+                placeholder={tr({ id: "trades.optional", message: "Optional" })}
                 className={fieldTextClass}
               />
             </Field>
@@ -834,7 +889,9 @@ function SymbolCard({
             {(rowsField) => (
               <div className="flex flex-col gap-2">
                 <span className={labelClass}>
-                  {block.symbol ? `Executions · ${block.symbol}` : "Executions"}
+                  {block.symbol
+                    ? tr({ id: "trades.executionsSymbol", message: `Executions · ${block.symbol}` })
+                    : tr({ id: "trades.executions", message: "Executions" })}
                 </span>
                 <div
                   className={cn(
@@ -842,13 +899,13 @@ function SymbolCard({
                     FILL_TABLE_COLS,
                   )}
                 >
-                  <span>Action</span>
-                  <span>Date / Time</span>
-                  <span>Qty</span>
-                  <span>Price</span>
-                  <span>Amount</span>
-                  <span>Fee</span>
-                  <span>P&L</span>
+                  <span>{tr({ id: "trades.action", message: "Action" })}</span>
+                  <span>{tr({ id: "trades.dateTime", message: "Date / Time" })}</span>
+                  <span>{tr({ id: "trades.qty", message: "Qty" })}</span>
+                  <span>{tr({ id: "trades.price", message: "Price" })}</span>
+                  <span>{tr({ id: "trades.amount", message: "Amount" })}</span>
+                  <span>{tr({ id: "trades.fee", message: "Fee" })}</span>
+                  <span>{tr({ id: "trades.pnl", message: "P&L" })}</span>
                   <span />
                 </div>
                 {/* popLayout pulls the removed fill out of flow at once, so the
@@ -877,12 +934,15 @@ function SymbolCard({
                       )}
                     >
                       <FillCell
-                        label="Action"
+                        label={tr({ id: "trades.action", message: "Action" })}
                         className="col-span-2 @min-[46rem]/symbol:col-span-1"
                       >
                         <FillActionToggle
                           side={row.side}
-                          aria-label={`Toggle action symbol ${index + 1} row ${rowIndex + 1}`}
+                          aria-label={tr({
+                            id: "trades.toggleRowAction",
+                            message: `Toggle action symbol ${index + 1} row ${rowIndex + 1}`,
+                          })}
                           onToggle={() =>
                             form.setFieldValue(
                               `${base}.rows[${rowIndex}].side` as never,
@@ -892,7 +952,7 @@ function SymbolCard({
                         />
                       </FillCell>
                       <FillCell
-                        label="Date / Time"
+                        label={tr({ id: "trades.dateTime", message: "Date / Time" })}
                         // Takes the rest of Action's row — six of eight tracks — so a
                         // whole timestamp stays readable in the narrowest block.
                         className="col-span-6 @min-[46rem]/symbol:col-span-1"
@@ -900,7 +960,10 @@ function SymbolCard({
                         <form.Field name={`${base}.rows[${rowIndex}].executed_at` as never}>
                           {(field) => (
                             <DateTimePicker
-                              aria-label={`Date/time symbol ${index + 1} row ${rowIndex + 1}`}
+                              aria-label={tr({
+                                id: "trades.rowDateTime",
+                                message: `Date/time symbol ${index + 1} row ${rowIndex + 1}`,
+                              })}
                               value={field.state.value as string}
                               onChange={(v) => field.handleChange(v as never)}
                               compact
@@ -909,49 +972,63 @@ function SymbolCard({
                         </form.Field>
                       </FillCell>
                       <FillCell
-                        label="Qty"
+                        label={tr({ id: "trades.qty", message: "Qty" })}
                         className="col-span-4 @min-[34rem]/symbol:col-span-2 @min-[46rem]/symbol:col-span-1"
                       >
                         <form.Field
                           name={`${base}.rows[${rowIndex}].quantity` as never}
                           validators={{
-                            onBlur: ({ value }) => validatePositiveAmount(value as string, "Qty"),
+                            onBlur: ({ value }) =>
+                              validatePositiveAmount(
+                                value as string,
+                                tr({ id: "trades.qty", message: "Qty" }),
+                              ),
                           }}
                         >
                           {(field) => (
                             <AmountInput
-                              aria-label={`Qty${index ? ` symbol ${index + 1}` : ""} row ${rowIndex + 1}`}
+                              aria-label={tr({
+                                id: "trades.rowQty",
+                                message: `Qty${index ? ` symbol ${index + 1}` : ""} row ${rowIndex + 1}`,
+                              })}
                               value={field.state.value as string}
                               onValueChange={(v) => field.handleChange(v as never)}
-                              placeholder="Qty"
+                              placeholder={tr({ id: "trades.qty", message: "Qty" })}
                               compact
                             />
                           )}
                         </form.Field>
                       </FillCell>
                       <FillCell
-                        label="Price"
+                        label={tr({ id: "trades.price", message: "Price" })}
                         className="col-span-4 @min-[34rem]/symbol:col-span-2 @min-[46rem]/symbol:col-span-1"
                       >
                         <form.Field
                           name={`${base}.rows[${rowIndex}].price` as never}
                           validators={{
-                            onBlur: ({ value }) => validatePositiveAmount(value as string, "Price"),
+                            onBlur: ({ value }) =>
+                              validatePositiveAmount(
+                                value as string,
+                                tr({ id: "trades.price", message: "Price" }),
+                              ),
                           }}
                         >
                           {(field) => (
                             <AmountInput
-                              aria-label={`Price${index ? ` symbol ${index + 1}` : ""} row ${rowIndex + 1}`}
+                              aria-label={tr({
+                                id: "trades.rowPrice",
+                                message: `Price${index ? ` symbol ${index + 1}` : ""} row ${rowIndex + 1}`,
+                              })}
                               value={field.state.value as string}
                               onValueChange={(v) => field.handleChange(v as never)}
-                              placeholder="Price"
+                              placeholder={tr({ id: "trades.price", message: "Price" })}
                               compact
                             />
                           )}
                         </form.Field>
                       </FillCell>
                       <FillCell
-                        label="Amount"
+                        label={tr({ id: "trades.amount", message: "Amount" })}
                         className="col-span-4 @min-[34rem]/symbol:col-span-2 @min-[46rem]/symbol:col-span-1"
                       >
                         <FillAmountCell
@@ -960,33 +1037,42 @@ function SymbolCard({
                           multiplier={multiplier}
                           currency={currency}
                           locale={locale}
-                          emptyLabel={`Amount symbol ${index + 1} row ${rowIndex + 1}: empty`}
+                          emptyLabel={tr({
+                            id: "trades.rowAmountEmpty",
+                            message: `Amount symbol ${index + 1} row ${rowIndex + 1}: empty`,
+                          })}
                         />
                       </FillCell>
                       <FillCell
-                        label="Fee"
+                        label={tr({ id: "trades.fee", message: "Fee" })}
                         className="col-span-4 @min-[34rem]/symbol:col-span-2 @min-[46rem]/symbol:col-span-1"
                       >
                         <form.Field
                           name={`${base}.rows[${rowIndex}].fees` as never}
                           validators={{
                             onBlur: ({ value }) =>
-                              validateNonNegativeAmount(value as string, "Fee"),
+                              validateNonNegativeAmount(
+                                value as string,
+                                tr({ id: "trades.fee", message: "Fee" }),
+                              ),
                           }}
                         >
                           {(field) => (
                             <AmountInput
-                              aria-label={`Fee${index ? ` symbol ${index + 1}` : ""} row ${rowIndex + 1}`}
+                              aria-label={tr({
+                                id: "trades.rowFee",
+                                message: `Fee${index ? ` symbol ${index + 1}` : ""} row ${rowIndex + 1}`,
+                              })}
                               value={field.state.value as string}
                               onValueChange={(v) => field.handleChange(v as never)}
-                              placeholder="Fee"
+                              placeholder={tr({ id: "trades.fee", message: "Fee" })}
                               compact
                             />
                           )}
                         </form.Field>
                       </FillCell>
                       <FillCell
-                        label="P&L"
+                        label={tr({ id: "trades.pnl", message: "P&L" })}
                         // Stacked: owns its whole line so the value reads as the
                         // block's result rather than a stray cell.
                         className="col-span-8 @min-[46rem]/symbol:col-span-1"
@@ -995,7 +1081,10 @@ function SymbolCard({
                           value={fillPnls[rowIndex]}
                           currency={currency}
                           locale={locale}
-                          emptyLabel={`P&L symbol ${index + 1} row ${rowIndex + 1}: empty`}
+                          emptyLabel={tr({
+                            id: "trades.rowPnlEmpty",
+                            message: `P&L symbol ${index + 1} row ${rowIndex + 1}: empty`,
+                          })}
                         />
                       </FillCell>
                       {block.rows.length > 1 ? (
@@ -1003,7 +1092,10 @@ function SymbolCard({
                           type="button"
                           variant="ghost"
                           size="icon-sm"
-                          aria-label={`Remove row symbol ${index + 1} row ${rowIndex + 1}`}
+                          aria-label={tr({
+                            id: "trades.removeRow",
+                            message: `Remove row symbol ${index + 1} row ${rowIndex + 1}`,
+                          })}
                           onClick={() => requestRowRemoval(row.key, rowIndex)}
                           // Stacked: a full-width block closing out the fill.
                           // Table: back to a square icon in the row's last column.
@@ -1030,7 +1122,10 @@ function SymbolCard({
                   type="button"
                   variant="default"
                   size="icon"
-                  aria-label={`Add execution row symbol ${index + 1}`}
+                  aria-label={tr({
+                    id: "trades.addExecutionRow",
+                    message: `Add execution row symbol ${index + 1}`,
+                  })}
                   onClick={() =>
                     rowsField.pushValue(
                       emptyExecutionRow(block.side === "long" ? "buy" : "sell", {
@@ -1058,14 +1153,17 @@ function SymbolCard({
             journalSummary={
               [
                 block.setupIds.length
-                  ? `${block.setupIds.length} setup${block.setupIds.length === 1 ? "" : "s"}`
+                  ? tr({ id: "trades.setupCount", message: `Setups: ${block.setupIds.length}` })
                   : "",
-                block.session,
+                sessionLabel(block.session),
                 block.emotionalStates.length > 2
-                  ? `${block.emotionalStates.slice(0, 2).join(", ")} +${block.emotionalStates.length - 2}`
-                  : joinEmotionalStates(block.emotionalStates),
+                  ? `${block.emotionalStates.slice(0, 2).map(emotionLabel).join(", ")} +${block.emotionalStates.length - 2}`
+                  : block.emotionalStates.map(emotionLabel).join(", "),
                 screenshotFiles.length
-                  ? `${screenshotFiles.length} shot${screenshotFiles.length === 1 ? "" : "s"}`
+                  ? tr({
+                      id: "trades.shotCount",
+                      message: `Screenshots: ${screenshotFiles.length}`,
+                    })
                   : "",
               ]
                 .filter(Boolean)
@@ -1078,142 +1176,194 @@ function SymbolCard({
               <>
                 {setups.length === 0 ? (
                   <div>
-                    <span className={labelClass}>Setups</span>
+                    <span className={labelClass}>
+                      {tr({ id: "trades.setups", message: "Setups" })}
+                    </span>
                     <p className="text-[11px] text-muted-foreground">
-                      No setups yet — create some in Playbook.
+                      {tr({
+                        id: "trades.noSetupsPlaybook",
+                        message: "No setups yet — create some in Playbook.",
+                      })}
                     </p>
                   </div>
                 ) : (
                   <JournalField
-                    label="Setups"
-                    hint="Select any that apply — the first becomes the main setup."
+                    label={tr({ id: "trades.setups", message: "Setups" })}
+                    hint={tr({
+                      id: "trades.setupSelectHint",
+                      message: "Select any that apply — the first becomes the main setup.",
+                    })}
                   >
                     <MultiSelectCombobox
-                      ariaLabel={`Setups${suffix}`}
+                      ariaLabel={tr({ id: "trades.setupsField", message: `Setups${suffix}` })}
                       options={setupOptions}
                       value={block.setupIds}
                       onValueChange={(ids) => set("setupIds", ids)}
-                      placeholder="Select setups"
-                      searchPlaceholder="Search setups…"
-                      emptyText="No matching setups."
+                      placeholder={tr({ id: "trades.selectSetups", message: "Select setups" })}
+                      searchPlaceholder={tr({
+                        id: "trades.searchSetups",
+                        message: "Search setups…",
+                      })}
+                      emptyText={tr({
+                        id: "trades.noMatchingSetups",
+                        message: "No matching setups.",
+                      })}
                     />
                   </JournalField>
                 )}
                 <JournalField
-                  label="Session"
-                  hint="One session per trade."
+                  label={tr({ id: "trades.session", message: "Session" })}
+                  hint={tr({ id: "trades.oneSession", message: "One session per trade." })}
                   htmlFor={`nt-session-${block.key}`}
                 >
                   <NativeSelect
                     id={`nt-session-${block.key}`}
-                    aria-label={`Session${suffix}`}
+                    aria-label={tr({ id: "trades.sessionField", message: `Session${suffix}` })}
                     value={block.session}
                     onChange={(e) => set("session", e.target.value)}
                     className={fieldTextClass}
                     wrapperClassName="w-full"
                   >
-                    <NativeSelectOption value="">No session</NativeSelectOption>
+                    <NativeSelectOption value="">
+                      {tr({ id: "trades.noSession", message: "No session" })}
+                    </NativeSelectOption>
                     {TRADE_SESSIONS.map((s) => (
                       <NativeSelectOption key={s} value={s}>
-                        {s}
+                        {sessionLabel(s)}
                       </NativeSelectOption>
                     ))}
                   </NativeSelect>
                 </JournalField>
                 <JournalField
-                  label="Emotion"
-                  hint="Select every state that applied during the trade."
+                  label={tr({ id: "trades.emotion", message: "Emotion" })}
+                  hint={tr({
+                    id: "trades.emotionSelectHint",
+                    message: "Select every state that applied during the trade.",
+                  })}
                 >
                   <MultiSelectCombobox
-                    ariaLabel={`Emotion${suffix}`}
-                    options={EMOTION_OPTIONS}
+                    ariaLabel={tr({ id: "trades.emotionField", message: `Emotion${suffix}` })}
+                    options={EMOTIONAL_STATES.map((value) => ({
+                      value,
+                      label: emotionLabel(value),
+                    }))}
                     value={block.emotionalStates}
                     onValueChange={(states) => set("emotionalStates", states)}
-                    placeholder="Select emotions"
-                    searchPlaceholder="Search emotions…"
-                    emptyText="No matching emotions."
+                    placeholder={tr({ id: "trades.selectEmotions", message: "Select emotions" })}
+                    searchPlaceholder={tr({
+                      id: "trades.searchEmotions",
+                      message: "Search emotions…",
+                    })}
+                    emptyText={tr({ id: "trades.noEmotions", message: "No matching emotions." })}
                   />
                 </JournalField>
                 {regularTags.length > 0 && (
-                  <JournalField label="Tags">
+                  <JournalField label={tr({ id: "trades.tags", message: "Tags" })}>
                     <MultiSelectCombobox
-                      ariaLabel={`Tags${suffix}`}
+                      ariaLabel={tr({ id: "trades.tagsField", message: `Tags${suffix}` })}
                       options={tagOptions}
                       value={block.selectedTagIds}
                       onValueChange={(ids) => set("selectedTagIds", ids)}
-                      placeholder="Select tags"
-                      searchPlaceholder="Search tags…"
-                      emptyText="No matching tags."
+                      placeholder={tr({ id: "trades.selectTags", message: "Select tags" })}
+                      searchPlaceholder={tr({ id: "trades.searchTags", message: "Search tags…" })}
+                      emptyText={tr({ id: "trades.noTags", message: "No matching tags." })}
                     />
                   </JournalField>
                 )}
                 {mistakeTags.length > 0 && (
-                  <JournalField label="Mistake type" hint="Optional — select any that apply.">
+                  <JournalField
+                    label={tr({ id: "trades.mistakeType", message: "Mistake type" })}
+                    hint={tr({
+                      id: "trades.mistakeHint",
+                      message: "Optional — select any that apply.",
+                    })}
+                  >
                     <MultiSelectCombobox
-                      ariaLabel={`Mistake type${suffix}`}
+                      ariaLabel={tr({
+                        id: "trades.mistakesField",
+                        message: `Mistake type${suffix}`,
+                      })}
                       options={mistakeOptions}
                       value={block.selectedMistakeIds}
                       onValueChange={(ids) => set("selectedMistakeIds", ids)}
-                      placeholder="Select mistakes"
-                      searchPlaceholder="Search mistakes…"
-                      emptyText="No matching mistakes."
+                      placeholder={tr({ id: "trades.selectMistakes", message: "Select mistakes" })}
+                      searchPlaceholder={tr({
+                        id: "trades.searchMistakes",
+                        message: "Search mistakes…",
+                      })}
+                      emptyText={tr({ id: "trades.noMistakes", message: "No matching mistakes." })}
                     />
                   </JournalField>
                 )}
                 <GradeControl
-                  label="Setup rating"
-                  hint="Rate the setup itself — ignore PnL and emotion."
+                  label={tr({ id: "trades.setupRating", message: "Setup rating" })}
+                  hint={tr({
+                    id: "trades.rateSetup",
+                    message: "Rate the setup itself — ignore PnL and emotion.",
+                  })}
                   value={block.setupGrade}
                   onChange={(v) => set("setupGrade", v)}
                 />
                 <GradeControl
-                  label="Execution rating"
-                  hint="Rate your execution — patience, timing, stop discipline."
+                  label={tr({ id: "trades.executionRating", message: "Execution rating" })}
+                  hint={tr({
+                    id: "trades.rateExecution",
+                    message: "Rate your execution — patience, timing, stop discipline.",
+                  })}
                   value={block.executionGrade}
                   onChange={(v) => set("executionGrade", v)}
                 />
                 <div>
                   <label className={labelClass} htmlFor={`nt-entry-${block.key}`}>
-                    Entry reason
+                    {tr({ id: "trades.entryReason", message: "Entry reason" })}
                   </label>
                   <FormTextarea
                     id={`nt-entry-${block.key}`}
-                    aria-label={`Entry reason${suffix}`}
+                    aria-label={tr({
+                      id: "trades.entryReasonField",
+                      message: `Entry reason${suffix}`,
+                    })}
                     value={block.entryReason}
                     onChange={(e) => set("entryReason", e.target.value)}
                     rows={2}
-                    placeholder="Why did you enter?"
+                    placeholder={tr({ id: "trades.whyEntry", message: "Why did you enter?" })}
                   />
                 </div>
                 <div>
                   <label className={labelClass} htmlFor={`nt-exit-${block.key}`}>
-                    Exit reason
+                    {tr({ id: "trades.exitReason", message: "Exit reason" })}
                   </label>
                   <FormTextarea
                     id={`nt-exit-${block.key}`}
-                    aria-label={`Exit reason${suffix}`}
+                    aria-label={tr({
+                      id: "trades.exitReasonField",
+                      message: `Exit reason${suffix}`,
+                    })}
                     value={block.exitReason}
                     onChange={(e) => set("exitReason", e.target.value)}
                     rows={2}
-                    placeholder="Why did you exit?"
+                    placeholder={tr({ id: "trades.whyExit", message: "Why did you exit?" })}
                   />
                 </div>
                 <div>
                   <label className={labelClass} htmlFor={`nt-review-${block.key}`}>
-                    Review notes
+                    {tr({ id: "trades.reviewNotes", message: "Review notes" })}
                   </label>
                   <FormTextarea
                     id={`nt-review-${block.key}`}
-                    aria-label={`Review notes${suffix}`}
+                    aria-label={tr({ id: "trades.reviewField", message: `Review notes${suffix}` })}
                     value={block.reviewNotes}
                     onChange={(e) => set("reviewNotes", e.target.value)}
                     rows={3}
-                    placeholder="What would you do differently?"
+                    placeholder={tr({
+                      id: "trades.reviewPrompt",
+                      message: "What would you do differently?",
+                    })}
                   />
                 </div>
                 <div>
                   <span className={labelClass}>
-                    Screenshots
+                    {tr({ id: "trades.screenshots", message: "Screenshots" })}
                     {screenshotFiles.length > 0
                       ? maxScreenshots != null
                         ? ` (${screenshotFiles.length}/${maxScreenshots})`
@@ -1238,33 +1388,47 @@ function SymbolCard({
             dividend={
               <>
                 <p className="m-0 text-[10px] leading-snug text-muted-foreground">
-                  Optional payout on this symbol. Amount rolls into trade P&amp;L (shorts as a
-                  debit).
+                  {tr({
+                    id: "trades.dividendHint",
+                    message:
+                      "Optional payout on this symbol. Amount rolls into trade P&L (shorts as a debit).",
+                  })}
                 </p>
                 <div className="grid grid-cols-2 gap-3">
-                  <JournalField label={`Amount (${currency})`}>
+                  <JournalField
+                    label={tr({ id: "trades.currencyAmount", message: `Amount (${currency})` })}
+                  >
                     <AmountInput
-                      aria-label={`Dividend amount${suffix}`}
+                      aria-label={tr({
+                        id: "trades.dividendAmountField",
+                        message: `Dividend amount${suffix}`,
+                      })}
                       value={block.dividendAmount}
                       onValueChange={(v) => set("dividendAmount", v)}
                       placeholder="0.00"
                       className={fieldTextClass}
                     />
                   </JournalField>
-                  <JournalField label="Date">
+                  <JournalField label={tr({ id: "trades.date", message: "Date" })}>
                     <DatePicker
-                      aria-label={`Dividend date${suffix}`}
+                      aria-label={tr({
+                        id: "trades.dividendDateField",
+                        message: `Dividend date${suffix}`,
+                      })}
                       value={block.dividendDate}
                       onChange={(v) => set("dividendDate", v)}
                     />
                   </JournalField>
                 </div>
-                <JournalField label="Note">
+                <JournalField label={tr({ id: "trades.note", message: "Note" })}>
                   <FormInput
-                    aria-label={`Dividend note${suffix}`}
+                    aria-label={tr({
+                      id: "trades.dividendNoteField",
+                      message: `Dividend note${suffix}`,
+                    })}
                     value={block.dividendNote}
                     onChange={(e) => set("dividendNote", e.target.value)}
-                    placeholder="Optional"
+                    placeholder={tr({ id: "trades.optional", message: "Optional" })}
                     className={fieldTextClass}
                   />
                 </JournalField>
@@ -1278,6 +1442,7 @@ function SymbolCard({
 }
 
 export function NewTradeDrawer() {
+  useLingui();
   usePrivacyMode();
   const reduceMotion = useReducedMotion();
   const navigate = useNavigate();
@@ -1347,7 +1512,7 @@ export function NewTradeDrawer() {
 
       const accountId = value.accountId || filterAccountId || accounts[0]?.id || "";
       if (!accountId) {
-        setSubmitError("Account is required.");
+        setSubmitError(tr({ id: "trades.accountRequired", message: "Account is required." }));
         return;
       }
       const tradesErr = validateSymbolTrades(value.trades);
@@ -1357,14 +1522,18 @@ export function NewTradeDrawer() {
       }
       const rows = flattenSymbolTradesToExecutions(value.trades);
       if (rows.length === 0) {
-        setSubmitError("Add at least one valid execution row.");
+        setSubmitError(
+          tr({ id: "trades.fillRequired", message: "Add at least one valid execution row." }),
+        );
         return;
       }
 
       if (editId) {
         const existing = useUI.getState().editTradeDetail ?? editTradeQ.data;
         if (!existing) {
-          setSubmitError("Trade still loading — try again.");
+          setSubmitError(
+            tr({ id: "trades.stillLoading", message: "Trade still loading — try again." }),
+          );
           return;
         }
         setEditSaving(true);
@@ -1447,10 +1616,13 @@ export function NewTradeDrawer() {
           }
 
           toast.add({
-            title: "Trade updated",
+            title: tr({ id: "trades.updated", message: "Trade updated" }),
             description: tradeId
-              ? "Fills and journal saved."
-              : "All fills removed — returned to trades.",
+              ? tr({ id: "trades.fillsSaved", message: "Fills and journal saved." })
+              : tr({
+                  id: "trades.allFillsRemoved",
+                  message: "All fills removed — returned to trades.",
+                }),
           });
           close();
           if (tradeId) {
@@ -1466,9 +1638,12 @@ export function NewTradeDrawer() {
                   .join(";")
               : error instanceof Error
                 ? error.message
-                : "Save failed";
+                : tr({ id: "trades.saveFailed", message: "Save failed" });
           setSubmitError(message);
-          toast.add({ title: "Could not update trade", description: message });
+          toast.add({
+            title: tr({ id: "trades.updateFailed", message: "Could not update trade" }),
+            description: message,
+          });
         } finally {
           setEditSaving(false);
         }
@@ -1523,8 +1698,11 @@ export function NewTradeDrawer() {
           }),
         );
         toast.add({
-          title: "Trades logged",
-          description: `${Object.keys(bySymbol).length || tradeIds.length} symbol${(Object.keys(bySymbol).length || tradeIds.length) === 1 ? "" : "s"} saved.`,
+          title: tr({ id: "trades.logged", message: "Trades logged" }),
+          description: tr({
+            id: "trades.savedSymbols",
+            message: `Symbols saved: ${Object.keys(bySymbol).length || tradeIds.length}`,
+          }),
         });
         close();
       } catch (error) {
@@ -1535,9 +1713,12 @@ export function NewTradeDrawer() {
                 .join(";")
             : error instanceof Error
               ? error.message
-              : "Save failed";
+              : tr({ id: "trades.saveFailed", message: "Save failed" });
         setSubmitError(message);
-        toast.add({ title: "Could not log trades", description: message });
+        toast.add({
+          title: tr({ id: "trades.logFailed", message: "Could not log trades" }),
+          description: message,
+        });
       }
     },
   });
@@ -1791,14 +1972,18 @@ export function NewTradeDrawer() {
         >
           <DrawerHeader>
             <DrawerTitle>
-              {isImportPreviewEdit ? "Edit Trade" : isEditMode ? "Edit Trade" : "New Trade"}
+              {isImportPreviewEdit
+                ? tr({ id: "trades.editTradeTitle", message: "Edit Trade" })
+                : isEditMode
+                  ? tr({ id: "trades.editTradeTitle", message: "Edit Trade" })
+                  : tr({ id: "trades.newTradeTitle", message: "New Trade" })}
             </DrawerTitle>
             <div className="ml-auto flex items-center gap-0.5">
               {!isEditMode && (
                 <ControlledPopover
                   open={templatesOpen}
                   onOpenChange={setTemplatesOpen}
-                  triggerAriaLabel="Templates"
+                  triggerAriaLabel={tr({ id: "trades.templates", message: "Templates" })}
                   className="min-w-[14rem] overflow-hidden p-0"
                   triggerClassName={cn(
                     buttonVariants({ variant: "outline", size: "sm" }),
@@ -1808,14 +1993,18 @@ export function NewTradeDrawer() {
                   trigger={
                     <>
                       <FileStack size={14} strokeWidth={1.75} aria-hidden />
-                      Templates
+                      {tr({ id: "trades.templates", message: "Templates" })}
                     </>
                   }
                 >
-                  <div className="flex flex-col p-1" role="menu" aria-label="Trade templates">
+                  <div
+                    className="flex flex-col p-1"
+                    role="menu"
+                    aria-label={tr({ id: "trades.tradeTemplates", message: "Trade templates" })}
+                  >
                     {templates.length === 0 ? (
                       <p className="m-0 px-2 py-2 text-[11px] text-muted-foreground">
-                        No saved templates yet
+                        {tr({ id: "trades.noTemplates", message: "No saved templates yet" })}
                       </p>
                     ) : (
                       templates.map((t) => (
@@ -1845,13 +2034,13 @@ export function NewTradeDrawer() {
                         "focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring",
                       )}
                     >
-                      Save first symbol as template…
+                      {tr({ id: "trades.saveTemplate", message: "Save first symbol as template…" })}
                     </button>
                   </div>
                 </ControlledPopover>
               )}
               <DrawerClose
-                aria-label="Close"
+                aria-label={tr({ id: "trades.close", message: "Close" })}
                 className={cn(
                   "inline-flex size-8 cursor-pointer items-center justify-center rounded-md border-none bg-transparent",
                   "text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
@@ -1865,19 +2054,34 @@ export function NewTradeDrawer() {
           <DrawerBody>
             <ModalBanner>
               {isImportPreviewEdit
-                ? "Import preview — review fills and set call/put. Apply updates this row; Confirm import writes the account."
+                ? tr({
+                    id: "trades.importPreviewHint",
+                    message:
+                      "Import preview — review fills and set call/put. Apply updates this row; Confirm import writes the account.",
+                  })
                 : isEditMode
-                  ? "Update fills, journal, and optional dividend for this trade."
-                  : "Add one or more symbols — each with fills, journal, and optional dividend. One Save logs every symbol as its own trade."}
+                  ? tr({
+                      id: "trades.editHint",
+                      message: "Update fills, journal, and optional dividend for this trade.",
+                    })
+                  : tr({
+                      id: "trades.newHint",
+                      message:
+                        "Add one or more symbols — each with fills, journal, and optional dividend. One Save logs every symbol as its own trade.",
+                    })}
             </ModalBanner>
             {isEditMode && !editHydrated && !editSource && editTradeQ.isLoading ? (
-              <p className="mt-6 text-center text-[13px] text-muted-foreground">Loading trade…</p>
+              <p className="mt-6 text-center text-[13px] text-muted-foreground">
+                {tr({ id: "trades.loading", message: "Loading trade…" })}
+              </p>
             ) : isEditMode && !editHydrated && !editSource && editTradeQ.isError ? (
               <p className="mt-6 text-center text-[13px] text-destructive">
-                Could not load trade for editing.
+                {tr({ id: "trades.editLoadFailed", message: "Could not load trade for editing." })}
               </p>
             ) : isEditMode && !editHydrated ? (
-              <p className="mt-6 text-center text-[13px] text-muted-foreground">Loading trade…</p>
+              <p className="mt-6 text-center text-[13px] text-muted-foreground">
+                {tr({ id: "trades.loading", message: "Loading trade…" })}
+              </p>
             ) : (
               <form
                 key={isEditMode ? `edit-${editTradeId}-${editFormKey}` : "new-trade"}
@@ -1889,7 +2093,9 @@ export function NewTradeDrawer() {
               >
                 <div className="flex flex-wrap items-end gap-3">
                   <div className="min-w-48 flex-1">
-                    <label className={labelClass}>Account</label>
+                    <label className={labelClass}>
+                      {tr({ id: "trades.account", message: "Account" })}
+                    </label>
                     <AccountMultiSelect
                       accounts={accounts}
                       // The primary leads; the rest are the copies the save
@@ -1918,15 +2124,24 @@ export function NewTradeDrawer() {
                           "h-8.5 text-sm font-medium sm:h-7.5",
                           !visionReady && "text-muted-foreground",
                         )}
-                        aria-label="Prefill trade from screenshot"
+                        aria-label={tr({
+                          id: "trades.prefillScreenshot",
+                          message: "Prefill trade from screenshot",
+                        })}
                         title={
                           visionReady
-                            ? "Select one or more screenshots"
-                            : "Set up screenshot scan in Settings before scanning"
+                            ? tr({
+                                id: "trades.selectScreenshots",
+                                message: "Select one or more screenshots",
+                              })
+                            : tr({
+                                id: "trades.scanSetup",
+                                message: "Set up screenshot scan in Settings before scanning",
+                              })
                         }
                       >
                         <ScanLine size={14} aria-hidden />
-                        Scan to fill
+                        {tr({ id: "trades.scanFill", message: "Scan to fill" })}
                       </Button>
                       <input
                         ref={ocrFileRef}
@@ -1947,11 +2162,17 @@ export function NewTradeDrawer() {
                         size="sm"
                         onClick={() => fillFileRef.current?.click()}
                         className="h-8.5 text-sm font-medium sm:h-7.5"
-                        aria-label="Prefill trade from a CSV or JSON file"
-                        title="Select a CSV or JSON file of fills"
+                        aria-label={tr({
+                          id: "trades.prefillFile",
+                          message: "Prefill trade from a CSV or JSON file",
+                        })}
+                        title={tr({
+                          id: "trades.selectFile",
+                          message: "Select a CSV or JSON file of fills",
+                        })}
                       >
                         <FileUp size={14} aria-hidden />
-                        Import file
+                        {tr({ id: "trades.importFile", message: "Import file" })}
                       </Button>
                       <input
                         ref={fillFileRef}
@@ -2032,7 +2253,7 @@ export function NewTradeDrawer() {
                     className="mx-auto text-sm"
                   >
                     <Plus size={15} />
-                    Add symbol
+                    {tr({ id: "trades.addSymbol", message: "Add symbol" })}
                   </Button>
                 )}
                 {submitError && <p className="text-xs text-destructive">{submitError}</p>}
@@ -2075,7 +2296,7 @@ export function NewTradeDrawer() {
                       onClick={reset}
                       className="text-sm"
                     >
-                      Clear
+                      {tr({ id: "trades.clear", message: "Clear" })}
                     </Button>
                   )}
                   <Button
@@ -2086,7 +2307,7 @@ export function NewTradeDrawer() {
                     onClick={close}
                     className="text-sm"
                   >
-                    Cancel
+                    {tr({ id: "trades.cancel", message: "Cancel" })}
                   </Button>
                   <Button
                     type="button"
@@ -2098,13 +2319,11 @@ export function NewTradeDrawer() {
                     }}
                     className="text-sm @min-[30rem]/form:ml-auto"
                   >
-                    {isImportPreviewEdit ? (
-                      <Trans>Apply</Trans>
-                    ) : isEditMode ? (
-                      <Trans>Save changes</Trans>
-                    ) : (
-                      <Trans>Save</Trans>
-                    )}
+                    {isImportPreviewEdit
+                      ? tr({ id: "trades.apply", message: "Apply" })
+                      : isEditMode
+                        ? tr({ id: "trades.saveChanges", message: "Save changes" })
+                        : tr({ id: "trades.save", message: "Save" })}
                   </Button>
                 </div>
               </form>
