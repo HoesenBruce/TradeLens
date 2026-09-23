@@ -3,6 +3,12 @@ import { persist } from "zustand/middleware";
 import type { Account } from "./api/types";
 
 export const DISPLAY_PREFS_STORAGE_KEY = "tm-display-prefs";
+export type PriceColorConvention = "green-up-red-down" | "red-up-green-down";
+export const PRICE_COLOR_DEFAULT: PriceColorConvention = "green-up-red-down";
+
+function isPriceColorConvention(value: unknown): value is PriceColorConvention {
+  return value === "green-up-red-down" || value === "red-up-green-down";
+}
 
 /** Currencies offered in the header display switch. */
 export const DISPLAY_CURRENCIES = [
@@ -288,6 +294,7 @@ interface DisplayPrefsState {
    * detected. Settings → About still reports update status when off.
    */
   updateNotices: boolean;
+  priceColorConvention: PriceColorConvention;
   setDisplayCurrency: (currency: DisplayCurrencyOverride) => void;
   setPrivacyMode: (on: boolean) => void;
   togglePrivacyMode: () => void;
@@ -296,6 +303,7 @@ interface DisplayPrefsState {
   setTimeFormat: (fmt: TimeFormatPref) => void;
   setTradeDateBasis: (basis: TradeDateBasis) => void;
   setUpdateNotices: (on: boolean) => void;
+  setPriceColorConvention: (convention: PriceColorConvention) => void;
 }
 
 export const useDisplayPrefs = create<DisplayPrefsState>()(
@@ -308,6 +316,7 @@ export const useDisplayPrefs = create<DisplayPrefsState>()(
       timeFormat: TIME_FORMAT_DEFAULT,
       tradeDateBasis: TRADE_DATE_BASIS_DEFAULT,
       updateNotices: true,
+      priceColorConvention: PRICE_COLOR_DEFAULT,
       setDisplayCurrency: (displayCurrency) => set({ displayCurrency }),
       setPrivacyMode: (privacyMode) => set({ privacyMode }),
       togglePrivacyMode: () => set((s) => ({ privacyMode: !s.privacyMode })),
@@ -328,6 +337,12 @@ export const useDisplayPrefs = create<DisplayPrefsState>()(
             : TRADE_DATE_BASIS_DEFAULT,
         }),
       setUpdateNotices: (updateNotices) => set({ updateNotices }),
+      setPriceColorConvention: (priceColorConvention) =>
+        set({
+          priceColorConvention: isPriceColorConvention(priceColorConvention)
+            ? priceColorConvention
+            : PRICE_COLOR_DEFAULT,
+        }),
     }),
     {
       name: DISPLAY_PREFS_STORAGE_KEY,
@@ -339,6 +354,7 @@ export const useDisplayPrefs = create<DisplayPrefsState>()(
         timeFormat: s.timeFormat,
         tradeDateBasis: s.tradeDateBasis,
         updateNotices: s.updateNotices,
+        priceColorConvention: s.priceColorConvention,
       }),
       merge: (persisted, current) => {
         const raw = persisted as (Partial<DisplayPrefsState> & { currency?: string }) | undefined;
@@ -377,6 +393,9 @@ export const useDisplayPrefs = create<DisplayPrefsState>()(
           tradeDateBasis,
           updateNotices:
             typeof raw?.updateNotices === "boolean" ? raw.updateNotices : current.updateNotices,
+          priceColorConvention: isPriceColorConvention(raw?.priceColorConvention)
+            ? raw.priceColorConvention
+            : PRICE_COLOR_DEFAULT,
         };
       },
     },

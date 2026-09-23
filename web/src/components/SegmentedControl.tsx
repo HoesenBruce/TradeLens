@@ -14,12 +14,12 @@ type SegmentTone = "pos" | "neg";
 
 const INDICATOR_TONE: Record<SegmentTone, string> = {
   pos: "bg-profit/15 shadow-xs/5",
-  neg: "bg-destructive/15 shadow-xs/5",
+  neg: "bg-loss/15 shadow-xs/5",
 };
 
 const ACTIVE_TEXT: Record<SegmentTone, string> = {
   pos: "text-profit",
-  neg: "text-destructive",
+  neg: "text-loss",
 };
 
 /** Map product sizes onto coss ToggleGroup sizes. */

@@ -361,7 +361,7 @@ function FillActionToggle({
         "active:scale-[0.98] motion-reduce:active:scale-100",
         isBuy
           ? "border-profit/35 bg-profit/10 text-profit hover:border-profit/50 hover:bg-profit/15 hover:text-profit dark:bg-profit/12"
-          : "border-destructive/35 bg-destructive/10 text-destructive hover:border-destructive/50 hover:bg-destructive/15 hover:text-destructive dark:bg-destructive/12",
+          : "border-loss/35 bg-loss/10 text-loss hover:border-loss/50 hover:bg-loss/15 hover:text-loss dark:bg-loss/12",
       )}
     >
       <AnimatePresence mode="popLayout" initial={false}>

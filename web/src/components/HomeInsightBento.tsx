@@ -18,7 +18,7 @@ export interface HomeInsightBentoProps {
 
 function toneClass(tone?: InsightRow["tone"]): string {
   if (tone === "pos") return "text-profit";
-  if (tone === "neg") return "text-destructive";
+  if (tone === "neg") return "text-loss";
   if (tone === "muted") return "text-muted-foreground";
   return "text-foreground";
 }
@@ -81,8 +81,8 @@ function HeroValue({ row, center = false }: { row: InsightRow; center?: boolean 
           className={cn(
             "text-[43px] font-semibold leading-none tracking-[-0.04em] tabular-nums",
             toneClass(row.tone),
-            row.tone === "pos" && "drop-shadow-[0_0_32px_rgba(74,222,128,0.3)]",
-            row.tone === "neg" && "drop-shadow-[0_0_32px_rgba(251,113,133,0.24)]",
+            row.tone === "pos" && "drop-shadow-[0_0_32px_var(--profit)]",
+            row.tone === "neg" && "drop-shadow-[0_0_32px_var(--loss)]",
           )}
         >
           {row.value}

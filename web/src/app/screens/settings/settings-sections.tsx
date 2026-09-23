@@ -82,6 +82,7 @@ import {
   type TimeFormatPref,
   type TimezonePref,
   type TradeDateBasis,
+  type PriceColorConvention,
   usePrivacyMode,
   useDisplayPrefs,
 } from "@/lib/displayPrefs";
@@ -2217,6 +2218,8 @@ export function GeneralTab() {
   const setTimeFormat = useDisplayPrefs((s) => s.setTimeFormat);
   const tradeDateBasis = useDisplayPrefs((s) => s.tradeDateBasis);
   const setTradeDateBasis = useDisplayPrefs((s) => s.setTradeDateBasis);
+  const priceColorConvention = useDisplayPrefs((s) => s.priceColorConvention);
+  const setPriceColorConvention = useDisplayPrefs((s) => s.setPriceColorConvention);
   const [serverUrl, setServerUrl] = useState(() => editableApiBaseUrl(getCustomApiBaseUrl()));
   const configInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -2294,6 +2297,22 @@ export function GeneralTab() {
               className="w-full"
               wrapperClassName="w-full"
             />
+          </SettingsGroupRow>
+          <SettingsGroupRow label={settingsLabel(locale, "priceColorConvention")}>
+            <NativeSelect
+              value={priceColorConvention}
+              onChange={(e) => setPriceColorConvention(e.target.value as PriceColorConvention)}
+              aria-label={settingsLabel(locale, "priceColorSelector")}
+              className="w-full"
+              wrapperClassName="w-full"
+            >
+              <NativeSelectOption value="green-up-red-down">
+                {settingsLabel(locale, "greenUpRedDown")}
+              </NativeSelectOption>
+              <NativeSelectOption value="red-up-green-down">
+                {settingsLabel(locale, "redUpGreenDown")}
+              </NativeSelectOption>
+            </NativeSelect>
           </SettingsGroupRow>
           <SettingsGroupRow
             label={settingsLabel(locale, "timezone")}

@@ -38,7 +38,10 @@ export function buildHeatmapNodes(
 /** Diverging fill: profit green / loss rose, opacity by |netPnl| vs the largest mover. */
 export function tileStyle(netPnl: number, maxAbs: number): { fill: string; fillOpacity: number } {
   const fillOpacity = 0.25 + 0.6 * Math.min(1, Math.abs(netPnl) / Math.max(1, maxAbs));
-  return { fill: netPnl >= 0 ? "var(--profit)" : "var(--loss)", fillOpacity };
+  return {
+    fill: netPnl > 0 ? "var(--profit)" : netPnl < 0 ? "var(--loss)" : "var(--flat)",
+    fillOpacity,
+  };
 }
 
 export interface HeatCellProps {

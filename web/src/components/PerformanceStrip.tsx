@@ -63,8 +63,8 @@ export function PerformanceStrip({
             className={cn(
               "text-[32px] font-semibold leading-none tracking-[-0.04em] tabular-nums",
               pnlColor(summary.net_pnl),
-              summary.net_pnl > 0 && "drop-shadow-[0_0_28px_rgba(74,222,128,0.28)]",
-              summary.net_pnl < 0 && "drop-shadow-[0_0_28px_rgba(251,113,133,0.22)]",
+              summary.net_pnl > 0 && "drop-shadow-[0_0_28px_var(--profit)]",
+              summary.net_pnl < 0 && "drop-shadow-[0_0_28px_var(--loss)]",
             )}
           >
             {fmtSignedMoney(money(summary.net_pnl), currency, locale)}

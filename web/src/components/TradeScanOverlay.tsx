@@ -115,7 +115,7 @@ function StatusGlyph({ status }: { status: FileStatus }) {
     case "parsing":
       return <Loader2 size={15} className="animate-spin text-muted-foreground" aria-hidden />;
     case "done":
-      return <CheckCircle2 size={17} className="text-profit" aria-hidden />;
+      return <CheckCircle2 size={17} className="text-success" aria-hidden />;
     case "error":
       return <AlertCircle size={17} className="text-destructive" aria-hidden />;
   }
@@ -277,7 +277,7 @@ function ScanBlockSummary({
         <span
           className={cn(
             "rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold",
-            long ? "text-profit" : "text-destructive",
+            long ? "text-profit" : "text-loss",
           )}
         >
           {long ? "Long" : "Short"}
@@ -298,10 +298,7 @@ function ScanBlockSummary({
             <div key={row.key} className="flex items-center gap-2 px-4 py-1">
               <span className="flex flex-1 items-center gap-2">
                 <span
-                  className={cn(
-                    "w-8 text-[12px] font-semibold",
-                    buy ? "text-profit" : "text-destructive",
-                  )}
+                  className={cn("w-8 text-[12px] font-semibold", buy ? "text-profit" : "text-loss")}
                 >
                   {buy ? "Buy" : "Sell"}
                 </span>
@@ -358,7 +355,7 @@ function ScanBlockSummary({
                   {fmtSignedMoney(preview.net, currency, locale)}
                 </span>
                 {preview.closed ? (
-                  <CheckCircle2 size={12} className="text-profit" aria-hidden />
+                  <CheckCircle2 size={12} className="text-success" aria-hidden />
                 ) : null}
               </span>
             ) : (
@@ -537,7 +534,7 @@ export function TradeScanOverlay({
               <span className="flex-1 text-[13px] font-medium text-foreground">
                 {parsedCount === 1 ? "1 file scanned" : `${parsedCount} files scanned`}
               </span>
-              <CheckCircle2 size={17} className="text-profit" aria-hidden />
+              <CheckCircle2 size={17} className="text-success" aria-hidden />
             </motion.div>
           ) : (
             items.map((item, index) => (

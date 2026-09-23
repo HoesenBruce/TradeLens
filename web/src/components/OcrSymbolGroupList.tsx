@@ -124,7 +124,7 @@ export function OcrSymbolGroupList({
                 <Check
                   size={14}
                   strokeWidth={1.5}
-                  className="shrink-0 text-profit"
+                  className="shrink-0 text-success"
                   aria-label="Logged"
                 />
               ) : null}

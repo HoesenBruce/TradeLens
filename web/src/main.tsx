@@ -8,11 +8,18 @@ import { ThemeProvider, THEME_STORAGE_KEY } from "./components/theme-provider";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { I18nProvider } from "./i18n";
 import { initAppUpdates } from "./lib/appUpdate";
+import { useDisplayPrefs } from "./lib/displayPrefs";
 import { pageViewTransitionTypes } from "./lib/pageViewTransition";
 import { routeTree } from "./routeTree.gen";
 import "./global.css";
 
 void initAppUpdates(getSerwist);
+
+function applyPriceColors() {
+  document.documentElement.dataset.priceColor = useDisplayPrefs.getState().priceColorConvention;
+}
+applyPriceColors();
+useDisplayPrefs.subscribe(applyPriceColors);
 
 const queryClient = new QueryClient({
   defaultOptions: {

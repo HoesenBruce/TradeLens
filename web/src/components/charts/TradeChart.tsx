@@ -15,12 +15,13 @@ import type { Execution } from "@/lib/api/types";
 import type { MarketBar, BarInterval } from "@/lib/api/market";
 import { intlLocale } from "@/lib/locale";
 import { cn } from "@/lib/cn";
+import { useDisplayPrefs } from "@/lib/displayPrefs";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { Skeleton } from "@/components/Skeleton";
 import { Button } from "@/components/ui/button";
 import { barsToCandlestickData } from "./barsToCandlestickData";
 import { utcSecToChartTime } from "./chartTime";
-import { BAR_INTERVALS, tradeChartTheme } from "./tradeChartTheme";
+import { BAR_INTERVALS, candleColors, tradeChartTheme } from "./tradeChartTheme";
 
 /** The fill fields the chart draws — synthetic backtest fills qualify too. */
 export type ChartFill = Pick<
@@ -116,6 +117,10 @@ export function TradeChart({
   const { t: tr } = useLinguiMacro();
 
   const locale = intlLocale();
+  const priceColorConvention = useDisplayPrefs((s) => s.priceColorConvention);
+  const { up: upColor, down: downColor } = candleColors(
+    priceColorConvention === "red-up-green-down",
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
@@ -157,12 +162,12 @@ export function TradeChart({
       crosshair: { vertLine: { labelVisible: true }, horzLine: { labelVisible: true } },
     });
     const series = chart.addSeries(CandlestickSeries, {
-      upColor: tradeChartTheme.up,
-      downColor: tradeChartTheme.down,
-      borderUpColor: tradeChartTheme.up,
-      borderDownColor: tradeChartTheme.down,
-      wickUpColor: tradeChartTheme.up,
-      wickDownColor: tradeChartTheme.down,
+      upColor,
+      downColor,
+      borderUpColor: upColor,
+      borderDownColor: downColor,
+      wickUpColor: upColor,
+      wickDownColor: downColor,
       // During replay, scale to the revealed bars only — the full-series
       // default would leak the not-yet-shown price range.
       autoscaleInfoProvider: (
@@ -192,7 +197,7 @@ export function TradeChart({
       seriesRef.current = null;
       setReady(false);
     };
-  }, [height]);
+  }, [height, upColor, downColor]);
 
   useEffect(() => {
     chartRef.current?.applyOptions({ localization: { locale } });
@@ -260,7 +265,7 @@ export function TradeChart({
     if (targetPrice != null) {
       series.createPriceLine({
         price: targetPrice,
-        color: tradeChartTheme.targetLine,
+        color: upColor,
         lineWidth: 1,
         lineStyle: 2,
         axisLabelVisible: true,
@@ -270,7 +275,7 @@ export function TradeChart({
     if (stopPrice != null) {
       series.createPriceLine({
         price: stopPrice,
-        color: tradeChartTheme.stopLine,
+        color: downColor,
         lineWidth: 1,
         lineStyle: 2,
         axisLabelVisible: true,
@@ -321,6 +326,8 @@ export function TradeChart({
     timezone,
     visibleFrom,
     visibleTo,
+    upColor,
+    downColor,
   ]);
 
   return (

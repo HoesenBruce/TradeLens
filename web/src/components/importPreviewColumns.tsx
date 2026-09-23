@@ -20,7 +20,10 @@ function ReturnCell({ value, currency }: { value: number; currency: string }) {
   const locale = intlLocale();
   return (
     <span
-      className={cn("tabular-nums font-semibold", value >= 0 ? "text-profit" : "text-destructive")}
+      className={cn(
+        "tabular-nums font-semibold",
+        value > 0 ? "text-profit" : value < 0 ? "text-loss" : "text-flat",
+      )}
     >
       {fmtSignedMoney(value, currency, locale)}
     </span>

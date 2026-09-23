@@ -100,9 +100,8 @@ export interface CalendarViewProps {
   onOpenDayReview?: (day: string) => void;
 }
 
-/** Softer P&L ink for heatmap cells — teal/rose, less neon than --color-profit/loss. */
 function dayColor(pnl: number): string {
-  return pnl >= 0 ? "rgb(82, 202, 150)" : "rgb(235, 75, 104)";
+  return pnl > 0 ? "var(--profit)" : pnl < 0 ? "var(--loss)" : "var(--flat)";
 }
 
 function todayString(tz?: string): string {
@@ -396,7 +395,7 @@ export function CalendarView({
                 "sm:h-7 sm:px-2.5 sm:text-[13px]",
                 (mode === "month" ? monthPnl : yearPnlTotal) >= 0
                   ? "bg-profit/10 text-profit hover:bg-profit/16"
-                  : "bg-destructive/10 text-destructive hover:bg-destructive/16",
+                  : "bg-loss/10 text-loss hover:bg-loss/16",
               )}
             >
               {fmtSignedMoneyCompact(
@@ -663,7 +662,7 @@ export function CalendarView({
                             ws.hasData &&
                               (ws.pnl >= 0
                                 ? "ring-1 ring-inset ring-profit/30"
-                                : "ring-1 ring-inset ring-destructive/30"),
+                                : "ring-1 ring-inset ring-loss/30"),
                           );
                           const weekStyle = ws.hasData
                             ? { background: pnlBgTint(ws.pnl) }
@@ -884,7 +883,7 @@ function MonthStatChip({
       className={cn(
         "inline-flex items-baseline gap-1.5 rounded-md px-2.5 py-1 text-[11px] tabular-nums",
         tone === "pos" && "bg-profit/10 text-profit",
-        tone === "neg" && "bg-destructive/10 text-destructive",
+        tone === "neg" && "bg-loss/10 text-loss",
         !tone && "bg-muted/60 text-foreground",
       )}
     >

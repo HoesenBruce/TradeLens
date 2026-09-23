@@ -1,6 +1,6 @@
 /** Calendar heatmap wash — TradeZella-style teal/rose with magnitude levels. */
-const PROFIT_WASH = "rgb(82, 202, 150)";
-const LOSS_WASH = "rgb(235, 75, 104)";
+const PROFIT_WASH = "var(--profit)";
+const LOSS_WASH = "var(--loss)";
 
 /**
  * Soft P&L cell wash with multi-level opacity from magnitude.
@@ -43,18 +43,18 @@ export const TINTED_LABEL_SUBTLE = "text-foreground/80 dark:text-foreground/75";
 // Semantic P&L color by sign (green/red on dark, flat for zero).
 export function pnlColor(v: number | null | undefined): string {
   if (v == null || v === 0) return "text-flat";
-  return v > 0 ? "text-profit" : "text-destructive";
+  return v > 0 ? "text-profit" : "text-loss";
 }
 
 export function heroPnlClass(v: number | null | undefined): string {
   const base = "text-[32px] font-semibold leading-none tracking-[-0.03em]";
   if (v == null || v === 0) return `${base} text-flat`;
-  return v > 0 ? `${base} text-profit` : `${base} text-destructive`;
+  return v > 0 ? `${base} text-profit` : `${base} text-loss`;
 }
 
 const BENTO_TONE: Record<string, string> = {
   pos: "text-profit",
-  neg: "text-destructive",
+  neg: "text-loss",
   accent: "text-primary",
   amber: "text-chart-3",
 };

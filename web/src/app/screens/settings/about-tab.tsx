@@ -174,10 +174,13 @@ function ApiHealthStatus({
     <span
       className={cn(
         "inline-flex items-center gap-1.5 text-[12px] font-medium",
-        ok ? "text-profit" : "text-destructive",
+        ok ? "text-success" : "text-destructive",
       )}
     >
-      <span className={cn("size-1.5 rounded-full", ok ? "bg-profit" : "bg-loss")} aria-hidden />
+      <span
+        className={cn("size-1.5 rounded-full", ok ? "bg-success" : "bg-destructive")}
+        aria-hidden
+      />
       {ok ? okLabel : errorLabel}
     </span>
   );
@@ -349,11 +352,11 @@ export function AboutTab() {
             <span
               className={cn(
                 "inline-flex items-center gap-1.5 text-[12px] font-medium",
-                attention ? "text-chart-3" : "text-profit",
+                attention ? "text-chart-3" : "text-success",
               )}
             >
               <span
-                className={cn("size-1.5 rounded-full", attention ? "bg-chart-3" : "bg-profit")}
+                className={cn("size-1.5 rounded-full", attention ? "bg-chart-3" : "bg-success")}
                 aria-hidden
               />
               {updateStatus}

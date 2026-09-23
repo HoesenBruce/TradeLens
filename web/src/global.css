@@ -199,6 +199,16 @@
   --flat: oklch(0.708 0 0);
 }
 
+:root[data-price-color="red-up-green-down"] {
+  --profit: oklch(0.577 0.245 27.325);
+  --loss: oklch(0.55 0.17 145);
+}
+
+:root.dark[data-price-color="red-up-green-down"] {
+  --profit: oklch(0.704 0.191 22.216);
+  --loss: oklch(0.72 0.17 145);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50 tabular-nums box-border;
