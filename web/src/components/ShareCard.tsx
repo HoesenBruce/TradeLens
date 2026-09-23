@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import type { ShareCardData } from "@/lib/shareCard";
+import { BRAND } from "@/lib/brand";
 import { downloadBlob, svgToPngBlob } from "@/lib/svgToPng";
 import { Modal } from "@/components/Modal";
 import { useToastManager } from "@/components/Toast";
@@ -71,7 +72,7 @@ export function ShareCardSvg({
 
       <circle cx={92} cy={84} r={9} fill={CARD.brand} />
       <text x={114} y={93} fontFamily={FONT} fontSize={26} fontWeight={600} fill={CARD.muted}>
-        TraderMemos
+        {BRAND.name}
       </text>
       <text
         x={1120}

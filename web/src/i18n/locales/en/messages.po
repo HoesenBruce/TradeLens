@@ -95,8 +95,8 @@ msgid "It may have expired or been revoked by its owner."
 msgstr "It may have expired or been revoked by its owner."
 
 #: src/app/screens/PublicShareView.tsx:385
-msgid "Journaled with <0>TraderMemos</0> — the self-hosted trading journal"
-msgstr "Journaled with <0>TraderMemos</0> — the self-hosted trading journal"
+msgid "Journaled with <0>{0}</0> — the self-hosted trading journal"
+msgstr "Journaled with <0>{0}</0> — the self-hosted trading journal"
 
 #: src/app/screens/PublicShareView.tsx:255
 msgid "Kelly"
@@ -4322,7 +4322,7 @@ msgstr "{0} accounts"
 #. placeholder {1}: warningToIgnore?.date
 #: src/app/screens/HomeView.tsx:841
 msgid "accounts.ignoreDetails"
-msgstr "{0} has no unadjusted closing price for {1}. TraderMemos will use the previous available market close for this date."
+msgstr "{0} has no unadjusted closing price for {1}. {2} will use the previous available market close for this date."
 
 #. js-lingui-explicit-id
 #. placeholder {0}: res.inserted

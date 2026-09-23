@@ -3,6 +3,7 @@ import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { t as tr } from "@lingui/core/macro";
 import { AlertTriangle, ArrowRight, Plus, TrendingUp, Upload } from "lucide-react";
 import { useMemo, useState } from "react";
+import { BRAND } from "@/lib/brand";
 import {
   Area,
   AreaChart,
@@ -840,7 +841,7 @@ export function HomeView({
             <DialogDescription>
               {tr({
                 id: "accounts.ignoreDetails",
-                message: `${warningToIgnore?.instrument} has no unadjusted closing price for ${warningToIgnore?.date}. TraderMemos will use the previous available market close for this date.`,
+                message: `${warningToIgnore?.instrument} has no unadjusted closing price for ${warningToIgnore?.date}. ${BRAND.name} will use the previous available market close for this date.`,
               })}
             </DialogDescription>
           </DialogHeader>
