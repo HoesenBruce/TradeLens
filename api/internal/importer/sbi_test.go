@@ -64,6 +64,9 @@ func TestSBITradeExecutionCSV(t *testing.T) {
 	require.Zero(t, cashOpen.Fees)
 	require.True(t, marginClose.ExecutedAt.Before(cashOpen.ExecutedAt))
 	require.NotEqual(t, marginClose.DedupKey, cashOpen.DedupKey)
+	require.Equal(t, "position_conversion", marginClose.EventType)
+	require.Equal(t, "genbiki", marginClose.ConversionType)
+	require.Equal(t, marginClose.ConversionID, cashOpen.ConversionID)
 }
 
 func TestSBIRowsUseConfirmedMapping(t *testing.T) {

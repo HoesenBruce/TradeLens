@@ -40,7 +40,13 @@ func SBIMarginAccounting(fills []Execution) AccountingResult {
 		allocatedFees := openFees * fill.Quantity / qty
 		openFees -= allocatedFees
 		qty = remaining
-		if fill.BrokerReportedPnl != nil {
+		if fill.ConversionType == "genbiki" {
+			zeroConversionTrade(result.Trades, fill.ID)
+			result.RealizedCloses = append(result.RealizedCloses, RealizedClose{
+				ExecutionID: fill.ID, Date: fill.ExecutedAt, Pnl: 0,
+				RemainingQty: qty, RemainingCostBasis: entry * qty, Source: "position_conversion",
+			})
+		} else if fill.BrokerReportedPnl != nil {
 			result.RealizedCloses = append(result.RealizedCloses, RealizedClose{
 				ExecutionID: fill.ID, Date: fill.ExecutedAt, Pnl: *fill.BrokerReportedPnl,
 				RemainingQty: qty, Source: "broker_reported",
@@ -67,4 +73,16 @@ func SBIMarginAccounting(fills []Execution) AccountingResult {
 		}
 	}
 	return result
+}
+
+func zeroConversionTrade(trades []Trade, executionID string) {
+	for i := range trades {
+		for _, id := range trades[i].ExecutionIDs {
+			if id == executionID {
+				zero := 0.0
+				trades[i].GrossPnl, trades[i].NetPnl, trades[i].ReturnPct = &zero, &zero, &zero
+				return
+			}
+		}
+	}
 }

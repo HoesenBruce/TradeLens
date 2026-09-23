@@ -42,6 +42,7 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 			Quantity: r.Quantity, Price: r.Price, Fees: r.Fees, Commission: r.Commission,
 			ExecutedAt: r.ExecutedAt, Multiplier: r.Multiplier, LotKey: lot,
 			BrokerReportedPnl: reportedPnlFromDetails(r.Details),
+			ConversionType:    conversionTypeFromDetails(r.Details),
 		})
 	}
 
@@ -52,7 +53,10 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 	upserts := []store.UpsertTradeParams{}
 	links := []store.LinkTradeExecutionParams{}
 	for _, g := range groups {
-		for _, tr := range Account(g, nil).Trades {
+		strategies := map[string]AccountingStrategy{
+			"sbi:cash": SBICashAccounting, "sbi:margin-long": SBIMarginAccounting, "sbi:margin-short": SBIMarginAccounting,
+		}
+		for _, tr := range Account(g, strategies).Trades {
 			id := tr.ExecutionIDs[0] // opening fill = stable id
 			upserts = append(upserts, toUpsertParams(id, userID, accountID, acc.BaseCurrency, tr))
 			for _, eid := range tr.ExecutionIDs {
@@ -85,6 +89,17 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 		s.AfterRegroup(userID, accountID)
 	}
 	return nil
+}
+
+func conversionTypeFromDetails(details sql.NullString) string {
+	if !details.Valid {
+		return ""
+	}
+	var value struct {
+		Type string `json:"conversion_type"`
+	}
+	_ = json.Unmarshal([]byte(details.String), &value)
+	return value.Type
 }
 
 func reportedPnlFromDetails(details sql.NullString) *float64 {

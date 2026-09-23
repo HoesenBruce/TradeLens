@@ -73,6 +73,7 @@ type state struct {
 	basisDay       map[positionKey]string
 	marginOpenings map[positionKey]int
 	marginOpenFees map[positionKey]float64
+	conversions    map[string]float64
 	accounts       map[string]*AccountSnapshot
 	warnings       []Warning
 }
@@ -108,7 +109,8 @@ func ReplayWithSplits(executions []store.Execution, dates []time.Time, splits []
 	s := state{
 		positions: map[positionKey]Position{}, basisDay: map[positionKey]string{},
 		marginOpenings: map[positionKey]int{}, marginOpenFees: map[positionKey]float64{},
-		accounts: map[string]*AccountSnapshot{},
+		conversions: map[string]float64{},
+		accounts:    map[string]*AccountSnapshot{},
 	}
 	out := make([]Snapshot, 0, len(dates))
 	nextExecution := 0
@@ -147,6 +149,7 @@ func (s *state) applySplit(split Split) {
 
 func (s *state) apply(ex store.Execution) {
 	lot := lotFromDetails(ex)
+	conversionType, conversionID := conversionFromDetails(ex)
 	kind := kindFromLot(lot)
 	openingSide := "buy"
 	if kind == MarginShort {
@@ -179,8 +182,20 @@ func (s *state) apply(ex store.Execution) {
 			}
 		}
 		buyCost := ex.Price * ex.Quantity
+		if conversionType == "genbiki" && kind == CashLong {
+			key := ex.AccountID + "|" + conversionID
+			transferred, ok := s.conversions[key]
+			if !ok {
+				s.warn(ex, "invalid_position_conversion", "genbiki source leg is missing")
+				return
+			}
+			buyCost = transferred
+			delete(s.conversions, key)
+		}
 		if sbiCash {
-			buyCost += ex.Fees + ex.Commission
+			if conversionType != "genbiki" {
+				buyCost += ex.Fees + ex.Commission
+			}
 			s.basisDay[key] = tokyoDate(ex.ExecutedAt).Format(time.DateOnly)
 		}
 		position.AverageCost = (position.AverageCost*position.Quantity + buyCost) / (position.Quantity + ex.Quantity)
@@ -190,7 +205,9 @@ func (s *state) apply(ex store.Execution) {
 			s.marginOpenings[key]++
 			s.marginOpenFees[key] += ex.Fees + ex.Commission
 		}
-		s.bookOpen(ex, kind, multiplier, sbiCash)
+		if conversionType != "genbiki" {
+			s.bookOpen(ex, kind, multiplier, sbiCash)
+		}
 		return
 	}
 
@@ -217,7 +234,11 @@ func (s *state) apply(ex store.Execution) {
 	if kind != CashLong && strings.HasPrefix(lot, "sbi:margin-") {
 		openFees := s.marginOpenFees[key] * ex.Quantity / position.Quantity
 		s.marginOpenFees[key] -= openFees
-		if reported := reportedPnlFromDetails(ex); reported != nil {
+		if conversionType == "genbiki" {
+			settlement = 0
+			cashSettlement = -fees
+			s.conversions[ex.AccountID+"|"+conversionID] = position.AverageCost*ex.Quantity*multiplier + openFees + fees
+		} else if reported := reportedPnlFromDetails(ex); reported != nil {
 			settlement = *reported
 			cashSettlement = settlement + openFees // opening fee was paid earlier
 		} else if s.marginOpenings[key] > 1 {
@@ -243,6 +264,18 @@ func (s *state) apply(ex store.Execution) {
 	} else {
 		s.positions[key] = position
 	}
+}
+
+func conversionFromDetails(ex store.Execution) (string, string) {
+	if !ex.Details.Valid {
+		return "", ""
+	}
+	var details struct {
+		Type string `json:"conversion_type"`
+		ID   string `json:"conversion_id"`
+	}
+	_ = json.Unmarshal([]byte(ex.Details.String), &details)
+	return details.Type, details.ID
 }
 
 func reportedPnlFromDetails(ex store.Execution) *float64 {
@@ -284,6 +317,13 @@ func replayTime(ex store.Execution) time.Time {
 		return ex.ExecutedAt
 	}
 	day := tokyoDate(ex.ExecutedAt)
+	conversionType, _ := conversionFromDetails(ex)
+	if conversionType == "genbiki" {
+		if kindFromLot(lotFromDetails(ex)) == CashLong {
+			return day.Add(18 * time.Hour)
+		}
+		return day.Add(12 * time.Hour)
+	}
 	if !opensPosition(ex) {
 		day = day.Add(12 * time.Hour)
 	}

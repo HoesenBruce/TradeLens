@@ -26,3 +26,14 @@ func TestSBIMarginAccountingReportedAndFallback(t *testing.T) {
 	require.Equal(t, 9000.0, result.RealizedCloses[0].Pnl)
 	require.Equal(t, "calculated_single_opening", result.RealizedCloses[0].Source)
 }
+
+func TestSBIMarginAccountingGenbikiRealizesZero(t *testing.T) {
+	open := ex("open", "buy", 100, 1000, "2026-09-01T01:00:00Z", 1)
+	close := ex("close", "sell", 100, 1090, "2026-09-03T01:00:00Z", 1)
+	open.LotKey, close.LotKey = "sbi:margin-long", "sbi:margin-long"
+	close.Fees, close.ConversionType = 500, "genbiki"
+	result := SBIMarginAccounting([]Execution{open, close})
+	require.Equal(t, 0.0, result.RealizedCloses[0].Pnl)
+	require.Equal(t, "position_conversion", result.RealizedCloses[0].Source)
+	require.Equal(t, 0.0, *result.Trades[0].NetPnl)
+}
