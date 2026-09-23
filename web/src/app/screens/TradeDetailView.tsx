@@ -1,3 +1,6 @@
+import { emotionLabel, sessionLabel } from "@/lib/tradeLabels";
+import { useLingui } from "@lingui/react";
+import { t as tr } from "@lingui/core/macro";
 import { ArrowLeft, Loader2, MoreVertical, Pencil, RefreshCw, Share2, Trash2 } from "lucide-react";
 import {
   forwardRef,
@@ -93,13 +96,13 @@ function coachToneClass(tone: CoachTone): string {
 function coachToneLabel(tone: CoachTone): string {
   switch (tone) {
     case "neg":
-      return "Issue";
+      return tr({ id: "trades.issue", message: "Issue" });
     case "warn":
-      return "Watch";
+      return tr({ id: "trades.watch", message: "Watch" });
     case "pos":
-      return "Strength";
+      return tr({ id: "trades.strength", message: "Strength" });
     default:
-      return "Tip";
+      return tr({ id: "trades.tip", message: "Tip" });
   }
 }
 
@@ -130,10 +133,11 @@ function TradeCoachNotes({ notes }: { notes: TradeCoachNote[] }) {
  * explain, this concludes.
  */
 function TradeCoachNextAction({ action }: { action: string }) {
+  useLingui();
   return (
     <div className="rounded-lg bg-primary/10 px-3 py-2.5">
       <p className="m-0 text-[11px] font-semibold uppercase tracking-widest text-primary">
-        Next action
+        {tr({ id: "trades.nextAction", message: "Next action" })}
       </p>
       <p className="m-0 mt-1.5 text-[13px] leading-relaxed text-foreground">{action}</p>
     </div>
@@ -153,6 +157,7 @@ function toCoachNotes(
 }
 
 function TradeCoachPanel({ trade, insights }: { trade: TradeDetail; insights: TradeInsights }) {
+  useLingui();
   const [open, setOpen] = useState(true);
   const ruleNotes = generateTradeCoachNotes(trade, insights);
   const coach = useTradeCoach(trade.id);
@@ -193,7 +198,7 @@ function TradeCoachPanel({ trade, insights }: { trade: TradeDetail; insights: Tr
     coach.data?.source === "error"
       ? coach.data.error
       : coach.isError
-        ? "Could not reach the coach API"
+        ? tr({ id: "trades.coachUnavailable", message: "Could not reach the coach API" })
         : undefined;
 
   return (
@@ -201,12 +206,14 @@ function TradeCoachPanel({ trade, insights }: { trade: TradeDetail; insights: Tr
       <Collapsible open={open} onOpenChange={setOpen}>
         <CollapsibleTrigger
           className="w-full items-center justify-between gap-4 px-4 py-3"
-          aria-label="Coach"
+          aria-label={tr({ id: "trades.coach", message: "Coach" })}
         >
           <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
             {/* Same type as a Card title — Coach is a card block that happens to
                 collapse, not a differently-branded panel. */}
-            <h2 className="shrink-0 text-xs font-medium text-muted-foreground">Coach</h2>
+            <h2 className="shrink-0 text-xs font-medium text-muted-foreground">
+              {tr({ id: "trades.coach", message: "Coach" })}
+            </h2>
             {hasGenerated ? (
               <span
                 className={cn(
@@ -214,7 +221,7 @@ function TradeCoachPanel({ trade, insights }: { trade: TradeDetail; insights: Tr
                   usingLlm ? "bg-primary/10 text-primary" : "bg-sidebar text-muted-foreground",
                 )}
               >
-                {usingLlm ? "AI" : "Rules"}
+                {usingLlm ? "AI" : tr({ id: "trades.rules", message: "Rules" })}
               </span>
             ) : null}
             {!open && collapsedSummary ? (
@@ -229,20 +236,33 @@ function TradeCoachPanel({ trade, insights }: { trade: TradeDetail; insights: Tr
               <div className="flex items-center justify-between gap-2">
                 <p className="m-0 min-w-0 flex-1 text-[11px] text-muted-foreground">
                   {coach.isPending
-                    ? "Asking the coach…"
+                    ? tr({ id: "trades.askingCoach", message: "Asking the coach…" })
                     : usingLlm
                       ? (savedLabel ?? "Generated from this trade via your coach model")
                       : errorMsg
-                        ? "Showing rule-based notes — AI unavailable"
+                        ? tr({
+                            id: "trades.coachFallback",
+                            message: "Showing rule-based notes — AI unavailable",
+                          })
                         : hasGenerated
-                          ? "Rule-based notes — AI coach returned nothing useful"
-                          : "Rule-based notes — click Ask AI for model coaching"}
+                          ? tr({
+                              id: "trades.coachEmpty",
+                              message: "Rule-based notes — AI coach returned nothing useful",
+                            })
+                          : tr({
+                              id: "trades.coachRules",
+                              message: "Rule-based notes — click Ask AI for model coaching",
+                            })}
                 </p>
                 <Button
                   type="button"
                   variant={hasGenerated ? "ghost" : "soft"}
                   size="sm"
-                  aria-label={hasGenerated ? "Regenerate AI coach" : "Ask AI coach"}
+                  aria-label={
+                    hasGenerated
+                      ? tr({ id: "trades.regenerateCoach", message: "Regenerate AI coach" })
+                      : tr({ id: "trades.askCoach", message: "Ask AI coach" })
+                  }
                   disabled={coach.isPending}
                   onClick={(e) => {
                     e.preventDefault();
@@ -255,7 +275,11 @@ function TradeCoachPanel({ trade, insights }: { trade: TradeDetail; insights: Tr
                   ) : hasGenerated ? (
                     <RefreshCw aria-hidden />
                   ) : null}
-                  {coach.isPending ? "Generating…" : hasGenerated ? "Regenerate" : "Ask AI"}
+                  {coach.isPending
+                    ? tr({ id: "trades.generating", message: "Generating…" })
+                    : hasGenerated
+                      ? tr({ id: "trades.regenerate", message: "Regenerate" })
+                      : tr({ id: "trades.askAi", message: "Ask AI" })}
                 </Button>
               </div>
             ) : null}
@@ -476,6 +500,7 @@ function JournalReadOnlyView({
   currency: string;
   children?: ReactNode;
 }) {
+  useLingui();
   const hydrated = hydrateJournalForm(form);
   const setupGrade = gradeFromInt(
     hydrated.confidence ? Number.parseInt(hydrated.confidence, 10) : null,
@@ -500,41 +525,48 @@ function JournalReadOnlyView({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <p className={fieldLabelClass}>Setups</p>
+        <p className={fieldLabelClass}>{tr({ id: "trades.setups", message: "Setups" })}</p>
         {selectedSetups.length === 0 ? (
           dash
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {selectedSetups.map((s, idx) => (
               <Pill key={s.id} tone="accent">
-                {idx === 0 ? `${s.name} · main` : s.name}
+                {idx === 0 ? tr({ id: "trades.mainSetup", message: `${s.name} · main` }) : s.name}
               </Pill>
             ))}
           </div>
         )}
       </div>
 
-      <JournalReadOnlyField label="Session">
-        {hydrated.session.trim() ? hydrated.session : dash}
+      <JournalReadOnlyField label={tr({ id: "trades.session", message: "Session" })}>
+        {hydrated.session.trim() ? sessionLabel(hydrated.session) : dash}
       </JournalReadOnlyField>
 
-      <JournalReadOnlyField label="Emotion">
-        {hydrated.emotional_state.trim() ? hydrated.emotional_state : dash}
+      <JournalReadOnlyField label={tr({ id: "trades.emotion", message: "Emotion" })}>
+        {hydrated.emotional_state.trim()
+          ? hydrated.emotional_state
+              .split(",")
+              .map((value) => emotionLabel(value.trim()))
+              .join(", ")
+          : dash}
       </JournalReadOnlyField>
 
       <div className="grid grid-cols-3 gap-3">
-        <JournalReadOnlyField label="Initial risk">
+        <JournalReadOnlyField label={tr({ id: "trades.initialRisk", message: "Initial risk" })}>
           {moneyField(hydrated.initial_risk)}
         </JournalReadOnlyField>
-        <JournalReadOnlyField label="Target">
+        <JournalReadOnlyField label={tr({ id: "trades.target", message: "Target" })}>
           {moneyField(hydrated.target_price)}
         </JournalReadOnlyField>
-        <JournalReadOnlyField label="Stop">{moneyField(hydrated.stop_price)}</JournalReadOnlyField>
+        <JournalReadOnlyField label={tr({ id: "trades.stop", message: "Stop" })}>
+          {moneyField(hydrated.stop_price)}
+        </JournalReadOnlyField>
       </div>
 
       {selectedCustom.length > 0 && (
         <div>
-          <p className={fieldLabelClass}>Tags</p>
+          <p className={fieldLabelClass}>{tr({ id: "trades.tags", message: "Tags" })}</p>
           <div className="flex flex-wrap gap-1.5">
             {selectedCustom.map((t) => (
               <Pill key={t.id} tone="muted">
@@ -547,7 +579,9 @@ function JournalReadOnlyView({
 
       {selectedMistake.length > 0 && (
         <div>
-          <p className={fieldLabelClass}>Mistake type</p>
+          <p className={fieldLabelClass}>
+            {tr({ id: "trades.mistakeType", message: "Mistake type" })}
+          </p>
           <div className="flex flex-wrap gap-1.5">
             {selectedMistake.map((t) => (
               <Pill key={t.id} tone="neg">
@@ -561,31 +595,37 @@ function JournalReadOnlyView({
       {(setupGrade || execGrade) && (
         <div className="flex flex-wrap gap-3">
           {setupGrade ? (
-            <JournalReadOnlyField label="Setup rating">
+            <JournalReadOnlyField label={tr({ id: "trades.setupRating", message: "Setup rating" })}>
               <Pill tone="accent">{setupGrade}</Pill>
             </JournalReadOnlyField>
           ) : null}
           {execGrade ? (
-            <JournalReadOnlyField label="Execution rating">
+            <JournalReadOnlyField
+              label={tr({ id: "trades.executionRating", message: "Execution rating" })}
+            >
               <Pill tone="accent">{execGrade}</Pill>
             </JournalReadOnlyField>
           ) : null}
         </div>
       )}
 
-      <JournalReadOnlyField label="Entry reason">
+      <JournalReadOnlyField label={tr({ id: "trades.entryReason", message: "Entry reason" })}>
         {textBlock(hydrated.entry_reason)}
       </JournalReadOnlyField>
-      <JournalReadOnlyField label="Exit reason">
+      <JournalReadOnlyField label={tr({ id: "trades.exitReason", message: "Exit reason" })}>
         {textBlock(hydrated.exit_reason)}
       </JournalReadOnlyField>
-      <JournalReadOnlyField label="Review notes">
+      <JournalReadOnlyField label={tr({ id: "trades.reviewNotes", message: "Review notes" })}>
         {textBlock(hydrated.review_notes)}
       </JournalReadOnlyField>
 
       <div className="grid grid-cols-2 gap-3">
-        <JournalReadOnlyField label="MAE ($)">{moneyField(hydrated.mae)}</JournalReadOnlyField>
-        <JournalReadOnlyField label="MFE ($)">{moneyField(hydrated.mfe)}</JournalReadOnlyField>
+        <JournalReadOnlyField label={tr({ id: "trades.mae", message: "MAE ($)" })}>
+          {moneyField(hydrated.mae)}
+        </JournalReadOnlyField>
+        <JournalReadOnlyField label={tr({ id: "trades.mfe", message: "MFE ($)" })}>
+          {moneyField(hydrated.mfe)}
+        </JournalReadOnlyField>
       </div>
 
       {children}
@@ -609,6 +649,7 @@ export const JournalPanel = forwardRef<JournalPanelHandle, JournalPanelProps>(fu
   },
   ref,
 ) {
+  useLingui();
   const seeded = hydrateJournalForm(initialState);
   const [form, setForm] = useState<JournalFormState>(seeded);
 
@@ -735,25 +776,34 @@ export const JournalPanel = forwardRef<JournalPanelHandle, JournalPanelProps>(fu
     <div className="flex flex-col gap-4">
       {draftRestored && (
         <div className="flex items-center justify-between gap-3 rounded-md bg-accent px-3 py-2">
-          <span className="text-[11px] text-muted-foreground">Unsaved draft restored.</span>
+          <span className="text-[11px] text-muted-foreground">
+            {tr({ id: "trades.draftRestored", message: "Unsaved draft restored." })}
+          </span>
           <Button
             type="button"
             variant="link"
             onClick={discardDraft}
             className="h-auto text-[11px]"
           >
-            Discard draft
+            {tr({ id: "trades.discardDraft", message: "Discard draft" })}
           </Button>
         </div>
       )}
 
       <div>
-        <p className={fieldLabelClass}>Setups (select multiple)</p>
+        <p className={fieldLabelClass}>
+          {tr({ id: "trades.multiSetups", message: "Setups (select multiple)" })}
+        </p>
         <p className="mb-2 text-[10px] text-muted-foreground">
-          First selected setup becomes the main setup.
+          {tr({
+            id: "trades.primarySetupHint",
+            message: "First selected setup becomes the main setup.",
+          })}
         </p>
         {setups.length === 0 ? (
-          <p className="text-[11px] text-muted-foreground">No setups yet.</p>
+          <p className="text-[11px] text-muted-foreground">
+            {tr({ id: "trades.noSetups", message: "No setups yet." })}
+          </p>
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {setups.map((s) => {
@@ -761,7 +811,9 @@ export const JournalPanel = forwardRef<JournalPanelHandle, JournalPanelProps>(fu
               const on = idx >= 0;
               return (
                 <ToneToggle key={s.id} pressed={on} onPressedChange={() => toggleSetup(s.id)}>
-                  {on && idx === 0 ? `${s.name} · main` : s.name}
+                  {on && idx === 0
+                    ? tr({ id: "trades.mainSetup", message: `${s.name} · main` })
+                    : s.name}
                 </ToneToggle>
               );
             })}
@@ -770,7 +822,7 @@ export const JournalPanel = forwardRef<JournalPanelHandle, JournalPanelProps>(fu
       </div>
 
       <div>
-        <p className={fieldLabelClass}>Session</p>
+        <p className={fieldLabelClass}>{tr({ id: "trades.session", message: "Session" })}</p>
         <div className="flex flex-wrap gap-1.5">
           {TRADE_SESSIONS.map((s) => {
             const on = form.session === s;
@@ -781,29 +833,32 @@ export const JournalPanel = forwardRef<JournalPanelHandle, JournalPanelProps>(fu
                 onPressedChange={() => setForm((f) => ({ ...f, session: on ? "" : s }))}
                 aria-label={`Session ${s}`}
               >
-                {s}
+                {sessionLabel(s)}
               </ToneToggle>
             );
           })}
         </div>
       </div>
 
-      <Field label="Emotion" htmlFor="trade-emotion">
+      <Field label={tr({ id: "trades.emotion", message: "Emotion" })} htmlFor="trade-emotion">
         <OptionsSelect
           id="trade-emotion"
           value={form.emotional_state}
           onValueChange={(emotional_state) => setForm((f) => ({ ...f, emotional_state }))}
           options={[
-            { value: "", label: "Not set" },
-            ...EMOTIONAL_STATES.map((s) => ({ value: s, label: s })),
+            { value: "", label: tr({ id: "trades.notSet", message: "Not set" }) },
+            ...EMOTIONAL_STATES.map((s) => ({ value: s, label: emotionLabel(s) })),
           ]}
-          ariaLabel="Emotion"
+          ariaLabel={tr({ id: "trades.emotion", message: "Emotion" })}
           triggerClassName="h-9 text-[12px]"
         />
       </Field>
 
       <div className="grid grid-cols-3 gap-3">
-        <Field label="Initial risk" htmlFor="trade-risk">
+        <Field
+          label={tr({ id: "trades.initialRisk", message: "Initial risk" })}
+          htmlFor="trade-risk"
+        >
           <AmountInput
             id="trade-risk"
             value={form.initial_risk}
@@ -811,26 +866,26 @@ export const JournalPanel = forwardRef<JournalPanelHandle, JournalPanelProps>(fu
             placeholder="0.00"
           />
         </Field>
-        <Field label="Target" htmlFor="trade-target">
+        <Field label={tr({ id: "trades.target", message: "Target" })} htmlFor="trade-target">
           <AmountInput
             id="trade-target"
             value={form.target_price}
             onValueChange={(target_price) => setForm((f) => ({ ...f, target_price }))}
-            placeholder="Target"
+            placeholder={tr({ id: "trades.target", message: "Target" })}
           />
         </Field>
-        <Field label="Stop" htmlFor="trade-stop">
+        <Field label={tr({ id: "trades.stop", message: "Stop" })} htmlFor="trade-stop">
           <AmountInput
             id="trade-stop"
             value={form.stop_price}
             onValueChange={(stop_price) => setForm((f) => ({ ...f, stop_price }))}
-            placeholder="Stop"
+            placeholder={tr({ id: "trades.stop", message: "Stop" })}
           />
         </Field>
       </div>
 
       {customTags.length > 0 && (
-        <Field label="Tags">
+        <Field label={tr({ id: "trades.tags", message: "Tags" })}>
           <TagChipGroup
             tags={customTags}
             selected={form.tag_ids}
@@ -841,7 +896,7 @@ export const JournalPanel = forwardRef<JournalPanelHandle, JournalPanelProps>(fu
       )}
 
       {mistakeTags.length > 0 && (
-        <Field label="Mistake type">
+        <Field label={tr({ id: "trades.mistakeType", message: "Mistake type" })}>
           <TagChipGroup
             tags={mistakeTags}
             selected={form.tag_ids}
@@ -852,64 +907,79 @@ export const JournalPanel = forwardRef<JournalPanelHandle, JournalPanelProps>(fu
       )}
 
       <RatingField
-        label="Setup rating"
-        hint="Rate the setup itself — ignore PnL and emotion."
+        label={tr({ id: "trades.setupRating", message: "Setup rating" })}
+        hint={tr({
+          id: "trades.setupRatingHint",
+          message: "Rate the setup itself — ignore PnL and emotion.",
+        })}
         value={form.confidence}
         onChange={(confidence) => setForm((f) => ({ ...f, confidence }))}
       />
       <RatingField
-        label="Execution rating"
-        hint="Rate your execution — patience, timing, stop discipline."
+        label={tr({ id: "trades.executionRating", message: "Execution rating" })}
+        hint={tr({
+          id: "trades.executionRatingHint",
+          message: "Rate your execution — patience, timing, stop discipline.",
+        })}
         value={form.trade_quality}
         onChange={(trade_quality) => setForm((f) => ({ ...f, trade_quality }))}
       />
 
-      <Field label="Entry reason" htmlFor="trade-entry-reason">
+      <Field
+        label={tr({ id: "trades.entryReason", message: "Entry reason" })}
+        htmlFor="trade-entry-reason"
+      >
         <FormTextarea
           id="trade-entry-reason"
           value={form.entry_reason}
           onChange={(e) => setForm((f) => ({ ...f, entry_reason: e.target.value }))}
           rows={2}
-          placeholder="Why did you enter?"
+          placeholder={tr({ id: "trades.entryReasonHint", message: "Why did you enter?" })}
         />
       </Field>
 
-      <Field label="Exit reason" htmlFor="trade-exit-reason">
+      <Field
+        label={tr({ id: "trades.exitReason", message: "Exit reason" })}
+        htmlFor="trade-exit-reason"
+      >
         <FormTextarea
           id="trade-exit-reason"
           value={form.exit_reason}
           onChange={(e) => setForm((f) => ({ ...f, exit_reason: e.target.value }))}
           rows={2}
-          placeholder="Why did you exit?"
+          placeholder={tr({ id: "trades.exitReasonHint", message: "Why did you exit?" })}
         />
       </Field>
 
-      <Field label="Review notes" htmlFor="trade-review-notes">
+      <Field
+        label={tr({ id: "trades.reviewNotes", message: "Review notes" })}
+        htmlFor="trade-review-notes"
+      >
         <FormTextarea
           id="trade-review-notes"
           value={form.review_notes}
           onChange={(e) => setForm((f) => ({ ...f, review_notes: e.target.value }))}
           rows={3}
-          placeholder="What would you do differently?"
+          placeholder={tr({ id: "trades.reviewHint", message: "What would you do differently?" })}
         />
       </Field>
 
       <div className="grid grid-cols-2 gap-3">
-        <Field label="MAE ($)" htmlFor="trade-mae">
+        <Field label={tr({ id: "trades.mae", message: "MAE ($)" })} htmlFor="trade-mae">
           <AmountInput
             id="trade-mae"
             value={form.mae}
             onValueChange={(mae) => setForm((f) => ({ ...f, mae }))}
-            placeholder="Max adverse"
+            placeholder={tr({ id: "trades.maxAdverse", message: "Max adverse" })}
             allowNegative
           />
         </Field>
-        <Field label="MFE ($)" htmlFor="trade-mfe">
+        <Field label={tr({ id: "trades.mfe", message: "MFE ($)" })} htmlFor="trade-mfe">
           <AmountInput
             id="trade-mfe"
             value={form.mfe}
             onValueChange={(mfe) => setForm((f) => ({ ...f, mfe }))}
-            placeholder="Max favorable"
+            placeholder={tr({ id: "trades.maxFavorable", message: "Max favorable" })}
             allowNegative
           />
         </Field>
@@ -925,7 +995,9 @@ export const JournalPanel = forwardRef<JournalPanelHandle, JournalPanelProps>(fu
           disabled={saving}
           className="h-9 w-full"
         >
-          {saving ? "Saving..." : "Save"}
+          {saving
+            ? tr({ id: "trades.saving", message: "Saving..." })
+            : tr({ id: "trades.save", message: "Save" })}
         </Button>
       )}
     </div>
@@ -955,6 +1027,7 @@ export function TradeDetailView({
   onDelete,
   deleting = false,
 }: TradeDetailViewProps) {
+  useLingui();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [typedConfirm, setTypedConfirm] = useState("");
@@ -984,8 +1057,11 @@ export function TradeDetailView({
     return (
       <Page fill className="items-center justify-center">
         <EmptyState
-          title="Trade not found"
-          hint="This trade may have been deleted or the ID is invalid."
+          title={tr({ id: "trades.tradeMissing", message: "Trade not found" })}
+          hint={tr({
+            id: "trades.tradeMissingHint",
+            message: "This trade may have been deleted or the ID is invalid.",
+          })}
         />
       </Page>
     );
@@ -1001,14 +1077,17 @@ export function TradeDetailView({
       onSuccess: (res) => {
         const bars = res.interval === "D" ? "daily" : `${res.interval}-minute`;
         toast.add({
-          title: "Excursion updated",
+          title: tr({ id: "trades.excursionUpdated", message: "Excursion updated" }),
           description: `MAE/MFE computed from ${res.bars_used} ${bars} bars.`,
         });
       },
       onError: (err) => {
         toast.add({
-          title: "Could not compute MAE/MFE",
-          description: err instanceof Error ? err.message : "Market data unavailable.",
+          title: tr({ id: "trades.excursionFailed", message: "Could not compute MAE/MFE" }),
+          description:
+            err instanceof Error
+              ? err.message
+              : tr({ id: "trades.marketUnavailable", message: "Market data unavailable." }),
         });
       },
     });
@@ -1030,7 +1109,7 @@ export function TradeDetailView({
             className="h-auto gap-1 self-start px-0 text-xs hover:bg-transparent"
           >
             <ArrowLeft size={13} strokeWidth={1.5} />
-            Back to trades
+            {tr({ id: "trades.backTrades", message: "Back to trades" })}
           </Button>
         ) : (
           <span />
@@ -1049,12 +1128,12 @@ export function TradeDetailView({
               disabled={deleting}
             >
               <Pencil size={14} strokeWidth={1.5} aria-hidden />
-              Edit trade
+              {tr({ id: "trades.editTrade", message: "Edit trade" })}
             </Button>
           )}
           <DropdownMenu>
             <DropdownMenuTrigger
-              aria-label="Trade actions"
+              aria-label={tr({ id: "trades.tradeActions", message: "Trade actions" })}
               disabled={deleting}
               className={cn(
                 "flex size-8 cursor-pointer items-center justify-center rounded-md border-none bg-transparent",
@@ -1068,12 +1147,12 @@ export function TradeDetailView({
             <DropdownMenuContent align="end" side="bottom" sideOffset={4} className="p-1">
               <DropdownMenuItem onClick={() => setShareOpen(true)}>
                 <Share2 size={14} strokeWidth={1.5} aria-hidden />
-                Share card
+                {tr({ id: "trades.shareCard", message: "Share card" })}
               </DropdownMenuItem>
               {onDelete ? (
                 <DropdownMenuItem variant="destructive" onClick={() => setDeleteOpen(true)}>
                   <Trash2 size={14} strokeWidth={1.5} aria-hidden />
-                  Remove trade
+                  {tr({ id: "trades.removeTrade", message: "Remove trade" })}
                 </DropdownMenuItem>
               ) : null}
             </DropdownMenuContent>
@@ -1085,7 +1164,7 @@ export function TradeDetailView({
         <Modal
           open={deleteOpen}
           onOpenChange={closeDeleteModal}
-          title={`Remove ${trade.symbol}?`}
+          title={tr({ id: "trades.removeSymbolConfirm", message: `Remove ${trade.symbol}?` })}
           className="max-w-[min(336px,94vw)]"
           footer={
             <>
@@ -1095,7 +1174,7 @@ export function TradeDetailView({
                 disabled={deleting}
                 onClick={() => closeDeleteModal(false)}
               >
-                Cancel
+                {tr({ id: "trades.cancel", message: "Cancel" })}
               </Button>
               <Button
                 type="button"
@@ -1106,20 +1185,26 @@ export function TradeDetailView({
                 }}
                 className="border-transparent bg-destructive/15 hover:bg-destructive/25"
               >
-                {deleting ? "Removing…" : "Remove trade"}
+                {deleting
+                  ? tr({ id: "trades.removing", message: "Removing…" })
+                  : tr({ id: "trades.removeTrade", message: "Remove trade" })}
               </Button>
             </>
           }
         >
           <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-            Permanently deletes this trade and all of its fills. This cannot be undone.
+            {tr({
+              id: "trades.removeWarning",
+              message:
+                "Permanently deletes this trade and all of its fills. This cannot be undone.",
+            })}
           </p>
           <div>
             <label
               htmlFor={confirmInputId}
               className="mb-1.5 block text-[11px] text-muted-foreground"
             >
-              Type <span className="font-medium text-foreground">{trade.symbol}</span> to confirm
+              {tr({ id: "trades.confirmSymbol", message: `Type ${trade.symbol} to confirm` })}
             </label>
             <FormInput
               id={confirmInputId}
@@ -1128,7 +1213,10 @@ export function TradeDetailView({
               autoFocus
               autoComplete="off"
               spellCheck={false}
-              aria-label={`Type ${trade.symbol} to confirm`}
+              aria-label={tr({
+                id: "trades.typeSymbolConfirm",
+                message: `Type ${trade.symbol} to confirm`,
+              })}
             />
           </div>
         </Modal>
@@ -1164,7 +1252,13 @@ export function TradeDetailView({
 
       <TradeCoachPanel trade={trade} insights={insights} />
 
-      <Card title="Screenshots" description="Charts and fills attached to this trade.">
+      <Card
+        title={tr({ id: "trades.screenshots", message: "Screenshots" })}
+        description={tr({
+          id: "trades.screenshotsHint",
+          message: "Charts and fills attached to this trade.",
+        })}
+      >
         <TradeScreenshotsSection tradeId={trade.id} />
       </Card>
     </Page>
@@ -1206,8 +1300,8 @@ function TradeScreenshotsSection({ tradeId }: { tradeId: string }) {
       uploading={uploading}
       disabled={remove.isPending}
       maxCount={maxScreenshots}
-      addLabel="Add screenshots"
-      addDescription="PNG, JPG, WebP · click to browse"
+      addLabel={tr({ id: "trades.addShots", message: "Add screenshots" })}
+      addDescription={tr({ id: "trades.shotFormats", message: "PNG, JPG, WebP · click to browse" })}
     />
   );
 }

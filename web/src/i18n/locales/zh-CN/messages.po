@@ -1182,3 +1182,2140 @@ msgstr "发生了什么？"
 #: src/app/screens/NewsView.tsx:302
 msgid "news.notesHint"
 msgstr "为什么值得关注？"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(fee, currency, locale)
+#: src/components/TradeExecutionsCard.tsx:221
+msgid "trades.feeAmount"
+msgstr " · 费用 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtQty(position)
+#: src/components/TradeExecutionsCard.tsx:227
+msgid "trades.heldQuantity"
+msgstr " · 持仓 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: s.name
+#: src/app/screens/TradeDetailView.tsx:535
+#: src/app/screens/TradeDetailView.tsx:815
+msgid "trades.mainSetup"
+msgstr "{0} · 主策略"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtDateTime(trade.opened_at)
+#: src/components/TradeDetailSheet.tsx:307
+msgid "trades.stillOpen"
+msgstr "{0} · 持仓中"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fmtMoney(totalFees, currency, locale)
+#: src/components/TradeExecutionsCard.tsx:170
+msgid "trades.feesAmount"
+msgstr "费用 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: (insights.feeDragPct * 100).toFixed(1)
+#: src/components/TradeSummaryCard.tsx:221
+msgid "trades.grossPercent"
+msgstr "占毛盈亏 {0}%"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:153
+msgid "trades.amountRequired"
+msgstr "请输入{label}"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:156
+msgid "trades.amountPositive"
+msgstr "{label}必须大于 0"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:165
+msgid "trades.amountNonnegative"
+msgstr "{label}不能小于 0"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:778
+msgid "trades.longChoice"
+msgstr "↗ 做多"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:779
+msgid "trades.shortChoice"
+msgstr "↘ 做空"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2097
+msgid "trades.account"
+msgstr "账户"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1515
+msgid "trades.accountRequired"
+msgstr "请选择账户。"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:220
+#: src/components/TradeResultPreview.tsx:385
+msgid "trades.accountPnl"
+msgstr "账户盈亏"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:902
+#: src/app/drawers/NewTradeDrawer.tsx:937
+msgid "trades.action"
+msgstr "操作"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/components/TradeRowMenu.tsx:93
+msgid "trades.actionsForSymbol"
+msgstr "操作：{0}"
+
+#. js-lingui-explicit-id
+#: src/lib/newTradeFormSchema.ts:226
+msgid "trades.symbolAtLeastOne"
+msgstr "请至少添加一个标的。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1526
+#: src/lib/newTradeFormSchema.ts:220
+#: src/lib/newTradeFormSchema.ts:235
+msgid "trades.fillRequired"
+msgstr "请至少添加一条有效成交记录。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1125
+msgid "trades.addExecutionRow"
+msgstr "添加成交：标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:231
+#: src/components/TradesFilters.tsx:235
+#: src/components/TradesFilters.tsx:239
+msgid "trades.addFilter"
+msgstr "添加筛选"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2067
+msgid "trades.newHint"
+msgstr "添加一个或多个标的，分别填写成交、日志与可选分红。保存后每个标的单独记录为一笔交易。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:122
+msgid "trades.addPlan"
+msgstr "添加计划"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1303
+#: src/components/JournalScreenshotUpload.tsx:131
+msgid "trades.addShots"
+msgstr "添加截图"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2256
+msgid "trades.addSymbol"
+msgstr "添加标的"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:181
+msgid "trades.afterFees"
+msgstr "扣除费用后"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:178
+#: src/components/TradeResultPreview.tsx:381
+msgid "trades.afterSave"
+msgstr "保存后"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:355
+msgid "trades.allClosed"
+msgstr "全部已平仓"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1622
+msgid "trades.allFillsRemoved"
+msgstr "所有成交已移除，已返回交易列表。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:906
+#: src/app/drawers/NewTradeDrawer.tsx:1031
+msgid "trades.amount"
+msgstr "金额"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1399
+msgid "trades.currencyAmount"
+msgstr "金额（{currency}）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1040
+msgid "trades.rowAmountEmpty"
+msgstr "金额：标的 {0}，行 {1}：空"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:9
+msgid "trades.anxious"
+msgstr "焦虑"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2323
+msgid "trades.apply"
+msgstr "应用"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:23
+msgid "trades.asia"
+msgstr "亚洲"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:282
+msgid "trades.askAi"
+msgstr "咨询 AI"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:264
+msgid "trades.askCoach"
+msgstr "咨询 AI 教练"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:239
+msgid "trades.askingCoach"
+msgstr "正在咨询教练…"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:253
+msgid "trades.autoBars"
+msgstr "从行情自动计算"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:144
+msgid "trades.autoExcursion"
+msgstr "从行情自动计算 MAE/MFE"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:212
+msgid "trades.avgEntry"
+msgstr "平均入场价格"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:223
+msgid "trades.avgExit"
+msgstr "平均出场价格"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:79
+msgid "trades.avgEntryShort"
+msgstr "平均入场价"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:82
+msgid "trades.avgExitShort"
+msgstr "平均出场价"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1112
+msgid "trades.backTrades"
+msgstr "返回交易列表"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:213
+#: src/components/TradeResultPreview.tsx:410
+msgid "trades.balance"
+msgstr "余额"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:295
+msgid "trades.batchResult"
+msgstr "批量结果"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:48
+msgid "trades.statusBe"
+msgstr "盈亏平衡"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:14
+msgid "trades.bored"
+msgstr "无聊"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:145
+#: src/components/TradeDetailSheet.tsx:299
+#: src/components/TradeListItem.tsx:179
+#: src/components/TradeSummaryCard.tsx:107
+msgid "trades.breakEven"
+msgstr "盈亏平衡"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:180
+msgid "trades.breakeven"
+msgstr "盈亏平衡"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:431
+msgid "trades.buy"
+msgstr "买入"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:384
+#: src/components/TradeExecutionsCard.tsx:79
+#: src/components/TradeExecutionsCard.tsx:201
+msgid "trades.buyUpper"
+msgstr "买入"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:6
+msgid "trades.calm"
+msgstr "平静"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2310
+#: src/app/screens/TradeDetailView.tsx:1177
+#: src/components/TradeDetailSheet.tsx:200
+#: src/components/TradeRowMenu.tsx:167
+msgid "trades.cancel"
+msgstr "取消"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:274
+msgid "trades.capture"
+msgstr "获利捕获率"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1257
+msgid "trades.screenshotsHint"
+msgstr "此交易附带的图表与成交截图。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2299
+msgid "trades.clear"
+msgstr "清空"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:302
+msgid "trades.clearFilters"
+msgstr "清除筛选"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:58
+msgid "trades.clipboardBlocked"
+msgstr "剪贴板访问被阻止"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2043
+#: src/components/TradeDetailSheet.tsx:149
+msgid "trades.close"
+msgstr "关闭"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:406
+msgid "trades.closeColumn"
+msgstr "平仓"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:408
+#: src/components/tradeColumns.tsx:505
+#: src/components/tradeColumns.tsx:543
+msgid "trades.closeDate"
+msgstr "平仓日期"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:339
+msgid "trades.closedLower"
+msgstr "已平仓"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:111
+#: src/components/TradeResultPreview.tsx:347
+msgid "trades.closed"
+msgstr "已平仓"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:209
+#: src/app/screens/TradeDetailView.tsx:215
+msgid "trades.coach"
+msgstr "教练"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:143
+#: src/components/TradePlanCard.tsx:250
+msgid "trades.computing"
+msgstr "计算中…"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:8
+msgid "trades.confident"
+msgstr "自信"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:718
+msgid "trades.contract"
+msgstr "合约"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:720
+msgid "trades.contractSymbol"
+msgstr "合约：标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:52
+msgid "trades.copied"
+msgstr "已复制"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:128
+msgid "trades.copySymbol"
+msgstr "复制代码"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1086
+msgid "trades.excursionFailed"
+msgstr "无法计算 MAE/MFE"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:57
+msgid "trades.copyFailed"
+msgstr "无法复制"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:167
+msgid "trades.detailFailed"
+msgstr "无法加载交易详情。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2079
+msgid "trades.editLoadFailed"
+msgstr "无法加载待编辑的交易。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1719
+msgid "trades.logFailed"
+msgstr "无法记录交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:201
+msgid "trades.coachUnavailable"
+msgstr "无法连接教练 API"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:94
+#: src/components/TradeRowMenu.tsx:79
+msgid "trades.removeFailed"
+msgstr "无法删除交易"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1644
+msgid "trades.updateFailed"
+msgstr "无法更新交易"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:395
+#: src/components/tradeColumns.tsx:504
+#: src/components/tradeColumns.tsx:542
+msgid "trades.createdAt"
+msgstr "开仓时间"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:28
+#: src/lib/tradeLabels.ts:35
+msgid "trades.crypto"
+msgstr "加密资产"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:729
+msgid "trades.custom"
+msgstr "自定义"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1412
+#: src/components/tradeColumns.tsx:393
+msgid "trades.date"
+msgstr "日期"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:903
+#: src/app/drawers/NewTradeDrawer.tsx:955
+msgid "trades.dateTime"
+msgstr "日期 / 时间"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:409
+msgid "trades.closedDateHint"
+msgstr "平仓日期（最后活动）"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:396
+msgid "trades.openedDate"
+msgstr "开仓日期"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:963
+msgid "trades.rowDateTime"
+msgstr "日期时间：标的 {0}，行 {1}"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:301
+msgid "trades.dipAfter"
+msgstr "出场后下跌"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:162
+#: src/components/tradeColumns.tsx:164
+#: src/components/tradeColumns.tsx:508
+#: src/components/tradeColumns.tsx:530
+msgid "trades.direction"
+msgstr "方向"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:165
+msgid "trades.directionHint"
+msgstr "方向：多/空；期权显示 LC/LP/SC/SP"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:788
+msgid "trades.discardDraft"
+msgstr "丢弃草稿"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:429
+msgid "trades.dividend"
+msgstr "分红"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1402
+msgid "trades.dividendAmountField"
+msgstr "分红金额{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1414
+msgid "trades.dividendDateField"
+msgstr "分红日期{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1425
+msgid "trades.dividendNoteField"
+msgstr "分红备注{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:232
+msgid "trades.dividends"
+msgstr "股息"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:63
+msgid "trades.editJournal"
+msgstr "编辑日志"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:164
+msgid "trades.editPlan"
+msgstr "编辑计划"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1131
+msgid "trades.editTrade"
+msgstr "编辑交易"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1976
+#: src/app/drawers/NewTradeDrawer.tsx:1978
+msgid "trades.editTradeTitle"
+msgstr "编辑交易"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1238
+#: src/app/screens/TradeDetailView.tsx:546
+#: src/app/screens/TradeDetailView.tsx:843
+#: src/app/screens/TradeDetailView.tsx:852
+msgid "trades.emotion"
+msgstr "情绪"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1245
+msgid "trades.emotionField"
+msgstr "情绪{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:208
+#: src/components/tradeColumns.tsx:211
+#: src/components/tradeColumns.tsx:511
+#: src/components/tradeColumns.tsx:533
+#: src/components/TradeDetailSheet.tsx:358
+#: src/components/TradeSummaryCard.tsx:194
+msgid "trades.entry"
+msgstr "入场"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1318
+#: src/app/screens/TradeDetailView.tsx:612
+#: src/app/screens/TradeDetailView.tsx:929
+#: src/components/TradeJournalCard.tsx:122
+msgid "trades.entryReason"
+msgstr "入场原因"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1322
+msgid "trades.entryReasonField"
+msgstr "入场理由{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:233
+#: src/components/tradeColumns.tsx:236
+#: src/components/tradeColumns.tsx:513
+#: src/components/tradeColumns.tsx:535
+msgid "trades.entryTotal"
+msgstr "入场总额"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:237
+msgid "trades.entryTotalHint"
+msgstr "入场总额 = 数量 × 平均入场价 × 合约乘数"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:85
+#: src/components/TradeResultPreview.tsx:188
+#: src/components/TradeResultPreview.tsx:308
+msgid "trades.estimatedPnl"
+msgstr "预计盈亏"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:239
+msgid "trades.excursion"
+msgstr "价格波动"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1080
+msgid "trades.excursionUpdated"
+msgstr "浮动盈亏已更新"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:110
+msgid "trades.exec"
+msgstr "执行"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:152
+msgid "trades.executed"
+msgstr "成交时间"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1308
+#: src/app/screens/TradeDetailView.tsx:604
+#: src/app/screens/TradeDetailView.tsx:919
+msgid "trades.executionRating"
+msgstr "执行评分"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:145
+msgid "trades.executionScoreHint"
+msgstr "执行评分：基于自动计算的入场回撤和最大浮盈捕获率"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:894
+msgid "trades.executions"
+msgstr "成交记录"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: block.symbol
+#: src/app/drawers/NewTradeDrawer.tsx:893
+msgid "trades.executionsSymbol"
+msgstr "成交记录 · {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.fills.length
+#: src/components/TradeDetailSheet.tsx:414
+msgid "trades.fillTitle"
+msgstr "成交记录（{0}）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: fills.length
+#: src/components/TradeExecutionsCard.tsx:165
+msgid "trades.executionsCount"
+msgstr "成交记录（{0}）"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:219
+#: src/components/tradeColumns.tsx:222
+#: src/components/tradeColumns.tsx:512
+#: src/components/tradeColumns.tsx:534
+#: src/components/TradeDetailSheet.tsx:362
+#: src/components/TradeSummaryCard.tsx:197
+msgid "trades.exit"
+msgstr "出场"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1334
+#: src/app/screens/TradeDetailView.tsx:615
+#: src/app/screens/TradeDetailView.tsx:942
+#: src/components/TradeJournalCard.tsx:127
+msgid "trades.exitReason"
+msgstr "出场原因"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1338
+msgid "trades.exitReasonField"
+msgstr "出场理由{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:260
+#: src/components/tradeColumns.tsx:263
+#: src/components/tradeColumns.tsx:514
+#: src/components/tradeColumns.tsx:536
+msgid "trades.exitTotal"
+msgstr "出场总额"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:264
+msgid "trades.exitTotalHint"
+msgstr "出场总额 = 数量 × 平均出场价 × 合约乘数"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:845
+msgid "trades.expiry"
+msgstr "到期日"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:847
+msgid "trades.expirySymbol"
+msgstr "到期日：标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:266
+msgid "trades.loadFailed"
+msgstr "无法加载交易，请检查连接后重试。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:10
+msgid "trades.fearful"
+msgstr "恐惧"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:907
+#: src/app/drawers/NewTradeDrawer.tsx:1047
+#: src/app/drawers/NewTradeDrawer.tsx:1056
+#: src/app/drawers/NewTradeDrawer.tsx:1068
+#: src/components/TradeDetailSheet.tsx:449
+msgid "trades.fee"
+msgstr "费用"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index ? ` symbol ${index + 1}` : ""
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1062
+msgid "trades.rowFee"
+msgstr "费用{0}，行 {1}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:345
+#: src/components/tradeColumns.tsx:348
+#: src/components/tradeColumns.tsx:517
+#: src/components/tradeColumns.tsx:539
+#: src/components/TradeDetailSheet.tsx:352
+#: src/components/TradeDetailSheet.tsx:383
+#: src/components/TradeExecutionsCard.tsx:119
+#: src/components/TradeResultPreview.tsx:344
+#: src/components/TradeSummaryCard.tsx:216
+msgid "trades.fees"
+msgstr "费用"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:97
+msgid "trades.fillPrice"
+msgstr "成交价格"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1621
+msgid "trades.fillsSaved"
+msgstr "成交记录和日志已保存。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: block.rows.length
+#: src/app/drawers/NewTradeDrawer.tsx:630
+msgid "trades.fillCount"
+msgstr "成交：{0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/components/TradeRowMenu.tsx:137
+msgid "trades.filterSymbol"
+msgstr "按代码 {0} 筛选"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:798
+msgid "trades.primarySetupHint"
+msgstr "首个选择的策略将作为主策略。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:7
+msgid "trades.focused"
+msgstr "专注"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:12
+msgid "trades.fomo"
+msgstr "害怕错过"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:30
+#: src/lib/tradeLabels.ts:38
+msgid "trades.forex"
+msgstr "外汇"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:29
+#: src/lib/tradeLabels.ts:36
+#: src/lib/tradeLabels.ts:37
+msgid "trades.futures"
+msgstr "期货"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:279
+msgid "trades.generating"
+msgstr "生成中…"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:11
+msgid "trades.greedy"
+msgstr "贪婪"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:350
+#: src/components/TradeSummaryCard.tsx:210
+msgid "trades.gross"
+msgstr "毛盈亏"
+
+#. js-lingui-explicit-id
+#: src/components/TradeListItem.tsx:243
+msgid "trades.hasNotes"
+msgstr "包含笔记"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:325
+#: src/components/tradeColumns.tsx:328
+#: src/components/tradeColumns.tsx:516
+#: src/components/tradeColumns.tsx:538
+#: src/components/TradeDetailSheet.tsx:379
+#: src/components/TradeSummaryCard.tsx:206
+msgid "trades.hold"
+msgstr "持仓时长"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:281
+msgid "trades.emptyHint"
+msgstr "导入券商历史记录或记录首笔交易，开始跟踪表现。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:252
+msgid "trades.importCsv"
+msgstr "导入 CSV"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2175
+msgid "trades.importFile"
+msgstr "导入文件"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2057
+msgid "trades.importPreviewHint"
+msgstr "导入预览：核对成交并设置看涨/看跌。应用将更新本行，确认导入后写入账户。"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:241
+msgid "trades.inclDividends"
+msgstr "含股息"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:95
+msgid "trades.includesAll"
+msgstr "包含全部"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:556
+#: src/app/screens/TradeDetailView.tsx:859
+msgid "trades.initialRisk"
+msgstr "初始风险"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:183
+msgid "trades.instrumentType"
+msgstr "品种类型"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:99
+msgid "trades.is"
+msgstr "是"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:87
+#: src/components/TradesFilters.tsx:93
+msgid "trades.anyOf"
+msgstr "是其中任一项"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:100
+msgid "trades.isNot"
+msgstr "不是"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:88
+#: src/components/TradesFilters.tsx:94
+msgid "trades.notAnyOf"
+msgstr "不是其中任一项"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:99
+msgid "trades.issue"
+msgstr "问题"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:411
+#: src/components/TradeJournalCard.tsx:70
+#: src/components/TradeJournalCard.tsx:84
+msgid "trades.journal"
+msgstr "交易日志"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:284
+msgid "trades.leftOnTable"
+msgstr "未捕获利润"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2075
+#: src/app/drawers/NewTradeDrawer.tsx:2083
+msgid "trades.loading"
+msgstr "正在加载交易…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:256
+msgid "trades.logTrade"
+msgstr "记录交易"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:24
+msgid "trades.london"
+msgstr "伦敦"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:628
+#: src/lib/tradeLabels.ts:67
+msgid "trades.long"
+msgstr "做多"
+
+#. js-lingui-explicit-id
+#: src/components/TradeListItem.tsx:103
+#: src/components/TradeSummaryCard.tsx:89
+msgid "trades.longUpper"
+msgstr "做多"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:56
+msgid "trades.longCall"
+msgstr "买入看涨期权"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:58
+msgid "trades.longPut"
+msgstr "买入看跌期权"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:143
+msgid "trades.loss"
+msgstr "亏损"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:46
+msgid "trades.statusLoss"
+msgstr "亏损"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:80
+msgid "trades.losses"
+msgstr "亏损"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:623
+#: src/app/screens/TradeDetailView.tsx:968
+msgid "trades.mae"
+msgstr "最大浮亏 ($)"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:683
+#: src/components/tradeColumns.tsx:180
+#: src/components/tradeColumns.tsx:182
+#: src/components/tradeColumns.tsx:509
+#: src/components/tradeColumns.tsx:531
+#: src/components/TradesFilters.tsx:133
+msgid "trades.market"
+msgstr "市场"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1090
+msgid "trades.marketUnavailable"
+msgstr "行情数据不可用。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:685
+msgid "trades.marketSymbol"
+msgstr "市场：标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:973
+msgid "trades.maxAdverse"
+msgstr "最大浮亏"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:982
+msgid "trades.maxFavorable"
+msgstr "最大浮盈"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:626
+#: src/app/screens/TradeDetailView.tsx:977
+msgid "trades.mfe"
+msgstr "最大浮盈 ($)"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1275
+#: src/app/screens/TradeDetailView.tsx:583
+#: src/app/screens/TradeDetailView.tsx:899
+msgid "trades.mistakeType"
+msgstr "错误类型"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1282
+msgid "trades.mistakesField"
+msgstr "错误类型{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:798
+msgid "trades.multiplier"
+msgstr "乘数"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:800
+msgid "trades.multiplierSymbol"
+msgstr "乘数：标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:360
+msgid "trades.netPnl"
+msgstr "净盈亏"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:424
+msgid "trades.riskHint"
+msgstr "净盈亏 ÷ 计划风险（初始风险）"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:160
+msgid "trades.netAfterFees"
+msgstr "扣除费用后的净盈亏"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:375
+msgid "trades.pnlPercentHint"
+msgstr "净盈亏占入场总额的百分比"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1979
+msgid "trades.newTradeTitle"
+msgstr "新建交易"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:25
+msgid "trades.nyAm"
+msgstr "纽约上午"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:26
+msgid "trades.nyPm"
+msgstr "纽约下午"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:140
+msgid "trades.nextAction"
+msgstr "下一步行动"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:418
+#: src/components/TradeExecutionsCard.tsx:183
+msgid "trades.noFills"
+msgstr "尚无成交记录。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1257
+msgid "trades.noEmotions"
+msgstr "没有匹配的情绪。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1294
+msgid "trades.noMistakes"
+msgstr "没有匹配的错误类型。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1207
+msgid "trades.noMatchingSetups"
+msgstr "没有匹配的策略。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1269
+msgid "trades.noTags"
+msgstr "没有匹配的标签。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:128
+msgid "trades.emptyPlan"
+msgstr "尚无计划。添加止损、目标或风险金额，以 R 衡量交易。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2007
+msgid "trades.noTemplates"
+msgstr "尚无已保存模板"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:316
+msgid "trades.noScreenshots"
+msgstr "尚无截图"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1228
+msgid "trades.noSession"
+msgstr "未设置时段"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1183
+msgid "trades.noSetupsPlaybook"
+msgstr "尚无策略，请先在策略库中创建。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:805
+msgid "trades.noSetups"
+msgstr "尚无交易策略。"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:241
+msgid "trades.noSymbols"
+msgstr "未找到代码。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:292
+msgid "trades.noMatches"
+msgstr "没有符合筛选条件的交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:280
+msgid "trades.empty"
+msgstr "尚无交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:849
+msgid "trades.notSet"
+msgstr "未设置"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1423
+msgid "trades.note"
+msgstr "备注"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:462
+#: src/components/TradeJournalCard.tsx:138
+msgid "trades.notes"
+msgstr "笔记"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:73
+msgid "trades.emptyJournal"
+msgstr "尚未记录，请趁记忆清晰写下入场和出场原因。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:275
+msgid "trades.ofMfe"
+msgstr "占 MFE"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1216
+msgid "trades.oneSession"
+msgstr "每笔交易一个时段。"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:144
+#: src/components/TradesFilters.tsx:81
+msgid "trades.open"
+msgstr "持仓中"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:47
+msgid "trades.statusOpen"
+msgstr "持仓中"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:111
+msgid "trades.openDrawer"
+msgstr "打开侧栏"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:145
+#: src/components/TradeRowMenu.tsx:120
+msgid "trades.openFull"
+msgstr "打开完整页面"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:27
+#: src/lib/tradeLabels.ts:34
+msgid "trades.option"
+msgstr "期权"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:64
+msgid "trades.missingRight"
+msgstr "期权：未设置看涨/看跌"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:812
+msgid "trades.optionRightSymbol"
+msgstr "期权类型：标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:874
+#: src/app/drawers/NewTradeDrawer.tsx:883
+#: src/app/drawers/NewTradeDrawer.tsx:1431
+msgid "trades.optional"
+msgstr "选填"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1276
+msgid "trades.mistakeHint"
+msgstr "可选，选择适用的项目。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1391
+msgid "trades.dividendHint"
+msgstr "此标的的可选分红，计入交易盈亏（空头计为支出）。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:16
+msgid "trades.overconfident"
+msgstr "过度自信"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:908
+#: src/app/drawers/NewTradeDrawer.tsx:1075
+#: src/components/tradeColumns.tsx:356
+#: src/components/tradeColumns.tsx:359
+#: src/components/tradeColumns.tsx:518
+#: src/components/tradeColumns.tsx:540
+msgid "trades.pnl"
+msgstr "盈亏"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:371
+#: src/components/tradeColumns.tsx:374
+#: src/components/tradeColumns.tsx:519
+#: src/components/tradeColumns.tsx:541
+msgid "trades.pnlPercent"
+msgstr "盈亏率"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1084
+msgid "trades.rowPnlEmpty"
+msgstr "盈亏：标的 {0}，行 {1}：空"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1196
+#: src/components/TradeDetailSheet.tsx:217
+#: src/components/TradeRowMenu.tsx:184
+msgid "trades.removeWarning"
+msgstr "永久删除此交易及其全部成交记录，此操作无法撤销。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:118
+#: src/components/TradePlanCard.tsx:160
+msgid "trades.planActual"
+msgstr "计划与实际"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:200
+#: src/components/TradePlanCard.tsx:213
+msgid "trades.planned"
+msgstr "计划值"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:185
+msgid "trades.plannedRR"
+msgstr "计划盈亏比"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:132
+msgid "trades.shotFormatsShort"
+msgstr "PNG、JPG · 点击浏览"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1304
+msgid "trades.shotFormats"
+msgstr "PNG、JPG、WebP · 点击浏览"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:135
+msgid "trades.pos"
+msgstr "持仓"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:297
+#: src/components/tradeColumns.tsx:300
+#: src/components/tradeColumns.tsx:515
+#: src/components/tradeColumns.tsx:537
+#: src/components/TradeResultPreview.tsx:105
+msgid "trades.position"
+msgstr "持仓"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:139
+msgid "trades.positionAfterFill"
+msgstr "本次成交后的持仓"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:301
+msgid "trades.openPosition"
+msgstr "未平仓数量"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:300
+msgid "trades.postMae"
+msgstr "出场后 MAE"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:291
+msgid "trades.postMfe"
+msgstr "出场后 MFE"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2165
+msgid "trades.prefillFile"
+msgstr "从 CSV 或 JSON 文件预填交易"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2127
+msgid "trades.prefillScreenshot"
+msgstr "从截图预填交易"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:905
+#: src/app/drawers/NewTradeDrawer.tsx:1003
+#: src/app/drawers/NewTradeDrawer.tsx:1012
+#: src/app/drawers/NewTradeDrawer.tsx:1024
+#: src/components/TradeExecutionsCard.tsx:93
+msgid "trades.price"
+msgstr "价格"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index ? ` symbol ${index + 1}` : ""
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1018
+msgid "trades.rowPrice"
+msgstr "价格{0}，行 {1}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:904
+#: src/app/drawers/NewTradeDrawer.tsx:975
+#: src/app/drawers/NewTradeDrawer.tsx:984
+#: src/app/drawers/NewTradeDrawer.tsx:996
+#: src/components/tradeColumns.tsx:510
+#: src/components/tradeColumns.tsx:532
+#: src/components/TradeDetailSheet.tsx:377
+#: src/components/TradeExecutionsCard.tsx:87
+msgid "trades.qty"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:110
+msgid "trades.fillValueHint"
+msgstr "数量 × 价格 × 合约乘数"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:260
+msgid "trades.amountCalc"
+msgstr "数量 × 价格 × 乘数"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index ? ` symbol ${index + 1}` : ""
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:990
+msgid "trades.rowQty"
+msgstr "数量{0}，行 {1}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:193
+#: src/components/tradeColumns.tsx:196
+msgid "trades.quantity"
+msgstr "数量"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:197
+msgid "trades.quantityOpened"
+msgstr "开仓数量"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:911
+msgid "trades.setupRatingHint"
+msgstr "评价策略本身，不考虑盈亏和情绪。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1300
+msgid "trades.rateSetup"
+msgstr "评价策略本身，不考虑盈亏和情绪。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:920
+msgid "trades.executionRatingHint"
+msgstr "评价执行质量：耐心、时机及止损纪律。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1309
+msgid "trades.rateExecution"
+msgstr "评价执行情况：耐心、时机与止损纪律。"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:472
+msgid "trades.readMore"
+msgstr "阅读更多"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:176
+msgid "trades.realizedR"
+msgstr "已实现 R = 净盈亏 ÷ 计划风险"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:252
+msgid "trades.recompute"
+msgstr "从行情重新计算"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:281
+msgid "trades.regenerate"
+msgstr "重新生成"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:263
+msgid "trades.regenerateCoach"
+msgstr "重新生成 AI 指导"
+
+#. js-lingui-explicit-id
+#: src/components/TradeRowMenu.tsx:149
+msgid "trades.remove"
+msgstr "移除"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/app/screens/TradeDetailView.tsx:1167
+#: src/components/TradeDetailSheet.tsx:190
+#: src/components/TradeRowMenu.tsx:157
+msgid "trades.removeSymbolConfirm"
+msgstr "删除 {0}?"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:1095
+msgid "trades.removeRow"
+msgstr "移除成交：标的 {0}，行 {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:671
+msgid "trades.removeSymbol"
+msgstr "移除标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1155
+#: src/app/screens/TradeDetailView.tsx:1190
+#: src/components/TradeDetailSheet.tsx:182
+#: src/components/TradeDetailSheet.tsx:211
+#: src/components/TradeRowMenu.tsx:178
+msgid "trades.removeTrade"
+msgstr "删除交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1189
+#: src/components/TradeDetailSheet.tsx:210
+#: src/components/TradeRowMenu.tsx:177
+msgid "trades.removing"
+msgstr "正在删除…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:218
+msgid "trades.reset"
+msgstr "重置"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:219
+#: src/components/TradeResultPreview.tsx:69
+msgid "trades.result"
+msgstr "结果"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:273
+msgid "trades.retry"
+msgstr "重试"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:13
+msgid "trades.revenge"
+msgstr "报复交易"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1350
+#: src/app/screens/TradeDetailView.tsx:618
+#: src/app/screens/TradeDetailView.tsx:955
+#: src/components/TradeJournalCard.tsx:132
+msgid "trades.reviewNotes"
+msgstr "复盘笔记"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1354
+msgid "trades.reviewField"
+msgstr "复盘笔记{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:205
+msgid "trades.reward"
+msgstr "收益"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:810
+msgid "trades.right"
+msgstr "期权类型"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:195
+#: src/components/TradeResultPreview.tsx:73
+#: src/components/TradeResultPreview.tsx:182
+#: src/components/TradeResultPreview.tsx:299
+msgid "trades.risk"
+msgstr "风险"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:248
+msgid "trades.coachEmpty"
+msgstr "AI 教练未返回有效内容，显示规则建议"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:252
+msgid "trades.coachRules"
+msgstr "当前为规则建议，点击咨询 AI 获取模型指导"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:224
+msgid "trades.rules"
+msgstr "规则"
+
+#. js-lingui-explicit-id
+#: src/components/TradePlanCard.tsx:292
+msgid "trades.runAfter"
+msgstr "出场后上涨"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2326
+#: src/app/screens/TradeDetailView.tsx:1000
+msgid "trades.save"
+msgstr "保存"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2325
+msgid "trades.saveChanges"
+msgstr "保存修改"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1641
+#: src/app/drawers/NewTradeDrawer.tsx:1716
+msgid "trades.saveFailed"
+msgstr "保存失败"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2037
+msgid "trades.saveTemplate"
+msgstr "将首个标的保存为模板…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:999
+msgid "trades.saving"
+msgstr "正在保存…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2144
+msgid "trades.scanFill"
+msgstr "扫描填入"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1366
+#: src/app/screens/TradeDetailView.tsx:1256
+msgid "trades.screenshots"
+msgstr "截图"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: screenshotFiles.length
+#: src/app/drawers/NewTradeDrawer.tsx:1163
+msgid "trades.shotCount"
+msgstr "截图：{0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1253
+msgid "trades.searchEmotions"
+msgstr "搜索情绪…"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:240
+msgid "trades.searchFilters"
+msgstr "搜索筛选…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1290
+msgid "trades.searchMistakes"
+msgstr "搜索错误类型…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1203
+msgid "trades.searchSetups"
+msgstr "搜索策略…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1268
+msgid "trades.searchTags"
+msgstr "搜索标签…"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2169
+msgid "trades.selectFile"
+msgstr "选择成交记录的 CSV 或 JSON 文件"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1192
+msgid "trades.setupSelectHint"
+msgstr "选择适用策略，第一项将作为主策略。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1252
+msgid "trades.selectEmotions"
+msgstr "选择情绪"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1239
+msgid "trades.emotionSelectHint"
+msgstr "选择交易中出现的所有情绪。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1289
+msgid "trades.selectMistakes"
+msgstr "选择错误类型"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2133
+msgid "trades.selectScreenshots"
+msgstr "选择一张或多张截图"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1202
+msgid "trades.selectSetups"
+msgstr "选择策略"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1267
+msgid "trades.selectTags"
+msgstr "选择标签"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:432
+msgid "trades.sell"
+msgstr "卖出"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:385
+#: src/components/TradeExecutionsCard.tsx:80
+#: src/components/TradeExecutionsCard.tsx:202
+msgid "trades.sellUpper"
+msgstr "卖出"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1215
+#: src/app/screens/TradeDetailView.tsx:542
+#: src/app/screens/TradeDetailView.tsx:825
+msgid "trades.session"
+msgstr "交易时段"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1221
+msgid "trades.sessionField"
+msgstr "时段{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/DirCell.tsx:53
+msgid "trades.setRight"
+msgstr "请在编辑中设置看涨或看跌"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2137
+msgid "trades.scanSetup"
+msgstr "扫描前请先在设置中配置截图扫描"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:398
+#: src/components/TradeJournalCard.tsx:105
+msgid "trades.setup"
+msgstr "交易策略"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1299
+#: src/app/screens/TradeDetailView.tsx:598
+#: src/app/screens/TradeDetailView.tsx:910
+msgid "trades.setupRating"
+msgstr "策略评分"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1180
+#: src/app/drawers/NewTradeDrawer.tsx:1191
+#: src/app/screens/TradeDetailView.tsx:528
+msgid "trades.setups"
+msgstr "交易策略"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:795
+msgid "trades.multiSetups"
+msgstr "交易策略（可多选）"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: block.setupIds.length
+#: src/app/drawers/NewTradeDrawer.tsx:1156
+msgid "trades.setupCount"
+msgstr "策略：{0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1198
+msgid "trades.setupsField"
+msgstr "策略{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1150
+msgid "trades.shareCard"
+msgstr "分享卡片"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:629
+#: src/lib/tradeLabels.ts:68
+msgid "trades.short"
+msgstr "做空"
+
+#. js-lingui-explicit-id
+#: src/components/TradeListItem.tsx:104
+#: src/components/TradeSummaryCard.tsx:90
+msgid "trades.shortUpper"
+msgstr "做空"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:60
+msgid "trades.shortCall"
+msgstr "卖出看涨期权"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:62
+msgid "trades.shortPut"
+msgstr "卖出看跌期权"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:243
+msgid "trades.coachFallback"
+msgstr "AI 不可用，显示规则建议"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:772
+#: src/components/TradeExecutionsCard.tsx:75
+msgid "trades.side"
+msgstr "买卖方向"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:774
+msgid "trades.sideSymbol"
+msgstr "方向：标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:201
+msgid "trades.size"
+msgstr "规模"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:133
+#: src/components/tradeColumns.tsx:135
+#: src/components/tradeColumns.tsx:507
+#: src/components/tradeColumns.tsx:529
+#: src/components/TradesFilters.tsx:121
+msgid "trades.status"
+msgstr "状态"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:26
+#: src/lib/tradeLabels.ts:33
+msgid "trades.stock"
+msgstr "股票"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:126
+#: src/components/tradeColumns.tsx:127
+#: src/components/tradeColumns.tsx:528
+msgid "trades.stockName"
+msgstr "股票名称"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:878
+#: src/app/screens/TradeDetailView.tsx:562
+#: src/app/screens/TradeDetailView.tsx:877
+#: src/app/screens/TradeDetailView.tsx:882
+#: src/components/TradePlanCard.tsx:173
+msgid "trades.stop"
+msgstr "止损价"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:880
+msgid "trades.stopSymbol"
+msgstr "止损：标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:103
+msgid "trades.strength"
+msgstr "优势"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:830
+msgid "trades.strike"
+msgstr "行权价"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:832
+msgid "trades.strikeSymbol"
+msgstr "行权价：标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:754
+#: src/components/tradeColumns.tsx:116
+#: src/components/tradeColumns.tsx:117
+#: src/components/tradeColumns.tsx:506
+#: src/components/tradeColumns.tsx:527
+#: src/components/TradesFilters.tsx:106
+msgid "trades.symbol"
+msgstr "代码"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:661
+msgid "trades.symbolIndex"
+msgstr "标的 {0}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:657
+msgid "trades.symbolSummary"
+msgstr "标的 {0} · {collapsedSummary}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:749
+#: src/lib/newTradeFormSchema.ts:147
+#: src/lib/newTradeFormSchema.ts:234
+#: src/lib/newTradeFormSchema.ts:242
+msgid "trades.symbolRequired"
+msgstr "请输入代码。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:642
+msgid "trades.symbolTrade"
+msgstr "标的交易 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:758
+msgid "trades.symbolField"
+msgstr "代码{suffix}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeResultPreview.tsx:334
+msgid "trades.symbols"
+msgstr "标的"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: Object.keys(bySymbol).length || tradeIds.length
+#: src/app/drawers/NewTradeDrawer.tsx:1702
+msgid "trades.savedSymbols"
+msgstr "已保存标的：{0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1261
+#: src/app/screens/TradeDetailView.tsx:569
+#: src/app/screens/TradeDetailView.tsx:888
+#: src/components/tradeColumns.tsx:448
+#: src/components/tradeColumns.tsx:451
+#: src/components/tradeColumns.tsx:545
+#: src/components/TradesFilters.tsx:145
+msgid "trades.tags"
+msgstr "标签"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1263
+msgid "trades.tagsField"
+msgstr "标签{suffix}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:866
+#: src/app/screens/TradeDetailView.tsx:559
+#: src/app/screens/TradeDetailView.tsx:869
+#: src/app/screens/TradeDetailView.tsx:874
+#: src/components/TradePlanCard.tsx:176
+msgid "trades.target"
+msgstr "目标价"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:868
+msgid "trades.targetSymbol"
+msgstr "目标：标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1986
+#: src/app/drawers/NewTradeDrawer.tsx:1996
+msgid "trades.templates"
+msgstr "模板"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1061
+msgid "trades.tradeMissingHint"
+msgstr "此交易可能已删除，或 ID 无效。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:766
+msgid "trades.ticker"
+msgstr "代码"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:151
+msgid "trades.time"
+msgstr "时间"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:329
+msgid "trades.holdHint"
+msgstr "交易持仓时长"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:105
+msgid "trades.tip"
+msgstr "建议"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:15
+msgid "trades.tired"
+msgstr "疲惫"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#. placeholder {1}: rowIndex + 1
+#: src/app/drawers/NewTradeDrawer.tsx:942
+msgid "trades.toggleRowAction"
+msgstr "切换买卖：标的 {0}，行 {1}"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: index + 1
+#: src/app/drawers/NewTradeDrawer.tsx:649
+msgid "trades.toggleSymbol"
+msgstr "展开或收起标的 {0}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeSummaryCard.tsx:240
+msgid "trades.total"
+msgstr "合计"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:349
+msgid "trades.feesHint"
+msgstr "费用与佣金合计"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:132
+msgid "trades.trade"
+msgstr "交易"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1136
+msgid "trades.tradeActions"
+msgstr "交易操作"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:1060
+msgid "trades.tradeMissing"
+msgstr "未找到交易"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:87
+#: src/components/TradeRowMenu.tsx:72
+msgid "trades.removed"
+msgstr "交易已删除"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:136
+msgid "trades.tradeResult"
+msgstr "交易结果"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1535
+msgid "trades.stillLoading"
+msgstr "交易仍在加载，请重试。"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:452
+msgid "trades.tradeTags"
+msgstr "交易标签"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2003
+msgid "trades.tradeTemplates"
+msgstr "交易模板"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1619
+msgid "trades.updated"
+msgstr "交易已更新"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1701
+msgid "trades.logged"
+msgstr "交易已记录"
+
+#. js-lingui-explicit-id
+#: src/components/TradeDetailSheet.tsx:95
+#: src/components/TradeRowMenu.tsx:80
+msgid "trades.retryLater"
+msgstr "请稍后重试"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/app/screens/TradeDetailView.tsx:1207
+#: src/components/TradeDetailSheet.tsx:228
+#: src/components/TradeRowMenu.tsx:194
+msgid "trades.confirmSymbol"
+msgstr "输入 {0} 以确认"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: trade.symbol
+#: src/app/screens/TradeDetailView.tsx:1216
+#: src/components/TradeDetailSheet.tsx:237
+#: src/components/TradeRowMenu.tsx:203
+msgid "trades.typeSymbolConfirm"
+msgstr "输入 {0} 以确认"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:780
+msgid "trades.draftRestored"
+msgstr "已恢复未保存的草稿。"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:653
+msgid "trades.untitled"
+msgstr "未命名"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:2063
+msgid "trades.editHint"
+msgstr "更新此笔交易的成交、日志与可选分红。"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:223
+msgid "trades.uploadShots"
+msgstr "上传交易日志截图"
+
+#. js-lingui-explicit-id
+#: src/components/JournalScreenshotUpload.tsx:264
+msgid "trades.uploading"
+msgstr "上传中…"
+
+#. js-lingui-explicit-id
+#: src/components/TradeExecutionsCard.tsx:103
+msgid "trades.value"
+msgstr "金额"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:82
+msgid "trades.wash"
+msgstr "盈亏平衡"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:101
+msgid "trades.watch"
+msgstr "留意"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:963
+msgid "trades.reviewHint"
+msgstr "下次会如何改进？"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1358
+msgid "trades.reviewPrompt"
+msgstr "下次会如何改进？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:937
+msgid "trades.entryReasonHint"
+msgstr "为什么入场？"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1329
+msgid "trades.whyEntry"
+msgstr "为什么入场？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradeDetailView.tsx:950
+msgid "trades.exitReasonHint"
+msgstr "为什么出场？"
+
+#. js-lingui-explicit-id
+#: src/app/drawers/NewTradeDrawer.tsx:1345
+msgid "trades.whyExit"
+msgstr "为什么出场？"
+
+#. js-lingui-explicit-id
+#: src/app/screens/TradesView.tsx:293
+msgid "trades.noMatchesHint"
+msgstr "扩大日期范围、清除代码/状态/市场/标签筛选，或切换账户。"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:142
+msgid "trades.win"
+msgstr "盈利"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:45
+msgid "trades.statusWin"
+msgstr "盈利"
+
+#. js-lingui-explicit-id
+#: src/components/TradesFilters.tsx:79
+msgid "trades.wins"
+msgstr "盈利"
+
+#. js-lingui-explicit-id
+#: src/components/TradeJournalCard.tsx:64
+msgid "trades.writeReview"
+msgstr "撰写复盘"

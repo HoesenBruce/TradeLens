@@ -4,7 +4,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
-import { i18n } from "@/i18n";
+import { i18n, loadLocale } from "@/i18n";
 import { executionsApi } from "@/lib/api/executions";
 import { ocrApi } from "@/lib/api/ocr";
 import { tradesApi } from "@/lib/api/trades";
@@ -200,6 +200,37 @@ describe("NewTradeDrawer", () => {
         }),
       ),
     );
+  });
+
+  it("saves canonical emotion and session values from Japanese labels", async () => {
+    await loadLocale("ja");
+    try {
+      const user = userEvent.setup();
+      wrap(<NewTradeDrawer />);
+      await user.type(screen.getByLabelText("銘柄コード"), "AAPL");
+      await user.type(screen.getByLabelText("数量、行 1"), "10");
+      await user.type(screen.getByLabelText("価格、行 1"), "100");
+      await user.click(screen.getByRole("button", { name: "ジャーナル" }));
+      await user.selectOptions(screen.getByLabelText("セッション"), "Asia");
+      await user.click(screen.getByLabelText("感情"));
+      await user.click(await screen.findByRole("option", { name: "冷静" }));
+      await user.keyboard("{Escape}");
+      await user.click(screen.getByRole("button", { name: "保存" }));
+      await waitFor(() =>
+        expect(mockedPatch).toHaveBeenCalledWith(
+          "t1",
+          expect.objectContaining({
+            emotional_state: "Calm",
+            notes: expect.stringContaining("## Session\nAsia"),
+          }),
+        ),
+      );
+      expect(mockedCreate).toHaveBeenCalledWith(
+        expect.objectContaining({ side: "buy", instrument_type: "stock" }),
+      );
+    } finally {
+      await loadLocale("en");
+    }
   });
 
   it("renders a per-symbol result preview plus an after-save summary at the form bottom", async () => {

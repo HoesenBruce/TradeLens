@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react";
+import { t as tr } from "@lingui/core/macro";
 import { Card } from "./Card";
 import { cardSectionLabelClass, StatCell } from "./StatCell";
 import { pnlColor } from "./theme-tokens";
@@ -93,6 +95,7 @@ export function TradePlanCard({
   onAutoExcursion,
   autoExcursionPending = false,
 }: TradePlanCardProps) {
+  useLingui();
   usePrivacyMode();
   const locale = intlLocale();
   const currency = trade.pnl_currency;
@@ -112,17 +115,21 @@ export function TradePlanCard({
   if (!hasPlan && !hasExcursion) {
     return (
       <Card
-        title="Plan vs actual"
+        title={tr({ id: "trades.planActual", message: "Plan vs actual" })}
         action={
           onEdit ? (
             <Button type="button" variant="soft" size="sm" onClick={onEdit}>
-              Add plan
+              {tr({ id: "trades.addPlan", message: "Add plan" })}
             </Button>
           ) : undefined
         }
       >
         <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-          No plan recorded. Add a stop, target, or risk amount to score this trade in R.
+          {tr({
+            id: "trades.emptyPlan",
+            message:
+              "No plan recorded. Add a stop, target, or risk amount to score this trade in R.",
+          })}
         </p>
         {onAutoExcursion && (
           <Button
@@ -132,7 +139,9 @@ export function TradePlanCard({
             disabled={autoExcursionPending}
             className="mt-2 h-auto self-start p-0 text-xs"
           >
-            {autoExcursionPending ? "Computing…" : "Auto-fill MAE/MFE from market data"}
+            {autoExcursionPending
+              ? tr({ id: "trades.computing", message: "Computing…" })
+              : tr({ id: "trades.autoExcursion", message: "Auto-fill MAE/MFE from market data" })}
           </Button>
         )}
       </Card>
@@ -148,11 +157,11 @@ export function TradePlanCard({
 
   return (
     <Card
-      title="Plan vs actual"
+      title={tr({ id: "trades.planActual", message: "Plan vs actual" })}
       action={
         onEdit ? (
           <Button type="button" variant="link" onClick={onEdit} className="h-auto text-xs">
-            Edit plan
+            {tr({ id: "trades.editPlan", message: "Edit plan" })}
           </Button>
         ) : undefined
       }
@@ -161,16 +170,19 @@ export function TradePlanCard({
         {hasPlan ? (
           <>
             <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-              <StatCell label="Stop">
+              <StatCell label={tr({ id: "trades.stop", message: "Stop" })}>
                 {insights.stop != null ? fmtMoney(insights.stop, currency, locale) : "—"}
               </StatCell>
-              <StatCell label="Target">
+              <StatCell label={tr({ id: "trades.target", message: "Target" })}>
                 {insights.target != null ? fmtMoney(insights.target, currency, locale) : "—"}
               </StatCell>
-              <StatCell label="Breakeven" hint="after fees">
+              <StatCell
+                label={tr({ id: "trades.breakeven", message: "Breakeven" })}
+                hint={tr({ id: "trades.afterFees", message: "after fees" })}
+              >
                 {insights.breakeven != null ? fmtMoney(insights.breakeven, currency, locale) : "—"}
               </StatCell>
-              <StatCell label="Planned R:R">
+              <StatCell label={tr({ id: "trades.plannedRR", message: "Planned R:R" })}>
                 {insights.plannedRR != null ? `${insights.plannedRR.toFixed(2)}:1` : "—"}
               </StatCell>
             </div>
@@ -180,29 +192,31 @@ export function TradePlanCard({
             <div className="flex max-w-2xl flex-col gap-2.5">
               {risk != null && (
                 <PlanBar
-                  label="Risk"
+                  label={tr({ id: "trades.risk", message: "Risk" })}
                   amount={risk}
                   scale={scale}
                   currency={currency}
                   tone="risk"
-                  note="planned"
+                  note={tr({ id: "trades.planned", message: "planned" })}
                 />
               )}
               {reward != null && (
                 <PlanBar
-                  label="Reward"
+                  label={tr({ id: "trades.reward", message: "Reward" })}
                   amount={reward}
                   scale={scale}
                   currency={currency}
                   tone="reward"
                   note={
-                    insights.plannedRR != null ? `${insights.plannedRR.toFixed(1)}R` : "planned"
+                    insights.plannedRR != null
+                      ? `${insights.plannedRR.toFixed(1)}R`
+                      : tr({ id: "trades.planned", message: "planned" })
                   }
                 />
               )}
               {result != null && (
                 <PlanBar
-                  label="Result"
+                  label={tr({ id: "trades.result", message: "Result" })}
                   amount={result}
                   scale={scale}
                   currency={currency}
@@ -221,7 +235,9 @@ export function TradePlanCard({
         {(hasExcursion || onAutoExcursion) && (
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <p className={cardSectionLabelClass}>Excursion</p>
+              <p className={cardSectionLabelClass}>
+                {tr({ id: "trades.excursion", message: "Excursion" })}
+              </p>
               {onAutoExcursion && (
                 <Button
                   type="button"
@@ -231,10 +247,10 @@ export function TradePlanCard({
                   className="h-auto text-xs"
                 >
                   {autoExcursionPending
-                    ? "Computing…"
+                    ? tr({ id: "trades.computing", message: "Computing…" })
                     : hasExcursion
-                      ? "Recompute from bars"
-                      : "Auto-fill from bars"}
+                      ? tr({ id: "trades.recompute", message: "Recompute from bars" })
+                      : tr({ id: "trades.autoBars", message: "Auto-fill from bars" })}
                 </Button>
               )}
             </div>
@@ -255,8 +271,8 @@ export function TradePlanCard({
                 {insights.mfe != null ? fmtSignedMoney(insights.mfe, currency, locale) : "—"}
               </StatCell>
               <StatCell
-                label="Capture"
-                hint="of MFE"
+                label={tr({ id: "trades.capture", message: "Capture" })}
+                hint={tr({ id: "trades.ofMfe", message: "of MFE" })}
                 valueClassName={
                   insights.mfeCapturePct != null ? pnlColor(insights.mfeCapturePct) : undefined
                 }
@@ -265,15 +281,15 @@ export function TradePlanCard({
                   ? `${(insights.mfeCapturePct * 100).toFixed(0)}%`
                   : "—"}
               </StatCell>
-              <StatCell label="Left on table">
+              <StatCell label={tr({ id: "trades.leftOnTable", message: "Left on table" })}>
                 {insights.leftOnTable != null
                   ? fmtSignedMoney(insights.leftOnTable, currency, locale)
                   : "—"}
               </StatCell>
               {insights.postExitMfe != null && (
                 <StatCell
-                  label="Post-exit MFE"
-                  hint="run after exit"
+                  label={tr({ id: "trades.postMfe", message: "Post-exit MFE" })}
+                  hint={tr({ id: "trades.runAfter", message: "run after exit" })}
                   valueClassName={pnlColor(Math.abs(insights.postExitMfe))}
                 >
                   {fmtSignedMoney(insights.postExitMfe, currency, locale)}
@@ -281,8 +297,8 @@ export function TradePlanCard({
               )}
               {insights.postExitMae != null && (
                 <StatCell
-                  label="Post-exit MAE"
-                  hint="dip after exit"
+                  label={tr({ id: "trades.postMae", message: "Post-exit MAE" })}
+                  hint={tr({ id: "trades.dipAfter", message: "dip after exit" })}
                   valueClassName={pnlColor(-Math.abs(insights.postExitMae))}
                 >
                   {fmtSignedMoney(insights.postExitMae, currency, locale)}

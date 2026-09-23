@@ -1,3 +1,6 @@
+import { useLingui } from "@lingui/react";
+import { t } from "@lingui/core/macro";
+import { directionLabel } from "@/lib/tradeLabels";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { resolveTradeDirection, type TradeDirectionView } from "@/lib/tradeDirection";
@@ -19,6 +22,7 @@ export function DirCell(props: {
   markMissingOptionRight?: boolean;
   className?: string;
 }) {
+  useLingui();
   const view = resolveTradeDirection(props);
   const Icon = view.arrowUp ? ArrowUpRight : ArrowDownRight;
   const color = DIR_TONE_CLASS[view.tone];
@@ -40,11 +44,15 @@ export function DirCell(props: {
         {view.tag ? (
           <span className={cn("text-[11px] font-semibold tracking-wide", color)}>{view.tag}</span>
         ) : null}
-        <span className="sr-only">{view.label}</span>
+        <span className="sr-only">{directionLabel(view)}</span>
       </TooltipTrigger>
       <TooltipContent side="top" className="flex-col items-start gap-0.5 px-2.5 py-1.5">
-        <span className="font-medium text-foreground">{view.label}</span>
-        <span className="text-[10px] text-muted-foreground">{view.detail}</span>
+        <span className="font-medium text-foreground">{directionLabel(view)}</span>
+        <span className="text-[10px] text-muted-foreground">
+          {view.tag === "?"
+            ? t({ id: "trades.setRight", message: "Set call or put via Edit" })
+            : directionLabel(view)}
+        </span>
       </TooltipContent>
     </Tooltip>
   );

@@ -1,6 +1,7 @@
+import { render } from "@/test/render";
 import type { ColumnDef } from "@/lib/table";
 import { flexRender, getCoreRowModel, useReactTable, type RowData } from "@/lib/table";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vite-plus/test";
 import type { AccountValueWarning, Summary, Trade } from "@/lib/api/types";
