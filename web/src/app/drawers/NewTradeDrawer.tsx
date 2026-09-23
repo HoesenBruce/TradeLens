@@ -780,16 +780,7 @@ function SymbolCard({
                 ]}
                 tones={{ long: "pos", short: "neg" }}
                 value={block.side}
-                onChange={(side) => {
-                  const next = side as "long" | "short";
-                  set("side", next);
-                  form.setFieldValue(
-                    `${base}.rows` as never,
-                    block.rows.map((r, row) =>
-                      row === 0 ? { ...r, side: next === "long" ? "buy" : "sell" } : r,
-                    ) as never,
-                  );
-                }}
+                onChange={(side) => set("side", side as "long" | "short")}
               />
             </Field>
           </div>
