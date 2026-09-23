@@ -67,6 +67,13 @@ The verified export headers are `約定日`, `銘柄コード`, `取引`, `約�
 grouped separately. `現引` becomes a margin-long close followed by a cash open at the
 same price; its fee is charged once on the margin close.
 
+Each SBI fill carries generic `position_type` (`cash`, `margin_long`, or
+`margin_short`) and `position_effect` (`increase` or `reduce`) in
+`executions.details`. The parser also sets these on `ParsedExecution`. The
+existing `lot` detail remains the grouping key, and deduplication is unchanged.
+Other importers leave these optional fields unset; accounting must keep its
+current default behavior unless a broker-specific rule explicitly opts in.
+
 ## Encoding
 
 The verified export uses CP932. It is decoded before header detection with the project's
