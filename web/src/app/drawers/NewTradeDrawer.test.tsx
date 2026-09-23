@@ -141,6 +141,25 @@ describe("NewTradeDrawer", () => {
     expect(screen.getByLabelText("Symbol")).toBeVisible();
   });
 
+  it("keeps existing execution actions when changing trade direction", async () => {
+    const user = userEvent.setup();
+    wrap(<NewTradeDrawer />);
+    const first = screen.getByRole("button", { name: "Toggle action symbol 1 row 1" });
+    expect(first).toHaveTextContent("BUY");
+    await user.click(
+      within(screen.getByRole("group", { name: "Side symbol 1" })).getByRole("button", {
+        name: "↘ SHORT",
+      }),
+    );
+    expect(first).toHaveTextContent("BUY");
+    await user.click(
+      within(screen.getByRole("group", { name: "Side symbol 1" })).getByRole("button", {
+        name: "↗ LONG",
+      }),
+    );
+    expect(first).toHaveTextContent("BUY");
+  });
+
   it("embeds journal and dividend controls on each symbol card", async () => {
     const user = userEvent.setup();
     wrap(<NewTradeDrawer />);
