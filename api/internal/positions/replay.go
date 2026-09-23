@@ -69,13 +69,15 @@ type positionKey struct {
 }
 
 type state struct {
-	positions      map[positionKey]Position
-	basisDay       map[positionKey]string
-	marginOpenings map[positionKey]int
-	marginOpenFees map[positionKey]float64
-	conversions    map[string]float64
-	accounts       map[string]*AccountSnapshot
-	warnings       []Warning
+	positions        map[positionKey]Position
+	basisDay         map[positionKey]string
+	marginOpenings   map[positionKey]int
+	marginOpenFees   map[positionKey]float64
+	conversions      map[string]float64
+	transferredBasis map[string]float64
+	convertedCash    map[positionKey]string
+	accounts         map[string]*AccountSnapshot
+	warnings         []Warning
 }
 
 func (s *state) account(accountID string) *AccountSnapshot {
@@ -94,6 +96,24 @@ func Replay(executions []store.Execution, dates []time.Time) []Snapshot {
 }
 
 func ReplayWithSplits(executions []store.Execution, dates []time.Time, splits []Split) []Snapshot {
+	return replay(executions, dates, splits, nil)
+}
+
+// ConversionBasis reuses position replay so grouping inherits the same margin costs.
+// Keys are cash execution IDs; absent entries have insufficient source history.
+func ConversionBasis(executions []store.Execution) map[string]float64 {
+	basis := map[string]float64{}
+	var last time.Time
+	for _, ex := range executions {
+		if ex.ExecutedAt.After(last) {
+			last = ex.ExecutedAt
+		}
+	}
+	replay(executions, []time.Time{last}, nil, basis)
+	return basis
+}
+
+func replay(executions []store.Execution, dates []time.Time, splits []Split, basis map[string]float64) []Snapshot {
 	executions = append([]store.Execution(nil), executions...)
 	sort.SliceStable(executions, func(i, j int) bool {
 		iTime, jTime := replayTime(executions[i]), replayTime(executions[j])
@@ -109,8 +129,8 @@ func ReplayWithSplits(executions []store.Execution, dates []time.Time, splits []
 	s := state{
 		positions: map[positionKey]Position{}, basisDay: map[positionKey]string{},
 		marginOpenings: map[positionKey]int{}, marginOpenFees: map[positionKey]float64{},
-		conversions: map[string]float64{},
-		accounts:    map[string]*AccountSnapshot{},
+		conversions: map[string]float64{}, transferredBasis: basis,
+		accounts: map[string]*AccountSnapshot{}, convertedCash: map[positionKey]string{},
 	}
 	out := make([]Snapshot, 0, len(dates))
 	nextExecution := 0
@@ -183,14 +203,18 @@ func (s *state) apply(ex store.Execution) {
 		}
 		buyCost := ex.Price * ex.Quantity
 		if conversionType == "genbiki" && kind == CashLong {
-			key := ex.AccountID + "|" + conversionID
-			transferred, ok := s.conversions[key]
+			conversionKey := ex.AccountID + "|" + conversionID
+			transferred, ok := s.conversions[conversionKey]
 			if !ok {
 				s.warn(ex, "invalid_position_conversion", "genbiki source leg is missing")
 				return
 			}
 			buyCost = transferred
-			delete(s.conversions, key)
+			if s.transferredBasis != nil {
+				s.transferredBasis[ex.ID] = transferred
+			}
+			delete(s.conversions, conversionKey)
+			s.convertedCash[key] = tokyoDate(ex.ExecutedAt).Format(time.DateOnly)
 		}
 		if sbiCash {
 			if conversionType != "genbiki" {
@@ -259,6 +283,7 @@ func (s *state) apply(ex store.Execution) {
 	if position.Quantity < epsilon {
 		delete(s.positions, key)
 		delete(s.basisDay, key)
+		delete(s.convertedCash, key)
 		delete(s.marginOpenings, key)
 		delete(s.marginOpenFees, key)
 	} else {
@@ -320,9 +345,9 @@ func replayTime(ex store.Execution) time.Time {
 	conversionType, _ := conversionFromDetails(ex)
 	if conversionType == "genbiki" {
 		if kindFromLot(lotFromDetails(ex)) == CashLong {
-			return day.Add(18 * time.Hour)
+			return day.Add(10 * time.Hour)
 		}
-		return day.Add(12 * time.Hour)
+		return day.Add(9 * time.Hour)
 	}
 	if !opensPosition(ex) {
 		day = day.Add(12 * time.Hour)
@@ -345,8 +370,8 @@ func (s *state) snapshot(date time.Time) Snapshot {
 			RealizedPnL: money.Round2(totals.RealizedPnL), Fees: money.Round2(totals.Fees),
 		}
 	}
-	for _, position := range s.positions {
-		if position.Lot == "sbi:cash" {
+	for key, position := range s.positions {
+		if position.Lot == "sbi:cash" && s.convertedCash[key] != tokyoDate(date).Format(time.DateOnly) {
 			position.AverageCost = math.Ceil(position.AverageCost - epsilon)
 		} else {
 			position.AverageCost = money.Round2(position.AverageCost)

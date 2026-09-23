@@ -4,10 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/tradermemos/api/internal/positions"
 	"github.com/tradermemos/api/internal/store"
 )
 
@@ -32,10 +34,41 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 	if err != nil {
 		return err
 	}
+	basis := positions.ConversionBasis(rows)
+	for _, r := range rows {
+		if lotKeyFromDetails(r.Details) == "sbi:cash" && conversionTypeFromDetails(r.Details) == "genbiki" {
+			if _, ok := basis[r.ID]; !ok {
+				return fmt.Errorf("SBI genbiki %s: insufficient margin history for acquisition basis", r.ID)
+			}
+		}
+	}
 	// partition by symbol+instrument[+lot|+option contract]
 	groups := map[string][]Execution{}
 	for _, r := range rows {
 		lot := lotKeyFromDetails(r.Details)
+		if cost, ok := basis[r.ID]; ok {
+			// Retain the broker reference price; persist derived basis for audit.
+			details := map[string]any{}
+			if err := json.Unmarshal([]byte(r.Details.String), &details); err != nil {
+				return err
+			}
+			unit := cost / r.Quantity
+			totalText, unitText := strconv.FormatFloat(cost, 'f', -1, 64), strconv.FormatFloat(unit, 'f', -1, 64)
+			if details["transferred_cost_basis"] != totalText || details["transferred_unit_cost"] != unitText {
+				details["transferred_cost_basis"], details["transferred_unit_cost"] = totalText, unitText
+				encoded, err := json.Marshal(details)
+				if err != nil {
+					return err
+				}
+				r.Details = sql.NullString{String: string(encoded), Valid: true}
+				if err := s.q.UpdateExecutionContract(ctx, store.UpdateExecutionContractParams{ID: r.ID, UserID: r.UserID, Symbol: r.Symbol, DedupHash: r.DedupHash, Details: r.Details}); err != nil {
+					return err
+				}
+			}
+			r.Price = unit
+			r.Fees = 0
+			r.Commission = 0
+		}
 		key := partitionKey(r.Symbol, r.InstrumentType, r.Details)
 		groups[key] = append(groups[key], Execution{
 			ID: r.ID, Symbol: r.Symbol, InstrumentType: r.InstrumentType, Side: r.Side,

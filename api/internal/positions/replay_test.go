@@ -154,7 +154,7 @@ func TestReplayGenbikiMergesIntoExistingCashAtAverageCost(t *testing.T) {
 	converted.Details = sql.NullString{String: `{"lot":"sbi:cash","conversion_type":"genbiki","conversion_id":"c1"}`, Valid: true}
 	snapshot := Replay([]store.Execution{converted, close, open, cash}, []time.Time{day("2026-09-02")})[0]
 	require.Equal(t, 200.0, snapshot.Accounts[0].Positions[0].Quantity)
-	require.Equal(t, 953.0, snapshot.Accounts[0].Positions[0].AverageCost)
+	require.Equal(t, 952.5, snapshot.Accounts[0].Positions[0].AverageCost)
 	require.Zero(t, snapshot.Accounts[0].RealizedPnL)
 }
 
@@ -254,4 +254,19 @@ func TestReplayAppliesExplicitSplitBeforeEffectiveDateExecutions(t *testing.T) {
 	require.Empty(t, snapshot.Warnings)
 	require.Empty(t, snapshot.Accounts[0].Positions)
 	require.Zero(t, snapshot.Accounts[0].RealizedPnL)
+}
+
+func TestReplayGenbikiBeforeSameDayCashSale(t *testing.T) {
+	opening := execution("open", "a", "1515", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 1000)
+	margin := execution("margin", "a", "1515", "sbi:margin-long", "sell", "2026-09-02T01:00:00Z", 100, 1090)
+	margin.Fees = 500
+	margin.Details.String = `{"lot":"sbi:margin-long","conversion_type":"genbiki","conversion_id":"c1"}`
+	cash := execution("cash", "a", "1515", "sbi:cash", "buy", "2026-09-02T01:00:00.000001Z", 100, 1090)
+	cash.Details.String = `{"lot":"sbi:cash","conversion_type":"genbiki","conversion_id":"c1"}`
+	sale := execution("sale", "a", "1515", "sbi:cash", "sell", "2026-09-02T02:00:00Z", 100, 1200)
+	snapshot := Replay([]store.Execution{sale, cash, margin, opening}, []time.Time{day("2026-09-02")})[0]
+	require.Empty(t, snapshot.Warnings)
+	require.Empty(t, snapshot.Accounts[0].Positions)
+	require.Equal(t, 19500.0, snapshot.Accounts[0].RealizedPnL)
+	require.Equal(t, 500.0, snapshot.Accounts[0].Fees)
 }

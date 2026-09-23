@@ -2,6 +2,7 @@ package trades
 
 import (
 	"math"
+	"slices"
 	"sort"
 	"time"
 
@@ -56,6 +57,24 @@ func SBICashAccounting(fills []Execution) AccountingResult {
 			Pnl:          money.Round2((fill.Price-average)*fill.Quantity - fill.Fees - fill.Commission),
 			RemainingQty: qty, RemainingCostBasis: cost, Source: "calculated_average_cost",
 		})
+	}
+	reconcileConversionTrades(fills, &result)
+	if qty > 0 {
+		for i := range result.Trades {
+			tr := &result.Trades[i]
+			if tr.Status != "open" {
+				continue
+			}
+			for _, fill := range fills {
+				if fill.ConversionType != "genbiki" {
+					continue
+				}
+				if slices.Contains(tr.ExecutionIDs, fill.ID) {
+					tr.AvgEntryPrice = money.Round2(cost / qty)
+					break
+				}
+			}
+		}
 	}
 	return result
 }

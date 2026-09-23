@@ -8,6 +8,7 @@ type RealizedClose struct {
 	ExecutionID        string
 	Date               time.Time
 	Pnl                float64
+	Fees               float64 // realized fees; conversion costs are capitalized instead
 	RemainingQty       float64
 	RemainingCostBasis float64
 	Source             string
