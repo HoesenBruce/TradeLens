@@ -2,6 +2,14 @@ package importer
 
 import "time"
 
+const (
+	PositionCash        = "cash"
+	PositionMarginLong  = "margin_long"
+	PositionMarginShort = "margin_short"
+	PositionIncrease    = "increase"
+	PositionReduce      = "reduce"
+)
+
 // ParsedExecution is a broker-agnostic fill produced by an Importer.
 type ParsedExecution struct {
 	ExternalID     string
@@ -13,6 +21,8 @@ type ParsedExecution struct {
 	Strike         string // option strike, decimal string ("120", "37.5")
 	Expiry         string // option expiry, YYYY-MM-DD
 	Side           string // buy|sell
+	PositionType   string // cash|margin_long|margin_short when source supplies it
+	PositionEffect string // increase|reduce when source supplies it
 	Quantity       float64
 	Price          float64
 	Fees           float64
