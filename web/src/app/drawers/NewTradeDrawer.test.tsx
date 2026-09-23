@@ -13,7 +13,10 @@ import { useUI } from "@/lib/ui";
 import { NewTradeDrawer, rowsFromOcrExtract } from "./NewTradeDrawer";
 
 vi.mock("../../lib/api/executions", () => ({
-  executionsApi: { create: vi.fn<() => Promise<unknown>>() },
+  executionsApi: {
+    create: vi.fn<() => Promise<unknown>>(),
+    update: vi.fn<() => Promise<unknown>>(),
+  },
 }));
 vi.mock("../../lib/api/trades", () => ({ tradesApi: { patch: vi.fn<() => Promise<unknown>>() } }));
 vi.mock("../../lib/api/cash", () => ({ cashApi: { create: vi.fn<() => Promise<unknown>>() } }));
@@ -54,6 +57,7 @@ vi.mock("../../components/Toast", () => ({
 }));
 
 const mockedCreate = vi.mocked(executionsApi.create);
+const mockedUpdate = vi.mocked(executionsApi.update);
 const mockedPatch = vi.mocked(tradesApi.patch);
 const mockedOcrParse = vi.mocked(ocrApi.parse);
 // `i18n` is loaded with the en catalog at module import; activate it so the
@@ -110,9 +114,11 @@ describe("rowsFromOcrExtract", () => {
 describe("NewTradeDrawer", () => {
   beforeEach(() => {
     mockedCreate.mockReset();
+    mockedUpdate.mockReset();
     mockedPatch.mockReset();
     mockedOcrParse.mockReset();
     mockedCreate.mockResolvedValue({ execution_id: "e1", trade_id: "t1" });
+    mockedUpdate.mockResolvedValue({ execution_id: "e1", trade_id: "meta-141" });
     mockedPatch.mockResolvedValue({} as never);
     mockOcrSettings.mockReturnValue({
       data: {
@@ -236,6 +242,45 @@ describe("NewTradeDrawer", () => {
     await user.click(within(direction).getByRole("button", { name: "↗ LONG" }));
     expect(result.textContent).toBe(baseline);
     expect(screen.getByLabelText("P&L symbol 1 row 2: empty")).toBeVisible();
+  });
+
+  it("keeps unknown note sections when the detail-page edit drawer saves a memo", async () => {
+    const detail = tradeDetailFromJournalPreview(
+      {
+        row: 1,
+        symbol: "META141",
+        market: "STOCK",
+        instrument_type: "stock",
+        side: "LONG",
+        qty: 10,
+        entry: 100,
+        exit: 110,
+        return_usd: 100,
+        open_date: "2026-08-26T00:00:00Z",
+        close_date: "2026-09-01T00:00:00Z",
+      },
+      { accountId: "a1", currency: "USD" },
+    );
+    detail.id = "meta-141";
+    detail.notes =
+      "## Planned direction\nshort\n\n## Broker metadata\nkeep me\n\n## Review notes\nold";
+    useUI.getState().openTradeEdit(detail);
+    wrap(<NewTradeDrawer />);
+    await userEvent.click(screen.getByRole("button", { name: "Journal" }));
+    await userEvent.clear(screen.getByLabelText("Review notes"));
+    await userEvent.type(screen.getByLabelText("Review notes"), "new memo");
+    await userEvent.click(screen.getByRole("button", { name: "Save changes" }));
+    await waitFor(() =>
+      expect(mockedPatch).toHaveBeenCalledWith(
+        "meta-141",
+        expect.objectContaining({
+          notes: expect.stringContaining("## Broker metadata\nkeep me"),
+        }),
+      ),
+    );
+    const notes = mockedPatch.mock.calls[0]![1].notes!;
+    expect(notes).toContain("## Planned direction\nshort");
+    expect(notes).toContain("## Review notes\nnew memo");
   });
 
   it("embeds journal and dividend controls on each symbol card", async () => {

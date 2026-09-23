@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vite-plus/test";
-import { buildStructuredJournalNotes, parseJournalNotes } from "./journalNotes";
+import {
+  buildStructuredJournalNotes,
+  parseJournalNotes,
+  updateStructuredJournalNotes,
+} from "./journalNotes";
 import { gradeFromInt, intFromGrade } from "./tradeGrades";
 
 describe("tradeGrades", () => {
@@ -34,5 +38,17 @@ describe("journalNotes", () => {
     expect(parsed.legacy).toBe("just a scribbled note");
     expect(parsed.entryReason).toBe("");
     expect(parsed.plannedDirection).toBe("");
+  });
+
+  it("preserves unedited sections and allows an explicit plan clear", () => {
+    const existing =
+      "## Planned direction\nshort\n\n## Broker metadata\nkeep me\n\n## Review notes\nold";
+    const changed = updateStructuredJournalNotes(existing, { reviewNotes: "new" });
+    expect(changed).toContain("## Planned direction\nshort");
+    expect(changed).toContain("## Broker metadata\nkeep me");
+    expect(changed).toContain("## Review notes\nnew");
+    expect(
+      updateStructuredJournalNotes(changed, { reviewNotes: "new", plannedDirection: "" }),
+    ).not.toContain("## Planned direction");
   });
 });
