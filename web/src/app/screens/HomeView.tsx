@@ -19,7 +19,12 @@ import { AnnualGoalCard } from "@/components/AnnualGoalCard";
 import { DailyLossCard } from "@/components/DailyLossCard";
 import { PropStatusCard } from "@/components/PropStatusCard";
 import { Card } from "@/components/Card";
-import { ChartFrame, chartTheme, chartTooltipStyle } from "@/components/ChartFrame";
+import {
+  ChartFrame,
+  chartTheme,
+  chartTooltipStyle,
+  pnlTooltipValue,
+} from "@/components/ChartFrame";
 import {
   Collapsible,
   CollapsibleChevron,
@@ -67,7 +72,7 @@ import { accountBaseCurrency, useDisplayTimePrefs, usePrivacyMode } from "@/lib/
 import { soleAccountId } from "@/lib/filters";
 import { COMPACT_VIEWPORT, useMediaQuery } from "@/lib/hooks/use-mobile";
 import { useMoneyFx } from "@/lib/hooks/useMoneyFx";
-import { fmtDayShort, fmtMoney, fmtMoneyCompact } from "@/lib/format";
+import { fmtDayShort, fmtMoney, fmtMoneyCompact, fmtSignedMoney } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import type { TradeStatusFilter } from "@/lib/tradeFilters";
 
@@ -231,6 +236,48 @@ function EquityCurveChart({
   );
 }
 
+export function AccountValueTooltip({
+  point,
+  currency,
+  label,
+}: {
+  point: { contributed_capital: number; estimated_account_value: number | null };
+  currency: string;
+  label: number;
+}) {
+  const { t: tr } = useLinguiMacro();
+  const value = point.estimated_account_value;
+  const gainLoss = value == null ? null : value - point.contributed_capital;
+  return (
+    <div style={chartTooltipStyle.contentStyle}>
+      <div style={chartTooltipStyle.labelStyle}>
+        {new Date(label).toLocaleDateString(intlLocale())}
+      </div>
+      <div>
+        {tr({ id: "accounts.netContributions", message: "Net Contributions" })}:{" "}
+        {fmtMoney(point.contributed_capital, currency, intlLocale())}
+      </div>
+      {value != null && gainLoss != null && (
+        <>
+          <div>
+            {tr({ id: "accounts.accountValue", message: "Account Value" })}:{" "}
+            {fmtMoney(value, currency, intlLocale())}
+          </div>
+          <div>
+            {tr({ id: "accounts.gainLoss", message: "Gain / Loss" })}:{" "}
+            {pnlTooltipValue(
+              gainLoss,
+              gainLoss === 0
+                ? fmtMoney(0, currency, intlLocale())
+                : fmtSignedMoney(gainLoss, currency, intlLocale()),
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function AccountValueChart({
   data,
   loading,
@@ -303,13 +350,13 @@ function AccountValueChart({
             />
             <Tooltip
               {...chartTooltipStyle}
-              labelFormatter={(value) => new Date(Number(value)).toLocaleDateString(intlLocale())}
-              formatter={(value, name) => [
-                fmtMoney(Number(value ?? 0), currency, intlLocale()),
-                name === "estimated_account_value"
-                  ? tr({ id: "accounts.estimated", message: "Estimated Account Value" })
-                  : tr({ id: "accounts.capital", message: "Contributed Capital" }),
-              ]}
+              content={({ active, payload, label }) => {
+                const point = payload?.[0]?.payload as (typeof points)[number] | undefined;
+                if (!active || !point) return null;
+                return (
+                  <AccountValueTooltip point={point} currency={currency} label={Number(label)} />
+                );
+              }}
               cursor={{ stroke: chartTheme.gridColor }}
             />
             <Line

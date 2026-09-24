@@ -5,7 +5,7 @@ import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vite-plus/test";
 import type { AccountValueWarning, Summary, Trade } from "@/lib/api/types";
-import { HomeView } from "./HomeView";
+import { AccountValueTooltip, HomeView } from "./HomeView";
 
 vi.mock("../../components/Toast", () => ({
   useToastManager: () => ({ add: vi.fn<(...args: any[]) => any>() }),
@@ -204,6 +204,39 @@ const BASE = {
 };
 
 describe("HomeView", () => {
+  it.each([
+    [1000, 900, "+$100.00"],
+    [800, 900, "-$100.00"],
+    [900, 900, "$0.00"],
+  ])("shows account value tooltip gain/loss for %i versus %i", (value, capital, gainLoss) => {
+    render(
+      <AccountValueTooltip
+        point={{ estimated_account_value: value, contributed_capital: capital }}
+        currency="USD"
+        label={Date.UTC(2026, 6, 1)}
+      />,
+    );
+    expect(screen.getByText(/Net Contributions:/)).toHaveTextContent("$900.00");
+    expect(screen.getByText(/Account Value:/)).toHaveTextContent(
+      new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value),
+    );
+    expect(screen.getByText(/Gain \/ Loss:/)).toHaveTextContent(gainLoss);
+    expect(screen.queryByText(/Contributed Capital:/)).not.toBeInTheDocument();
+  });
+
+  it("omits account value and gain/loss when reconstruction is unavailable", () => {
+    render(
+      <AccountValueTooltip
+        point={{ estimated_account_value: null, contributed_capital: 900 }}
+        currency="USD"
+        label={Date.UTC(2026, 6, 1)}
+      />,
+    );
+    expect(screen.getByText(/Net Contributions:/)).toBeInTheDocument();
+    expect(screen.queryByText(/Account Value:/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Gain \/ Loss:/)).not.toBeInTheDocument();
+  });
+
   it("renders the stats strip from the summary", () => {
     render(<HomeView {...BASE} />);
     expect(screen.getByText("Wins")).toBeInTheDocument();
