@@ -41,7 +41,12 @@ describe("accountBaseCurrency", () => {
     expect(accountBaseCurrency(accounts, "a2")).toBe("USD");
   });
 
-  it("falls back when no account is selected", () => {
+  it("uses the shared currency for all accounts when none is selected", () => {
+    expect(accountBaseCurrency([{ id: "j1", base_currency: "JPY" }], undefined)).toBe("JPY");
+    expect(accountBaseCurrency([{ id: "j1", base_currency: "JPY" }], [])).toBe("JPY");
+  });
+
+  it("falls back when all accounts have mixed currencies", () => {
     expect(accountBaseCurrency(accounts, undefined)).toBe("USD");
   });
 });

@@ -532,6 +532,9 @@ export function HomeView({
   const baseCurrency = accountBaseCurrency(accounts, selectedAccountIds);
   const { currency, rate } = useMoneyFx(baseCurrency);
   const fxRate = rate ?? 1;
+  const { currency: valueCurrency, rate: valueRate } = useMoneyFx(
+    accountValue?.currency ?? baseCurrency,
+  );
   const compact = useMediaQuery(COMPACT_VIEWPORT);
   const [range, setRange] = useState("30D");
   const [warningToIgnore, setWarningToIgnore] = useState<AccountValueWarning | null>(null);
@@ -671,8 +674,8 @@ export function HomeView({
             data={accountValue}
             loading={accountValueLoading}
             error={accountValueError}
-            currency={currency}
-            fxRate={fxRate}
+            currency={valueCurrency}
+            fxRate={valueRate ?? 1}
           />
           {!accountValueLoading && !accountValueError && (accountValue?.points.length ?? 0) > 0 ? (
             <div className="flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-muted-foreground">
