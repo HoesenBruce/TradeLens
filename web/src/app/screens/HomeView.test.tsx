@@ -7,6 +7,8 @@ import { describe, expect, it, vi } from "vite-plus/test";
 import type { AccountValueWarning, Summary, Trade } from "@/lib/api/types";
 import { HomeView } from "./HomeView";
 
+const useMoneyFxMock = vi.hoisted(() => vi.fn<(currency: string) => void>());
+
 vi.mock("../../components/Toast", () => ({
   useToastManager: () => ({ add: vi.fn<(...args: any[]) => any>() }),
 }));
@@ -19,15 +21,18 @@ vi.mock("../../lib/hooks/useTradeDetail", () => ({
 }));
 
 vi.mock("../../lib/hooks/useMoneyFx", () => ({
-  useMoneyFx: (baseCurrency: string) => ({
-    baseCurrency,
-    displayCurrency: baseCurrency || "USD",
-    currency: baseCurrency || "USD",
-    rate: 1,
-    toDisplay: (v: number) => v,
-    isLoading: false,
-    isError: false,
-  }),
+  useMoneyFx: (baseCurrency: string) => {
+    useMoneyFxMock(baseCurrency);
+    return {
+      baseCurrency,
+      displayCurrency: baseCurrency || "USD",
+      currency: baseCurrency || "USD",
+      rate: 1,
+      toDisplay: (v: number) => v,
+      isLoading: false,
+      isError: false,
+    };
+  },
 }));
 
 // DailyLossCard fetches risk rules; no limit configured means it renders null.
@@ -311,6 +316,12 @@ describe("HomeView", () => {
     expect(screen.getByText("Historical account value")).toBeInTheDocument();
     expect(screen.getByText("Estimated Account Value")).toBeInTheDocument();
     expect(screen.getByText("Contributed Capital")).toBeInTheDocument();
+  });
+
+  it("uses the account-value response currency for its conversion", () => {
+    useMoneyFxMock.mockClear();
+    render(<HomeView {...BASE} accountValue={{ ...BASE.accountValue, currency: "JPY" }} />);
+    expect(useMoneyFxMock).toHaveBeenCalledWith("JPY");
   });
 
   it("shows account-value loading, empty, error, and a single warning detail", () => {

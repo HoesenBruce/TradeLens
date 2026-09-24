@@ -418,7 +418,7 @@ export function useDisplayTimePrefs(): {
  * Account ledger currency — source of truth for stored amounts / forms.
  * Accepts a single account id or a portfolio scope (array of ids): a
  * multi-account scope resolves to its shared currency (the picker only builds
- * same-currency groups), falling back when the scope is empty or disagrees.
+ * same-currency groups). An empty scope means all accounts.
  */
 export function accountBaseCurrency(
   accounts: readonly Pick<Account, "id" | "base_currency">[],
@@ -426,8 +426,9 @@ export function accountBaseCurrency(
   fallback = "USD",
 ): string {
   const ids = typeof accountId === "string" ? [accountId] : (accountId ?? []);
+  const scopedIds = ids.length > 0 ? ids : accounts.map((account) => account.id);
   let base: string | undefined;
-  for (const id of ids) {
+  for (const id of scopedIds) {
     const currency = accounts.find((a) => a.id === id)?.base_currency;
     if (!currency) continue;
     if (base === undefined) base = currency;
