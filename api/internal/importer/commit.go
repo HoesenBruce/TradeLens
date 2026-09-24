@@ -62,13 +62,15 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 	inserts := make([]store.InsertExecutionParams, 0, len(parsed.Executions))
 	for i, pe := range parsed.Executions {
 		mult := resolveMultiplierCached(ctx, q, multipliers, pe)
-		if pe.LotKey != "" && skippedLots[pe.LotKey] {
+		// SBI lot keys name position types, not individual round trips.
+		guardLot := pe.LotKey != "" && !strings.HasPrefix(pe.LotKey, "sbi:")
+		if guardLot && skippedLots[pe.LotKey] {
 			res.Skipped++
 			continue
 		}
 		hash := hashes[i]
 		if _, exists := seen[hash]; exists {
-			if pe.LotKey != "" {
+			if guardLot {
 				skippedLots[pe.LotKey] = true
 			}
 			res.Skipped++
