@@ -217,6 +217,7 @@ export interface TradeAttachment {
 
 // Trade matches tradeDTO from api/internal/api/dto.go
 export interface Trade {
+  accounting_warning?: string;
   id: string;
   account_id: string;
   symbol: string;

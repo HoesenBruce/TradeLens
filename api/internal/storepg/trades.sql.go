@@ -8,7 +8,6 @@ package storepg
 import (
 	"context"
 	"database/sql"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -63,30 +62,29 @@ type DeleteTradesNotInAccountParams struct {
 	Keep      []string `json:"keep"`
 }
 
-// HAND-PATCHED: sqlc+database/sql collapses the keep slice to a single `$3` for
-// Postgres, so the placeholders have to be expanded here. Note the differences
-// from the SQLite twin in store/trades.sql.go: there is no `/*SLICE:keep*/?`
-// marker to substitute (sqlc already rendered it as `$3`) and the markers are
-// numbered, not `?`. `make sqlc` overwrites this file — re-apply after
-// regenerating, and keep TestBulkWriterConformance/postgres green.
+// NOTE: sqlc+database/sql emits a broken single-$3 slice expand for Postgres.
+// storepg/trades.sql.go implements placeholder expansion manually; re-apply after
+// `make sqlc` and re-run TestBulkWriterConformance/postgres — the patch cannot be
+// copied from the SQLite twin (no /*SLICE:keep*/? marker, numbered placeholders).
 func (q *Queries) DeleteTradesNotInAccount(ctx context.Context, arg DeleteTradesNotInAccountParams) error {
-	queryParams := []interface{}{arg.UserID, arg.AccountID}
-	list := "NULL"
+	query := deleteTradesNotInAccount
+	var queryParams []interface{}
+	queryParams = append(queryParams, arg.UserID)
+	queryParams = append(queryParams, arg.AccountID)
 	if len(arg.Keep) > 0 {
-		markers := make([]string, len(arg.Keep))
-		for i, v := range arg.Keep {
+		for _, v := range arg.Keep {
 			queryParams = append(queryParams, v)
-			markers[i] = "$" + strconv.Itoa(len(queryParams))
 		}
-		list = strings.Join(markers, ",")
+		query = strings.Replace(query, "/*SLICE:keep*/?", strings.Repeat(",?", len(arg.Keep))[1:], 1)
+	} else {
+		query = strings.Replace(query, "/*SLICE:keep*/?", "NULL", 1)
 	}
-	query := strings.Replace(deleteTradesNotInAccount, "id NOT IN ($3)", "id NOT IN ("+list+")", 1)
 	_, err := q.db.ExecContext(ctx, query, queryParams...)
 	return err
 }
 
 const getTrade = `-- name: GetTrade :one
-SELECT id, user_id, account_id, symbol, instrument_type, direction, status, opened_at, closed_at, qty_opened, avg_entry_price, avg_exit_price, gross_pnl, fees_total, net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes, created_at, updated_at, qty_remaining FROM trades WHERE id = $1 AND user_id = $2
+SELECT id, user_id, account_id, symbol, instrument_type, direction, status, opened_at, closed_at, qty_opened, avg_entry_price, avg_exit_price, gross_pnl, fees_total, net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes, created_at, updated_at, qty_remaining, accounting_warning FROM trades WHERE id = $1 AND user_id = $2
 `
 
 type GetTradeParams struct {
@@ -121,6 +119,7 @@ func (q *Queries) GetTrade(ctx context.Context, arg GetTradeParams) (Trade, erro
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.QtyRemaining,
+		&i.AccountingWarning,
 	)
 	return i, err
 }
@@ -129,7 +128,7 @@ const insertTrade = `-- name: InsertTrade :one
 INSERT INTO trades (id, user_id, account_id, symbol, instrument_type, direction, status,
     opened_at, closed_at, qty_opened, qty_remaining, avg_entry_price, avg_exit_price, gross_pnl, fees_total,
     net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21) RETURNING id, user_id, account_id, symbol, instrument_type, direction, status, opened_at, closed_at, qty_opened, avg_entry_price, avg_exit_price, gross_pnl, fees_total, net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes, created_at, updated_at, qty_remaining
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21) RETURNING id, user_id, account_id, symbol, instrument_type, direction, status, opened_at, closed_at, qty_opened, avg_entry_price, avg_exit_price, gross_pnl, fees_total, net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes, created_at, updated_at, qty_remaining, accounting_warning
 `
 
 type InsertTradeParams struct {
@@ -205,6 +204,7 @@ func (q *Queries) InsertTrade(ctx context.Context, arg InsertTradeParams) (Trade
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.QtyRemaining,
+		&i.AccountingWarning,
 	)
 	return i, err
 }
@@ -224,7 +224,7 @@ func (q *Queries) LinkTradeExecution(ctx context.Context, arg LinkTradeExecution
 }
 
 const listClosedTrades = `-- name: ListClosedTrades :many
-SELECT id, user_id, account_id, symbol, instrument_type, direction, status, opened_at, closed_at, qty_opened, avg_entry_price, avg_exit_price, gross_pnl, fees_total, net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes, created_at, updated_at, qty_remaining FROM trades
+SELECT id, user_id, account_id, symbol, instrument_type, direction, status, opened_at, closed_at, qty_opened, avg_entry_price, avg_exit_price, gross_pnl, fees_total, net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes, created_at, updated_at, qty_remaining, accounting_warning FROM trades
 WHERE user_id = $1 AND status = 'closed'
   AND (account_id = COALESCE($2, account_id))
   AND (closed_at >= COALESCE($3::timestamp, closed_at))
@@ -277,6 +277,7 @@ func (q *Queries) ListClosedTrades(ctx context.Context, arg ListClosedTradesPara
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.QtyRemaining,
+			&i.AccountingWarning,
 		); err != nil {
 			return nil, err
 		}
@@ -339,7 +340,7 @@ func (q *Queries) ListExecutionsForTrade(ctx context.Context, tradeID string) ([
 }
 
 const listTrades = `-- name: ListTrades :many
-SELECT id, user_id, account_id, symbol, instrument_type, direction, status, opened_at, closed_at, qty_opened, avg_entry_price, avg_exit_price, gross_pnl, fees_total, net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes, created_at, updated_at, qty_remaining FROM trades
+SELECT id, user_id, account_id, symbol, instrument_type, direction, status, opened_at, closed_at, qty_opened, avg_entry_price, avg_exit_price, gross_pnl, fees_total, net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes, created_at, updated_at, qty_remaining, accounting_warning FROM trades
 WHERE user_id = $1
   AND (account_id = COALESCE($2, account_id))
   AND (status = COALESCE($3, status))
@@ -385,6 +386,7 @@ func (q *Queries) ListTrades(ctx context.Context, arg ListTradesParams) ([]Trade
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.QtyRemaining,
+			&i.AccountingWarning,
 		); err != nil {
 			return nil, err
 		}
@@ -417,8 +419,8 @@ func (q *Queries) UpdateTradeNotes(ctx context.Context, arg UpdateTradeNotesPara
 const upsertTrade = `-- name: UpsertTrade :exec
 INSERT INTO trades (id, user_id, account_id, symbol, instrument_type, direction, status,
     opened_at, closed_at, qty_opened, qty_remaining, avg_entry_price, avg_exit_price, gross_pnl, fees_total,
-    net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, '')
+    net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, accounting_warning, notes)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, '')
 ON CONFLICT(id) DO UPDATE SET
     account_id = excluded.account_id, symbol = excluded.symbol,
     instrument_type = excluded.instrument_type, direction = excluded.direction,
@@ -428,30 +430,32 @@ ON CONFLICT(id) DO UPDATE SET
     avg_exit_price = excluded.avg_exit_price, gross_pnl = excluded.gross_pnl,
     fees_total = excluded.fees_total, net_pnl = excluded.net_pnl,
     pnl_currency = excluded.pnl_currency, return_pct = excluded.return_pct,
+    accounting_warning = excluded.accounting_warning,
     time_in_trade_secs = excluded.time_in_trade_secs, updated_at = CURRENT_TIMESTAMP
 `
 
 type UpsertTradeParams struct {
-	ID              string          `json:"id"`
-	UserID          string          `json:"user_id"`
-	AccountID       string          `json:"account_id"`
-	Symbol          string          `json:"symbol"`
-	InstrumentType  string          `json:"instrument_type"`
-	Direction       string          `json:"direction"`
-	Status          string          `json:"status"`
-	OpenedAt        time.Time       `json:"opened_at"`
-	ClosedAt        sql.NullTime    `json:"closed_at"`
-	QtyOpened       float64         `json:"qty_opened"`
-	QtyRemaining    float64         `json:"qty_remaining"`
-	AvgEntryPrice   float64         `json:"avg_entry_price"`
-	AvgExitPrice    sql.NullFloat64 `json:"avg_exit_price"`
-	GrossPnl        sql.NullFloat64 `json:"gross_pnl"`
-	FeesTotal       float64         `json:"fees_total"`
-	NetPnl          sql.NullFloat64 `json:"net_pnl"`
-	PnlCurrency     string          `json:"pnl_currency"`
-	ReturnPct       sql.NullFloat64 `json:"return_pct"`
-	RMultiple       sql.NullFloat64 `json:"r_multiple"`
-	TimeInTradeSecs sql.NullInt64   `json:"time_in_trade_secs"`
+	ID                string          `json:"id"`
+	UserID            string          `json:"user_id"`
+	AccountID         string          `json:"account_id"`
+	Symbol            string          `json:"symbol"`
+	InstrumentType    string          `json:"instrument_type"`
+	Direction         string          `json:"direction"`
+	Status            string          `json:"status"`
+	OpenedAt          time.Time       `json:"opened_at"`
+	ClosedAt          sql.NullTime    `json:"closed_at"`
+	QtyOpened         float64         `json:"qty_opened"`
+	QtyRemaining      float64         `json:"qty_remaining"`
+	AvgEntryPrice     float64         `json:"avg_entry_price"`
+	AvgExitPrice      sql.NullFloat64 `json:"avg_exit_price"`
+	GrossPnl          sql.NullFloat64 `json:"gross_pnl"`
+	FeesTotal         float64         `json:"fees_total"`
+	NetPnl            sql.NullFloat64 `json:"net_pnl"`
+	PnlCurrency       string          `json:"pnl_currency"`
+	ReturnPct         sql.NullFloat64 `json:"return_pct"`
+	RMultiple         sql.NullFloat64 `json:"r_multiple"`
+	TimeInTradeSecs   sql.NullInt64   `json:"time_in_trade_secs"`
+	AccountingWarning string          `json:"accounting_warning"`
 }
 
 func (q *Queries) UpsertTrade(ctx context.Context, arg UpsertTradeParams) error {
@@ -476,6 +480,7 @@ func (q *Queries) UpsertTrade(ctx context.Context, arg UpsertTradeParams) error 
 		arg.ReturnPct,
 		arg.RMultiple,
 		arg.TimeInTradeSecs,
+		arg.AccountingWarning,
 	)
 	return err
 }

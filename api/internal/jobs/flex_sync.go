@@ -7,13 +7,14 @@ import (
 
 	"github.com/tradermemos/api/internal/flexsync"
 	"github.com/tradermemos/api/internal/store"
+	"github.com/tradermemos/api/internal/trades"
 )
 
 // NewFlexSync returns a job that pulls IBKR Flex statements for every account
 // with sync enabled and runs them through the import pipeline. Each account's
 // outcome (including failure) is recorded on its settings row, so one broken
 // token never blocks other accounts.
-func NewFlexSync(q store.Querier, client *flexsync.Client, every time.Duration, log *slog.Logger) Job {
+func NewFlexSync(q store.Querier, client *flexsync.Client, every time.Duration, log *slog.Logger, getters ...trades.BarsGetter) Job {
 	run := func(ctx context.Context) error {
 		rows, err := q.ListEnabledFlexSyncSettings(ctx)
 		if err != nil {
@@ -23,7 +24,7 @@ func NewFlexSync(q store.Querier, client *flexsync.Client, every time.Duration, 
 			if ctx.Err() != nil {
 				return ctx.Err()
 			}
-			res, err := flexsync.Sync(ctx, q, client, s)
+			res, err := flexsync.Sync(ctx, q, client, s, getters...)
 			flexsync.RecordOutcome(ctx, q, s, res, err)
 			if err != nil {
 				log.Warn("flex sync failed", "account", s.AccountID, "err", err)

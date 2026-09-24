@@ -127,6 +127,9 @@ func main() {
 	flexClient := &flexsync.Client{}
 	alertsSvc := alerts.NewService(q, logger, cfg.AlertsAllowPrivateWebhooks)
 	tradesSvc := trades.NewService(q)
+	if marketSvc != nil {
+		tradesSvc.GetBars = marketSvc.GetBars
+	}
 	tradesSvc.AfterRegroup = func(userID, _ string) { alertsSvc.TradeWritten(userID) }
 	s := api.New(api.Deps{
 		JWTSecret:         cfg.JWTSecret,
@@ -176,7 +179,7 @@ func main() {
 			runner.Register(jobs.NewFlexSync(
 				q, flexClient,
 				time.Duration(cfg.JobFlexSyncIntervalMin)*time.Minute,
-				logger,
+				logger, tradesSvc.GetBars,
 			))
 		}
 		if cfg.JobAlertsIntervalMin > 0 {

@@ -13,6 +13,7 @@ import (
 
 	"github.com/tradermemos/api/internal/importer"
 	"github.com/tradermemos/api/internal/store"
+	"github.com/tradermemos/api/internal/trades"
 )
 
 // Result summarizes one account sync.
@@ -32,7 +33,7 @@ func (r Result) Summary() string {
 // import pipeline (broker preset mapping → dedup → commit → regroup),
 // recording an import batch for history. The statement must be a CSV Flex
 // Query containing the Trades → Executions section.
-func Sync(ctx context.Context, q store.Querier, client *Client, s store.FlexSyncSetting) (Result, error) {
+func Sync(ctx context.Context, q store.Querier, client *Client, s store.FlexSyncSetting, getters ...trades.BarsGetter) (Result, error) {
 	data, err := client.FetchStatement(ctx, s.Token, s.QueryID)
 	if err != nil {
 		return Result{}, err
@@ -65,7 +66,7 @@ func Sync(ctx context.Context, q store.Querier, client *Client, s store.FlexSync
 	parsed := importer.NewGeneric(mapping).WithSourceTZ(sourceTZ).ParseRows(rows)
 	parsed.Format = "executions"
 	committed, err := importer.Commit(ctx, q, s.UserID, s.AccountID,
-		sql.NullString{String: batch.ID, Valid: true}, parsed)
+		sql.NullString{String: batch.ID, Valid: true}, parsed, getters...)
 	if err != nil {
 		return Result{}, fmt.Errorf("commit: %w", err)
 	}

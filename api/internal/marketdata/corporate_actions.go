@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var commonSplitRatios = []float64{2, 3, 4, 5, 6, 10}
+var commonSplitRatios = []float64{2, 3, 4, 5, 6, 7, 10}
 
 // CorporateActionCandidate is evidence of a possible unsupported boundary.
 // Candidates are never authoritative: imported broker records remain unchanged.

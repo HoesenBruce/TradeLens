@@ -25,6 +25,11 @@ func TestFindCorporateActionCandidates(t *testing.T) {
 			wantType: "stock_split", wantRatio: 2,
 		},
 		{
+			name: "seven for one split", status: "unadjusted", wantCount: 1,
+			bars:     []Bar{dailyBar("2025-09-26", 17745, 18200, 17500, 17920), dailyBar("2025-09-29", 2560, 2600, 2500, 2535)},
+			wantType: "stock_split", wantRatio: 7,
+		},
+		{
 			name: "reverse split", status: "unadjusted", wantCount: 1,
 			bars:     []Bar{dailyBar("2026-01-01", 10, 10.4, 9.8, 10.2), dailyBar("2026-01-02", 51, 52, 49, 50)},
 			wantType: "reverse_stock_split", wantRatio: 5,

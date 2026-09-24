@@ -14,14 +14,21 @@ import (
 )
 
 type Service struct {
-	q store.Querier
+	q       store.Querier
+	GetBars BarsGetter
 	// AfterRegroup, when set, runs after every successful Regroup — the single
 	// seam that sees manual entry, edits, imports, and background syncs alike
 	// (journal-alert evaluation hooks in here).
 	AfterRegroup func(userID, accountID string)
 }
 
-func NewService(q store.Querier) *Service { return &Service{q: q} }
+func NewService(q store.Querier, getters ...BarsGetter) *Service {
+	s := &Service{q: q}
+	if len(getters) > 0 {
+		s.GetBars = getters[0]
+	}
+	return s
+}
 
 // Regroup rebuilds all trades for an account from its executions. Idempotent.
 func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
@@ -89,7 +96,11 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 		strategies := map[string]AccountingStrategy{
 			"sbi:cash": SBICashAccounting, "sbi:margin-long": SBIMarginAccounting, "sbi:margin-short": SBIMarginAccounting,
 		}
-		for _, tr := range Account(g, strategies).Trades {
+		result := Account(g, strategies)
+		if err := s.checkSplitBoundaries(ctx, g, &result); err != nil {
+			return err
+		}
+		for _, tr := range result.Trades {
 			id := tr.ExecutionIDs[0] // opening fill = stable id
 			upserts = append(upserts, toUpsertParams(id, userID, accountID, acc.BaseCurrency, tr))
 			for _, eid := range tr.ExecutionIDs {
@@ -277,26 +288,27 @@ func optionRightFromOCCMarker(s string) string {
 // nullable columns).
 func toUpsertParams(id, userID, accountID, pnlCurrency string, tr Trade) store.UpsertTradeParams {
 	return store.UpsertTradeParams{
-		ID:              id,
-		UserID:          userID,
-		AccountID:       accountID,
-		Symbol:          tr.Symbol,
-		InstrumentType:  tr.InstrumentType,
-		Direction:       tr.Direction,
-		Status:          tr.Status,
-		OpenedAt:        tr.OpenedAt,
-		ClosedAt:        nt(tr.ClosedAt),
-		QtyOpened:       tr.QtyOpened,
-		QtyRemaining:    tr.QtyRemaining,
-		AvgEntryPrice:   tr.AvgEntryPrice,
-		AvgExitPrice:    nf(tr.AvgExitPrice),
-		GrossPnl:        nf(tr.GrossPnl),
-		FeesTotal:       tr.FeesTotal,
-		NetPnl:          nf(tr.NetPnl),
-		PnlCurrency:     pnlCurrency,
-		ReturnPct:       nf(tr.ReturnPct),
-		RMultiple:       sql.NullFloat64{}, // derived from trade_journal.initial_risk at read time; null in the row
-		TimeInTradeSecs: ni(tr.TimeInTradeSecs),
+		ID:                id,
+		AccountingWarning: tr.AccountingWarning,
+		UserID:            userID,
+		AccountID:         accountID,
+		Symbol:            tr.Symbol,
+		InstrumentType:    tr.InstrumentType,
+		Direction:         tr.Direction,
+		Status:            tr.Status,
+		OpenedAt:          tr.OpenedAt,
+		ClosedAt:          nt(tr.ClosedAt),
+		QtyOpened:         tr.QtyOpened,
+		QtyRemaining:      tr.QtyRemaining,
+		AvgEntryPrice:     tr.AvgEntryPrice,
+		AvgExitPrice:      nf(tr.AvgExitPrice),
+		GrossPnl:          nf(tr.GrossPnl),
+		FeesTotal:         tr.FeesTotal,
+		NetPnl:            nf(tr.NetPnl),
+		PnlCurrency:       pnlCurrency,
+		ReturnPct:         nf(tr.ReturnPct),
+		RMultiple:         sql.NullFloat64{}, // derived from trade_journal.initial_risk at read time; null in the row
+		TimeInTradeSecs:   ni(tr.TimeInTradeSecs),
 	}
 }
 
