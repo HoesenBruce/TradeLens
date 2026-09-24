@@ -6798,3 +6798,14 @@ msgstr "Actual P&L"
 #. js-lingui-explicit-id
 msgid "trades.savedAccountingResult"
 msgstr "Saved accounting result; changes to executions appear after saving."
+#. js-lingui-explicit-id
+msgid "accounts.netContributions"
+msgstr "Net Contributions"
+
+#. js-lingui-explicit-id
+msgid "accounts.accountValue"
+msgstr "Account Value"
+
+#. js-lingui-explicit-id
+msgid "accounts.gainLoss"
+msgstr "Gain / Loss"
