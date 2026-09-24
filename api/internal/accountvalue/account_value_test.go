@@ -113,6 +113,31 @@ func TestReconstructAppliesReportedSplit(t *testing.T) {
 	require.Empty(t, point.Warnings)
 }
 
+func TestSplitWithPartialClosePreservesAccountValue(t *testing.T) {
+	response := bars("7013", "unadjusted", map[string]float64{
+		"2025-09-26": 17745, "2025-09-29": 2535,
+	})
+	for i := range response.Bars {
+		if response.Bars[i].MarketDate == "2025-09-29" {
+			response.Bars[i].SplitRatio = 7
+		}
+	}
+	result, err := testService(map[string]marketdata.Response{"7013": response}).Reconstruct(context.Background(), Request{
+		Executions: []store.Execution{
+			execution("buy", "a", "7013", "sbi:cash", "buy", "2025-09-25T01:00:00Z", 200, 17745),
+			execution("sell", "a", "7013", "sbi:cash", "sell", "2025-09-29T01:00:00Z", 200, 2535),
+		},
+		CashTransactions: []store.CashTransaction{cashRow("deposit", "a", "deposit", 11000000, "2025-09-25T01:00:00Z")},
+		MarketSessions:   []time.Time{day("2025-09-26"), day("2025-09-29")},
+	})
+	require.NoError(t, err)
+	for _, point := range result.Accounts[0].Points {
+		require.Equal(t, "complete", point.Status)
+		require.InDelta(t, 11000000, *point.EstimatedAccountValue, 1)
+		require.Equal(t, 11000000.0, point.ContributedCapital)
+	}
+}
+
 func TestExplicitSplitsHonorsConfirmedAndRejected(t *testing.T) {
 	responses := map[Instrument]marketdata.Response{
 		{"AAA", "stock"}: {CorporateActions: []marketdata.CorporateActionCandidate{{EffectiveDate: "2025-09-29", CandidateType: "reverse_stock_split", SuspectedRatio: 5, Status: "confirmed"}}},
