@@ -2,6 +2,7 @@ import { emotionLabel, sessionLabel, instrumentLabel } from "@/lib/tradeLabels";
 import { useLingui } from "@lingui/react";
 import { t as tr } from "@lingui/core/macro";
 import { useForm, useStore } from "@tanstack/react-form";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import {
   ArrowDownRight,
@@ -866,62 +867,70 @@ function SymbolCard({
               )}
             </div>
           )}
-          <div className="space-y-2">
-            <span className={labelClass}>
-              {tr({ id: "trades.tradePlan", message: "Trade plan" })}
-            </span>
-            <p className="text-[11px] text-muted-foreground">
-              {tr({
-                id: "trades.planDirectionHint",
-                message: "For your trade plan only. Does not change actual executions or P&L.",
-              })}
-            </p>
-          </div>
-          <div className="max-w-[12rem]">
-            <Field label={tr({ id: "trades.plannedDirection", message: "Planned direction" })}>
-              <SegmentedControl
-                ariaLabel={tr({ id: "trades.sideSymbol", message: `Side symbol ${index + 1}` })}
-                size="md"
-                fullWidth
-                options={[
-                  { value: "long", label: tr({ id: "trades.longChoice", message: "↗ LONG" }) },
-                  { value: "short", label: tr({ id: "trades.shortChoice", message: "↘ SHORT" }) },
-                ]}
-                tones={{ long: "pos", short: "neg" }}
-                value={block.plannedSide}
-                onChange={(side) => set("plannedSide", side as "long" | "short")}
-              />
-            </Field>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <Field label={tr({ id: "trades.target", message: "Target" })}>
-              <AmountInput
-                aria-label={tr({
-                  id: "trades.targetSymbol",
-                  message: `Target symbol ${index + 1}`,
+          <section
+            className="space-y-3 rounded-lg border border-border/70 p-3"
+            aria-label={tr({ id: "trades.tradePlan", message: "Trade plan" })}
+          >
+            <div className="space-y-2">
+              <span className={labelClass}>
+                {tr({ id: "trades.tradePlan", message: "Trade plan" })}
+              </span>
+              <p className="text-[11px] text-muted-foreground">
+                {tr({
+                  id: "trades.planDirectionHint",
+                  message: "For your trade plan only. Does not change actual executions or P&L.",
                 })}
-                value={block.target}
-                onValueChange={(v) => set("target", v)}
-                placeholder={tr({ id: "trades.optional", message: "Optional" })}
-                className={fieldTextClass}
-              />
-            </Field>
-            <Field label={tr({ id: "trades.stop", message: "Stop" })}>
-              <AmountInput
-                aria-label={tr({ id: "trades.stopSymbol", message: `Stop symbol ${index + 1}` })}
-                value={block.stop}
-                onValueChange={(v) => set("stop", v)}
-                placeholder={tr({ id: "trades.optional", message: "Optional" })}
-                className={fieldTextClass}
-              />
-            </Field>
-          </div>
+              </p>
+            </div>
+            <div className="max-w-[12rem]">
+              <Field label={tr({ id: "trades.plannedDirection", message: "Planned direction" })}>
+                <SegmentedControl
+                  ariaLabel={tr({ id: "trades.sideSymbol", message: `Side symbol ${index + 1}` })}
+                  size="md"
+                  fullWidth
+                  options={[
+                    { value: "long", label: tr({ id: "trades.longChoice", message: "↗ LONG" }) },
+                    { value: "short", label: tr({ id: "trades.shortChoice", message: "↘ SHORT" }) },
+                  ]}
+                  tones={{ long: "pos", short: "neg" }}
+                  value={block.plannedSide}
+                  onChange={(side) => set("plannedSide", side as "long" | "short")}
+                />
+              </Field>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label={tr({ id: "trades.target", message: "Target" })}>
+                <AmountInput
+                  aria-label={tr({
+                    id: "trades.targetSymbol",
+                    message: `Target symbol ${index + 1}`,
+                  })}
+                  value={block.target}
+                  onValueChange={(v) => set("target", v)}
+                  placeholder={tr({ id: "trades.optional", message: "Optional" })}
+                  className={fieldTextClass}
+                />
+              </Field>
+              <Field label={tr({ id: "trades.stop", message: "Stop" })}>
+                <AmountInput
+                  aria-label={tr({ id: "trades.stopSymbol", message: `Stop symbol ${index + 1}` })}
+                  value={block.stop}
+                  onValueChange={(v) => set("stop", v)}
+                  placeholder={tr({ id: "trades.optional", message: "Optional" })}
+                  className={fieldTextClass}
+                />
+              </Field>
+            </div>
+          </section>
           <form.Field name={`${base}.rows` as never} mode="array">
             {(rowsField) => (
               <div className="flex flex-col gap-2">
                 <span className={labelClass}>
                   {block.symbol
-                    ? tr({ id: "trades.executionsSymbol", message: `Executions · ${block.symbol}` })
+                    ? tr({
+                        id: "trades.executionsSymbol",
+                        message: `Executions · ${block.symbol}`,
+                      })
                     : tr({ id: "trades.executions", message: "Executions" })}
                 </span>
                 <p className="text-[11px] text-muted-foreground">
@@ -946,7 +955,7 @@ function SymbolCard({
                   <span />
                 </div>
                 {/* popLayout pulls the removed fill out of flow at once, so the
-                    rows below spring up rather than jump. */}
+                  rows below spring up rather than jump. */}
                 <AnimatePresence initial={false} mode="popLayout" onExitComplete={commitRowRemoval}>
                   {visibleRows.map(({ row, rowIndex }) => (
                     <motion.div
@@ -1165,7 +1174,7 @@ function SymbolCard({
                   })}
                   onClick={() =>
                     rowsField.pushValue(
-                      emptyExecutionRow(block.plannedSide === "short" ? "sell" : "buy", {
+                      emptyExecutionRow(block.rows.at(-1)?.side ?? "buy", {
                         option_right: block.option_right,
                         strike: block.option_strike,
                         expiry: block.option_expiry,
@@ -1504,6 +1513,7 @@ function SymbolCard({
 
 export function NewTradeDrawer() {
   useLingui();
+  const queryClient = useQueryClient();
   usePrivacyMode();
   const reduceMotion = useReducedMotion();
   const navigate = useNavigate();
@@ -1523,7 +1533,7 @@ export function NewTradeDrawer() {
   const updateExecution = useUpdateExecution();
   const deleteExecution = useDeleteExecution();
   const editTradeQ = useTradeDetail(editTradeId ?? "");
-  /** Prefer the snapshot passed at open; fall back to query cache/network. */
+  /** The edit entry point passes a freshly fetched detail; import previews use a local snapshot. */
   const editSource = editTradeDetail ?? editTradeQ.data;
   const editPreviewSide =
     isEditMode && editSource ? (editSource.direction === "short" ? "short" : "long") : undefined;
@@ -1641,7 +1651,7 @@ export function NewTradeDrawer() {
 
           const block = value.trades[0];
           if (block && tradeId) {
-            await tradesApi.patch(tradeId, {
+            const updatedTrade = await tradesApi.patch(tradeId, {
               notes: updateStructuredJournalNotes(editSource?.notes ?? "", {
                 session: block.session,
                 plannedDirection: block.plannedSide,
@@ -1659,6 +1669,8 @@ export function NewTradeDrawer() {
               target_price: num(block.target) ?? undefined,
               stop_price: num(block.stop) ?? undefined,
             });
+            await queryClient.cancelQueries({ queryKey: ["trade", tradeId] });
+            queryClient.setQueryData(["trade", tradeId], updatedTrade);
             for (const file of capScreenshots(pendingFilesByKey[block.key] ?? [], maxScreenshots)) {
               const fd = new FormData();
               fd.append("file", file);
