@@ -55,6 +55,31 @@ func TestReconstructValuesAccountsPositionsAndCashEvents(t *testing.T) {
 	require.Equal(t, 100.0, *result.Accounts[1].Points[0].EstimatedAccountValue)
 }
 
+func TestReconstructDeductsGenbikiPrincipalAcrossDays(t *testing.T) {
+	service := testService(map[string]marketdata.Response{
+		"AAA": bars("AAA", "unadjusted", map[string]float64{"2026-09-02": 1000, "2026-09-03": 1000}),
+	})
+	open := execution("open", "a", "AAA", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 1000)
+	first := execution("first", "a", "AAA", "sbi:margin-long", "sell", "2026-09-02T01:00:00Z", 40, 1100)
+	first.Details = sql.NullString{String: `{"lot":"sbi:margin-long","conversion_type":"genbiki","conversion_id":"c1"}`, Valid: true}
+	firstCash := execution("first-cash", "a", "AAA", "sbi:cash", "buy", "2026-09-02T01:00:00.000001Z", 40, 1100)
+	firstCash.Details = sql.NullString{String: `{"lot":"sbi:cash","conversion_type":"genbiki","conversion_id":"c1"}`, Valid: true}
+	second := execution("second", "a", "AAA", "sbi:margin-long", "sell", "2026-09-03T01:00:00Z", 60, 1100)
+	second.Details = sql.NullString{String: `{"lot":"sbi:margin-long","conversion_type":"genbiki","conversion_id":"c2"}`, Valid: true}
+	secondCash := execution("second-cash", "a", "AAA", "sbi:cash", "buy", "2026-09-03T01:00:00.000001Z", 60, 1100)
+	secondCash.Details = sql.NullString{String: `{"lot":"sbi:cash","conversion_type":"genbiki","conversion_id":"c2"}`, Valid: true}
+	result, err := service.Reconstruct(context.Background(), Request{
+		Executions: []store.Execution{open, first, firstCash, second, secondCash},
+		MarketSessions: []time.Time{day("2026-09-02"), day("2026-09-03")},
+	})
+	require.NoError(t, err)
+	points := result.Accounts[0].Points
+	require.Equal(t, -40000.0, points[0].CashBalance)
+	require.Equal(t, -100000.0, points[1].CashBalance)
+	require.Empty(t, points[0].Warnings)
+	require.Empty(t, points[1].Warnings)
+}
+
 func TestReconstructIdentifiesInvalidExecution(t *testing.T) {
 	service := testService(map[string]marketdata.Response{
 		"AAA": bars("AAA", "unadjusted", map[string]float64{"2026-09-02": 10}),
