@@ -229,8 +229,14 @@ func (s *Service) loadPrices(ctx context.Context, executions []store.Execution, 
 func explicitSplits(responses map[Instrument]marketdata.Response) []positions.Split {
 	var splits []positions.Split
 	for instrument, response := range responses {
+		rejected := map[string]bool{}
+		for _, candidate := range response.CorporateActions {
+			if candidate.Status == "rejected" {
+				rejected[candidate.EffectiveDate] = true
+			}
+		}
 		for _, bar := range response.Bars {
-			if bar.SplitRatio <= 0 || bar.SplitRatio == 1 {
+			if bar.SplitRatio <= 0 || bar.SplitRatio == 1 || rejected[bar.MarketDate] {
 				continue
 			}
 			date, err := time.ParseInLocation(time.DateOnly, bar.MarketDate, tokyo)

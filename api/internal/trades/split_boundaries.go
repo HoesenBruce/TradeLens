@@ -3,6 +3,7 @@ package trades
 import (
 	"context"
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -73,7 +74,11 @@ func (s *Service) checkSplitBoundaries(ctx context.Context, fills []Execution, r
 		}
 	}
 	zone, _ := time.LoadLocation(marketdata.MarketTimezone(marketdata.Request{Symbol: fills[0].Symbol, InstrumentType: "stock"}))
-	if from.In(zone).Format("2006-01-02") == to.In(zone).Format("2006-01-02") {
+	open := false
+	for _, tr := range result.Trades {
+		open = open || tr.Status == "open"
+	}
+	if !open && from.In(zone).Format("2006-01-02") == to.In(zone).Format("2006-01-02") {
 		return nil
 	}
 	if s.GetBars == nil {
@@ -82,9 +87,20 @@ func (s *Service) checkSplitBoundaries(ctx context.Context, fills []Execution, r
 		}
 		return nil
 	}
+	for _, tr := range result.Trades {
+		if tr.Status == "open" && time.Now().After(to) {
+			to = time.Now()
+			break
+		}
+	}
 	response, err := s.GetBars(ctx, marketdata.Request{Symbol: fills[0].Symbol, InstrumentType: "stock", Interval: "D", From: from.AddDate(0, 0, -7), To: to.AddDate(0, 0, 1)})
 	if err != nil {
 		return fmt.Errorf("check corporate actions for %s: %w", fills[0].Symbol, err)
+	}
+	if response.Timezone != "" {
+		if location, err := time.LoadLocation(response.Timezone); err == nil {
+			zone = location
+		}
 	}
 	candidates := append([]marketdata.CorporateActionCandidate(nil), response.CorporateActions...)
 	for _, detected := range marketdata.FindCorporateActionCandidates(response) {
@@ -96,10 +112,47 @@ func (s *Service) checkSplitBoundaries(ctx context.Context, fills []Execution, r
 			candidates = append(candidates, detected)
 		}
 	}
-	loc := time.UTC
-	if zone, err := time.LoadLocation(response.Timezone); err == nil {
-		loc = zone
+	// Only a provider split ratio or an explicitly confirmed candidate can change accounting.
+	// A rejected candidate vetoes a provider ratio for the same day.
+	approved := map[string]float64{}
+	for _, bar := range response.Bars {
+		if bar.SplitRatio > 0 && bar.SplitRatio != 1 {
+			approved[bar.MarketDate] = bar.SplitRatio
+		}
 	}
+	for _, c := range response.CorporateActions {
+		switch c.Status {
+		case "rejected":
+			delete(approved, c.EffectiveDate)
+		case "confirmed":
+			if c.SuspectedRatio > 0 && (c.CandidateType == "stock_split" || c.CandidateType == "reverse_stock_split") {
+				ratio := c.SuspectedRatio
+				if c.CandidateType == "reverse_stock_split" {
+					ratio = 1 / ratio
+				}
+				approved[c.EffectiveDate] = ratio
+			}
+		}
+	}
+	for _, c := range response.CorporateActions {
+		if c.Status == "rejected" {
+			delete(approved, c.EffectiveDate)
+		}
+	}
+	adjusted := append([]Execution(nil), fills...)
+	days := make([]string, 0, len(approved))
+	for day := range approved {
+		days = append(days, day)
+	}
+	sort.Strings(days)
+	for _, day := range days {
+		adjustPriorFills(adjusted, day, approved[day], zone)
+	}
+	if len(days) > 0 {
+		strategies := map[string]AccountingStrategy{"sbi:cash": SBICashAccounting, "sbi:margin-long": SBIMarginAccounting, "sbi:margin-short": SBIMarginAccounting}
+		*result = Account(adjusted, strategies)
+	}
+	loc := zone
 	for i := range result.Trades {
 		tr := &result.Trades[i]
 		last := tr.OpenedAt
@@ -115,6 +168,9 @@ func (s *Service) checkSplitBoundaries(ctx context.Context, fills []Execution, r
 				reliable = reliable && f.BrokerReportedPnl != nil && f.ConversionType == ""
 			}
 		}
+		if tr.Status == "open" && to.After(last) {
+			last = to
+		}
 		reliable = reliable && closeCount > 0 && tr.NetPnl != nil
 		for _, c := range candidates {
 			if c.Status == "rejected" {
@@ -126,6 +182,11 @@ func (s *Service) checkSplitBoundaries(ctx context.Context, fills []Execution, r
 			}
 			day := date.Format("2006-01-02")
 			if day <= tr.OpenedAt.In(loc).Format("2006-01-02") || day > last.In(loc).Format("2006-01-02") {
+				continue
+			}
+			if _, ok := approved[day]; ok {
+				tr.AccountingWarning += fmt.Sprintf(" Stock split adjusted: %.3g:1 on %s.", approved[day], day)
+				tr.AccountingWarning = strings.TrimSpace(tr.AccountingWarning)
 				continue
 			}
 			tr.AccountingWarning = fmt.Sprintf("Corporate-action boundary: %s on %s (ratio %.3g). Quantities and cost basis are not split-adjusted.", c.CandidateType, day, c.SuspectedRatio)
@@ -140,4 +201,39 @@ func (s *Service) checkSplitBoundaries(ctx context.Context, fills []Execution, r
 		}
 	}
 	return nil
+}
+
+// Convert only the currently open round trip into the new share basis.
+// Earlier closed trades and imported executions keep their original units.
+func adjustPriorFills(fills []Execution, day string, ratio float64, zone *time.Location) {
+	if ratio <= 0 || ratio == 1 {
+		return
+	}
+	sort.SliceStable(fills, func(i, j int) bool { return fills[i].ExecutedAt.Before(fills[j].ExecutedAt) })
+	start, position := 0, 0.0
+	end := len(fills)
+	for i, f := range fills {
+		if f.ExecutedAt.In(zone).Format(time.DateOnly) >= day {
+			end = i
+			break
+		}
+		if position == 0 {
+			start = i
+		}
+		if f.Side == "buy" {
+			position += f.Quantity
+		} else {
+			position -= f.Quantity
+		}
+		if abs(position) < 1e-9 {
+			position = 0
+		}
+	}
+	if position == 0 {
+		return
+	}
+	for i := start; i < end; i++ {
+		fills[i].Quantity *= ratio
+		fills[i].Price /= ratio
+	}
 }
