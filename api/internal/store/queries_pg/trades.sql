@@ -37,8 +37,8 @@ ORDER BY opened_at DESC;
 -- name: UpsertTrade :exec
 INSERT INTO trades (id, user_id, account_id, symbol, instrument_type, direction, status,
     opened_at, closed_at, qty_opened, qty_remaining, avg_entry_price, avg_exit_price, gross_pnl, fees_total,
-    net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, '')
+    net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, accounting_warning, notes)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, '')
 ON CONFLICT(id) DO UPDATE SET
     account_id = excluded.account_id, symbol = excluded.symbol,
     instrument_type = excluded.instrument_type, direction = excluded.direction,
@@ -48,6 +48,7 @@ ON CONFLICT(id) DO UPDATE SET
     avg_exit_price = excluded.avg_exit_price, gross_pnl = excluded.gross_pnl,
     fees_total = excluded.fees_total, net_pnl = excluded.net_pnl,
     pnl_currency = excluded.pnl_currency, return_pct = excluded.return_pct,
+    accounting_warning = excluded.accounting_warning,
     time_in_trade_secs = excluded.time_in_trade_secs, updated_at = CURRENT_TIMESTAMP;
 
 -- name: DeleteTradesNotInAccount :exec

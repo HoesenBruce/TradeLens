@@ -290,6 +290,14 @@ function TradeDetailSheetBody({
 
   return (
     <div className="flex flex-col gap-5 px-4 py-4">
+      {trade.accounting_warning && (
+        <p
+          role="alert"
+          className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-sm"
+        >
+          {trade.accounting_warning}
+        </p>
+      )}
       <div>
         <div className="flex flex-wrap items-center gap-2.5">
           <Pill

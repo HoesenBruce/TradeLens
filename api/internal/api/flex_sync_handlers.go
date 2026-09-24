@@ -190,7 +190,7 @@ func (s *Server) handleRunFlexSync(c *echo.Context) error {
 		return Fail(http.StatusServiceUnavailable, "unavailable", "flex sync is not available", nil)
 	}
 
-	res, syncErr := flexsync.Sync(ctx, s.deps.Store, s.deps.FlexClient, row)
+	res, syncErr := flexsync.Sync(ctx, s.deps.Store, s.deps.FlexClient, row, s.deps.Trades.GetBars)
 	flexsync.RecordOutcome(ctx, s.deps.Store, row, res, syncErr)
 	if syncErr != nil {
 		// A statement that isn't ready inside the polling window is normal

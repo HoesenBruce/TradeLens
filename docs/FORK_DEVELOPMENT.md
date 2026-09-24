@@ -259,3 +259,36 @@ that repository documentation does not contradict the active development scope.
   Remaining UI/catalog entries may fall back to English; full translation and
   layout QA belong to a later issue once the UI stabilizes. Mobile is preserved
   but localization/device behavior has not been validated.
+
+### SBI margin settlement P&L and split boundaries (#148)
+
+Completed SBI margin trades with broker-reported close results use the sum of
+settlement P&L (plus any supported single-opening fallback closes). Settlement
+values are already net: fees are not deducted again; gross is net plus the
+recorded fees. Ordinary partial closes keep `trade.net_pnl = null`. The existing
+conversion reconciliation remains in force. Other broker buckets retain their
+normal accounting unless a corporate-action boundary makes the price basis unsafe.
+
+For example, two 7013 buys of 100 at 17,980 and 17,510 followed by two sales of
+100 at 2,614.5 and 2,611.5, with SBI settlement results of 11,331 and 11,031,
+now produce net JPY 22,362 rather than JPY -3,026,438 (assuming JPY 38 fees).
+
+With market data enabled, regroup checks daily provider split events and the
+existing OHLC discontinuity detector (including 7:1). A crossing trade without
+complete SBI settlement evidence gets null gross/net P&L and return percentage.
+With complete evidence, settlement P&L is retained but return percentage is null:
+raw entry notional is not a split-adjusted return basis. `accounting_warning` is
+persisted and included in list/detail responses, the detail drawer and full page.
+No split normalization of execution quantities or prices is performed.
+
+Market lookup failures abort regroup before trade writes; retry after restoring
+the provider. Disabled/unconfigured market data cannot establish split boundaries
+and is explicitly labelled as unchecked on multi-day stock streams. Detection is
+limited to provider coverage and the existing heuristic, not an authoritative
+corporate-action registry. Offline import/legacy normalization callers likewise
+need a configured bars getter to perform the check.
+
+Existing trade rows are not rewritten by the schema migration. Rebuild affected
+accounts via `POST /api/v1/trades/regroup` with `{"account_id":"..."}` and working
+market data. This can change historical P&L/statistics or exclude unsafe results
+from P&L aggregates; original imported executions and journal annotations remain.

@@ -1,0 +1,1 @@
+ALTER TABLE trades ADD COLUMN IF NOT EXISTS accounting_warning TEXT NOT NULL DEFAULT '';
