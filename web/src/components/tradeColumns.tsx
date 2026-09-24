@@ -45,10 +45,11 @@ export function tradeNotional(qty: number, price: number, instrumentType: string
 }
 
 export function tradeStatus(t: Trade): {
-  label: "WIN" | "LOSS" | "OPEN" | "BE";
+  label: "WIN" | "LOSS" | "OPEN" | "BE" | "N/A";
   tone: PillTone;
 } {
   if (t.status === "open") return { label: "OPEN", tone: "accent" };
+  if (t.net_pnl == null && t.accounting_warning) return { label: "N/A", tone: "muted" };
   if (t.net_pnl != null && t.net_pnl > 0) return { label: "WIN", tone: "pos" };
   if (t.net_pnl != null && t.net_pnl < 0) return { label: "LOSS", tone: "neg" };
   return { label: "BE", tone: "muted" };
@@ -143,6 +144,7 @@ export function tradeColumns(
           LOSS: tr({ id: "trades.loss", message: "Loss" }),
           OPEN: tr({ id: "trades.open", message: "Open" }),
           BE: tr({ id: "trades.breakEven", message: "Break-even" }),
+          "N/A": i.row.original.accounting_warning ?? "N/A",
         };
         return (
           <Pill tone={s.tone} title={titles[s.label]}>

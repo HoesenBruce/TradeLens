@@ -126,6 +126,26 @@ describe("TradeDetailSheet", () => {
     } as never);
   });
 
+  it("surfaces an unavailable split result without a numeric P&L", () => {
+    const warning =
+      "Corporate-action boundary: stock_split on 2025-09-29 (ratio 7). P&L unavailable.";
+    mockedDetail.mockReturnValue({
+      data: {
+        ...TRADE,
+        net_pnl: null,
+        gross_pnl: null,
+        return_pct: null,
+        accounting_warning: warning,
+      },
+      isLoading: false,
+      isError: false,
+    } as never);
+    wrap(<TradeDetailSheet tradeId="t1" onClose={vi.fn<(...args: any[]) => any>()} />);
+    expect(screen.getByRole("alert")).toHaveTextContent(warning);
+    expect(screen.getByText("N/A")).toBeInTheDocument();
+    expect(screen.queryByText("+$2.50")).not.toBeInTheDocument();
+  });
+
   it("shows WIN status, dates, and collapses empty plan dashes", () => {
     wrap(<TradeDetailSheet tradeId="t1" onClose={vi.fn<(...args: any[]) => any>()} />);
 

@@ -24,7 +24,7 @@ type CommitResult struct {
 
 // Commit inserts executions, regroups trades, then applies journal annotations.
 // batchID may be invalid (CLI imports); when valid, executions are tagged for reversal.
-func Commit(ctx context.Context, q store.Querier, userID, accountID string, batchID sql.NullString, parsed ParseResult) (CommitResult, error) {
+func Commit(ctx context.Context, q store.Querier, userID, accountID string, batchID sql.NullString, parsed ParseResult, getters ...trades.BarsGetter) (CommitResult, error) {
 	res := CommitResult{Errors: parsed.Errors, Format: parsed.Format}
 	if res.Errors == nil {
 		res.Errors = []RowError{}
@@ -134,7 +134,7 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 		return res, fmt.Errorf("insert %d executions: %w", len(inserts), err)
 	}
 
-	if err := trades.NewService(q).Regroup(ctx, userID, accountID); err != nil {
+	if err := trades.NewService(q, getters...).Regroup(ctx, userID, accountID); err != nil {
 		return res, fmt.Errorf("regroup trades after %d inserts: %w", res.Inserted, err)
 	}
 

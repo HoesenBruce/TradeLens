@@ -11,7 +11,7 @@ import (
 )
 
 const listTradesMissingExcursion = `-- name: ListTradesMissingExcursion :many
-SELECT t.id, t.user_id, t.account_id, t.symbol, t.instrument_type, t.direction, t.status, t.opened_at, t.closed_at, t.qty_opened, t.avg_entry_price, t.avg_exit_price, t.gross_pnl, t.fees_total, t.net_pnl, t.pnl_currency, t.return_pct, t.r_multiple, t.time_in_trade_secs, t.notes, t.created_at, t.updated_at, t.qty_remaining FROM trades t
+SELECT t.id, t.user_id, t.account_id, t.symbol, t.instrument_type, t.direction, t.status, t.opened_at, t.closed_at, t.qty_opened, t.avg_entry_price, t.avg_exit_price, t.gross_pnl, t.fees_total, t.net_pnl, t.pnl_currency, t.return_pct, t.r_multiple, t.time_in_trade_secs, t.notes, t.created_at, t.updated_at, t.qty_remaining, t.accounting_warning FROM trades t
 LEFT JOIN trade_journal j ON j.trade_id = t.id
 WHERE t.status = 'closed' AND t.instrument_type != 'option'
   AND (j.trade_id IS NULL OR j.mfe IS NULL
@@ -68,6 +68,7 @@ func (q *Queries) ListTradesMissingExcursion(ctx context.Context, arg ListTrades
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.QtyRemaining,
+			&i.AccountingWarning,
 		); err != nil {
 			return nil, err
 		}

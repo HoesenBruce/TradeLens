@@ -362,29 +362,30 @@ type Tag struct {
 }
 
 type Trade struct {
-	ID              string          `json:"id"`
-	UserID          string          `json:"user_id"`
-	AccountID       string          `json:"account_id"`
-	Symbol          string          `json:"symbol"`
-	InstrumentType  string          `json:"instrument_type"`
-	Direction       string          `json:"direction"`
-	Status          string          `json:"status"`
-	OpenedAt        time.Time       `json:"opened_at"`
-	ClosedAt        sql.NullTime    `json:"closed_at"`
-	QtyOpened       float64         `json:"qty_opened"`
-	AvgEntryPrice   float64         `json:"avg_entry_price"`
-	AvgExitPrice    sql.NullFloat64 `json:"avg_exit_price"`
-	GrossPnl        sql.NullFloat64 `json:"gross_pnl"`
-	FeesTotal       float64         `json:"fees_total"`
-	NetPnl          sql.NullFloat64 `json:"net_pnl"`
-	PnlCurrency     string          `json:"pnl_currency"`
-	ReturnPct       sql.NullFloat64 `json:"return_pct"`
-	RMultiple       sql.NullFloat64 `json:"r_multiple"`
-	TimeInTradeSecs sql.NullInt64   `json:"time_in_trade_secs"`
-	Notes           string          `json:"notes"`
-	CreatedAt       time.Time       `json:"created_at"`
-	UpdatedAt       time.Time       `json:"updated_at"`
-	QtyRemaining    float64         `json:"qty_remaining"`
+	ID                string          `json:"id"`
+	UserID            string          `json:"user_id"`
+	AccountID         string          `json:"account_id"`
+	Symbol            string          `json:"symbol"`
+	InstrumentType    string          `json:"instrument_type"`
+	Direction         string          `json:"direction"`
+	Status            string          `json:"status"`
+	OpenedAt          time.Time       `json:"opened_at"`
+	ClosedAt          sql.NullTime    `json:"closed_at"`
+	QtyOpened         float64         `json:"qty_opened"`
+	AvgEntryPrice     float64         `json:"avg_entry_price"`
+	AvgExitPrice      sql.NullFloat64 `json:"avg_exit_price"`
+	GrossPnl          sql.NullFloat64 `json:"gross_pnl"`
+	FeesTotal         float64         `json:"fees_total"`
+	NetPnl            sql.NullFloat64 `json:"net_pnl"`
+	PnlCurrency       string          `json:"pnl_currency"`
+	ReturnPct         sql.NullFloat64 `json:"return_pct"`
+	RMultiple         sql.NullFloat64 `json:"r_multiple"`
+	TimeInTradeSecs   sql.NullInt64   `json:"time_in_trade_secs"`
+	Notes             string          `json:"notes"`
+	CreatedAt         time.Time       `json:"created_at"`
+	UpdatedAt         time.Time       `json:"updated_at"`
+	QtyRemaining      float64         `json:"qty_remaining"`
+	AccountingWarning string          `json:"accounting_warning"`
 }
 
 type TradeAttachment struct {

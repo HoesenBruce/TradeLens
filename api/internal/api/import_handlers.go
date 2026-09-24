@@ -19,6 +19,7 @@ import (
 	"github.com/labstack/echo/v5"
 	"github.com/tradermemos/api/internal/auth"
 	"github.com/tradermemos/api/internal/importer"
+	"github.com/tradermemos/api/internal/marketdata"
 	"github.com/tradermemos/api/internal/store"
 )
 
@@ -489,8 +490,13 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 			committed = importer.CommitResult{Format: loaded.Format, Errors: parsed.Errors}
 		} else {
 			var err error
+			// Use the transaction store: SQLite has a single connection.
+			getBars := s.deps.Trades.GetBars
+			if getBars != nil && s.deps.Market != nil {
+				getBars = marketdata.NewService(q, s.deps.Market.Provider).GetBars
+			}
 			committed, err = importer.Commit(ctx, q, uid, batch.AccountID,
-				sql.NullString{String: batch.ID, Valid: true}, parsed)
+				sql.NullString{String: batch.ID, Valid: true}, parsed, getBars)
 			if err != nil {
 				return fmt.Errorf("commit executions: %w", err)
 			}

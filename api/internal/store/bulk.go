@@ -262,7 +262,7 @@ const (
 
 	upsertTradesPrefix = `INSERT INTO trades (id, user_id, account_id, symbol, instrument_type, direction, status,
     opened_at, closed_at, qty_opened, qty_remaining, avg_entry_price, avg_exit_price, gross_pnl, fees_total,
-    net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, notes)`
+    net_pnl, pnl_currency, return_pct, r_multiple, time_in_trade_secs, accounting_warning, notes)`
 
 	upsertTradesConflict = ` ON CONFLICT(id) DO UPDATE SET
     account_id = excluded.account_id, symbol = excluded.symbol,
@@ -273,6 +273,7 @@ const (
     avg_exit_price = excluded.avg_exit_price, gross_pnl = excluded.gross_pnl,
     fees_total = excluded.fees_total, net_pnl = excluded.net_pnl,
     pnl_currency = excluded.pnl_currency, return_pct = excluded.return_pct,
+    accounting_warning = excluded.accounting_warning,
     time_in_trade_secs = excluded.time_in_trade_secs, updated_at = CURRENT_TIMESTAMP`
 
 	upsertTradeJournalsPrefix = `INSERT INTO trade_journal (
@@ -325,7 +326,7 @@ func tradeRows(rows []UpsertTradeParams) [][]any {
 			r.ID, r.UserID, r.AccountID, r.Symbol, r.InstrumentType, r.Direction, r.Status,
 			r.OpenedAt, r.ClosedAt, r.QtyOpened, r.QtyRemaining, r.AvgEntryPrice, r.AvgExitPrice,
 			r.GrossPnl, r.FeesTotal, r.NetPnl, r.PnlCurrency, r.ReturnPct, r.RMultiple,
-			r.TimeInTradeSecs,
+			r.TimeInTradeSecs, r.AccountingWarning,
 		}
 	}
 	return out

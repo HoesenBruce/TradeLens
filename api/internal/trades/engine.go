@@ -24,22 +24,23 @@ type Execution struct {
 }
 
 type Trade struct {
-	Symbol          string
-	InstrumentType  string
-	Direction       string // long|short
-	Status          string // open|closed
-	OpenedAt        time.Time
-	ClosedAt        *time.Time
-	QtyOpened       float64
-	QtyRemaining    float64 // open position size; 0 when closed
-	AvgEntryPrice   float64
-	AvgExitPrice    *float64
-	GrossPnl        *float64
-	FeesTotal       float64
-	NetPnl          *float64
-	ReturnPct       *float64
-	TimeInTradeSecs *int64
-	ExecutionIDs    []string
+	AccountingWarning string
+	Symbol            string
+	InstrumentType    string
+	Direction         string // long|short
+	Status            string // open|closed
+	OpenedAt          time.Time
+	ClosedAt          *time.Time
+	QtyOpened         float64
+	QtyRemaining      float64 // open position size; 0 when closed
+	AvgEntryPrice     float64
+	AvgExitPrice      *float64
+	GrossPnl          *float64
+	FeesTotal         float64
+	NetPnl            *float64
+	ReturnPct         *float64
+	TimeInTradeSecs   *int64
+	ExecutionIDs      []string
 }
 
 // Group folds executions for a SINGLE (account,symbol,instrument) stream into round-trip trades
