@@ -185,6 +185,10 @@ describe("NewTradeDrawer", () => {
     );
     await user.click(screen.getByRole("button", { name: "Add execution row symbol 1" }));
     expect(screen.getByRole("button", { name: "Toggle action symbol 1 row 2" })).toHaveTextContent(
+      "BUY",
+    );
+    await user.click(screen.getByRole("button", { name: "Toggle action symbol 1 row 2" }));
+    expect(screen.getByRole("button", { name: "Toggle action symbol 1 row 2" })).toHaveTextContent(
       "SELL",
     );
     await user.type(screen.getByLabelText("Qty row 2"), "10");

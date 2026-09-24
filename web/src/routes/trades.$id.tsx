@@ -22,8 +22,9 @@ function TradeDetailPage() {
       loading={detailQ.isLoading}
       error={detailQ.isError}
       onBack={() => navigate({ to: "/trades" })}
-      onEdit={() => {
-        if (detailQ.data) openTradeEdit(detailQ.data);
+      onEdit={async () => {
+        const { data } = await detailQ.refetch();
+        if (data) openTradeEdit(data);
       }}
       deleting={deleteTrade.isPending}
       onDelete={async () => {
