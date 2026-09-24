@@ -140,7 +140,7 @@ func TestReplayGenbikiMovesMarginLongToCashOnce(t *testing.T) {
 		Lot: "sbi:cash", Quantity: 100, AverageCost: 1005, Multiplier: 1,
 	}}, snapshot.Accounts[0].Positions)
 	require.Zero(t, snapshot.Accounts[0].RealizedPnL)
-	require.Equal(t, -500.0, snapshot.Accounts[0].CashDelta)
+	require.Equal(t, -101000.0, snapshot.Accounts[0].CashDelta)
 	require.Equal(t, 500.0, snapshot.Accounts[0].Fees)
 }
 
@@ -156,6 +156,38 @@ func TestReplayGenbikiMergesIntoExistingCashAtAverageCost(t *testing.T) {
 	require.Equal(t, 200.0, snapshot.Accounts[0].Positions[0].Quantity)
 	require.Equal(t, 952.5, snapshot.Accounts[0].Positions[0].AverageCost)
 	require.Zero(t, snapshot.Accounts[0].RealizedPnL)
+	require.Equal(t, -191000.0, snapshot.Accounts[0].CashDelta)
+	require.Equal(t, 500.0, snapshot.Accounts[0].Fees)
+}
+
+func TestReplayGenbikiPartialAndRepeatedConversions(t *testing.T) {
+	open := execution("open", "a", "5401", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 1000)
+	open.Fees = 100
+	first := execution("first-margin", "a", "5401", "sbi:margin-long", "sell", "2026-09-02T01:00:00Z", 40, 1090)
+	first.Fees = 200
+	first.Details.String = `{"lot":"sbi:margin-long","conversion_type":"genbiki","conversion_id":"c1"}`
+	firstCash := execution("first-cash", "a", "5401", "sbi:cash", "buy", "2026-09-02T01:00:00.000001Z", 40, 1090)
+	firstCash.Details.String = `{"lot":"sbi:cash","conversion_type":"genbiki","conversion_id":"c1"}`
+	second := execution("second-margin", "a", "5401", "sbi:margin-long", "sell", "2026-09-03T01:00:00Z", 60, 1100)
+	second.Fees = 300
+	second.Details.String = `{"lot":"sbi:margin-long","conversion_type":"genbiki","conversion_id":"c2"}`
+	secondCash := execution("second-cash", "a", "5401", "sbi:cash", "buy", "2026-09-03T01:00:00.000001Z", 60, 1100)
+	secondCash.Details.String = `{"lot":"sbi:cash","conversion_type":"genbiki","conversion_id":"c2"}`
+
+	snapshots := Replay([]store.Execution{secondCash, firstCash, second, open, first}, []time.Time{day("2026-09-02"), day("2026-09-03")})
+	require.Empty(t, snapshots[0].Warnings)
+	require.Equal(t, []Position{
+		{AccountID: "a", Symbol: "5401", InstrumentType: "stock", Kind: CashLong, Lot: "sbi:cash", Quantity: 40, AverageCost: 1006, Multiplier: 1},
+		{AccountID: "a", Symbol: "5401", InstrumentType: "stock", Kind: MarginLong, Lot: "sbi:margin-long", Quantity: 60, AverageCost: 1000, Multiplier: 1},
+	}, snapshots[0].Accounts[0].Positions)
+	require.Equal(t, -40540.0, snapshots[0].Accounts[0].CashDelta)
+	require.Equal(t, 300.0, snapshots[0].Accounts[0].Fees)
+	require.Empty(t, snapshots[1].Warnings)
+	require.Equal(t, 100.0, snapshots[1].Accounts[0].Positions[0].Quantity)
+	require.Equal(t, 1006.0, snapshots[1].Accounts[0].Positions[0].AverageCost)
+	require.Equal(t, -101200.0, snapshots[1].Accounts[0].CashDelta)
+	require.Equal(t, 600.0, snapshots[1].Accounts[0].Fees)
+	require.Zero(t, snapshots[1].Accounts[0].RealizedPnL)
 }
 
 func TestReplayIsolatesAccountsInstrumentsAndRejectsOverClose(t *testing.T) {

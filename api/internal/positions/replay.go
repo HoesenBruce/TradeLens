@@ -231,6 +231,8 @@ func (s *state) apply(ex store.Execution) {
 		}
 		if conversionType != "genbiki" {
 			s.bookOpen(ex, kind, multiplier, sbiCash)
+		} else if kind == CashLong {
+			s.account(ex.AccountID).CashDelta -= buyCost
 		}
 		return
 	}
