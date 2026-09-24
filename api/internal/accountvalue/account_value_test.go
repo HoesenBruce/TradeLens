@@ -113,6 +113,17 @@ func TestReconstructAppliesReportedSplit(t *testing.T) {
 	require.Empty(t, point.Warnings)
 }
 
+func TestExplicitSplitsHonorsConfirmedAndRejected(t *testing.T) {
+	responses := map[Instrument]marketdata.Response{
+		{"AAA", "stock"}: {CorporateActions: []marketdata.CorporateActionCandidate{{EffectiveDate: "2025-09-29", CandidateType: "reverse_stock_split", SuspectedRatio: 5, Status: "confirmed"}}},
+		{"BBB", "stock"}: {Bars: []marketdata.Bar{{MarketDate: "2025-09-29", SplitRatio: 7}}, CorporateActions: []marketdata.CorporateActionCandidate{{EffectiveDate: "2025-09-29", Status: "rejected"}}},
+	}
+	splits := explicitSplits(responses)
+	require.Len(t, splits, 1)
+	require.Equal(t, "AAA", splits[0].Symbol)
+	require.Equal(t, 0.2, splits[0].Ratio)
+}
+
 func TestReconstructMissingPriceAndPartialProviderFailure(t *testing.T) {
 	service := &Service{getBars: func(_ context.Context, req marketdata.Request) (marketdata.Response, error) {
 		if req.Symbol == "BAD" {

@@ -229,13 +229,32 @@ func (s *Service) loadPrices(ctx context.Context, executions []store.Execution, 
 func explicitSplits(responses map[Instrument]marketdata.Response) []positions.Split {
 	var splits []positions.Split
 	for instrument, response := range responses {
+		rejected := map[string]bool{}
+		ratios := map[string]float64{}
+		for _, candidate := range response.CorporateActions {
+			if candidate.Status == "rejected" {
+				rejected[candidate.EffectiveDate] = true
+			} else if candidate.Status == "confirmed" && candidate.SuspectedRatio > 0 {
+				switch candidate.CandidateType {
+				case "stock_split":
+					ratios[candidate.EffectiveDate] = candidate.SuspectedRatio
+				case "reverse_stock_split":
+					ratios[candidate.EffectiveDate] = 1 / candidate.SuspectedRatio
+				}
+			}
+		}
 		for _, bar := range response.Bars {
-			if bar.SplitRatio <= 0 || bar.SplitRatio == 1 {
+			if bar.SplitRatio > 0 && bar.SplitRatio != 1 {
+				ratios[bar.MarketDate] = bar.SplitRatio
+			}
+		}
+		for day, ratio := range ratios {
+			if rejected[day] {
 				continue
 			}
-			date, err := time.ParseInLocation(time.DateOnly, bar.MarketDate, tokyo)
+			date, err := time.ParseInLocation(time.DateOnly, day, tokyo)
 			if err == nil {
-				splits = append(splits, positions.Split{Symbol: instrument.Symbol, InstrumentType: instrument.InstrumentType, EffectiveDate: date, Ratio: bar.SplitRatio})
+				splits = append(splits, positions.Split{Symbol: instrument.Symbol, InstrumentType: instrument.InstrumentType, EffectiveDate: date, Ratio: ratio})
 			}
 		}
 	}

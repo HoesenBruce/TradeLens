@@ -13,7 +13,7 @@ func TestSplitSettlementAccounting(t *testing.T) {
 		reported, partial, split bool
 		want                     *float64
 	}{
-		{"SBI IHI", "sbi:margin-long", true, false, true, f64(22362)},
+		{"SBI IHI", "sbi:margin-long", true, false, true, nil},
 		{"missing settlement", "sbi:margin-long", false, false, true, nil},
 		{"partial", "sbi:margin-long", true, true, true, nil},
 		{"non SBI default", "", true, false, false, f64(-3026438)},
@@ -57,13 +57,15 @@ func TestSplitSettlementAccounting(t *testing.T) {
 			}
 			if tc.split {
 				require.Contains(t, tr.AccountingWarning, "2025-09-29")
-				require.Nil(t, tr.ReturnPct)
+				if tc.want != nil {
+					require.NotNil(t, tr.ReturnPct)
+				}
 			} else {
 				require.Empty(t, tr.AccountingWarning)
 			}
 			require.Equal(t, 17980.0, fills[0].Price)
-			if tc.partial {
-				require.Equal(t, 100.0, tr.QtyRemaining)
+			if tc.partial && tc.split {
+				require.Equal(t, 1300.0, tr.QtyRemaining)
 			}
 		})
 	}
@@ -115,4 +117,76 @@ func TestRejectedProviderBoundaryOverridesDetection(t *testing.T) {
 	require.NoError(t, svc.checkSplitBoundaries(context.Background(), fills, &result))
 	require.Empty(t, result.Trades[0].AccountingWarning)
 	require.Equal(t, -600.0, *result.Trades[0].NetPnl)
+}
+
+func TestConfirmedSplitNormalization(t *testing.T) {
+	for _, tc := range []struct {
+		name                                                   string
+		ratio, openQty, closeQty, openPrice, closePrice, gross float64
+	}{
+		{"forward", 2, 100, 200, 1000, 550, 10000},
+		{"reverse", 0.2, 100, 20, 100, 550, 1000},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			fills := []Execution{
+				ex("open", "buy", tc.openQty, tc.openPrice, "2025-09-25T01:00:00Z", 1),
+				ex("close", "sell", tc.closeQty, tc.closePrice, "2025-09-30T01:00:00Z", 1),
+			}
+			result := Account(fills, nil)
+			svc := &Service{GetBars: func(context.Context, marketdata.Request) (marketdata.Response, error) {
+				return marketdata.Response{Timezone: "Asia/Tokyo", Bars: []marketdata.Bar{{MarketDate: "2025-09-29", SplitRatio: tc.ratio}}}, nil
+			}}
+			require.NoError(t, svc.checkSplitBoundaries(context.Background(), fills, &result))
+			tr := result.Trades[0]
+			require.Equal(t, "closed", tr.Status)
+			require.InDelta(t, tc.closeQty, tr.QtyOpened, 1e-9)
+			require.InDelta(t, tc.openPrice/tc.ratio, tr.AvgEntryPrice, 1e-9)
+			require.InDelta(t, tc.gross, *tr.GrossPnl, 1e-9)
+			require.InDelta(t, tc.openQty*tc.openPrice, tr.QtyOpened*tr.AvgEntryPrice, 1e-9)
+			require.Equal(t, tc.openQty, fills[0].Quantity)
+			require.Equal(t, tc.openPrice, fills[0].Price)
+		})
+	}
+}
+
+func TestPartialCloseAcrossSplit(t *testing.T) {
+	fills := []Execution{
+		ex("a", "buy", 200, 1000, "2025-09-25T01:00:00Z", 1),
+		ex("b", "sell", 50, 1100, "2025-09-26T01:00:00Z", 1),
+		ex("c", "sell", 300, 550, "2025-09-30T01:00:00Z", 1),
+	}
+	result := Account(fills, nil)
+	svc := &Service{GetBars: func(context.Context, marketdata.Request) (marketdata.Response, error) {
+		return marketdata.Response{Timezone: "Asia/Tokyo", Bars: []marketdata.Bar{{MarketDate: "2025-09-29", SplitRatio: 2}}}, nil
+	}}
+	require.NoError(t, svc.checkSplitBoundaries(context.Background(), fills, &result))
+	tr := result.Trades[0]
+	require.Equal(t, "closed", tr.Status)
+	require.Equal(t, 400.0, tr.QtyOpened)
+	require.Equal(t, 500.0, tr.AvgEntryPrice)
+	require.Equal(t, 20000.0, *tr.GrossPnl)
+}
+
+func TestOpenPositionAndSBISettlementAcrossSplit(t *testing.T) {
+	open := ex("a", "buy", 100, 1000, "2025-09-25T01:00:00Z", 1)
+	open.LotKey = "sbi:margin-long"
+	closed := ex("b", "sell", 200, 550, "2025-09-30T01:00:00Z", 1)
+	closed.LotKey = open.LotKey
+	closed.BrokerReportedPnl = f64(1234)
+	svc := &Service{GetBars: func(context.Context, marketdata.Request) (marketdata.Response, error) {
+		return marketdata.Response{Timezone: "Asia/Tokyo", Bars: []marketdata.Bar{{MarketDate: "2025-09-29", SplitRatio: 2}}}, nil
+	}}
+	strategies := map[string]AccountingStrategy{"sbi:margin-long": SBIMarginAccounting}
+	result := Account([]Execution{open}, strategies)
+	require.NoError(t, svc.checkSplitBoundaries(context.Background(), []Execution{open}, &result))
+	require.Equal(t, 200.0, result.Trades[0].QtyRemaining)
+	require.Equal(t, 500.0, result.Trades[0].AvgEntryPrice)
+
+	result = Account([]Execution{open, closed}, strategies)
+	require.NoError(t, svc.checkSplitBoundaries(context.Background(), []Execution{open, closed}, &result))
+	tr := result.Trades[0]
+	require.Equal(t, "closed", tr.Status)
+	require.Equal(t, 1234.0, *tr.NetPnl)
+	require.Equal(t, 500.0, tr.AvgEntryPrice)
+	require.InDelta(t, 1.234, *tr.ReturnPct, 0.01)
 }
