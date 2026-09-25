@@ -55,7 +55,7 @@ func TestReconstructValuesAccountsPositionsAndCashEvents(t *testing.T) {
 	require.Equal(t, 100.0, *result.Accounts[1].Points[0].EstimatedAccountValue)
 }
 
-func TestReconstructUsesSBIReportedRemainingMarginBasis(t *testing.T) {
+func TestReconstructIgnoresSBIReportedMarginBasis(t *testing.T) {
 	service := testService(map[string]marketdata.Response{"7003": bars("7003", "unadjusted", map[string]float64{"2026-09-03": 6100})})
 	first := execution("1", "a", "7003", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 6000)
 	second := execution("2", "a", "7003", "sbi:margin-long", "buy", "2026-09-02T01:00:00Z", 100, 5000)
@@ -65,8 +65,15 @@ func TestReconstructUsesSBIReportedRemainingMarginBasis(t *testing.T) {
 	require.NoError(t, err)
 	point := result.Accounts[0].Points[0]
 	require.Equal(t, "complete", point.Status)
-	require.Equal(t, 110000.0, *point.UnrealizedPnL)
+	require.Equal(t, 60000.0, *point.UnrealizedPnL)
 	require.Equal(t, 130000.0, *point.EstimatedAccountValue)
+	require.Equal(t, 70000.0, point.RealizedPnL)
+	require.Empty(t, point.Warnings)
+
+	close.Details = sql.NullString{String: `{"lot":"sbi:margin-long","broker_reported_close_basis":12000,"broker_reported_realized_pnl":-99999}`, Valid: true}
+	withBadReports, err := service.Reconstruct(context.Background(), Request{Executions: []store.Execution{first, second, close}, MarketSessions: []time.Time{day("2026-09-03")}})
+	require.NoError(t, err)
+	require.Equal(t, point, withBadReports.Accounts[0].Points[0])
 }
 
 func TestReconstructDeductsGenbikiPrincipalAcrossDays(t *testing.T) {

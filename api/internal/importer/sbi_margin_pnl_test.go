@@ -43,6 +43,8 @@ func TestSBIMarginPnLEnrichment(t *testing.T) {
 	require.True(t, ok)
 	fills, err := q.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: "u", AccountID: "a"})
 	require.NoError(t, err)
+	date := []time.Time{time.Date(2026, 9, 17, 0, 0, 0, 0, time.UTC)}
+	beforeEnrichment := positions.Replay(fills, date)[0]
 	matched := MatchSBIMarginPnL(file.Parsed, fills)
 	require.Equal(t, "enrichable", matched[0].Status)
 	disagree := append([]SBIMarginPnLRow(nil), file.Parsed...)
@@ -61,8 +63,10 @@ func TestSBIMarginPnLEnrichment(t *testing.T) {
 	require.NoError(t, json.Unmarshal([]byte(fills[2].Details.String), &details))
 	require.Equal(t, 6000.0, details["broker_reported_close_basis"])
 	require.Equal(t, 20000.0, details["broker_reported_realized_pnl"])
-	snapshot := positions.Replay(fills, []time.Time{time.Date(2026, 9, 17, 0, 0, 0, 0, time.UTC)})[0]
-	require.Equal(t, 5000.0, snapshot.Accounts[0].Positions[0].AverageCost)
+	snapshot := positions.Replay(fills, date)[0]
+	require.Equal(t, beforeEnrichment, snapshot)
+	require.Equal(t, 5500.0, snapshot.Accounts[0].Positions[0].AverageCost)
+	require.Equal(t, 70000.0, snapshot.Accounts[0].RealizedPnL)
 
 	conflict := append([]SBIMarginPnLRow(nil), file.Parsed...)
 	conflict[0].Basis = 5999
