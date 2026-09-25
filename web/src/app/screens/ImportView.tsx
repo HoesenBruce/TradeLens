@@ -647,12 +647,14 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
   const { t: tr } = useLinguiMacro();
   const isJournal = preview.format === "journal_trades";
   const isCash = preview.format === "cash_transactions";
+  const isEnrichment = preview.format === "sbi_margin_pnl";
   // MetaTrader statements are parsed positionally — no column mapping, but the
   // server-timezone choice still applies (statement times are broker wall clock).
   const isStatement = preview.source === "statement";
   const skipMapping =
     isJournal ||
     isCash ||
+    isEnrichment ||
     isStatement ||
     (preview.source === "json" && preview.format === "executions");
   const [mapping, setMapping] = useState<Record<string, string>>(() => {
@@ -739,6 +741,14 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
                 })}
               </p>
             </div>
+          ) : isEnrichment ? (
+            <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
+              {tr({
+                id: "imports.sbiEnrichmentHint",
+                message:
+                  "SBI margin realized P&L updates matching closing executions only. Review each row before confirming; no new fills are created.",
+              })}
+            </p>
           ) : isCash ? (
             <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
               {tr({
@@ -876,7 +886,30 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
         </div>
       </Card>
 
-      {isJournal && preview.sample_trades && preview.sample_trades.length > 0 ? (
+      {isEnrichment ? (
+        <Card title={tr({ id: "imports.sbiEnrichmentPreview", message: "Enrichment preview" })}>
+          <div className="space-y-2 text-[12px]">
+            <p className="text-muted-foreground">
+              {Object.entries(
+                (preview.enrichment_rows ?? []).reduce<Record<string, number>>((counts, row) => {
+                  counts[row.status] = (counts[row.status] ?? 0) + 1;
+                  return counts;
+                }, {}),
+              )
+                .map(([status, count]) => `${sbiEnrichmentStatus(status)}: ${count}`)
+                .join(" · ")}
+            </p>
+            {(preview.enrichment_rows ?? []).map((row, index) => (
+              <p key={index} className="rounded-md bg-muted px-3 py-2">
+                {index + 1}. {row.date} · {row.symbol} · {row.transaction} · {row.quantity} @{" "}
+                {row.price} · 平均取得価額 {row.basis} · 実現損益 {row.pnl ?? "—"} ·{" "}
+                <strong>{sbiEnrichmentStatus(row.status)}</strong>
+                {row.message ? ` (${row.message})` : ""}
+              </p>
+            ))}
+          </div>
+        </Card>
+      ) : isJournal && preview.sample_trades && preview.sample_trades.length > 0 ? (
         <Card
           flush
           title={tr({
@@ -930,6 +963,25 @@ interface Step3Props {
   onImportAnother: () => void;
 }
 
+function sbiEnrichmentStatus(status: string): string {
+  switch (status) {
+    case "enrichable":
+      return tr({ id: "imports.sbiEnrichable", message: "Ready to enrich" });
+    case "already_enriched":
+      return tr({ id: "imports.sbiAlreadyEnriched", message: "Already enriched" });
+    case "ambiguous_match":
+      return tr({ id: "imports.sbiAmbiguous", message: "Ambiguous match" });
+    case "no_matching_execution":
+      return tr({ id: "imports.sbiUnmatched", message: "No matching execution" });
+    case "conflict":
+      return tr({ id: "imports.sbiConflict", message: "Conflicting value" });
+    case "invalid_row":
+      return tr({ id: "imports.sbiInvalid", message: "Invalid row" });
+    default:
+      return status;
+  }
+}
+
 function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
   const { t: tr } = useLinguiMacro();
   return (
@@ -956,7 +1008,13 @@ function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
                 highlight="pos"
               />
             ) : null}
-            {result.format !== "cash_transactions" ? (
+            {result.format === "sbi_margin_pnl" ? (
+              <Row
+                label={tr({ id: "imports.sbiEnriched", message: "Executions enriched" })}
+                value={String(result.enriched ?? 0)}
+                highlight="pos"
+              />
+            ) : result.format !== "cash_transactions" ? (
               <Row
                 label={
                   result.format === "journal_trades"
@@ -968,10 +1026,14 @@ function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
               />
             ) : null}
             <Row
-              label={tr({ id: "imports.skipped", message: "Skipped (duplicates)" })}
+              label={
+                result.format === "sbi_margin_pnl"
+                  ? tr({ id: "imports.notEnriched", message: "Not enriched" })
+                  : tr({ id: "imports.skipped", message: "Skipped (duplicates)" })
+              }
               value={String(result.skipped)}
             />
-            {typeof result.annotated === "number" && (
+            {result.format !== "sbi_margin_pnl" && typeof result.annotated === "number" && (
               <Row
                 label={tr({ id: "imports.annotated", message: "Journal annotated" })}
                 value={String(result.annotated)}
@@ -1009,6 +1071,20 @@ function Step3Result({ result, onDone, onImportAnother }: Step3Props) {
             ))}
           </div>
         )}
+        {result.format === "sbi_margin_pnl" &&
+        (result.enrichment_rows ?? []).some((row) => row.status !== "enrichable") ? (
+          <div className="rounded-md bg-muted px-3.5 py-2.5 text-[11px]">
+            {result.enrichment_rows
+              ?.filter((row) => row.status !== "enrichable")
+              .map((row, index) => (
+                <p key={index}>
+                  {row.date} · {row.symbol} · {row.transaction} · {row.quantity} @ {row.price}:{" "}
+                  {sbiEnrichmentStatus(row.status)}
+                  {row.message ? ` (${row.message})` : ""}
+                </p>
+              ))}
+          </div>
+        ) : null}
 
         <div className="mt-2 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
           <Button type="button" variant="default" onClick={onDone} className="w-full sm:w-auto">

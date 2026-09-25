@@ -38,6 +38,7 @@ type loadedImport struct {
 	Headers   []string
 	Rows      []map[string]string
 	Cash      importer.SBICashImport
+	MarginPnL importer.SBIMarginPnLImport
 	JSON      importer.JSONImport
 	Statement *importer.MTStatement
 }
@@ -101,6 +102,9 @@ func loadImportFile(fh *multipart.FileHeader) (loadedImport, error) {
 			Source: "csv", Format: "cash_transactions", Headers: cash.Headers,
 			Rows: cash.Rows, Cash: cash,
 		}, err
+	}
+	if pnl, ok, err := importer.ReadSBIMarginPnLCSV(data); ok || err != nil {
+		return loadedImport{Source: "sbi_margin_pnl", Format: "sbi_margin_pnl", Headers: pnl.Headers, Rows: pnl.Rows, MarginPnL: pnl}, err
 	}
 
 	// MetaTrader statements (MT5 Trade History Report .xlsx/.html, MT4
@@ -187,6 +191,9 @@ func (s *Server) handleImportPreview(c *echo.Context) error {
 	detectedBroker := ""
 	suggestedTZ := ""
 	switch {
+	case loaded.Format == "sbi_margin_pnl":
+		suggested = map[string]string{}
+		detectedBroker = "SBI Securities (Margin Realized P&L)"
 	case loaded.Format == "cash_transactions":
 		suggested = map[string]string{}
 		detectedBroker = "SBI Securities (Cash Transactions)"
@@ -239,6 +246,13 @@ func (s *Server) handleImportPreview(c *echo.Context) error {
 	}
 
 	resp["account_id"] = accountID
+	if loaded.Format == "sbi_margin_pnl" {
+		executions, err := s.deps.Store.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: uid, AccountID: accountID})
+		if err != nil {
+			return Fail(http.StatusInternalServerError, "internal", "could not preview enrichment", nil)
+		}
+		resp["enrichment_rows"] = importer.MatchSBIMarginPnL(loaded.MarginPnL.Parsed, executions)
+	}
 	return c.JSON(http.StatusOK, resp)
 }
 
@@ -323,15 +337,17 @@ func (s *Server) createAccountFromJSONMeta(ctx context.Context, userID string, m
 }
 
 type importResult struct {
-	Inserted       int                 `json:"inserted"`
-	Skipped        int                 `json:"skipped"`
-	Annotated      int                 `json:"annotated"`
-	Trades         int                 `json:"trades"`
-	CashInserted   int                 `json:"cash_inserted"`
-	SetupsUpserted int                 `json:"setups_upserted"`
-	Format         string              `json:"format"`
-	AccountID      string              `json:"account_id,omitempty"`
-	Errors         []importer.RowError `json:"errors"`
+	Inserted       int                        `json:"inserted"`
+	Skipped        int                        `json:"skipped"`
+	Annotated      int                        `json:"annotated"`
+	Trades         int                        `json:"trades"`
+	CashInserted   int                        `json:"cash_inserted"`
+	Enriched       int                        `json:"enriched"`
+	EnrichmentRows []importer.SBIMarginPnLRow `json:"enrichment_rows,omitempty"`
+	SetupsUpserted int                        `json:"setups_upserted"`
+	Format         string                     `json:"format"`
+	AccountID      string                     `json:"account_id,omitempty"`
+	Errors         []importer.RowError        `json:"errors"`
 }
 
 // handleImportCommitFresh creates account (if needed) + batch, then commits in one step.
@@ -439,6 +455,8 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 		parsed = loaded.Statement.Parse(sourceTZ)
 	case loaded.Format == "cash_transactions":
 		parsed = importer.ParseResult{Format: loaded.Format, Errors: loaded.Cash.Errors}
+	case loaded.Format == "sbi_margin_pnl":
+		parsed = importer.ParseResult{Format: loaded.Format}
 	case loaded.Format == "journal_trades":
 		opts := journalOptionOverrides(c)
 		parsed = importer.NewJournal().ParseRowsWithOptions(loaded.Rows, opts)
@@ -472,6 +490,8 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 	}
 
 	var committed importer.CommitResult
+	var enrichmentRows []importer.SBIMarginPnLRow
+	var enriched int
 	setupsUpserted := 0
 	cashInserted := 0
 	// One transaction for the whole commit: a failure anywhere leaves no
@@ -486,8 +506,12 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 			setupsUpserted = n
 		}
 
-		if loaded.Format == "cash_transactions" {
-			committed = importer.CommitResult{Format: loaded.Format, Errors: parsed.Errors}
+		if loaded.Format == "cash_transactions" || loaded.Format == "sbi_margin_pnl" {
+			rowErrors := parsed.Errors
+			if rowErrors == nil {
+				rowErrors = []importer.RowError{}
+			}
+			committed = importer.CommitResult{Format: loaded.Format, Errors: rowErrors}
 		} else {
 			var err error
 			// Use the transaction store: SQLite has a single connection.
@@ -502,7 +526,22 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 			}
 		}
 
-		if loaded.Source == "json" {
+		if loaded.Format == "sbi_margin_pnl" {
+			executions, err := q.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: uid, AccountID: batch.AccountID})
+			if err != nil {
+				return err
+			}
+			enrichmentRows = importer.MatchSBIMarginPnL(loaded.MarginPnL.Parsed, executions)
+			getBars := s.deps.Trades.GetBars
+			if getBars != nil && s.deps.Market != nil {
+				getBars = marketdata.NewService(q, s.deps.Market.Provider).GetBars
+			}
+			enriched, err = importer.CommitSBIMarginPnL(ctx, q, uid, batch.AccountID, enrichmentRows, getBars)
+			if err != nil {
+				return err
+			}
+			committed.Skipped = len(enrichmentRows) - enriched
+		} else if loaded.Source == "json" {
 			if err := s.applyJSONAccountMeta(ctx, q, uid, batch.AccountID, loaded.JSON.Account); err != nil {
 				return fmt.Errorf("apply account metadata: %w", err)
 			}
@@ -543,6 +582,7 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 		Annotated: committed.Annotated, Trades: committed.Trades,
 		Format: committed.Format, Errors: committed.Errors,
 		CashInserted: cashInserted, SetupsUpserted: setupsUpserted,
+		Enriched: enriched, EnrichmentRows: enrichmentRows,
 		AccountID: batch.AccountID,
 	})
 }
@@ -743,6 +783,9 @@ func (s *Server) handleDeleteImport(c *echo.Context) error {
 	batch, err := s.deps.Store.GetImportBatch(ctx, store.GetImportBatchParams{ID: batchID, UserID: uid})
 	if err != nil {
 		return Fail(http.StatusNotFound, "not_found", "import batch not found", nil)
+	}
+	if batch.Source == "sbi_margin_pnl" {
+		return Fail(http.StatusConflict, "conflict", "SBI enrichment cannot be reversed by deleting its batch", nil)
 	}
 	if err := store.InTx(ctx, s.deps.Store, func(q store.Querier) error {
 		if err := q.DeleteExecutionsForBatch(ctx, store.DeleteExecutionsForBatchParams{

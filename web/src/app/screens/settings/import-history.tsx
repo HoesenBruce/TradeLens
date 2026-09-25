@@ -132,7 +132,7 @@ export function ImportHistorySection({
       description={tr({
         id: "accounts.historyHint",
         message:
-          "Every batch of imported executions — scheduled syncs, manual syncs, and file imports. Rolling one back deletes its executions.",
+          "Execution import rollbacks delete that batch's fills. SBI enrichment cannot be rolled back separately.",
       })}
     >
       {imports.isError ? (
@@ -155,7 +155,12 @@ export function ImportHistorySection({
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <span className="truncate text-[13px] font-medium">
-                    {sourceLabel(batch.source)}
+                    {batch.source === "sbi_margin_pnl"
+                      ? tr({
+                          id: "accounts.sbiMarginPnLSource",
+                          message: "SBI margin realized P&L",
+                        })
+                      : sourceLabel(batch.source)}
                   </span>
                   {batch.status === "reversed" ? (
                     <Badge variant="secondary">
@@ -170,7 +175,14 @@ export function ImportHistorySection({
                   {new Date(batch.created_at).toLocaleString(intlLocale())}
                 </p>
               </div>
-              {batch.status !== "reversed" ? (
+              {batch.source === "sbi_margin_pnl" ? (
+                <span className="text-[11px] text-muted-foreground">
+                  {tr({
+                    id: "accounts.sbiEnrichmentHistory",
+                    message: "This enrichment cannot be rolled back separately",
+                  })}
+                </span>
+              ) : batch.status !== "reversed" ? (
                 <RollbackButton batch={batch} accountName={accountName(batch.account_id)} />
               ) : null}
             </div>
