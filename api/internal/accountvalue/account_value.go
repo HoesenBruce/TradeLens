@@ -183,7 +183,11 @@ func (s *Service) Reconstruct(ctx context.Context, req Request) (Result, error) 
 			}
 			for _, warning := range snapshot.Warnings {
 				if warning.AccountID == accountID {
-					point.invalid(warning.Code, warning.Instrument, warning.ExecutionID, warning.Date, warning.Message)
+					if warning.Code == "margin_settlement_mismatch" || warning.Code == "cash_close_basis_mismatch" {
+						point.Warnings = append(point.Warnings, Warning{Code: warning.Code, Instrument: warning.Instrument, ExecutionID: warning.ExecutionID, Date: warning.Date, Message: warning.Message})
+					} else {
+						point.invalid(warning.Code, warning.Instrument, warning.ExecutionID, warning.Date, warning.Message)
+					}
 				}
 			}
 			for _, warning := range ledger.warnings {

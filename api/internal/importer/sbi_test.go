@@ -122,6 +122,19 @@ func TestSBIMarginSettlementMissingZeroAndInvalid(t *testing.T) {
 	require.Empty(t, result.Executions)
 }
 
+func TestSBIReportedAcquisitionBasis(t *testing.T) {
+	row := map[string]string{"約定日": "2026/09/03", "銘柄コード": "7003", "取引": "信用返済売", "約定数量": "100", "約定単価": "6200", "平均取得価額": "6,000", "受渡金額/決済損益": "20000"}
+	parsed := ParseSBIRows([]map[string]string{row}, nil, "")
+	require.Empty(t, parsed.Errors)
+	require.Equal(t, 6000.0, *parsed.Executions[0].ReportedCloseBasis)
+	row["取引"] = "株式現物売"
+	parsed = ParseSBIRows([]map[string]string{row}, nil, "")
+	require.Equal(t, 6000.0, *parsed.Executions[0].ReportedCloseBasis)
+	row["平均取得価額"] = "invalid"
+	parsed = ParseSBIRows([]map[string]string{row}, nil, "")
+	require.Equal(t, []RowError{{Row: 1, Message: "invalid reported acquisition basis"}}, parsed.Errors)
+}
+
 func TestSBISemanticLabels(t *testing.T) {
 	cases := []struct{ label, position, effect string }{
 		{"株式現物買", "cash", "increase"}, {"現物買", "cash", "increase"},

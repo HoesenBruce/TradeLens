@@ -55,6 +55,20 @@ func TestReconstructValuesAccountsPositionsAndCashEvents(t *testing.T) {
 	require.Equal(t, 100.0, *result.Accounts[1].Points[0].EstimatedAccountValue)
 }
 
+func TestReconstructUsesSBIReportedRemainingMarginBasis(t *testing.T) {
+	service := testService(map[string]marketdata.Response{"7003": bars("7003", "unadjusted", map[string]float64{"2026-09-03": 6100})})
+	first := execution("1", "a", "7003", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 6000)
+	second := execution("2", "a", "7003", "sbi:margin-long", "buy", "2026-09-02T01:00:00Z", 100, 5000)
+	close := execution("3", "a", "7003", "sbi:margin-long", "sell", "2026-09-03T01:00:00Z", 100, 6200)
+	close.Details = sql.NullString{String: `{"lot":"sbi:margin-long","broker_reported_close_basis":6000,"broker_reported_realized_pnl":20000}`, Valid: true}
+	result, err := service.Reconstruct(context.Background(), Request{Executions: []store.Execution{close, second, first}, MarketSessions: []time.Time{day("2026-09-03")}})
+	require.NoError(t, err)
+	point := result.Accounts[0].Points[0]
+	require.Equal(t, "complete", point.Status)
+	require.Equal(t, 110000.0, *point.UnrealizedPnL)
+	require.Equal(t, 130000.0, *point.EstimatedAccountValue)
+}
+
 func TestReconstructDeductsGenbikiPrincipalAcrossDays(t *testing.T) {
 	service := testService(map[string]marketdata.Response{
 		"AAA": bars("AAA", "unadjusted", map[string]float64{"2026-09-02": 1000, "2026-09-03": 1000}),
@@ -69,7 +83,7 @@ func TestReconstructDeductsGenbikiPrincipalAcrossDays(t *testing.T) {
 	secondCash := execution("second-cash", "a", "AAA", "sbi:cash", "buy", "2026-09-03T01:00:00.000001Z", 60, 1100)
 	secondCash.Details = sql.NullString{String: `{"lot":"sbi:cash","conversion_type":"genbiki","conversion_id":"c2"}`, Valid: true}
 	result, err := service.Reconstruct(context.Background(), Request{
-		Executions: []store.Execution{open, first, firstCash, second, secondCash},
+		Executions:     []store.Execution{open, first, firstCash, second, secondCash},
 		MarketSessions: []time.Time{day("2026-09-02"), day("2026-09-03")},
 	})
 	require.NoError(t, err)
