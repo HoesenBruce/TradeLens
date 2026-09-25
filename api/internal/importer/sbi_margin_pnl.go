@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -35,6 +36,8 @@ type SBIMarginPnLImport struct {
 	Parsed  []SBIMarginPnLRow
 }
 
+var sbiPnLCode = regexp.MustCompile(`^[0-9A-Z]{4,5}$`)
+
 func ReadSBIMarginPnLCSV(data []byte) (SBIMarginPnLImport, bool, error) {
 	decoded, err := decodeSBI(data)
 	if err != nil {
@@ -48,9 +51,10 @@ func ReadSBIMarginPnLCSV(data []byte) (SBIMarginPnLImport, bool, error) {
 	}
 	for i, record := range records {
 		headers := trimHeaders(record)
-		if !hasSBIHeaderFields(headers, []string{"約定日", "銘柄コード", "取引", "平均取得価額"}) ||
+		if !hasSBIHeaderFields(headers, []string{"約定日", "取引", "平均取得価額"}) ||
+			(!hasSBIHeaderFields(headers, []string{"銘柄コード"}) && !hasSBIHeaderFields(headers, []string{"銘柄名"})) ||
 			(!hasSBIHeaderFields(headers, []string{"数量", "単価"}) && !hasSBIHeaderFields(headers, []string{"約定数量", "約定単価"})) ||
-			(!hasSBIHeaderFields(headers, []string{"実現損益"}) && !hasSBIHeaderFields(headers, []string{"決済損益"})) {
+			(!hasSBIHeaderFields(headers, []string{"実現損益"}) && !hasSBIHeaderFields(headers, []string{"決済損益"}) && !hasSBIHeaderFields(headers, []string{"実現損益(税引前・円)"})) {
 			continue
 		}
 		// Execution history remains the primary importer even if it happens to carry basis.
@@ -69,14 +73,28 @@ func ReadSBIMarginPnLCSV(data []byte) (SBIMarginPnLImport, bool, error) {
 				}
 			}
 			out.Rows = append(out.Rows, row)
-			if row["取引"] != "信用返済売" && row["取引"] != "信用返済買" {
+			transaction := row["取引"]
+			switch transaction {
+			case "返済売":
+				transaction = "信用返済売"
+			case "返済買":
+				transaction = "信用返済買"
+			}
+			if transaction != "信用返済売" && transaction != "信用返済買" {
 				continue
 			}
-			p := SBIMarginPnLRow{Date: row["約定日"], Symbol: row["銘柄コード"], Transaction: row["取引"]}
+			symbol := row["銘柄コード"]
+			if symbol == "" {
+				parts := strings.Fields(row["銘柄名"])
+				if len(parts) > 0 && sbiPnLCode.MatchString(parts[len(parts)-1]) {
+					symbol = parts[len(parts)-1]
+				}
+			}
+			p := SBIMarginPnLRow{Date: row["約定日"], Symbol: symbol, Transaction: transaction}
 			quantity, qerr := sbiPnLNumber(firstValue(row, "数量", "約定数量"))
 			price, perr := sbiPnLNumber(firstValue(row, "単価", "約定単価"))
 			basis, berr := sbiPnLNumber(row["平均取得価額"])
-			pnl, nerr := sbiPnLNumber(firstValue(row, "実現損益", "決済損益"))
+			pnl, nerr := sbiPnLNumber(firstValue(row, "実現損益", "決済損益", "実現損益(税引前・円)"))
 			if _, err := sbiPnLDate(p.Date); err != nil || p.Symbol == "" || qerr != nil || perr != nil || berr != nil || nerr != nil || quantity <= 0 || price <= 0 || basis <= 0 {
 				p.Status, p.Message = "invalid_row", "invalid date, symbol, quantity, price, basis or realized P&L"
 			} else {
@@ -107,7 +125,7 @@ func sbiPnLNumber(raw string) (float64, error) {
 }
 
 func sbiPnLDate(raw string) (string, error) {
-	for _, layout := range []string{"2006/01/02", "2006-01-02"} {
+	for _, layout := range []string{"2006/01/02", "2006/1/2", "2006-01-02"} {
 		if d, err := time.Parse(layout, raw); err == nil {
 			return d.Format("2006-01-02"), nil
 		}
