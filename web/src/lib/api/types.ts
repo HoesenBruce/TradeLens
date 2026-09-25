@@ -503,12 +503,26 @@ export interface ImportPreview {
    */
   suggested_source_tz?: string;
   /** Parsed payload kind. */
-  format?: "journal_trades" | "executions" | "cash_transactions";
+  format?: "journal_trades" | "executions" | "cash_transactions" | "sbi_margin_pnl";
   /** Upload source detected by the API; "statement" = MetaTrader report */
   source?: "csv" | "json" | "statement";
   row_count?: number;
   journal_summary?: JournalPreviewSummary;
   sample_trades?: JournalTradePreview[];
+  enrichment_rows?: SBIEnrichmentRow[];
+}
+
+export interface SBIEnrichmentRow {
+  date: string;
+  symbol: string;
+  transaction: string;
+  quantity: number;
+  price: number;
+  basis: number;
+  pnl?: number;
+  status: string;
+  message?: string;
+  execution_id?: string;
 }
 
 // ImportResult is the response from POST /imports/:id/commit
@@ -521,6 +535,8 @@ export interface ImportResult {
   cash_inserted?: number;
   setups_upserted?: number;
   format?: string;
+  enriched?: number;
+  enrichment_rows?: SBIEnrichmentRow[];
   errors: RowError[];
 }
 

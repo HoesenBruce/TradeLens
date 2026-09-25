@@ -4798,7 +4798,7 @@ msgstr "使用前收盘价估算"
 #. js-lingui-explicit-id
 #: src/app/screens/settings/import-history.tsx:132
 msgid "accounts.historyHint"
-msgstr "包含定时同步、手动同步及文件导入的所有批次。回滚将删除该批次的成交记录。"
+msgstr "回滚成交导入会删除该批次的成交；SBI 补充信息无法单独回滚。"
 
 #. js-lingui-explicit-id
 #. placeholder {0}: warning.execution_id
@@ -6595,3 +6595,51 @@ msgstr "账户价值"
 #. js-lingui-explicit-id
 msgid "accounts.gainLoss"
 msgstr "收益 / 亏损"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiEnrichmentHint"
+msgstr "SBI 信用实现损益仅补充匹配到的平仓成交。确认前请核对每一行；不会新增成交。"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiEnrichmentPreview"
+msgstr "补充导入预览"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiEnrichable"
+msgstr "可补充"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiAlreadyEnriched"
+msgstr "已补充"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiAmbiguous"
+msgstr "匹配不唯一"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiUnmatched"
+msgstr "未找到成交"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiConflict"
+msgstr "数值冲突"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiInvalid"
+msgstr "无效行"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiEnriched"
+msgstr "已补充成交"
+
+#. js-lingui-explicit-id
+msgid "imports.notEnriched"
+msgstr "未补充"
+
+#. js-lingui-explicit-id
+msgid "accounts.sbiEnrichmentHistory"
+msgstr "此补充批次无法单独回滚"
+
+#. js-lingui-explicit-id
+msgid "accounts.sbiMarginPnLSource"
+msgstr "SBI 信用实现损益"
