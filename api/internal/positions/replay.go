@@ -70,6 +70,7 @@ type positionKey struct {
 
 type state struct {
 	positions        map[positionKey]Position
+	marginBasis      map[positionKey]float64
 	basisDay         map[positionKey]string
 	marginOpenings   map[positionKey]int
 	marginOpenFees   map[positionKey]float64
@@ -127,7 +128,7 @@ func replay(executions []store.Execution, dates []time.Time, splits []Split, bas
 	sort.SliceStable(splits, func(i, j int) bool { return splits[i].EffectiveDate.Before(splits[j].EffectiveDate) })
 
 	s := state{
-		positions: map[positionKey]Position{}, basisDay: map[positionKey]string{},
+		positions: map[positionKey]Position{}, marginBasis: map[positionKey]float64{}, basisDay: map[positionKey]string{},
 		marginOpenings: map[positionKey]int{}, marginOpenFees: map[positionKey]float64{},
 		conversions: map[string]float64{}, transferredBasis: basis,
 		accounts: map[string]*AccountSnapshot{}, convertedCash: map[positionKey]string{},
@@ -226,6 +227,7 @@ func (s *state) apply(ex store.Execution) {
 		position.Quantity += ex.Quantity
 		s.positions[key] = position
 		if kind != CashLong && strings.HasPrefix(lot, "sbi:margin-") {
+			s.marginBasis[key] += buyCost
 			s.marginOpenings[key]++
 			s.marginOpenFees[key] += ex.Fees + ex.Commission
 		}
@@ -247,6 +249,9 @@ func (s *state) apply(ex store.Execution) {
 	}
 	if sbiCash {
 		position.AverageCost = math.Ceil(position.AverageCost - epsilon)
+		if basis := reportedCloseBasisFromDetails(ex); basis != nil && abs(*basis-position.AverageCost) > 1 {
+			s.warn(ex, "cash_close_basis_mismatch", "broker-reported acquisition basis differs from SBI cash average cost by more than 1 JPY")
+		}
 	}
 	gross := (ex.Price - position.AverageCost) * ex.Quantity * multiplier
 	if kind == MarginShort {
@@ -260,6 +265,33 @@ func (s *state) apply(ex store.Execution) {
 	if kind != CashLong && strings.HasPrefix(lot, "sbi:margin-") {
 		openFees := s.marginOpenFees[key] * ex.Quantity / position.Quantity
 		s.marginOpenFees[key] -= openFees
+		if conversionType != "genbiki" {
+			if basis := reportedCloseBasisFromDetails(ex); basis != nil {
+				closedBasis := ex.Quantity * *basis
+				remaining := s.marginBasis[key] - closedBasis
+				if remaining < -0.01 || (ex.Quantity < position.Quantity-epsilon && remaining <= 0) {
+					s.warn(ex, "invalid_margin_close_basis", "broker-reported close basis exceeds the remaining margin cost basis")
+				} else {
+					s.marginBasis[key] = math.Max(0, remaining)
+					if position.Quantity-ex.Quantity > epsilon {
+						position.AverageCost = s.marginBasis[key] / (position.Quantity - ex.Quantity)
+					}
+				}
+				if reported := reportedPnlFromDetails(ex); reported != nil {
+					expected := (ex.Price-*basis)*ex.Quantity*multiplier - fees - openFees
+					if kind == MarginShort {
+						expected = (*basis-ex.Price)*ex.Quantity*multiplier - fees - openFees
+					}
+					if abs(expected-*reported) > 1 {
+						s.warn(ex, "margin_settlement_mismatch", "broker-reported realized P&L differs from price, acquisition basis, and fees by more than 1 JPY")
+					}
+				}
+			} else {
+				s.marginBasis[key] -= position.AverageCost * ex.Quantity
+			}
+		} else {
+			s.marginBasis[key] -= position.AverageCost * ex.Quantity
+		}
 		if conversionType == "genbiki" {
 			settlement = 0
 			cashSettlement = -fees
@@ -284,6 +316,7 @@ func (s *state) apply(ex store.Execution) {
 	position.Quantity -= ex.Quantity
 	if position.Quantity < epsilon {
 		delete(s.positions, key)
+		delete(s.marginBasis, key)
 		delete(s.basisDay, key)
 		delete(s.convertedCash, key)
 		delete(s.marginOpenings, key)
@@ -316,6 +349,19 @@ func reportedPnlFromDetails(ex store.Execution) *float64 {
 		return nil
 	}
 	return details.Pnl
+}
+
+func reportedCloseBasisFromDetails(ex store.Execution) *float64 {
+	if !ex.Details.Valid {
+		return nil
+	}
+	var details struct {
+		Basis *float64 `json:"broker_reported_close_basis"`
+	}
+	if json.Unmarshal([]byte(ex.Details.String), &details) != nil || details.Basis == nil || math.IsNaN(*details.Basis) || math.IsInf(*details.Basis, 0) || *details.Basis < 0 {
+		return nil
+	}
+	return details.Basis
 }
 
 func (s *state) bookOpen(ex store.Execution, kind Kind, multiplier float64, sbiCash bool) {

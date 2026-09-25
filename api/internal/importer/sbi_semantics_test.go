@@ -77,6 +77,11 @@ func TestSBIMixedPositionSemanticsPersistAndRegroup(t *testing.T) {
 		} else {
 			require.NotContains(t, details, "broker_reported_realized_pnl")
 		}
+		if i >= 3 {
+			require.Equal(t, 1000.0, details["broker_reported_close_basis"])
+		} else {
+			require.NotContains(t, details, "broker_reported_close_basis")
+		}
 	}
 	trades, err := q.ListTrades(ctx, store.ListTradesParams{UserID: user.ID})
 	require.NoError(t, err)
