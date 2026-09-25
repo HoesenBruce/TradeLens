@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"os"
 	"path/filepath"
 	"testing"
 	"time"
@@ -80,4 +81,23 @@ func TestSBIMarginPnLEnrichment(t *testing.T) {
 	require.Equal(t, "ambiguous_match", MatchSBIMarginPnL(file.Parsed, fills)[0].Status)
 	file.Parsed[0].Price = 6199
 	require.Equal(t, "no_matching_execution", MatchSBIMarginPnL(file.Parsed, fills)[0].Status)
+}
+
+func TestSBIMarginPnLRealReportLayout(t *testing.T) {
+	// Sanitized report shape: preamble, summary, combined name/code, short labels and signed yen.
+	input, err := os.ReadFile("testdata/sbi-margin-real-report.csv")
+	require.NoError(t, err)
+	cp932, _, err := transform.Bytes(japanese.ShiftJIS.NewEncoder(), input)
+	require.NoError(t, err)
+	got, ok, err := ReadSBIMarginPnLCSV(cp932)
+	require.NoError(t, err)
+	require.True(t, ok)
+	require.Len(t, got.Rows, 4)
+	require.Len(t, got.Parsed, 3)
+	require.Equal(t, SBIMarginPnLRow{Date: "2026/9/17", Symbol: "7003", Transaction: "信用返済売", Quantity: 100, Price: 4392.2, Basis: 4154, PnL: got.Parsed[0].PnL}, got.Parsed[0])
+	require.Equal(t, 23502.0, *got.Parsed[0].PnL)
+	require.Equal(t, "5801", got.Parsed[1].Symbol)
+	require.Equal(t, "信用返済買", got.Parsed[1].Transaction)
+	require.Equal(t, -17829.0, *got.Parsed[1].PnL)
+	require.Equal(t, "invalid_row", got.Parsed[2].Status)
 }
