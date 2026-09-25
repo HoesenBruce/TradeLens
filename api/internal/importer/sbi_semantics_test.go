@@ -68,6 +68,7 @@ func TestSBIMixedPositionSemanticsPersistAndRegroup(t *testing.T) {
 		var details map[string]any
 		require.NoError(t, json.Unmarshal([]byte(fill.Details.String), &details))
 		require.Equal(t, wantTypes[i], details["position_type"])
+		require.Equal(t, "date", details["source_time_precision"])
 		require.Equal(t, wantEffects[i], details["position_effect"])
 		require.Equal(t, "sbi:"+map[string]string{"cash": "cash", "margin_long": "margin-long", "margin_short": "margin-short"}[wantTypes[i]], details["lot"])
 		require.Equal(t, "匿名銘柄", details["stock_name"])
