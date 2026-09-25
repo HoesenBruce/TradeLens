@@ -241,6 +241,17 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 
 			execution := parsed.Executions[0]
 			execution.PositionType, execution.PositionEffect, _ = sbiSemantics(leg)
+			if transaction == leg && execution.PositionEffect == PositionReduce {
+				raw := strings.TrimSpace(strings.ReplaceAll(row["平均取得価額"], ",", ""))
+				if raw != "" && raw != "--" && raw != "-" {
+					basis, err := strconv.ParseFloat(raw, 64)
+					if err != nil || math.IsNaN(basis) || math.IsInf(basis, 0) || basis < 0 {
+						result.Errors = append(result.Errors, RowError{Row: i + 1, Message: "invalid reported acquisition basis"})
+						break
+					}
+					execution.ReportedCloseBasis = &basis
+				}
+			}
 			if conversionID != "" {
 				execution.EventType = "position_conversion"
 				execution.ConversionType = "genbiki"

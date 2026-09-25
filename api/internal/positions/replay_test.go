@@ -74,6 +74,29 @@ func withReportedPnl(ex store.Execution, pnl float64) store.Execution {
 	return ex
 }
 
+func TestReplaySBIMarginReportedBasisPreservesRemainder(t *testing.T) {
+	first := execution("1", "a", "7003", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 6000)
+	second := execution("2", "a", "7003", "sbi:margin-long", "buy", "2026-09-02T01:00:00Z", 100, 5000)
+	close := execution("3", "a", "7003", "sbi:margin-long", "sell", "2026-09-03T01:00:00Z", 100, 6200)
+	close.Details = sql.NullString{String: `{"lot":"sbi:margin-long","broker_reported_close_basis":6000,"broker_reported_realized_pnl":20000}`, Valid: true}
+	snapshot := Replay([]store.Execution{close, second, first}, []time.Time{day("2026-09-03")})[0]
+	require.Empty(t, snapshot.Warnings)
+	require.Equal(t, 100.0, snapshot.Accounts[0].Positions[0].Quantity)
+	require.Equal(t, 5000.0, snapshot.Accounts[0].Positions[0].AverageCost)
+	require.Equal(t, 20000.0, snapshot.Accounts[0].RealizedPnL)
+
+	close.Details = sql.NullString{String: `{"lot":"sbi:margin-long","broker_reported_close_basis":12000,"broker_reported_realized_pnl":20000}`, Valid: true}
+	snapshot = Replay([]store.Execution{first, second, close}, []time.Time{day("2026-09-03")})[0]
+	require.Equal(t, "invalid_margin_close_basis", snapshot.Warnings[0].Code)
+	require.Equal(t, 5500.0, snapshot.Accounts[0].Positions[0].AverageCost)
+
+	other := execution("4", "b", "7003", "", "buy", "2026-09-01T01:00:00Z", 100, 6000)
+	other2 := execution("5", "b", "7003", "", "buy", "2026-09-02T01:00:00Z", 100, 5000)
+	otherClose := execution("6", "b", "7003", "", "sell", "2026-09-03T01:00:00Z", 100, 6200)
+	snapshot = Replay([]store.Execution{other, other2, otherClose}, []time.Time{day("2026-09-03")})[0]
+	require.Equal(t, 5500.0, snapshot.Accounts[0].Positions[0].AverageCost)
+}
+
 func TestReplaySBIMarginReportedCloseAndMissingFallback(t *testing.T) {
 	first := execution("open-a", "a", "AAA", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 1000)
 	first.Fees = 5
