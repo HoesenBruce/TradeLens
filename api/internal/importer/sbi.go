@@ -201,7 +201,7 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 			fields[key] = value
 		}
 	}
-	generic := NewGeneric(fields).WithSourceTZ(sourceTZ)
+	generic := NewGeneric(fields).WithSourceTZ(sourceTZ).WithDateOnlyTime(9, 0)
 	occurrences := map[string]int{}
 	result := ParseResult{Format: "executions"}
 

@@ -37,7 +37,8 @@ func TestSBITradeExecutionCSV(t *testing.T) {
 	require.Equal(t, "sell", cashSell.Side)
 	require.Equal(t, "stock", cashBuy.InstrumentType)
 	require.Equal(t, "sbi:cash", cashBuy.LotKey)
-	require.Equal(t, time.Date(2026, 1, 4, 15, 0, 0, 0, time.UTC), cashBuy.ExecutedAt)
+	require.Equal(t, time.Date(2026, 1, 5, 0, 0, 0, 0, time.UTC), cashBuy.ExecutedAt)
+	require.Equal(t, "date", cashBuy.SourceTimePrecision)
 	require.Equal(t, 10.0, cashSell.Fees)
 
 	require.Equal(t, "sbi:margin-long", result.Executions[2].LotKey)
@@ -67,6 +68,32 @@ func TestSBITradeExecutionCSV(t *testing.T) {
 	require.Equal(t, "position_conversion", marginClose.EventType)
 	require.Equal(t, "genbiki", marginClose.ConversionType)
 	require.Equal(t, marginClose.ConversionID, cashOpen.ConversionID)
+}
+
+func TestSBIDateOnlyAnchorPreservesTimedValuesAndOrder(t *testing.T) {
+	row := func(at, side string) map[string]string {
+		return map[string]string{"約定日": at, "銘柄コード": "7203", "取引": side, "約定数量": "100", "約定単価": "1000"}
+	}
+	parsed := ParseSBIRows([]map[string]string{
+		row("2026/08/07", "株式現物買"),
+		row("2026/08/07", "現引"),
+	}, nil, "")
+	require.Empty(t, parsed.Errors)
+	require.Len(t, parsed.Executions, 3)
+	require.Equal(t, time.Date(2026, 8, 7, 0, 0, 0, 0, time.UTC), parsed.Executions[0].ExecutedAt)
+	require.Equal(t, "2026-08-07", parsed.Executions[0].ExecutedAt.Format("2006-01-02"))
+	for i := 1; i < 3; i++ {
+		require.True(t, parsed.Executions[i-1].ExecutedAt.Before(parsed.Executions[i].ExecutedAt))
+		require.Equal(t, "date", parsed.Executions[i].SourceTimePrecision)
+	}
+	timed := ParseSBIRows([]map[string]string{row("2026-08-07 14:32:10", "株式現物買")}, nil, "")
+	require.Empty(t, timed.Errors)
+	require.Equal(t, time.Date(2026, 8, 7, 5, 32, 10, 0, time.UTC), timed.Executions[0].ExecutedAt)
+	require.Empty(t, timed.Executions[0].SourceTimePrecision)
+	offset := ParseSBIRows([]map[string]string{row("2026-08-07T14:32:10+08:00", "株式現物買")}, nil, "")
+	require.Empty(t, offset.Errors)
+	require.Equal(t, time.Date(2026, 8, 7, 6, 32, 10, 0, time.UTC), offset.Executions[0].ExecutedAt)
+	require.Empty(t, offset.Executions[0].SourceTimePrecision)
 }
 
 func TestSBIRowsUseConfirmedMapping(t *testing.T) {
