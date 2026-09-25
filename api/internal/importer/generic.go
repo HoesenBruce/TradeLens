@@ -16,7 +16,8 @@ type Generic struct {
 	// carry an offset — a naive "Fri 16:30" from a US broker is Eastern wall
 	// time, and reading it as UTC shifts every fill by 4-5h (late-Friday fills
 	// even onto Saturday). Timestamps with their own offset are unaffected.
-	loc *time.Location
+	loc            *time.Location
+	dateOnlyOffset time.Duration
 	// Quantities are lots (FX/CFD platforms), not units/shares — resolve the
 	// contract size per symbol instead of the conventional multiplier.
 	lotSized bool
@@ -35,6 +36,12 @@ func (g *Generic) WithSourceTZ(tz string) *Generic {
 	if loc, err := time.LoadLocation(tz); err == nil {
 		g.loc = loc
 	}
+	return g
+}
+
+// WithDateOnlyTime anchors date-only values in the source timezone.
+func (g *Generic) WithDateOnlyTime(hour, minute int) *Generic {
+	g.dateOnlyOffset = time.Duration(hour)*time.Hour + time.Duration(minute)*time.Minute
 	return g
 }
 
@@ -306,11 +313,16 @@ func (g *Generic) parseRow(row map[string]string) (ParsedExecution, error) {
 		return p, fmt.Errorf("invalid price")
 	}
 	p.Price = price
-	ts, err := parseTimeIn(g.col(row, "executed_at"), g.loc)
+	dateValue := g.col(row, "executed_at")
+	ts, err := parseTimeIn(dateValue, g.loc)
 	if err != nil {
 		return p, fmt.Errorf("invalid date %q", g.col(row, "executed_at"))
 	}
 	p.ExecutedAt = ts
+	if g.dateOnlyOffset != 0 && isDateOnly(dateValue) {
+		p.ExecutedAt = p.ExecutedAt.Add(g.dateOnlyOffset)
+		p.SourceTimePrecision = "date"
+	}
 	// Costs are stored as positive magnitudes: brokers disagree on sign
 	// (IBKR reports IBCommission negative), and the P&L engine subtracts
 	// fees_total from gross either way.
@@ -340,6 +352,15 @@ func (g *Generic) parseRow(row map[string]string) (ParsedExecution, error) {
 	}
 	g.applyMultiplier(&p, row)
 	return p, nil
+}
+
+func isDateOnly(s string) bool {
+	for _, layout := range []string{"01/02/2006", "2006/01/02", "2006-01-02"} {
+		if _, err := time.Parse(layout, strings.TrimSpace(s)); err == nil {
+			return true
+		}
+	}
+	return false
 }
 
 // US timezone abbreviations brokers stamp on export times (Webull "EDT").

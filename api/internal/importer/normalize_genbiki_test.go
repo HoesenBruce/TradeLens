@@ -39,6 +39,8 @@ func TestNormalizeLegacyGenbiki(t *testing.T) {
 	current := parsed
 	current.Executions = append([]ParsedExecution(nil), parsed.Executions...)
 	for i := range parsed.Executions {
+		parsed.Executions[i].ExecutedAt = parsed.Executions[i].ExecutedAt.Add(-9 * time.Hour) // legacy midnight anchor
+		parsed.Executions[i].SourceTimePrecision = ""
 		parsed.Executions[i].EventType = ""
 		parsed.Executions[i].ConversionType = ""
 		parsed.Executions[i].ConversionID = ""

@@ -33,6 +33,7 @@ type ParsedExecution struct {
 	Fees                float64
 	Commission          float64
 	ExecutedAt          time.Time
+	SourceTimePrecision string  // "date" when a broker supplied no clock time
 	Multiplier          float64 // 1 stock, 100 option; 0 means "default to 1"
 	// LotKey isolates overlapping same-symbol round-trips (journal imports).
 	// Stored in executions.details as {"lot":"..."}.

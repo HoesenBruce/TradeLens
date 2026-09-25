@@ -83,8 +83,11 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 		}
 		id := uuid.New().String()
 		details := sql.NullString{}
-		if pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" || pe.ReportedRealizedPnl != nil || pe.ReportedCloseBasis != nil || pe.EventType != "" {
+		if pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" || pe.ReportedRealizedPnl != nil || pe.ReportedCloseBasis != nil || pe.EventType != "" || pe.SourceTimePrecision != "" {
 			payload := map[string]any{}
+			if pe.SourceTimePrecision != "" {
+				payload["source_time_precision"] = pe.SourceTimePrecision
+			}
 			if pe.LotKey != "" {
 				payload["lot"] = pe.LotKey
 			}
