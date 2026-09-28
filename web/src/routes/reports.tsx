@@ -136,7 +136,7 @@ function ReportsPage() {
   const shareEnabled = systemInfoQ.data?.features?.share_links === true;
   const [shareOpen, setShareOpen] = useState(false);
   const summaryQ = useSummary(analyticsFilters);
-  const ytdSummaryQ = useSummary(ytdFilters);
+  const ytdSummaryQ = useSummary(ytdFilters, false);
   const rSummaryQ = useRSummary(analyticsFilters);
   const equityQ = useEquityCurve(analyticsFilters);
   const tradesQ = useTrades(analyticsFilters);

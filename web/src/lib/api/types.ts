@@ -268,6 +268,16 @@ export interface TradeDetail extends Trade {
 export interface Summary {
   /** Output currency from the aggregate API; absent on legacy/R responses. */
   currency?: string;
+  target_currency?: string;
+  fx_policy?: "latest";
+  fx_rates?: {
+    from: string;
+    to: string;
+    rate: number;
+    as_of: string;
+    provider: string;
+    cached: boolean;
+  }[];
   total_trades: number;
   wins: number;
   losses: number;

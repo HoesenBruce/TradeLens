@@ -1,4 +1,5 @@
 import type { Account, CashTransaction, Summary, Trade } from "./api/types";
+import { accountBaseCurrency } from "./displayPrefs";
 
 export interface HeaderStats {
   netPnl: number;
@@ -23,6 +24,8 @@ export function netDeposits(opts: {
   accountIds?: string | readonly string[];
   cashTx: CashTransaction[];
 }): number {
+  // Mixed funding needs per-flow FX; zero disables Reports percentage mode.
+  if (!accountBaseCurrency(opts.accounts, opts.accountIds)) return 0;
   const accountIds = new Set(scopeAccounts(opts.accounts, opts.accountIds).map((a) => a.id));
   return opts.cashTx
     .filter((c) => accountIds.has(c.account_id))
@@ -39,6 +42,9 @@ export function computeHeaderStats(opts: {
   summary?: Summary;
   trades: Trade[];
 }): HeaderStats {
+  if (!accountBaseCurrency(opts.accounts, opts.accountIds)) {
+    return { netPnl: opts.summary?.net_pnl ?? 0, netPnlPct: null, cash: 0, active: 0 };
+  }
   const accountIds = new Set(scopeAccounts(opts.accounts, opts.accountIds).map((a) => a.id));
   const cashFlow = opts.cashTx
     .filter((c) => accountIds.has(c.account_id))

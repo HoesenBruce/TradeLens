@@ -85,3 +85,17 @@ describe("computeHeaderStats", () => {
     expect(s.active).toBe(50);
   });
 });
+
+it("does not combine native cash flows with a normalized mixed Summary", () => {
+  const opts = {
+    accounts: [acct("a1", 0), { ...acct("a2", 0), base_currency: "JPY" }],
+    cashTx: [
+      { account_id: "a1", amount: 1000 },
+      { account_id: "a2", amount: 1000 },
+    ] as never,
+    summary: { ...summary(150010), currency: "JPY" },
+    trades: [],
+  };
+  expect(netDeposits(opts)).toBe(0);
+  expect(computeHeaderStats(opts)).toEqual({ netPnl: 150010, netPnlPct: null, cash: 0, active: 0 });
+});

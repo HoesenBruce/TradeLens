@@ -223,37 +223,47 @@ func toExecutionDTOs(rows []store.Execution) []executionDTO {
 	return out
 }
 
-// errMixedCurrencies rejects portfolio scopes whose accounts settle in
-// different base currencies — summing them 1:1 would produce a meaningless
-// number, and /market/fx only has spot rates, not the historical rates an
-// honest conversion would need.
+// Mixed scopes are rejected unless the endpoint normalizes each monetary input.
 var errMixedCurrencies = errors.New("selected accounts mix base currencies")
 
-// portfolioCurrency resolves exactly the accounts included by the trade loaders.
-func (s *Server) portfolioCurrency(ctx context.Context, userID string, f Filters) (string, error) {
+// portfolioCurrencies resolves exactly the accounts included by the trade loaders.
+func (s *Server) portfolioCurrencies(ctx context.Context, userID string, f Filters) ([]string, error) {
 	accounts, err := s.deps.Store.ListAccounts(ctx, userID)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	base := ""
+	for _, id := range f.AccountIDs {
+		if !slices.ContainsFunc(accounts, func(a store.Account) bool { return a.ID == id }) {
+			return nil, errUnknownCurrency
+		}
+	}
+	currencies := []string{}
 	for _, a := range accounts {
 		if !f.matchAccount(a.ID) || (len(f.AccountIDs) == 0 && !f.IncludeBacktest && a.AccountType == AccountTypeBacktest) {
 			continue
 		}
 		if a.BaseCurrency == "" {
-			return "", errUnknownCurrency
+			return nil, errUnknownCurrency
 		}
-		if base != "" && a.BaseCurrency != base {
-			return "", errMixedCurrencies
-		}
-		base = a.BaseCurrency
-	}
-	for _, id := range f.AccountIDs {
-		if !slices.ContainsFunc(accounts, func(a store.Account) bool { return a.ID == id }) {
-			return "", errUnknownCurrency
+		if !slices.Contains(currencies, a.BaseCurrency) {
+			currencies = append(currencies, a.BaseCurrency)
 		}
 	}
-	return base, nil
+	return currencies, nil
+}
+
+func (s *Server) portfolioCurrency(ctx context.Context, userID string, f Filters) (string, error) {
+	currencies, err := s.portfolioCurrencies(ctx, userID, f)
+	if err != nil {
+		return "", err
+	}
+	if len(currencies) > 1 {
+		return "", errMixedCurrencies
+	}
+	if len(currencies) == 0 {
+		return "", nil
+	}
+	return currencies[0], nil
 }
 
 var errUnknownCurrency = errors.New("account scope currency could not be resolved")
@@ -286,6 +296,11 @@ func (s *Server) loadClosedTrades(ctx context.Context, userID string, f Filters)
 	if err := s.checkPortfolioCurrency(ctx, userID, f); err != nil {
 		return nil, err
 	}
+	return s.loadClosedTradeRows(ctx, userID, f)
+}
+
+// Only callers that validate scope and normalize money may bypass the currency guard.
+func (s *Server) loadClosedTradeRows(ctx context.Context, userID string, f Filters) ([]store.Trade, error) {
 	rows, err := s.deps.Store.ListClosedTrades(ctx, store.ListClosedTradesParams{
 		UserID:    userID,
 		AccountID: f.accountNarg(),

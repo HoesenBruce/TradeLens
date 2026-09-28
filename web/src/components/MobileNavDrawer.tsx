@@ -99,7 +99,7 @@ function FiltersSection() {
       </SectionLabel>
       <div className="flex flex-wrap items-center gap-2 px-3 pt-0.5 pb-1.5">
         <DateRangePicker />
-        <DisplayCurrencySelect baseCurrency={baseCurrency} />
+        <DisplayCurrencySelect baseCurrency={baseCurrency || "USD"} aggregate={!baseCurrency} />
         <ToolsPopover variant="header" />
       </div>
     </div>
