@@ -214,18 +214,11 @@ func (s *Server) handleSummary(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusBadRequest, "bad_request", err.Error(), nil)
 	}
-	rows, err := s.loadClosedTrades(c.Request().Context(), auth.UserID(c), f)
+	response, err := s.summary(c.Request().Context(), auth.UserID(c), f, c.QueryParam("target_currency"))
 	if err != nil {
-		return failLoad(err, "could not compute summary")
+		return err
 	}
-	currency, err := s.portfolioCurrency(c.Request().Context(), auth.UserID(c), f)
-	if err != nil {
-		return failLoad(err, "could not resolve summary currency")
-	}
-	return c.JSON(http.StatusOK, struct {
-		analytics.Summary
-		Currency string `json:"currency"`
-	}{analytics.Summarize(toClosedTrades(rows)), currency})
+	return c.JSON(http.StatusOK, response)
 }
 
 func (s *Server) handleRSummary(c *echo.Context) error {

@@ -68,7 +68,7 @@ function HomePage() {
   );
 
   const summaryQ = useSummary(filters);
-  const ytdSummaryQ = useSummary(ytdFilters);
+  const ytdSummaryQ = useSummary(ytdFilters, false);
   const equityQ = useEquityCurve(filters);
   const accountsQ = useAccounts();
   const accountValueQ = useAccountValue(

@@ -1,16 +1,22 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import { accountsApi } from "@/lib/api/accounts";
+import { useMoneyFx } from "./useMoneyFx";
 import { analyticsApi } from "@/lib/api/analytics";
 import { marketApi } from "@/lib/api/market";
-import type { Account, AccountValue } from "@/lib/api/types";
+import type { Account, AccountValue, Summary } from "@/lib/api/types";
 import { useDisplayPrefs } from "@/lib/displayPrefs";
-import { useAccountValue } from "./useAnalytics";
+import { useAccountValue, useSummary } from "./useAnalytics";
 
 vi.mock("@/lib/api/analytics", () => ({
-  analyticsApi: { accountValue: vi.fn<typeof analyticsApi.accountValue>() },
+  analyticsApi: {
+    accountValue: vi.fn<typeof analyticsApi.accountValue>(),
+    summary: vi.fn<typeof analyticsApi.summary>(),
+  },
 }));
+vi.mock("@/lib/api/accounts", () => ({ accountsApi: { list: vi.fn<typeof accountsApi.list>() } }));
 vi.mock("@/lib/api/market", () => ({ marketApi: { fx: vi.fn<typeof marketApi.fx>() } }));
 const accounts = [
   { id: "sbi", base_currency: "JPY", account_type: "cash" },
@@ -46,6 +52,7 @@ function makeWrapper() {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.mocked(accountsApi.list).mockResolvedValue(accounts);
   useDisplayPrefs.setState({ displayCurrency: "JPY" });
   vi.mocked(analyticsApi.accountValue).mockImplementation(async (f) =>
     f.account_id === "ibkr" ? value("USD", 10_000) : value("JPY", 1_350_000),
@@ -170,5 +177,61 @@ describe("useAccountValue", () => {
     await waitFor(() => expect(result.current.data?.currency).toBe("USD"));
     expect(result.current.data?.points[0].estimated_account_value).toBe(19000);
     expect(marketApi.fx).toHaveBeenCalledWith({ from: "JPY", to: "USD" });
+  });
+});
+
+describe("useSummary mixed currency", () => {
+  it("switches display/account scopes and formats output without another FX conversion", async () => {
+    vi.mocked(analyticsApi.summary).mockImplementation(
+      async (f) =>
+        ({
+          currency: f.target_currency ?? (f.account_id === "ibkr" ? "USD" : "JPY"),
+          net_pnl: f.target_currency === "JPY" ? 3090 : f.target_currency === "USD" ? 20.6 : 90,
+        }) as Summary,
+    );
+    const { result, rerender } = renderHook(
+      ({ id }) => {
+        const summary = useSummary({ account_id: id });
+        const money = useMoneyFx(summary.data?.currency ?? "");
+        return { summary, money };
+      },
+      { wrapper: makeWrapper(), initialProps: { id: undefined as string | undefined } },
+    );
+    await waitFor(() => expect(result.current.summary.data?.net_pnl).toBe(3090));
+    expect(result.current.money.toDisplay(3090)).toBe(3090);
+    expect(marketApi.fx).not.toHaveBeenCalled();
+    act(() => useDisplayPrefs.setState({ displayCurrency: "USD" }));
+    await waitFor(() => expect(result.current.summary.data?.net_pnl).toBe(20.6));
+    expect(result.current.money.currency).toBe("USD");
+    expect(result.current.money.toDisplay(20.6)).toBe(20.6);
+    expect(marketApi.fx).not.toHaveBeenCalled();
+    act(() => useDisplayPrefs.setState({ displayCurrency: "JPY" }));
+    await waitFor(() => expect(result.current.summary.data?.net_pnl).toBe(3090));
+    rerender({ id: "sbi" });
+    await waitFor(() => expect(result.current.summary.data?.net_pnl).toBe(90));
+    expect(analyticsApi.summary).toHaveBeenCalledWith({ account_id: "sbi" });
+    rerender({ id: undefined });
+    await waitFor(() => expect(result.current.summary.data?.net_pnl).toBe(3090));
+    act(() => useDisplayPrefs.setState({ displayCurrency: null }));
+    await waitFor(() => expect(result.current.summary.data?.currency).toBe("USD"));
+    expect(analyticsApi.summary).toHaveBeenCalledWith({
+      account_id: undefined,
+      target_currency: "USD",
+    });
+  });
+
+  it("keeps mixed goal inputs on the rejecting native-currency path", async () => {
+    vi.mocked(analyticsApi.summary).mockRejectedValue(new Error("mixed_currencies"));
+    const { result } = renderHook(() => useSummary({}, false), { wrapper: makeWrapper() });
+    await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(analyticsApi.summary).toHaveBeenCalledWith({});
+    expect(result.current.data).toBeUndefined();
+  });
+
+  it("does not publish data when normalization fails", async () => {
+    vi.mocked(analyticsApi.summary).mockRejectedValue(new Error("fx_unavailable"));
+    const { result } = renderHook(() => useSummary({}), { wrapper: makeWrapper() });
+    await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(result.current.data).toBeUndefined();
   });
 });
