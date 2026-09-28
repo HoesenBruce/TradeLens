@@ -1,4 +1,7 @@
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
+import { useQueries } from "@tanstack/react-query";
+import { tradesApi } from "@/lib/api/trades";
+import { analyticsApi } from "@/lib/api/analytics";
 import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
@@ -64,7 +67,6 @@ import {
   useSaveOcrSettings,
   useTestOcrSettings,
 } from "@/lib/hooks/useOcrSettings";
-import { useTrades } from "@/lib/hooks/useTrades";
 import { formatCashDisplay, signedCashAmount } from "@/lib/cashAmount";
 import { parseAmountToNumber } from "@/lib/amountInput";
 import { fmtDate, fmtMoney, fmtSignedMoney } from "@/lib/format";
@@ -231,8 +233,23 @@ export function AccountsTab({
   const [editCashError, setEditCashError] = useState<string | null>(null);
   const [savingCash, setSavingCash] = useState(false);
 
-  const tradesQ = useTrades({});
-  const trades = tradesQ.data;
+  // Account rows retain each account's own currency, independently of portfolio display.
+  const accountTrades = useQueries({
+    queries: accounts.map((account) => {
+      const request = { account_id: account.id, target_currency: account.base_currency };
+      return { queryKey: ["trades", request], queryFn: () => tradesApi.list(request) };
+    }),
+  });
+  const accountFunding = useQueries({
+    queries: accounts.map((account) => {
+      const request = { account_id: account.id, target_currency: account.base_currency };
+      return {
+        queryKey: ["analytics", "equity-curve", request],
+        queryFn: () => analyticsApi.equityCurve(request),
+      };
+    }),
+  });
+  const trades = accountTrades.flatMap((q) => (q.isSuccess ? q.data.trades : []));
   const primaryId = useMemo(() => primaryAccountId(accounts), [accounts]);
   const tradeCountByAccount = useMemo(() => {
     const counts = new Map<string, number>();
@@ -731,8 +748,10 @@ export function AccountsTab({
           <>
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-2">
-                {accounts.map((acc) => {
-                  const balance = ledgerBalance(acc, cashTransactions);
+                {accounts.map((acc, index) => {
+                  const funding = accountFunding[index];
+                  const ready = accountTrades[index]?.isSuccess && funding?.isSuccess;
+                  const balance = ledgerBalance(acc, funding?.data?.cash_transactions ?? []);
                   const isPrimary = acc.id === primaryId;
                   const tradeCount = tradeCountByAccount.get(acc.id) ?? 0;
                   const netPnl = netPnlByAccount.get(acc.id) ?? 0;
@@ -787,7 +806,7 @@ export function AccountsTab({
                       </div>
                       <div className="shrink-0 text-right">
                         <p className="m-0 text-[14px] font-semibold tabular-nums tracking-tight text-foreground">
-                          {fmtMoney(equity, acc.base_currency, locale)}
+                          {ready ? fmtMoney(equity, acc.base_currency, locale) : "—"}
                         </p>
                         <p
                           className={cn(
@@ -799,7 +818,7 @@ export function AccountsTab({
                                 : "text-muted-foreground",
                           )}
                         >
-                          {fmtSignedMoney(netPnl, acc.base_currency, locale)}
+                          {ready ? fmtSignedMoney(netPnl, acc.base_currency, locale) : "—"}
                         </p>
                       </div>
                       <ChevronRight
@@ -1213,7 +1232,8 @@ export function RulesTab({
   const locale = intlLocale();
   const goalYear = annualGoal?.year ?? new Date().getFullYear();
   const ytdFilters = useMemo(() => ytdFiltersForYear({}, goalYear), [goalYear]);
-  const ytdSummaryQ = useSummary(ytdFilters, false);
+  const ytdSummaryQ = useSummary(ytdFilters);
+  const goalCurrency = annualGoal?.currency || ytdSummaryQ.data?.currency || "USD";
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [goalDraft, setGoalDraft] = useState("");
   const [goalError, setGoalError] = useState<string | null>(null);
@@ -1232,7 +1252,12 @@ export function RulesTab({
   }, [checklistContent, checklistModalOpen]);
 
   const goalProgress =
-    annualGoal?.amount != null && annualGoal.amount > 0 && ytdSummaryQ.data != null
+    annualGoal?.amount != null &&
+    annualGoal.amount > 0 &&
+    !annualGoalError &&
+    !ytdSummaryQ.isError &&
+    ytdSummaryQ.data != null &&
+    annualGoal.currency === ytdSummaryQ.data.currency
       ? computeAnnualGoalProgress(annualGoal.amount, ytdSummaryQ.data.net_pnl, goalYear)
       : null;
 
@@ -1325,7 +1350,11 @@ export function RulesTab({
   }
 
   function openGoalModal() {
-    setGoalDraft(annualGoal?.amount != null ? String(annualGoal.amount) : "");
+    setGoalDraft(
+      annualGoal?.amount != null
+        ? String(Number(annualGoal.amount.toFixed(goalCurrency === "JPY" ? 0 : 2)))
+        : "",
+    );
     setGoalError(null);
     setGoalModalOpen(true);
   }
@@ -1457,7 +1486,12 @@ export function RulesTab({
             <ListSkeleton rows={1} />
           </div>
         ) : annualGoalError ? (
-          <SettingsCardNote tone="destructive">Failed to load annual goal.</SettingsCardNote>
+          <SettingsCardNote tone="destructive">
+            Annual goal unavailable. Check FX or confirm its currency.
+            <Button type="button" variant="outline" onClick={openGoalModal}>
+              Set annual goal
+            </Button>
+          </SettingsCardNote>
         ) : annualGoal?.amount == null ? (
           <SettingsCardRow
             icon={Target}
@@ -1493,7 +1527,7 @@ export function RulesTab({
                 className="gap-1.5"
               >
                 <span className="font-semibold tabular-nums text-foreground">
-                  {fmtMoney(annualGoal.amount, "USD", locale)}
+                  {fmtMoney(annualGoal.amount, goalCurrency, locale)}
                 </span>
                 <Pencil size={12} strokeWidth={1.5} aria-hidden className="text-muted-foreground" />
               </Button>
@@ -1521,7 +1555,7 @@ export function RulesTab({
                           : "text-muted-foreground",
                     )}
                   >
-                    {fmtSignedMoney(goalProgress.ytdNetPnl, "USD", locale)}
+                    {fmtSignedMoney(goalProgress.ytdNetPnl, goalCurrency, locale)}
                   </span>{" "}
                   YTD ·{" "}
                   <span className="tabular-nums">{Math.round(goalProgress.progressPct)}%</span> of
@@ -1743,7 +1777,7 @@ export function RulesTab({
       >
         <div className="flex flex-col gap-3">
           <Field
-            label="Target net P&L ($)"
+            label={`Target net P&L (${goalCurrency})`}
             htmlFor="annual-goal-amount"
             error={goalError ?? undefined}
           >

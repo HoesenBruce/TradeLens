@@ -1,0 +1,1 @@
+ALTER TABLE annual_goals ADD COLUMN currency TEXT NOT NULL DEFAULT '';

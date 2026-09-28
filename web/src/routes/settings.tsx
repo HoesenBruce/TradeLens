@@ -95,12 +95,16 @@ function SettingsPage() {
       onSaveRiskRules={async (body) => {
         await saveRiskRulesM.mutateAsync(body);
       }}
-      annualGoal={annualGoalQ.data}
+      annualGoal={
+        annualGoalQ.isError
+          ? { year: goalYear, amount: null, currency: annualGoalQ.currency }
+          : annualGoalQ.data
+      }
       annualGoalLoading={annualGoalQ.isLoading}
       annualGoalError={annualGoalQ.isError}
       annualGoalSaving={saveAnnualGoalM.isPending || clearAnnualGoalM.isPending}
       onSaveAnnualGoal={async (body) => {
-        await saveAnnualGoalM.mutateAsync(body);
+        await saveAnnualGoalM.mutateAsync({ ...body, currency: annualGoalQ.currency });
       }}
       onClearAnnualGoal={async (year) => {
         await clearAnnualGoalM.mutateAsync(year);

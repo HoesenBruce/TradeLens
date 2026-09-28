@@ -3,12 +3,16 @@ package api
 import (
 	"database/sql"
 	"errors"
+	"fmt"
+	"math"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v5"
 	"github.com/tradermemos/api/internal/auth"
+	"github.com/tradermemos/api/internal/marketdata"
 	"github.com/tradermemos/api/internal/store"
 )
 
@@ -127,13 +131,14 @@ func validateRiskRules(in riskRulesDTO) error {
 }
 
 type annualGoalDTO struct {
-	Year   int      `json:"year"`
-	Amount *float64 `json:"amount"`
+	Year     int      `json:"year"`
+	Amount   *float64 `json:"amount"`
+	Currency string   `json:"currency"`
 }
 
 func toAnnualGoalDTO(g store.AnnualGoal) annualGoalDTO {
 	amount := g.Amount
-	return annualGoalDTO{Year: int(g.Year), Amount: &amount}
+	return annualGoalDTO{Year: int(g.Year), Amount: &amount, Currency: g.Currency}
 }
 
 func parseGoalYear(c *echo.Context) (int64, error) {
@@ -152,6 +157,10 @@ func parseGoalYear(c *echo.Context) (int64, error) {
 }
 
 func (s *Server) handleGetAnnualGoal(c *echo.Context) error {
+	requested := strings.ToUpper(strings.TrimSpace(c.QueryParam("target_currency")))
+	if requested != "" && !validCurrency(requested) {
+		return Fail(http.StatusBadRequest, "bad_request", "invalid target_currency", nil)
+	}
 	uid := auth.UserID(c)
 	year, err := parseGoalYear(c)
 	if err != nil {
@@ -162,10 +171,40 @@ func (s *Server) handleGetAnnualGoal(c *echo.Context) error {
 		Year:   year,
 	})
 	if errors.Is(err, sql.ErrNoRows) {
+		if requested != "" {
+			return c.JSON(http.StatusOK, struct {
+				Year   int      `json:"year"`
+				Amount *float64 `json:"amount"`
+				currencyMetadata
+			}{int(year), nil, currencyMetadata{Currency: requested, TargetCurrency: requested, FXPolicy: "latest", FXRates: []marketdata.FxRateResponse{}}})
+		}
 		return c.JSON(http.StatusOK, annualGoalDTO{Year: int(year), Amount: nil})
 	}
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not load annual goal", nil)
+	}
+	out := toAnnualGoalDTO(g)
+	if requested != "" {
+		if !validCurrency(g.Currency) {
+			return Fail(http.StatusBadRequest, "currency_required", fmt.Sprintf("Legacy goal amount %g has no currency. Confirm its amount in the displayed currency and save again.", g.Amount), nil)
+		}
+		meta := currencyMetadata{Currency: requested, TargetCurrency: requested, FXPolicy: "latest", FXRates: []marketdata.FxRateResponse{}}
+		rate, err := s.analyticsRate(c.Request().Context(), &meta, map[string]float64{requested: 1}, g.Currency)
+		if err != nil {
+			return err
+		}
+		amount := g.Amount * rate
+		if math.IsNaN(amount) || math.IsInf(amount, 0) {
+			return Fail(http.StatusBadGateway, "fx_unavailable", "invalid normalized goal", nil)
+		}
+		out.Amount = &amount
+		out.Currency = requested
+		return c.JSON(http.StatusOK, struct {
+			Year   int      `json:"year"`
+			Amount *float64 `json:"amount"`
+			currencyMetadata
+			SourceCurrency string `json:"source_currency"`
+		}{out.Year, out.Amount, meta, g.Currency})
 	}
 	return c.JSON(http.StatusOK, toAnnualGoalDTO(g))
 }
@@ -173,8 +212,9 @@ func (s *Server) handleGetAnnualGoal(c *echo.Context) error {
 func (s *Server) handlePutAnnualGoal(c *echo.Context) error {
 	uid := auth.UserID(c)
 	var in struct {
-		Year   int      `json:"year"`
-		Amount *float64 `json:"amount"`
+		Year     int      `json:"year"`
+		Amount   *float64 `json:"amount"`
+		Currency string   `json:"currency"`
 	}
 	if err := c.Bind(&in); err != nil {
 		return Fail(http.StatusBadRequest, "bad_request", "invalid body", nil)
@@ -188,13 +228,18 @@ func (s *Server) handlePutAnnualGoal(c *echo.Context) error {
 	if in.Amount == nil {
 		return Fail(http.StatusBadRequest, "bad_request", "amount is required", nil)
 	}
-	if *in.Amount <= 0 {
+	in.Currency = strings.ToUpper(strings.TrimSpace(in.Currency))
+	if in.Currency != "" && !validCurrency(in.Currency) {
+		return Fail(http.StatusBadRequest, "bad_request", "invalid currency", nil)
+	}
+	if math.IsNaN(*in.Amount) || math.IsInf(*in.Amount, 0) || *in.Amount <= 0 {
 		return Fail(http.StatusBadRequest, "bad_request", "amount must be > 0", nil)
 	}
 	g, err := s.deps.Store.UpsertAnnualGoal(c.Request().Context(), store.UpsertAnnualGoalParams{
-		UserID: uid,
-		Year:   int64(in.Year),
-		Amount: *in.Amount,
+		UserID:   uid,
+		Year:     int64(in.Year),
+		Amount:   *in.Amount,
+		Currency: in.Currency,
 	})
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not save annual goal", nil)

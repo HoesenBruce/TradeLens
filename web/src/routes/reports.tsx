@@ -30,7 +30,6 @@ import {
   useSummary,
 } from "@/lib/hooks/useAnalytics";
 import { useAnnualGoal, useClearAnnualGoal, useSaveAnnualGoal } from "@/lib/hooks/useAnnualGoal";
-import { useCash } from "@/lib/hooks/useCash";
 import { useTrades } from "@/lib/hooks/useTrades";
 import { netDeposits } from "@/lib/headerStats";
 import { resolvePresetRange, type ReportsViewPreset } from "@/lib/reportsPresets";
@@ -136,7 +135,7 @@ function ReportsPage() {
   const shareEnabled = systemInfoQ.data?.features?.share_links === true;
   const [shareOpen, setShareOpen] = useState(false);
   const summaryQ = useSummary(analyticsFilters);
-  const ytdSummaryQ = useSummary(ytdFilters, false);
+  const ytdSummaryQ = useSummary(ytdFilters);
   const rSummaryQ = useRSummary(analyticsFilters);
   const equityQ = useEquityCurve(analyticsFilters);
   const tradesQ = useTrades(analyticsFilters);
@@ -157,16 +156,30 @@ function ReportsPage() {
   const [execScoreBucket, setExecScoreBucket] = useState<ExecScoreBucket>("week");
   const execScoreQ = useExecutionScore(analyticsFilters, execScoreBucket);
   const accountsQ = useAccounts();
-  const cashQ = useCash(filters);
-  const annualGoalQ = useAnnualGoal(goalYear);
+  const annualGoalQ = useAnnualGoal(goalYear, analyticsFilters);
   const saveAnnualGoalM = useSaveAnnualGoal();
   const clearAnnualGoalM = useClearAnnualGoal();
   const currency = summaryQ.data?.currency ?? accountBaseCurrency(accountsQ.data ?? [], accountIds);
   // %-basis is the capital actually put in (net deposits), read off the cash
   // ledger rather than the starting_balance metadata.
   const denominator = useMemo(
-    () => netDeposits({ accounts: accountsQ.data ?? [], accountIds, cashTx: cashQ.data ?? [] }),
-    [accountsQ.data, accountIds, cashQ.data],
+    () =>
+      equityQ.isError || summaryQ.isError || equityQ.data?.currency !== summaryQ.data?.currency
+        ? 0
+        : netDeposits({
+            accounts: accountsQ.data ?? [],
+            accountIds,
+            cashTx: equityQ.data?.cash_transactions ?? [],
+            currency: equityQ.data?.currency,
+          }),
+    [
+      accountsQ.data,
+      accountIds,
+      equityQ.data,
+      equityQ.isError,
+      summaryQ.isError,
+      summaryQ.data?.currency,
+    ],
   );
 
   return (
@@ -247,11 +260,19 @@ function ReportsPage() {
         goalYear={goalYear}
         goalAmount={annualGoalQ.data?.amount}
         goalLoading={annualGoalQ.isLoading}
+        goalError={
+          annualGoalQ.error?.message ??
+          (ytdSummaryQ.isError ? "Year-to-date analytics unavailable" : undefined)
+        }
         goalSaving={saveAnnualGoalM.isPending || clearAnnualGoalM.isPending}
         ytdNetPnl={ytdSummaryQ.data?.net_pnl}
         ytdLoading={ytdSummaryQ.isLoading}
         onSaveGoal={async (amount) => {
-          await saveAnnualGoalM.mutateAsync({ year: goalYear, amount });
+          await saveAnnualGoalM.mutateAsync({
+            year: goalYear,
+            amount,
+            currency: annualGoalQ.currency,
+          });
         }}
         onClearGoal={async () => {
           await clearAnnualGoalM.mutateAsync(goalYear);

@@ -204,6 +204,7 @@ export interface ReportsViewProps {
   goalYear: number;
   goalAmount: number | null | undefined;
   goalLoading: boolean;
+  goalError?: string;
   goalSaving: boolean;
   ytdNetPnl: number | undefined;
   ytdLoading: boolean;
@@ -260,6 +261,7 @@ function SummaryMetricsGrid({
   goalYear,
   goalAmount,
   goalLoading,
+  goalError,
   goalSaving,
   ytdNetPnl,
   ytdLoading,
@@ -277,6 +279,7 @@ function SummaryMetricsGrid({
   goalYear: number;
   goalAmount: number | null | undefined;
   goalLoading: boolean;
+  goalError?: string;
   goalSaving: boolean;
   ytdNetPnl: number | undefined;
   ytdLoading: boolean;
@@ -394,6 +397,7 @@ function SummaryMetricsGrid({
         fxRate={fxRate}
         variant="compact"
         loading={goalLoading || ytdLoading}
+        unavailable={goalError}
         saving={goalSaving}
         onSave={onSaveGoal}
         onClear={onClearGoal}
@@ -663,6 +667,7 @@ export function ReportsView({
   goalYear,
   goalAmount,
   goalLoading,
+  goalError,
   goalSaving,
   ytdNetPnl,
   ytdLoading,
@@ -730,6 +735,7 @@ export function ReportsView({
           goalYear={goalYear}
           goalAmount={goalAmount}
           goalLoading={goalLoading}
+          goalError={goalError}
           goalSaving={goalSaving}
           ytdNetPnl={ytdNetPnl}
           ytdLoading={ytdLoading}

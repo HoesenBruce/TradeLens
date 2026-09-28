@@ -15,8 +15,7 @@ import { useHotkeyLabel } from "@/lib/keybindings";
 import { fmtMoney, fmtPct, fmtSignedMoney, fmtSignedPct } from "@/lib/format";
 import { computeHeaderStats } from "@/lib/headerStats";
 import { useAccounts } from "@/lib/hooks/useAccounts";
-import { useSummary } from "@/lib/hooks/useAnalytics";
-import { useCash } from "@/lib/hooks/useCash";
+import { useEquityCurve, useSummary } from "@/lib/hooks/useAnalytics";
 import { useMoneyFx } from "@/lib/hooks/useMoneyFx";
 import { useTrades } from "@/lib/hooks/useTrades";
 import { intlLocale } from "@/lib/locale";
@@ -308,20 +307,32 @@ export function HeaderBar() {
   const accounts = accountsQ.data ?? [];
   const summaryQ = useSummary(filters);
   const tradesQ = useTrades(filters);
-  const cashQ = useCash(filters);
+  const fundingQ = useEquityCurve(filters);
 
   const baseCurrency = summaryQ.data?.currency ?? accountBaseCurrency(accounts, accountIds);
   const { currency, toDisplay, isLoading: fxLoading } = useMoneyFx(baseCurrency);
   const stats = computeHeaderStats({
     accounts,
     accountIds,
-    cashTx: cashQ.data ?? [],
+    cashTx: fundingQ.data?.cash_transactions ?? [],
+    currency: fundingQ.data?.currency,
     summary: summaryQ.data,
     trades: tradesQ.data ?? [],
   });
-  const summary = summaryQ.data;
-  // Balance and funding ratios still require a native same-currency ledger.
+  const summary = summaryQ.isError ? undefined : summaryQ.data;
   const nativeCurrency = accountBaseCurrency(accounts, accountIds);
+  const fundingReady = Boolean(
+    summary &&
+    fundingQ.data &&
+    fundingQ.data.currency === baseCurrency &&
+    tradesQ.currency === baseCurrency &&
+    !summaryQ.isError &&
+    !summaryQ.isLoading &&
+    !fundingQ.isError &&
+    !tradesQ.isError &&
+    !fundingQ.isLoading &&
+    !tradesQ.isLoading,
+  );
   // Only judge staleness against a LOADED account list — before the query
   // resolves every persisted id would look deleted and the scope would clear
   // on each reload.
@@ -378,7 +389,7 @@ export function HeaderBar() {
                 : fmtSignedMoney(toDisplay(stats.netPnl), currency, intlLocale())
             }
           />
-          {nativeCurrency && stats.netPnlPct != null ? (
+          {fundingReady && stats.netPnlPct != null ? (
             <RollingNumber
               value={fmtSignedPct(stats.netPnlPct, intlLocale())}
               className="text-[12px] font-medium opacity-70 sm:text-[13px]"
@@ -399,7 +410,7 @@ export function HeaderBar() {
           <StatDivider />
           <HeaderStat
             label={tr({ id: "market.balance", message: "Balance" })}
-            value={nativeCurrency ? fmtMoney(toDisplay(stats.cash), currency, intlLocale()) : "—"}
+            value={fundingReady ? fmtMoney(toDisplay(stats.cash), currency, intlLocale()) : "—"}
           />
         </div>
         {symbols?.length && !onTradesPage ? (

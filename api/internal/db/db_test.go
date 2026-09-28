@@ -59,3 +59,20 @@ func TestMigrateRecoversDirtyVersion(t *testing.T) {
 	require.NoError(t, conn.QueryRow(`SELECT dirty FROM schema_migrations`).Scan(&dirty))
 	require.Equal(t, 0, dirty)
 }
+
+func TestGoalCurrencyMigrationPreservesUnassignedAmount(t *testing.T) {
+	conn, err := Open(filepath.Join(t.TempDir(), "goals.db"))
+	require.NoError(t, err)
+	defer conn.Close()
+	_, err = conn.Exec(`CREATE TABLE annual_goals(user_id TEXT NOT NULL,year INTEGER NOT NULL,amount REAL NOT NULL,updated_at TIMESTAMP NOT NULL,PRIMARY KEY(user_id,year)); INSERT INTO annual_goals VALUES('legacy',2026,15000,CURRENT_TIMESTAMP)`)
+	require.NoError(t, err)
+	migration, err := fs.ReadFile(migrationsFS, "migrations/000052_annual_goal_currency.up.sql")
+	require.NoError(t, err)
+	_, err = conn.Exec(string(migration))
+	require.NoError(t, err)
+	var amount float64
+	var currency string
+	require.NoError(t, conn.QueryRow(`SELECT amount,currency FROM annual_goals WHERE user_id='legacy'`).Scan(&amount, &currency))
+	require.Equal(t, 15000., amount)
+	require.Empty(t, currency)
+}

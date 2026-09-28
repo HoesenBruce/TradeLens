@@ -28,7 +28,7 @@ func (q *Queries) DeleteAnnualGoal(ctx context.Context, arg DeleteAnnualGoalPara
 }
 
 const getAnnualGoal = `-- name: GetAnnualGoal :one
-SELECT user_id, year, amount, updated_at
+SELECT user_id, year, amount, updated_at, currency
 FROM annual_goals
 WHERE user_id = $1 AND year = $2
 `
@@ -46,33 +46,42 @@ func (q *Queries) GetAnnualGoal(ctx context.Context, arg GetAnnualGoalParams) (A
 		&i.Year,
 		&i.Amount,
 		&i.UpdatedAt,
+		&i.Currency,
 	)
 	return i, err
 }
 
 const upsertAnnualGoal = `-- name: UpsertAnnualGoal :one
-INSERT INTO annual_goals (user_id, year, amount, updated_at)
-VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+INSERT INTO annual_goals (user_id, year, amount, currency, updated_at)
+VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)
 ON CONFLICT(user_id, year) DO UPDATE SET
     amount = excluded.amount,
+    currency = excluded.currency,
     updated_at = CURRENT_TIMESTAMP
-RETURNING user_id, year, amount, updated_at
+RETURNING user_id, year, amount, updated_at, currency
 `
 
 type UpsertAnnualGoalParams struct {
-	UserID string  `json:"user_id"`
-	Year   int64   `json:"year"`
-	Amount float64 `json:"amount"`
+	UserID   string  `json:"user_id"`
+	Year     int64   `json:"year"`
+	Amount   float64 `json:"amount"`
+	Currency string  `json:"currency"`
 }
 
 func (q *Queries) UpsertAnnualGoal(ctx context.Context, arg UpsertAnnualGoalParams) (AnnualGoal, error) {
-	row := q.db.QueryRowContext(ctx, upsertAnnualGoal, arg.UserID, arg.Year, arg.Amount)
+	row := q.db.QueryRowContext(ctx, upsertAnnualGoal,
+		arg.UserID,
+		arg.Year,
+		arg.Amount,
+		arg.Currency,
+	)
 	var i AnnualGoal
 	err := row.Scan(
 		&i.UserID,
 		&i.Year,
 		&i.Amount,
 		&i.UpdatedAt,
+		&i.Currency,
 	)
 	return i, err
 }

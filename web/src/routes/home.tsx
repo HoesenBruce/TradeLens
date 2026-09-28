@@ -16,7 +16,6 @@ import {
   useSummary,
 } from "@/lib/hooks/useAnalytics";
 import { useAnnualGoal, useClearAnnualGoal, useSaveAnnualGoal } from "@/lib/hooks/useAnnualGoal";
-import { useCash } from "@/lib/hooks/useCash";
 import { useTrades } from "@/lib/hooks/useTrades";
 import { filterTradesByStatus } from "@/lib/tradeFilters";
 import { useUI } from "@/lib/ui";
@@ -68,7 +67,7 @@ function HomePage() {
   );
 
   const summaryQ = useSummary(filters);
-  const ytdSummaryQ = useSummary(ytdFilters, false);
+  const ytdSummaryQ = useSummary(ytdFilters);
   const equityQ = useEquityCurve(filters);
   const accountsQ = useAccounts();
   const accountValueQ = useAccountValue(
@@ -77,10 +76,9 @@ function HomePage() {
   );
   const tradesQ = useTrades(filters);
   const monthTradesQ = useTrades(monthFilters);
-  const cashQ = useCash(filters);
   const dailyQ = useDailyPnl(monthFilters);
   const breakdownQ = useBreakdown(breakdownDim, filters);
-  const annualGoalQ = useAnnualGoal(calendarYear);
+  const annualGoalQ = useAnnualGoal(calendarYear, filters);
   const saveAnnualGoalM = useSaveAnnualGoal();
   const clearAnnualGoalM = useClearAnnualGoal();
 
@@ -98,7 +96,8 @@ function HomePage() {
   const headerStats = computeHeaderStats({
     accounts: accountsQ.data ?? [],
     accountIds,
-    cashTx: cashQ.data ?? [],
+    cashTx: equityQ.data?.cash_transactions ?? [],
+    currency: equityQ.data?.currency,
     summary: summaryQ.data,
     trades: tradesQ.data ?? [],
   });
@@ -174,11 +173,19 @@ function HomePage() {
         goalYear={calendarYear}
         goalAmount={annualGoalQ.data?.amount}
         goalLoading={annualGoalQ.isLoading}
+        goalError={
+          annualGoalQ.error?.message ??
+          (ytdSummaryQ.isError ? "Year-to-date analytics unavailable" : undefined)
+        }
         goalSaving={saveAnnualGoalM.isPending || clearAnnualGoalM.isPending}
         ytdNetPnl={ytdSummaryQ.data?.net_pnl}
         ytdLoading={ytdSummaryQ.isLoading}
         onSaveGoal={async (amount) => {
-          await saveAnnualGoalM.mutateAsync({ year: calendarYear, amount });
+          await saveAnnualGoalM.mutateAsync({
+            year: calendarYear,
+            amount,
+            currency: annualGoalQ.currency,
+          });
         }}
         onClearGoal={async () => {
           await clearAnnualGoalM.mutateAsync(calendarYear);

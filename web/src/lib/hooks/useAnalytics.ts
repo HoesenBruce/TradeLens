@@ -24,7 +24,7 @@ export function useAnalyticsRequest(
   // Same-currency scopes keep their native contract for forms and sibling endpoints.
   const displayCurrency = useDisplayCurrency("USD");
   const request =
-    normalizeMixed && currencies.size > 1
+    normalizeMixed && currencies.size !== 1
       ? { ...filters, target_currency: displayCurrency }
       : explicitTarget
         ? {
@@ -44,6 +44,7 @@ export function useSummary(filters: Filters, normalizeMixed = true) {
   });
   return {
     ...query,
+    data: query.isError ? undefined : query.data,
     isLoading: accountsQ.isPending || query.isLoading,
     isError: accountsQ.isError || query.isError,
   };
@@ -65,6 +66,7 @@ export function useEquityCurve(filters: Filters) {
   });
   return {
     ...query,
+    data: query.isError ? undefined : query.data,
     isLoading: accountsQ.isPending || query.isLoading,
     isError: accountsQ.isError || query.isError,
   };
@@ -143,6 +145,7 @@ export function useDailyPnl(filters: Filters) {
   });
   return {
     ...query,
+    data: query.isError ? undefined : query.data,
     isLoading: accountsQ.isPending || query.isLoading,
     isError: accountsQ.isError || query.isError,
   };
@@ -183,7 +186,7 @@ export function useBreakdown(by: string, filters: Filters) {
   });
   return {
     ...query,
-    data: query.data?.groups,
+    data: query.isError ? undefined : query.data?.groups,
     currency: query.data?.currency,
     isLoading: accountsQ.isPending || query.isLoading,
     isError: accountsQ.isError || query.isError,
