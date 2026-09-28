@@ -40,11 +40,18 @@ func SBIMarginAccounting(fills []Execution) AccountingResult {
 		allocatedFees := openFees * fill.Quantity / qty
 		openFees -= allocatedFees
 		qty = remaining
-		if fill.ConversionType == "genbiki" {
-			// Reconcile conversion-containing trades after all closes.
+		if fill.SettlementType == "genwatashi" && qty > 1e-9 {
+			entry = (entry*(qty+fill.Quantity) - fill.Price*fill.Quantity) / qty
+		}
+		if fill.ConversionType == "genbiki" || fill.SettlementType == "genwatashi" {
+			// The cash leg owns disposal P&L for a settlement.
+			source := "position_conversion"
+			if fill.SettlementType == "genwatashi" {
+				source = "position_settlement"
+			}
 			result.RealizedCloses = append(result.RealizedCloses, RealizedClose{
 				ExecutionID: fill.ID, Date: fill.ExecutedAt, Pnl: 0,
-				RemainingQty: qty, RemainingCostBasis: entry * qty, Source: "position_conversion",
+				RemainingQty: qty, RemainingCostBasis: entry * qty, Source: source,
 			})
 		} else if fill.BrokerReportedPnl != nil {
 			result.RealizedCloses = append(result.RealizedCloses, RealizedClose{
@@ -83,7 +90,7 @@ func reconcileConversionTrades(fills []Execution, result *AccountingResult) {
 	closes := map[string]RealizedClose{}
 	unavailableIDs := map[string]bool{}
 	for _, fill := range fills {
-		if fill.ConversionType == "genbiki" {
+		if fill.ConversionType == "genbiki" || fill.SettlementType == "genwatashi" {
 			conversions[fill.ID] = true
 		}
 	}
@@ -115,7 +122,7 @@ func reconcileConversionTrades(fills []Execution, result *AccountingResult) {
 		}
 		net = money.Round2(net)
 		tr.NetPnl = &net
-		if len(fills) > 0 && fills[0].LotKey == "sbi:margin-long" {
+		if len(fills) > 0 && (fills[0].LotKey == "sbi:margin-long" || fills[0].LotKey == "sbi:margin-short") {
 			tr.FeesTotal = money.Round2(fees)
 		}
 		gross := money.Round2(net + tr.FeesTotal)

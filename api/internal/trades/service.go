@@ -42,6 +42,7 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 		return err
 	}
 	basis := positions.ConversionBasis(rows)
+	settlements := positions.SettlementResults(rows)
 	for _, r := range rows {
 		if lotKeyFromDetails(r.Details) == "sbi:cash" && conversionTypeFromDetails(r.Details) == "genbiki" {
 			if _, ok := basis[r.ID]; !ok {
@@ -53,6 +54,36 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 	groups := map[string][]Execution{}
 	for _, r := range rows {
 		lot := lotKeyFromDetails(r.Details)
+		settlementType := settlementTypeFromDetails(r.Details)
+		if settlementType == "genwatashi" && (lot == "sbi:cash" || lot == "sbi:margin-short") {
+			result, ok := settlements[r.ID]
+			if !ok {
+				return fmt.Errorf("SBI genwatashi %s: missing or ambiguous settlement history", r.ID)
+			}
+			details := map[string]any{}
+			if err := json.Unmarshal([]byte(r.Details.String), &details); err != nil {
+				return err
+			}
+			for field, value := range map[string]float64{
+				"cash_qty_disposed": result.CashQtyDisposed, "cash_cost_basis_used": result.CashCostBasisUsed,
+				"margin_short_qty_closed": result.MarginShortQtyClosed, "disposal_price": result.DisposalPrice,
+				"applicable_costs": result.ApplicableCosts, "realized_pnl": result.RealizedPnL,
+			} {
+				details[field] = strconv.FormatFloat(value, 'f', -1, 64)
+			}
+			details["realized_pnl_source"] = result.Source
+			encoded, err := json.Marshal(details)
+			if err != nil {
+				return err
+			}
+			r.Details = sql.NullString{String: string(encoded), Valid: true}
+			if err := s.q.UpdateExecutionContract(ctx, store.UpdateExecutionContractParams{ID: r.ID, UserID: r.UserID, Symbol: r.Symbol, DedupHash: r.DedupHash, Details: r.Details}); err != nil {
+				return err
+			}
+			if lot == "sbi:cash" {
+				r.Price, r.Fees, r.Commission = result.DisposalPrice, result.ApplicableCosts, 0
+			}
+		}
 		if cost, ok := basis[r.ID]; ok {
 			// Retain the broker reference price; persist derived basis for audit.
 			details := map[string]any{}
@@ -82,6 +113,8 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 			Quantity: r.Quantity, Price: r.Price, Fees: r.Fees, Commission: r.Commission,
 			ExecutedAt: r.ExecutedAt, Multiplier: r.Multiplier, LotKey: lot,
 			BrokerReportedPnl: reportedPnlFromDetails(r.Details),
+			SettlementType:    settlementType,
+			SettlementResult:  settlementResult(settlements, r.ID),
 			ConversionType:    conversionTypeFromDetails(r.Details),
 		})
 	}
@@ -133,6 +166,23 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 		s.AfterRegroup(userID, accountID)
 	}
 	return nil
+}
+
+func settlementResult(results map[string]positions.Settlement, id string) *positions.Settlement {
+	if result, ok := results[id]; ok {
+		return &result
+	}
+	return nil
+}
+
+func settlementTypeFromDetails(details sql.NullString) string {
+	var d struct {
+		Type string `json:"settlement_type"`
+	}
+	if details.Valid {
+		_ = json.Unmarshal([]byte(details.String), &d)
+	}
+	return d.Type
 }
 
 func conversionTypeFromDetails(details sql.NullString) string {

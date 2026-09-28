@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/tradermemos/api/internal/money"
+	"github.com/tradermemos/api/internal/positions"
 )
 
 type Execution struct {
@@ -20,6 +21,8 @@ type Execution struct {
 	Multiplier        float64  // 1 stock, 100 option, tick-derived for futures
 	LotKey            string   // optional; isolates overlapping same-symbol round-trips
 	BrokerReportedPnl *float64 // broker-reported result on a closing execution
+	SettlementType    string
+	SettlementResult  *positions.Settlement
 	ConversionType    string
 }
 

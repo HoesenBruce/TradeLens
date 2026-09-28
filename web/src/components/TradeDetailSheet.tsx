@@ -435,16 +435,18 @@ function TradeDetailSheetBody({
                 <span className="flex items-center gap-2">
                   <span
                     aria-label={
-                      f.side === "buy"
-                        ? tr({ id: "trades.buy", message: "Buy" })
-                        : tr({ id: "trades.sell", message: "Sell" })
+                      f.trade_type === "genwatashi"
+                        ? "現渡"
+                        : f.side === "buy"
+                          ? tr({ id: "trades.buy", message: "Buy" })
+                          : tr({ id: "trades.sell", message: "Sell" })
                     }
                     className={cn(
-                      "flex size-4 items-center justify-center rounded-md text-[10px] font-bold",
+                      "flex min-w-4 items-center justify-center rounded-md px-1 text-[10px] font-bold",
                       f.side === "buy" ? "bg-profit/10 text-profit" : "bg-loss/10 text-loss",
                     )}
                   >
-                    {f.side === "buy" ? "B" : "S"}
+                    {f.trade_type === "genwatashi" ? "現渡" : f.side === "buy" ? "B" : "S"}
                   </span>
                   <span className="text-foreground">
                     {f.quantity} @ {fmtMoney(f.price, currency, intlLocale())}

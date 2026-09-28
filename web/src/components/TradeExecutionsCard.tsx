@@ -75,9 +75,11 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
         header: tr({ id: "trades.side", message: "Side" }),
         cell: ({ row }) => (
           <Pill tone={row.original.fill.side === "buy" ? "pos" : "neg"}>
-            {row.original.fill.side === "buy"
-              ? tr({ id: "trades.buyUpper", message: "BUY" })
-              : tr({ id: "trades.sellUpper", message: "SELL" })}
+            {row.original.fill.trade_type === "genwatashi"
+              ? "現渡"
+              : row.original.fill.side === "buy"
+                ? tr({ id: "trades.buyUpper", message: "BUY" })
+                : tr({ id: "trades.sellUpper", message: "SELL" })}
           </Pill>
         ),
         meta: { minWidth: 72 },
@@ -197,9 +199,11 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
                   <div className="flex items-center justify-between gap-3">
                     <span className="flex items-center gap-2">
                       <Pill tone={fill.side === "buy" ? "pos" : "neg"}>
-                        {fill.side === "buy"
-                          ? tr({ id: "trades.buyUpper", message: "BUY" })
-                          : tr({ id: "trades.sellUpper", message: "SELL" })}
+                        {fill.trade_type === "genwatashi"
+                          ? "現渡"
+                          : fill.side === "buy"
+                            ? tr({ id: "trades.buyUpper", message: "BUY" })
+                            : tr({ id: "trades.sellUpper", message: "SELL" })}
                       </Pill>
                       <span className="text-[15px] font-semibold tabular-nums text-foreground">
                         {fmtQty(fill.quantity)} @ {fmtMoney(fill.price, currency, locale)}
