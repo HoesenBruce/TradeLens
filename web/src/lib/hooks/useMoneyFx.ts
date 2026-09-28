@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { marketApi } from "@/lib/api/market";
 import { useDisplayCurrency } from "@/lib/displayPrefs";
 
 /** Latest FX: 1 `from` = `rate` `to`. Skips the network when currencies match. */
-export function useFxRate(from: string, to: string) {
+export function fxRateQueryOptions(from: string, to: string) {
   const base = from.trim().toUpperCase();
   const quote = to.trim().toUpperCase();
   const same = Boolean(base) && base === quote;
 
-  return useQuery({
+  return queryOptions({
     queryKey: ["fx-rate", base, quote],
     queryFn: () => marketApi.fx({ from: base, to: quote }),
     enabled: Boolean(base && quote) && !same,
@@ -17,6 +17,10 @@ export function useFxRate(from: string, to: string) {
     retry: 1,
     refetchOnWindowFocus: false,
   });
+}
+
+export function useFxRate(from: string, to: string) {
+  return useQuery(fxRateQueryOptions(from, to));
 }
 
 /**
