@@ -5,6 +5,7 @@ import type {
   BreakGroup,
   ComplianceReport,
   EquityCurve,
+  DailyPnl,
   ExecScoreReport,
   Filters,
   MonteCarloResult,
@@ -17,7 +18,7 @@ export const analyticsApi = {
     apiFetch<Summary>(`/analytics/summary${qs(f as Record<string, string | undefined>)}`),
   rSummary: (f: Filters) =>
     apiFetch<RSummary>(`/analytics/r-summary${qs(f as Record<string, string | undefined>)}`),
-  equityCurve: (f: Filters) =>
+  equityCurve: (f: Filters & { target_currency?: string }) =>
     apiFetch<EquityCurve>(`/analytics/equity-curve${qs(f as Record<string, string | undefined>)}`),
   accountValue: (
     f: Pick<Filters, "account_id" | "from" | "to"> & { ignored_missing_prices?: string },
@@ -25,10 +26,8 @@ export const analyticsApi = {
     apiFetch<AccountValue>(
       `/analytics/account-value${qs(f as Record<string, string | undefined>)}`,
     ),
-  daily: (f: Filters) =>
-    apiFetch<Record<string, number>>(
-      `/analytics/daily${qs(f as Record<string, string | undefined>)}`,
-    ),
+  daily: (f: Filters & { target_currency?: string }) =>
+    apiFetch<DailyPnl>(`/analytics/daily${qs(f as Record<string, string | undefined>)}`),
   compliance: (f: Filters) =>
     apiFetch<ComplianceReport>(
       `/analytics/compliance${qs(f as Record<string, string | undefined>)}`,

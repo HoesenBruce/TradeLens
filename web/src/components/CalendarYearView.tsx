@@ -77,7 +77,7 @@ function YearMonthCard({
   dailyPnl: Record<string, number>;
   dayRecords: Record<string, DayRecord>;
   tradesByDay?: Map<string, Trade[]>;
-  tradeCount: number;
+  tradeCount?: number;
   currency: string;
   fxRate: number;
   onSelect: (month: number) => void;
@@ -88,13 +88,13 @@ function YearMonthCard({
   const grid = monthGrid(year, month, dailyPnl);
   const weeks = grid.weeks.filter((week) => week.some((c) => c != null));
   const total = grid.monthTotal;
-  const hasTrades = tradeCount > 0 || weeks.some((week) => week.some((c) => c?.pnl != null));
+  const hasTrades = (tradeCount ?? 0) > 0 || weeks.some((week) => week.some((c) => c?.pnl != null));
   const now = new Date();
   const isFuture =
     year > now.getFullYear() || (year === now.getFullYear() && month > now.getMonth() + 1);
   const monthKey = `${year}-${String(month).padStart(2, "0")}`;
   const label = `${shortMonth(year, month, locale)} ${year}${
-    tradeCount > 0 ? `, ${tradeCount} trades` : ""
+    (tradeCount ?? 0) > 0 ? `, ${tradeCount} trades` : ""
   }`;
 
   return (
@@ -180,7 +180,11 @@ function YearMonthCard({
           {hasTrades ? fmtSignedMoneyCompact(total * fxRate, currency, locale) : "—"}
         </p>
         <p className="text-[11px] tabular-nums text-muted-foreground">
-          {tradeCount > 0 ? `${tradeCount} ${tradeCount === 1 ? "trade" : "trades"}` : "No trades"}
+          {tradeCount == null
+            ? "—"
+            : tradeCount > 0
+              ? `${tradeCount} ${tradeCount === 1 ? "trade" : "trades"}`
+              : "No trades"}
         </p>
       </div>
     </div>
@@ -192,6 +196,7 @@ export interface CalendarYearViewProps {
   dailyPnl: Record<string, number>;
   /** Closed-trade counts keyed by "YYYY-MM". */
   tradesByMonth?: Record<string, number>;
+  tradesUnavailable?: boolean;
   /** Win/loss records keyed by "YYYY-MM-DD". */
   dayRecords?: Record<string, DayRecord>;
   /** Day trades for hover-card rows, keyed by "YYYY-MM-DD". */
@@ -207,6 +212,7 @@ export function CalendarYearView({
   year,
   dailyPnl,
   tradesByMonth = {},
+  tradesUnavailable = false,
   dayRecords = {},
   tradesByDay,
   loading,
@@ -240,7 +246,7 @@ export function CalendarYearView({
                 dailyPnl={dailyPnl}
                 dayRecords={dayRecords}
                 tradesByDay={tradesByDay}
-                tradeCount={tradesByMonth[key] ?? 0}
+                tradeCount={tradesUnavailable ? undefined : (tradesByMonth[key] ?? 0)}
                 currency={currency}
                 fxRate={fxRate}
                 onSelect={onSelectMonth}

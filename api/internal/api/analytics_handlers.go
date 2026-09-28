@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"math"
 	"net/http"
 	"sort"
 	"strconv"
@@ -319,11 +320,18 @@ func (s *Server) handleDaily(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusBadRequest, "bad_request", err.Error(), nil)
 	}
-	rows, err := s.loadClosedTrades(c.Request().Context(), auth.UserID(c), f)
+	meta, trades, err := s.normalizedTrades(c.Request().Context(), auth.UserID(c), f, c.QueryParam("target_currency"))
 	if err != nil {
-		return failLoad(err, "could not compute daily pnl")
+		return err
 	}
-	return c.JSON(http.StatusOK, analytics.DailyPnl(toClosedTrades(rows), f.DateBasis, f.Loc))
+	// Preserve the native map contract for existing clients without a target.
+	if c.QueryParam("target_currency") == "" {
+		return c.JSON(http.StatusOK, analytics.DailyPnl(trades, f.DateBasis, f.Loc))
+	}
+	return c.JSON(http.StatusOK, struct {
+		currencyMetadata
+		Pnl map[string]float64 `json:"pnl"`
+	}{meta, analytics.DailyPnl(trades, f.DateBasis, f.Loc)})
 }
 
 func (s *Server) handleEquityCurve(c *echo.Context) error {
@@ -334,9 +342,9 @@ func (s *Server) handleEquityCurve(c *echo.Context) error {
 		return Fail(http.StatusBadRequest, "bad_request", err.Error(), nil)
 	}
 
-	rows, err := s.loadClosedTrades(ctx, uid, f)
+	meta, trades, err := s.normalizedTrades(ctx, uid, f, c.QueryParam("target_currency"))
 	if err != nil {
-		return failLoad(err, "could not compute equity curve")
+		return err
 	}
 	cashRows, err := s.deps.Store.ListCashTransactions(ctx, store.ListCashTransactionsParams{
 		UserID: uid, AccountID: f.accountNarg(),
@@ -349,15 +357,34 @@ func (s *Server) handleEquityCurve(c *echo.Context) error {
 		return Fail(http.StatusInternalServerError, "internal", "could not load cash flows", nil)
 	}
 	cashRows = filterCashAccounts(cashRows, excluded)
+	rates := map[string]float64{meta.Currency: 1}
+	for _, fx := range meta.FXRates {
+		rates[fx.From] = fx.Rate
+	}
 	flows := make([]analytics.CashFlow, 0, len(cashRows))
+	cash := make([]cashDTO, 0, len(cashRows))
 	for _, ct := range cashRows {
 		if !f.matchAccount(ct.AccountID) {
 			continue
 		}
-		flows = append(flows, analytics.CashFlow{Amount: ct.Amount, OccurredAt: ct.OccurredAt})
+		rate, err := s.analyticsRate(ctx, &meta, rates, ct.Currency)
+		if err != nil {
+			return err
+		}
+		amount := ct.Amount * rate
+		if math.IsNaN(amount) || math.IsInf(amount, 0) {
+			return Fail(http.StatusBadGateway, "fx_unavailable", "invalid normalized cash input", nil)
+		}
+		flows = append(flows, analytics.CashFlow{Amount: amount, OccurredAt: ct.OccurredAt})
+		ct.Amount, ct.Currency = amount, meta.Currency
+		cash = append(cash, toCashDTO(ct))
 	}
 	// The curve starts at zero: accounts.starting_balance is metadata only, it is
 	// already seeded into the ledger as the "Opening balance" deposit
 	// (ensureOpeningDeposit), so adding it here would count that money twice.
-	return c.JSON(http.StatusOK, analytics.EquityCurve(0, flows, toClosedTrades(rows)))
+	return c.JSON(http.StatusOK, struct {
+		analytics.Equity
+		currencyMetadata
+		CashTransactions []cashDTO `json:"cash_transactions"`
+	}{analytics.EquityCurve(0, flows, trades), meta, cash})
 }

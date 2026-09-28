@@ -332,7 +332,17 @@ export interface EquityPoint {
   at: string;
   equity: number;
 }
-export interface EquityCurve {
+export interface AnalyticsCurrency {
+  currency: string;
+  target_currency: string;
+  fx_policy: "latest";
+  fx_rates: Summary["fx_rates"];
+}
+export interface DailyPnl extends AnalyticsCurrency {
+  pnl: Record<string, number>;
+}
+export interface EquityCurve extends AnalyticsCurrency {
+  cash_transactions: CashTransaction[];
   points: EquityPoint[];
   max_drawdown: number;
 }
