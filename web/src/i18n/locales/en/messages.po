@@ -6809,3 +6809,7 @@ msgstr "Account Value"
 #. js-lingui-explicit-id
 msgid "accounts.gainLoss"
 msgstr "Gain / Loss"
+
+#. js-lingui-explicit-id
+msgid "market.marginToCash"
+msgstr "Margin → Cash"

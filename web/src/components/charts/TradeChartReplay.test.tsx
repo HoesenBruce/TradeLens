@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import type { Execution } from "@/lib/api/types";
 import type { MarketBar } from "@/lib/api/market";
 
+const createPriceLine = vi.fn<(...args: any[]) => any>();
 const setData = vi.fn<(...args: any[]) => any>();
 const setMarkers = vi.fn<(...args: any[]) => any>();
 const createSeriesMarkers = vi.fn<(...args: any[]) => any>(() => ({ setMarkers }));
@@ -13,7 +14,7 @@ vi.mock("lightweight-charts", () => {
   const series = {
     setData: (...args: any[]) => setData(...args),
     applyOptions: vi.fn<(...args: any[]) => any>(),
-    createPriceLine: vi.fn<(...args: any[]) => any>(),
+    createPriceLine: (...args: any[]) => createPriceLine(...args),
     priceLines: () => [],
     removePriceLine: vi.fn<(...args: any[]) => any>(),
   };
@@ -68,6 +69,7 @@ const fills: Execution[] = [
 
 describe("TradeChart replay mode", () => {
   beforeEach(() => {
+    createPriceLine.mockClear();
     setData.mockClear();
     setMarkers.mockClear();
     createSeriesMarkers.mockClear();
@@ -141,4 +143,44 @@ describe("TradeChart replay mode", () => {
     );
     expect(getByLabelText("Exit replay")).toBeInTheDocument();
   });
+});
+
+it("renders localized conversion pairs without execution price lines in embedded and expanded charts", async () => {
+  const { loadLocale } = await import("@/i18n");
+  const details = {
+    event_type: "position_conversion",
+    conversion_type: "genbiki",
+    conversion_id: "c1",
+    lot: "sbi:margin-long",
+  };
+  const pair = [
+    { ...fills[0]!, side: "sell", details },
+    { ...fills[0]!, details: { ...details, lot: "sbi:cash" } },
+  ];
+  for (const [locale, label] of [
+    ["en", "Margin → Cash"],
+    ["ja", "現引"],
+    ["zh-CN", "信用转现物"],
+  ]) {
+    await loadLocale(locale!);
+    for (const expanded of [false, true]) {
+      createPriceLine.mockClear();
+      const { unmount } = render(
+        <TradeChart
+          symbol="1515"
+          bars={bars}
+          fills={pair}
+          interval="1"
+          hideHeaderLabel={expanded}
+          height={expanded ? 480 : 280}
+        />,
+      );
+      expect(createSeriesMarkers.mock.calls.at(-1)![1]).toMatchObject([
+        { shape: "circle", text: expect.stringContaining(label!) },
+      ]);
+      expect(createPriceLine).not.toHaveBeenCalled();
+      unmount();
+    }
+  }
+  await loadLocale("en");
 });

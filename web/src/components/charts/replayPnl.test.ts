@@ -166,3 +166,44 @@ describe("formatReplayBarTime", () => {
     expect(daily).not.toMatch(/\d{2}:\d{2}/);
   });
 });
+
+it("replays conversion custody and transferred cost without a false realized exit", () => {
+  const details = {
+    event_type: "position_conversion",
+    conversion_type: "genbiki",
+    conversion_id: "c1",
+    lot: "sbi:margin-long",
+  };
+  const margin = fill({ side: "sell", price: 50, executed_at: at(T0 + 60), details });
+  const cash = fill({
+    price: 50,
+    executed_at: at(T0 + 60),
+    details: { ...details, lot: "sbi:cash", transferred_unit_cost: "10" },
+  });
+  expect(computeReplayPnl([fill({}), margin, cash], bars, 2, "1")).toMatchObject({
+    position: 100,
+    avgCost: 10,
+    realized: 0,
+    net: 200,
+  });
+  expect(computeReplayPnl([fill({}), margin], bars, 2, "1")).toMatchObject({
+    position: 0,
+    realized: 0,
+    net: 0,
+  });
+  expect(computeReplayPnl([cash], bars, 2, "1")).toMatchObject({
+    position: 100,
+    avgCost: 10,
+    realized: 0,
+    net: 200,
+  });
+  expect(detectFillBarMismatch([cash], bars, "1")).toBe(false);
+  expect(
+    computeReplayPnl(
+      [{ ...cash, details: { ...cash.details!, transferred_unit_cost: "" } }],
+      bars,
+      2,
+      "1",
+    ),
+  ).toBeNull();
+});
