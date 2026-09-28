@@ -118,8 +118,17 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 			}
 			if pe.EventType != "" {
 				payload["event_type"] = pe.EventType
-				payload["conversion_type"] = pe.ConversionType
-				payload["conversion_id"] = pe.ConversionID
+				if pe.ConversionType != "" {
+					payload["conversion_type"] = pe.ConversionType
+					payload["conversion_id"] = pe.ConversionID
+				}
+				if pe.SettlementType != "" {
+					payload["settlement_type"] = pe.SettlementType
+					payload["settlement_id"] = pe.SettlementID
+				}
+				if pe.SettlementProceeds != nil {
+					payload["broker_reported_settlement_proceeds"] = *pe.SettlementProceeds
+				}
 			}
 			if b, err := json.Marshal(payload); err == nil {
 				details = sql.NullString{String: string(b), Valid: true}

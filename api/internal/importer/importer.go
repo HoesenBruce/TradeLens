@@ -25,6 +25,9 @@ type ParsedExecution struct {
 	PositionEffect      string   // increase|reduce when source supplies it
 	ReportedRealizedPnl *float64 // broker-reported close result, when the source identifies one
 	ReportedCloseBasis  *float64 // broker-reported average acquisition price for a close
+	SettlementType      string
+	SettlementID        string
+	SettlementProceeds  *float64 // net SBI genwatashi receipt, not realized P&L
 	EventType           string   // position_conversion when the source identifies a conversion
 	ConversionType      string   // broker conversion kind, e.g. genbiki
 	ConversionID        string   // links the source and destination legs of one conversion

@@ -75,6 +75,8 @@ type state struct {
 	conversions      map[string]float64
 	transferredBasis map[string]float64
 	convertedCash    map[positionKey]string
+	settlementLegs   map[string][]store.Execution
+	settlements      map[string]Settlement
 	accounts         map[string]*AccountSnapshot
 	warnings         []Warning
 }
@@ -95,7 +97,7 @@ func Replay(executions []store.Execution, dates []time.Time) []Snapshot {
 }
 
 func ReplayWithSplits(executions []store.Execution, dates []time.Time, splits []Split) []Snapshot {
-	return replay(executions, dates, splits, nil)
+	return replay(executions, dates, splits, nil, nil)
 }
 
 // ConversionBasis reuses position replay so grouping inherits the same margin costs.
@@ -108,11 +110,11 @@ func ConversionBasis(executions []store.Execution) map[string]float64 {
 			last = ex.ExecutedAt
 		}
 	}
-	replay(executions, []time.Time{last}, nil, basis)
+	replay(executions, []time.Time{last}, nil, basis, nil)
 	return basis
 }
 
-func replay(executions []store.Execution, dates []time.Time, splits []Split, basis map[string]float64) []Snapshot {
+func replay(executions []store.Execution, dates []time.Time, splits []Split, basis map[string]float64, settlements map[string]Settlement) []Snapshot {
 	executions = append([]store.Execution(nil), executions...)
 	sort.SliceStable(executions, func(i, j int) bool {
 		iTime, jTime := replayTime(executions[i]), replayTime(executions[j])
@@ -131,6 +133,7 @@ func replay(executions []store.Execution, dates []time.Time, splits []Split, bas
 		conversions:    map[string]float64{}, transferredBasis: basis,
 		accounts: map[string]*AccountSnapshot{}, convertedCash: map[positionKey]string{},
 	}
+	s.settlementLegs, s.settlements = settlementPairs(executions), settlements
 	out := make([]Snapshot, 0, len(dates))
 	nextExecution := 0
 	nextSplit := 0
@@ -167,6 +170,10 @@ func (s *state) applySplit(split Split) {
 }
 
 func (s *state) apply(ex store.Execution) {
+	if settlementDetails(ex).Type == "genwatashi" && strings.HasPrefix(lotFromDetails(ex), "sbi:") {
+		s.applyGenwatashi(ex)
+		return
+	}
 	lot := lotFromDetails(ex)
 	conversionType, conversionID := conversionFromDetails(ex)
 	kind := kindFromLot(lot)
@@ -337,6 +344,9 @@ func replayTime(ex store.Execution) time.Time {
 		return ex.ExecutedAt
 	}
 	day := tokyoDate(ex.ExecutedAt)
+	if settlementDetails(ex).Type == "genwatashi" {
+		return day.Add(11 * time.Hour).Add(time.Duration(ex.ExecutedAt.Nanosecond()))
+	}
 	conversionType, _ := conversionFromDetails(ex)
 	if conversionType == "genbiki" {
 		if kindFromLot(lotFromDetails(ex)) == CashLong {

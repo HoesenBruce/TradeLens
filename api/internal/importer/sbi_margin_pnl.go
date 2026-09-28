@@ -80,7 +80,7 @@ func ReadSBIMarginPnLCSV(data []byte) (SBIMarginPnLImport, bool, error) {
 			case "返済買":
 				transaction = "信用返済買"
 			}
-			if transaction != "信用返済売" && transaction != "信用返済買" {
+			if transaction != "信用返済売" && transaction != "信用返済買" && transaction != "現渡" {
 				continue
 			}
 			symbol := row["銘柄コード"]
@@ -151,8 +151,14 @@ func MatchSBIMarginPnL(rows []SBIMarginPnLRow, executions []store.Execution) []S
 			}
 			lot, _ := details["lot"].(string)
 			wantLot, wantSide := "sbi:margin-long", "sell"
+			if row.Transaction == "現渡" {
+				wantLot, wantSide = "sbi:cash", "sell"
+			}
 			if row.Transaction == "信用返済買" {
 				wantLot, wantSide = "sbi:margin-short", "buy"
+			}
+			if (row.Transaction == "現渡" && details["settlement_type"] != "genwatashi") || (row.Transaction != "現渡" && details["settlement_type"] != nil) {
+				continue
 			}
 			if lot != wantLot || details["position_effect"] != "reduce" || execution.Side != wantSide ||
 				execution.Symbol != row.Symbol || math.Abs(execution.Quantity-row.Quantity) > 0.000001 || math.Abs(execution.Price-row.Price) > 0.0001 ||
