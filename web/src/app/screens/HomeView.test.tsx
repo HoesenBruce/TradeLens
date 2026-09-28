@@ -1,7 +1,7 @@
 import { render } from "@/test/render";
 import type { ColumnDef } from "@/lib/table";
 import { flexRender, getCoreRowModel, useReactTable, type RowData } from "@/lib/table";
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vite-plus/test";
 import type { AccountValueWarning, Summary, Trade } from "@/lib/api/types";
@@ -130,6 +130,7 @@ const TRADE: Trade = {
 };
 
 const BASE = {
+  baselineTrades: [TRADE],
   summaryLoading: false,
   summaryError: false,
   summary: SUMMARY,
@@ -204,6 +205,39 @@ const BASE = {
 };
 
 describe("HomeView", () => {
+  it("keeps Open statistics on the base scope while outcome-filtered content changes", () => {
+    const open = { ...TRADE, id: "open", symbol: "OPEN", status: "open" as const };
+    const baselineTrades = [TRADE, open];
+    const { rerender } = render(
+      <HomeView {...BASE} baselineTrades={baselineTrades} trades={baselineTrades} />,
+    );
+    for (const filter of ["open", "win", "loss", "wash", undefined] as const) {
+      const trades =
+        filter === "open" ? [open] : filter === "win" ? [TRADE] : filter ? [] : baselineTrades;
+      rerender(
+        <HomeView
+          {...BASE}
+          baselineTrades={baselineTrades}
+          trades={trades}
+          tradeStatusFilter={filter}
+        />,
+      );
+      const card = screen.getByRole("button", { name: /^Open 1 50%$/ });
+      expect(within(card).getByText("1")).toBeInTheDocument();
+      expect(card).toHaveAttribute("aria-pressed", String(filter === "open"));
+    }
+    rerender(
+      <HomeView
+        {...BASE}
+        summary={{ ...SUMMARY, total_trades: 0 }}
+        baselineTrades={[open]}
+        trades={[]}
+        tradeStatusFilter="loss"
+      />,
+    );
+    expect(screen.getByRole("button", { name: /^Open 1 100%$/ })).toBeInTheDocument();
+  });
+
   it.each([
     [1000, 900, "+$100.00"],
     [800, 900, "-$100.00"],
@@ -526,6 +560,7 @@ describe("HomeView", () => {
         {...BASE}
         summary={{ ...SUMMARY, total_trades: 0, wins: 0, losses: 0 }}
         trades={[openTrade, { ...openTrade, id: "t3" }]}
+        baselineTrades={[openTrade, { ...openTrade, id: "t3" }]}
       />,
     );
     expect(screen.getByText("100%")).toBeInTheDocument();
@@ -538,6 +573,7 @@ describe("HomeView", () => {
         {...BASE}
         summary={{ ...SUMMARY, total_trades: 0 }}
         trades={[]}
+        baselineTrades={[]}
         equityPoints={[]}
       />,
     );
@@ -557,6 +593,7 @@ describe("HomeView", () => {
         {...BASE}
         summary={{ ...SUMMARY, total_trades: 0 }}
         trades={[]}
+        baselineTrades={[]}
         equityPoints={[]}
         accountFunded
       />,
@@ -577,6 +614,7 @@ describe("HomeView", () => {
         {...BASE}
         summary={{ ...SUMMARY, total_trades: 0 }}
         trades={[]}
+        baselineTrades={[]}
         equityPoints={[]}
         onImport={onImport}
         onNewTrade={onNewTrade}
