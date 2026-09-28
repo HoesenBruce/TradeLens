@@ -235,6 +235,7 @@ export interface Trade {
   fees_total: number;
   net_pnl: number | null;
   pnl_currency: string;
+  source_pnl_currency?: string;
   return_pct: number | null;
   time_in_trade_secs: number | null;
   notes: string;

@@ -42,7 +42,7 @@ func (s *Server) handleExecScore(c *echo.Context) error {
 
 	rows, err := s.loadClosedTrades(ctx, uid, f)
 	if err != nil {
-		return Fail(http.StatusInternalServerError, "internal", "could not load trades", nil)
+		return failLoad(err, "could not load trades")
 	}
 	journals, err := s.deps.Store.ListTradeJournalsForUser(ctx, uid)
 	if err != nil {

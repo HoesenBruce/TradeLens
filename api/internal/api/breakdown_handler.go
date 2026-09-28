@@ -27,9 +27,9 @@ func (s *Server) handleBreakdown(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusBadRequest, "bad_request", err.Error(), nil)
 	}
-	rows, err := s.loadClosedTrades(ctx, uid, f)
+	meta, rows, err := s.normalizedClosedRows(ctx, uid, f, c.QueryParam("target_currency"))
 	if err != nil {
-		return failLoad(err, "could not load trades")
+		return err
 	}
 
 	groups := map[string][]analytics.ClosedTrade{}
@@ -76,7 +76,13 @@ func (s *Server) handleBreakdown(c *echo.Context) error {
 			}
 		}
 	}
-	return c.JSON(http.StatusOK, analytics.Breakdown(groups))
+	if c.QueryParam("target_currency") == "" {
+		return c.JSON(http.StatusOK, analytics.Breakdown(groups))
+	}
+	return c.JSON(http.StatusOK, struct {
+		currencyMetadata
+		Groups []analytics.BreakGroup `json:"groups"`
+	}{meta, analytics.Breakdown(groups)})
 }
 
 func (s *Server) setupKey(ctx context.Context, userID, tradeID string) string {

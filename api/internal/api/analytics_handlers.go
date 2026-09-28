@@ -229,7 +229,11 @@ func (s *Server) handleRSummary(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusBadRequest, "bad_request", err.Error(), nil)
 	}
-	rows, err := s.loadClosedTrades(ctx, uid, f)
+	// R ratios divide amounts in each trade's own currency before aggregation.
+	if _, err := s.portfolioCurrencies(ctx, uid, f); err != nil {
+		return failLoad(err, "could not compute r-summary")
+	}
+	rows, err := s.loadClosedTradeRows(ctx, uid, f)
 	if err != nil {
 		return failLoad(err, "could not compute r-summary")
 	}
@@ -292,11 +296,10 @@ func (s *Server) handleMonteCarlo(c *echo.Context) error {
 		params.RuinThreshold = t
 	}
 
-	rows, err := s.loadClosedTrades(c.Request().Context(), auth.UserID(c), f)
+	meta, trades, err := s.normalizedTrades(c.Request().Context(), auth.UserID(c), f, c.QueryParam("target_currency"))
 	if err != nil {
-		return Fail(http.StatusInternalServerError, "internal", "could not run simulation", nil)
+		return err
 	}
-	trades := toClosedTrades(rows)
 	// Chronological order matters only for the historical-drawdown anchor;
 	// the bootstrap itself samples i.i.d.
 	sort.Slice(trades, func(i, j int) bool { return trades[i].ClosedAt.Before(trades[j].ClosedAt) })
@@ -304,7 +307,10 @@ func (s *Server) handleMonteCarlo(c *echo.Context) error {
 	for i, t := range trades {
 		pnls[i] = t.NetPnl
 	}
-	return c.JSON(http.StatusOK, analytics.MonteCarlo(pnls, params))
+	return c.JSON(http.StatusOK, struct {
+		analytics.MonteCarloResult
+		currencyMetadata
+	}{analytics.MonteCarlo(pnls, params), meta})
 }
 
 func uintParam(c *echo.Context, name string) (uint64, error) {

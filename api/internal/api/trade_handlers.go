@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"errors"
+	"math"
 	"net/http"
 
 	"github.com/labstack/echo/v5"
@@ -29,10 +30,23 @@ func (s *Server) handleListTrades(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusBadRequest, "bad_request", err.Error(), nil)
 	}
-	rows, err := s.loadTrades(ctx, uid, f)
+	var meta currencyMetadata
+	var rows []store.Trade
+	requested := c.QueryParam("target_currency")
+	if requested == "" {
+		rows, err = s.loadTrades(ctx, uid, f)
+	} else {
+		meta, err = s.analyticsCurrency(ctx, uid, f, requested)
+		if err != nil {
+			return err
+		}
+		rows, err = s.loadTradeRows(ctx, uid, f)
+	}
 	if err != nil {
 		return failLoad(err, "could not list trades")
 	}
+	rates := map[string]float64{meta.Currency: 1}
+
 	risks, err := s.deps.Store.ListJournalRisks(ctx, uid)
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not load risk", nil)
@@ -89,7 +103,39 @@ func (s *Server) handleListTrades(c *echo.Context) error {
 			dto.Confidence = iptr(j.Confidence)
 			dto.TradeQuality = iptr(j.TradeQuality)
 		}
+		if requested != "" {
+			source := dto.PnlCurrency
+			rate, err := s.normalizeTrade(ctx, &meta, rates, &t)
+			if err != nil {
+				return err
+			}
+			dto.NetPnl, dto.GrossPnl, dto.FeesTotal = fptr(t.NetPnl), fptr(t.GrossPnl), t.FeesTotal
+			dto.SourcePnlCurrency, dto.PnlCurrency = source, meta.Currency
+			dto.AvgEntryPrice *= rate
+			for _, value := range []float64{dto.AvgEntryPrice, t.AvgExitPrice.Float64 * rate} {
+				if math.IsNaN(value) || math.IsInf(value, 0) {
+					return Fail(http.StatusBadGateway, "fx_unavailable", "invalid normalized monetary input", nil)
+				}
+			}
+			if dto.AvgExitPrice != nil {
+				v := *dto.AvgExitPrice * rate
+				dto.AvgExitPrice = &v
+			}
+			if dto.InitialRisk != nil {
+				v := *dto.InitialRisk * rate
+				if math.IsNaN(v) || math.IsInf(v, 0) {
+					return Fail(http.StatusBadGateway, "fx_unavailable", "invalid normalized risk", nil)
+				}
+				dto.InitialRisk = &v
+			}
+		}
 		out = append(out, dto)
+	}
+	if requested != "" {
+		return c.JSON(http.StatusOK, struct {
+			currencyMetadata
+			Trades []tradeDTO `json:"trades"`
+		}{meta, out})
 	}
 	return c.JSON(http.StatusOK, out)
 }

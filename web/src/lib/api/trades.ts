@@ -6,7 +6,7 @@ import type {
   TradeCoachReview,
   TradeCoachReviewHistory,
 } from "./trades.coach.types";
-import type { Filters, Trade, TradeDetail } from "./types";
+import type { AnalyticsCurrency, Filters, Trade, TradeDetail } from "./types";
 
 export type {
   StoredTradeCoachReview,
@@ -27,7 +27,10 @@ export interface TradeExcursion {
 }
 
 export const tradesApi = {
-  list: (f: Filters) => apiFetch<Trade[]>(`/trades${qs(f as Record<string, string | undefined>)}`),
+  list: (f: Filters & { target_currency?: string }) =>
+    apiFetch<AnalyticsCurrency & { trades: Trade[] }>(
+      `/trades${qs(f as Record<string, string | undefined>)}`,
+    ),
   get: (id: string) => apiFetch<TradeDetail>(`/trades/${id}`),
   /**
    * LLM coach review when enabled in settings; otherwise source "off".

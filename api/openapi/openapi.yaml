@@ -650,16 +650,24 @@ paths:
           in: query
           schema:
             type: string
+        - name: target_currency
+          in: query
+          description: Explicit display currency; returns normalized trades envelope. Native detail and storage remain unchanged.
+          schema:
+            type: string
       responses:
         "200":
           description: Trades
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  additionalProperties: true
+                oneOf:
+                  - type: array
+                    items:
+                      type: object
+                  - type: object
+                    description: currency, target_currency, fx_policy latest, fx_rates and trades. Row P&L, fees, prices and initial_risk use output currency; source_pnl_currency retains provenance.
+                    additionalProperties: true
 
   /api/v1/trades/{id}:
     get:
@@ -1045,9 +1053,14 @@ paths:
         - $ref: "#/components/parameters/FromQuery"
         - $ref: "#/components/parameters/ToQuery"
         - $ref: "#/components/parameters/TzQuery"
+        - name: target_currency
+          in: query
+          description: Convert each monetary input before detecting patterns; latest FX and fail-closed.
+          schema:
+            type: string
       responses:
         "200":
-          description: Behavior report
+          description: Behavior report with currency, target_currency, fx_policy latest and fx_rates
           content:
             application/json:
               schema:
