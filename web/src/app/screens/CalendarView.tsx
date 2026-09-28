@@ -19,7 +19,6 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/Hove
 import { heroPnlClass, pnlBgTint, pnlColor, TINTED_LABEL_SUBTLE } from "@/components/theme-tokens";
 
 import type { Account, CashTransaction, EquityPoint, Summary, Trade } from "@/lib/api/types";
-import { netDeposits } from "@/lib/headerStats";
 import {
   balanceAsOf,
   type DayRecord,
@@ -128,10 +127,8 @@ export function CalendarView({
   monthTrades = [],
   yearTradeList = [],
   monthSummary,
-  accounts,
   cashTx,
   equityPoints = [],
-  selectedAccountIds,
   year,
   month,
   mode,
@@ -195,7 +192,8 @@ export function CalendarView({
   // balance — so day, week, month, and year percentages all share one basis.
   // Before any curve data arrives, fall back to net deposits (the pre-curve
   // basis) so the modal % doesn't flash null.
-  const deposits = netDeposits({ accounts, accountIds: selectedAccountIds, cashTx });
+  // Only normalized API cash inputs may supply the fallback; account metadata is native.
+  const deposits = cashTx.reduce((sum, tx) => sum + tx.amount, 0);
   const periodStartBalance = (dayKey: string): number | null => {
     const startISO = normalizeFilterDate(dayKey, "start", marketTz);
     if (!startISO) return null;
@@ -218,6 +216,7 @@ export function CalendarView({
   // At-a-glance stats behind each day's hover card, keyed by day.
   const dayDetails = useMemo(() => {
     const map = new Map<string, ReturnType<typeof dayDetail>>();
+    if (dayTradesError || dayTradesLoading) return map;
     for (const week of monthGrid(year, month, dailyPnl).weeks) {
       for (const cell of week) {
         if (!cell || cell.pnl == null) continue;
@@ -241,10 +240,22 @@ export function CalendarView({
       }
     }
     return map;
-  }, [year, month, dailyPnl, monthTradesByDay, records, cashTx, equityPoints, marketTz]);
+  }, [
+    year,
+    month,
+    dailyPnl,
+    monthTradesByDay,
+    records,
+    cashTx,
+    equityPoints,
+    marketTz,
+    dayTradesError,
+    dayTradesLoading,
+  ]);
 
   const weekDetails = useMemo(() => {
     const map = new Map<number, ReturnType<typeof weekDetail>>();
+    if (dayTradesError || dayTradesLoading) return map;
     const { weeks: gridWeeks } = monthGrid(year, month, dailyPnl);
     gridWeeks.forEach((week, wi) => {
       const ws = weeks[wi];
@@ -274,7 +285,19 @@ export function CalendarView({
       );
     });
     return map;
-  }, [year, month, dailyPnl, weeks, monthTradesByDay, records, cashTx, equityPoints, marketTz]);
+  }, [
+    year,
+    month,
+    dailyPnl,
+    weeks,
+    monthTradesByDay,
+    records,
+    cashTx,
+    equityPoints,
+    marketTz,
+    dayTradesError,
+    dayTradesLoading,
+  ]);
 
   const hasAnyPnl = Object.keys(dailyPnl).some((key) => {
     const [y, m] = key.split("-").map(Number);
@@ -452,6 +475,7 @@ export function CalendarView({
                 year={year}
                 dailyPnl={yearDailyPnl}
                 tradesByMonth={yearTradesByMonth}
+                tradesUnavailable={dayTradesError || dayTradesLoading}
                 dayRecords={yearDayRecords}
                 tradesByDay={yearTradesByDay}
                 loading={yearDailyLoading}

@@ -112,6 +112,7 @@ function HomePage() {
         equityLoading={equityQ.isLoading}
         equityError={equityQ.isError}
         equityPoints={equityQ.data?.points ?? []}
+        equityCurrency={equityQ.data?.currency}
         maxDrawdown={equityQ.data?.max_drawdown}
         accountValue={accountValueQ.data}
         accountValueLoading={accountsQ.isLoading || accountValueQ.isLoading}
@@ -156,8 +157,9 @@ function HomePage() {
         }
         calendarYear={calendarYear}
         calendarMonth={calendarMonth}
-        dailyPnl={dailyQ.data ?? {}}
-        todayNetPnl={dailyQ.data?.[dayKeyInTz(now.toISOString(), filters.tz)] ?? 0}
+        dailyPnl={dailyQ.data?.pnl ?? {}}
+        dailyCurrency={dailyQ.data?.currency}
+        todayNetPnl={dailyQ.data?.pnl[dayKeyInTz(now.toISOString(), filters.tz)] ?? 0}
         dayRecords={calendarDayRecords}
         dailyLoading={dailyQ.isLoading}
         dailyError={dailyQ.isError}

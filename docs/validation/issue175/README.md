@@ -34,8 +34,9 @@ are unavailable until their native cash/goal inputs can be normalized.
 
 The endpoint audit and remaining normalization work are tracked in
 [#179](https://github.com/HoesenBruce/TraderMemos-Private/issues/179).
-Equity, Daily/Calendar, Breakdown/Reports/Playbook, trade rows/account contribution
-and Wrapped retain their current mixed-currency rejection. Explicit portfolio
+Equity and Daily normalization is delivered by #181 (part 1 of #179); see
+`../issue179/README.md` for the new contract and validation. Breakdown/Reports/Playbook,
+trade rows/account contribution and Wrapped retain their mixed-currency rejection. Explicit portfolio
 selection still disallows incompatible currencies; All Accounts supports mixed
 Summary. Historical account-value reconstruction/combining remains unchanged.
 

@@ -1015,9 +1015,25 @@ paths:
         - $ref: "#/components/parameters/FromQuery"
         - $ref: "#/components/parameters/ToQuery"
         - $ref: "#/components/parameters/TzQuery"
+        - name: target_currency
+          in: query
+          description: Three-letter target currency. When omitted, uses the shared account currency and rejects mixed scopes.
+          schema:
+            type: string
+            pattern: '^[A-Za-z]{3}$'
       responses:
         "200":
-          description: Daily rows
+          description: Daily map without target_currency (legacy clients); normalized envelope with an explicit target.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: With target_currency, contains currency, target_currency, fx_policy (latest), fx_rates and pnl (date to amount). Without target, returns the legacy date to amount map.
+                additionalProperties: true
+        "400":
+          description: Invalid target, unknown currency or mixed scope without target.
+        "502":
+          description: fx_unavailable; no partial results are returned.
 
   /api/v1/analytics/behavior:
     get:
@@ -1047,9 +1063,41 @@ paths:
         - $ref: "#/components/parameters/AccountIdQuery"
         - $ref: "#/components/parameters/FromQuery"
         - $ref: "#/components/parameters/ToQuery"
+        - name: target_currency
+          in: query
+          description: Three-letter target currency. When omitted, uses the shared account currency and rejects mixed scopes.
+          schema:
+            type: string
+            pattern: '^[A-Za-z]{3}$'
       responses:
         "200":
-          description: Equity points
+          description: Normalized equity points, monetary drawdown and cash_transactions in the actual output currency.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [currency, target_currency, fx_policy, fx_rates]
+                properties:
+                  currency:
+                    type: string
+                    description: Actual output currency; empty only for an empty account scope without a requested target.
+                  target_currency:
+                    type: string
+                    description: Requested target (uppercase); empty when omitted.
+                  fx_policy:
+                    type: string
+                    enum: [latest]
+                  fx_rates:
+                    type: array
+                    description: Rates applied once per source currency, including provider and as_of. Identity conversions need no FX lookup.
+                    items:
+                      type: object
+                      additionalProperties: true
+                additionalProperties: true
+        "400":
+          description: Invalid target, unknown currency or mixed scope without target.
+        "502":
+          description: fx_unavailable; no partial results are returned.
 
   /api/v1/analytics/account-value:
     get:

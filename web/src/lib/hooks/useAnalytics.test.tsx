@@ -8,12 +8,14 @@ import { analyticsApi } from "@/lib/api/analytics";
 import { marketApi } from "@/lib/api/market";
 import type { Account, AccountValue, Summary } from "@/lib/api/types";
 import { useDisplayPrefs } from "@/lib/displayPrefs";
-import { useAccountValue, useSummary } from "./useAnalytics";
+import { useAccountValue, useSummary, useDailyPnl, useEquityCurve } from "./useAnalytics";
 
 vi.mock("@/lib/api/analytics", () => ({
   analyticsApi: {
     accountValue: vi.fn<typeof analyticsApi.accountValue>(),
     summary: vi.fn<typeof analyticsApi.summary>(),
+    daily: vi.fn<typeof analyticsApi.daily>(),
+    equityCurve: vi.fn<typeof analyticsApi.equityCurve>(),
   },
 }));
 vi.mock("@/lib/api/accounts", () => ({ accountsApi: { list: vi.fn<typeof accountsApi.list>() } }));
@@ -234,4 +236,66 @@ describe("useSummary mixed currency", () => {
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.data).toBeUndefined();
   });
+});
+
+describe("Daily and Equity shared currency contract", () => {
+  it.each(["daily", "equityCurve"] as const)(
+    "%s follows target and account changes without a second conversion",
+    async (endpoint) => {
+      vi.mocked(analyticsApi[endpoint]).mockImplementation(async (f) => ({
+        currency: f.target_currency ?? "",
+        target_currency: f.target_currency ?? "",
+        fx_policy: "latest",
+        fx_rates: [],
+        pnl: {
+          "2026-09-01":
+            f.account_id === "sbi" ? 200 : f.target_currency === "JPY" ? 3200 : 3200 / 150,
+        },
+        points: [],
+        max_drawdown: 0,
+        cash_transactions: [],
+      }));
+      const { result, rerender } = renderHook(
+        ({ id }) => {
+          const query =
+            endpoint === "daily"
+              ? useDailyPnl({ account_id: id })
+              : useEquityCurve({ account_id: id });
+          const money = useMoneyFx(query.data?.currency ?? "");
+          return { query, money };
+        },
+        { wrapper: makeWrapper(), initialProps: { id: undefined as string | undefined } },
+      );
+      await waitFor(() => expect(result.current.query.data?.currency).toBe("JPY"));
+      expect(result.current.money.toDisplay(3200)).toBe(3200);
+      expect(marketApi.fx).not.toHaveBeenCalled();
+      await act(() => useDisplayPrefs.setState({ displayCurrency: "USD" }));
+      await waitFor(() => expect(result.current.query.data?.currency).toBe("USD"));
+      expect(result.current.money.toDisplay(3200 / 150)).toBe(3200 / 150);
+      rerender({ id: "sbi" });
+      await waitFor(() =>
+        expect(analyticsApi[endpoint]).toHaveBeenCalledWith({
+          account_id: "sbi",
+          target_currency: "JPY",
+        }),
+      );
+      await act(() => useDisplayPrefs.setState({ displayCurrency: "JPY" }));
+      rerender({ id: undefined });
+      await waitFor(() => expect(result.current.query.data?.currency).toBe("JPY"));
+      await act(() => useDisplayPrefs.setState({ displayCurrency: null }));
+      await waitFor(() => expect(result.current.query.data?.currency).toBe("USD"));
+    },
+  );
+  it.each(["daily", "equityCurve"] as const)(
+    "%s fails closed when FX is unavailable",
+    async (endpoint) => {
+      vi.mocked(analyticsApi[endpoint]).mockRejectedValue(new Error("fx_unavailable"));
+      const { result } = renderHook(
+        () => (endpoint === "daily" ? useDailyPnl({}) : useEquityCurve({})),
+        { wrapper: makeWrapper() },
+      );
+      await waitFor(() => expect(result.current.isError).toBe(true));
+      expect(result.current.data).toBeUndefined();
+    },
+  );
 });

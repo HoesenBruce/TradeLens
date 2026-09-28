@@ -293,3 +293,17 @@ describe("CalendarView", () => {
     expect(screen.getAllByText("+$1.00").length).toBeGreaterThanOrEqual(1);
   });
 });
+
+it("keeps normalized year P&L without claiming zero trades when rows are unavailable", () => {
+  wrap(
+    <CalendarView
+      {...BASE}
+      mode="year"
+      yearDailyPnl={{ "2026-07-01": 3200 }}
+      yearTradesByMonth={{}}
+      dayTradesError
+    />,
+  );
+  expect(screen.queryByText("No trades")).not.toBeInTheDocument();
+  expect(screen.getByTitle("Year summary")).toHaveTextContent(/3\.2/i);
+});

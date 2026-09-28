@@ -287,6 +287,7 @@ function SummaryMetricsGrid({
   useDisplayTimePrefs();
   const locale = intlLocale();
   const [equityRange, setEquityRange] = useState<ChartRange>("all");
+  const equityFx = useMoneyFx(equity?.currency ?? currency);
   const equityPoints = equityPointsInRange(equity?.points ?? [], equityRange);
 
   return (
@@ -299,7 +300,7 @@ function SummaryMetricsGrid({
             <BentoTitle tone="muted">
               Equity curve
               {equityPoints.length > 0 && equity
-                ? ` · Max DD ${fmtMoney(equity.max_drawdown * fxRate, currency, locale)}`
+                ? ` · Max DD ${fmtMoney(equity.max_drawdown * (equityFx.rate ?? 1), equityFx.currency, locale)}`
                 : null}
             </BentoTitle>
           }
@@ -314,7 +315,10 @@ function SummaryMetricsGrid({
               <ChartFrame inset className="rounded-none border-0 bg-transparent">
                 <ResponsiveContainer width="100%" height={height ?? 148}>
                   <AreaChart
-                    data={equityPoints.map((p) => ({ ...p, equity: p.equity * fxRate }))}
+                    data={equityPoints.map((p) => ({
+                      ...p,
+                      equity: p.equity * (equityFx.rate ?? 1),
+                    }))}
                     margin={{ top: 8, right: 8, bottom: 0, left: 4 }}
                     accessibilityLayer={false}
                   >
@@ -336,7 +340,9 @@ function SummaryMetricsGrid({
                     />
                     <YAxis
                       tick={{ fontSize: 10, fill: chartTheme.axisColor }}
-                      tickFormatter={(v: number) => fmtMoneyCompact(v, currency, intlLocale())}
+                      tickFormatter={(v: number) =>
+                        fmtMoneyCompact(v, equityFx.currency, intlLocale())
+                      }
                       axisLine={false}
                       tickLine={false}
                       width={52}
@@ -346,7 +352,7 @@ function SummaryMetricsGrid({
                       {...chartTooltipStyle}
                       labelFormatter={(label) => String(label ?? "").slice(0, 10)}
                       formatter={(value) => [
-                        fmtMoney(Number(value ?? 0), currency, intlLocale()),
+                        fmtMoney(Number(value ?? 0), equityFx.currency, intlLocale()),
                         "Equity",
                       ]}
                       cursor={{ fill: chartTheme.cursorFill }}
