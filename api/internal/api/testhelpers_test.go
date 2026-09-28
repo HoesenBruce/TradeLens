@@ -34,6 +34,10 @@ func testServerWithRegistration(t *testing.T, allowRegistration bool) *api.Serve
 }
 
 func testServerWithAccountValue(t *testing.T, allowRegistration bool, loader func(context.Context, marketdata.Request) (marketdata.Response, error)) *api.Server {
+	return testServerWithProvider(t, allowRegistration, loader, marketdata.NewYahooProvider())
+}
+
+func testServerWithProvider(t *testing.T, allowRegistration bool, loader func(context.Context, marketdata.Request) (marketdata.Response, error), provider *marketdata.YahooProvider) *api.Server {
 	t.Helper()
 	conn, err := db.Open(filepath.Join(t.TempDir(), "t.db"))
 	require.NoError(t, err)
@@ -41,7 +45,6 @@ func testServerWithAccountValue(t *testing.T, allowRegistration bool, loader fun
 	// NewForDriver (not store.New) so handlers exercise the TxRunner path.
 	q := store.NewForDriver(conn, "sqlite")
 	j := auth.NewJWT("test")
-	provider := marketdata.NewYahooProvider()
 	market := marketdata.NewService(q, provider)
 	if loader == nil {
 		loader = market.GetBars

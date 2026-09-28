@@ -1213,7 +1213,7 @@ export function RulesTab({
   const locale = intlLocale();
   const goalYear = annualGoal?.year ?? new Date().getFullYear();
   const ytdFilters = useMemo(() => ytdFiltersForYear({}, goalYear), [goalYear]);
-  const ytdSummaryQ = useSummary(ytdFilters);
+  const ytdSummaryQ = useSummary(ytdFilters, false);
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [goalDraft, setGoalDraft] = useState("");
   const [goalError, setGoalError] = useState<string | null>(null);

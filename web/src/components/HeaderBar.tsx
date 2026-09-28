@@ -113,8 +113,10 @@ export function DisplayCurrencySelect({
   baseCurrency,
   variant = "header",
   side,
+  aggregate = false,
 }: {
   baseCurrency: string;
+  aggregate?: boolean;
   variant?: "header" | "rail";
   /** Popover side; defaults to `right` for rail, `bottom` for header. */
   side?: "top" | "right" | "bottom" | "left";
@@ -131,9 +133,10 @@ export function DisplayCurrencySelect({
   const ActiveIcon = currencyIcon(activeCode);
   const popoverSide = side ?? (variant === "rail" ? "right" : "bottom");
   const tipSide = popoverSide === "right" ? "right" : "bottom";
-  const tipLabel = usingAccount
-    ? tr({ id: "market.currencyAccount", message: `Display currency · ${activeCode} (account)` })
-    : tr({ id: "market.currency", message: `Display currency · ${activeCode}` });
+  const tipLabel =
+    usingAccount && !aggregate
+      ? tr({ id: "market.currencyAccount", message: `Display currency · ${activeCode} (account)` })
+      : tr({ id: "market.currency", message: `Display currency · ${activeCode}` });
 
   const convertible = DISPLAY_CURRENCIES.filter((code) => code !== base);
   const options = [
@@ -142,7 +145,7 @@ export function DisplayCurrencySelect({
       label: (
         <CurrencyOptionLabel
           code={base}
-          detail={tr({ id: "market.account", message: "Account" })}
+          detail={aggregate ? tipLabel : tr({ id: "market.account", message: "Account" })}
         />
       ),
       shortLabel: <CurrencyOptionLabel code={base} />,
@@ -171,10 +174,14 @@ export function DisplayCurrencySelect({
           <TooltipTrigger
             render={
               <MenuTrigger
-                aria-label={tr({
-                  id: "market.showIn",
-                  message: `Show amounts in (account ledger is ${base})`,
-                })}
+                aria-label={
+                  aggregate
+                    ? tipLabel
+                    : tr({
+                        id: "market.showIn",
+                        message: `Show amounts in (account ledger is ${base})`,
+                      })
+                }
                 className={cn(
                   "group relative flex size-8 cursor-pointer items-center justify-center rounded-md outline-none",
                   "pointer-coarse:size-11",
@@ -208,7 +215,9 @@ export function DisplayCurrencySelect({
           >
             <MenuGroup>
               <MenuGroupLabel>
-                {tr({ id: "market.accountCurrency", message: "Account currency" })}
+                {aggregate
+                  ? tipLabel
+                  : tr({ id: "market.accountCurrency", message: "Account currency" })}
               </MenuGroupLabel>
               <CurrencyMenuItem value={AUTO_VALUE} code={base} />
             </MenuGroup>
@@ -231,10 +240,14 @@ export function DisplayCurrencySelect({
       value={usingAccount ? AUTO_VALUE : displayCurrency!}
       onValueChange={applyCurrency}
       options={options}
-      ariaLabel={tr({
-        id: "market.showIn",
-        message: `Show amounts in (account ledger is ${base})`,
-      })}
+      ariaLabel={
+        aggregate
+          ? tipLabel
+          : tr({
+              id: "market.showIn",
+              message: `Show amounts in (account ledger is ${base})`,
+            })
+      }
       ghost
       triggerClassName={cn(filterChipClass, "min-w-[5.25rem] gap-1.5 tabular-nums")}
     />
@@ -307,6 +320,8 @@ export function HeaderBar() {
     trades: tradesQ.data ?? [],
   });
   const summary = summaryQ.data;
+  // Balance and funding ratios still require a native same-currency ledger.
+  const nativeCurrency = accountBaseCurrency(accounts, accountIds);
   // Only judge staleness against a LOADED account list — before the query
   // resolves every persisted id would look deleted and the scope would clear
   // on each reload.
@@ -356,8 +371,14 @@ export function HeaderBar() {
             fxLoading && "opacity-60",
           )}
         >
-          <RollingNumber value={fmtSignedMoney(toDisplay(stats.netPnl), currency, intlLocale())} />
-          {stats.netPnlPct != null ? (
+          <RollingNumber
+            value={
+              summaryQ.isError || !summary
+                ? "—"
+                : fmtSignedMoney(toDisplay(stats.netPnl), currency, intlLocale())
+            }
+          />
+          {nativeCurrency && stats.netPnlPct != null ? (
             <RollingNumber
               value={fmtSignedPct(stats.netPnlPct, intlLocale())}
               className="text-[12px] font-medium opacity-70 sm:text-[13px]"
@@ -378,7 +399,7 @@ export function HeaderBar() {
           <StatDivider />
           <HeaderStat
             label={tr({ id: "market.balance", message: "Balance" })}
-            value={fmtMoney(toDisplay(stats.cash), currency, intlLocale())}
+            value={nativeCurrency ? fmtMoney(toDisplay(stats.cash), currency, intlLocale()) : "—"}
           />
         </div>
         {symbols?.length && !onTradesPage ? (
@@ -417,7 +438,12 @@ export function HeaderBar() {
         </Button>
         <div className="hidden items-center gap-1 md:flex">
           <DateRangePicker variant="rail" side="bottom" />
-          <DisplayCurrencySelect baseCurrency={baseCurrency} variant="rail" side="bottom" />
+          <DisplayCurrencySelect
+            baseCurrency={nativeCurrency || "USD"}
+            aggregate={!nativeCurrency}
+            variant="rail"
+            side="bottom"
+          />
         </div>
         <PrivacyToggle />
         <AccountNavPopover variant="header" />

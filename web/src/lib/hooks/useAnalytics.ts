@@ -3,13 +3,36 @@ import { analyticsApi } from "@/lib/api/analytics";
 import type { Account, Filters } from "@/lib/api/types";
 import { combineAccountValues } from "@/lib/accountValue";
 import { accountBaseCurrency, useDisplayCurrency } from "@/lib/displayPrefs";
+import { useAccounts } from "./useAccounts";
 import { fxRateQueryOptions } from "./useMoneyFx";
 
-export function useSummary(filters: Filters) {
-  return useQuery({
-    queryKey: ["analytics", "summary", filters],
-    queryFn: () => analyticsApi.summary(filters),
+export function useSummary(filters: Filters, normalizeMixed = true) {
+  const accountsQ = useAccounts();
+  const ids = filters.account_id?.split(",").filter(Boolean);
+  const currencies = new Set(
+    (accountsQ.data ?? [])
+      .filter((account) =>
+        ids?.length ? ids.includes(account.id) : account.account_type !== "backtest",
+      )
+      .map((account) => account.base_currency),
+  );
+  // Auto has no shared base for a mixed scope: use an explicit USD target.
+  // Same-currency scopes keep their native contract for forms and sibling endpoints.
+  const displayCurrency = useDisplayCurrency("USD");
+  const request =
+    normalizeMixed && currencies.size > 1
+      ? { ...filters, target_currency: displayCurrency }
+      : filters;
+  const query = useQuery({
+    queryKey: ["analytics", "summary", request],
+    queryFn: () => analyticsApi.summary(request),
+    enabled: accountsQ.isSuccess,
   });
+  return {
+    ...query,
+    isLoading: accountsQ.isPending || query.isLoading,
+    isError: accountsQ.isError || query.isError,
+  };
 }
 
 export function useRSummary(filters: Filters) {

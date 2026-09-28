@@ -13,7 +13,7 @@ import type {
 } from "./types";
 
 export const analyticsApi = {
-  summary: (f: Filters) =>
+  summary: (f: Filters & { target_currency?: string }) =>
     apiFetch<Summary>(`/analytics/summary${qs(f as Record<string, string | undefined>)}`),
   rSummary: (f: Filters) =>
     apiFetch<RSummary>(`/analytics/r-summary${qs(f as Record<string, string | undefined>)}`),
