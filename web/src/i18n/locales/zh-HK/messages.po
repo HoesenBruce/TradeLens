@@ -6799,3 +6799,7 @@ msgstr "实际盈亏"
 #. js-lingui-explicit-id
 msgid "trades.savedAccountingResult"
 msgstr "已保存的记账结果；成交修改会在保存后更新。"
+
+#. js-lingui-explicit-id
+msgid "market.marginToCash"
+msgstr "信用轉現貨"

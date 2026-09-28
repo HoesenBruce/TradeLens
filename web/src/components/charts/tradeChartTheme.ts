@@ -7,6 +7,7 @@ export const tradeChartTheme = {
   down: "#eb4b68",
   buyMarker: "#4fa5ff",
   sellMarker: "#8a92a6",
+  conversionMarker: "#d4a85a",
   entryLine: "#4fa5ff",
 } as const;
 
