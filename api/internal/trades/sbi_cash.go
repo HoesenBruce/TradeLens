@@ -52,10 +52,15 @@ func SBICashAccounting(fills []Execution) AccountingResult {
 		if qty < 1e-9 {
 			qty, cost = 0, 0
 		}
+		pnl := money.Round2((fill.Price-average)*fill.Quantity - fill.Fees - fill.Commission)
+		source := "calculated_average_cost"
+		if fill.SettlementResult != nil {
+			pnl, source = fill.SettlementResult.RealizedPnL, fill.SettlementResult.Source
+		}
 		result.RealizedCloses = append(result.RealizedCloses, RealizedClose{
 			ExecutionID: fill.ID, Date: fill.ExecutedAt.In(tokyo),
-			Pnl:          money.Round2((fill.Price-average)*fill.Quantity - fill.Fees - fill.Commission),
-			RemainingQty: qty, RemainingCostBasis: cost, Source: "calculated_average_cost",
+			Pnl: pnl, Fees: fill.Fees + fill.Commission,
+			RemainingQty: qty, RemainingCostBasis: cost, Source: source,
 		})
 	}
 	reconcileConversionTrades(fills, &result)

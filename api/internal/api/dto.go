@@ -194,6 +194,9 @@ func toExecutionDTO(e store.Execution) executionDTO {
 }
 
 func tradeType(side string, details map[string]string) string {
+	if details["settlement_type"] == "genwatashi" && (details["lot"] == "sbi:cash" || details["lot"] == "sbi:margin-short") {
+		return "genwatashi"
+	}
 	switch details["lot"] {
 	case "sbi:cash":
 		return "cash_" + side

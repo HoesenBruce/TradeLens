@@ -210,6 +210,8 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 		legs := []string{}
 		if transaction == "現引" {
 			legs = []string{"信用返済売", "株式現物買"}
+		} else if transaction == "現渡" {
+			legs = []string{"株式現物売", "信用返済買"}
 		} else if _, _, supported := sbiSemantics(transaction); supported {
 			legs = []string{transaction}
 		} else {
@@ -229,8 +231,11 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 		for legIndex, leg := range legs {
 			legRow := maps.Clone(row)
 			legRow[fields["side"]] = leg
-			if transaction == "現引" && legIndex == 1 {
-				legRow[fields["fees"]] = "--" // charge the conversion once, on margin close
+			if (transaction == "現引" || transaction == "現渡") && legIndex == 1 {
+				legRow[fields["fees"]] = "--" // charge the event once, on its first leg
+				if transaction == "現渡" && fields["commission"] != "" {
+					legRow[fields["commission"]] = "--"
+				}
 			}
 			parsed := generic.ParseRows([]map[string]string{legRow})
 			if len(parsed.Errors) > 0 {
@@ -250,6 +255,30 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 						break
 					}
 					execution.ReportedCloseBasis = &basis
+				}
+			}
+			if transaction == "現渡" {
+				execution.EventType = "position_settlement"
+				execution.SettlementType = "genwatashi"
+				execution.SettlementID = fmt.Sprintf("sbi|genwatashi|%s|%d", key, occurrences[key])
+				if legIndex == 0 {
+					invalid := false
+					for field, target := range map[string]**float64{"受渡金額/決済損益": &execution.SettlementProceeds, "実現損益": &execution.ReportedRealizedPnl, "平均取得価額": &execution.ReportedCloseBasis} {
+						raw := strings.TrimSpace(row[field])
+						if raw == "" || raw == "--" || raw == "-" {
+							continue
+						}
+						v, err := sbiPnLNumber(raw)
+						if err != nil || (field != "実現損益" && v < 0) {
+							result.Errors = append(result.Errors, RowError{Row: i + 1, Message: "invalid genwatashi " + field})
+							invalid = true
+							break
+						}
+						*target = &v
+					}
+					if invalid {
+						break
+					}
 				}
 			}
 			if conversionID != "" {
