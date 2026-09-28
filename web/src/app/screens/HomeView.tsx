@@ -283,26 +283,20 @@ function AccountValueChart({
   loading,
   error,
   currency,
-  fxRate,
 }: {
   data: AccountValue | undefined;
   loading: boolean;
   error: boolean;
   currency: string;
-  fxRate: number;
 }) {
   const { t: tr } = useLinguiMacro();
-
   const points = useMemo(
     () =>
       (data?.points ?? []).map((point) => ({
         ...point,
         timestamp: new Date(`${point.date}T00:00:00+09:00`).getTime(),
-        estimated_account_value:
-          point.estimated_account_value == null ? null : point.estimated_account_value * fxRate,
-        contributed_capital: point.contributed_capital * fxRate,
       })),
-    [data?.points, fxRate],
+    [data?.points],
   );
 
   if (loading) return <Skeleton className="min-h-[240px] w-full" />;
@@ -718,8 +712,7 @@ export function HomeView({
             data={accountValue}
             loading={accountValueLoading}
             error={accountValueError}
-            currency={currency}
-            fxRate={fxRate}
+            currency={accountValue?.currency ?? currency}
           />
           {!accountValueLoading && !accountValueError && (accountValue?.points.length ?? 0) > 0 ? (
             <div className="flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-muted-foreground">

@@ -70,12 +70,13 @@ function HomePage() {
   const summaryQ = useSummary(filters);
   const ytdSummaryQ = useSummary(ytdFilters);
   const equityQ = useEquityCurve(filters);
+  const accountsQ = useAccounts();
   const accountValueQ = useAccountValue(
     accountValueFilters(filters.account_id, accountValueRange, ignoredPrices),
+    accountsQ.data ?? [],
   );
   const tradesQ = useTrades(filters);
   const monthTradesQ = useTrades(monthFilters);
-  const accountsQ = useAccounts();
   const cashQ = useCash(filters);
   const dailyQ = useDailyPnl(monthFilters);
   const breakdownQ = useBreakdown(breakdownDim, filters);
@@ -113,8 +114,8 @@ function HomePage() {
         equityPoints={equityQ.data?.points ?? []}
         maxDrawdown={equityQ.data?.max_drawdown}
         accountValue={accountValueQ.data}
-        accountValueLoading={accountValueQ.isLoading}
-        accountValueError={accountValueQ.isError}
+        accountValueLoading={accountsQ.isLoading || accountValueQ.isLoading}
+        accountValueError={accountsQ.isError || accountValueQ.isError}
         accountValueRange={accountValueRange}
         onAccountValueRangeChange={setAccountValueRange}
         onIgnoreAccountValueWarning={(warning: AccountValueWarning) => {
