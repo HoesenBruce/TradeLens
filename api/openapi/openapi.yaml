@@ -975,7 +975,14 @@ paths:
             application/json:
               schema:
                 type: object
+                required: [currency]
+                properties:
+                  currency:
+                    type: string
+                    description: Shared base currency of included accounts; empty only when there are no accounts.
                 additionalProperties: true
+        "400":
+          description: mixed_currencies or unknown_currency; no monetary aggregate is returned.
 
   /api/v1/analytics/daily:
     get:
@@ -1753,9 +1760,9 @@ components:
       in: query
       description: >-
         Account scope. Accepts a single account id, a comma-separated list, or
-        the parameter repeated (portfolio mode). Multi-account scopes must share
+        the parameter repeated (portfolio mode). All included accounts must share
         one base currency; mixed-currency selections return 400
-        `mixed_currencies`. Omit for all accounts.
+        `mixed_currencies`, including when omitted. Omit for all live accounts.
       schema:
         type: string
     FromQuery:

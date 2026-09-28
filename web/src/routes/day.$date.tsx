@@ -51,7 +51,8 @@ function DayReviewPage() {
   const behaviorQ = useBehavior(dayFilters);
   const notesQ = useNotes({ from: dayFilters.from, to: dayFilters.to });
   const accountsQ = useAccounts();
-  const baseCurrency = accountBaseCurrency(accountsQ.data ?? [], accountIds);
+  const baseCurrency =
+    summaryQ.data?.currency ?? accountBaseCurrency(accountsQ.data ?? [], accountIds);
   const { currency, rate } = useMoneyFx(baseCurrency);
 
   const goToDay = (d: string) => void navigate({ to: "/day/$date", params: { date: d } });

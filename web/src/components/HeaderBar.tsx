@@ -124,7 +124,7 @@ export function DisplayCurrencySelect({
   const [open, setOpen] = useState(false);
   const displayCurrency = useDisplayPrefs((s) => s.displayCurrency);
   const setDisplayCurrency = useDisplayPrefs((s) => s.setDisplayCurrency);
-  const base = baseCurrency.trim().toUpperCase() || "USD";
+  const base = baseCurrency.trim().toUpperCase() || "—";
   // `null` or an override that matches the account base = show in account currency (no FX).
   const usingAccount = displayCurrency === null || displayCurrency.toUpperCase() === base;
   const activeCode = usingAccount ? base : displayCurrency!.toUpperCase();
@@ -297,7 +297,7 @@ export function HeaderBar() {
   const tradesQ = useTrades(filters);
   const cashQ = useCash(filters);
 
-  const baseCurrency = accountBaseCurrency(accounts, accountIds);
+  const baseCurrency = summaryQ.data?.currency ?? accountBaseCurrency(accounts, accountIds);
   const { currency, toDisplay, isLoading: fxLoading } = useMoneyFx(baseCurrency);
   const stats = computeHeaderStats({
     accounts,

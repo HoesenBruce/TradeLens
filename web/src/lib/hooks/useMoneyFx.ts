@@ -29,7 +29,8 @@ export function useFxRate(from: string, to: string) {
  * (never silently relabels the same number with a different currency symbol).
  */
 export function useMoneyFx(baseCurrency: string) {
-  const displayCurrency = useDisplayCurrency(baseCurrency);
+  const preferredCurrency = useDisplayCurrency(baseCurrency);
+  const displayCurrency = baseCurrency ? preferredCurrency : "";
   const needsFx = baseCurrency.toUpperCase() !== displayCurrency.toUpperCase();
   const fxQ = useFxRate(baseCurrency, displayCurrency);
 

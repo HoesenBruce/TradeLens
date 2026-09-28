@@ -15,6 +15,7 @@ function maskedMoney(): string | null {
 export function fmtMoney(v: number, currency: string, locale: string): string {
   const masked = maskedMoney();
   if (masked) return masked;
+  if (!currency) return "—";
   return new Intl.NumberFormat(locale, { style: "currency", currency }).format(v);
 }
 
@@ -22,6 +23,7 @@ export function fmtMoney(v: number, currency: string, locale: string): string {
 export function fmtMoneyCompact(v: number, currency: string, locale: string): string {
   const masked = maskedMoney();
   if (masked) return masked;
+  if (!currency) return "—";
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
@@ -42,6 +44,8 @@ export function fmtDayShort(iso: string, locale: string): string {
 export function fmtSignedMoney(v: number, currency: string, locale: string): string {
   const masked = maskedMoney();
   if (masked) return masked;
+  if (!currency) return "—";
+  if (!currency) return fmtMoney(v, currency, locale);
   const s = fmtMoney(Math.abs(v), currency, locale);
   return v < 0 ? `-${s}` : `+${s}`;
 }
@@ -50,6 +54,8 @@ export function fmtSignedMoney(v: number, currency: string, locale: string): str
 export function fmtSignedMoneyCompact(v: number, currency: string, locale: string): string {
   const masked = maskedMoney();
   if (masked) return masked;
+  if (!currency) return "—";
+  if (!currency) return fmtMoneyCompact(v, currency, locale);
   const s = fmtMoneyCompact(Math.abs(v), currency, locale);
   if (v < 0) return `-${s}`;
   if (v > 0) return `+${s}`;
