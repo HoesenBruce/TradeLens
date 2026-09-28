@@ -6,6 +6,7 @@ import type {
   ComplianceReport,
   EquityCurve,
   DailyPnl,
+  AnalyticsCurrency,
   ExecScoreReport,
   Filters,
   MonteCarloResult,
@@ -32,14 +33,16 @@ export const analyticsApi = {
     apiFetch<ComplianceReport>(
       `/analytics/compliance${qs(f as Record<string, string | undefined>)}`,
     ),
-  behavior: (f: Filters) =>
-    apiFetch<BehaviorReport>(`/analytics/behavior${qs(f as Record<string, string | undefined>)}`),
-  breakdown: (by: string, f: Filters) =>
-    apiFetch<BreakGroup[]>(
+  behavior: (f: Filters & { target_currency?: string }) =>
+    apiFetch<BehaviorReport & AnalyticsCurrency>(
+      `/analytics/behavior${qs(f as Record<string, string | undefined>)}`,
+    ),
+  breakdown: (by: string, f: Filters & { target_currency?: string }) =>
+    apiFetch<AnalyticsCurrency & { groups: BreakGroup[] }>(
       `/analytics/breakdown${qs({ by, ...(f as Record<string, string | undefined>) })}`,
     ),
-  monteCarlo: (f: Filters) =>
-    apiFetch<MonteCarloResult>(
+  monteCarlo: (f: Filters & { target_currency?: string }) =>
+    apiFetch<MonteCarloResult & AnalyticsCurrency>(
       `/analytics/montecarlo${qs(f as Record<string, string | undefined>)}`,
     ),
   executionScore: (f: Filters, bucket: "week" | "month") =>

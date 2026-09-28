@@ -19,7 +19,7 @@ function PlaybookPage() {
   const setupsQ = useSetups();
   const breakdownQ = useBreakdown("setup", filters);
   const accountsQ = useAccounts();
-  const currency = accountBaseCurrency(accountsQ.data ?? [], accountIds);
+  const currency = breakdownQ.currency ?? accountBaseCurrency(accountsQ.data ?? [], accountIds);
 
   const deleteM = useDeleteSetup();
 
@@ -30,6 +30,7 @@ function PlaybookPage() {
       setupsError={setupsQ.isError}
       breakdown={breakdownQ.data ?? []}
       breakdownLoading={breakdownQ.isLoading}
+      breakdownError={breakdownQ.isError}
       currency={currency}
       onDelete={async (id) => {
         const name = setupsQ.data?.find((setup) => setup.id === id)?.name ?? "Setup";

@@ -42,7 +42,7 @@ function TradesPage() {
   const tradesQ = useTrades(filters);
   const accountsQ = useAccounts();
   const accounts = accountsQ.data ?? [];
-  const currency = accountBaseCurrency(accounts, accountIds);
+  const currency = tradesQ.currency ?? accountBaseCurrency(accounts, accountIds);
 
   const hasNarrowingFilters = !!(
     from ||

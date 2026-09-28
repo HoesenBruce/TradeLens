@@ -6,7 +6,11 @@ import { accountBaseCurrency, useDisplayCurrency } from "@/lib/displayPrefs";
 import { useAccounts } from "./useAccounts";
 import { fxRateQueryOptions } from "./useMoneyFx";
 
-function useAnalyticsRequest(filters: Filters, normalizeMixed = true, explicitTarget = false) {
+export function useAnalyticsRequest(
+  filters: Filters,
+  normalizeMixed = true,
+  explicitTarget = false,
+) {
   const accountsQ = useAccounts();
   const ids = filters.account_id?.split(",").filter(Boolean);
   const currencies = new Set(
@@ -153,26 +157,37 @@ export function useCompliance(filters: Filters, enabled = true) {
 }
 
 export function useBehavior(filters: Filters, enabled = true) {
+  const { request, accountsQ } = useAnalyticsRequest(filters, true, true);
   return useQuery({
-    queryKey: ["analytics", "behavior", filters],
-    queryFn: () => analyticsApi.behavior(filters),
-    enabled,
+    queryKey: ["analytics", "behavior", request],
+    queryFn: () => analyticsApi.behavior(request),
+    enabled: enabled && accountsQ.isSuccess,
   });
 }
 
 export function useMonteCarlo(filters: Filters, enabled = true) {
+  const { request, accountsQ } = useAnalyticsRequest(filters, true, true);
   return useQuery({
-    queryKey: ["analytics", "montecarlo", filters],
-    queryFn: () => analyticsApi.monteCarlo(filters),
-    enabled,
+    queryKey: ["analytics", "montecarlo", request],
+    queryFn: () => analyticsApi.monteCarlo(request),
+    enabled: enabled && accountsQ.isSuccess,
   });
 }
 
 export function useBreakdown(by: string, filters: Filters) {
-  return useQuery({
-    queryKey: ["analytics", "breakdown", by, filters],
-    queryFn: () => analyticsApi.breakdown(by, filters),
+  const { request, accountsQ } = useAnalyticsRequest(filters, true, true);
+  const query = useQuery({
+    queryKey: ["analytics", "breakdown", by, request],
+    queryFn: () => analyticsApi.breakdown(by, request),
+    enabled: accountsQ.isSuccess,
   });
+  return {
+    ...query,
+    data: query.data?.groups,
+    currency: query.data?.currency,
+    isLoading: accountsQ.isPending || query.isLoading,
+    isError: accountsQ.isError || query.isError,
+  };
 }
 
 export function useExecutionScore(filters: Filters, bucket: "week" | "month") {

@@ -35,7 +35,7 @@ function WrappedPage() {
   );
   const tradesQ = useTrades(filters);
   const accountsQ = useAccounts();
-  const baseCurrency = accountBaseCurrency(accountsQ.data ?? [], accountIds);
+  const baseCurrency = tradesQ.currency ?? accountBaseCurrency(accountsQ.data ?? [], accountIds);
   const { currency, rate } = useMoneyFx(baseCurrency);
 
   const wrapped = useMemo(() => computeYearWrapped(tradesQ.data ?? [], year), [tradesQ.data, year]);
@@ -44,7 +44,7 @@ function WrappedPage() {
     <YearWrappedView
       wrapped={wrapped}
       loading={tradesQ.isLoading}
-      error={tradesQ.isError}
+      error={tradesQ.isError || rate == null}
       year={year}
       currentYear={new Date().getFullYear()}
       onYearChange={(next) =>

@@ -42,6 +42,7 @@ export interface PlaybookViewProps {
   setupsError: boolean;
   breakdown: BreakGroup[];
   breakdownLoading: boolean;
+  breakdownError?: boolean;
   currency: string;
   onDelete: (id: string) => Promise<void>;
 }
@@ -552,6 +553,8 @@ export function PlaybookView({
   setupsLoading,
   setupsError,
   breakdown,
+  breakdownLoading,
+  breakdownError,
   currency,
   onDelete,
 }: PlaybookViewProps) {
@@ -626,6 +629,8 @@ export function PlaybookView({
   };
 
   const subtitle = () => {
+    if (breakdownLoading || breakdownError || rate == null) return `${setups.length} plays`;
+
     if (setups.length === 0) return "Define your plays once, then log trades straight from them.";
     const plays = `${setups.length} play${setups.length === 1 ? "" : "s"}`;
     if (traded.length === 0) return `${plays} · none traded in this range`;
@@ -791,11 +796,14 @@ export function PlaybookView({
   );
 
   const renderContent = () => {
-    if (setupsLoading) return <ListSkeleton rows={4} />;
+    if (setupsLoading || breakdownLoading) return <ListSkeleton rows={4} />;
 
     if (setupsError) {
       return <EmptyState title="Could not load setups" hint="Try refreshing the page." />;
     }
+
+    if (breakdownError || rate == null)
+      return <EmptyState title="Analytics unavailable" hint="Try refreshing the page." />;
 
     if (setups.length === 0) {
       return (

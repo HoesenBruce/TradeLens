@@ -43,6 +43,7 @@ func sptr(n sql.NullString) *string {
 // tradeDTO flattens sqlc's sql.Null* fields into JSON-friendly nullable values
 // (a number or null), so clients see net_pnl: 200 rather than {Float64,Valid}.
 type tradeDTO struct {
+	SourcePnlCurrency string      `json:"source_pnl_currency,omitempty"`
 	AccountingWarning string      `json:"accounting_warning,omitempty"`
 	ID                string      `json:"id"`
 	AccountID         string      `json:"account_id"`
@@ -328,6 +329,10 @@ func (s *Server) loadTrades(ctx context.Context, userID string, f Filters) ([]st
 	if err := s.checkPortfolioCurrency(ctx, userID, f); err != nil {
 		return nil, err
 	}
+	return s.loadTradeRows(ctx, userID, f)
+}
+
+func (s *Server) loadTradeRows(ctx context.Context, userID string, f Filters) ([]store.Trade, error) {
 	rows, err := s.deps.Store.ListTrades(ctx, store.ListTradesParams{
 		UserID:    userID,
 		AccountID: f.accountNarg(),
