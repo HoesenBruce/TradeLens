@@ -229,34 +229,50 @@ func toExecutionDTOs(rows []store.Execution) []executionDTO {
 // honest conversion would need.
 var errMixedCurrencies = errors.New("selected accounts mix base currencies")
 
-// checkPortfolioCurrency enforces the same-currency rule for multi-account
-// scopes. Single-account and all-account scopes pass through untouched (the
-// all-accounts default predates portfolio mode and keeps its behavior).
-func (s *Server) checkPortfolioCurrency(ctx context.Context, userID string, f Filters) error {
-	if len(f.AccountIDs) < 2 {
-		return nil
-	}
+// portfolioCurrency resolves exactly the accounts included by the trade loaders.
+func (s *Server) portfolioCurrency(ctx context.Context, userID string, f Filters) (string, error) {
 	accounts, err := s.deps.Store.ListAccounts(ctx, userID)
 	if err != nil {
-		return err
+		return "", err
 	}
 	base := ""
 	for _, a := range accounts {
-		if !slices.Contains(f.AccountIDs, a.ID) {
+		if !f.matchAccount(a.ID) || (len(f.AccountIDs) == 0 && !f.IncludeBacktest && a.AccountType == AccountTypeBacktest) {
 			continue
 		}
-		if base == "" {
-			base = a.BaseCurrency
-		} else if a.BaseCurrency != base {
-			return errMixedCurrencies
+		if a.BaseCurrency == "" {
+			return "", errUnknownCurrency
+		}
+		if base != "" && a.BaseCurrency != base {
+			return "", errMixedCurrencies
+		}
+		base = a.BaseCurrency
+	}
+	for _, id := range f.AccountIDs {
+		if !slices.ContainsFunc(accounts, func(a store.Account) bool { return a.ID == id }) {
+			return "", errUnknownCurrency
 		}
 	}
-	return nil
+	return base, nil
+}
+
+var errUnknownCurrency = errors.New("account scope currency could not be resolved")
+
+func (s *Server) checkPortfolioCurrency(ctx context.Context, userID string, f Filters) error {
+	// Full exports preserve individual rows, rather than summing money.
+	if f.IncludeBacktest {
+		return nil
+	}
+	_, err := s.portfolioCurrency(ctx, userID, f)
+	return err
 }
 
 // failLoad maps a loader error to an API error: the mixed-currency guard is
 // the caller's mistake (400), anything else is internal.
 func failLoad(err error, msg string) error {
+	if errors.Is(err, errUnknownCurrency) {
+		return Fail(http.StatusBadRequest, "unknown_currency", errUnknownCurrency.Error(), nil)
+	}
 	if errors.Is(err, errMixedCurrencies) {
 		return Fail(http.StatusBadRequest, "mixed_currencies", errMixedCurrencies.Error(), nil)
 	}

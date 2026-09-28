@@ -195,3 +195,9 @@ describe.each(["en-US", "zh-CN", "ja-JP"])("locale-aware formatting: %s", (local
     );
   });
 });
+
+it("does not invent a currency for unresolved money", () => {
+  useDisplayPrefs.setState({ privacyMode: false });
+  expect(fmtMoney(8362055, "", "en-US")).toBe("—");
+  expect(fmtMoneyCompact(8362055, "", "en-US")).toBe("—");
+});

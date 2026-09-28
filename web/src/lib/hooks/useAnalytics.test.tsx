@@ -156,4 +156,19 @@ describe("useAccountValue", () => {
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.data).toBeUndefined();
   });
+  it("preserves the USD target for mixed historical series without a display override", async () => {
+    useDisplayPrefs.setState({ displayCurrency: null });
+    vi.mocked(marketApi.fx).mockImplementation(async ({ from, to }) => ({
+      from,
+      to,
+      rate: 1 / 150,
+      as_of: "2025-05-19",
+      provider: "test",
+      cached: false,
+    }));
+    const { result } = renderHook(() => useAccountValue({}, accounts), { wrapper: makeWrapper() });
+    await waitFor(() => expect(result.current.data?.currency).toBe("USD"));
+    expect(result.current.data?.points[0].estimated_account_value).toBe(19000);
+    expect(marketApi.fx).toHaveBeenCalledWith({ from: "JPY", to: "USD" });
+  });
 });

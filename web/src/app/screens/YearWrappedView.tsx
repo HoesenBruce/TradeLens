@@ -196,13 +196,13 @@ export function YearWrappedView({
           <div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-5">
             <StatCell
               label="Best day"
-              value={wrapped.bestDay ? money(wrapped.bestDay.pnl) : "$0.00"}
+              value={wrapped.bestDay ? money(wrapped.bestDay.pnl) : money(0)}
               hint={wrapped.bestDay?.date}
               tone={wrapped.bestDay && wrapped.bestDay.pnl > 0 ? "pos" : "muted"}
             />
             <StatCell
               label="Biggest win"
-              value={wrapped.biggestWin ? money(wrapped.biggestWin.pnl) : "$0.00"}
+              value={wrapped.biggestWin ? money(wrapped.biggestWin.pnl) : money(0)}
               hint={
                 wrapped.biggestWin
                   ? `${wrapped.biggestWin.symbol} · ${wrapped.biggestWin.date}`
@@ -231,13 +231,13 @@ export function YearWrappedView({
           <div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-5">
             <StatCell
               label="Worst day"
-              value={wrapped.worstDay ? money(wrapped.worstDay.pnl) : "$0.00"}
+              value={wrapped.worstDay ? money(wrapped.worstDay.pnl) : money(0)}
               hint={wrapped.worstDay?.date}
               tone={wrapped.worstDay && wrapped.worstDay.pnl < 0 ? "neg" : "muted"}
             />
             <StatCell
               label="Biggest loss"
-              value={wrapped.biggestLoss ? money(wrapped.biggestLoss.pnl) : "$0.00"}
+              value={wrapped.biggestLoss ? money(wrapped.biggestLoss.pnl) : money(0)}
               hint={
                 wrapped.biggestLoss
                   ? `${wrapped.biggestLoss.symbol} · ${wrapped.biggestLoss.date}`

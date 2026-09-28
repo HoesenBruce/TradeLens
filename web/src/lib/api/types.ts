@@ -266,6 +266,8 @@ export interface TradeDetail extends Trade {
 
 // Summary matches analytics.Summary from api/internal/analytics/analytics.go
 export interface Summary {
+  /** Output currency from the aggregate API; absent on legacy/R responses. */
+  currency?: string;
   total_trades: number;
   wins: number;
   losses: number;

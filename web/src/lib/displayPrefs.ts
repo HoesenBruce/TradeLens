@@ -414,26 +414,21 @@ export function useDisplayTimePrefs(): {
   return { timezone, timeFormat, marketTimezone };
 }
 
-/**
- * Account ledger currency — source of truth for stored amounts / forms.
- * Accepts a single account id or a portfolio scope (array of ids): a
- * multi-account scope resolves to its shared currency (the picker only builds
- * same-currency groups), falling back when the scope is empty or disagrees.
+/** Resolve a same-currency scope; an empty selection means all live accounts.
+ * Unknown or mixed scopes have no source currency. Form defaults belong in forms.
  */
 export function accountBaseCurrency(
-  accounts: readonly Pick<Account, "id" | "base_currency">[],
+  accounts: readonly (Pick<Account, "id" | "base_currency"> & { account_type?: string })[],
   accountId?: string | readonly string[],
-  fallback = "USD",
+  fallback = "",
 ): string {
-  const ids = typeof accountId === "string" ? [accountId] : (accountId ?? []);
-  let base: string | undefined;
-  for (const id of ids) {
-    const currency = accounts.find((a) => a.id === id)?.base_currency;
-    if (!currency) continue;
-    if (base === undefined) base = currency;
-    else if (currency !== base) return fallback;
-  }
-  return base ?? fallback;
+  const ids = (typeof accountId === "string" ? [accountId] : (accountId ?? [])).filter(Boolean);
+  const selected = ids.length
+    ? ids.map((id) => accounts.find((a) => a.id === id))
+    : accounts.filter((a) => a.account_type !== "backtest");
+  if (!selected.length || selected.some((a) => !a?.base_currency)) return fallback;
+  const currencies = new Set(selected.map((a) => a!.base_currency));
+  return currencies.size === 1 ? selected[0]!.base_currency : fallback;
 }
 
 /** Prefer display override; otherwise use account base. */

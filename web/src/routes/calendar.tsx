@@ -97,7 +97,7 @@ function CalendarPage() {
   }, [selectedDay, scopeTradesQ.data, tradeDateBasis, tz]);
 
   const accounts = accountsQ.data ?? [];
-  const currency = accountBaseCurrency(accounts, accountIds);
+  const currency = monthSummaryQ.data?.currency ?? accountBaseCurrency(accounts, accountIds);
 
   function shiftMonth(delta: number) {
     const d = new Date(year, month - 1 + delta, 1);
