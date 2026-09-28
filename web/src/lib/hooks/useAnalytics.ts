@@ -6,7 +6,7 @@ import { accountBaseCurrency, useDisplayCurrency } from "@/lib/displayPrefs";
 import { useAccounts } from "./useAccounts";
 import { fxRateQueryOptions } from "./useMoneyFx";
 
-export function useSummary(filters: Filters, normalizeMixed = true) {
+function useAnalyticsRequest(filters: Filters, normalizeMixed = true, explicitTarget = false) {
   const accountsQ = useAccounts();
   const ids = filters.account_id?.split(",").filter(Boolean);
   const currencies = new Set(
@@ -22,7 +22,17 @@ export function useSummary(filters: Filters, normalizeMixed = true) {
   const request =
     normalizeMixed && currencies.size > 1
       ? { ...filters, target_currency: displayCurrency }
-      : filters;
+      : explicitTarget
+        ? {
+            ...filters,
+            target_currency: currencies.size === 1 ? [...currencies][0] : displayCurrency,
+          }
+        : filters;
+  return { request, accountsQ };
+}
+
+export function useSummary(filters: Filters, normalizeMixed = true) {
+  const { request, accountsQ } = useAnalyticsRequest(filters, normalizeMixed);
   const query = useQuery({
     queryKey: ["analytics", "summary", request],
     queryFn: () => analyticsApi.summary(request),
@@ -43,10 +53,17 @@ export function useRSummary(filters: Filters) {
 }
 
 export function useEquityCurve(filters: Filters) {
-  return useQuery({
-    queryKey: ["analytics", "equity-curve", filters],
-    queryFn: () => analyticsApi.equityCurve(filters),
+  const { request, accountsQ } = useAnalyticsRequest(filters, true, true);
+  const query = useQuery({
+    queryKey: ["analytics", "equity-curve", request],
+    queryFn: () => analyticsApi.equityCurve(request),
+    enabled: accountsQ.isSuccess,
   });
+  return {
+    ...query,
+    isLoading: accountsQ.isPending || query.isLoading,
+    isError: accountsQ.isError || query.isError,
+  };
 }
 
 export function useAccountValue(
@@ -114,10 +131,17 @@ export function useAccountValue(
 }
 
 export function useDailyPnl(filters: Filters) {
-  return useQuery({
-    queryKey: ["analytics", "daily", filters],
-    queryFn: () => analyticsApi.daily(filters),
+  const { request, accountsQ } = useAnalyticsRequest(filters, true, true);
+  const query = useQuery({
+    queryKey: ["analytics", "daily", request],
+    queryFn: () => analyticsApi.daily(request),
+    enabled: accountsQ.isSuccess,
   });
+  return {
+    ...query,
+    isLoading: accountsQ.isPending || query.isLoading,
+    isError: accountsQ.isError || query.isError,
+  };
 }
 
 export function useCompliance(filters: Filters, enabled = true) {

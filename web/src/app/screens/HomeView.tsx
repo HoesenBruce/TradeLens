@@ -83,6 +83,7 @@ export interface HomeViewProps {
   equityLoading: boolean;
   equityError: boolean;
   equityPoints: EquityPoint[];
+  equityCurrency?: string;
   maxDrawdown?: number;
   accountValue: AccountValue | undefined;
   accountValueLoading: boolean;
@@ -109,6 +110,7 @@ export interface HomeViewProps {
   calendarYear: number;
   calendarMonth: number;
   dailyPnl: Record<string, number>;
+  dailyCurrency?: string;
   /** Today's realized net P&L (account base currency) for the daily-loss tracker. */
   todayNetPnl?: number;
   dayRecords?: Record<string, DayRecord>;
@@ -519,6 +521,7 @@ export function HomeView({
   equityLoading,
   equityError,
   equityPoints,
+  equityCurrency,
   maxDrawdown,
   accountValue,
   accountValueLoading,
@@ -544,6 +547,7 @@ export function HomeView({
   calendarYear,
   calendarMonth,
   dailyPnl,
+  dailyCurrency,
   todayNetPnl = 0,
   dayRecords,
   dailyLoading,
@@ -575,6 +579,8 @@ export function HomeView({
 
   const baseCurrency = summary?.currency ?? accountBaseCurrency(accounts, selectedAccountIds);
   const { currency, rate } = useMoneyFx(baseCurrency);
+  const equityFx = useMoneyFx(equityCurrency ?? baseCurrency);
+  const dailyFx = useMoneyFx(dailyCurrency ?? baseCurrency);
   const fxRate = rate ?? 1;
   const compact = useMediaQuery(COMPACT_VIEWPORT);
   const [range, setRange] = useState("30D");
@@ -673,8 +679,8 @@ export function HomeView({
               equityLoading={equityLoading}
               equityError={equityError}
               equityPoints={equityPoints}
-              currency={currency}
-              fxRate={fxRate}
+              currency={equityFx.currency}
+              fxRate={equityFx.rate ?? 1}
               range={range}
             />
           )}
@@ -732,7 +738,11 @@ export function HomeView({
         </div>
       </Card>
 
-      <DailyLossCard todayNetPnl={todayNetPnl} currency={currency} fxRate={fxRate} />
+      <DailyLossCard
+        todayNetPnl={todayNetPnl}
+        currency={dailyFx.currency}
+        fxRate={dailyFx.rate ?? 1}
+      />
 
       {/* Prop status tracks one funded account; hidden under a multi-account scope. */}
       <PropStatusCard accounts={accounts} selectedAccountId={soleAccountId(selectedAccountIds)} />
@@ -786,8 +796,8 @@ export function HomeView({
             month={calendarMonth}
             dailyPnl={dailyPnl}
             dayRecords={dayRecords}
-            currency={currency}
-            fxRate={fxRate}
+            currency={dailyFx.currency}
+            fxRate={dailyFx.rate ?? 1}
             loading={dailyLoading}
             error={dailyError}
             onOpenCalendar={onOpenCalendar}

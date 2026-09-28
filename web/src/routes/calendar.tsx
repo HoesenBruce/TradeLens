@@ -7,7 +7,6 @@ import { accountBaseCurrency, useDisplayPrefs } from "@/lib/displayPrefs";
 import { normalizeFilterDate, useFilterParams, useFilters } from "@/lib/filters";
 import { useAccounts } from "@/lib/hooks/useAccounts";
 import { useDailyPnl, useEquityCurve, useSummary } from "@/lib/hooks/useAnalytics";
-import { useCash } from "@/lib/hooks/useCash";
 import { useTrades } from "@/lib/hooks/useTrades";
 
 export const Route = createFileRoute("/calendar")({
@@ -53,7 +52,6 @@ function CalendarPage() {
   const accountIds = useFilters((s) => s.accountIds);
   const tradeDateBasis = useDisplayPrefs((s) => s.tradeDateBasis);
   const accountsQ = useAccounts();
-  const cashQ = useCash(filters);
   // All-time curve (no from/to): its points carry the running balance, which
   // funds day/week start-balance readings regardless of the visible month.
   const equityQ = useEquityCurve(filters);
@@ -97,7 +95,10 @@ function CalendarPage() {
   }, [selectedDay, scopeTradesQ.data, tradeDateBasis, tz]);
 
   const accounts = accountsQ.data ?? [];
-  const currency = monthSummaryQ.data?.currency ?? accountBaseCurrency(accounts, accountIds);
+  const currency =
+    dailyQ.data?.currency ??
+    monthSummaryQ.data?.currency ??
+    accountBaseCurrency(accounts, accountIds);
 
   function shiftMonth(delta: number) {
     const d = new Date(year, month - 1 + delta, 1);
@@ -118,10 +119,10 @@ function CalendarPage() {
   return (
     <>
       <CalendarView
-        dailyPnl={dailyQ.data ?? {}}
+        dailyPnl={dailyQ.data?.pnl ?? {}}
         dailyLoading={dailyQ.isLoading}
         dailyError={dailyQ.isError}
-        yearDailyPnl={yearDailyQ.data ?? {}}
+        yearDailyPnl={yearDailyQ.data?.pnl ?? {}}
         yearDailyLoading={yearDailyQ.isLoading}
         yearDailyError={yearDailyQ.isError}
         yearTradesByMonth={yearTradesByMonth}
@@ -131,7 +132,7 @@ function CalendarPage() {
         yearTradeList={yearTradesQ.data ?? []}
         monthSummary={monthSummaryQ.data}
         accounts={accounts}
-        cashTx={cashQ.data ?? []}
+        cashTx={equityQ.data?.cash_transactions ?? []}
         equityPoints={equityQ.data?.points ?? []}
         selectedAccountIds={accountIds}
         year={year}
@@ -158,8 +159,8 @@ function CalendarPage() {
         selectedDay={selectedDay}
         onSelectDay={setSelectedDay}
         dayTrades={dayTrades}
-        dayTradesLoading={Boolean(selectedDay) && scopeTradesQ.isLoading}
-        dayTradesError={Boolean(selectedDay) && scopeTradesQ.isError}
+        dayTradesLoading={scopeTradesQ.isLoading}
+        dayTradesError={scopeTradesQ.isError}
         currency={currency}
         onSelectTrade={(t) => setSelectedTradeId(t.id)}
         onOpenDayReview={(day) => void navigate({ to: "/day/$date", params: { date: day } })}
