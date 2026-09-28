@@ -1,6 +1,7 @@
 import type { BarInterval, MarketBar } from "@/lib/api/market";
 import type { Execution } from "@/lib/api/types";
 import { INTERVAL_SEC } from "./barsToCandlestickData";
+import { conversionEvents } from "./conversionEvents";
 import { CHART_TIME_ZONE } from "./chartTime";
 
 /**
@@ -10,7 +11,8 @@ import { CHART_TIME_ZONE } from "./chartTime";
 export type ReplayFillInput = Pick<
   Execution,
   "side" | "quantity" | "price" | "fees" | "commission" | "executed_at" | "multiplier"
->;
+> &
+  Partial<Pick<Execution, "details">>;
 
 export interface ReplayPnl {
   /** Signed open quantity at the cursor (+long / -short). */
@@ -62,10 +64,23 @@ export function computeReplayPnl(
   let fees = 0;
   let lastMult = 1;
 
-  for (const f of passed) {
+  for (const { fill: f, conversion, legs } of conversionEvents(passed)) {
     const mult = f.multiplier > 0 ? f.multiplier : 1;
     lastMult = mult;
-    fees += (f.fees ?? 0) + (f.commission ?? 0);
+    fees += legs.reduce((sum, leg) => sum + (leg.fees ?? 0) + (leg.commission ?? 0), 0);
+    if (conversion) {
+      if (legs.length === 2) continue; // Both legs move custody, retaining position and cost.
+      if (f.side === "sell") {
+        position = Math.max(0, position - f.quantity);
+        if (position === 0) avgCost = 0;
+      } else {
+        const cost = Number(f.details?.transferred_unit_cost);
+        if (!Number.isFinite(cost) || cost <= 0) return null;
+        avgCost = (avgCost * position + cost * f.quantity) / (position + f.quantity);
+        position += f.quantity;
+      }
+      continue;
+    }
     const qty = f.side === "buy" ? f.quantity : -f.quantity;
 
     if (position === 0 || Math.sign(qty) === Math.sign(position)) {
@@ -111,7 +126,8 @@ export function detectFillBarMismatch(
   interval: BarInterval,
 ): boolean {
   const step = INTERVAL_SEC[interval];
-  return fills.some((f) => {
+  return conversionEvents(fills).some(({ fill: f, conversion }) => {
+    if (conversion) return false;
     const t = Math.floor(new Date(f.executed_at).getTime() / 1000);
     const bar = bars.find((b) => t >= b.time && t < b.time + step);
     if (!bar) return false;

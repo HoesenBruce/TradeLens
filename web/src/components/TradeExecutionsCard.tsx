@@ -1,6 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
 import type { ColumnDef } from "@/lib/table";
 import { useMemo } from "react";
+import { isMarginToCash } from "./charts/conversionEvents";
 import { Card } from "./Card";
 import { DataTable } from "./DataTable";
 import { Item, ItemContent, ItemGroup } from "./Item";
@@ -74,12 +75,27 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
         id: "side",
         header: tr({ id: "trades.side", message: "Side" }),
         cell: ({ row }) => (
-          <Pill tone={row.original.fill.side === "buy" ? "pos" : "neg"}>
-            {row.original.fill.trade_type === "genwatashi"
-              ? "現渡"
-              : row.original.fill.side === "buy"
-                ? tr({ id: "trades.buyUpper", message: "BUY" })
-                : tr({ id: "trades.sellUpper", message: "SELL" })}
+          <Pill
+            tone={
+              isMarginToCash(row.original.fill)
+                ? "amber"
+                : row.original.fill.side === "buy"
+                  ? "pos"
+                  : "neg"
+            }
+            title={
+              isMarginToCash(row.original.fill)
+                ? row.original.fill.details?.conversion_id
+                : undefined
+            }
+          >
+            {isMarginToCash(row.original.fill)
+              ? tr({ id: "market.marginToCash", message: "Margin → Cash" })
+              : row.original.fill.trade_type === "genwatashi"
+                ? "現渡"
+                : row.original.fill.side === "buy"
+                  ? tr({ id: "trades.buyUpper", message: "BUY" })
+                  : tr({ id: "trades.sellUpper", message: "SELL" })}
           </Pill>
         ),
         meta: { minWidth: 72 },
@@ -198,12 +214,17 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
                 <ItemContent className="gap-1">
                   <div className="flex items-center justify-between gap-3">
                     <span className="flex items-center gap-2">
-                      <Pill tone={fill.side === "buy" ? "pos" : "neg"}>
-                        {fill.trade_type === "genwatashi"
-                          ? "現渡"
-                          : fill.side === "buy"
-                            ? tr({ id: "trades.buyUpper", message: "BUY" })
-                            : tr({ id: "trades.sellUpper", message: "SELL" })}
+                      <Pill
+                        tone={isMarginToCash(fill) ? "amber" : fill.side === "buy" ? "pos" : "neg"}
+                        title={isMarginToCash(fill) ? fill.details?.conversion_id : undefined}
+                      >
+                        {isMarginToCash(fill)
+                          ? tr({ id: "market.marginToCash", message: "Margin → Cash" })
+                          : fill.trade_type === "genwatashi"
+                            ? "現渡"
+                            : fill.side === "buy"
+                              ? tr({ id: "trades.buyUpper", message: "BUY" })
+                              : tr({ id: "trades.sellUpper", message: "SELL" })}
                       </Pill>
                       <span className="text-[15px] font-semibold tabular-nums text-foreground">
                         {fmtQty(fill.quantity)} @ {fmtMoney(fill.price, currency, locale)}

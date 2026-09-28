@@ -56,3 +56,12 @@ func TestToExecutionDTODerivesSBIMarginTradeType(t *testing.T) {
 	dto := toExecutionDTO(store.Execution{Side: "sell", Details: sql.NullString{String: string(raw), Valid: true}})
 	require.Equal(t, "margin_short_open", dto.TradeType)
 }
+
+func TestToExecutionDTOExposesConversionMetadata(t *testing.T) {
+	dto := toExecutionDTO(store.Execution{Side: "buy", Details: sql.NullString{String: `{"event_type":"position_conversion","conversion_type":"genbiki","conversion_id":"c1","lot":"sbi:cash","transferred_unit_cost":"3100"}`, Valid: true}})
+	require.Equal(t, "position_conversion", dto.Details["event_type"])
+	require.Equal(t, "genbiki", dto.Details["conversion_type"])
+	require.Equal(t, "c1", dto.Details["conversion_id"])
+	require.Equal(t, "3100", dto.Details["transferred_unit_cost"])
+	require.Equal(t, "cash_buy", dto.TradeType)
+}

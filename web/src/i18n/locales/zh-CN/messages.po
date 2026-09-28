@@ -6643,3 +6643,7 @@ msgstr "此补充批次无法单独回滚"
 #. js-lingui-explicit-id
 msgid "accounts.sbiMarginPnLSource"
 msgstr "SBI 信用实现损益"
+
+#. js-lingui-explicit-id
+msgid "market.marginToCash"
+msgstr "信用转现物"

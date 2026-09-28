@@ -20,6 +20,7 @@ import { SegmentedControl } from "@/components/SegmentedControl";
 import { Skeleton } from "@/components/Skeleton";
 import { Button } from "@/components/ui/button";
 import { barsToCandlestickData } from "./barsToCandlestickData";
+import { conversionEvents } from "./conversionEvents";
 import { utcSecToChartTime } from "./chartTime";
 import { BAR_INTERVALS, candleColors, tradeChartTheme } from "./tradeChartTheme";
 
@@ -27,15 +28,27 @@ import { BAR_INTERVALS, candleColors, tradeChartTheme } from "./tradeChartTheme"
 export type ChartFill = Pick<
   Execution,
   "side" | "quantity" | "price" | "executed_at" | "trade_type"
->;
+> &
+  Partial<Pick<Execution, "details">>;
 
-function fillMarkers(fills: ChartFill[], timezone?: string): SeriesMarker<Time>[] {
-  return fills.map((f) => ({
+export function fillMarkers(
+  fills: ChartFill[],
+  conversionLabel: string,
+  locale: string,
+  timezone?: string,
+): SeriesMarker<Time>[] {
+  return conversionEvents(fills).map(({ fill: f, conversion }) => ({
     time: utcSecToChartTime(Math.floor(new Date(f.executed_at).getTime() / 1000), timezone),
-    position: f.side === "buy" ? "belowBar" : "aboveBar",
-    shape: f.side === "buy" ? "arrowUp" : "arrowDown",
-    color: f.side === "buy" ? tradeChartTheme.buyMarker : tradeChartTheme.sellMarker,
-    text: `${f.quantity} @ ${f.price}`,
+    position: conversion ? "aboveBar" : f.side === "buy" ? "belowBar" : "aboveBar",
+    shape: conversion ? "circle" : f.side === "buy" ? "arrowUp" : "arrowDown",
+    color: conversion
+      ? tradeChartTheme.conversionMarker
+      : f.side === "buy"
+        ? tradeChartTheme.buyMarker
+        : tradeChartTheme.sellMarker,
+    text: conversion
+      ? `◆ ${conversionLabel} ${new Intl.NumberFormat(locale).format(f.quantity)}`
+      : `${f.quantity} @ ${f.price}`,
   }));
 }
 
@@ -282,12 +295,17 @@ export function TradeChart({
         title: tr({ id: "market.stop", message: "Stop" }),
       });
     }
-    for (const fill of visibleFills) {
-      series.createPriceLine(executionPriceLine(fill));
+    for (const { fill, conversion } of conversionEvents(visibleFills)) {
+      if (!conversion) series.createPriceLine(executionPriceLine(fill));
     }
 
     if (visibleFills.length > 0) {
-      const markers = fillMarkers(visibleFills, timezone);
+      const markers = fillMarkers(
+        visibleFills,
+        tr({ id: "market.marginToCash", message: "Margin → Cash" }),
+        locale,
+        timezone,
+      );
       if (markersRef.current) {
         markersRef.current.setMarkers(markers);
       } else {

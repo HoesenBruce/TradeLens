@@ -6799,3 +6799,7 @@ msgstr "実際の損益"
 #. js-lingui-explicit-id
 msgid "trades.savedAccountingResult"
 msgstr "保存済みの計算結果です。約定の変更は保存後に反映されます。"
+
+#. js-lingui-explicit-id
+msgid "market.marginToCash"
+msgstr "現引"
