@@ -68,6 +68,7 @@ func TestPortfolioFiltersAggregateSelectedAccounts(t *testing.T) {
 
 	// No filter still means all accounts.
 	sum = summaryFor(t, s, tok, "")
+	require.Equal(t, "USD", sum["currency"])
 	require.EqualValues(t, 3, sum["total_trades"])
 
 	// The trade log honors the same multi-account scope.
@@ -126,5 +127,37 @@ func TestPortfolioCashListHonorsAccountSet(t *testing.T) {
 	for _, r := range rows {
 		require.Contains(t, []string{accA, accB}, r.AccountID)
 		require.NotEqual(t, accC, r.AccountID)
+	}
+}
+
+func TestSummaryScopeCurrency(t *testing.T) {
+	s := testServer(t)
+	tok := registerAndLogin(t, s, "summary-currency@x.com")
+	require.Equal(t, "", summaryFor(t, s, tok, "")["currency"])
+	a := accountWithCurrency(t, s, tok, "JPY A", "JPY")
+	b := accountWithCurrency(t, s, tok, "JPY B", "JPY")
+	backtestAccountID(t, s, tok) // USD backtest is outside the default live scope.
+	seedClosedTrade(t, s, tok, a, "7203", 100)
+	seedClosedTrade(t, s, tok, b, "6758", 50)
+	for _, scope := range []string{"", "?account_id=", "?account_id=,", "?account_id=" + a + "," + b} {
+		sum := summaryFor(t, s, tok, scope)
+		require.Equal(t, "JPY", sum["currency"])
+		require.EqualValues(t, 300, sum["net_pnl"])
+		require.EqualValues(t, 2, sum["total_trades"])
+	}
+	require.Equal(t, "JPY", summaryFor(t, s, tok, "?account_id="+a)["currency"])
+	usd := accountWithCurrency(t, s, tok, "USD", "USD")
+	require.Equal(t, "USD", summaryFor(t, s, tok, "?account_id="+usd)["currency"])
+	for _, scope := range []string{"", "?account_id=", "?account_id=,"} {
+		for _, path := range []string{"summary", "daily", "equity-curve"} {
+			rec := do(s, http.MethodGet, "/api/v1/analytics/"+path+scope, "", tok)
+			require.Equal(t, http.StatusBadRequest, rec.Code, rec.Body.String())
+			require.Contains(t, rec.Body.String(), "mixed_currencies")
+		}
+	}
+	for _, scope := range []string{"missing", a + ",missing"} {
+		rec := do(s, http.MethodGet, "/api/v1/analytics/summary?account_id="+scope, "", tok)
+		require.Equal(t, http.StatusBadRequest, rec.Code)
+		require.Contains(t, rec.Body.String(), "unknown_currency")
 	}
 }

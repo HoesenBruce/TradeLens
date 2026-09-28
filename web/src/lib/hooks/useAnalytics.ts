@@ -53,6 +53,9 @@ export function useAccountValue(
       : accountBaseCurrency(
           selected,
           selected.map((account) => account.id),
+          // Historical series already convert each API source separately;
+          // preserve their existing USD target default for mixed scopes.
+          "USD",
         );
   const currency = useDisplayCurrency(baseCurrency);
   const fx = useQueries({

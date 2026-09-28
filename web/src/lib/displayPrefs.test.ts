@@ -41,8 +41,20 @@ describe("accountBaseCurrency", () => {
     expect(accountBaseCurrency(accounts, "a2")).toBe("USD");
   });
 
-  it("falls back when no account is selected", () => {
-    expect(accountBaseCurrency(accounts, undefined)).toBe("USD");
+  it("resolves all live accounts without inventing USD", () => {
+    const jpy = [
+      { id: "j1", base_currency: "JPY" },
+      { id: "j2", base_currency: "JPY" },
+      { id: "bt", base_currency: "USD", account_type: "backtest" },
+    ];
+    for (const scope of [undefined, "", []]) {
+      expect(accountBaseCurrency(jpy, scope)).toBe("JPY");
+      expect(accountBaseCurrency(accounts, scope)).toBe("");
+      expect(accountBaseCurrency([], scope)).toBe("");
+    }
+    expect(accountBaseCurrency(jpy, ["j1", "missing"])).toBe("");
+    expect(accountBaseCurrency(jpy, "missing")).toBe("");
+    expect(accountBaseCurrency([{ id: "u", base_currency: "USD" }])).toBe("USD");
   });
 });
 

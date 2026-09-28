@@ -570,7 +570,7 @@ export function HomeView({
     { value: "ALL", label: tr({ id: "accounts.allRange", message: "ALL" }) },
   ];
 
-  const baseCurrency = accountBaseCurrency(accounts, selectedAccountIds);
+  const baseCurrency = summary?.currency ?? accountBaseCurrency(accounts, selectedAccountIds);
   const { currency, rate } = useMoneyFx(baseCurrency);
   const fxRate = rate ?? 1;
   const compact = useMediaQuery(COMPACT_VIEWPORT);

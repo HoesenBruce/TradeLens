@@ -161,7 +161,7 @@ function ReportsPage() {
   const annualGoalQ = useAnnualGoal(goalYear);
   const saveAnnualGoalM = useSaveAnnualGoal();
   const clearAnnualGoalM = useClearAnnualGoal();
-  const currency = accountBaseCurrency(accountsQ.data ?? [], accountIds);
+  const currency = summaryQ.data?.currency ?? accountBaseCurrency(accountsQ.data ?? [], accountIds);
   // %-basis is the capital actually put in (net deposits), read off the cash
   // ledger rather than the starting_balance metadata.
   const denominator = useMemo(

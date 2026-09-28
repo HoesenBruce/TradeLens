@@ -711,7 +711,7 @@ export function PlaybookView({
         />
         <SummaryStat
           label="Net"
-          value={fmtSignedMoney(totals.netPnl * fxRate, currency, locale)}
+          value={fmtSignedMoney(totals.netPnl * fxRate, displayCurrency, locale)}
           valueClass={pnlColor(totals.netPnl)}
         />
         {totals.best ? (
@@ -719,7 +719,7 @@ export function PlaybookView({
             label="Top play"
             value={totals.best.setup.name}
             valueClass="tracking-tight"
-            sub={fmtSignedMoney(totals.best.netPnl * fxRate, currency, locale)}
+            sub={fmtSignedMoney(totals.best.netPnl * fxRate, displayCurrency, locale)}
           />
         ) : null}
       </div>
