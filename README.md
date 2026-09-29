@@ -26,39 +26,40 @@ TradeLens retains the original project’s AGPL-3.0 license and attribution; see
 
 <br/>
 
-<img src="docs/screenshots/tradelens-login.png" alt="TradeLens sign-in screen with the lens icon and product name" width="100%" />
+<img src="docs/screenshots/tradelens-login-en.png" alt="TradeLens sign-in screen with the lens icon and product name" width="100%" />
 
 </div>
 
-The screenshot shows the TradeLens Web sign-in screen from a local instance.
+## A look inside
+
+<img src="docs/screenshots/tradelens-reports-en.png" alt="TradeLens English reports with equity curve and daily P&L" width="100%" />
+
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/tradelens-trades-en.png" alt="TradeLens English trade list" /><p align="center"><strong>Trade log</strong></p></td>
+<td width="50%"><img src="docs/screenshots/tradelens-playbook-en.png" alt="TradeLens English playbook with per-setup performance" /><p align="center"><strong>Playbook</strong></p></td>
+</tr>
+</table>
+
+Screenshots show the English TradeLens Web interface on a local instance. Trading results are generated demo data from `scripts/seed-demo.py`, not real trading performance.
 Historical TraderMemos screenshots remain in `docs/screenshots/` for reference.
-
----
-
-## Upstream live demo
-
-Try the original TraderMemos (not a TradeLens deployment) without installing anything: **[tradermemos.netlify.app](https://tradermemos.netlify.app)**
-
-Sign in with `tradermemosdemo` / `demopassword`. The demo account carries a seeded dataset — treat it as a shared sandbox, and don't store anything real in it.
-
-If TraderMemos is part of your daily review, consider [sponsoring its development](https://github.com/sponsors/sinhong2011) — it keeps the project free and self-hosted for everyone.
 
 ---
 
 ## Why TradeLens?
 
-Cloud journals like **TradeZella** and **TraderSync** are polished — but your edge lives in the data.
+TradeLens keeps your trading journal and portfolio analytics on your own infrastructure. You control the database, configure your own OpenAI-compatible API for optional AI features, and can extend the application from source.
 
-TradeLens inherits TraderMemos’s self-hosting approach, following the examples of **[Ghost](https://github.com/TryGhost/Ghost)** for publishing, **[Umami](https://github.com/umami-software/umami)** for analytics, and **[Plane](https://github.com/makeplane/plane)** for project tracking: run it on your infrastructure, own the database, extend it without asking permission. The interaction bar is set by **[Linear](https://linear.app)** and **[Cal.com](https://github.com/calcom/cal.com)** — applied to a trading terminal.
+## What TradeLens adds
 
-| | Cloud journals | TradeLens |
-|---|---|---|
-| **Data ownership** | Vendor-hosted | Your SQLite / Postgres, your VPS |
-| **Cost** | Monthly subscription | Free + your hosting |
-| **AI keys** | Often vendor-managed | Your OpenAI-compatible API |
-| **Customization** | Limited | Fork, patch, deploy |
+- **Portfolio review across currencies:** aggregate account statistics in an explicit target currency, with historical account-value estimates and visible warnings when valuation data is incomplete.
+- **Japanese brokerage workflows:** SBI Securities execution and cash-statement imports, realized P&L report enrichment, and handling for margin-to-cash conversions, delivery settlements, and stock splits.
+- **News and thesis review:** record news with linked assets and predictions, validate predictions against available market data, review outcomes, and export records as Markdown.
+- **Localized Web review:** Simplified Chinese support and broader translation coverage across trading, import, analytics, and settings screens.
 
 ## Features
+
+TradeLens inherits most core capabilities from TraderMemos while adding fork-specific portfolio, broker-import, and market-review features. Inherited upstream features may not all receive the same level of validation in this fork.
 
 | Feature | What it does |
 |---|---|
@@ -67,9 +68,9 @@ TradeLens inherits TraderMemos’s self-hosting approach, following the examples
 | 🗓&nbsp; **P&L calendar** | Daily heatmap with weekly totals and day-detail drill-down |
 | 📈&nbsp; **Reports** | Expectancy, SQN, Kelly %, MAE/MFE, Monte Carlo, execution quality — by setup, hour, and session, saved as view presets |
 | 📖&nbsp; **Playbook** | Strategy library linked to the trades that used each setup, with rule-compliance scoring |
-| 📥&nbsp; **Import** | 9 broker CSV presets, MT4/MT5 statements, IBKR Flex sync — or the [tm-sync](docs/tm-sync.md) watcher that imports statements as they appear |
+| 📥&nbsp; **Import** | Broker CSV presets (including SBI Securities), MT4/MT5 statements, IBKR Flex sync — or the [tm-sync](docs/tm-sync.md) watcher that imports statements as they appear |
 | 🔔&nbsp; **Alerts** | Risk rules, daily loss limits, and prop-drawdown warnings — push and webhook, from your own server |
-| ⏪&nbsp; **Bar replay** | Backtest any symbol bar by bar against a persistent paper account — analyzed by the same reports |
+| ⏪&nbsp; **Bar replay** | Backtest symbols with available market data bar by bar against a persistent paper account — analyzed by the same reports |
 | 🔗&nbsp; **Sharing** | Revocable read-only performance links, share cards, and a Year Wrapped recap |
 | 🧮&nbsp; **Tools** | Position-size / FX / Kelly calculators, advanced chart, economic calendar, cash ledger |
 | 🤖&nbsp; **AI** *(optional)* | Screenshot fill extraction + trade coach via OpenAI-compatible APIs — your keys |
@@ -190,6 +191,14 @@ Upstream user docs (which may differ from this fork) live on the docs site: **[t
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Local dev (`make dev`) |
 | [DESIGN.md](DESIGN.md) | UI system — shadcn/ui + coss ui tokens |
 
+## Upstream live demo
+
+Try the original TraderMemos (not a TradeLens deployment) without installing anything: **[tradermemos.netlify.app](https://tradermemos.netlify.app)**
+
+Sign in with `tradermemosdemo` / `demopassword`. The demo account carries a seeded dataset — treat it as a shared sandbox, and don't store anything real in it.
+
+If TraderMemos is part of your daily review, consider [sponsoring its development](https://github.com/sponsors/sinhong2011) — it keeps the project free and self-hosted for everyone.
+
 ## Upstream star history
 
 <div align="center">
@@ -204,6 +213,6 @@ Upstream user docs (which may differ from this fork) live on the docs site: **[t
 
 ## License
 
-TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos), originally developed by [sinhong2011](https://github.com/sinhong2011) and contributors. The upstream [AGPL-3.0](LICENSE) license is preserved unchanged. See [NOTICE](NOTICE) for attribution.
+TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos), originally developed by [sinhong2011](https://github.com/sinhong2011) and contributors.
 
-Self-host it, modify it, and run it for yourself or your firm freely. If you run a modified version as a network service for others, you have to publish those changes.
+TradeLens is distributed under the GNU AGPL-3.0. See [LICENSE](LICENSE) for the full license terms and [NOTICE](NOTICE) for attribution.
