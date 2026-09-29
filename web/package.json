@@ -111,7 +111,7 @@
   "cloudflare": {
     "bindings": {
       "VITE_API": {
-        "description": "Optional build-time API base URL (e.g. `https://api.example.com/api/v1`). Leave empty and set **Server** on the login screen instead. See [fork-deploy.md](https://github.com/HoesenBruce/TraderMemos-Private/blob/main/docs/fork-deploy.md)."
+        "description": "Optional build-time API base URL (e.g. `https://api.example.com/api/v1`). Leave empty and set **Server** on the login screen instead. See [fork-deploy.md](https://github.com/HoesenBruce/TradeLens/blob/main/docs/fork-deploy.md)."
       }
     }
   }
