@@ -489,7 +489,7 @@ describe("SettingsView", () => {
     expect(screen.getByText("Connected")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "GitHub repository" })).toHaveAttribute(
       "href",
-      "https://github.com/HoesenBruce/TraderMemos-Private",
+      "https://github.com/HoesenBruce/TradeLens",
     );
     expect(screen.getAllByRole("link", { name: /github repository/i })).toHaveLength(2);
     expect(screen.getByText(/TradeLens is based on TraderMemos/)).toBeInTheDocument();
@@ -499,11 +499,11 @@ describe("SettingsView", () => {
     );
     expect(screen.getByRole("link", { name: /GNU AGPL-3.0/ })).toHaveAttribute(
       "href",
-      "https://github.com/HoesenBruce/TraderMemos-Private/blob/main/LICENSE",
+      "https://github.com/HoesenBruce/TradeLens/blob/main/LICENSE",
     );
     expect(screen.getByRole("link", { name: /NOTICE/ })).toHaveAttribute(
       "href",
-      "https://github.com/HoesenBruce/TraderMemos-Private/blob/main/NOTICE",
+      "https://github.com/HoesenBruce/TradeLens/blob/main/NOTICE",
     );
   });
 });

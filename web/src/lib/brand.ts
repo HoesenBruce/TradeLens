@@ -4,6 +4,6 @@ export const BRAND = {
   shortName: "TradeLens",
   tagline: "Record. Review. Improve.",
   description: "Self-hosted trading journal, portfolio analytics, and market review platform.",
-  repositoryUrl: "https://github.com/HoesenBruce/TraderMemos-Private",
+  repositoryUrl: "https://github.com/HoesenBruce/TradeLens",
   upstreamRepositoryUrl: "https://github.com/sinhong2011/TraderMemos",
 } as const;

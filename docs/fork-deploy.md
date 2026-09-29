@@ -3,7 +3,7 @@
 
 # Fork → deploy the web UI on your account
 
-> TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos). The current fork is `HoesenBruce/TraderMemos-Private`; private-repository access is required. Stable deployment identifiers remain compatible; see [branding compatibility](#branding-compatibility).
+> TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos). The current fork is `HoesenBruce/TradeLens`; private-repository access is required. Stable deployment identifiers remain compatible; see [branding compatibility](#branding-compatibility).
 
 Goal: another GitHub user gets **TradeLens web** on **their** Vercel / Cloudflare / Netlify, and/or the **API** on Railway, then connects them.
 
@@ -21,10 +21,10 @@ No manual fork. The platform clones into *your* GitHub and deploys under *your* 
 
 | Platform | Button / link | What you get |
 |----------|---------------|--------------|
-| **Vercel** | [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&root-directory=web&project-name=tradelens&repository-name=tradelens&env=VITE_API&envDescription=Optional%20API%20base%20URL%20(e.g.%20https%3A%2F%2Fapi.example.com%2Fapi%2Fv1).%20Leave%20empty%20to%20set%20Server%20at%20login.&envLink=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private%2Fblob%2Fmain%2Fdocs%2Ffork-deploy.md) | Full monorepo clone; project Root = `web` |
-| **Cloudflare** | [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private%2Ftree%2Fmain%2Fweb) | New repo from `web/` only; Workers static SPA |
-| **Netlify** | [Deploy to Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TraderMemos-Private) | Uses root [`netlify.toml`](../netlify.toml) (`base = web`) |
-| **Railway** | [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&utm_medium=integration&utm_source=button&utm_campaign=tradelens) | Go API via [`railway.toml`](../railway.toml); attach Volume at `/data` |
+| **Vercel** | [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens&root-directory=web&project-name=tradelens&repository-name=tradelens&env=VITE_API&envDescription=Optional%20API%20base%20URL%20(e.g.%20https%3A%2F%2Fapi.example.com%2Fapi%2Fv1).%20Leave%20empty%20to%20set%20Server%20at%20login.&envLink=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens%2Fblob%2Fmain%2Fdocs%2Ffork-deploy.md) | Full monorepo clone; project Root = `web` |
+| **Cloudflare** | [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens%2Ftree%2Fmain%2Fweb) | New repo from `web/` only; Workers static SPA |
+| **Netlify** | [Deploy to Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TradeLens) | Uses root [`netlify.toml`](../netlify.toml) (`base = web`) |
+| **Railway** | [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens&utm_medium=integration&utm_source=button&utm_campaign=tradelens) | Go API via [`railway.toml`](../railway.toml); attach Volume at `/data` |
 
 Optional env **`VITE_API`**: bake in a default API base (`https://api.example.com/api/v1`). Leave blank to type the Server URL at login.
 
@@ -61,7 +61,7 @@ Prefer Option 1 (Workers + [`web/wrangler.toml`](../web/wrangler.toml)) for SPA 
 
 ### Netlify
 
-1. [app.netlify.com/start/deploy](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TraderMemos-Private) — or **Add new site → Import** your fork.
+1. [app.netlify.com/start/deploy](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TradeLens) — or **Add new site → Import** your fork.
 2. Root [`netlify.toml`](../netlify.toml) already sets `base = web`, build, publish, and SPA redirect.  
 3. Optional env: `VITE_API`.  
 4. Allow `https://*.netlify.app` in `TM_CORS_ORIGINS`.
@@ -70,7 +70,7 @@ Prefer Option 1 (Workers + [`web/wrangler.toml`](../web/wrangler.toml)) for SPA 
 
 Railway is the best one-click host for the **Go API** (disk volume for SQLite). Pair it with a CDN web deploy above.
 
-1. [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&utm_medium=integration&utm_source=button&utm_campaign=tradelens) — or New Project → Deploy from GitHub → your fork.
+1. [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens&utm_medium=integration&utm_source=button&utm_campaign=tradelens) — or New Project → Deploy from GitHub → your fork.
 2. Root [`railway.toml`](../railway.toml) builds `api/Dockerfile` and health-checks `/healthz`.  
 3. **Attach a Volume** mounted at `/data` (keeps SQLite + attachments across deploys).  
 4. Variables:
@@ -143,3 +143,35 @@ Historical releases are unchanged. Mobile app identity/display configuration is
 retained pending mobile reactivation; iOS/Android builds are not validated here.
 PWA metadata already uses TradeLens. Account export download names now use
 `tradelens-export`; the backup format and import compatibility are unchanged.
+
+## Repository rename (issue #104)
+
+The private repository is now `HoesenBruce/TradeLens`. Existing clones can keep
+their directory names; update the remote in each development/NAS checkout:
+
+```sh
+git remote set-url origin git@github.com:HoesenBruce/TradeLens.git
+git remote -v
+git fetch origin
+git ls-remote upstream HEAD
+```
+
+Keep `upstream` at `https://github.com/sinhong2011/TraderMemos.git`. The optional
+`fork` remote (`HoesenBruce/TraderMemos`) is a separate repository, not the renamed
+private repository. GitHub resolves the old private repository URL to TradeLens;
+update bookmarks, scripts and deployment provider Git integrations to the new URL
+instead of relying indefinitely on that redirect.
+
+For an existing NAS install, keep its checkout directory, Compose project name,
+`.env`, bind mounts and named volumes. After updating origin, use the existing
+source-build update procedure (`git pull --ff-only`, then `make up-build`). Do not
+clone into a new directory or run `docker compose down -v`. Docker Hub image
+names and namespaces are independent of the GitHub rename; this fork does not
+publish GHCR images. Existing image-based installs keep their configured tags.
+
+Actions use relative reusable workflows and `GITHUB_REPOSITORY` for release
+uploads, so no hard-coded private repository name needs changing. Check external
+PAT repository selections, deployment integrations and Docker environment
+approvers on each existing environment. Live NAS/cloud deployment and a real
+release require access to those environments and are not established by a local
+source check.
