@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Seed a TraderMemos instance with a realistic demo dataset.
+"""Seed a TradeLens instance with a realistic demo dataset.
 
 Talks to the public API only — no database access — so it works against a local
 `make up` stack or a deployed demo instance. Every fill is POSTed to

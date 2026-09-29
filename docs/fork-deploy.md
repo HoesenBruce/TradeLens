@@ -3,7 +3,7 @@
 
 # Fork → deploy the web UI on your account
 
-> TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos). The current fork is `HoesenBruce/TraderMemos-Private`; private-repository access is required. Keep internal deployment identifiers until #103.
+> TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos). The current fork is `HoesenBruce/TraderMemos-Private`; private-repository access is required. Stable deployment identifiers remain compatible; see [branding compatibility](#branding-compatibility).
 
 Goal: another GitHub user gets **TradeLens web** on **their** Vercel / Cloudflare / Netlify, and/or the **API** on Railway, then connects them.
 
@@ -21,10 +21,10 @@ No manual fork. The platform clones into *your* GitHub and deploys under *your* 
 
 | Platform | Button / link | What you get |
 |----------|---------------|--------------|
-| **Vercel** | [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&root-directory=web&project-name=tradermemos&repository-name=tradermemos&env=VITE_API&envDescription=Optional%20API%20base%20URL%20(e.g.%20https%3A%2F%2Fapi.example.com%2Fapi%2Fv1).%20Leave%20empty%20to%20set%20Server%20at%20login.&envLink=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private%2Fblob%2Fmain%2Fdocs%2Ffork-deploy.md) | Full monorepo clone; project Root = `web` |
+| **Vercel** | [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&root-directory=web&project-name=tradelens&repository-name=tradelens&env=VITE_API&envDescription=Optional%20API%20base%20URL%20(e.g.%20https%3A%2F%2Fapi.example.com%2Fapi%2Fv1).%20Leave%20empty%20to%20set%20Server%20at%20login.&envLink=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private%2Fblob%2Fmain%2Fdocs%2Ffork-deploy.md) | Full monorepo clone; project Root = `web` |
 | **Cloudflare** | [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private%2Ftree%2Fmain%2Fweb) | New repo from `web/` only; Workers static SPA |
 | **Netlify** | [Deploy to Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TraderMemos-Private) | Uses root [`netlify.toml`](../netlify.toml) (`base = web`) |
-| **Railway** | [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&utm_medium=integration&utm_source=button&utm_campaign=tradermemos) | Go API via [`railway.toml`](../railway.toml); attach Volume at `/data` |
+| **Railway** | [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&utm_medium=integration&utm_source=button&utm_campaign=tradelens) | Go API via [`railway.toml`](../railway.toml); attach Volume at `/data` |
 
 Optional env **`VITE_API`**: bake in a default API base (`https://api.example.com/api/v1`). Leave blank to type the Server URL at login.
 
@@ -70,7 +70,7 @@ Prefer Option 1 (Workers + [`web/wrangler.toml`](../web/wrangler.toml)) for SPA 
 
 Railway is the best one-click host for the **Go API** (disk volume for SQLite). Pair it with a CDN web deploy above.
 
-1. [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&utm_medium=integration&utm_source=button&utm_campaign=tradermemos) — or New Project → Deploy from GitHub → your fork.
+1. [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&utm_medium=integration&utm_source=button&utm_campaign=tradelens) — or New Project → Deploy from GitHub → your fork.
 2. Root [`railway.toml`](../railway.toml) builds `api/Dockerfile` and health-checks `/healthz`.  
 3. **Attach a Volume** mounted at `/data` (keeps SQLite + attachments across deploys).  
 4. Variables:
@@ -123,3 +123,23 @@ The API is Go + SQLite + uploads. Keep it on Docker/VPS/NAS. The one-click butto
 ## Maintainer tip (upstream)
 
 In GitHub → **Settings → General → Template repository**, enable the template flag so “Use this template” appears next to Fork. One-click Deploy buttons already clone without requiring a template.
+
+## Branding compatibility
+
+Source builds use `tradelens-api` / `tradelens-web` image names and TradeLens OCI
+labels. The publish workflow tags both `tradelens-*` and legacy `tradermemos-*`
+repositories with the same build; existing Compose/NAS installations keep pulling
+the legacy names. Default upstream pulls remain unchanged; use `make up-build`
+for this fork. No volume or Compose project rename is required.
+
+Keep existing Compose service keys, `tm_data`, database filenames, `TM_*` settings,
+CLI paths and cloud deployment identifiers: renaming them can disconnect stored
+data or create a second deployment. Existing cloud projects need no migration;
+new Vercel projects default to `tradelens`.
+
+New Android release artifacts use `TradeLens-<version>.apk` and `TradeLens.apk`;
+`TraderMemos.apk` and its checksum remain aliases for existing download links.
+Historical releases are unchanged. Mobile app identity/display configuration is
+retained pending mobile reactivation; iOS/Android builds are not validated here.
+PWA metadata already uses TradeLens. Account export download names now use
+`tradelens-export`; the backup format and import compatibility are unchanged.
