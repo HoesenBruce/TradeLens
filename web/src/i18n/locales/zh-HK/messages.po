@@ -12281,3 +12281,23 @@ msgstr ""
 #: src/app/screens/YearWrappedView.tsx:191
 msgid "wrapped.yourYearInTrading"
 msgstr ""
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.openSourceAttribution"
+msgstr "開源 / 署名"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.upstreamRepository"
+msgstr "上游儲存庫"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.projectLicense"
+msgstr "專案授權條款"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.attributionNotices"
+msgstr "署名聲明"

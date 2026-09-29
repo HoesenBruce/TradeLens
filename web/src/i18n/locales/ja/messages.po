@@ -12281,3 +12281,23 @@ msgstr "取引データはご自身のサーバーに保存されます。"
 #: src/app/screens/YearWrappedView.tsx:191
 msgid "wrapped.yourYearInTrading"
 msgstr "今年のトレード"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.openSourceAttribution"
+msgstr "オープンソース / 帰属"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.upstreamRepository"
+msgstr "上流リポジトリ"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.projectLicense"
+msgstr "プロジェクトのライセンス"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.attributionNotices"
+msgstr "帰属に関する告知"
