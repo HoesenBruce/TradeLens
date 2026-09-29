@@ -6453,7 +6453,7 @@ msgstr "No sorting applied"
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:63
 msgid "market.sbi1"
-msgstr "Open the SBI Securities execution history page."
+msgstr "In SBI Securities, open {0}, select the import period, and export the CSV."
 
 #. js-lingui-explicit-id
 #: src/app/screens/ReplayView.tsx:330
@@ -6676,7 +6676,7 @@ msgstr "Session"
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:64
 msgid "market.sbi2"
-msgstr "Set the period and export the execution history as CSV."
+msgstr "Open {0}, select the corresponding period, and export the CSV."
 
 #. js-lingui-explicit-id
 #. placeholder {0}: Math.abs(pnl.position)
@@ -6820,7 +6820,7 @@ msgstr "Tools"
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:68
 msgid "market.sbi3"
-msgstr "Upload the original CSV — CP932 encoding and the report header are handled automatically."
+msgstr "Import both exports to reconstruct trades, cash flows, and contributed capital. Upload one original CSV at a time; CP932 encoding and report headers are handled automatically."
 
 #. js-lingui-explicit-id
 #: src/app/screens/ConnectView.tsx:105
@@ -12300,3 +12300,7 @@ msgstr "Project license"
 #. js-lingui-explicit-id
 msgid "settings.attributionNotices"
 msgstr "Attribution notices"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiFiles"
+msgstr "Account reconstruction uses both {0} and {1}. Import each file separately."
