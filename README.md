@@ -14,13 +14,13 @@ TradeLens retains the original project’s AGPL-3.0 license and attribution; see
 
 <br/>
 
-[![Release](https://img.shields.io/github/v/release/HoesenBruce/TraderMemos-Private?color=8b5cf6&label=release)](https://github.com/HoesenBruce/TraderMemos-Private/releases) [![Web CI](https://github.com/HoesenBruce/TraderMemos-Private/actions/workflows/web-ci.yml/badge.svg)](https://github.com/HoesenBruce/TraderMemos-Private/actions/workflows/web-ci.yml) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/HoesenBruce/TradeLens?color=8b5cf6&label=release)](https://github.com/HoesenBruce/TradeLens/releases) [![Web CI](https://github.com/HoesenBruce/TradeLens/actions/workflows/web-ci.yml/badge.svg)](https://github.com/HoesenBruce/TradeLens/actions/workflows/web-ci.yml) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue)](LICENSE)
 
 [![Go](https://img.shields.io/badge/Go-1.26+-00ADD8?logo=go&logoColor=white)](api/go.mod) [![React](https://img.shields.io/badge/React-Vite+-61DAFB?logo=react&logoColor=black)](web/) [![SQLite](https://img.shields.io/badge/SQLite-embedded-003B57?logo=sqlite&logoColor=white)](api/) [![Self-hosted](https://img.shields.io/badge/Self--hosted-ready-8b5cf6)](docs/fork-deploy.md)
 
 <br/>
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&root-directory=web&project-name=tradelens&repository-name=tradelens&env=VITE_API&envDescription=Optional%20API%20base%20URL%20(e.g.%20https%3A%2F%2Fapi.example.com%2Fapi%2Fv1).%20Leave%20empty%20to%20set%20Server%20at%20login.&envLink=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private%2Fblob%2Fmain%2Fdocs%2Ffork-deploy.md) [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private%2Ftree%2Fmain%2Fweb) [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TraderMemos-Private) [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&utm_medium=integration&utm_source=button&utm_campaign=tradelens)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens&root-directory=web&project-name=tradelens&repository-name=tradelens&env=VITE_API&envDescription=Optional%20API%20base%20URL%20(e.g.%20https%3A%2F%2Fapi.example.com%2Fapi%2Fv1).%20Leave%20empty%20to%20set%20Server%20at%20login.&envLink=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens%2Fblob%2Fmain%2Fdocs%2Ffork-deploy.md) [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens%2Ftree%2Fmain%2Fweb) [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TradeLens) [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens&utm_medium=integration&utm_source=button&utm_campaign=tradelens)
 
 <br/>
 
@@ -80,9 +80,9 @@ This fork adds or significantly extends the following areas while retaining the 
 
 The following are tracked separately and are **not delivered features**:
 
-- [IBKR intraday market-data provider](https://github.com/HoesenBruce/TraderMemos-Private/issues/15): IBKR Flex trade imports are available; a dedicated IBKR intraday bars provider is not.
-- [Custom statistics dashboard](https://github.com/HoesenBruce/TraderMemos-Private/issues/10), [additional multi-account review](https://github.com/HoesenBruce/TraderMemos-Private/issues/9), and [actual/virtual account comparison](https://github.com/HoesenBruce/TraderMemos-Private/issues/8): current portfolio aggregation does not imply these additional workflows are complete.
-- [Login-page language selector](https://github.com/HoesenBruce/TraderMemos-Private/issues/195): in-app language settings exist; a login selector remains planned.
+- [IBKR intraday market-data provider](https://github.com/HoesenBruce/TradeLens/issues/15): IBKR Flex trade imports are available; a dedicated IBKR intraday bars provider is not.
+- [Custom statistics dashboard](https://github.com/HoesenBruce/TradeLens/issues/10), [additional multi-account review](https://github.com/HoesenBruce/TradeLens/issues/9), and [actual/virtual account comparison](https://github.com/HoesenBruce/TradeLens/issues/8): current portfolio aggregation does not imply these additional workflows are complete.
+- [Login-page language selector](https://github.com/HoesenBruce/TradeLens/issues/195): in-app language settings exist; a login selector remains planned.
 
 The Generic Bars HTTP integration is implemented; operating a separate intraday collector and verifying its data coverage is a separate deployment task. News research and evaluation are implemented as described above, not a promise of automated news collection or a general event backtesting system.
 
@@ -103,8 +103,8 @@ Mobile is preserved from upstream and **not validated for this fork**. Reactivat
 Web UI and API in one Compose stack, on your own machine:
 
 ```bash
-git clone git@github.com:HoesenBruce/TraderMemos-Private.git
-cd TraderMemos-Private
+git clone git@github.com:HoesenBruce/TradeLens.git
+cd TradeLens
 make up-build    # → http://localhost:3000
 ```
 
@@ -162,8 +162,8 @@ Building it yourself instead: see [mobile/README.md](mobile/README.md).
 ## Development
 
 ```bash
-git clone git@github.com:HoesenBruce/TraderMemos-Private.git
-cd TraderMemos-Private
+git clone git@github.com:HoesenBruce/TradeLens.git
+cd TradeLens
 make setup && make dev   # API :8080 + web :5173
 ```
 

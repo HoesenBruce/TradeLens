@@ -11,8 +11,8 @@
 ### Clone and bootstrap
 
 ```bash
-git clone git@github.com:HoesenBruce/TraderMemos-Private.git
-cd TraderMemos-Private
+git clone git@github.com:HoesenBruce/TradeLens.git
+cd TradeLens
 make setup           # mise + air + vp install; seeds api/.env
 
 # Web validation (from repo root)
