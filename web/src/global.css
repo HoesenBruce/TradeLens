@@ -270,13 +270,21 @@
   }
 }
 
+/* Review points at 0.9s, 1.8s and 2.7s match AuthShell's memo delays. */
 @keyframes auth-lens-focus {
-  from {
-    opacity: 0;
-    transform: translate(-160px, 100px);
+  0% {
+    transform: translate(-540px, 210px);
   }
-  to {
-    opacity: 1;
+  25% {
+    transform: translate(-326px, 188px);
+  }
+  50% {
+    transform: translate(-160px, 118px);
+  }
+  75% {
+    transform: translate(-60px, 36px);
+  }
+  100% {
     transform: translate(0, 0);
   }
 }

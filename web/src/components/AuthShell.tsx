@@ -23,7 +23,7 @@ type Memo = {
   /** Chip anchor: % offsets + translate that hangs it off the marker. */
   chip: string;
   marker: { cx: number; cy: number };
-  delay: string;
+  delay: number;
 };
 
 const MEMOS: Memo[] = [
@@ -39,7 +39,7 @@ const MEMOS: Memo[] = [
     tone: "loss",
     chip: "left-[36.6%] top-[77.5%] -translate-x-1/2 translate-y-3",
     marker: { cx: 214, cy: 248 },
-    delay: "[animation-delay:700ms]",
+    delay: 900,
   },
   {
     meta: "APR 02 · ES",
@@ -50,7 +50,7 @@ const MEMOS: Memo[] = [
     tone: "profit",
     chip: "left-[65.1%] top-[55.6%] -translate-x-1/2 translate-y-[calc(-100%_-_12px)]",
     marker: { cx: 380, cy: 178 },
-    delay: "[animation-delay:950ms]",
+    delay: 1800,
   },
   {
     meta: "MAY 21 · AAPL",
@@ -62,9 +62,9 @@ const MEMOS: Memo[] = [
     },
     r: "+3.2R",
     tone: "profit",
-    chip: "left-[82.2%] top-[30%] translate-x-[-85%] translate-y-[calc(-100%_-_14px)]",
+    chip: "left-[82.2%] top-[30%] -translate-x-full translate-y-[calc(-100%_-_14px)]",
     marker: { cx: 480, cy: 96 },
-    delay: "[animation-delay:1200ms]",
+    delay: 2700,
   },
 ];
 
@@ -111,7 +111,8 @@ function EquityArtwork() {
         {MEMOS.map((m) => (
           <g
             key={m.meta}
-            className={cn("motion-safe:animate-[auth-memo-in_500ms_ease-out_both]", m.delay)}
+            className="motion-safe:animate-[auth-memo-in_500ms_ease-out_both]"
+            style={{ animationDelay: `${m.delay}ms` }}
           >
             <circle
               cx={m.marker.cx}
@@ -128,22 +129,30 @@ function EquityArtwork() {
           </g>
         ))}
         {/* One focus pass, then a static lens: no idle animation. */}
-        <circle cx="510" cy="82" r="42" fill={`url(#${glowId})`} />
-        <g className="stroke-primary motion-safe:animate-[auth-lens-focus_1.6s_ease-out_both]">
-          <circle cx="510" cy="82" r="29" strokeWidth="2.5" />
-          <path d="M531 103 L553 125" strokeWidth="5" strokeLinecap="round" />
-          <circle cx="510" cy="82" r="4" className="fill-primary" stroke="none" />
+        <circle cx="540" cy="60" r="42" fill={`url(#${glowId})`} />
+        <g data-auth-lens className="motion-safe:animate-[auth-lens-focus_3.6s_linear_both]">
+          <circle
+            cx="540"
+            cy="60"
+            r="29"
+            fill="#0B132B"
+            fillOpacity="0.85"
+            stroke="#E5E7EB"
+            strokeWidth="3"
+          />
+          <path d="M561 81 L579 99" stroke="#3B82F6" strokeWidth="5" strokeLinecap="round" />
+          <circle cx="540" cy="60" r="4" fill="#3B82F6" />
         </g>
       </svg>
 
       {MEMOS.map((m) => (
         <div
           key={m.meta}
+          style={{ animationDelay: `${m.delay}ms` }}
           className={cn(
             "absolute w-44 rounded-lg border border-border/60 bg-popover/85 px-2.5 py-1.5 text-left shadow-lg backdrop-blur-sm",
             "motion-safe:animate-[auth-memo-in_500ms_ease-out_both]",
             m.chip,
-            m.delay,
           )}
         >
           <div className="flex items-baseline justify-between gap-2">
