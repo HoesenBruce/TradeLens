@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@/test/render";
+import { screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { ReportsRDistributionChart } from "./ReportsRDistributionChart";
 
@@ -59,7 +60,7 @@ describe("ReportsRDistributionChart", () => {
         error={false}
       />,
     );
-    expect(screen.getByText("-1 to 0")).toBeInTheDocument();
+    expect(screen.getByText("-1 – 0")).toBeInTheDocument();
     // totalTrades (18) is the R-eligible/included count; excluded (9) is
     // disjoint, so the caption's denominator is their sum, not totalTrades.
     expect(screen.getByText(/Showing 18 of 27 closed trades, 9 excluded/)).toBeInTheDocument();

@@ -14,9 +14,9 @@ describe("catalog activation", () => {
       expect(localStorage.getItem("tm-locale")).toBe(locale);
       expect(i18n._("issue85.missing")).toBe("issue85.missing");
     }
-    await loadLocale("zh-CN");
-    expect(i18n._("Tz0i8g")).toBe("Settings");
-    expect(document.documentElement.lang).toBe("zh-CN");
+    await loadLocale("zh-HK");
+    expect(i18n._("auth.showValue")).toBe("Show value");
+    expect(document.documentElement.lang).toBe("zh-HK");
     await loadLocale("constructor");
     expect(i18n.locale).toBe("en");
   });
@@ -48,5 +48,27 @@ it("preserves trade label interpolation in Chinese and Japanese", async () => {
     await loadLocale(locale);
     expect(i18n._("trades.currencyAmount", { currency: "JPY" })).toBe(amount);
     expect(i18n._("trades.dividendAmountField", { suffix: " 2" })).toBe(field);
+  }
+});
+
+it("refreshes secondary labels without changing broker, rule or hotkey identifiers", async () => {
+  const { BROKERS } = await import("@/lib/brokers");
+  const { currencyRegion } = await import("@/lib/currency");
+  const { hotkeyCommandName } = await import("@/lib/keybindings");
+  const { RISK_RULE_DEFS } = await import("@/lib/settingsFormSchema");
+  const broker = BROKERS.find((b) => b.key === "ibkr")!;
+  const ids = { broker: broker.accountBroker, rule: RISK_RULE_DEFS[0].key };
+  for (const [locale, reports, region] of [
+    ["en", "Reports", "Japan"],
+    ["zh-CN", "报表", "日本"],
+    ["ja", "レポート", "日本"],
+    ["ko", "Reports", "Japan"],
+    ["zh-HK", "Reports", "Japan"],
+  ]) {
+    await loadLocale(locale);
+    expect(hotkeyCommandName("nav-stats")).toBe(reports);
+    expect(currencyRegion("JPY")).toBe(region);
+    expect({ broker: broker.accountBroker, rule: RISK_RULE_DEFS[0].key }).toEqual(ids);
+    expect(broker.steps.join(" ")).toContain("Flex Queries");
   }
 });

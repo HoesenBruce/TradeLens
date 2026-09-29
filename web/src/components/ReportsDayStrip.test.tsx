@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@/test/render";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vite-plus/test";
 import type { Trade } from "@/lib/api/types";
@@ -71,7 +72,7 @@ describe("ReportsDayStrip", () => {
     );
     expect(screen.getByText("Trading days")).toBeInTheDocument();
     expect(screen.getByText(/\+\$214\.90/)).toBeInTheDocument();
-    expect(screen.getByText("1 trade")).toBeInTheDocument();
+    expect(screen.getByText("Trades: 1")).toBeInTheDocument();
   });
 
   it("keeps long JPY gains and losses readable with the full value in the title", () => {

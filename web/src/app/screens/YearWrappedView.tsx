@@ -1,3 +1,5 @@
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, PartyPopper, Share2 } from "lucide-react";
 import { type ReactNode, useState } from "react";
@@ -81,6 +83,8 @@ export function YearWrappedView({
   currency,
   fxRate,
 }: YearWrappedViewProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const locale = intlLocale();
   const money = (v: number) => fmtSignedMoney(v * fxRate, currency, locale);
@@ -89,9 +93,11 @@ export function YearWrappedView({
   const header = (
     <div className="mx-auto flex w-full max-w-2xl items-center justify-between">
       <h1 className="text-[20px] font-bold tracking-[-0.02em] text-foreground">
-        {year} Wrapped
+        <Trans id="wrapped.yearTitle">{year} Wrapped</Trans>
         {year === currentYear ? (
-          <span className="ml-2 text-[12px] font-medium text-muted-foreground">so far</span>
+          <span className="ml-2 text-[12px] font-medium text-muted-foreground">
+            {localize({ id: "wrapped.soFar", message: "so far" })}
+          </span>
         ) : null}
       </h1>
       <div className="flex items-center gap-1">
@@ -99,7 +105,7 @@ export function YearWrappedView({
           type="button"
           variant="ghost"
           size="icon-sm"
-          aria-label="Share card"
+          aria-label={localize({ id: "trades.shareCard", message: "Share card" })}
           disabled={loading || error || wrapped.totalTrades === 0}
           onClick={() => setShareOpen(true)}
         >
@@ -109,7 +115,7 @@ export function YearWrappedView({
           type="button"
           variant="ghost"
           size="icon-sm"
-          aria-label="Previous year"
+          aria-label={localize({ id: "wrapped.previousYear", message: "Previous year" })}
           onClick={() => onYearChange(year - 1)}
         >
           <ChevronLeft aria-hidden />
@@ -118,7 +124,7 @@ export function YearWrappedView({
           type="button"
           variant="ghost"
           size="icon-sm"
-          aria-label="Next year"
+          aria-label={localize({ id: "wrapped.nextYear", message: "Next year" })}
           disabled={year >= currentYear}
           onClick={() => onYearChange(year + 1)}
         >
@@ -146,7 +152,9 @@ export function YearWrappedView({
       <Page>
         {header}
         <p className="mx-auto w-full max-w-2xl p-4 text-xs text-destructive">
-          Failed to load trades for {year}.
+          <Trans id="wrapped.failedToLoadTradesForSentence">
+            Failed to load trades for {year}.
+          </Trans>
         </p>
       </Page>
     );
@@ -157,8 +165,14 @@ export function YearWrappedView({
       <Page fill>
         {header}
         <EmptyState
-          title={`No closed trades in ${year}`}
-          hint="Import or log trades, then come back for the recap."
+          title={localize({
+            id: "wrapped.noClosedTradesInValue0",
+            message: `No closed trades in ${{ value0: year }}`,
+          })}
+          hint={localize({
+            id: "wrapped.importOrLogTradesThenComeBackForTheRecap",
+            message: "Import or log trades, then come back for the recap.",
+          })}
           icon={<PartyPopper aria-hidden />}
         />
       </Page>
@@ -173,7 +187,9 @@ export function YearWrappedView({
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
         {/* Hero */}
         <WrappedCard className="items-center py-10 text-center">
-          <Eyebrow>Your year in trading</Eyebrow>
+          <Eyebrow>
+            {localize({ id: "wrapped.yourYearInTrading", message: "Your year in trading" })}
+          </Eyebrow>
           <p
             className={cn(
               "mt-4 text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[52px]",
@@ -185,23 +201,25 @@ export function YearWrappedView({
             {money(wrapped.netPnl)}
           </p>
           <p className="mt-4 text-[13px] text-muted-foreground">
-            {wrapped.totalTrades} trades · {fmtPct(wrapped.winRate, locale)} win rate ·{" "}
-            {wrapped.tradingDays} days in the market
+            <Trans id="wrapped.tradesWinRateDaysInTheMarketSentence">
+              {wrapped.totalTrades} trades · {fmtPct(wrapped.winRate, locale)} win rate ·{" "}
+              {wrapped.tradingDays} days in the market
+            </Trans>
           </p>
         </WrappedCard>
 
         {/* Highs */}
         <WrappedCard>
-          <Eyebrow>The highs</Eyebrow>
+          <Eyebrow>{localize({ id: "wrapped.theHighs", message: "The highs" })}</Eyebrow>
           <div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-5">
             <StatCell
-              label="Best day"
+              label={localize({ id: "accounts.bestDay", message: "Best day" })}
               value={wrapped.bestDay ? money(wrapped.bestDay.pnl) : money(0)}
               hint={wrapped.bestDay?.date}
               tone={wrapped.bestDay && wrapped.bestDay.pnl > 0 ? "pos" : "muted"}
             />
             <StatCell
-              label="Biggest win"
+              label={localize({ id: "wrapped.biggestWin", message: "Biggest win" })}
               value={wrapped.biggestWin ? money(wrapped.biggestWin.pnl) : money(0)}
               hint={
                 wrapped.biggestWin
@@ -211,15 +229,22 @@ export function YearWrappedView({
               tone={wrapped.biggestWin ? "pos" : "muted"}
             />
             <StatCell
-              label="Longest win streak"
+              label={localize({ id: "wrapped.longestWinStreak", message: "Longest win streak" })}
               value={String(wrapped.bestStreak)}
-              hint={wrapped.bestStreak > 0 ? "wins in a row" : undefined}
+              hint={
+                wrapped.bestStreak > 0
+                  ? localize({ id: "wrapped.winsInARow", message: "wins in a row" })
+                  : undefined
+              }
               tone={wrapped.bestStreak > 0 ? "pos" : "muted"}
             />
             <StatCell
-              label="Green days"
+              label={localize({ id: "wrapped.greenDays", message: "Green days" })}
               value={String(wrapped.greenDays)}
-              hint={`of ${wrapped.tradingDays} trading days`}
+              hint={localize({
+                id: "wrapped.ofValue0TradingDays",
+                message: `of ${{ value0: wrapped.tradingDays }} trading days`,
+              })}
               tone={wrapped.greenDays > 0 ? "pos" : "muted"}
             />
           </div>
@@ -227,16 +252,16 @@ export function YearWrappedView({
 
         {/* Lows */}
         <WrappedCard>
-          <Eyebrow>The lessons</Eyebrow>
+          <Eyebrow>{localize({ id: "wrapped.theLessons", message: "The lessons" })}</Eyebrow>
           <div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-5">
             <StatCell
-              label="Worst day"
+              label={localize({ id: "accounts.worstDay", message: "Worst day" })}
               value={wrapped.worstDay ? money(wrapped.worstDay.pnl) : money(0)}
               hint={wrapped.worstDay?.date}
               tone={wrapped.worstDay && wrapped.worstDay.pnl < 0 ? "neg" : "muted"}
             />
             <StatCell
-              label="Biggest loss"
+              label={localize({ id: "wrapped.biggestLoss", message: "Biggest loss" })}
               value={wrapped.biggestLoss ? money(wrapped.biggestLoss.pnl) : money(0)}
               hint={
                 wrapped.biggestLoss
@@ -246,22 +271,35 @@ export function YearWrappedView({
               tone={wrapped.biggestLoss ? "neg" : "muted"}
             />
             <StatCell
-              label="Longest loss streak"
+              label={localize({ id: "wrapped.longestLossStreak", message: "Longest loss streak" })}
               value={String(wrapped.worstStreak)}
-              hint={wrapped.worstStreak > 0 ? "losses in a row" : undefined}
+              hint={
+                wrapped.worstStreak > 0
+                  ? localize({ id: "wrapped.lossesInARow", message: "losses in a row" })
+                  : undefined
+              }
               tone={wrapped.worstStreak > 0 ? "neg" : "muted"}
             />
             <StatCell
-              label="Red days"
+              label={localize({ id: "wrapped.redDays", message: "Red days" })}
               value={String(wrapped.redDays)}
-              hint={`of ${wrapped.tradingDays} trading days`}
+              hint={localize({
+                id: "wrapped.ofValue0TradingDays",
+                message: `of ${{ value0: wrapped.tradingDays }} trading days`,
+              })}
               tone={wrapped.redDays > 0 ? "neg" : "muted"}
             />
             {wrapped.mainMistake ? (
               <StatCell
-                label="Most-tagged mistake"
+                label={localize({
+                  id: "wrapped.mostTaggedMistake",
+                  message: "Most-tagged mistake",
+                })}
                 value={wrapped.mainMistake}
-                hint="tagged on your journals"
+                hint={localize({
+                  id: "wrapped.taggedOnYourJournals",
+                  message: "tagged on your journals",
+                })}
                 tone="neg"
               />
             ) : null}
@@ -270,7 +308,7 @@ export function YearWrappedView({
 
         {/* Rhythm */}
         <WrappedCard>
-          <Eyebrow>Your rhythm</Eyebrow>
+          <Eyebrow>{localize({ id: "wrapped.yourRhythm", message: "Your rhythm" })}</Eyebrow>
           <div className="mt-5 flex h-24 items-end gap-1.5" aria-hidden>
             {wrapped.months.map((m) => (
               <div key={m.month} className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
@@ -289,30 +327,38 @@ export function YearWrappedView({
                     height: `${m.trades === 0 ? 4 : Math.max(8, (m.trades / maxMonthTrades) * 72)}px`,
                   }}
                 />
-                <span className="text-[9px] text-muted-foreground">{m.label}</span>
+                <span className="text-[9px] text-muted-foreground">
+                  {new Intl.DateTimeFormat(locale, { month: "short", timeZone: "UTC" }).format(
+                    new Date(Date.UTC(year, m.month, 1)),
+                  )}
+                </span>
               </div>
             ))}
           </div>
           <p className="mt-4 text-[13px] text-muted-foreground">
             {wrapped.busiestMonth ? (
-              <>
+              <Trans id="wrapped.busiestMonthSummary">
                 Busiest month:{" "}
-                <span className="font-semibold text-foreground">{wrapped.busiestMonth.label}</span>{" "}
+                <span className="font-semibold text-foreground">
+                  {new Intl.DateTimeFormat(locale, { month: "short", timeZone: "UTC" }).format(
+                    new Date(Date.UTC(year, wrapped.busiestMonth.month, 1)),
+                  )}
+                </span>{" "}
                 with {wrapped.busiestMonth.trades} trades (
                 <span className={pnlColor(wrapped.busiestMonth.pnl)}>
                   {money(wrapped.busiestMonth.pnl)}
                 </span>
                 ).
-              </>
+              </Trans>
             ) : (
-              "No monthly activity yet."
+              localize({ id: "wrapped.noMonthlyActivityYet", message: "No monthly activity yet." })
             )}
           </p>
         </WrappedCard>
 
         {/* Habits */}
         <WrappedCard>
-          <Eyebrow>Your habits</Eyebrow>
+          <Eyebrow>{localize({ id: "wrapped.yourHabits", message: "Your habits" })}</Eyebrow>
           <div className="mt-4 space-y-2.5">
             {wrapped.topSymbols.map((s, i) => (
               <p
@@ -324,34 +370,46 @@ export function YearWrappedView({
                   {s.symbol}
                 </span>
                 <span className="shrink-0">
-                  {s.trades} trades ·{" "}
-                  <span className={cn("font-semibold", pnlColor(s.pnl))}>{money(s.pnl)}</span>
+                  <Trans id="wrapped.tradesSentence">
+                    {s.trades} trades ·{" "}
+                    <span className={cn("font-semibold", pnlColor(s.pnl))}>{money(s.pnl)}</span>
+                  </Trans>
                 </span>
               </p>
             ))}
           </div>
           <div className="mt-5 grid grid-cols-2 gap-x-5">
-            <StatCell label="Time in the market" value={fmtDuration(wrapped.totalHoldSecs)} />
-            <StatCell label="Average hold" value={fmtDuration(wrapped.avgHoldSecs)} />
+            <StatCell
+              label={localize({ id: "wrapped.timeInTheMarket", message: "Time in the market" })}
+              value={fmtDuration(wrapped.totalHoldSecs)}
+            />
+            <StatCell
+              label={localize({ id: "accounts.averageHold", message: "Average hold" })}
+              value={fmtDuration(wrapped.avgHoldSecs)}
+            />
           </div>
         </WrappedCard>
 
         {/* Bottom line */}
         <WrappedCard>
-          <Eyebrow>Bottom line</Eyebrow>
+          <Eyebrow>{localize({ id: "wrapped.bottomLine", message: "Bottom line" })}</Eyebrow>
           <div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-5 sm:grid-cols-3">
             <StatCell
-              label="Profit factor"
+              label={localize({ id: "accounts.profitFactor", message: "Profit factor" })}
               value={wrapped.profitFactor > 0 ? wrapped.profitFactor.toFixed(2) : "0.00"}
               tone={wrapped.profitFactor >= 1 ? "pos" : "neg"}
             />
             <StatCell
-              label="Expectancy"
+              label={localize({ id: "reports.expectancy", message: "Expectancy" })}
               value={money(wrapped.expectancy)}
-              hint="per trade"
+              hint={localize({ id: "accounts.perTrade", message: "per trade" })}
               tone={wrapped.expectancy >= 0 ? "pos" : "neg"}
             />
-            <StatCell label="Fees paid" value={money(-wrapped.totalFees)} tone="neg" />
+            <StatCell
+              label={localize({ id: "wrapped.feesPaid", message: "Fees paid" })}
+              value={money(-wrapped.totalFees)}
+              tone="neg"
+            />
           </div>
           <Link
             to="/reports"
@@ -365,7 +423,10 @@ export function YearWrappedView({
             }}
             className="mt-5 inline-flex text-[12px] font-medium text-primary no-underline hover:underline"
           >
-            Dig into the full reports →
+            {localize({
+              id: "wrapped.digIntoTheFullReports",
+              message: "Dig into the full reports →",
+            })}
           </Link>
         </WrappedCard>
       </div>

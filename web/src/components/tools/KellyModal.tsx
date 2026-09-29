@@ -1,3 +1,5 @@
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useEffect, useMemo, useState } from "react";
 import { fieldInputClass } from "@/components/field-styles";
 import { Modal } from "@/components/Modal";
@@ -16,6 +18,8 @@ export function KellyModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const filters = useFilterParams();
   const summary = useSummary(filters).data;
 
@@ -47,17 +51,20 @@ export function KellyModal({
     <Modal
       open={open}
       onOpenChange={onOpenChange}
-      title="Kelly criterion"
+      title={localize({ id: "market.kelly", message: "Kelly criterion" })}
       className="max-w-[420px]"
     >
       <p className="m-0 text-xs leading-relaxed text-muted-foreground">
-        Optimal fraction of capital to risk per trade from win rate and payoff ratio. Prefilled from
-        your recorded stats when available.
+        {localize({
+          id: "calculator.optimalFractionOfCapitalToRiskPerTradeFromWinRateAnd",
+          message:
+            "Optimal fraction of capital to risk per trade from win rate and payoff ratio. Prefilled from your recorded stats when available.",
+        })}
       </p>
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelClass} htmlFor="kelly-winrate">
-            Win rate %
+            {localize({ id: "calculator.winRate", message: "Win rate %" })}
           </label>
           <input
             id="kelly-winrate"
@@ -70,7 +77,7 @@ export function KellyModal({
         </div>
         <div>
           <label className={labelClass} htmlFor="kelly-payoff">
-            Payoff (win ÷ loss)
+            {localize({ id: "calculator.payoffWinLoss", message: "Payoff (win ÷ loss)" })}
           </label>
           <input
             id="kelly-payoff"
@@ -85,26 +92,34 @@ export function KellyModal({
       {kelly != null ? (
         <div className="rounded-panel border border-border bg-muted px-3.5 py-3">
           <p className="m-0 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-            Full Kelly
+            {localize({ id: "calculator.fullKelly", message: "Full Kelly" })}
           </p>
           <p className="mt-1 mb-0 text-2xl tabular-nums text-foreground">
             {(kelly * 100).toFixed(1)}%
           </p>
           {kelly > 0 ? (
             <p className="mt-1 mb-0 text-[11px] tabular-nums text-muted-foreground">
-              Half Kelly {(kelly * 50).toFixed(1)}% · Quarter {(kelly * 25).toFixed(1)}% — most
-              traders size at half Kelly or less.
+              <Trans id="calculator.halfKellyQuarterMostTradersSizeAtHalfSentence">
+                Half Kelly {(kelly * 50).toFixed(1)}% · Quarter {(kelly * 25).toFixed(1)}% — most
+                traders size at half Kelly or less.
+              </Trans>
             </p>
           ) : (
             <p className="mt-1 mb-0 text-[11px] text-muted-foreground">
-              No positive edge at these numbers — Kelly says risk nothing until win rate or payoff
-              improves.
+              {localize({
+                id: "calculator.noPositiveEdgeAtTheseNumbersKellySaysRiskNothingUntilWin",
+                message:
+                  "No positive edge at these numbers — Kelly says risk nothing until win rate or payoff improves.",
+              })}
             </p>
           )}
         </div>
       ) : (
         <p className="m-0 text-xs text-muted-foreground">
-          Enter a win rate (0–100) and a payoff ratio above zero.
+          {localize({
+            id: "calculator.enterAWinRate0100AndAPayoffRatioAboveZero",
+            message: "Enter a win rate (0–100) and a payoff ratio above zero.",
+          })}
         </p>
       )}
     </Modal>

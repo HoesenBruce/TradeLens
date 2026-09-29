@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { ReactNode } from "react";
 import type { EquityCurve, Summary, Trade } from "@/lib/api/types";
 import { pnlColor } from "./theme-tokens";
@@ -100,16 +102,18 @@ function ContextItem({
 
 /** Van Tharp SQN quality bands (computed on per-trade net P&L). */
 function sqnLabel(sqn: number): string {
-  if (sqn >= 5) return "superb";
-  if (sqn >= 3) return "excellent";
-  if (sqn >= 2.5) return "good";
-  if (sqn >= 2) return "average";
-  if (sqn >= 1) return "below average";
-  return "poor";
+  if (sqn >= 5) return localize({ id: "reports.qualitySuperb", message: "superb" });
+  if (sqn >= 3) return localize({ id: "reports.qualityExcellent", message: "excellent" });
+  if (sqn >= 2.5) return localize({ id: "reports.qualityGood", message: "good" });
+  if (sqn >= 2) return localize({ id: "reports.qualityAverage", message: "average" });
+  if (sqn >= 1) return localize({ id: "reports.belowAverage", message: "below average" });
+  return localize({ id: "reports.qualityPoor", message: "poor" });
 }
 
 /** Unified performance overview — hero, edge charts, key stats, context strip. */
 export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryBentoProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const money = useReportsMoney();
   const locale = intlLocale();
@@ -122,7 +126,9 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
 
   // median_*/kelly_pct/sqn fall back gracefully when the API predates them.
   const useMedian = money.avgMode === "median";
-  const statLabel = useMedian ? "Median" : "Avg";
+  const statLabel = useMedian
+    ? localize({ id: "reports.median", message: "Median" })
+    : localize({ id: "reports.avg", message: "Avg" });
   const avgWin = useMedian ? (summary.median_win ?? summary.avg_win) : summary.avg_win;
   const avgLoss = useMedian ? (summary.median_loss ?? summary.avg_loss) : summary.avg_loss;
   const avgTrade = useMedian ? (summary.median_trade ?? summary.avg_trade) : summary.avg_trade;
@@ -143,8 +149,10 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
       <div className="grid gap-3 lg:grid-cols-12">
         <BentoCell className="justify-between lg:col-span-5">
           <div>
-            <Eyebrow>Performance</Eyebrow>
-            <p className="mt-2 text-[12px] text-muted-foreground">Net P&L</p>
+            <Eyebrow>{localize({ id: "accounts.performance", message: "Performance" })}</Eyebrow>
+            <p className="mt-2 text-[12px] text-muted-foreground">
+              {localize({ id: "accounts.netPnl", message: "Net P&L" })}
+            </p>
             <p
               className={cn(
                 "mt-3 text-center text-[36px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[40px]",
@@ -158,18 +166,21 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
           </div>
           <div className="mt-6 space-y-2.5">
             <MetaRow
-              label="Gross"
+              label={localize({ id: "accounts.gross", message: "Gross" })}
               value={money.format(grossVolume)}
               className={pnlColor(grossVolume)}
             />
             <MetaRow
-              label="Fees"
+              label={localize({ id: "imports.fieldFees", message: "Fees" })}
               value={`${money.format(summary.total_fees)} (${feePct.toFixed(1)}%)`}
               className="text-destructive"
             />
-            <MetaRow label="Trades" value={String(summary.total_trades)} />
             <MetaRow
-              label="Expectancy"
+              label={localize({ id: "imports.trades", message: "Trades" })}
+              value={String(summary.total_trades)}
+            />
+            <MetaRow
+              label={localize({ id: "reports.expectancy", message: "Expectancy" })}
               value={money.format(summary.expectancy)}
               className={pnlColor(summary.expectancy)}
             />
@@ -177,10 +188,12 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
         </BentoCell>
 
         <BentoCell className="lg:col-span-7">
-          <Eyebrow>Edge metrics</Eyebrow>
+          <Eyebrow>{localize({ id: "reports.edgeMetrics", message: "Edge metrics" })}</Eyebrow>
           <div className="mt-3 grid flex-1 grid-cols-2 gap-4 sm:gap-5">
             <div className="flex flex-col items-center justify-center">
-              <p className="mb-2 self-start text-[11px] text-muted-foreground">Profit factor</p>
+              <p className="mb-2 self-start text-[11px] text-muted-foreground">
+                {localize({ id: "accounts.profitFactor", message: "Profit factor" })}
+              </p>
               <GaugeArc
                 value={pfFraction}
                 className="w-full max-w-[148px]"
@@ -195,11 +208,15 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
                   {pf > 0 ? pf.toFixed(2) : "—"}
                 </span>
               </GaugeArc>
-              <p className="mt-1 text-[10px] text-muted-foreground">1.0 = break-even</p>
+              <p className="mt-1 text-[10px] text-muted-foreground">
+                {localize({ id: "reports.breakEvenHint", message: "1.0 = break-even" })}
+              </p>
             </div>
 
             <div className="flex flex-col items-center justify-center">
-              <p className="mb-2 self-start text-[11px] text-muted-foreground">Win rate</p>
+              <p className="mb-2 self-start text-[11px] text-muted-foreground">
+                {localize({ id: "accounts.winRate", message: "Win rate" })}
+              </p>
               <DonutRing
                 className="w-full max-w-[120px]"
                 segments={[
@@ -221,7 +238,9 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
             </div>
 
             <div className="flex flex-col justify-center">
-              <p className="text-[11px] text-muted-foreground">Payoff ratio</p>
+              <p className="text-[11px] text-muted-foreground">
+                {localize({ id: "reports.payoffRatio", message: "Payoff ratio" })}
+              </p>
               <p
                 className={cn(
                   "mt-2 text-[28px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[30px]",
@@ -231,20 +250,35 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
                 {payoff === Infinity ? "∞" : payoff > 0 ? `${payoff.toFixed(2)}×` : "—"}
               </p>
               <p className="mt-1 text-[10px] text-muted-foreground">
-                {useMedian ? "median win ÷ median loss" : "avg win ÷ avg loss"}
+                {useMedian
+                  ? localize({
+                      id: "reports.medianWinMedianLoss",
+                      message: "median win ÷ median loss",
+                    })
+                  : localize({ id: "reports.avgWinAvgLoss", message: "avg win ÷ avg loss" })}
               </p>
             </div>
 
             <div className="flex flex-col justify-center">
               <div className="flex items-baseline justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="text-[10px] text-muted-foreground">{statLabel} win</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {localize({
+                      id: "reports.statWin",
+                      message: `${{ statistic: statLabel }} win`,
+                    })}
+                  </p>
                   <p className="mt-0.5 truncate text-[14px] font-semibold tabular-nums text-profit">
                     {money.format(avgWin)}
                   </p>
                 </div>
                 <div className="min-w-0 text-right">
-                  <p className="text-[10px] text-muted-foreground">{statLabel} loss</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {localize({
+                      id: "reports.statLoss",
+                      message: `${{ statistic: statLabel }} loss`,
+                    })}
+                  </p>
                   <p className="mt-0.5 truncate text-[14px] font-semibold tabular-nums text-loss">
                     {money.format(avgLoss)}
                   </p>
@@ -260,13 +294,17 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
               </div>
               <div className="mt-3 grid grid-cols-2 gap-2">
                 <div>
-                  <p className="text-[10px] text-muted-foreground">Largest win</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {localize({ id: "reports.largestWin", message: "Largest win" })}
+                  </p>
                   <p className="mt-0.5 text-[13px] font-semibold tabular-nums text-profit">
                     {money.format(summary.largest_win)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] text-muted-foreground">Largest loss</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {localize({ id: "reports.largestLoss", message: "Largest loss" })}
+                  </p>
                   <p className="mt-0.5 text-[13px] font-semibold tabular-nums text-loss">
                     {money.format(summary.largest_loss)}
                   </p>
@@ -280,7 +318,9 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
       {/* Band 2 — key secondary stats */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <BentoCell>
-          <Eyebrow tone="muted">{statLabel} trade</Eyebrow>
+          <Eyebrow tone="muted">
+            {localize({ id: "reports.statTrade", message: `${{ statistic: statLabel }} trade` })}
+          </Eyebrow>
           <p
             className={cn(
               "mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[26px]",
@@ -292,7 +332,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
         </BentoCell>
 
         <BentoCell>
-          <Eyebrow tone="muted">Kelly %</Eyebrow>
+          <Eyebrow tone="muted">{localize({ id: "reports.kelly", message: "Kelly %" })}</Eyebrow>
           <p
             className={cn(
               "mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[26px]",
@@ -306,9 +346,15 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
           <p className="mt-2 text-center text-[10px] text-muted-foreground">
             {kellyDefined
               ? kelly > 0
-                ? `optimal risk · half Kelly ${(kelly / 2).toFixed(1)}%`
-                : "negative edge — size down"
-              : "needs a win and a loss"}
+                ? localize({
+                    id: "reports.optimalRiskHalfKellyValue0",
+                    message: `optimal risk · half Kelly ${{ value0: (kelly / 2).toFixed(1) }}%`,
+                  })
+                : localize({
+                    id: "reports.negativeEdgeSizeDown",
+                    message: "negative edge — size down",
+                  })
+              : localize({ id: "reports.needsAWinAndALoss", message: "needs a win and a loss" })}
           </p>
         </BentoCell>
 
@@ -326,80 +372,121 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
             {sqnDefined ? sqn.toFixed(2) : "—"}
           </p>
           <p className="mt-2 text-center text-[10px] text-muted-foreground">
-            {sqnDefined ? `system quality: ${sqnLabel(sqn)}` : "needs 2+ varied trades"}
+            {sqnDefined
+              ? localize({
+                  id: "reports.systemQualityValue0",
+                  message: `system quality: ${{ value0: sqnLabel(sqn) }}`,
+                })
+              : localize({ id: "reports.needs2VariedTrades", message: "needs 2+ varied trades" })}
           </p>
         </BentoCell>
 
         <BentoCell>
-          <Eyebrow tone="muted">Max drawdown</Eyebrow>
+          <Eyebrow tone="muted">
+            {localize({ id: "accounts.maxDrawdown", message: "Max drawdown" })}
+          </Eyebrow>
           <p className="mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-loss sm:text-[26px]">
             {maxDrawdown != null && maxDrawdown > 0 ? money.format(-maxDrawdown) : "—"}
           </p>
-          <p className="mt-2 text-center text-[10px] text-muted-foreground">peak pullback</p>
+          <p className="mt-2 text-center text-[10px] text-muted-foreground">
+            {localize({ id: "reports.peakPullback", message: "peak pullback" })}
+          </p>
         </BentoCell>
 
         <BentoCell>
-          <Eyebrow tone="muted">Total fees</Eyebrow>
+          <Eyebrow tone="muted">
+            {localize({ id: "reports.totalFees", message: "Total fees" })}
+          </Eyebrow>
           <p className="mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-destructive sm:text-[26px]">
             {money.format(summary.total_fees)}
           </p>
           <p className="mt-2 text-center text-[10px] text-muted-foreground">
-            {feePct.toFixed(1)}% of gross
+            {feePct.toFixed(1)}
+            {localize({ id: "reports.ofGross", message: "% of gross" })}
           </p>
         </BentoCell>
 
         <BentoCell>
-          <Eyebrow tone="muted">Open / breakeven</Eyebrow>
+          <Eyebrow tone="muted">
+            {localize({ id: "reports.openBreakeven", message: "Open / breakeven" })}
+          </Eyebrow>
           <p className="mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-foreground sm:text-[26px]">
             {openTrades} / {summary.breakeven}
           </p>
-          <p className="mt-2 text-center text-[10px] text-muted-foreground">active · flat exits</p>
+          <p className="mt-2 text-center text-[10px] text-muted-foreground">
+            {localize({ id: "reports.activeFlatExits", message: "active · flat exits" })}
+          </p>
         </BentoCell>
       </div>
 
       {/* Band 3 — session context in one panel */}
       <BentoCell>
-        <Eyebrow>Session context</Eyebrow>
+        <Eyebrow>{localize({ id: "reports.sessionContext", message: "Session context" })}</Eyebrow>
         <div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-5 sm:grid-cols-3 lg:grid-cols-4">
           <ContextItem
-            label="Best streak"
+            label={localize({ id: "accounts.bestStreak", message: "Best streak" })}
             value={insights.bestStreak > 0 ? String(insights.bestStreak) : "—"}
-            hint={insights.bestStreak > 0 ? "wins in a row" : undefined}
+            hint={
+              insights.bestStreak > 0
+                ? localize({ id: "reports.winsInARow", message: "wins in a row" })
+                : undefined
+            }
             tone="pos"
           />
           <ContextItem
-            label="Worst streak"
+            label={localize({ id: "accounts.worstStreak", message: "Worst streak" })}
             value={insights.worstStreak > 0 ? String(insights.worstStreak) : "—"}
-            hint={insights.worstStreak > 0 ? "losses in a row" : undefined}
+            hint={
+              insights.worstStreak > 0
+                ? localize({ id: "reports.lossesInARow", message: "losses in a row" })
+                : undefined
+            }
             tone={insights.worstStreak > 0 ? "neg" : undefined}
           />
           <ContextItem
-            label="Best day"
+            label={localize({ id: "accounts.bestDay", message: "Best day" })}
             value={insights.bestDay ? money.format(insights.bestDay.pnl) : "—"}
             hint={insights.bestDay?.date}
             tone={insights.bestDay && insights.bestDay.pnl > 0 ? "pos" : undefined}
           />
           <ContextItem
-            label="Worst day"
+            label={localize({ id: "accounts.worstDay", message: "Worst day" })}
             value={insights.worstDay ? money.format(insights.worstDay.pnl) : "—"}
             hint={insights.worstDay?.date}
             tone={insights.worstDay && insights.worstDay.pnl < 0 ? "neg" : undefined}
           />
-          <ContextItem label="Winning hold" value={fmtDuration(insights.winHoldSecs)} tone="pos" />
-          <ContextItem label="Losing hold" value={fmtDuration(insights.lossHoldSecs)} tone="neg" />
           <ContextItem
-            label="Avg hold"
+            label={localize({ id: "accounts.winHold", message: "Winning hold" })}
+            value={fmtDuration(insights.winHoldSecs)}
+            tone="pos"
+          />
+          <ContextItem
+            label={localize({ id: "accounts.lossHold", message: "Losing hold" })}
+            value={fmtDuration(insights.lossHoldSecs)}
+            tone="neg"
+          />
+          <ContextItem
+            label={localize({ id: "reports.avgHold", message: "Avg hold" })}
             value={fmtDuration(insights.avgHoldSecs)}
-            hint={`${summary.total_trades} trades`}
+            hint={localize({
+              id: "reports.value0Trades",
+              message: `${{ value0: summary.total_trades }} trades`,
+            })}
           />
           <ContextItem
-            label="Top symbol"
+            label={localize({ id: "accounts.topSymbol", message: "Top symbol" })}
             value={insights.topSymbol ?? "—"}
-            hint={insights.topSymbol ? "most traded" : undefined}
+            hint={
+              insights.topSymbol
+                ? localize({ id: "accounts.mostTraded", message: "most traded" })
+                : undefined
+            }
           />
           <ContextItem
-            label="Main leak"
-            value={insights.mainMistake ?? "None tagged"}
+            label={localize({ id: "accounts.mainLeak", message: "Main leak" })}
+            value={
+              insights.mainMistake ?? localize({ id: "reports.noneTagged", message: "None tagged" })
+            }
             tone={insights.mainMistake ? "neg" : "muted"}
           />
         </div>

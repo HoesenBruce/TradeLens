@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { BehaviorReport } from "@/lib/api/types";
 import { usePrivacyMode } from "@/lib/displayPrefs";
 import { fmtDayShort, fmtPct } from "@/lib/format";
@@ -27,21 +28,28 @@ export function BehaviorOverconfidenceCard({
   error,
   onSelectTradeId,
 }: BehaviorOverconfidenceCardProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const money = useReportsMoney();
   const locale = intlLocale();
 
   if (loading) {
     return (
-      <Card title="Overconfidence">
+      <Card title={localize({ id: "reports.overconfidence", message: "Overconfidence" })}>
         <Skeleton height="160px" />
       </Card>
     );
   }
   if (error) {
     return (
-      <Card title="Overconfidence">
-        <p className="m-0 text-xs text-destructive">Failed to load behavior report.</p>
+      <Card title={localize({ id: "reports.overconfidence", message: "Overconfidence" })}>
+        <p className="m-0 text-xs text-destructive">
+          {localize({
+            id: "reports.failedToLoadBehaviorReport",
+            message: "Failed to load behavior report.",
+          })}
+        </p>
       </Card>
     );
   }
@@ -49,13 +57,23 @@ export function BehaviorOverconfidenceCard({
   const sec = report?.overconfidence;
   if (!sec || sec.events.length === 0) {
     return (
-      <Card title="Overconfidence">
+      <Card title={localize({ id: "reports.overconfidence", message: "Overconfidence" })}>
         <EmptyState
-          title="No post-streak size inflation detected"
+          title={localize({
+            id: "reports.noPostStreakSizeInflationDetected",
+            message: "No post-streak size inflation detected",
+          })}
           hint={
             sec && sec.streaks > 0
-              ? `${sec.streaks} win streak${sec.streaks === 1 ? "" : "s"} of 3+ found — position sizing stayed disciplined afterward.`
-              : "After a streak of 3+ wins, the next trade is flagged when it is sized 1.5× above the streak's median."
+              ? localize({
+                  id: "reports.disciplinedStreaks",
+                  message: `Win streaks of 3+ found: ${{ count: sec.streaks }} — position sizing stayed disciplined afterward.`,
+                })
+              : localize({
+                  id: "reports.afterAStreakOf3WinsTheNextTradeIsFlaggedWhen",
+                  message:
+                    "After a streak of 3+ wins, the next trade is flagged when it is sized 1.5× above the streak's median.",
+                })
           }
         />
       </Card>
@@ -66,38 +84,54 @@ export function BehaviorOverconfidenceCard({
 
   return (
     <Card
-      title="Overconfidence"
-      description="Size inflation after win streaks — the flagged trades are the ones opened bigger right after a hot run."
+      title={localize({ id: "reports.overconfidence", message: "Overconfidence" })}
+      description={localize({
+        id: "reports.sizeInflationAfterWinStreaksTheFlaggedTradesAreTheOnesOpened",
+        message:
+          "Size inflation after win streaks — the flagged trades are the ones opened bigger right after a hot run.",
+      })}
     >
       <div className="flex flex-col gap-5">
         <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
-          <StatCard label="Win streaks (3+)" value={String(sec.streaks)} />
           <StatCard
-            label="Inflated trades"
-            value={String(sec.flagged.trades)}
-            hint={`win rate ${fmtPct(sec.flagged.win_rate, locale)}`}
+            label={localize({ id: "reports.winStreaks3", message: "Win streaks (3+)" })}
+            value={String(sec.streaks)}
           />
           <StatCard
-            label="Inflated P&L"
+            label={localize({ id: "reports.inflatedTrades", message: "Inflated trades" })}
+            value={String(sec.flagged.trades)}
+            hint={localize({
+              id: "reports.winRateValue0",
+              message: `win rate ${{ value0: fmtPct(sec.flagged.win_rate, locale) }}`,
+            })}
+          />
+          <StatCard
+            label={localize({ id: "reports.inflatedPL", message: "Inflated P&L" })}
             value={money.format(sec.flagged.net_pnl)}
             accent={sec.flagged.net_pnl >= 0 ? "pos" : "neg"}
           />
           <StatCard
-            label="Baseline win rate"
+            label={localize({ id: "reports.baselineWinRate", message: "Baseline win rate" })}
             value={fmtPct(sec.baseline.win_rate, locale)}
-            hint={`${sec.baseline.trades} trades`}
+            hint={localize({
+              id: "reports.value0Trades",
+              message: `${{ value0: sec.baseline.trades }} trades`,
+            })}
           />
         </div>
 
         {sec.insufficient_data && (
           <p className="m-0 text-[11px] leading-relaxed text-muted-foreground">
-            Small sample — patterns firm up as more closed trades accumulate.
+            {localize({
+              id: "reports.smallSamplePatternsFirmUpAsMoreClosedTradesAccumulate",
+              message: "Small sample — patterns firm up as more closed trades accumulate.",
+            })}
           </p>
         )}
 
         <div className="flex flex-col gap-1.5">
           <p className="m-0 text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
-            Recent events
+            {localize({ id: "reports.recentEvents", message: "Recent events" })}
           </p>
           <ul className="m-0 flex list-none flex-col gap-1 p-0">
             {recent.map((ev) => (
@@ -112,7 +146,10 @@ export function BehaviorOverconfidenceCard({
                       {fmtDayShort(`${ev.date}T12:00:00Z`, locale)}
                     </span>
                     <span className="font-medium text-foreground">{ev.symbol}</span>
-                    <Pill tone="amber">size ×{(ev.size_ratio ?? 0).toFixed(1)}</Pill>
+                    <Pill tone="amber">
+                      {localize({ id: "reports.size", message: "size ×" })}
+                      {(ev.size_ratio ?? 0).toFixed(1)}
+                    </Pill>
                   </span>
                   <span
                     className={

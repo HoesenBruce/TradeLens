@@ -1,3 +1,6 @@
+import { t as localize } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import QRCode from "qrcode";
 import { useEffect, useState } from "react";
 import { Modal } from "@/components/Modal";
@@ -56,6 +59,8 @@ function ChangePasswordModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const change = useChangePassword();
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
@@ -76,15 +81,30 @@ function ChangePasswordModal({
     // Checked here so the common mistakes never reach the network; the server
     // remains the authority on the current password.
     if (next !== confirm) {
-      setError("The new passwords don't match.");
+      setError(
+        localize({
+          id: "settings.theNewPasswordsDonTMatch",
+          message: "The new passwords don't match.",
+        }),
+      );
       return;
     }
     if (next.length < MIN_LENGTH) {
-      setError(`Use at least ${MIN_LENGTH} characters.`);
+      setError(
+        localize({
+          id: "settings.useAtLeastValue0Characters",
+          message: `Use at least ${{ value0: MIN_LENGTH }} characters.`,
+        }),
+      );
       return;
     }
     if (next === current) {
-      setError("That is already your password.");
+      setError(
+        localize({
+          id: "settings.thatIsAlreadyYourPassword",
+          message: "That is already your password.",
+        }),
+      );
       return;
     }
     change.mutate(
@@ -97,9 +117,16 @@ function ChangePasswordModal({
   }
 
   return (
-    <Modal open={open} onOpenChange={onOpenChange} title="Change password">
+    <Modal
+      open={open}
+      onOpenChange={onOpenChange}
+      title={localize({ id: "settings.changePassword", message: "Change password" })}
+    >
       <form onSubmit={submit} className="flex flex-col gap-3">
-        <ModalField id="current-password" label="Current password">
+        <ModalField
+          id="current-password"
+          label={localize({ id: "settings.currentPassword", message: "Current password" })}
+        >
           <Input
             id="current-password"
             type="password"
@@ -108,7 +135,10 @@ function ChangePasswordModal({
             onChange={(e) => setCurrent(e.target.value)}
           />
         </ModalField>
-        <ModalField id="new-password" label="New password">
+        <ModalField
+          id="new-password"
+          label={localize({ id: "settings.newPassword", message: "New password" })}
+        >
           <Input
             id="new-password"
             type="password"
@@ -117,7 +147,10 @@ function ChangePasswordModal({
             onChange={(e) => setNext(e.target.value)}
           />
         </ModalField>
-        <ModalField id="confirm-password" label="Confirm new password">
+        <ModalField
+          id="confirm-password"
+          label={localize({ id: "settings.confirmNewPassword", message: "Confirm new password" })}
+        >
           <Input
             id="confirm-password"
             type="password"
@@ -128,16 +161,19 @@ function ChangePasswordModal({
         </ModalField>
 
         <p className="text-[12px] text-muted-foreground">
-          Your other devices are signed out — this browser stays signed in.
+          {localize({
+            id: "settings.yourOtherDevicesAreSignedOutThisBrowserStaysSignedIn",
+            message: "Your other devices are signed out — this browser stays signed in.",
+          })}
         </p>
         {error ? <p className="text-[13px] text-destructive">{error}</p> : null}
 
         <div className="flex justify-end gap-2 pt-1">
           <Button type="button" variant="ghost" onClick={close}>
-            Cancel
+            {localize({ id: "trades.cancel", message: "Cancel" })}
           </Button>
           <Button type="submit" disabled={!current || !next || !confirm} loading={change.isPending}>
-            Change password
+            {localize({ id: "settings.changePassword", message: "Change password" })}
           </Button>
         </div>
       </form>
@@ -173,7 +209,7 @@ function TotpQr({ url }: { url: string }) {
   return (
     <img
       src={dataUrl}
-      alt="Authenticator setup QR code"
+      alt={localize({ id: "settings.authenticatorQr", message: "Authenticator setup QR code" })}
       width={200}
       height={200}
       className="rounded-lg bg-white p-2"
@@ -190,6 +226,8 @@ function TwoFactorModal({
   onOpenChange: (open: boolean) => void;
   enabled: boolean;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const start = useStartTotp();
   const confirm = useConfirmTotp();
   const disable = useDisableTotp();
@@ -224,7 +262,11 @@ function TwoFactorModal({
 
   if (enabled) {
     return (
-      <Modal open={open} onOpenChange={onOpenChange} title="Turn off two-factor">
+      <Modal
+        open={open}
+        onOpenChange={onOpenChange}
+        title={localize({ id: "settings.turnOffTwoFactor", message: "Turn off two-factor" })}
+      >
         <form
           className="flex flex-col gap-3"
           onSubmit={(e) => {
@@ -233,7 +275,10 @@ function TwoFactorModal({
             disable.mutate({ password, code }, { onSuccess: close, onError: fail });
           }}
         >
-          <ModalField id="totp-off-password" label="Password">
+          <ModalField
+            id="totp-off-password"
+            label={localize({ id: "settings.password", message: "Password" })}
+          >
             <Input
               id="totp-off-password"
               type="password"
@@ -242,7 +287,10 @@ function TwoFactorModal({
               onChange={(e) => setPassword(e.target.value)}
             />
           </ModalField>
-          <ModalField id="totp-off-code" label="Authenticator code">
+          <ModalField
+            id="totp-off-code"
+            label={localize({ id: "settings.authenticatorCode", message: "Authenticator code" })}
+          >
             <Input
               id="totp-off-code"
               inputMode="numeric"
@@ -253,15 +301,19 @@ function TwoFactorModal({
             />
           </ModalField>
           <p className="text-[12px] text-muted-foreground">
-            Both are required so a borrowed session can&apos;t strip the factor. Lost your
-            authenticator? Run{" "}
-            <code className="rounded bg-muted px-1 py-0.5">tradermemos disable-totp --email …</code>{" "}
-            on the server — there are deliberately no recovery codes to lose.
+            <Trans id="settings.bothAreRequiredSoABorrowedSessionCanSentence">
+              Both are required so a borrowed session can&apos;t strip the factor. Lost your
+              authenticator? Run{" "}
+              <code className="rounded bg-muted px-1 py-0.5">
+                tradermemos disable-totp --email …
+              </code>{" "}
+              on the server — there are deliberately no recovery codes to lose.
+            </Trans>
           </p>
           {error ? <p className="text-[13px] text-destructive">{error}</p> : null}
           <div className="flex justify-end gap-2 pt-1">
             <Button type="button" variant="ghost" onClick={close}>
-              Cancel
+              {localize({ id: "trades.cancel", message: "Cancel" })}
             </Button>
             <Button
               type="submit"
@@ -269,7 +321,7 @@ function TwoFactorModal({
               disabled={!password || !code}
               loading={disable.isPending}
             >
-              Turn off
+              {localize({ id: "settings.turnOff", message: "Turn off" })}
             </Button>
           </div>
         </form>
@@ -278,7 +330,11 @@ function TwoFactorModal({
   }
 
   return (
-    <Modal open={open} onOpenChange={onOpenChange} title="Set up two-factor">
+    <Modal
+      open={open}
+      onOpenChange={onOpenChange}
+      title={localize({ id: "settings.setUpTwoFactor", message: "Set up two-factor" })}
+    >
       <form
         className="flex flex-col gap-4"
         onSubmit={(e) => {
@@ -295,14 +351,23 @@ function TwoFactorModal({
             <Skeleton className="size-[200px] rounded-lg" />
           )}
           <p className="text-center text-[12px] text-muted-foreground">
-            Scan with your authenticator app, or enter this key by hand:
+            {localize({
+              id: "settings.scanWithYourAuthenticatorAppOrEnterThisKeyByHand",
+              message: "Scan with your authenticator app, or enter this key by hand:",
+            })}
           </p>
           <code className="break-all rounded bg-muted px-2 py-1 text-center text-[12px]">
             {setup?.secret ?? "…"}
           </code>
         </div>
 
-        <ModalField id="totp-code" label="Enter a code to confirm">
+        <ModalField
+          id="totp-code"
+          label={localize({
+            id: "settings.enterACodeToConfirm",
+            message: "Enter a code to confirm",
+          })}
+        >
           <Input
             id="totp-code"
             inputMode="numeric"
@@ -316,10 +381,10 @@ function TwoFactorModal({
 
         <div className="flex justify-end gap-2">
           <Button type="button" variant="ghost" onClick={close}>
-            Cancel
+            {localize({ id: "trades.cancel", message: "Cancel" })}
           </Button>
           <Button type="submit" disabled={!setup || code.length < 6} loading={confirm.isPending}>
-            Turn on
+            {localize({ id: "settings.turnOn", message: "Turn on" })}
           </Button>
         </div>
       </form>
@@ -337,6 +402,8 @@ function TwoFactorModal({
  * account actually has.
  */
 export function AccountTab() {
+  const { t: localize } = useSecondaryLingui();
+
   const me = useMe();
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [totpOpen, setTotpOpen] = useState(false);
@@ -345,50 +412,81 @@ export function AccountTab() {
   return (
     <div className="flex flex-col gap-6">
       <SettingsSection
-        title="Signed in as"
-        description="The account this browser is authenticated with."
+        title={localize({ id: "settings.signedInAs", message: "Signed in as" })}
+        description={localize({
+          id: "settings.theAccountThisBrowserIsAuthenticatedWith",
+          message: "The account this browser is authenticated with.",
+        })}
       >
         <SettingsGroup>
-          <SettingsGroupRow label="Username">
+          <SettingsGroupRow label={localize({ id: "settings.username", message: "Username" })}>
             {me.isLoading ? (
               <Skeleton className="h-4 w-40" />
             ) : (
               <span className="text-[13px]">{me.data?.email ?? "—"}</span>
             )}
           </SettingsGroupRow>
-          <SettingsGroupRow label="Role">
+          <SettingsGroupRow label={localize({ id: "settings.role", message: "Role" })}>
             {me.isLoading ? (
               <Skeleton className="h-4 w-16" />
             ) : (
               <Pill tone={me.data?.is_admin ? "accent" : "muted"}>
-                {me.data?.is_admin ? "Owner" : "Member"}
+                {me.data?.is_admin
+                  ? localize({ id: "settings.owner", message: "Owner" })
+                  : localize({ id: "settings.member", message: "Member" })}
               </Pill>
             )}
           </SettingsGroupRow>
-          <SettingsGroupRow label="Member since">
+          <SettingsGroupRow
+            label={localize({ id: "settings.memberSince", message: "Member since" })}
+          >
             {me.isLoading ? (
               <Skeleton className="h-4 w-24" />
             ) : (
               <span className="text-[13px]">{me.data ? fmtDate(me.data.created_at) : "—"}</span>
             )}
           </SettingsGroupRow>
-          <SettingsGroupRow label="Server" last>
+          <SettingsGroupRow label={localize({ id: "settings.server", message: "Server" })} last>
             <span className="text-[13px]">{serverHost(getBaseUrl())}</span>
           </SettingsGroupRow>
         </SettingsGroup>
       </SettingsSection>
 
-      <SettingsSection title="Security" description="How this account is protected.">
+      <SettingsSection
+        title={localize({ id: "settings.security", message: "Security" })}
+        description={localize({
+          id: "settings.howThisAccountIsProtected",
+          message: "How this account is protected.",
+        })}
+      >
         <SettingsGroup>
-          <SettingsGroupRow label="Password" detail="Changing it signs out your other devices">
+          <SettingsGroupRow
+            label={localize({ id: "settings.password", message: "Password" })}
+            detail={localize({
+              id: "settings.changingItSignsOutYourOtherDevices",
+              message: "Changing it signs out your other devices",
+            })}
+          >
             <Button type="button" variant="outline" size="sm" onClick={() => setPasswordOpen(true)}>
-              Change
+              {localize({ id: "settings.change", message: "Change" })}
             </Button>
           </SettingsGroupRow>
           <SettingsGroupRow
-            label="Two-factor authentication"
-            detail="A 6-digit code from an authenticator app, on top of your password"
-            badge={<Pill tone={enabled ? "pos" : "muted"}>{enabled ? "On" : "Off"}</Pill>}
+            label={localize({
+              id: "settings.twoFactorAuthentication",
+              message: "Two-factor authentication",
+            })}
+            detail={localize({
+              id: "settings.a6DigitCodeFromAnAuthenticatorAppOnTopOfYour",
+              message: "A 6-digit code from an authenticator app, on top of your password",
+            })}
+            badge={
+              <Pill tone={enabled ? "pos" : "muted"}>
+                {enabled
+                  ? localize({ id: "settings.on", message: "On" })
+                  : localize({ id: "settings.off", message: "Off" })}
+              </Pill>
+            }
             last
           >
             <Button
@@ -397,7 +495,9 @@ export function AccountTab() {
               size="sm"
               onClick={() => setTotpOpen(true)}
             >
-              {enabled ? "Turn off" : "Set up"}
+              {enabled
+                ? localize({ id: "settings.turnOff", message: "Turn off" })
+                : localize({ id: "settings.setUp", message: "Set up" })}
             </Button>
           </SettingsGroupRow>
         </SettingsGroup>

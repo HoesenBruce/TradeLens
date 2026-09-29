@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { CalendarX2, CloudAlert } from "lucide-react";
 import { useMemo } from "react";
 import { Card } from "@/components/Card";
@@ -21,10 +23,30 @@ const IMPACT_META: Record<
   EconomicImpact,
   { label: string; variant: "destructive-light" | "warning-light" | "secondary" | "info-light" }
 > = {
-  high: { label: "High", variant: "destructive-light" },
-  medium: { label: "Medium", variant: "warning-light" },
-  low: { label: "Low", variant: "secondary" },
-  holiday: { label: "Holiday", variant: "info-light" },
+  high: {
+    get label() {
+      return localize({ id: "calculator.high", message: "High" });
+    },
+    variant: "destructive-light",
+  },
+  medium: {
+    get label() {
+      return localize({ id: "calculator.medium", message: "Medium" });
+    },
+    variant: "warning-light",
+  },
+  low: {
+    get label() {
+      return localize({ id: "calculator.low", message: "Low" });
+    },
+    variant: "secondary",
+  },
+  holiday: {
+    get label() {
+      return localize({ id: "calculator.holiday", message: "Holiday" });
+    },
+    variant: "info-light",
+  },
 };
 
 /** Sunday day-key of the week `offsetWeeks` from today, on the trader's clock. */
@@ -121,6 +143,8 @@ export function EconomicEventsView({
   currencies,
   onCurrenciesChange,
 }: EconomicEventsViewProps) {
+  const { t: localize } = useSecondaryLingui();
+
   const locale = intlLocale();
   const { timeZone } = getDisplayTimeOpts();
   const todayKey = dayKeyInTz(new Date().toISOString(), timeZone);
@@ -168,8 +192,11 @@ export function EconomicEventsView({
       return (
         <EmptyState
           icon={<CloudAlert size={20} strokeWidth={1.75} />}
-          title="Couldn't load events"
-          hint="The calendar feed or API is unreachable. Try again in a minute."
+          title={localize({ id: "calculator.couldnTLoadEvents", message: "Couldn't load events" })}
+          hint={localize({
+            id: "calculator.theCalendarFeedOrApiIsUnreachableTryAgainInAMinute",
+            message: "The calendar feed or API is unreachable. Try again in a minute.",
+          })}
         />
       );
     }
@@ -177,17 +204,34 @@ export function EconomicEventsView({
       return (
         <EmptyState
           icon={<CalendarX2 size={20} strokeWidth={1.75} />}
-          title={filtersActive ? "No events match the filters" : "No events this week"}
+          title={
+            filtersActive
+              ? localize({
+                  id: "calculator.noEventsMatchTheFilters",
+                  message: "No events match the filters",
+                })
+              : localize({ id: "calculator.noEventsThisWeek", message: "No events this week" })
+          }
           hint={
             filtersActive
-              ? "Clear the impact or currency filters to see the full week."
-              : "Older weeks only show events collected while the server was running."
+              ? localize({
+                  id: "calculator.clearTheImpactOrCurrencyFiltersToSeeTheFullWeek",
+                  message: "Clear the impact or currency filters to see the full week.",
+                })
+              : localize({
+                  id: "calculator.olderWeeksOnlyShowEventsCollectedWhileTheServerWasRunning",
+                  message: "Older weeks only show events collected while the server was running.",
+                })
           }
         />
       );
     }
     return (
-      <div className="flex flex-col pb-2" role="table" aria-label="Economic events">
+      <div
+        className="flex flex-col pb-2"
+        role="table"
+        aria-label={localize({ id: "calculator.economicEvents", message: "Economic events" })}
+      >
         <div
           role="row"
           className={cn(
@@ -195,15 +239,21 @@ export function EconomicEventsView({
             "pt-3 pb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground",
           )}
         >
-          <span role="columnheader">Time</span>
-          <span role="columnheader">Cur</span>
-          <span role="columnheader">Impact</span>
-          <span role="columnheader">Event</span>
+          <span role="columnheader">{localize({ id: "trades.time", message: "Time" })}</span>
+          <span role="columnheader">{localize({ id: "calculator.cur", message: "Cur" })}</span>
+          <span role="columnheader">
+            {localize({ id: "calculator.impact", message: "Impact" })}
+          </span>
+          <span role="columnheader">{localize({ id: "calculator.event", message: "Event" })}</span>
           <span role="columnheader" className="hidden text-right sm:block">
-            {hasActual ? "Actual" : "Forecast"}
+            {hasActual
+              ? localize({ id: "calculator.actual", message: "Actual" })
+              : localize({ id: "calculator.forecast", message: "Forecast" })}
           </span>
           <span role="columnheader" className="hidden text-right sm:block">
-            {hasActual ? "Forecast" : "Previous"}
+            {hasActual
+              ? localize({ id: "calculator.forecast", message: "Forecast" })
+              : localize({ id: "calculator.previous", message: "Previous" })}
           </span>
         </div>
         {byDay.map(([dayKey, dayEvents]) => (
@@ -217,7 +267,7 @@ export function EconomicEventsView({
               {formatDayHeader(dayKey, locale)}
               {dayKey === todayKey ? (
                 <Badge variant="primary-light" size="xs" radius="full">
-                  Today
+                  {localize({ id: "market.today", message: "Today" })}
                 </Badge>
               ) : null}
             </h3>
@@ -272,8 +322,8 @@ export function EconomicEventsView({
         <PeriodNav
           onPrev={onPrevWeek}
           onNext={onNextWeek}
-          prevLabel="Previous week"
-          nextLabel="Next week"
+          prevLabel={localize({ id: "events.previousWeek", message: "Previous week" })}
+          nextLabel={localize({ id: "events.nextWeek", message: "Next week" })}
           className="min-w-0"
         >
           {isCurrentWeek ? (
@@ -286,8 +336,11 @@ export function EconomicEventsView({
             <button
               type="button"
               onClick={onThisWeek}
-              title="Back to this week"
-              aria-label={`Back to this week (showing ${label})`}
+              title={localize({ id: "calculator.backToThisWeek", message: "Back to this week" })}
+              aria-label={localize({
+                id: "calculator.backToThisWeekShowingValue0",
+                message: `Back to this week (showing ${{ value0: label }})`,
+              })}
               className={cn(
                 "min-w-0 truncate rounded-md px-1 text-center text-[13px] font-semibold tabular-nums",
                 "tracking-[-0.01em] text-foreground transition-colors hover:text-primary",
@@ -306,12 +359,12 @@ export function EconomicEventsView({
             onClick={onThisWeek}
             className="hidden h-8 shrink-0 px-2 text-[12px] sm:inline-flex sm:h-7 sm:px-2.5"
           >
-            This week
+            {localize({ id: "calculator.thisWeek", message: "This week" })}
           </Button>
         ) : null}
         <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
           <FacetedFilter
-            title="Impact"
+            title={localize({ id: "calculator.impact", message: "Impact" })}
             multiple
             options={IMPACT_VALUES.map((v) => ({ value: v, label: IMPACT_META[v].label }))}
             value={impact}
@@ -321,7 +374,7 @@ export function EconomicEventsView({
             className="px-2 sm:px-3"
           />
           <FacetedFilter
-            title="Currency"
+            title={localize({ id: "auth.currency", message: "Currency" })}
             multiple
             options={currencyOptions}
             value={currencies}

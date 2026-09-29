@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { ArrowLeftRight } from "lucide-react";
 import { useState } from "react";
 import { fieldInputClass } from "@/components/field-styles";
@@ -50,6 +51,8 @@ export function FxConverterModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const [amount, setAmount] = useState("100");
   const [from, setFrom] = useState("USD");
   const [to, setTo] = useState("EUR");
@@ -71,16 +74,19 @@ export function FxConverterModal({
     <Modal
       open={open}
       onOpenChange={onOpenChange}
-      title="Currency converter"
+      title={localize({ id: "market.fx", message: "Currency converter" })}
       className="max-w-[420px]"
     >
       <p className="m-0 text-xs leading-relaxed text-muted-foreground">
-        Latest rates from the market data service — the same source the app uses for display
-        currency conversion.
+        {localize({
+          id: "calculator.latestRatesFromTheMarketDataServiceTheSameSourceTheApp",
+          message:
+            "Latest rates from the market data service — the same source the app uses for display currency conversion.",
+        })}
       </p>
       <div>
         <label className={labelClass} htmlFor="fx-amount">
-          Amount
+          {localize({ id: "accounts.amount", message: "Amount" })}
         </label>
         <input
           id="fx-amount"
@@ -92,12 +98,17 @@ export function FxConverterModal({
         />
       </div>
       <div className="flex items-end gap-2">
-        <CurrencySelect id="fx-from" label="From" value={from} onChange={setFrom} />
+        <CurrencySelect
+          id="fx-from"
+          label={localize({ id: "calculator.currencyFrom", message: "From" })}
+          value={from}
+          onChange={setFrom}
+        />
         <Button
           type="button"
           variant="ghost"
           size="icon"
-          aria-label="Swap currencies"
+          aria-label={localize({ id: "calculator.swapCurrencies", message: "Swap currencies" })}
           onClick={() => {
             setFrom(to);
             setTo(from);
@@ -105,7 +116,12 @@ export function FxConverterModal({
         >
           <ArrowLeftRight size={14} strokeWidth={1.5} aria-hidden />
         </Button>
-        <CurrencySelect id="fx-to" label="To" value={to} onChange={setTo} />
+        <CurrencySelect
+          id="fx-to"
+          label={localize({ id: "calculator.currencyTo", message: "To" })}
+          value={to}
+          onChange={setTo}
+        />
       </div>
       <div className="rounded-lg bg-muted/40 px-4 py-3">
         {converted != null ? (
@@ -121,10 +137,16 @@ export function FxConverterModal({
         ) : (
           <p className="m-0 text-xs text-muted-foreground">
             {!valid
-              ? "Enter an amount to convert."
+              ? localize({
+                  id: "calculator.enterAnAmountToConvert",
+                  message: "Enter an amount to convert.",
+                })
               : fxQ.isLoading
-                ? "Fetching rate…"
-                : "Rate unavailable right now."}
+                ? localize({ id: "calculator.fetchingRate", message: "Fetching rate…" })
+                : localize({
+                    id: "calculator.rateUnavailableRightNow",
+                    message: "Rate unavailable right now.",
+                  })}
           </p>
         )}
       </div>

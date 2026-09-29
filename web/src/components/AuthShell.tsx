@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { type ReactNode, useId } from "react";
 import { AppLogo } from "@/components/AppLogo";
 import { BRAND } from "@/lib/brand";
@@ -27,7 +29,12 @@ type Memo = {
 const MEMOS: Memo[] = [
   {
     meta: "MAR 14 · NVDA",
-    note: "Chased the open. Cut it fast.",
+    get note() {
+      return localize({
+        id: "auth.chasedTheOpenCutItFast",
+        message: "Chased the open. Cut it fast.",
+      });
+    },
     r: "−1.4R",
     tone: "loss",
     chip: "left-[36.6%] top-[77.5%] -translate-x-1/2 translate-y-3",
@@ -36,7 +43,9 @@ const MEMOS: Memo[] = [
   },
   {
     meta: "APR 02 · ES",
-    note: "Waited for the retest.",
+    get note() {
+      return localize({ id: "auth.waitedForTheRetest", message: "Waited for the retest." });
+    },
     r: "+2.1R",
     tone: "profit",
     chip: "left-[65.1%] top-[55.6%] -translate-x-1/2 translate-y-[calc(-100%_-_12px)]",
@@ -45,7 +54,12 @@ const MEMOS: Memo[] = [
   },
   {
     meta: "MAY 21 · AAPL",
-    note: "A+ setup. Followed the plan.",
+    get note() {
+      return localize({
+        id: "auth.aSetupFollowedThePlan",
+        message: "A+ setup. Followed the plan.",
+      });
+    },
     r: "+3.2R",
     tone: "profit",
     chip: "left-[82.2%] top-[30%] translate-x-[-85%] translate-y-[calc(-100%_-_14px)]",
@@ -159,6 +173,8 @@ export function AuthShell({
   children: ReactNode;
   formClassName?: string;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   return (
     <div className="min-h-svh w-full bg-background lg:grid lg:grid-cols-[1.1fr_minmax(0,1fr)]">
       <div className="relative hidden flex-col justify-between gap-10 overflow-hidden bg-sidebar p-10 lg:flex xl:p-14">
@@ -180,18 +196,27 @@ export function AuthShell({
         <div className="relative flex flex-col gap-10">
           <div className="flex max-w-[26rem] flex-col gap-3">
             <h2 className="text-balance text-4xl font-semibold tracking-tight text-foreground xl:text-[2.75rem] xl:leading-[1.1]">
-              Every trade, written down.
+              {localize({
+                id: "auth.everyTradeWrittenDown",
+                message: "Every trade, written down.",
+              })}
             </h2>
             <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
-              Your private trading journal — dashboard, P&L calendar, playbook, and reports, on your
-              own server.
+              {localize({
+                id: "auth.yourPrivateTradingJournalDashboardPLCalendarPlaybookAndReportsOn",
+                message:
+                  "Your private trading journal — dashboard, P&L calendar, playbook, and reports, on your own server.",
+              })}
             </p>
           </div>
           <EquityArtwork />
         </div>
 
         <p className="relative text-xs text-muted-foreground">
-          Self-hosted. Your trades never leave your server.
+          {localize({
+            id: "auth.selfHostedYourTradesNeverLeaveYourServer",
+            message: "Self-hosted. Your trades never leave your server.",
+          })}
         </p>
       </div>
 

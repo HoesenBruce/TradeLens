@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import {
   CartesianGrid,
@@ -44,6 +45,8 @@ export function ReportsDurationScatter({
   error,
   onSelectTradeId,
 }: ReportsDurationScatterProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const money = useReportsMoney();
   const [range, setRange] = useState<ChartRange>("all");
@@ -59,9 +62,17 @@ export function ReportsDurationScatter({
     loading ? (
       <Skeleton height="240px" />
     ) : error ? (
-      <p className="text-xs text-destructive">Failed to load trades.</p>
+      <p className="text-xs text-destructive">
+        {localize({ id: "accounts.tradesError", message: "Failed to load trades." })}
+      </p>
     ) : points.length === 0 ? (
-      <EmptyState title="No data" hint="Close trades with hold times to see the scatter." />
+      <EmptyState
+        title={localize({ id: "reports.noData", message: "No data" })}
+        hint={localize({
+          id: "reports.closeTradesWithHoldTimesToSeeTheScatter",
+          message: "Close trades with hold times to see the scatter.",
+        })}
+      />
     ) : (
       <>
         <ChartFrame className="border-0 rounded-none">
@@ -95,7 +106,11 @@ export function ReportsDurationScatter({
                 // Scatter tooltips fire per-axis; label the pair off the point payload.
                 formatter={(value, name, item) => {
                   const p = item?.payload as (typeof data)[number] | undefined;
-                  if (name === "secs") return [fmtDuration(Number(value ?? 0)), "Hold time"];
+                  if (name === "secs")
+                    return [
+                      fmtDuration(Number(value ?? 0)),
+                      localize({ id: "reports.holdTime", message: "Hold time" }),
+                    ];
                   return [
                     pnlTooltipValue(Number(value ?? 0), money.formatAxis(Number(value ?? 0))),
                     p?.symbol ?? "P&L",
@@ -107,7 +122,10 @@ export function ReportsDurationScatter({
                 stroke={chartTheme.axisColor}
                 strokeDasharray="4 3"
                 label={{
-                  value: `median ${fmtDuration(median)}`,
+                  value: localize({
+                    id: "reports.medianValue0",
+                    message: `median ${{ value0: fmtDuration(median) }}`,
+                  }),
                   position: "top",
                   fontSize: 10,
                   fill: chartTheme.axisColor,
@@ -131,13 +149,20 @@ export function ReportsDurationScatter({
           </ResponsiveContainer>
         </ChartFrame>
         <p className="mt-2 text-[10px] text-muted-foreground">
-          Hold time on a log scale · dashed line marks the median hold
+          {localize({
+            id: "reports.holdTimeOnALogScaleDashedLineMarksTheMedianHold",
+            message: "Hold time on a log scale · dashed line marks the median hold",
+          })}
         </p>
       </>
     );
 
   return (
-    <ChartCard title="Duration vs P&L" range={range} onRangeChange={setRange}>
+    <ChartCard
+      title={localize({ id: "reports.durationVsPL", message: "Duration vs P&L" })}
+      range={range}
+      onRangeChange={setRange}
+    >
       {body}
     </ChartCard>
   );

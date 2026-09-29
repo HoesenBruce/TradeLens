@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { ColumnDef } from "@/lib/table";
 import { Card } from "./Card";
 import { DataTable } from "./DataTable";
@@ -37,7 +39,7 @@ function buildSessionColumns(
   return [
     {
       accessorKey: "key",
-      header: "Session",
+      header: localize({ id: "reports.session", message: "Session" }),
       cell: (info) => (
         <span className="font-medium text-foreground">{info.getValue<string>()}</span>
       ),
@@ -45,7 +47,7 @@ function buildSessionColumns(
     {
       id: "total_trades",
       accessorFn: (row) => row.summary.total_trades,
-      header: "Trades",
+      header: localize({ id: "imports.trades", message: "Trades" }),
       cell: (info) => (
         <span className="tabular-nums text-muted-foreground">{info.getValue<number>()}</span>
       ),
@@ -53,7 +55,7 @@ function buildSessionColumns(
     {
       id: "win_rate",
       accessorFn: (row) => row.summary.win_rate,
-      header: "Win %",
+      header: localize({ id: "reports.win", message: "Win %" }),
       cell: (info) => (
         <span className="tabular-nums text-foreground">
           {fmtPct(info.getValue<number>(), locale)}
@@ -63,13 +65,13 @@ function buildSessionColumns(
     {
       id: "net_pnl",
       accessorFn: (row) => row.summary.net_pnl,
-      header: "Net P&L",
+      header: localize({ id: "accounts.netPnl", message: "Net P&L" }),
       cell: (info) => <SessionPnlCell summary={info.row.original.summary} />,
     },
     {
       id: "avg_trade",
       accessorFn: (row) => row.summary.avg_trade,
-      header: "Avg/Trade",
+      header: localize({ id: "reports.avgTrade", message: "Avg/Trade" }),
       cell: (info) => {
         const v = info.getValue<number>();
         return (
@@ -82,7 +84,7 @@ function buildSessionColumns(
     {
       id: "profit_factor",
       accessorFn: (row) => row.summary.profit_factor,
-      header: "PF",
+      header: localize({ id: "accounts.pf", message: "PF" }),
       cell: (info) => {
         const v = info.getValue<number>();
         return <span className="tabular-nums text-foreground">{v > 0 ? v.toFixed(2) : "—"}</span>;
@@ -91,7 +93,7 @@ function buildSessionColumns(
     {
       id: "expectancy",
       accessorFn: (row) => row.summary.expectancy,
-      header: "Expectancy",
+      header: localize({ id: "reports.expectancy", message: "Expectancy" }),
       cell: (info) => {
         const v = info.getValue<number>();
         return (
@@ -111,22 +113,35 @@ export function ReportsSessionTable({
   currency,
   fxRate = 1,
 }: ReportsSessionTableProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const locale = intlLocale();
 
   return (
-    <Card title="Session Performance" flush>
+    <Card
+      title={localize({ id: "reports.sessionPerformance", message: "Session Performance" })}
+      flush
+    >
       {loading ? (
         <div className="p-4">
           <Skeleton height="160px" />
         </div>
       ) : error ? (
-        <p className="p-4 text-xs text-destructive">Failed to load session performance.</p>
+        <p className="p-4 text-xs text-destructive">
+          {localize({
+            id: "reports.failedToLoadSessionPerformance",
+            message: "Failed to load session performance.",
+          })}
+        </p>
       ) : breakdown.length === 0 ? (
         <div className="p-4">
           <EmptyState
-            title="No data"
-            hint="Add trades or adjust filters to see session performance."
+            title={localize({ id: "reports.noData", message: "No data" })}
+            hint={localize({
+              id: "reports.addTradesOrAdjustFiltersToSeeSessionPerformance",
+              message: "Add trades or adjust filters to see session performance.",
+            })}
           />
         </div>
       ) : (

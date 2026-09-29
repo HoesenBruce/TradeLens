@@ -188,3 +188,20 @@ describe("buildWrappedShareCard", () => {
     expect(c.chips[1]).toEqual({ text: "RED YEAR", tone: "loss" });
   });
 });
+
+it("keeps semantic tones and avoids a duplicated return stat after locale switches", async () => {
+  const { loadLocale } = await import("@/i18n");
+  try {
+    for (const locale of ["zh-CN", "ja"]) {
+      await loadLocale(locale);
+      const win = card(trade({ initial_risk: null, r_multiple: null }));
+      expect(win.tone).toBe("profit");
+      expect(win.stats.some((stat) => stat.label === win.hero.label)).toBe(false);
+      const loss = card(trade({ net_pnl: -50 }));
+      expect(loss.tone).toBe("loss");
+      expect(loss.chips.some((chip) => chip.tone === "loss")).toBe(true);
+    }
+  } finally {
+    await loadLocale("en");
+  }
+});

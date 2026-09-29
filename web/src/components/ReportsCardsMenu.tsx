@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Check, ChevronDown, ChevronUp, LayoutGrid } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
@@ -12,6 +13,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
  * list itself: hidden cards drop to the bottom and re-append on show.
  */
 export function ReportsCardsMenu({ tab }: { tab: ReportsTab }) {
+  const { t: localize } = useSecondaryLingui();
+
   const [open, setOpen] = useState(false);
   const cards = useReportsView((s) => s.cards);
   const setTabCards = useReportsView((s) => s.setTabCards);
@@ -75,7 +78,10 @@ export function ReportsCardsMenu({ tab }: { tab: ReportsTab }) {
         <div className="flex shrink-0 items-center">
           <button
             type="button"
-            aria-label={`Move ${labels.get(id)} up`}
+            aria-label={localize({
+              id: "reports.moveValue0Up",
+              message: `Move ${{ value0: labels.get(id) }} up`,
+            })}
             onClick={() => move(id, -1)}
             disabled={index === 0}
             className="flex size-7 cursor-pointer items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-default disabled:opacity-40"
@@ -84,7 +90,10 @@ export function ReportsCardsMenu({ tab }: { tab: ReportsTab }) {
           </button>
           <button
             type="button"
-            aria-label={`Move ${labels.get(id)} down`}
+            aria-label={localize({
+              id: "reports.moveValue0Down",
+              message: `Move ${{ value0: labels.get(id) }} down`,
+            })}
             onClick={() => move(id, 1)}
             disabled={index === visible.length - 1}
             className="flex size-7 cursor-pointer items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-default disabled:opacity-40"
@@ -99,15 +108,15 @@ export function ReportsCardsMenu({ tab }: { tab: ReportsTab }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
-        aria-label="Customize cards"
+        aria-label={localize({ id: "reports.customizeCards", message: "Customize cards" })}
         className={cn(filterChipClass, "cursor-pointer", (open || customized) && "bg-accent")}
       >
         <LayoutGrid size={14} strokeWidth={1.75} className="shrink-0 text-muted-foreground" />
-        Cards
+        {localize({ id: "reports.cards", message: "Cards" })}
       </PopoverTrigger>
       <PopoverContent align="end" className="w-64 p-1.5">
         <p className="px-2 pt-1 pb-1.5 text-[11px] font-medium text-muted-foreground">
-          Cards on this tab
+          {localize({ id: "reports.cardsOnThisTab", message: "Cards on this tab" })}
         </p>
         <div className="flex flex-col">
           {visible.map((id, i) => row(id, true, i))}
@@ -122,7 +131,7 @@ export function ReportsCardsMenu({ tab }: { tab: ReportsTab }) {
               className="w-full justify-start text-muted-foreground"
               onClick={() => resetTabCards(tab)}
             >
-              Reset to default
+              {localize({ id: "reports.resetToDefault", message: "Reset to default" })}
             </Button>
           </div>
         )}

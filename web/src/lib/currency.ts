@@ -1,3 +1,4 @@
+import { t as tr } from "@lingui/core/macro";
 import type { LucideIcon } from "lucide-react";
 import { DollarSign, Euro, JapaneseYen, PoundSterling } from "lucide-react";
 import type { DisplayCurrencyCode } from "./displayPrefs";
@@ -35,15 +36,33 @@ const CURRENCY_SYMBOLS: Record<DisplayCurrencyCode, string> = {
 
 /** Issuing region — the plain-language half of the code (`HKD` → Hong Kong). */
 const CURRENCY_REGIONS: Record<DisplayCurrencyCode, string> = {
-  USD: "United States",
-  HKD: "Hong Kong",
-  TWD: "Taiwan",
-  CNY: "China",
-  EUR: "Euro area",
-  GBP: "United Kingdom",
-  JPY: "Japan",
-  AUD: "Australia",
-  SGD: "Singapore",
+  get USD() {
+    return tr({ id: "currency.regionUSD", message: "United States" });
+  },
+  get HKD() {
+    return tr({ id: "currency.regionHKD", message: "Hong Kong" });
+  },
+  get TWD() {
+    return tr({ id: "currency.regionTWD", message: "Taiwan" });
+  },
+  get CNY() {
+    return tr({ id: "currency.regionCNY", message: "China" });
+  },
+  get EUR() {
+    return tr({ id: "currency.regionEUR", message: "Euro area" });
+  },
+  get GBP() {
+    return tr({ id: "currency.regionGBP", message: "United Kingdom" });
+  },
+  get JPY() {
+    return tr({ id: "currency.regionJPY", message: "Japan" });
+  },
+  get AUD() {
+    return tr({ id: "currency.regionAUD", message: "Australia" });
+  },
+  get SGD() {
+    return tr({ id: "currency.regionSGD", message: "Singapore" });
+  },
 };
 
 function normalize(code: string): string {

@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import {
   CartesianGrid,
@@ -28,6 +29,8 @@ export interface ReportsRollingWinRateProps {
 }
 
 export function ReportsRollingWinRate({ trades, loading, error }: ReportsRollingWinRateProps) {
+  const { t: localize } = useSecondaryLingui();
+
   const locale = intlLocale();
   const [windowSize, setWindowSize] = useState(WINDOWS[0]);
   const [range, setRange] = useState<ChartRange>("all");
@@ -37,7 +40,7 @@ export function ReportsRollingWinRate({ trades, loading, error }: ReportsRolling
 
   const controls = (
     <SegmentedControl
-      ariaLabel="Rolling window"
+      ariaLabel={localize({ id: "reports.rollingWindow", message: "Rolling window" })}
       value={String(windowSize)}
       onChange={(v) => setWindowSize(Number(v))}
       options={WINDOWS.map((w) => ({ value: String(w), label: String(w) }))}
@@ -48,11 +51,19 @@ export function ReportsRollingWinRate({ trades, loading, error }: ReportsRolling
     loading ? (
       <Skeleton height="200px" />
     ) : error ? (
-      <p className="text-xs text-destructive">Failed to load rolling win rate.</p>
+      <p className="text-xs text-destructive">
+        {localize({
+          id: "reports.failedToLoadRollingWinRate",
+          message: "Failed to load rolling win rate.",
+        })}
+      </p>
     ) : points.length === 0 ? (
       <EmptyState
-        title="Not enough trades"
-        hint={`Need at least ${windowSize} closed trades in range to compute a rolling window.`}
+        title={localize({ id: "reports.notEnoughTrades", message: "Not enough trades" })}
+        hint={localize({
+          id: "reports.needAtLeastValue0ClosedTradesInRangeToComputeARolling",
+          message: `Need at least ${{ value0: windowSize }} closed trades in range to compute a rolling window.`,
+        })}
       />
     ) : (
       <>
@@ -79,8 +90,13 @@ export function ReportsRollingWinRate({ trades, loading, error }: ReportsRolling
               />
               <Tooltip
                 {...chartTooltipStyle}
-                formatter={(value) => [fmtPct(Number(value ?? 0), locale), "Win rate"]}
-                labelFormatter={(v) => `Trade #${v}`}
+                formatter={(value) => [
+                  fmtPct(Number(value ?? 0), locale),
+                  localize({ id: "accounts.winRate", message: "Win rate" }),
+                ]}
+                labelFormatter={(v) =>
+                  localize({ id: "reports.tradeValue0", message: `Trade #${{ value0: v }}` })
+                }
               />
               <Line
                 type="monotone"
@@ -96,7 +112,12 @@ export function ReportsRollingWinRate({ trades, loading, error }: ReportsRolling
     );
 
   return (
-    <ChartCard title="Rolling Win Rate" controls={controls} range={range} onRangeChange={setRange}>
+    <ChartCard
+      title={localize({ id: "reports.rollingWinRate", message: "Rolling Win Rate" })}
+      controls={controls}
+      range={range}
+      onRangeChange={setRange}
+    >
       {body}
     </ChartCard>
   );

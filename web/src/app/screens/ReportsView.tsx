@@ -1,3 +1,6 @@
+import { useLingui as useLinguiRuntime } from "@lingui/react";
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { ColumnDef } from "@/lib/table";
 import { Fragment, useState, type ReactNode } from "react";
 import {
@@ -104,13 +107,27 @@ export type BreakdownDim =
   | "trade_quality";
 
 const DIM_LABELS: Record<BreakdownDim, string> = {
-  symbol: "Symbol",
-  setup: "Setup",
-  day_of_week: "Day of Week",
-  hour_of_day: "Hour",
-  session: "Session",
-  tag: "Tag",
-  mistake: "Mistake",
+  get symbol() {
+    return localize({ id: "imports.fieldSymbol", message: "Symbol" });
+  },
+  get setup() {
+    return localize({ id: "trades.setup", message: "Setup" });
+  },
+  get day_of_week() {
+    return localize({ id: "reports.dayOfWeek", message: "Day of Week" });
+  },
+  get hour_of_day() {
+    return localize({ id: "reports.hour", message: "Hour" });
+  },
+  get session() {
+    return localize({ id: "trades.session", message: "Session" });
+  },
+  get tag() {
+    return localize({ id: "reports.tag", message: "Tag" });
+  },
+  get mistake() {
+    return localize({ id: "settings.mistake", message: "Mistake" });
+  },
   trade_quality: "Execution",
 };
 
@@ -121,11 +138,36 @@ const SELECTOR_DIMS: BreakdownDim[] = ["setup", "mistake"];
 export type { ReportsTab };
 
 export const REPORT_TABS: { value: ReportsTab; label: string }[] = [
-  { value: "overview", label: "Overview" },
-  { value: "win-loss", label: "Win / Loss" },
-  { value: "detailed", label: "Detailed" },
-  { value: "risk", label: "Risk" },
-  { value: "behavior", label: "Behavior" },
+  {
+    value: "overview",
+    get label() {
+      return localize({ id: "reports.overview", message: "Overview" });
+    },
+  },
+  {
+    value: "win-loss",
+    get label() {
+      return localize({ id: "reports.winLoss", message: "Win / Loss" });
+    },
+  },
+  {
+    value: "detailed",
+    get label() {
+      return localize({ id: "reports.detailed", message: "Detailed" });
+    },
+  },
+  {
+    value: "risk",
+    get label() {
+      return localize({ id: "trades.risk", message: "Risk" });
+    },
+  },
+  {
+    value: "behavior",
+    get label() {
+      return localize({ id: "reports.behavior", message: "Behavior" });
+    },
+  },
 ];
 
 export interface ReportsViewProps {
@@ -286,6 +328,8 @@ function SummaryMetricsGrid({
   onSaveGoal: (amount: number) => Promise<void>;
   onClearGoal: () => Promise<void>;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   useDisplayTimePrefs();
   const locale = intlLocale();
@@ -301,9 +345,12 @@ function SummaryMetricsGrid({
           className="min-h-[180px]"
           title={
             <BentoTitle tone="muted">
-              Equity curve
+              {localize({ id: "accounts.curve", message: "Equity curve" })}
               {equityPoints.length > 0 && equity
-                ? ` · Max DD ${fmtMoney(equity.max_drawdown * (equityFx.rate ?? 1), equityFx.currency, locale)}`
+                ? localize({
+                    id: "reports.maxDdValue0",
+                    message: ` · Max DD ${{ value0: fmtMoney(equity.max_drawdown * (equityFx.rate ?? 1), equityFx.currency, locale) }}`,
+                  })
                 : null}
             </BentoTitle>
           }
@@ -374,7 +421,7 @@ function SummaryMetricsGrid({
               </ChartFrame>
             ) : (
               <p className="py-8 text-center text-[12px] text-muted-foreground">
-                No equity data yet.
+                {localize({ id: "reports.noEquityDataYet", message: "No equity data yet." })}
               </p>
             )
           }
@@ -432,7 +479,7 @@ export function buildColumns(dimLabel: string): ColumnDef<BreakGroup>[] {
     {
       id: "total_trades",
       accessorFn: (row) => row.summary.total_trades,
-      header: "Trades",
+      header: localize({ id: "imports.trades", message: "Trades" }),
       cell: (info) => (
         <span className="tabular-nums" style={{ color: "var(--muted-foreground)" }}>
           {info.getValue<number>()}
@@ -442,7 +489,7 @@ export function buildColumns(dimLabel: string): ColumnDef<BreakGroup>[] {
     {
       id: "win_rate",
       accessorFn: (row) => row.summary.win_rate,
-      header: "Win Rate",
+      header: localize({ id: "reports.winRate", message: "Win Rate" }),
       cell: (info) => (
         <span className="tabular-nums" style={{ color: "var(--foreground)" }}>
           {fmtPct(info.getValue<number>(), intlLocale())}
@@ -452,13 +499,13 @@ export function buildColumns(dimLabel: string): ColumnDef<BreakGroup>[] {
     {
       id: "net_pnl",
       accessorFn: (row) => row.summary.net_pnl,
-      header: "Net P&L",
+      header: localize({ id: "accounts.netPnl", message: "Net P&L" }),
       cell: (info) => <PnlCell summary={info.row.original.summary} />,
     },
     {
       id: "profit_factor",
       accessorFn: (row) => row.summary.profit_factor,
-      header: "Profit Factor",
+      header: localize({ id: "reports.profitFactor", message: "Profit Factor" }),
       cell: (info) => {
         const v = info.getValue<number>();
         return (
@@ -471,7 +518,7 @@ export function buildColumns(dimLabel: string): ColumnDef<BreakGroup>[] {
     {
       id: "expectancy",
       accessorFn: (row) => row.summary.expectancy,
-      header: "Expectancy",
+      header: localize({ id: "reports.expectancy", message: "Expectancy" }),
       cell: (info) => {
         const v = info.getValue<number>();
         return <ReportsMoneyCell value={v} />;
@@ -508,6 +555,9 @@ function DimSelector({
   value: BreakdownDim;
   onChange: (d: BreakdownDim) => void;
 }) {
+  "use no memo";
+  useLinguiRuntime();
+
   return (
     <div className="flex items-center gap-1">
       {SELECTOR_DIMS.map((d) => {
@@ -675,6 +725,8 @@ export function ReportsView({
   onClearGoal,
   shareAction,
 }: ReportsViewProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const { currency: displayCurrency, rate } = useMoneyFx(currency);
   const fxRate = rate ?? 1;
@@ -695,11 +747,26 @@ export function ReportsView({
     }
 
     if (error) {
-      return <p className="p-4 text-xs text-destructive">Failed to load breakdown data.</p>;
+      return (
+        <p className="p-4 text-xs text-destructive">
+          {localize({
+            id: "reports.failedToLoadBreakdownData",
+            message: "Failed to load breakdown data.",
+          })}
+        </p>
+      );
     }
 
     if (breakdown.length === 0) {
-      return <EmptyState title="No data" hint="Add trades or adjust filters to see a breakdown." />;
+      return (
+        <EmptyState
+          title={localize({ id: "reports.noData", message: "No data" })}
+          hint={localize({
+            id: "reports.addTradesOrAdjustFiltersToSeeABreakdown",
+            message: "Add trades or adjust filters to see a breakdown.",
+          })}
+        />
+      );
     }
 
     return (
@@ -721,7 +788,9 @@ export function ReportsView({
       summary: summaryLoading ? (
         <Skeleton height="120px" />
       ) : summaryError ? (
-        <p className="p-4 text-xs text-destructive">Failed to load summary.</p>
+        <p className="p-4 text-xs text-destructive">
+          {localize({ id: "accounts.summaryError", message: "Failed to load summary." })}
+        </p>
       ) : summary ? (
         <SummaryMetricsGrid
           summary={summary}
@@ -762,7 +831,10 @@ export function ReportsView({
         />
       ),
       playbook: (
-        <Card title="Playbook & Leaks" action={panelRight}>
+        <Card
+          title={localize({ id: "reports.playbookLeaks", message: "Playbook & Leaks" })}
+          action={panelRight}
+        >
           {renderContent()}
         </Card>
       ),
@@ -800,7 +872,7 @@ export function ReportsView({
       "symbol-tag": (
         <div className="grid gap-4 lg:grid-cols-2">
           <ReportsBreakdownCard
-            title="Symbol"
+            title={localize({ id: "imports.fieldSymbol", message: "Symbol" })}
             breakdown={symbolBreakdown}
             loading={symbolBreakdownLoading}
             error={symbolBreakdownError}
@@ -808,7 +880,7 @@ export function ReportsView({
             tableColumns={buildColumns("Symbol")}
           />
           <ReportsBreakdownCard
-            title="Tag"
+            title={localize({ id: "reports.tag", message: "Tag" })}
             breakdown={tagBreakdown}
             loading={tagBreakdownLoading}
             error={tagBreakdownError}
@@ -820,8 +892,41 @@ export function ReportsView({
       "day-hour": (
         <div className="grid gap-4 lg:grid-cols-2">
           <ReportsBreakdownCard
-            title="Day of Week"
-            breakdown={dayOfWeekBreakdown}
+            title={localize({ id: "reports.dayOfWeek", message: "Day of Week" })}
+            breakdown={dayOfWeekBreakdown.map((g) => ({
+              ...g,
+              key: ![
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+              ].includes(g.key)
+                ? g.key
+                : new Intl.DateTimeFormat(intlLocale(), {
+                    weekday: "long",
+                    timeZone: "UTC",
+                  }).format(
+                    new Date(
+                      Date.UTC(
+                        2026,
+                        0,
+                        4 +
+                          [
+                            "Sunday",
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday",
+                            "Saturday",
+                          ].indexOf(g.key),
+                      ),
+                    ),
+                  ),
+            }))}
             loading={dayOfWeekBreakdownLoading}
             error={dayOfWeekBreakdownError}
             tableColumns={buildColumns("Day")}
@@ -940,7 +1045,7 @@ export function ReportsView({
           onValueChange={(v) => onTabChange(v as ReportsTab)}
         >
           <TabsList
-            aria-label="Report sections"
+            aria-label={localize({ id: "reports.reportSections", message: "Report sections" })}
             fullWidth
             className="h-10 rounded-md border border-border bg-muted p-1"
           >

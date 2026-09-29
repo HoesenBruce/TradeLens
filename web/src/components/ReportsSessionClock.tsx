@@ -1,13 +1,44 @@
+import { intlLocale } from "@/lib/locale";
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { resolveMarketTimezone, useDisplayTimePrefs, wallClockToIso } from "@/lib/displayPrefs";
 
 /** Conventional forex session hours, each on its own local exchange clock. */
 const SESSIONS = [
-  { label: "Sydney", tz: "Australia/Sydney", start: 7, end: 16 },
-  { label: "Tokyo", tz: "Asia/Tokyo", start: 9, end: 18 },
-  { label: "London", tz: "Europe/London", start: 8, end: 17 },
-  { label: "New York", tz: "America/New_York", start: 8, end: 17 },
+  {
+    get label() {
+      return localize({ id: "reports.sydney", message: "Sydney" });
+    },
+    tz: "Australia/Sydney",
+    start: 7,
+    end: 16,
+  },
+  {
+    get label() {
+      return localize({ id: "reports.tokyo", message: "Tokyo" });
+    },
+    tz: "Asia/Tokyo",
+    start: 9,
+    end: 18,
+  },
+  {
+    get label() {
+      return localize({ id: "trades.london", message: "London" });
+    },
+    tz: "Europe/London",
+    start: 8,
+    end: 17,
+  },
+  {
+    get label() {
+      return localize({ id: "reports.newYork", message: "New York" });
+    },
+    tz: "America/New_York",
+    start: 8,
+    end: 17,
+  },
 ] as const;
 
 /** Fractional hour-of-day (0–24) of an instant in the given zone. */
@@ -59,9 +90,11 @@ function sessionLanes(now: Date, marketTz: string): SessionLane[] {
 
 function tickLabel(hour: number, h12: boolean): string {
   if (!h12) return String(hour).padStart(2, "0");
-  if (hour === 0) return "12 AM";
-  if (hour === 12) return "12 PM";
-  return hour < 12 ? `${hour} AM` : `${hour - 12} PM`;
+  return new Intl.DateTimeFormat(intlLocale(), {
+    hour: "numeric",
+    hour12: true,
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(2026, 0, 1, hour)));
 }
 
 /**
@@ -70,6 +103,8 @@ function tickLabel(hour: number, h12: boolean): string {
  * marker. Repaints every minute.
  */
 export function ReportsSessionClock() {
+  const { t: localize } = useSecondaryLingui();
+
   const { timeFormat, marketTimezone } = useDisplayTimePrefs();
   const marketTz = resolveMarketTimezone(marketTimezone);
   const [now, setNow] = useState(() => new Date());
@@ -81,13 +116,17 @@ export function ReportsSessionClock() {
 
   const lanes = sessionLanes(now, marketTz);
   const nowFrac = hourFractionInTz(now, marketTz);
-  const tzCity = marketTz.split("/").pop()?.replace(/_/g, " ") ?? marketTz;
+  const tzCity = SESSIONS.find((s) => s.tz === marketTz)?.label ?? marketTz;
 
   return (
     <section className="flex min-w-0 flex-col rounded-lg bg-card p-4 sm:p-5">
       <div className="flex items-baseline justify-between gap-2">
-        <p className="text-[10px] font-semibold tracking-wide text-chart-3">Market sessions</p>
-        <p className="text-[10px] text-muted-foreground">{tzCity} clock</p>
+        <p className="text-[10px] font-semibold tracking-wide text-chart-3">
+          {localize({ id: "reports.marketSessions", message: "Market sessions" })}
+        </p>
+        <p className="text-[10px] text-muted-foreground">
+          {tzCity} {localize({ id: "reports.clock", message: "clock" })}
+        </p>
       </div>
       <div className="mt-3 flex gap-3">
         <div className="flex w-16 shrink-0 flex-col gap-1.5">

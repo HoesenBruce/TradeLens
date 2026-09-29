@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Card } from "./Card";
 import { EmptyState } from "./EmptyState";
 import { useReportsMoney } from "./ReportsDisplayContext";
@@ -17,7 +19,8 @@ export interface ReportsExecutionGradeProps {
 const GRADE_RANK: Record<string, number> = Object.fromEntries(TRADE_GRADES.map((g, i) => [g, i]));
 
 function labelFor(key: string): { label: string; rank: number } {
-  if (key === "unrated") return { label: "Unrated", rank: 999 };
+  if (key === "unrated")
+    return { label: localize({ id: "reports.unrated", message: "Unrated" }), rank: 999 };
   const grade = gradeFromInt(Number(key));
   if (!grade) return { label: key, rank: 998 };
   return { label: grade, rank: GRADE_RANK[grade] };
@@ -28,6 +31,8 @@ function pfText(pf: number): string {
 }
 
 export function ReportsExecutionGrade({ breakdown, loading, error }: ReportsExecutionGradeProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const money = useReportsMoney();
 
@@ -35,13 +40,24 @@ export function ReportsExecutionGrade({ breakdown, loading, error }: ReportsExec
   const maxAbs = Math.max(1, ...rows.map((r) => Math.abs(money.pnl(r.g.summary))));
 
   return (
-    <Card title="Execution Grade">
+    <Card title={localize({ id: "reports.executionGrade", message: "Execution Grade" })}>
       {loading ? (
         <Skeleton height="220px" />
       ) : error ? (
-        <p className="text-xs text-destructive">Failed to load execution grade.</p>
+        <p className="text-xs text-destructive">
+          {localize({
+            id: "reports.failedToLoadExecutionGrade",
+            message: "Failed to load execution grade.",
+          })}
+        </p>
       ) : rows.length === 0 ? (
-        <EmptyState title="No rated trades" hint="Rate your execution on trades to see this." />
+        <EmptyState
+          title={localize({ id: "reports.noRatedTrades", message: "No rated trades" })}
+          hint={localize({
+            id: "reports.rateYourExecutionOnTradesToSeeThis",
+            message: "Rate your execution on trades to see this.",
+          })}
+        />
       ) : (
         <ul className="flex flex-col gap-3">
           {rows.map(({ g, label }) => {
@@ -56,7 +72,8 @@ export function ReportsExecutionGrade({ breakdown, loading, error }: ReportsExec
                   </span>
                   <span className="flex items-baseline gap-3">
                     <span className="text-[10px] tracking-wide text-flat">
-                      PF {pfText(g.summary.profit_factor)}
+                      {localize({ id: "accounts.pf", message: "PF" })}{" "}
+                      {pfText(g.summary.profit_factor)}
                     </span>
                     <span className={`text-sm font-semibold tabular-nums ${pnlColor(pnl)}`}>
                       {money.format(pnl)}
@@ -71,7 +88,9 @@ export function ReportsExecutionGrade({ breakdown, loading, error }: ReportsExec
                   />
                 </div>
                 <span className="text-[10px] text-flat">
-                  {g.summary.wins}W · {g.summary.losses}L
+                  {g.summary.wins}
+                  {localize({ id: "reports.w", message: "W ·" })} {g.summary.losses}
+                  {localize({ id: "reports.l", message: "L" })}
                 </span>
               </li>
             );

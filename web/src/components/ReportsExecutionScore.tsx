@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import {
   CartesianGrid,
@@ -29,42 +31,103 @@ export type ExecScoreBucket = "week" | "month";
 type AxisKey = "composite" | "entry" | "exit" | "risk" | "stability" | "tempo";
 
 const AXES: { key: AxisKey; label: string; hint: string }[] = [
-  { key: "composite", label: "Composite", hint: "Weighted blend of the five axes below." },
+  {
+    key: "composite",
+    get label() {
+      return localize({ id: "reports.composite", message: "Composite" });
+    },
+    get hint() {
+      return localize({
+        id: "reports.weightedBlendOfTheFiveAxesBelow",
+        message: "Weighted blend of the five axes below.",
+      });
+    },
+  },
   {
     key: "entry",
-    label: "Entry",
-    hint: "How little heat entries take relative to the move they find (MAE vs MFE).",
+    get label() {
+      return localize({ id: "market.entry", message: "Entry" });
+    },
+    get hint() {
+      return localize({
+        id: "reports.howLittleHeatEntriesTakeRelativeToTheMoveTheyFindMae",
+        message: "How little heat entries take relative to the move they find (MAE vs MFE).",
+      });
+    },
   },
-  { key: "exit", label: "Exit", hint: "Share of each trade's peak open profit kept at the close." },
+  {
+    key: "exit",
+    get label() {
+      return localize({ id: "imports.exit", message: "Exit" });
+    },
+    get hint() {
+      return localize({
+        id: "reports.shareOfEachTradeSPeakOpenProfitKeptAtTheClose",
+        message: "Share of each trade's peak open profit kept at the close.",
+      });
+    },
+  },
   {
     key: "risk",
-    label: "Risk",
-    hint: "Risk journaled before the trade, blended with rule compliance when rules are set.",
+    get label() {
+      return localize({ id: "trades.risk", message: "Risk" });
+    },
+    get hint() {
+      return localize({
+        id: "reports.riskJournaledBeforeTheTradeBlendedWithRuleComplianceWhenRulesAre",
+        message:
+          "Risk journaled before the trade, blended with rule compliance when rules are set.",
+      });
+    },
   },
   {
     key: "stability",
-    label: "Stability",
-    hint: "Consistency of results — average R per unit of variance.",
+    get label() {
+      return localize({ id: "accounts.stability", message: "Stability" });
+    },
+    get hint() {
+      return localize({
+        id: "reports.consistencyOfResultsAverageRPerUnitOfVariance",
+        message: "Consistency of results — average R per unit of variance.",
+      });
+    },
   },
   {
     key: "tempo",
-    label: "Tempo",
-    hint: "Trades free of quick same-symbol re-entries and overtraded days.",
+    get label() {
+      return localize({ id: "reports.tempo", message: "Tempo" });
+    },
+    get hint() {
+      return localize({
+        id: "reports.tradesFreeOfQuickSameSymbolReEntriesAndOvertradedDays",
+        message: "Trades free of quick same-symbol re-entries and overtraded days.",
+      });
+    },
   },
 ];
 
 const BUCKETS: { value: ExecScoreBucket; label: string }[] = [
-  { value: "week", label: "Weekly" },
-  { value: "month", label: "Monthly" },
+  {
+    value: "week",
+    get label() {
+      return localize({ id: "reports.weekly", message: "Weekly" });
+    },
+  },
+  {
+    value: "month",
+    get label() {
+      return localize({ id: "reports.monthly", message: "Monthly" });
+    },
+  },
 ];
 
 /** Quality band for a 0–100 score; drives the composite's caption. */
 export function execScoreBand(score: number): string {
-  if (score >= 85) return "excellent";
-  if (score >= 70) return "strong";
-  if (score >= 55) return "solid";
-  if (score >= 40) return "uneven";
-  return "weak";
+  if (score >= 85) return localize({ id: "reports.qualityExcellent", message: "excellent" });
+  if (score >= 70) return localize({ id: "reports.qualityStrong", message: "strong" });
+  if (score >= 55) return localize({ id: "reports.qualitySolid", message: "solid" });
+  if (score >= 40) return localize({ id: "reports.qualityUneven", message: "uneven" });
+  return localize({ id: "reports.qualityWeak", message: "weak" });
 }
 
 function scoreTone(score: number): string {
@@ -98,13 +161,18 @@ export function ReportsExecutionScore({
   bucket,
   onBucketChange,
 }: ReportsExecutionScoreProps) {
+  const { t: localize } = useSecondaryLingui();
+
   useDisplayTimePrefs();
   const locale = intlLocale();
   const [axis, setAxis] = useState<AxisKey>("composite");
 
   const action = (
     <SegmentedControl
-      ariaLabel="Score series granularity"
+      ariaLabel={localize({
+        id: "reports.scoreSeriesGranularity",
+        message: "Score series granularity",
+      })}
       value={bucket}
       onChange={(v) => onBucketChange(v as ExecScoreBucket)}
       options={BUCKETS}
@@ -115,17 +183,38 @@ export function ReportsExecutionScore({
 
   const renderBody = () => {
     if (loading) return <Skeleton height="280px" />;
-    if (error) return <p className="text-xs text-destructive">Failed to load execution score.</p>;
+    if (error)
+      return (
+        <p className="text-xs text-destructive">
+          {localize({
+            id: "reports.failedToLoadExecutionScore",
+            message: "Failed to load execution score.",
+          })}
+        </p>
+      );
     if (!report || report.trades === 0) {
       return (
-        <EmptyState title="No trades" hint="Add trades or adjust filters to see your score." />
+        <EmptyState
+          title={localize({ id: "reports.noTrades", message: "No trades" })}
+          hint={localize({
+            id: "reports.addTradesOrAdjustFiltersToSeeYourScore",
+            message: "Add trades or adjust filters to see your score.",
+          })}
+        />
       );
     }
     if (report.composite == null) {
       return (
         <EmptyState
-          title="Not enough data to score"
-          hint="Scores unlock at 5 closed trades — journaled risk and auto MAE/MFE sharpen every axis."
+          title={localize({
+            id: "reports.notEnoughDataToScore",
+            message: "Not enough data to score",
+          })}
+          hint={localize({
+            id: "reports.scoresUnlockAt5ClosedTradesJournaledRiskAndAutoMaeMfe",
+            message:
+              "Scores unlock at 5 closed trades — journaled risk and auto MAE/MFE sharpen every axis.",
+          })}
         />
       );
     }
@@ -147,7 +236,10 @@ export function ReportsExecutionScore({
             {Math.round(report.composite)}
           </p>
           <p className="text-[11px] text-muted-foreground">
-            {execScoreBand(report.composite)} · {report.trades} trades
+            {localize({
+              id: "reports.scoreSummary",
+              message: `${{ band: execScoreBand(report.composite) }} · ${{ count: report.trades }} trades`,
+            })}
           </p>
           {radarData.length >= 3 ? (
             <ResponsiveContainer width="100%" height={210}>
@@ -169,8 +261,11 @@ export function ReportsExecutionScore({
             </ResponsiveContainer>
           ) : (
             <p className="mt-6 px-4 text-center text-[11px] leading-relaxed text-muted-foreground">
-              The radar needs at least three scored axes — journal initial risk and run auto MAE/MFE
-              to light up the rest.
+              {localize({
+                id: "reports.theRadarNeedsAtLeastThreeScoredAxesJournalInitialRiskAnd",
+                message:
+                  "The radar needs at least three scored axes — journal initial risk and run auto MAE/MFE to light up the rest.",
+              })}
             </p>
           )}
         </div>
@@ -201,7 +296,9 @@ export function ReportsExecutionScore({
                       score == null ? "text-muted-foreground" : scoreTone(score),
                     )}
                   >
-                    {score == null ? "no data" : Math.round(score)}
+                    {score == null
+                      ? localize({ id: "reports.noData2", message: "no data" })
+                      : Math.round(score)}
                   </span>
                 </button>
               );
@@ -232,7 +329,12 @@ export function ReportsExecutionScore({
                   labelFormatter={(v) => fmtDayShort(String(v), locale)}
                   formatter={(value, _name, item) => {
                     const point = item?.payload as ExecScorePoint | undefined;
-                    const trades = point ? ` · ${point.trades} trades` : "";
+                    const trades = point
+                      ? localize({
+                          id: "reports.value0Trades2",
+                          message: ` · ${{ value0: point.trades }} trades`,
+                        })
+                      : "";
                     return [`${Math.round(Number(value ?? 0))}${trades}`, selected.label];
                   }}
                 />
@@ -255,7 +357,10 @@ export function ReportsExecutionScore({
   };
 
   return (
-    <Card title="Execution Score" action={action}>
+    <Card
+      title={localize({ id: "reports.executionScore", message: "Execution Score" })}
+      action={action}
+    >
       {renderBody()}
     </Card>
   );

@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
@@ -30,6 +31,8 @@ export function ReportsPeriodReturns({
   fxRate,
   denominator,
 }: ReportsPeriodReturnsProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   useDisplayTimePrefs();
   const locale = intlLocale();
@@ -47,19 +50,37 @@ export function ReportsPeriodReturns({
       : fmtSignedMoney(raw * fxRate, currency, locale);
 
   const cells: { label: string; hint: string; value: number }[] = [
-    { label: "Daily", hint: "avg / traded day", value: returns.daily },
-    { label: "Weekly", hint: "avg / traded week", value: returns.weekly },
-    { label: "Monthly", hint: "avg / traded month", value: returns.monthly },
-    { label: "Annualized", hint: "run rate / year", value: returns.annualized },
+    {
+      label: localize({ id: "reports.daily", message: "Daily" }),
+      hint: localize({ id: "reports.avgTradedDay", message: "avg / traded day" }),
+      value: returns.daily,
+    },
+    {
+      label: localize({ id: "reports.weekly", message: "Weekly" }),
+      hint: localize({ id: "reports.avgTradedWeek", message: "avg / traded week" }),
+      value: returns.weekly,
+    },
+    {
+      label: localize({ id: "reports.monthly", message: "Monthly" }),
+      hint: localize({ id: "reports.avgTradedMonth", message: "avg / traded month" }),
+      value: returns.monthly,
+    },
+    {
+      label: localize({ id: "reports.annualized", message: "Annualized" }),
+      hint: localize({ id: "reports.runRateYear", message: "run rate / year" }),
+      value: returns.annualized,
+    },
   ];
 
   return (
     <section className="min-w-0">
       <div className="mb-2 flex items-center justify-between gap-2">
-        <p className="text-[10px] font-semibold tracking-wide text-chart-3">Period returns</p>
+        <p className="text-[10px] font-semibold tracking-wide text-chart-3">
+          {localize({ id: "reports.periodReturns", message: "Period returns" })}
+        </p>
         {pctEnabled ? (
           <SegmentedControl
-            ariaLabel="Period return unit"
+            ariaLabel={localize({ id: "reports.periodReturnUnit", message: "Period return unit" })}
             size="xs"
             value={unit}
             onChange={(v) => setUnit(v as "abs" | "pct")}

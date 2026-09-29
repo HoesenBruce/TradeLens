@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { money, shares as fmtShares, signedMoney } from "@/lib/r-calculator/format";
 import { useFvgStore } from "@/lib/r-calculator/useFvgStore";
 import { cn } from "@/lib/cn";
@@ -8,6 +9,8 @@ import { TradeTicket, type TradeTicketRow } from "./TradeTicket";
 import { WarningBanner } from "./WarningBanner";
 
 export function FvgPanel() {
+  const { t: localize } = useSecondaryLingui();
+
   const store = useFvgStore();
   const session = store.sessions.find((s) => s.id === store.activeId);
   if (!session) return null;
@@ -17,44 +20,67 @@ export function FvgPanel() {
   const long = session.direction === "long";
 
   const ticketRows: TradeTicketRow[] = [
-    { label: "Direction", value: long ? "Long" : "Short" },
-    { label: "Entry", value: `$${money(result.entryPrice)}` },
-    { label: "Stop", value: `$${money(result.stopPrice)}` },
-    { label: "Target", value: `$${money(result.targetPrice)}` },
-    { label: "1R / share", value: `$${money(result.oneR)}` },
-    { label: "Position value", value: `$${money(result.positionValue)}` },
     {
-      label: "Profit at target",
+      label: localize({ id: "imports.direction", message: "Direction" }),
+      value: long
+        ? localize({ id: "trades.long", message: "Long" })
+        : localize({ id: "trades.short", message: "Short" }),
+    },
+    {
+      label: localize({ id: "market.entry", message: "Entry" }),
+      value: `$${money(result.entryPrice)}`,
+    },
+    {
+      label: localize({ id: "market.stop", message: "Stop" }),
+      value: `$${money(result.stopPrice)}`,
+    },
+    {
+      label: localize({ id: "market.target", message: "Target" }),
+      value: `$${money(result.targetPrice)}`,
+    },
+    {
+      label: localize({ id: "calculator.1rShare", message: "1R / share" }),
+      value: `$${money(result.oneR)}`,
+    },
+    {
+      label: localize({ id: "calculator.positionValue", message: "Position value" }),
+      value: `$${money(result.positionValue)}`,
+    },
+    {
+      label: localize({ id: "calculator.profitAtTarget", message: "Profit at target" }),
       value: `$${money(result.profitAtTarget)}`,
       tone: "profit",
     },
     {
-      label: "Loss at stop",
+      label: localize({ id: "calculator.lossAtStop", message: "Loss at stop" }),
       value: `$${money(result.lossAtStop)}`,
       tone: "loss",
     },
-    { label: "Realised R:R", value: `${result.realRR.toFixed(1)}:1` },
+    {
+      label: localize({ id: "calculator.realisedRR", message: "Realised R:R" }),
+      value: `${result.realRR.toFixed(1)}:1`,
+    },
   ];
 
   return (
     <div className="grid h-full min-h-0 grid-cols-1 gap-4 xl:grid-cols-2">
       <div className="flex min-h-0 flex-col gap-3 overflow-y-auto pr-0.5">
-        <Card title="Trade setup">
+        <Card title={localize({ id: "calculator.tradeSetup", message: "Trade setup" })}>
           <div className="flex flex-col gap-3">
             <SegmentedControl
-              ariaLabel="Trade direction"
+              ariaLabel={localize({ id: "calculator.tradeDirection", message: "Trade direction" })}
               fullWidth
               value={session.direction}
               onChange={(v) => store.setField("direction", v as "long" | "short")}
               options={[
-                { value: "long", label: "▲ Long" },
-                { value: "short", label: "▼ Short" },
+                { value: "long", label: localize({ id: "calculator.long", message: "▲ Long" }) },
+                { value: "short", label: localize({ id: "calculator.short", message: "▼ Short" }) },
               ]}
             />
 
             <div className="grid grid-cols-2 gap-2">
               <CalcInputField
-                label="Gap top"
+                label={localize({ id: "calculator.gapTop", message: "Gap top" })}
                 value={session.zoneTop}
                 onValue={(n) => store.setField("zoneTop", n)}
                 step={0.01}
@@ -62,7 +88,7 @@ export function FvgPanel() {
                 prefix="$"
               />
               <CalcInputField
-                label="Gap bottom"
+                label={localize({ id: "calculator.gapBottom", message: "Gap bottom" })}
                 value={session.zoneBottom}
                 onValue={(n) => store.setField("zoneBottom", n)}
                 step={0.01}
@@ -72,24 +98,29 @@ export function FvgPanel() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <span className="text-[13px] font-medium text-muted-foreground">Entry at</span>
+              <span className="text-[13px] font-medium text-muted-foreground">
+                {localize({ id: "calculator.entryAt", message: "Entry at" })}
+              </span>
               <SegmentedControl
-                ariaLabel="Entry location"
+                ariaLabel={localize({ id: "calculator.entryLocation", message: "Entry location" })}
                 fullWidth
                 value={session.entryAt}
                 onChange={(v) =>
                   store.setField("entryAt", v as "top" | "mid" | "bottom" | "manual")
                 }
                 options={[
-                  { value: "top", label: "Top" },
-                  { value: "mid", label: "Mid" },
-                  { value: "bottom", label: "Bottom" },
-                  { value: "manual", label: "Manual" },
+                  { value: "top", label: localize({ id: "calculator.top", message: "Top" }) },
+                  { value: "mid", label: localize({ id: "calculator.mid", message: "Mid" }) },
+                  {
+                    value: "bottom",
+                    label: localize({ id: "calculator.bottom", message: "Bottom" }),
+                  },
+                  { value: "manual", label: localize({ id: "market.manual", message: "Manual" }) },
                 ]}
               />
               {isManual ? (
                 <CalcInputField
-                  label="Entry price"
+                  label={localize({ id: "calculator.entryPrice", message: "Entry price" })}
                   value={session.entryPrice}
                   onValue={(n) => store.setField("entryPrice", n)}
                   step={0.01}
@@ -101,25 +132,25 @@ export function FvgPanel() {
 
             <div className="grid grid-cols-2 gap-2">
               <CalcInputField
-                label="Stop buffer"
+                label={localize({ id: "calculator.stopBuffer", message: "Stop buffer" })}
                 value={session.stopBuffer}
                 onValue={(n) => store.setField("stopBuffer", n)}
                 step={0.01}
                 min={0}
                 prefix="$"
-                hint="beyond the gap"
+                hint={localize({ id: "calculator.beyondTheGap", message: "beyond the gap" })}
               />
               <CalcInputField
-                label="Target"
+                label={localize({ id: "market.target", message: "Target" })}
                 value={session.rMultiple}
                 onValue={(n) => store.setField("rMultiple", n)}
                 step={0.5}
                 min={0}
                 suffix="R"
-                hint="reward multiple"
+                hint={localize({ id: "calculator.rewardMultiple", message: "reward multiple" })}
               />
               <CalcInputField
-                label="Account"
+                label={localize({ id: "market.account", message: "Account" })}
                 value={session.account}
                 onValue={(n) => store.setField("account", n)}
                 step={100}
@@ -127,13 +158,13 @@ export function FvgPanel() {
                 prefix="$"
               />
               <CalcInputField
-                label="Risk"
+                label={localize({ id: "trades.risk", message: "Risk" })}
                 value={session.riskPct}
                 onValue={(n) => store.setField("riskPct", n)}
                 step={0.25}
                 min={0}
                 suffix="%"
-                hint="per trade"
+                hint={localize({ id: "accounts.perTrade", message: "per trade" })}
               />
             </div>
           </div>
@@ -144,13 +175,18 @@ export function FvgPanel() {
 
       <div className="flex min-h-0 flex-col gap-3 xl:min-h-0">
         <TradeTicket
-          heroLabel="Suggested size"
+          heroLabel={localize({ id: "calculator.suggestedSize", message: "Suggested size" })}
           heroValue={fmtShares(result.shares)}
-          heroUnit="sh"
+          heroUnit={localize({ id: "calculator.shareUnit", message: "sh" })}
           rows={ticketRows}
         />
         {/* Keep the card mounted when the inputs are invalid so the column doesn't collapse. */}
-        <Card title="Risk / reward axis" fill flush className="min-h-[280px]">
+        <Card
+          title={localize({ id: "calculator.riskRewardAxis", message: "Risk / reward axis" })}
+          fill
+          flush
+          className="min-h-[280px]"
+        >
           {result.valid ? (
             <FvgAxis
               long={long}
@@ -163,7 +199,10 @@ export function FvgPanel() {
             />
           ) : (
             <div className="flex min-h-[240px] flex-1 items-center justify-center px-4 pb-4 text-center text-[13px] text-muted-foreground">
-              Set a valid gap and stop to plot the axis.
+              {localize({
+                id: "calculator.setAValidGapAndStopToPlotTheAxis",
+                message: "Set a valid gap and stop to plot the axis.",
+              })}
             </div>
           )}
         </Card>
@@ -189,6 +228,8 @@ function FvgAxis({
   profitAtTarget: number;
   lossAtStop: number;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const entryTop = (rMultiple / (rMultiple + 1)) * 100;
 
   return (
@@ -237,21 +278,24 @@ function FvgAxis({
           <FvgPriceLabel
             top="0%"
             tone="profit"
-            caption={`Target +${rMultiple}R`}
+            caption={localize({
+              id: "calculator.targetValue0R",
+              message: `Target +${{ value0: rMultiple }}R`,
+            })}
             price={money(targetPrice)}
             pl={signedMoney(profitAtTarget)}
           />
           <FvgPriceLabel
             top={`${entryTop}%`}
             tone="text"
-            caption="Entry"
+            caption={localize({ id: "market.entry", message: "Entry" })}
             price={money(entryPrice)}
             emphasize
           />
           <FvgPriceLabel
             top="100%"
             tone="loss"
-            caption="Stop −1R"
+            caption={localize({ id: "calculator.stopMinus1R", message: "Stop −1R" })}
             price={money(stopPrice)}
             pl={signedMoney(-lossAtStop)}
           />

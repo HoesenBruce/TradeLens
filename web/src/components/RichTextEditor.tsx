@@ -1,3 +1,4 @@
+import { t as localize } from "@lingui/core/macro";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -159,24 +160,24 @@ export function RichTextEditor({
       {showHints ? (
         <p className="flex shrink-0 flex-wrap items-center gap-x-2 gap-y-1 px-3 pt-1 pb-2 text-[10px] text-muted-foreground">
           <span className="inline-flex items-center gap-1">
-            <Kbd>#</Kbd> heading
+            <Kbd>#</Kbd> {localize({ id: "editor.headingHint", message: "heading" })}
           </span>
           <span className="text-border" aria-hidden>
             ·
           </span>
           <span className="inline-flex items-center gap-1">
-            <Kbd>-</Kbd> list
+            <Kbd>-</Kbd> {localize({ id: "editor.listHint", message: "list" })}
           </span>
           <span className="text-border" aria-hidden>
             ·
           </span>
           <span className="inline-flex items-center gap-1">
-            <Kbd>[]</Kbd> checklist
+            <Kbd>[]</Kbd> {localize({ id: "editor.checklistHint", message: "checklist" })}
           </span>
           <span className="text-border" aria-hidden>
             ·
           </span>
-          <span>paste or drop images</span>
+          <span>{localize({ id: "editor.imageHint", message: "paste or drop images" })}</span>
         </p>
       ) : null}
     </div>

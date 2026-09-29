@@ -1,3 +1,5 @@
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import {
   Area,
   CartesianGrid,
@@ -37,6 +39,8 @@ export function ReportsMonteCarlo({
   error,
   currency,
 }: ReportsMonteCarloProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   useDisplayTimePrefs();
   const money = useReportsMoney();
@@ -52,15 +56,26 @@ export function ReportsMonteCarlo({
   }));
 
   return (
-    <Card title="Monte Carlo">
+    <Card title={localize({ id: "reports.monteCarlo", message: "Monte Carlo" })}>
       {loading ? (
         <Skeleton height="240px" />
       ) : error ? (
-        <p className="text-xs text-destructive">Failed to load simulation.</p>
+        <p className="text-xs text-destructive">
+          {localize({
+            id: "reports.failedToLoadSimulation",
+            message: "Failed to load simulation.",
+          })}
+        </p>
       ) : !simulation || simulation.insufficient_data ? (
         <EmptyState
-          title="Not enough closed trades"
-          hint="The simulation needs at least 10 closed trades to resample."
+          title={localize({
+            id: "reports.notEnoughClosedTrades",
+            message: "Not enough closed trades",
+          })}
+          hint={localize({
+            id: "reports.theSimulationNeedsAtLeast10ClosedTradesToResample",
+            message: "The simulation needs at least 10 closed trades to resample.",
+          })}
         />
       ) : (
         <>
@@ -68,50 +83,65 @@ export function ReportsMonteCarlo({
             <StatCard
               variant="bento"
               align="center"
-              label="Median Outcome"
+              label={localize({ id: "reports.medianOutcome", message: "Median Outcome" })}
               value={money.format(simulation.terminal.p50)}
               accent={simulation.terminal.p50 >= 0 ? "pos" : "neg"}
-              hint={`over the next ${simulation.horizon} trades`}
+              hint={localize({
+                id: "reports.overTheNextValue0Trades",
+                message: `over the next ${{ value0: simulation.horizon }} trades`,
+              })}
             />
             <StatCard
               variant="bento"
               align="center"
-              label="Best Case"
+              label={localize({ id: "reports.bestCase", message: "Best Case" })}
               value={money.format(simulation.terminal.p95)}
               accent={simulation.terminal.p95 > 0 ? "pos" : "none"}
-              hint="95th percentile"
+              hint={localize({ id: "reports.95thPercentile", message: "95th percentile" })}
             />
             <StatCard
               variant="bento"
               align="center"
-              label="Worst Case"
+              label={localize({ id: "reports.worstCase", message: "Worst Case" })}
               value={money.format(simulation.terminal.p05)}
               accent={simulation.terminal.p05 < 0 ? "neg" : "none"}
-              hint="5th percentile"
+              hint={localize({ id: "reports.5thPercentile", message: "5th percentile" })}
             />
             <StatCard
               variant="bento"
               align="center"
-              label="Typical Max Drawdown"
+              label={localize({
+                id: "reports.typicalMaxDrawdown",
+                message: "Typical Max Drawdown",
+              })}
               value={money.format(-simulation.max_drawdown.p50)}
               accent="neg"
-              hint={`1 in 20 worse than ${fmtMoneyCompact(simulation.max_drawdown.p95, currency, locale)}`}
+              hint={localize({
+                id: "reports.1In20WorseThanValue0",
+                message: `1 in 20 worse than ${{ value0: fmtMoneyCompact(simulation.max_drawdown.p95, currency, locale) }}`,
+              })}
             />
             <StatCard
               variant="bento"
               align="center"
-              label="Chance of Profit"
+              label={localize({ id: "reports.chanceOfProfit", message: "Chance of Profit" })}
               value={fmtPct(1 - simulation.terminal.prob_negative, locale)}
               accent={simulation.terminal.prob_negative > 0.25 ? "neg" : "pos"}
-              hint="paths ending above zero"
+              hint={localize({
+                id: "reports.pathsEndingAboveZero",
+                message: "paths ending above zero",
+              })}
             />
             <StatCard
               variant="bento"
               align="center"
-              label="Risk of Ruin"
+              label={localize({ id: "reports.riskOfRuin", message: "Risk of Ruin" })}
               value={fmtPct(simulation.risk_of_ruin, locale)}
               accent={simulation.risk_of_ruin > 0.1 ? "neg" : "none"}
-              hint={`drawdown ≥ ${fmtMoneyCompact(simulation.ruin_threshold, currency, locale)}`}
+              hint={localize({
+                id: "reports.drawdownValue0",
+                message: `drawdown ≥ ${{ value0: fmtMoneyCompact(simulation.ruin_threshold, currency, locale) }}`,
+              })}
             />
           </div>
           <div className="mt-4">
@@ -136,7 +166,12 @@ export function ReportsMonteCarlo({
                   />
                   <Tooltip
                     {...chartTooltipStyle}
-                    labelFormatter={(n) => `After ${String(n)} trades`}
+                    labelFormatter={(n) =>
+                      localize({
+                        id: "reports.afterValue0Trades",
+                        message: `After ${{ value0: String(n) }} trades`,
+                      })
+                    }
                     formatter={(value, name) => {
                       if (Array.isArray(value)) {
                         const [lo, hi] = value as [number, number];
@@ -186,9 +221,11 @@ export function ReportsMonteCarlo({
             </ChartFrame>
           </div>
           <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
-            {simulation.paths.toLocaleString(locale)} resamples of your {simulation.trades} closed
-            trades&apos; net P&amp;L — assumes each trade is an independent draw from your history,
-            so streaks and changing conditions are understated.
+            <Trans id="reports.resamplesOfYourClosedTradesNetPLSentence">
+              {simulation.paths.toLocaleString(locale)} resamples of your {simulation.trades} closed
+              trades&apos; net P&amp;L — assumes each trade is an independent draw from your
+              history, so streaks and changing conditions are understated.
+            </Trans>
           </p>
         </>
       )}

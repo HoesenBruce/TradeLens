@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import {
   CartesianGrid,
@@ -33,15 +35,45 @@ import { Skeleton } from "./Skeleton";
 type RightMetric = "cumulativePnl" | "profitFactor" | "expectancy";
 
 const RIGHT_METRICS: { value: RightMetric; label: string }[] = [
-  { value: "cumulativePnl", label: "Cumulative P&L" },
-  { value: "profitFactor", label: "Profit Factor" },
-  { value: "expectancy", label: "Expectancy" },
+  {
+    value: "cumulativePnl",
+    get label() {
+      return localize({ id: "reports.cumulativePL", message: "Cumulative P&L" });
+    },
+  },
+  {
+    value: "profitFactor",
+    get label() {
+      return localize({ id: "reports.profitFactor", message: "Profit Factor" });
+    },
+  },
+  {
+    value: "expectancy",
+    get label() {
+      return localize({ id: "reports.expectancy", message: "Expectancy" });
+    },
+  },
 ];
 
 const GRANULARITIES: { value: EvolutionGranularity; label: string }[] = [
-  { value: "day", label: "Day" },
-  { value: "week", label: "Week" },
-  { value: "month", label: "Month" },
+  {
+    value: "day",
+    get label() {
+      return localize({ id: "reports.dayBucket", message: "Day" });
+    },
+  },
+  {
+    value: "week",
+    get label() {
+      return localize({ id: "reports.week", message: "Week" });
+    },
+  },
+  {
+    value: "month",
+    get label() {
+      return localize({ id: "accounts.month", message: "Month" });
+    },
+  },
 ];
 
 export interface ReportsMetricEvolutionProps {
@@ -54,6 +86,8 @@ export interface ReportsMetricEvolutionProps {
 }
 
 export function ReportsMetricEvolution({ trades, loading, error }: ReportsMetricEvolutionProps) {
+  const { t: localize } = useSecondaryLingui();
+
   useDisplayTimePrefs();
   const locale = intlLocale();
   const money = useReportsMoney();
@@ -89,7 +123,10 @@ export function ReportsMetricEvolution({ trades, loading, error }: ReportsMetric
     <>
       <div className="max-w-full overflow-x-auto">
         <SegmentedControl
-          ariaLabel="Evolution granularity"
+          ariaLabel={localize({
+            id: "reports.evolutionGranularity",
+            message: "Evolution granularity",
+          })}
           value={granularity}
           onChange={(v) => setGranularity(v as EvolutionGranularity)}
           options={GRANULARITIES}
@@ -97,7 +134,7 @@ export function ReportsMetricEvolution({ trades, loading, error }: ReportsMetric
       </div>
       <div className="max-w-full overflow-x-auto">
         <SegmentedControl
-          ariaLabel="Right axis metric"
+          ariaLabel={localize({ id: "reports.rightAxisMetric", message: "Right axis metric" })}
           value={rightMetric}
           onChange={(v) => setRightMetric(v as RightMetric)}
           options={RIGHT_METRICS}
@@ -110,9 +147,20 @@ export function ReportsMetricEvolution({ trades, loading, error }: ReportsMetric
     loading ? (
       <Skeleton height="220px" />
     ) : error ? (
-      <p className="text-xs text-destructive">Failed to load metric evolution.</p>
+      <p className="text-xs text-destructive">
+        {localize({
+          id: "reports.failedToLoadMetricEvolution",
+          message: "Failed to load metric evolution.",
+        })}
+      </p>
     ) : points.length === 0 ? (
-      <EmptyState title="No data" hint="Add trades or adjust filters to see trends over time." />
+      <EmptyState
+        title={localize({ id: "reports.noData", message: "No data" })}
+        hint={localize({
+          id: "reports.addTradesOrAdjustFiltersToSeeTrendsOverTime",
+          message: "Add trades or adjust filters to see trends over time.",
+        })}
+      />
     ) : (
       <ChartFrame className="border-0 rounded-none">
         {/* Expose the last cumulative P&L (display units) for unit tests —
@@ -154,7 +202,11 @@ export function ReportsMetricEvolution({ trades, loading, error }: ReportsMetric
               labelFormatter={(v) => fmtDayShort(String(v), locale)}
               formatter={(value, name) => {
                 const v = Number(value ?? 0);
-                if (name === "winRate") return [fmtPct(v, locale), "Win rate"];
+                if (name === "winRate")
+                  return [
+                    fmtPct(v, locale),
+                    localize({ id: "accounts.winRate", message: "Win rate" }),
+                  ];
                 // Dollar metrics are signed P&L; profit factor is a ratio, so it stays neutral.
                 const text = fmtRight(v);
                 return [
@@ -187,7 +239,12 @@ export function ReportsMetricEvolution({ trades, loading, error }: ReportsMetric
     );
 
   return (
-    <ChartCard title="Metric Evolution" controls={controls} range={range} onRangeChange={setRange}>
+    <ChartCard
+      title={localize({ id: "reports.metricEvolution", message: "Metric Evolution" })}
+      controls={controls}
+      range={range}
+      onRangeChange={setRange}
+    >
       {body}
     </ChartCard>
   );

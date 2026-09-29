@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ const SEQUENCE_WINDOW_MS = 800;
  * second key before committing on its own.
  */
 export function KeybindingRecorder({ id }: { id: AppHotkeyId }) {
+  const { t } = useLingui();
   const binding = useHotkeyBindings()[id];
   const isCustom = useIsCustomBinding(id);
   const setBinding = useKeybindings((s) => s.setBinding);
@@ -108,14 +110,20 @@ export function KeybindingRecorder({ id }: { id: AppHotkeyId }) {
 
   useEffect(() => clearTimer, [clearTimer]);
 
-  const preview = pending.length > 0 ? formatHotkeyLabel(serializeHotkey(pending)) : "Press keys…";
+  const preview =
+    pending.length > 0
+      ? formatHotkeyLabel(serializeHotkey(pending))
+      : t({ id: "settings.pressKeys", message: "Press keys…" });
 
   return (
     <div className="flex min-w-0 flex-col items-start gap-1.5 md:items-end">
       <div className="flex items-center gap-1.5">
         <button
           type="button"
-          aria-label={`Change shortcut, currently ${binding.label}`}
+          aria-label={t({
+            id: "settings.changeShortcutCurrent",
+            message: `Change shortcut, currently ${{ binding: binding.label }}`,
+          })}
           onClick={() => {
             setError(null);
             setRecording(true);
@@ -138,7 +146,7 @@ export function KeybindingRecorder({ id }: { id: AppHotkeyId }) {
           type="button"
           variant="ghost"
           size="icon"
-          aria-label="Reset to default"
+          aria-label={t({ id: "settings.resetDefault", message: "Reset to default" })}
           className={cn("size-8", isCustom ? "" : "invisible")}
           disabled={!isCustom}
           onClick={() => {
@@ -150,7 +158,9 @@ export function KeybindingRecorder({ id }: { id: AppHotkeyId }) {
         </Button>
       </div>
       {recording ? (
-        <p className="text-[11px] text-muted-foreground">Esc to cancel</p>
+        <p className="text-[11px] text-muted-foreground">
+          {t({ id: "settings.escapeToCancel", message: "Esc to cancel" })}
+        </p>
       ) : error ? (
         <p className="text-[11px] text-destructive md:text-right">{error}</p>
       ) : null}
