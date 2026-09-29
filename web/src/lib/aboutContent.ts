@@ -1,9 +1,7 @@
 import type { AppLocale } from "./locale";
 import { BRAND } from "./brand";
-import { REPO_URL } from "./version";
-
-export { REPO_URL };
-export const DEVELOPER_NAME = "sinhong2011";
+export const REPO_URL = BRAND.repositoryUrl;
+export const DEVELOPER_NAME = "sinhong2011 and contributors";
 export const DEVELOPER_GITHUB = "https://github.com/sinhong2011";
 export const DEVELOPER_AVATAR = "https://github.com/sinhong2011.png";
 
@@ -30,6 +28,7 @@ export type AboutContent = {
   philosophyTitle: string;
   philosophy: string;
   licenseNote: string;
+  attribution: string;
   developerTitle: string;
   developerRole: string;
   developerGithubLabel: string;
@@ -80,7 +79,7 @@ export type AboutContent = {
 const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
   en: {
     tagline: "Self-hosted trading journal",
-    intro: `${BRAND.name} is an open-source performance journal for active traders. Your trades, screenshots, and analytics stay on infrastructure you control — no SaaS lock-in, no data mining.`,
+    intro: BRAND.description,
     featuresTitle: "What you get",
     features: [
       {
@@ -142,8 +141,10 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     philosophyTitle: "Why self-host?",
     philosophy: `Cloud journals like TradeZella and TraderSync are polished — but your edge lives in the data. ${BRAND.name} follows the same philosophy as projects like Ghost, Umami, and Plane: run it yourself, own the database, and extend it without permission.`,
     licenseNote: "Open source. Deploy on Docker, Railway, or your own VPS.",
-    developerTitle: "Developer",
-    developerRole: "Creator & maintainer",
+    attribution:
+      "TradeLens is based on TraderMemos, originally developed by sinhong2011 and contributors.",
+    developerTitle: "Original upstream author",
+    developerRole: "Original creator of TraderMemos",
     developerGithubLabel: "View on GitHub",
     apiTitle: "Backend API",
     apiDescription: `Live connection to the ${BRAND.name} API this app is using.`,
@@ -198,7 +199,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
   },
   "zh-HK": {
     tagline: "自架交易日誌",
-    intro: `${BRAND.name} 是面向活躍交易者的開源績效日誌。你的交易、截圖與分析都留在你控制的基礎設施上——沒有 SaaS 綁定，也沒有資料挖掘。`,
+    intro: "自架交易日誌、投資組合分析與市場回顧平台。",
     featuresTitle: "功能概覽",
     features: [
       {
@@ -254,8 +255,9 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     philosophyTitle: "為何自架？",
     philosophy: `雲端日誌如 TradeZella、TraderSync 很完善——但你的優勢藏在資料裡。${BRAND.name} 與 Ghost、Umami、Plane 等專案同一理念：自己部署、擁有資料庫、無需許可即可擴展。`,
     licenseNote: "開源。可部署於 Docker、Railway 或自有 VPS。",
-    developerTitle: "開發者",
-    developerRole: "創作者及維護者",
+    attribution: "TradeLens 基於 TraderMemos，由 sinhong2011 及貢獻者最初開發。",
+    developerTitle: "原始上游作者",
+    developerRole: "TraderMemos 原始創作者",
     developerGithubLabel: "在 GitHub 查看",
     apiTitle: "後端 API",
     apiDescription: `此應用程式目前連線的 ${BRAND.name} API。`,
@@ -308,7 +310,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
   },
   ja: {
     tagline: "セルフホスト型トレードジャーナル",
-    intro: `${BRAND.name} はアクティブトレーダー向けのオープンソースパフォーマンスジャーナルです。トレード、スクショ、分析はすべて自分で管理するインフラに残ります — SaaS ロックインやデータマイニングはありません。`,
+    intro: "セルフホスト型のトレード日誌、ポートフォリオ分析、市場レビューのプラットフォーム。",
     featuresTitle: "主な機能",
     features: [
       {
@@ -371,8 +373,10 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     philosophy:
       "TradeZella や TraderSync のようなクラウドジャーナルは洗練されています — しかしエッジはデータの中にあります。Ghost、Umami、Plane と同じ思想：自分で動かし、DB を所有し、許可なく拡張する。",
     licenseNote: "オープンソース。Docker、Railway、または自前 VPS にデプロイ可能。",
-    developerTitle: "開発者",
-    developerRole: "作成者 & メンテナ",
+    attribution:
+      "TradeLens は、sinhong2011 とコントリビューターが開発した TraderMemos を基にしています。",
+    developerTitle: "上流プロジェクトの原作者",
+    developerRole: "TraderMemos の原作者",
     developerGithubLabel: "GitHub で見る",
     apiTitle: "バックエンド API",
     apiDescription: `このアプリが使用中の ${BRAND.name} API への接続情報。`,
@@ -426,7 +430,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
   },
   ko: {
     tagline: "셀프호스팅 트레이딩 저널",
-    intro: `${BRAND.name}는 활발한 트레이더를 위한 오픈소스 성과 저널입니다. 거래, 스크린샷, 분석이 모두 직접 관리하는 인프라에 남습니다 — SaaS 종속이나 데이터 마이닝 없음.`,
+    intro: "셀프호스팅 거래 일지, 포트폴리오 분석 및 시장 검토 플랫폼.",
     featuresTitle: "주요 기능",
     features: [
       {
@@ -484,8 +488,9 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     philosophy:
       "TradeZella, TraderSync 같은 클라우드 저널은 잘 만들어졌지만 — 엣지는 데이터 안에 있습니다. Ghost, Umami, Plane과 같은 철학: 직접 운영하고, DB를 소유하고, 허가 없이 확장.",
     licenseNote: "오픈소스. Docker, Railway 또는 자체 VPS에 배포.",
-    developerTitle: "개발자",
-    developerRole: "제작자 및 유지보수",
+    attribution: "TradeLens는 sinhong2011 및 기여자가 개발한 TraderMemos를 기반으로 합니다.",
+    developerTitle: "업스트림 원저자",
+    developerRole: "TraderMemos 원저자",
     developerGithubLabel: "GitHub에서 보기",
     apiTitle: "백엔드 API",
     apiDescription: `이 앱이 사용 중인 ${BRAND.name} API 연결 정보.`,
@@ -537,6 +542,15 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
       background_jobs: "백그라운드 작업",
     },
   },
+};
+
+ABOUT["zh-CN"] = {
+  ...ABOUT.en,
+  intro: "自托管交易日志、投资组合分析和市场复盘平台。",
+  attribution: "TradeLens 基于 TraderMemos，由 sinhong2011 和贡献者最初开发。",
+  developerTitle: "原始上游作者",
+  developerRole: "TraderMemos 原始创作者",
+  developerGithubLabel: "在 GitHub 查看",
 };
 
 export function aboutContent(locale: string): AboutContent {
