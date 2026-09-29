@@ -1,5 +1,5 @@
 #!/bin/bash
-# Release ports used by TraderMemos dev servers.
+# Release ports used by TradeLens dev servers.
 # Kills air parent + server children by process group, preventing respawn.
 # Reads TM_HTTP_PORT from api/.env (defaults to 8080). Also frees Vite :5173.
 # Usage: make kill

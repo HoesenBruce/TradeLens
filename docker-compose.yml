@@ -12,6 +12,8 @@
 
 services:
   api:
+    labels:
+      org.opencontainers.image.title: TradeLens API
     image: ${DOCKERHUB_USERNAME:-sinhong2011}/tradermemos-api:${TM_IMAGE_TAG:-latest}
     ports:
       - "8080:8080"
@@ -53,6 +55,8 @@ services:
       retries: 3
       start_period: 15s
   web:
+    labels:
+      org.opencontainers.image.title: TradeLens Web
     image: ${DOCKERHUB_USERNAME:-sinhong2011}/tradermemos-web:${TM_IMAGE_TAG:-latest}
     ports:
       - "3000:80"

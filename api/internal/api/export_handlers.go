@@ -172,7 +172,7 @@ func (s *Server) handleExport(c *echo.Context) error {
 			}
 		}
 		if format == "json" {
-			filename := exporter.ExportFilename("tradermemos-export", acc.Name, "json")
+			filename := exporter.ExportFilename("tradelens-export", acc.Name, "json")
 			c.Response().Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, filename))
 			return c.JSON(http.StatusOK, payload)
 		}
@@ -186,7 +186,7 @@ func (s *Server) handleExport(c *echo.Context) error {
 		if err := exporter.WriteJournalCSV(&buf, rows); err != nil {
 			return Fail(http.StatusInternalServerError, "internal", "could not write csv", nil)
 		}
-		filename := exporter.ExportFilename("tradermemos-export", acc.Name, "csv")
+		filename := exporter.ExportFilename("tradelens-export", acc.Name, "csv")
 		c.Response().Header().Set("Content-Type", "text/csv; charset=utf-8")
 		c.Response().Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, filename))
 		return c.Blob(http.StatusOK, "text/csv; charset=utf-8", buf.Bytes())
@@ -235,7 +235,7 @@ func (s *Server) writeExportZip(c *echo.Context, userID, accountID, accountName 
 	if err := zw.Close(); err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not finalize zip", nil)
 	}
-	filename := exporter.ExportFilename("tradermemos-export", accountName, "zip")
+	filename := exporter.ExportFilename("tradelens-export", accountName, "zip")
 	c.Response().Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, filename))
 	return c.Blob(http.StatusOK, "application/zip", buf.Bytes())
 }

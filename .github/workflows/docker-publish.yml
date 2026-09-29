@@ -5,8 +5,9 @@
 #   DOCKERHUB_TOKEN
 #
 # Images:
-#   docker.io/<username>/tradermemos-api
-#   docker.io/<username>/tradermemos-web
+#   docker.io/<username>/tradelens-api
+#   docker.io/<username>/tradelens-web
+# Legacy tradermemos-* tags are published from the same build for existing installs.
 #
 # Self-host compose pulls those images via DOCKERHUB_USERNAME in root .env
 # (see .env.example). Default namespace in compose is sinhong2011.
@@ -20,7 +21,7 @@
 # Semver tags are raw values from the resolved version — type=semver only
 # works on tag refs, and this workflow always runs on a branch ref.
 
-name: Publish Docker images
+name: Publish TradeLens Docker images
 
 on:
   workflow_call:
@@ -111,7 +112,11 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/tradermemos-${{ matrix.image }}
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/tradelens-${{ matrix.image }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/tradermemos-${{ matrix.image }}
+          labels: |
+            org.opencontainers.image.title=TradeLens ${{ matrix.image }}
           tags: |
             type=raw,value=${{ steps.buildmeta.outputs.version }},enable=${{ steps.buildmeta.outputs.semver == 'true' }}
             type=raw,value=${{ steps.buildmeta.outputs.major_minor }},enable=${{ steps.buildmeta.outputs.semver == 'true' }}

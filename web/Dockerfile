@@ -19,5 +19,6 @@ COPY VERSION /VERSION
 RUN pnpm run build
 
 FROM nginx:alpine
+LABEL org.opencontainers.image.title="TradeLens Web"
 COPY web/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /web/dist /usr/share/nginx/html

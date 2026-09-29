@@ -14,6 +14,7 @@ RUN CGO_ENABLED=0 go build \
     -o /out/tradermemos ./cmd/cli
 
 FROM debian:bookworm-slim
+LABEL org.opencontainers.image.title="TradeLens API"
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
