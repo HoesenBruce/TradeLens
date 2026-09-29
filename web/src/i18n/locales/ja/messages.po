@@ -6454,7 +6454,7 @@ msgstr "並べ替え未設定"
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:63
 msgid "market.sbi1"
-msgstr "SBI証券の約定履歴ページを開きます。"
+msgstr "SBI証券で {0} を開き、対象期間を選択してCSVをエクスポートします。"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ReplayView.tsx:330
@@ -6677,7 +6677,7 @@ msgstr "セッション"
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:64
 msgid "market.sbi2"
-msgstr "期間を指定し、約定履歴をCSVで出力します。"
+msgstr "{0} を開き、対応する期間を選択してCSVをエクスポートします。"
 
 #. js-lingui-explicit-id
 #. placeholder {0}: Math.abs(pnl.position)
@@ -6821,7 +6821,7 @@ msgstr "ツール"
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:68
 msgid "market.sbi3"
-msgstr "元のCSVをアップロードします。CP932文字コードとレポートのヘッダーは自動処理されます。"
+msgstr "両方のファイルを取り込み、取引・入出金・拠出元本を再構築します。元のCSVを1ファイルずつアップロードしてください。CP932とレポートヘッダーは自動処理されます。"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ConnectView.tsx:105
@@ -12301,3 +12301,7 @@ msgstr "プロジェクトのライセンス"
 #. js-lingui-explicit-id
 msgid "settings.attributionNotices"
 msgstr "帰属に関する告知"
+
+#. js-lingui-explicit-id
+msgid "imports.sbiFiles"
+msgstr "口座の再構築には {0} と {1} の両方を使用します。各ファイルを個別に取り込んでください。"
