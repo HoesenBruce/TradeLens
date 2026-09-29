@@ -6,7 +6,9 @@
 
 ### Record. Review. Improve.
 
-**Self-hosted trading journal, portfolio analytics, and market review platform.** TradeLens is a Web-first fork of [TraderMemos](https://github.com/sinhong2011/TraderMemos). The existing Expo mobile client is preserved but is outside active fork validation.
+**A self-hosted trading journal, portfolio analytics, and trading research platform** for recording trades, reviewing performance, and testing market theses. Built on [TraderMemos](https://github.com/sinhong2011/TraderMemos) by [sinhong2011](https://github.com/sinhong2011) and contributors, TradeLens extends broker imports, account valuation, market-data access, research workflows, and Web localization.
+
+The Web application is the active product. The existing Expo mobile client is preserved but is outside active fork validation.
 
 TradeLens retains the original project’s AGPL-3.0 license and attribution; see [NOTICE](NOTICE) and [fork development policy](docs/FORK_DEVELOPMENT.md).
 
@@ -50,33 +52,41 @@ Historical TraderMemos screenshots remain in `docs/screenshots/` for reference.
 
 TradeLens keeps your trading journal and portfolio analytics on your own infrastructure. You control the database, configure your own OpenAI-compatible API for optional AI features, and can extend the application from source.
 
-## What TradeLens adds
-
-- **Portfolio review across currencies:** aggregate account statistics in an explicit target currency, with historical account-value estimates and visible warnings when valuation data is incomplete.
-- **Japanese brokerage workflows:** SBI Securities execution and cash-statement imports, realized P&L report enrichment, and handling for margin-to-cash conversions, delivery settlements, and stock splits.
-- **News and thesis review:** record news with linked assets and predictions, validate predictions against available market data, review outcomes, and export records as Markdown.
-- **Localized Web review:** Simplified Chinese support and broader translation coverage across trading, import, analytics, and settings screens.
-
 ## Features
 
-TradeLens inherits most core capabilities from TraderMemos while adding fork-specific portfolio, broker-import, and market-review features. Inherited upstream features may not all receive the same level of validation in this fork.
+These capabilities are available on the current `main` branch. Core journaling, reports, replay, and sharing build on TraderMemos; the next section describes this fork's extensions. Market-data features depend on provider coverage, and AI features require your own configured OpenAI-compatible API.
 
-| Feature | What it does |
+| Capability | What you can do |
 |---|---|
-| 📊&nbsp; **Home** | Equity curve, expectancy, streaks, hold times, and annual goal pacing — per account or across a multi-account portfolio |
-| 📒&nbsp; **Trade log** | Fills grouped into trades — filter, sort, tag, and drill into execution detail with MAE/MFE excursion charts |
-| 🗓&nbsp; **P&L calendar** | Daily heatmap with weekly totals and day-detail drill-down |
-| 📈&nbsp; **Reports** | Expectancy, SQN, Kelly %, MAE/MFE, Monte Carlo, execution quality — by setup, hour, and session, saved as view presets |
-| 📖&nbsp; **Playbook** | Strategy library linked to the trades that used each setup, with rule-compliance scoring |
-| 📥&nbsp; **Import** | Broker CSV presets (including SBI Securities), MT4/MT5 statements, IBKR Flex sync — or the [tm-sync](docs/tm-sync.md) watcher that imports statements as they appear |
-| 🔔&nbsp; **Alerts** | Risk rules, daily loss limits, and prop-drawdown warnings — push and webhook, from your own server |
-| ⏪&nbsp; **Bar replay** | Backtest symbols with available market data bar by bar against a persistent paper account — analyzed by the same reports |
-| 🔗&nbsp; **Sharing** | Revocable read-only performance links, share cards, and a Year Wrapped recap |
-| 🧮&nbsp; **Tools** | Position-size / FX / Kelly calculators, advanced chart, economic calendar, cash ledger |
-| 🤖&nbsp; **AI** *(optional)* | Screenshot fill extraction + trade coach via OpenAI-compatible APIs — your keys |
-| 🔌&nbsp; **API access** | Personal access tokens (`tm_pat_…`) for MCP/scripts; OpenAPI docs at `/docs` |
-| 📱&nbsp; **Upstream mobile app** *(beta; unverified in this fork)* | iOS & Android companion (Expo) — offline journaling on both; widgets, Live Activities, and Siri / Action Button capture on iOS. TestFlight (iOS) · APK on [Releases](https://github.com/sinhong2011/TraderMemos/releases) (Android) |
-| 🌗&nbsp; **Themes** | Dark and light, built on shadcn/ui + [coss ui](https://coss.com/ui/docs) tokens |
+| **Trading Journal** | Record or import fills, group them into trades, filter and tag your journal, attach screenshots, and review execution detail and MAE/MFE. Keep trade plans, planned direction, stops, and targets alongside actual fills and review notes. Import broker CSVs, MT4/MT5 statements, or IBKR Flex data; use [tm-sync](docs/tm-sync.md) to watch statement folders. |
+| **Portfolio & Performance** | Review one account or a selected account group through Home statistics, equity curves, the P&L calendar, account-value estimates, and annual goals. Analyze expectancy, SQN, Kelly %, Monte Carlo, execution quality, and setup/session breakdowns; manage cash flows and risk/prop alerts. Mixed-currency analytics require a target currency and use **latest FX**, including when displaying historical values; they do not reconstruct historical FX returns. |
+| **Japanese Broker Support** | Import SBI Securities execution, yen cash-statement, and domestic-stock realized P&L CSVs. Review cash and margin-long/short trades, 現引 (margin-to-cash conversion), and 現渡 (delivery settlement), with broker-specific accounting and warnings where split or valuation evidence is incomplete. |
+| **Market Data** | Use Yahoo or Finnhub bars, or connect a local/self-hosted service implementing the Generic Bars v1 HTTP contract. Configure provider order and fallback for supported responses. Feed charts, excursion analysis, replay, valuation, and prediction evaluation with available bars; inspect split-related events and data limitations. |
+| **Trading Research** | Build a Playbook linked to trades and review rule compliance. Replay available bars with a persistent paper account. Record news theses, affected assets, and User/AI predictions; review optional AI suggestions before saving and export news records as Markdown. Prediction-validation APIs evaluate trading-day horizons and optional benchmark/excess returns; the News performance page summarizes stored evaluations. |
+| **User Experience** | Review trades in dark or light themes, use localized Web workflows in English, Simplified Chinese, and Japanese (with upstream Traditional Chinese and Korean retained), and use position-size, FX, and Kelly tools. Share revocable read-only performance links, share cards, and Year Wrapped recaps. Optional AI supports screenshot fill extraction and trade coaching; personal API tokens support scripts/MCP, with OpenAPI docs at `/docs`. |
+
+## Extended from TraderMemos
+
+This fork adds or significantly extends the following areas while retaining the original project's journal and analytics foundation:
+
+- **SBI imports and Japanese accounting:** dedicated execution and cash-statement parsing, realized P&L enrichment, separate cash/margin semantics, 現引 and 現渡 handling, and split-boundary safeguards. These are SBI-specific rules, not assumptions applied to every broker. See [SBI import documentation](docs/features/sbi-import.md) and the [accounting policy](docs/FORK_DEVELOPMENT.md#broker-and-accounting-compatibility).
+- **Account valuation and currency-aware review:** position/cash replay for historical account-value estimates, stock-split and conversion handling, and target-currency normalization across portfolio statistics, cash flows, and annual goals. Estimates depend on imported history and market coverage; latest-FX conversion is labelled, and missing evidence is surfaced rather than silently treated as a complete valuation.
+- **Trade planning and review:** planned direction is stored separately from execution/accounting direction, with clearer separation of plan, actual fills, target-price comparison, and review notes. The underlying journal, stops/targets, and risk tools come from TraderMemos.
+- **Market-data integration:** Generic Bars v1 HTTP access for compatible external services, configurable provider routing/fallback, source metadata, and additional Japanese symbol and corporate-action handling. This interface does not bundle a collector or guarantee complete intraday history.
+- **News thesis research:** news/asset records, manual predictions, optional structured AI analysis with explicit acceptance, deterministic horizon evaluation, optional benchmark comparison, performance aggregation, and Markdown export. Evaluation depends on available bars; pending, unavailable, and incomplete outcomes remain distinct from validated results.
+- **Web localization and workflow refinements:** Simplified Chinese and expanded English/Japanese coverage across trading, imports, analytics, news, and settings, plus TradeLens branding and revised review surfaces. Translation coverage does not imply every retained upstream locale or mobile workflow has been validated.
+
+## Roadmap & validation scope
+
+The following are tracked separately and are **not delivered features**:
+
+- [IBKR intraday market-data provider](https://github.com/HoesenBruce/TraderMemos-Private/issues/15): IBKR Flex trade imports are available; a dedicated IBKR intraday bars provider is not.
+- [Custom statistics dashboard](https://github.com/HoesenBruce/TraderMemos-Private/issues/10), [additional multi-account review](https://github.com/HoesenBruce/TraderMemos-Private/issues/9), and [actual/virtual account comparison](https://github.com/HoesenBruce/TraderMemos-Private/issues/8): current portfolio aggregation does not imply these additional workflows are complete.
+- [Login-page language selector](https://github.com/HoesenBruce/TraderMemos-Private/issues/195): in-app language settings exist; a login selector remains planned.
+
+The Generic Bars HTTP integration is implemented; operating a separate intraday collector and verifying its data coverage is a separate deployment task. News research and evaluation are implemented as described above, not a promise of automated news collection or a general event backtesting system.
+
+Mobile is preserved from upstream and **not validated for this fork**. Reactivation requires compatibility and platform testing; see the [fork development policy](docs/FORK_DEVELOPMENT.md). Inherited upstream features may not all receive the same level of validation as active Web workflows.
 
 ## Tech stack
 
