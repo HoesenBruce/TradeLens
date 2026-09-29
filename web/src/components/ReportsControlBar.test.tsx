@@ -63,3 +63,9 @@ describe("ReportsControlBar", () => {
     expect(onUnitModeChange).toHaveBeenCalledWith("pct");
   });
 });
+
+it("does not offer a percentage mode without funding and reflects absolute output", () => {
+  render(<ReportsControlBar {...base} unitMode="pct" pctEnabled={false} />);
+  expect(screen.queryByRole("button", { name: "%" })).not.toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "$" })).toHaveAttribute("aria-pressed", "true");
+});

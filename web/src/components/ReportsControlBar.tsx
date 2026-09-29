@@ -82,12 +82,12 @@ export function ReportsControlBar({
         value={pnlMode}
         onChange={(v) => onPnlModeChange(v as PnlMode)}
       />
-      <div title={pctEnabled ? undefined : "Set an account starting balance to view %"}>
+      <div title={pctEnabled ? undefined : "A funded scope is required to view %"}>
         <SegmentedControl
           ariaLabel="Unit"
           size="xs"
-          options={UNIT_OPTS}
-          value={unitMode}
+          options={pctEnabled ? UNIT_OPTS : UNIT_OPTS.filter((o) => o.value === "abs")}
+          value={pctEnabled ? unitMode : "abs"}
           onChange={(v) => onUnitModeChange(v as UnitMode)}
         />
       </div>

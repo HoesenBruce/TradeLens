@@ -104,6 +104,18 @@ func migrateSQLite(conn *sql.DB) error {
 				dirty = false
 			}
 		}
+		if ver == 52 {
+			var count int
+			if err := conn.QueryRow("SELECT count(*) FROM pragma_table_info('annual_goals') WHERE name = 'currency'").Scan(&count); err != nil {
+				return err
+			}
+			if count == 1 {
+				if err := drv.SetVersion(ver, false); err != nil {
+					return err
+				}
+				dirty = false
+			}
+		}
 		if dirty {
 			prev := max(ver-1, 0)
 			if err := drv.SetVersion(prev, false); err != nil {

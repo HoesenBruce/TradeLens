@@ -23,9 +23,16 @@ export function netDeposits(opts: {
   accounts: Account[];
   accountIds?: string | readonly string[];
   cashTx: CashTransaction[];
+  /** Authoritative currency of already-normalized cash and trade samples. */
+  currency?: string;
 }): number {
   // Mixed funding needs per-flow FX; zero disables Reports percentage mode.
-  if (!accountBaseCurrency(opts.accounts, opts.accountIds)) return 0;
+  if (
+    opts.currency
+      ? opts.cashTx.some((c) => c.currency !== opts.currency || !Number.isFinite(c.amount))
+      : !accountBaseCurrency(opts.accounts, opts.accountIds)
+  )
+    return 0;
   const accountIds = new Set(scopeAccounts(opts.accounts, opts.accountIds).map((a) => a.id));
   return opts.cashTx
     .filter((c) => accountIds.has(c.account_id))
@@ -39,10 +46,18 @@ export function computeHeaderStats(opts: {
   accounts: Account[];
   accountIds?: string | readonly string[];
   cashTx: CashTransaction[];
+  /** Authoritative currency of already-normalized cash and trade samples. */
+  currency?: string;
   summary?: Summary;
   trades: Trade[];
 }): HeaderStats {
-  if (!accountBaseCurrency(opts.accounts, opts.accountIds)) {
+  if (
+    opts.currency
+      ? opts.summary?.currency !== opts.currency ||
+        opts.cashTx.some((c) => c.currency !== opts.currency || !Number.isFinite(c.amount)) ||
+        opts.trades.some((t) => t.pnl_currency !== opts.currency)
+      : !accountBaseCurrency(opts.accounts, opts.accountIds)
+  ) {
     return { netPnl: opts.summary?.net_pnl ?? 0, netPnlPct: null, cash: 0, active: 0 };
   }
   const accountIds = new Set(scopeAccounts(opts.accounts, opts.accountIds).map((a) => a.id));

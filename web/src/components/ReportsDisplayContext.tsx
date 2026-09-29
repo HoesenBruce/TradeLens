@@ -12,7 +12,7 @@ export interface ReportsDisplay {
   unitMode: UnitMode;
   /** Mean vs outlier-resistant median for per-trade stats; defaults to mean. */
   avgMode?: AvgMode;
-  denominator: number; // % basis (starting balance); 0 disables %
+  denominator: number; // Net deposits in the same API currency as samples; 0 disables %.
   currency: string;
   fxRate: number;
 }
@@ -52,15 +52,14 @@ export function useReportsMoney() {
   const tradePnl = (t: Trade) =>
     d.pnlMode === "gross" ? (t.gross_pnl ?? t.net_pnl ?? 0) : (t.net_pnl ?? 0);
 
-  const display = (rawPnl: number) =>
-    usePct ? (rawPnl * d.fxRate) / d.denominator : rawPnl * d.fxRate;
+  const display = (rawPnl: number) => (usePct ? rawPnl / d.denominator : rawPnl * d.fxRate);
   const format = (rawPnl: number) =>
     usePct
-      ? fmtPct((rawPnl * d.fxRate) / d.denominator, locale)
+      ? fmtPct(rawPnl / d.denominator, locale)
       : fmtSignedMoney(rawPnl * d.fxRate, d.currency, locale);
   const formatCompact = (rawPnl: number) =>
     usePct
-      ? fmtPct((rawPnl * d.fxRate) / d.denominator, locale)
+      ? fmtPct(rawPnl / d.denominator, locale)
       : fmtSignedMoneyCompact(rawPnl * d.fxRate, d.currency, locale);
   const formatAxis = (displayValue: number) =>
     usePct ? fmtPct(displayValue, locale) : fmtSignedMoneyCompact(displayValue, d.currency, locale);

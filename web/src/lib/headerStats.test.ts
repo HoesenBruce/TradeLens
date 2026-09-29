@@ -99,3 +99,33 @@ it("does not combine native cash flows with a normalized mixed Summary", () => {
   expect(netDeposits(opts)).toBe(0);
   expect(computeHeaderStats(opts)).toEqual({ netPnl: 150010, netPnlPct: null, cash: 0, active: 0 });
 });
+
+it("combines normalized mixed cash, P&L and open samples only in the declared currency", () => {
+  const accounts = [acct("a1", 0), { ...acct("a2", 0), base_currency: "JPY" }];
+  for (const [currency, scale] of [
+    ["JPY", 150],
+    ["USD", 1],
+  ] as const) {
+    const opts = {
+      accounts,
+      currency,
+      cashTx: [
+        { account_id: "a1", currency, amount: 100 * scale },
+        { account_id: "a2", currency, amount: 100 * scale },
+        { account_id: "a2", currency, amount: -10 * scale },
+      ] as never,
+      summary: { ...summary(20 * scale), currency },
+      trades: [{ ...openTrade(2, 10 * scale), pnl_currency: currency }],
+    };
+    expect(netDeposits(opts)).toBe(190 * scale);
+    expect(computeHeaderStats(opts)).toEqual({
+      netPnl: 20 * scale,
+      netPnlPct: 20 / 190,
+      cash: 210 * scale,
+      active: 20 * scale,
+    });
+    expect(netDeposits({ ...opts, accountIds: "a1" })).toBe(100 * scale);
+    expect(computeHeaderStats({ ...opts, currency: "EUR" }).netPnlPct).toBeNull();
+    expect(netDeposits({ ...opts, currency: "EUR" })).toBe(0);
+  }
+});

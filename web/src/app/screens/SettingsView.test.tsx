@@ -1,4 +1,5 @@
-import { screen } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ComponentProps } from "react";
 import { describe, expect, it, beforeEach, vi } from "vite-plus/test";
@@ -11,16 +12,41 @@ import { SettingsView } from "./SettingsView";
 
 function renderSettings(props: ComponentProps<typeof SettingsView>) {
   return renderWithI18n(
-    <ThemeProvider defaultTheme="dark">
-      <Toaster>
-        <SettingsView {...props} />
-      </Toaster>
-    </ThemeProvider>,
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      <ThemeProvider defaultTheme="dark">
+        <Toaster>
+          <SettingsView {...props} />
+        </Toaster>
+      </ThemeProvider>
+    </QueryClientProvider>,
   );
 }
 
-vi.mock("../../lib/hooks/useTrades", () => ({
-  useTrades: () => ({ data: [], isLoading: false, isError: false }),
+vi.mock("../../lib/api/trades", () => ({
+  tradesApi: {
+    list: vi.fn<(request: { account_id: string; target_currency: string }) => Promise<unknown>>(
+      async (request) => ({
+        currency: request.target_currency,
+        trades: [
+          { account_id: request.account_id, net_pnl: request.target_currency === "JPY" ? 200 : 20 },
+        ],
+      }),
+    ),
+  },
+}));
+vi.mock("../../lib/api/analytics", () => ({
+  analyticsApi: {
+    equityCurve: vi.fn<
+      (request: { account_id: string; target_currency: string }) => Promise<unknown>
+    >(async (request) => ({
+      currency: request.target_currency,
+      cash_transactions: [
+        { account_id: request.account_id, amount: 10000, currency: request.target_currency },
+      ],
+    })),
+  },
 }));
 
 vi.mock("@tanstack/react-router", () => ({
@@ -145,8 +171,7 @@ vi.mock("../../lib/hooks/useSystemInfo", async (importOriginal) => ({
 }));
 
 // SettingsView reads `me` to decide whether the owner-only Users section
-// belongs in the nav. Everything else in this file renders without a
-// QueryClient, so the whole module is stubbed rather than provided for.
+// belongs in the nav. Owner state is stubbed independently of account analytics.
 vi.mock("../../lib/hooks/useMe", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../../lib/hooks/useMe")>()),
   useMe: () => ({
@@ -266,6 +291,17 @@ describe("SettingsView", () => {
     // Manage/delete now live on the account detail page the row links to.
     expect(screen.getByRole("link", { name: /main/i })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /delete main/i })).not.toBeInTheDocument();
+  });
+
+  it("keeps mixed account rows in their own currency", async () => {
+    const jpy = { ...accounts[0], id: "j", name: "Japan", base_currency: "JPY" };
+    renderSettings({ ...baseProps, accounts: [...accounts, jpy] });
+    const usdRow = screen.getByRole("link", { name: /Main/ });
+    const jpyRow = screen.getByRole("link", { name: /Japan/ });
+    expect(await within(usdRow).findByText("+$20.00")).toBeInTheDocument();
+    expect(await within(jpyRow).findByText("+¥200")).toBeInTheDocument();
+    expect(within(usdRow).getByText("$10,020.00")).toBeInTheDocument();
+    expect(within(jpyRow).getByText("¥10,200")).toBeInTheDocument();
   });
 
   it("lists every account as a row linking to its detail page", () => {

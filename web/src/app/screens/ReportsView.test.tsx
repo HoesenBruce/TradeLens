@@ -226,7 +226,7 @@ describe("ReportsView", () => {
   });
 
   it("renders the display-mode toggles", () => {
-    render(<ReportsView {...base} dim="symbol" breakdown={[]} />);
+    render(<ReportsView {...base} dim="symbol" breakdown={[]} denominator={1000} />);
     const pnl = screen.getByRole("group", { name: "P&L basis" });
     const unit = screen.getByRole("group", { name: "Unit" });
     expect(within(pnl).getByRole("button", { name: "Gross" })).toBeInTheDocument();

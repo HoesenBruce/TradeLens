@@ -1514,6 +1514,61 @@ paths:
         "413":
           description: Too many keys, or the blob exceeds 16 KiB
 
+  /api/v1/settings/annual-goal:
+    get:
+      tags: [Settings]
+      summary: Read annual goal in its stored or requested currency
+      parameters:
+        - name: year
+          in: query
+          schema:
+            type: integer
+        - name: target_currency
+          in: query
+          schema:
+            type: string
+            pattern: '^[A-Za-z]{3}$'
+      responses:
+        "200":
+          description: year, amount (null if unset), currency. Explicit target also returns target_currency, fx_policy latest, fx_rates and source_currency for a saved goal. Stored goal is never modified by conversion.
+        "400":
+          description: Invalid target or currency_required for a legacy goal whose currency is unassigned; no normalized progress input is returned.
+        "502":
+          description: fx_unavailable; no normalized amount is returned.
+    put:
+      tags: [Settings]
+      summary: Save annual goal with an explicit source currency
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount]
+              properties:
+                year:
+                  type: integer
+                amount:
+                  type: number
+                  description: Positive finite amount in currency.
+                currency:
+                  type: string
+                  description: Three-letter currency; omitted by legacy clients leaves currency unassigned and excludes normalized progress until confirmed.
+      responses:
+        "200":
+          description: Stored annual goal with currency.
+    delete:
+      tags: [Settings]
+      summary: Clear annual goal
+      parameters:
+        - name: year
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Goal with null amount.
+
   /api/v1/settings/alerts:
     get:
       tags: [Alerts]

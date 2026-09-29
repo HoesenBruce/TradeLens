@@ -127,6 +127,7 @@ export interface HomeViewProps {
   goalYear: number;
   goalAmount: number | null | undefined;
   goalLoading: boolean;
+  goalError?: string;
   goalSaving: boolean;
   ytdNetPnl: number | undefined;
   ytdLoading: boolean;
@@ -563,6 +564,7 @@ export function HomeView({
   goalYear,
   goalAmount,
   goalLoading,
+  goalError,
   goalSaving,
   ytdNetPnl,
   ytdLoading,
@@ -738,11 +740,13 @@ export function HomeView({
         </div>
       </Card>
 
-      <DailyLossCard
-        todayNetPnl={todayNetPnl}
-        currency={dailyFx.currency}
-        fxRate={dailyFx.rate ?? 1}
-      />
+      {accountBaseCurrency(accounts, selectedAccountIds) ? (
+        <DailyLossCard
+          todayNetPnl={todayNetPnl}
+          currency={dailyFx.currency}
+          fxRate={dailyFx.rate ?? 1}
+        />
+      ) : null}
 
       {/* Prop status tracks one funded account; hidden under a multi-account scope. */}
       <PropStatusCard accounts={accounts} selectedAccountId={soleAccountId(selectedAccountIds)} />
@@ -755,6 +759,7 @@ export function HomeView({
         fxRate={fxRate}
         variant="hero"
         loading={goalLoading || ytdLoading}
+        unavailable={goalError}
         saving={goalSaving}
         onSave={onSaveGoal}
         onClear={onClearGoal}

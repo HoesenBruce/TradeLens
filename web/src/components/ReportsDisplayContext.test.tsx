@@ -181,3 +181,18 @@ describe("useReportsMoney", () => {
     ).toBe(50);
   });
 });
+
+it("keeps return ratios unchanged by display FX, since samples and deposits share API currency", () => {
+  for (const fxRate of [1, 1 / 150, 150]) {
+    const { result } = renderHook(() => useReportsMoney(), {
+      wrapper: wrapper({
+        pnlMode: "net",
+        unitMode: "pct",
+        denominator: 10000,
+        currency: "USD",
+        fxRate,
+      }),
+    });
+    expect(result.current.display(200)).toBeCloseTo(0.02);
+  }
+});

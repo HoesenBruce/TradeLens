@@ -48,7 +48,7 @@ describe("AccountNavPopover", () => {
     expect(useFilters.getState().accountIds).toEqual(["a1"]);
   });
 
-  it("builds a same-currency portfolio and disables other-currency rows", async () => {
+  it("builds a mixed portfolio and preserves checked scope", async () => {
     const user = userEvent.setup();
     wrap(<AccountNavPopover />);
 
@@ -57,15 +57,11 @@ describe("AccountNavPopover", () => {
     await user.click(screen.getByRole("menuitemcheckbox", { name: /Paper USD/ }));
     expect(useFilters.getState().accountIds).toEqual(["a1", "a2"]);
 
-    // The EUR account can't join a USD portfolio.
-    expect(screen.getByRole("menuitemcheckbox", { name: /Euro EUR/ })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
-
+    await user.click(screen.getByRole("menuitemcheckbox", { name: /Euro EUR/ }));
+    expect(useFilters.getState().accountIds).toEqual(["a1", "a2", "a3"]);
     // Deselecting one keeps the rest of the scope.
     await user.click(screen.getByRole("menuitemcheckbox", { name: /Live USD/ }));
-    expect(useFilters.getState().accountIds).toEqual(["a2"]);
+    expect(useFilters.getState().accountIds).toEqual(["a2", "a3"]);
   });
 
   it("clears the scope from the All accounts row", async () => {
