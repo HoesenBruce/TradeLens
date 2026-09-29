@@ -30,7 +30,7 @@ func TestExportUnifiedCSVAndJSON(t *testing.T) {
 	rec = do(s, http.MethodGet, "/api/v1/exports?account_id="+acc+"&format=csv", "", tok)
 	require.Equal(t, http.StatusOK, rec.Code, rec.Body.String())
 	require.Contains(t, rec.Header().Get("Content-Type"), "text/csv")
-	require.Contains(t, rec.Header().Get("Content-Disposition"), "tradermemos-export")
+	require.Contains(t, rec.Header().Get("Content-Disposition"), "tradelens-export")
 	records, err := csv.NewReader(strings.NewReader(rec.Body.String())).ReadAll()
 	require.NoError(t, err)
 	require.GreaterOrEqual(t, len(records), 2)
@@ -40,6 +40,7 @@ func TestExportUnifiedCSVAndJSON(t *testing.T) {
 
 	rec = do(s, http.MethodGet, "/api/v1/exports?account_id="+acc+"&format=json", "", tok)
 	require.Equal(t, http.StatusOK, rec.Code, rec.Body.String())
+	require.Contains(t, rec.Header().Get("Content-Disposition"), "tradelens-export")
 	var payload map[string]any
 	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &payload))
 	require.Equal(t, float64(1), payload["format_version"])
@@ -66,6 +67,7 @@ func TestExportZipIncludesJSON(t *testing.T) {
 	rec := do(s, http.MethodGet, "/api/v1/exports?account_id="+acc+"&format=zip", "", tok)
 	require.Equal(t, http.StatusOK, rec.Code, rec.Body.String())
 	require.Equal(t, "application/zip", rec.Header().Get("Content-Type"))
+	require.Contains(t, rec.Header().Get("Content-Disposition"), "tradelens-export")
 	require.Contains(t, rec.Header().Get("Content-Disposition"), ".zip")
 	require.Greater(t, rec.Body.Len(), 100)
 }

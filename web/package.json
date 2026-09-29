@@ -1,5 +1,5 @@
 {
-  "name": "tradermemos-web",
+  "name": "tradelens-web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -111,7 +111,7 @@
   "cloudflare": {
     "bindings": {
       "VITE_API": {
-        "description": "Optional build-time API base URL (e.g. `https://api.example.com/api/v1`). Leave empty and set **Server** on the login screen instead. See [fork-deploy.md](https://github.com/sinhong2011/TraderMemos/blob/main/docs/fork-deploy.md)."
+        "description": "Optional build-time API base URL (e.g. `https://api.example.com/api/v1`). Leave empty and set **Server** on the login screen instead. See [fork-deploy.md](https://github.com/HoesenBruce/TraderMemos-Private/blob/main/docs/fork-deploy.md)."
       }
     }
   }

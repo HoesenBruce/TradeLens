@@ -1,6 +1,6 @@
 # Release workflow
 
-TraderMemos uses [release-please](https://github.com/googleapis/release-please) for semver, changelogs, and GitHub Releases.
+TradeLens uses [release-please](https://github.com/googleapis/release-please) for semver, changelogs, and GitHub Releases.
 
 ```mermaid
 flowchart TD
@@ -38,7 +38,7 @@ lines release-please reads to build the changelog.
 4. Merge the Release PR → GitHub Release `vX.Y.Z` is created.
 5. Approve the `docker-hub` deployment → Docker images are published.
 6. The Android APK builds on EAS — no approval needed — and lands on the GitHub
-   Release page as `TraderMemos-<version>.apk` (+ `.sha256`).
+   Release page as `TradeLens-<version>.apk` (+ `.sha256`).
 7. Build iOS separately: dispatch `ios-release` on the private Forgejo remote
    (see [Mobile releases](#mobile-releases)). It is **not** part of this chain.
 
@@ -89,9 +89,13 @@ from the repo.
 
 ## Docker images
 
+Images publish as `tradelens-api` / `tradelens-web`, with matching legacy
+`tradermemos-*` aliases for existing deployments. Stable Android download names
+are `TradeLens.apk` and the compatibility alias `TraderMemos.apk` (both with checksums).
+
 On release, `.github/workflows/release-please.yml` chains `docker-publish.yml` with the new version (same tags as a manual GitHub Release).
 
-You can still run **Publish Docker images** manually via `workflow_dispatch`.
+You can still run **Publish TradeLens Docker images** manually via `workflow_dispatch`.
 
 ### Approval gate
 
@@ -112,7 +116,7 @@ deliberate act rather than a side effect of merging the Release PR. The test
 jobs run first and ungated, so the approval prompt arrives with CI already green.
 
 Approve from the workflow run page, or the **Deployments** section of the
-release. Unapproved runs expire after 30 days; re-run **Publish Docker images**
+release. Unapproved runs expire after 30 days; re-run **Publish TradeLens Docker images**
 via `workflow_dispatch` with the version to backfill.
 
 Reviewers live in **Settings → Environments → docker-hub**, not in the workflow

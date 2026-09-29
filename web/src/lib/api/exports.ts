@@ -50,7 +50,7 @@ export async function downloadExport(params: {
     throw new ApiError(res.status, e.code ?? "error", e.message ?? res.statusText);
   }
 
-  const fallback = `tradermemos-export.${params.format}`;
+  const fallback = `tradelens-export.${params.format}`;
   const filename = filenameFromDisposition(res.headers.get("Content-Disposition"), fallback);
 
   if (params.format === "json") {
