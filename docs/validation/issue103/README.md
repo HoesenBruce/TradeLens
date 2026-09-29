@@ -44,7 +44,7 @@ cases do not apply to the filename-only change.
 
 ![Actual JSON, CSV and ZIP downloads](exports.png)
 
-- Full Web Docker build was stopped after repeated download failures (curl error 23)
+- Full Web Docker build failed with a dependency download timeout (error 23)
   for the pnpm-managed Node ARM64 musl runtime and Cloudflare workerd. Local Web
   build passed; no successful Web Docker build is claimed.
 
