@@ -12280,3 +12280,23 @@ msgstr "Your trade data stays on your stack."
 #: src/app/screens/YearWrappedView.tsx:191
 msgid "wrapped.yourYearInTrading"
 msgstr "Your year in trading"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.openSourceAttribution"
+msgstr "Open source / Attribution"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.upstreamRepository"
+msgstr "Upstream repository"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.projectLicense"
+msgstr "Project license"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.attributionNotices"
+msgstr "Attribution notices"

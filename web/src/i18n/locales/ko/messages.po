@@ -12281,3 +12281,23 @@ msgstr ""
 #: src/app/screens/YearWrappedView.tsx:191
 msgid "wrapped.yourYearInTrading"
 msgstr ""
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.openSourceAttribution"
+msgstr "오픈 소스 / 저작자 표시"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.upstreamRepository"
+msgstr "업스트림 저장소"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.projectLicense"
+msgstr "프로젝트 라이선스"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.attributionNotices"
+msgstr "저작자 표시 고지"

@@ -12280,3 +12280,23 @@ msgstr "交易数据保存在你的服务器上。"
 #: src/app/screens/YearWrappedView.tsx:191
 msgid "wrapped.yourYearInTrading"
 msgstr "你的交易年度"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.openSourceAttribution"
+msgstr "开源 / 署名"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.upstreamRepository"
+msgstr "上游仓库"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.projectLicense"
+msgstr "项目许可证"
+
+#: src/app/screens/settings/about-tab.tsx
+#. js-lingui-explicit-id
+msgid "settings.attributionNotices"
+msgstr "署名声明"

@@ -479,16 +479,31 @@ describe("SettingsView", () => {
     window.location.hash = "#about";
     renderSettings({ ...baseProps });
     expect(await screen.findByRole("heading", { name: "TradeLens", level: 2 })).toBeInTheDocument();
-    expect(screen.getByText(/open-source performance journal/i)).toBeInTheDocument();
-    expect(screen.getByText("sinhong2011")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Self-hosted trading journal, portfolio analytics/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText("sinhong2011 and contributors")).toBeInTheDocument();
     expect(screen.getByText("Backend API")).toBeInTheDocument();
     expect(screen.getByText("Updates")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /check for updates/i })).toBeInTheDocument();
     expect(screen.getByText("Connected")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "GitHub repository" })).toHaveAttribute(
       "href",
-      "https://github.com/sinhong2011/TraderMemos",
+      "https://github.com/HoesenBruce/TraderMemos-Private",
     );
     expect(screen.getAllByRole("link", { name: /github repository/i })).toHaveLength(2);
+    expect(screen.getByText(/TradeLens is based on TraderMemos/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /TraderMemos Upstream repository/ })).toHaveAttribute(
+      "href",
+      "https://github.com/sinhong2011/TraderMemos",
+    );
+    expect(screen.getByRole("link", { name: /GNU AGPL-3.0/ })).toHaveAttribute(
+      "href",
+      "https://github.com/HoesenBruce/TraderMemos-Private/blob/main/LICENSE",
+    );
+    expect(screen.getByRole("link", { name: /NOTICE/ })).toHaveAttribute(
+      "href",
+      "https://github.com/HoesenBruce/TraderMemos-Private/blob/main/NOTICE",
+    );
   });
 });

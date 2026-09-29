@@ -294,6 +294,40 @@ export function AboutTab() {
         </div>
       </AboutCard>
 
+      <SettingsSection
+        title={localize({
+          id: "settings.openSourceAttribution",
+          message: "Open source / Attribution",
+        })}
+      >
+        <AboutCard className="p-2">
+          <p className="m-0 px-4 py-3.5 text-[13px] leading-relaxed text-muted-foreground">
+            {content.attribution}
+          </p>
+          <AboutLinkRow
+            label="TraderMemos"
+            href={BRAND.upstreamRepositoryUrl}
+            description={localize({
+              id: "settings.upstreamRepository",
+              message: "Upstream repository",
+            })}
+          />
+          <AboutLinkRow
+            label="GNU AGPL-3.0"
+            href={`${REPO_URL}/blob/main/LICENSE`}
+            description={localize({ id: "settings.projectLicense", message: "Project license" })}
+          />
+          <AboutLinkRow
+            label="NOTICE"
+            href={`${REPO_URL}/blob/main/NOTICE`}
+            description={localize({
+              id: "settings.attributionNotices",
+              message: "Attribution notices",
+            })}
+          />
+        </AboutCard>
+      </SettingsSection>
+
       {/* Versions & updates */}
       <SettingsSection title={content.updatesTitle} description={content.updatesDescription}>
         <SettingsGroup>
