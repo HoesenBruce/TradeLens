@@ -1,4 +1,4 @@
-# Contributing to TraderMemos
+# Contributing to TradeLens
 
 ## Development setup
 
@@ -11,8 +11,8 @@
 ### Clone and bootstrap
 
 ```bash
-git clone <repo-url>
-cd TraderMemos
+git clone git@github.com:HoesenBruce/TraderMemos-Private.git
+cd TraderMemos-Private
 make setup           # mise + air + vp install; seeds api/.env
 
 # Web validation (from repo root)

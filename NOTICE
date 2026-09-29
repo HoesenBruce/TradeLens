@@ -1,0 +1,17 @@
+TradeLens
+
+TradeLens is a fork of TraderMemos, originally developed by sinhong2011
+and the TraderMemos contributors:
+https://github.com/sinhong2011/TraderMemos
+
+Fork source: https://github.com/HoesenBruce/TraderMemos-Private
+Product name: TradeLens
+Tagline: Record. Review. Improve.
+
+The original project license, GNU Affero General Public License version 3,
+is preserved in LICENSE. Existing copyright and attribution notices remain
+applicable. The TradeLens name identifies downstream changes and does not
+claim original authorship of TraderMemos or its third-party dependencies.
+
+Repository names, CLI commands, API identifiers, database names, and the
+preserved mobile client may still use TraderMemos for compatibility.

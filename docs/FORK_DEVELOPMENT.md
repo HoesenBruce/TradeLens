@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines the development scope and compatibility policy for the private fork
+This document defines the development scope and compatibility policy for TradeLens, the private fork of [TraderMemos](https://github.com/sinhong2011/TraderMemos),
 `HoesenBruce/TraderMemos-Private`.
 
 The goal is to support fork-specific trading workflows while keeping future upstream merges and
