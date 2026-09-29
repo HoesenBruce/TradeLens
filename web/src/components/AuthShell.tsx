@@ -196,7 +196,7 @@ export function AuthShell({
         />
 
         <div className="relative flex items-center gap-2.5">
-          <AppLogo size={30} />
+          <AppLogo size={48} />
           <p className="text-base font-semibold tracking-tight text-foreground">{BRAND.name}</p>
         </div>
 
@@ -231,7 +231,7 @@ export function AuthShell({
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(65%_45%_at_50%_-8%,color-mix(in_oklab,var(--primary)_6%,transparent),transparent_62%)]"
         />
         <div className="relative mb-8 flex flex-col items-center gap-2.5 lg:hidden">
-          <AppLogo size={36} />
+          <AppLogo size={72} />
           <p className="text-base font-semibold tracking-tight text-foreground">{BRAND.name}</p>
           <p className="text-sm text-muted-foreground">{BRAND.tagline}</p>
         </div>
