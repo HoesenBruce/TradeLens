@@ -330,6 +330,7 @@ function BrokerGuidance({
 // ---------------------------------------------------------------------------
 
 interface Step1Props {
+  brokerKey?: string;
   accounts: Account[];
   accountsLoading: boolean;
   defaultAccountId?: string;
@@ -339,6 +340,7 @@ interface Step1Props {
 }
 
 function Step1Upload({
+  brokerKey,
   accounts,
   accountsLoading,
   defaultAccountId,
@@ -384,6 +386,14 @@ function Step1Upload({
   return (
     <Card title={tr({ id: "imports.uploadFile", message: "Upload file" })} fill>
       <div className="flex min-h-0 flex-1 flex-col gap-4">
+        {brokerKey === "sbi" && (
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {tr({
+              id: "imports.sbiFiles",
+              message: `Account reconstruction uses both ${"約定履歴 CSV"} and ${"入出金明細 CSV"}. Import each file separately.`,
+            })}
+          </p>
+        )}
         {accountsLoading ? (
           <Skeleton height="36px" />
         ) : canBypassAccount && accounts.length === 0 ? (
@@ -1577,6 +1587,7 @@ export function ImportView({
           {step === 1 && (
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(260px,300px)]">
               <Step1Upload
+                brokerKey={brokerKey}
                 accounts={accounts}
                 accountsLoading={accountsLoading}
                 defaultAccountId={defaultAccountId}

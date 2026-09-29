@@ -56,19 +56,22 @@ export const BROKERS: BrokerDef[] = [
     brand: "#E60012",
     monogram: "SBI",
     get formats() {
-      return tr({ id: "market.sbiFormat", message: "Execution History CSV" });
+      return "約定履歴 CSV · 入出金明細 CSV";
     },
     get steps() {
       return [
-        tr({ id: "market.sbi1", message: "Open the SBI Securities execution history page." }),
+        tr({
+          id: "market.sbi1",
+          message: `In SBI Securities, open ${"口座管理 → 取引履歴 → 約定履歴"}, select the import period, and export the CSV.`,
+        }),
         tr({
           id: "market.sbi2",
-          message: "Set the period and export the execution history as CSV.",
+          message: `Open ${"入出金 → 入出金明細"}, select the corresponding period, and export the CSV.`,
         }),
         tr({
           id: "market.sbi3",
           message:
-            "Upload the original CSV — CP932 encoding and the report header are handled automatically.",
+            "Import both exports to reconstruct trades, cash flows, and contributed capital. Upload one original CSV at a time; CP932 encoding and report headers are handled automatically.",
         }),
       ];
     },
