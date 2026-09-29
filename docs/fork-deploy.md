@@ -1,9 +1,11 @@
 > [!NOTE]
-> **Canonical version:** the docs site sources in [`marketing/content/docs/`](../marketing/content/docs/) — this copy is kept as a convenience and may lag behind.
+> **Upstream reference:** the docs site sources in [`marketing/content/docs/`](../marketing/content/docs/) — this copy documents the TradeLens fork. Upstream documentation may differ.
 
 # Fork → deploy the web UI on your account
 
-Goal: another GitHub user gets **TraderMemos web** on **their** Vercel / Cloudflare / Netlify, and/or the **API** on Railway, then connects them.
+> TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos). The current fork is `HoesenBruce/TraderMemos-Private`; private-repository access is required. Keep internal deployment identifiers until #103.
+
+Goal: another GitHub user gets **TradeLens web** on **their** Vercel / Cloudflare / Netlify, and/or the **API** on Railway, then connects them.
 
 ```
 You                    CDN (Vercel / CF / Netlify)     API (Railway / Docker)
@@ -19,10 +21,10 @@ No manual fork. The platform clones into *your* GitHub and deploys under *your* 
 
 | Platform | Button / link | What you get |
 |----------|---------------|--------------|
-| **Vercel** | [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsinhong2011%2FTraderMemos&root-directory=web&project-name=tradermemos&repository-name=tradermemos&env=VITE_API&envDescription=Optional%20API%20base%20URL%20(e.g.%20https%3A%2F%2Fapi.example.com%2Fapi%2Fv1).%20Leave%20empty%20to%20set%20Server%20at%20login.&envLink=https%3A%2F%2Fgithub.com%2Fsinhong2011%2FTraderMemos%2Fblob%2Fmain%2Fdocs%2Ffork-deploy.md) | Full monorepo clone; project Root = `web` |
-| **Cloudflare** | [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2Fsinhong2011%2FTraderMemos%2Ftree%2Fmain%2Fweb) | New repo from `web/` only; Workers static SPA |
-| **Netlify** | [Deploy to Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/sinhong2011/TraderMemos) | Uses root [`netlify.toml`](../netlify.toml) (`base = web`) |
-| **Railway** | [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2Fsinhong2011%2FTraderMemos&utm_medium=integration&utm_source=button&utm_campaign=tradermemos) | Go API via [`railway.toml`](../railway.toml); attach Volume at `/data` |
+| **Vercel** | [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&root-directory=web&project-name=tradermemos&repository-name=tradermemos&env=VITE_API&envDescription=Optional%20API%20base%20URL%20(e.g.%20https%3A%2F%2Fapi.example.com%2Fapi%2Fv1).%20Leave%20empty%20to%20set%20Server%20at%20login.&envLink=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private%2Fblob%2Fmain%2Fdocs%2Ffork-deploy.md) | Full monorepo clone; project Root = `web` |
+| **Cloudflare** | [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private%2Ftree%2Fmain%2Fweb) | New repo from `web/` only; Workers static SPA |
+| **Netlify** | [Deploy to Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TraderMemos-Private) | Uses root [`netlify.toml`](../netlify.toml) (`base = web`) |
+| **Railway** | [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&utm_medium=integration&utm_source=button&utm_campaign=tradermemos) | Go API via [`railway.toml`](../railway.toml); attach Volume at `/data` |
 
 Optional env **`VITE_API`**: bake in a default API base (`https://api.example.com/api/v1`). Leave blank to type the Server URL at login.
 
@@ -59,7 +61,7 @@ Prefer Option 1 (Workers + [`web/wrangler.toml`](../web/wrangler.toml)) for SPA 
 
 ### Netlify
 
-1. [app.netlify.com/start/deploy](https://app.netlify.com/start/deploy?repository=https://github.com/sinhong2011/TraderMemos) — or **Add new site → Import** your fork.  
+1. [app.netlify.com/start/deploy](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TraderMemos-Private) — or **Add new site → Import** your fork.
 2. Root [`netlify.toml`](../netlify.toml) already sets `base = web`, build, publish, and SPA redirect.  
 3. Optional env: `VITE_API`.  
 4. Allow `https://*.netlify.app` in `TM_CORS_ORIGINS`.
@@ -68,7 +70,7 @@ Prefer Option 1 (Workers + [`web/wrangler.toml`](../web/wrangler.toml)) for SPA 
 
 Railway is the best one-click host for the **Go API** (disk volume for SQLite). Pair it with a CDN web deploy above.
 
-1. [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2Fsinhong2011%2FTraderMemos&utm_medium=integration&utm_source=button&utm_campaign=tradermemos) — or New Project → Deploy from GitHub → your fork.  
+1. [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTraderMemos-Private&utm_medium=integration&utm_source=button&utm_campaign=tradermemos) — or New Project → Deploy from GitHub → your fork.
 2. Root [`railway.toml`](../railway.toml) builds `api/Dockerfile` and health-checks `/healthz`.  
 3. **Attach a Volume** mounted at `/data` (keeps SQLite + attachments across deploys).  
 4. Variables:
