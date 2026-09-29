@@ -8,7 +8,7 @@ import { cn } from "@/lib/cn";
 /**
  * Equity curve at panel scale: a smooth run with one drawdown, drawn on load,
  * grounded by a gradient area fill. Journal memos pin onto its turning points
- * and the run ends in the brand's glowing terminal cursor.
+ * and a lens settles over the final review point. Motion runs once on entry.
  */
 const EQUITY_LINE =
   "M0 270 C 50 266, 90 252, 130 236 C 160 224, 180 250, 214 248 C 250 246, 270 210, 305 182 C 330 162, 350 186, 380 178 C 420 168, 440 120, 480 96 C 505 81, 522 66, 540 60";
@@ -23,7 +23,7 @@ type Memo = {
   /** Chip anchor: % offsets + translate that hangs it off the marker. */
   chip: string;
   marker: { cx: number; cy: number };
-  delay: string;
+  delay: number;
 };
 
 const MEMOS: Memo[] = [
@@ -39,7 +39,7 @@ const MEMOS: Memo[] = [
     tone: "loss",
     chip: "left-[36.6%] top-[77.5%] -translate-x-1/2 translate-y-3",
     marker: { cx: 214, cy: 248 },
-    delay: "[animation-delay:700ms]",
+    delay: 900,
   },
   {
     meta: "APR 02 · ES",
@@ -50,7 +50,7 @@ const MEMOS: Memo[] = [
     tone: "profit",
     chip: "left-[65.1%] top-[55.6%] -translate-x-1/2 translate-y-[calc(-100%_-_12px)]",
     marker: { cx: 380, cy: 178 },
-    delay: "[animation-delay:950ms]",
+    delay: 1800,
   },
   {
     meta: "MAY 21 · AAPL",
@@ -62,9 +62,9 @@ const MEMOS: Memo[] = [
     },
     r: "+3.2R",
     tone: "profit",
-    chip: "left-[82.2%] top-[30%] translate-x-[-85%] translate-y-[calc(-100%_-_14px)]",
+    chip: "left-[82.2%] top-[30%] -translate-x-full translate-y-[calc(-100%_-_14px)]",
     marker: { cx: 480, cy: 96 },
-    delay: "[animation-delay:1200ms]",
+    delay: 2700,
   },
 ];
 
@@ -80,12 +80,12 @@ function EquityArtwork() {
       <svg viewBox="0 0 584 320" fill="none" className="w-full">
         <defs>
           <radialGradient id={glowId}>
-            <stop offset="0" stopColor="var(--profit)" stopOpacity="0.28" />
-            <stop offset="1" stopColor="var(--profit)" stopOpacity="0" />
+            <stop offset="0" stopColor="var(--primary)" stopOpacity="0.28" />
+            <stop offset="1" stopColor="var(--primary)" stopOpacity="0" />
           </radialGradient>
           <linearGradient id={areaId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="var(--profit)" stopOpacity="0.16" />
-            <stop offset="0.85" stopColor="var(--profit)" stopOpacity="0" />
+            <stop offset="0" stopColor="var(--primary)" stopOpacity="0.16" />
+            <stop offset="0.85" stopColor="var(--primary)" stopOpacity="0" />
           </linearGradient>
           <linearGradient id={fadeId} x1="0" y1="0" x2="1" y2="0">
             <stop offset="0.7" stopColor="#fff" />
@@ -104,14 +104,15 @@ function EquityArtwork() {
         <path
           d={EQUITY_LINE}
           pathLength={1}
-          className="stroke-profit [stroke-dasharray:1] motion-safe:animate-[auth-equity-draw_1.4s_ease-out_both]"
+          className="stroke-primary [stroke-dasharray:1] motion-safe:animate-[auth-equity-draw_1.4s_ease-out_both]"
           strokeWidth="2"
           strokeLinecap="round"
         />
         {MEMOS.map((m) => (
           <g
             key={m.meta}
-            className={cn("motion-safe:animate-[auth-memo-in_500ms_ease-out_both]", m.delay)}
+            className="motion-safe:animate-[auth-memo-in_500ms_ease-out_both]"
+            style={{ animationDelay: `${m.delay}ms` }}
           >
             <circle
               cx={m.marker.cx}
@@ -127,22 +128,31 @@ function EquityArtwork() {
             />
           </g>
         ))}
-        {/* glowing terminal cursor at the end of the run — from the logo */}
-        <circle cx="545" cy="58" r="30" fill={`url(#${glowId})`} />
-        <g className="motion-safe:animate-[auth-cursor-blink_1.24s_steps(1,end)_infinite] [animation-delay:1600ms]">
-          <rect x="537" y="47" width="16" height="23" rx="4" className="fill-profit" />
-          <rect x="539.5" y="49.5" width="11" height="2.5" rx="1.25" className="fill-white/50" />
+        {/* One focus pass, then a static lens: no idle animation. */}
+        <circle cx="540" cy="60" r="42" fill={`url(#${glowId})`} />
+        <g data-auth-lens className="motion-safe:animate-[auth-lens-focus_3.6s_linear_both]">
+          <circle
+            cx="540"
+            cy="60"
+            r="29"
+            fill="#0B132B"
+            fillOpacity="0.85"
+            stroke="#E5E7EB"
+            strokeWidth="3"
+          />
+          <path d="M561 81 L579 99" stroke="#3B82F6" strokeWidth="5" strokeLinecap="round" />
+          <circle cx="540" cy="60" r="4" fill="#3B82F6" />
         </g>
       </svg>
 
       {MEMOS.map((m) => (
         <div
           key={m.meta}
+          style={{ animationDelay: `${m.delay}ms` }}
           className={cn(
             "absolute w-44 rounded-lg border border-border/60 bg-popover/85 px-2.5 py-1.5 text-left shadow-lg backdrop-blur-sm",
             "motion-safe:animate-[auth-memo-in_500ms_ease-out_both]",
             m.chip,
-            m.delay,
           )}
         >
           <div className="flex items-baseline justify-between gap-2">
@@ -185,7 +195,7 @@ export function AuthShell({
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_55%_at_12%_105%,color-mix(in_oklab,var(--profit)_8%,transparent),transparent_60%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_55%_at_12%_105%,color-mix(in_oklab,var(--primary)_8%,transparent),transparent_60%)]"
         />
 
         <div className="relative flex items-center gap-2.5">
@@ -196,10 +206,7 @@ export function AuthShell({
         <div className="relative flex flex-col gap-10">
           <div className="flex max-w-[26rem] flex-col gap-3">
             <h2 className="text-balance text-4xl font-semibold tracking-tight text-foreground xl:text-[2.75rem] xl:leading-[1.1]">
-              {localize({
-                id: "auth.everyTradeWrittenDown",
-                message: "Every trade, written down.",
-              })}
+              {BRAND.tagline}
             </h2>
             <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
               {localize({
@@ -229,12 +236,12 @@ export function AuthShell({
         <div className="relative mb-8 flex flex-col items-center gap-2.5 lg:hidden">
           <AppLogo size={36} />
           <p className="text-base font-semibold tracking-tight text-foreground">{BRAND.name}</p>
+          <p className="text-sm text-muted-foreground">{BRAND.tagline}</p>
         </div>
         <section
           data-auth-surface
           className={cn(
             "relative flex w-full max-w-[22.5rem] min-w-0 flex-col gap-6",
-            "motion-safe:animate-[auth-memo-in_450ms_ease-out_both] motion-safe:[animation-delay:120ms]",
             formClassName,
           )}
         >
