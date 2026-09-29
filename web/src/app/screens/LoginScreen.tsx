@@ -14,6 +14,9 @@ import { Button } from "@/components/ui/button";
 import { authApi } from "@/lib/api/auth";
 import { ApiError, editableApiBaseUrl, getCustomApiBaseUrl, setBaseUrl } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth";
+import { useLocale } from "@/i18n";
+import { settingsLabel } from "@/lib/locale";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 
 const MODES = [
   {
@@ -43,6 +46,7 @@ export function LoginScreen({
 }) {
   const { t: localize } = useSecondaryLingui();
 
+  const { locale, setLocale } = useLocale();
   const signIn = useAuth((s) => s.signIn);
   const formId = useId();
 
@@ -121,6 +125,18 @@ export function LoginScreen({
 
   return (
     <AuthShell>
+      <NativeSelect
+        value={locale}
+        onChange={(e) => void setLocale(e.target.value)}
+        aria-label={settingsLabel(locale, "languageSelector")}
+        variant="ghost"
+        size="sm"
+        wrapperClassName="self-end"
+      >
+        <NativeSelectOption value="en">English</NativeSelectOption>
+        <NativeSelectOption value={locale === "zh-HK" ? "zh-HK" : "zh-CN"}>中文</NativeSelectOption>
+        <NativeSelectOption value="ja">日本語</NativeSelectOption>
+      </NativeSelect>
       <div className="flex flex-col items-center gap-1 text-center">
         <h1 id={`${formId}-title`} className="text-xl font-semibold tracking-tight text-foreground">
           {isLogin
