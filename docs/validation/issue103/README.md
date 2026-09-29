@@ -20,6 +20,8 @@
 - `pnpm check`: passed, zero errors; 341 existing warnings.
 - `pnpm test`: exited 0; existing jsdom `window.scrollTo` diagnostics were emitted.
 - Workflow YAML parsed with Ruby's standard YAML parser.
+- APK copy/checksum commands verified with a dummy artifact, including matching
+  TradeLens and legacy aliases (macOS `shasum -a 256` equivalent).
 - SQLite and PostgreSQL source Compose configurations parsed successfully.
 - API Docker build passed. OCI title reads `TradeLens API`; setup/account read-back
   passed across container restart using the existing `/data/tradermemos.db` default.
@@ -42,8 +44,13 @@ cases do not apply to the filename-only change.
 
 ![Actual JSON, CSV and ZIP downloads](exports.png)
 
+- Full Web Docker build was stopped after repeated download failures (curl error 23)
+  for the pnpm-managed Node ARM64 musl runtime and Cloudflare workerd. Local Web
+  build passed; no successful Web Docker build is claimed.
+
 ## External limits
 
 Docker Hub publication and EAS/release uploads are not executed locally; they keep
 existing approval/secrets requirements. NAS hardware and native iOS/Android were
-not tested. CI status is recorded on the pull request separately.
+not tested. PR #204 CI jobs did not start: GitHub reported failed account payments or a
+spending-limit restriction. CI is blocked, not passed.
