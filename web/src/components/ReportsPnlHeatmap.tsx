@@ -1,3 +1,6 @@
+import { useLingui as useLinguiRuntime } from "@lingui/react";
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Flame } from "lucide-react";
 import { Fragment, useMemo, useState } from "react";
 import { Card } from "./Card";
@@ -12,7 +15,7 @@ import { cn } from "@/lib/cn";
 import { usePrivacyMode } from "@/lib/displayPrefs";
 import { fmtDayShort, fmtPct } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
-import { computePnlHeatmap, HEATMAP_DAY_LABELS, type HeatmapCell } from "@/lib/pnlHeatmap";
+import { computePnlHeatmap, type HeatmapCell } from "@/lib/pnlHeatmap";
 
 export interface ReportsPnlHeatmapProps {
   trades: Trade[];
@@ -22,6 +25,11 @@ export interface ReportsPnlHeatmapProps {
 }
 
 const DETAIL_TRADE_LIMIT = 8;
+function dayLabel(day: number) {
+  return new Intl.DateTimeFormat(intlLocale(), { weekday: "short", timeZone: "UTC" }).format(
+    new Date(Date.UTC(2026, 0, 5 + day)),
+  );
+}
 
 function cellBackground(pnl: number, trades: number, maxAbsPnl: number): string | undefined {
   if (trades === 0 || maxAbsPnl <= 0) return undefined;
@@ -41,6 +49,8 @@ export function ReportsPnlHeatmap({
   error,
   onSelectTradeId,
 }: ReportsPnlHeatmapProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const money = useReportsMoney();
   const locale = intlLocale();
@@ -70,13 +80,21 @@ export function ReportsPnlHeatmap({
   if (loading) {
     body = <Skeleton height="240px" />;
   } else if (error) {
-    body = <p className="text-xs text-destructive">Failed to load trades.</p>;
+    body = (
+      <p className="text-xs text-destructive">
+        {localize({ id: "accounts.tradesError", message: "Failed to load trades." })}
+      </p>
+    );
   } else if (heatmap.total === 0) {
     body = (
       <EmptyState
         className="py-8"
-        title="No closed trades yet"
-        hint="Once trades are logged, this shows when your edge shows up — by weekday and entry hour."
+        title={localize({ id: "reports.noClosedTradesYet", message: "No closed trades yet" })}
+        hint={localize({
+          id: "reports.onceTradesAreLoggedThisShowsWhenYourEdgeShowsUpBy",
+          message:
+            "Once trades are logged, this shows when your edge shows up — by weekday and entry hour.",
+        })}
         icon={<Flame aria-hidden />}
       />
     );
@@ -100,14 +118,20 @@ export function ReportsPnlHeatmap({
             {heatmap.days.map((d) => (
               <Fragment key={`d${d}`}>
                 <div className="flex items-center text-[11px] text-muted-foreground">
-                  {HEATMAP_DAY_LABELS[d]}
+                  {dayLabel(d)}
                 </div>
                 {hours.map((h) => {
                   const cell = heatmap.grid[d][h];
                   const traded = cell.trades > 0;
                   const label = traded
-                    ? `${HEATMAP_DAY_LABELS[d]} ${h}:00 — ${money.format(cell.pnl)} · ${cell.trades} trade${cell.trades === 1 ? "" : "s"}`
-                    : `${HEATMAP_DAY_LABELS[d]} ${h}:00 — no trades`;
+                    ? localize({
+                        id: "reports.heatmapCell",
+                        message: `${{ day: dayLabel(d) }} ${{ hour: h }}:00 — ${{ pnl: money.format(cell.pnl) }} · Trades: ${{ count: cell.trades }}`,
+                      })
+                    : localize({
+                        id: "reports.heatmapNoTrades",
+                        message: `${{ day: dayLabel(d) }} ${{ hour: h }}:00 — no trades`,
+                      });
                   return (
                     <Tooltip key={`c${d}-${h}`}>
                       <TooltipTrigger
@@ -135,7 +159,7 @@ export function ReportsPnlHeatmap({
                         className="flex-col items-start gap-0.5 px-2.5 py-1.5"
                       >
                         <span className="font-medium text-foreground">
-                          {HEATMAP_DAY_LABELS[d]} {h}:00
+                          {dayLabel(d)} {h}:00
                         </span>
                         {traded ? (
                           <span className="text-[11px]">
@@ -144,11 +168,16 @@ export function ReportsPnlHeatmap({
                             </span>
                             <span className="text-muted-foreground">
                               {" "}
-                              · {cell.trades} trade{cell.trades === 1 ? "" : "s"}
+                              {localize({
+                                id: "reports.tooltipTradeCount",
+                                message: ` · Trades: ${{ count: cell.trades }}`,
+                              })}
                             </span>
                           </span>
                         ) : (
-                          <span className="text-[11px] text-muted-foreground">No trades</span>
+                          <span className="text-[11px] text-muted-foreground">
+                            {localize({ id: "reports.noTrades", message: "No trades" })}
+                          </span>
                         )}
                       </TooltipContent>
                     </Tooltip>
@@ -159,8 +188,11 @@ export function ReportsPnlHeatmap({
           </div>
         </div>
         <p className="mt-4 text-[11px] text-muted-foreground">
-          P&L by entry weekday and hour, on the market clock (Eastern). Deeper color means a bigger
-          total; green is profit, red is loss. Click a cell for the trades behind it.
+          {localize({
+            id: "reports.pLByEntryWeekdayAndHourOnTheMarketClockEastern",
+            message:
+              "P&L by entry weekday and hour, on the market clock (Eastern). Deeper color means a bigger total; green is profit, red is loss. Click a cell for the trades behind it.",
+          })}
         </p>
         <Popover
           open={selected != null}
@@ -183,7 +215,7 @@ export function ReportsPnlHeatmap({
     );
   }
 
-  return <Card title="P&L heatmap">{body}</Card>;
+  return <Card title={localize({ id: "reports.pLHeatmap", message: "P&L heatmap" })}>{body}</Card>;
 }
 
 function CellDetails({
@@ -201,6 +233,11 @@ function CellDetails({
   locale: string;
   onSelectTradeId?: (id: string) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
+  ("use no memo");
+  useLinguiRuntime();
+
   const money = useReportsMoney();
   const wins = cell.items.filter((t) => money.tradePnl(t) > 0).length;
   const losses = cell.items.filter((t) => money.tradePnl(t) < 0).length;
@@ -213,7 +250,7 @@ function CellDetails({
       <div className="flex flex-col gap-2">
         <header className="flex items-baseline justify-between gap-2">
           <h3 className="text-sm font-semibold text-foreground">
-            {HEATMAP_DAY_LABELS[day]} · {hour}:00–{(hour + 1) % 24}:00
+            {dayLabel(day)} · {hour}:00–{(hour + 1) % 24}:00
           </h3>
           <span className="text-[11px] text-muted-foreground">ET</span>
         </header>
@@ -222,7 +259,11 @@ function CellDetails({
             {money.format(cell.pnl)}
           </span>
           <span className="text-[11px] tabular-nums text-muted-foreground">
-            {wins}W · {losses}L · {fmtPct(cell.trades > 0 ? wins / cell.trades : 0, locale)} win
+            {wins}
+            {localize({ id: "reports.w", message: "W ·" })} {losses}
+            {localize({ id: "reports.l2", message: "L ·" })}{" "}
+            {fmtPct(cell.trades > 0 ? wins / cell.trades : 0, locale)}{" "}
+            {localize({ id: "reports.win2", message: "win" })}
           </span>
         </div>
         <ul className="-mx-2 flex flex-col">
@@ -250,7 +291,9 @@ function CellDetails({
           })}
         </ul>
         {hidden > 0 ? (
-          <p className="text-[11px] text-muted-foreground">+{hidden} more in this hour</p>
+          <p className="text-[11px] text-muted-foreground">
+            <Trans id="reports.moreInThisHourSentence">+{hidden} more in this hour</Trans>
+          </p>
         ) : null}
       </div>
     </PopoverContent>

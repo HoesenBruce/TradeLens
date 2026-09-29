@@ -1,3 +1,4 @@
+import { t as localize } from "@lingui/core/macro";
 import { t as tr } from "@lingui/core/macro";
 import { isoToWallClock } from "./displayPrefs";
 import { parseAmountToNumber } from "./amountInput";
@@ -123,45 +124,99 @@ export type RiskRuleDef = {
 export const RISK_RULE_DEFS: readonly RiskRuleDef[] = [
   {
     key: "max_risk_per_trade",
-    label: "Max risk / trade",
-    detail: "Cap planned risk on a single trade.",
+    get label() {
+      return localize({ id: "settings.maxRiskTrade", message: "Max risk / trade" });
+    },
+    get detail() {
+      return localize({
+        id: "settings.capPlannedRiskOnASingleTrade",
+        message: "Cap planned risk on a single trade.",
+      });
+    },
     unit: "$",
-    placeholder: "e.g. 100",
+    get placeholder() {
+      return localize({ id: "settings.eG100", message: "e.g. 100" });
+    },
   },
   {
     key: "max_daily_loss",
-    label: "Max daily loss",
-    detail: "Stop when today's realized loss hits this amount.",
+    get label() {
+      return localize({ id: "settings.maxDailyLoss", message: "Max daily loss" });
+    },
+    get detail() {
+      return localize({
+        id: "settings.stopWhenTodaySRealizedLossHitsThisAmount",
+        message: "Stop when today's realized loss hits this amount.",
+      });
+    },
     unit: "$",
-    placeholder: "e.g. 300",
+    get placeholder() {
+      return localize({ id: "settings.eG300", message: "e.g. 300" });
+    },
   },
   {
     key: "max_open_risk",
-    label: "Max open risk",
-    detail: "Limit total risk across open positions.",
+    get label() {
+      return localize({ id: "settings.maxOpenRisk", message: "Max open risk" });
+    },
+    get detail() {
+      return localize({
+        id: "settings.limitTotalRiskAcrossOpenPositions",
+        message: "Limit total risk across open positions.",
+      });
+    },
     unit: "$",
-    placeholder: "e.g. 500",
+    get placeholder() {
+      return localize({ id: "settings.eG500", message: "e.g. 500" });
+    },
   },
   {
     key: "max_trades_per_day",
-    label: "Max trades / day",
-    detail: "Cap how many trades close in a single day.",
+    get label() {
+      return localize({ id: "settings.maxTradesDay", message: "Max trades / day" });
+    },
+    get detail() {
+      return localize({
+        id: "settings.capHowManyTradesCloseInASingleDay",
+        message: "Cap how many trades close in a single day.",
+      });
+    },
     unit: "count",
-    placeholder: "e.g. 5",
+    get placeholder() {
+      return localize({ id: "settings.eG5", message: "e.g. 5" });
+    },
   },
   {
     key: "max_consecutive_losses",
-    label: "Max consecutive losses",
-    detail: "Stop after this many losing trades in a row.",
+    get label() {
+      return localize({ id: "settings.maxConsecutiveLosses", message: "Max consecutive losses" });
+    },
+    get detail() {
+      return localize({
+        id: "settings.stopAfterThisManyLosingTradesInARow",
+        message: "Stop after this many losing trades in a row.",
+      });
+    },
     unit: "count",
-    placeholder: "e.g. 3",
+    get placeholder() {
+      return localize({ id: "settings.eG3", message: "e.g. 3" });
+    },
   },
   {
     key: "default_account_risk_pct",
-    label: "Default account risk %",
-    detail: "Suggested size as a percent of account equity.",
+    get label() {
+      return localize({ id: "settings.defaultAccountRisk", message: "Default account risk %" });
+    },
+    get detail() {
+      return localize({
+        id: "settings.suggestedSizeAsAPercentOfAccountEquity",
+        message: "Suggested size as a percent of account equity.",
+      });
+    },
     unit: "%",
-    placeholder: "e.g. 1",
+    get placeholder() {
+      return localize({ id: "settings.eG1", message: "e.g. 1" });
+    },
   },
 ] as const;
 
@@ -220,18 +275,22 @@ export function formatRiskRuleValue(key: RiskRuleKey, value: number, locale?: st
 export function validateRiskRuleValue(key: RiskRuleKey, raw: string): string | undefined {
   if (riskRuleDef(key).unit === "count") {
     const t = raw.trim();
-    if (!t) return "Enter a value.";
+    if (!t) return localize({ id: "settings.enterAValue", message: "Enter a value." });
     const n = Number(t);
-    if (!Number.isInteger(n) || n < 0) return "Enter a whole number of trades.";
+    if (!Number.isInteger(n) || n < 0)
+      return localize({
+        id: "settings.enterAWholeNumberOfTrades",
+        message: "Enter a whole number of trades.",
+      });
     return undefined;
   }
   if (key === "default_account_risk_pct") {
     const t = raw.trim();
-    if (!t) return "Enter a value.";
+    if (!t) return localize({ id: "settings.enterAValue", message: "Enter a value." });
     return validateRiskPercent(raw) ?? undefined;
   }
   const t = raw.trim();
-  if (!t) return "Enter a value.";
+  if (!t) return localize({ id: "settings.enterAValue", message: "Enter a value." });
   return validateOptionalAmountField(raw) ?? undefined;
 }
 

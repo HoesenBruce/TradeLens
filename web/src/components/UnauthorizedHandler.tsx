@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import { useEffect } from "react";
 import { setUnauthorizedHandler } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth";
@@ -14,8 +15,8 @@ export function UnauthorizedHandler() {
       signOut();
       if (wasAuthed) {
         toast.add({
-          title: "Session expired",
-          description: "Sign in again to continue.",
+          title: t({ id: "auth.sessionExpired", message: "Session expired" }),
+          description: t({ id: "auth.signInAgain", message: "Sign in again to continue." }),
         });
       }
     });

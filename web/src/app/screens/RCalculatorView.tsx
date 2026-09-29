@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { soleAccountId, useFilters } from "@/lib/filters";
@@ -18,18 +20,34 @@ const HINT_KEY = "tradermemos/r-calc/position-size-hint";
 
 const MODE_COPY: Record<AppMode, { title: string; description: string }> = {
   rmultiple: {
-    title: "R-Multiple Calculator",
-    description:
-      "Size positions by risk, plan exit ladders, and visualize reward/risk. Cash positions only — no leverage, fees, or slippage.",
+    get title() {
+      return localize({ id: "calculator.rMultipleCalculator", message: "R-Multiple Calculator" });
+    },
+    get description() {
+      return localize({
+        id: "calculator.sizePositionsByRiskPlanExitLaddersAndVisualizeRewardRiskCash",
+        message:
+          "Size positions by risk, plan exit ladders, and visualize reward/risk. Cash positions only — no leverage, fees, or slippage.",
+      });
+    },
   },
   fvg: {
-    title: "FVG Calculator",
-    description:
-      "Size an entry inside a fair-value gap against a buffered stop. Cash positions only — no leverage, fees, or slippage.",
+    get title() {
+      return localize({ id: "calculator.fvgCalculator", message: "FVG Calculator" });
+    },
+    get description() {
+      return localize({
+        id: "calculator.sizeAnEntryInsideAFairValueGapAgainstABufferedStop",
+        message:
+          "Size an entry inside a fair-value gap against a buffered stop. Cash positions only — no leverage, fees, or slippage.",
+      });
+    },
   },
 };
 
 export function RCalculatorView() {
+  const { t: localize } = useSecondaryLingui();
+
   const [mode, setMode] = useState<AppMode>("rmultiple");
   // Read on first render so the hint doesn't flash in after mount.
   const [hintDismissed, setHintDismissed] = useState(() => localStorage.getItem(HINT_KEY) === "1");
@@ -105,12 +123,17 @@ export function RCalculatorView() {
         </p>
         {!hintDismissed ? (
           <div className="mt-2 flex max-w-2xl items-center gap-1 text-xs text-muted-foreground">
-            <span>Need a quick share count? Use Tools → Position size in the header.</span>
+            <span>
+              {localize({
+                id: "calculator.needAQuickShareCountUseToolsPositionSizeInTheHeader",
+                message: "Need a quick share count? Use Tools → Position size in the header.",
+              })}
+            </span>
             <Button
               type="button"
               variant="ghost"
               size="icon-xs"
-              aria-label="Dismiss hint"
+              aria-label={localize({ id: "calculator.dismissHint", message: "Dismiss hint" })}
               onClick={() => {
                 localStorage.setItem(HINT_KEY, "1");
                 setHintDismissed(true);
@@ -126,11 +149,14 @@ export function RCalculatorView() {
       <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {sessionRail}
         <SegmentedControl
-          ariaLabel="Calculator mode"
+          ariaLabel={localize({ id: "calculator.calculatorMode", message: "Calculator mode" })}
           value={mode}
           onChange={(v) => setMode(v as AppMode)}
           options={[
-            { value: "rmultiple", label: "R-Multiple" },
+            {
+              value: "rmultiple",
+              label: localize({ id: "calculator.rMultiple", message: "R-Multiple" }),
+            },
             { value: "fvg", label: "FVG" },
           ]}
         />

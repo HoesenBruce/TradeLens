@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
 import { useDisplayTimePrefs, usePrivacyMode } from "@/lib/displayPrefs";
@@ -47,6 +48,8 @@ export interface ReportsDayStripProps {
 }
 
 export function ReportsDayStrip({ trades, loading, onDayClick }: ReportsDayStripProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   useDisplayTimePrefs();
   const money = useReportsMoney();
@@ -67,7 +70,9 @@ export function ReportsDayStrip({ trades, loading, onDayClick }: ReportsDayStrip
 
   return (
     <section className="min-w-0">
-      <p className="mb-2 text-[10px] font-semibold tracking-wide text-chart-3">Trading days</p>
+      <p className="mb-2 text-[10px] font-semibold tracking-wide text-chart-3">
+        {localize({ id: "accounts.tradingDays", message: "Trading days" })}
+      </p>
       <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:thin]">
         {days.map((d) => {
           const dow = new Date(`${d.date}T12:00:00Z`).getUTCDay();
@@ -87,7 +92,14 @@ export function ReportsDayStrip({ trades, loading, onDayClick }: ReportsDayStrip
                   "cursor-pointer border-none transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 isWeekend && "opacity-60",
               )}
-              aria-label={onDayClick ? `View trades for ${label}` : undefined}
+              aria-label={
+                onDayClick
+                  ? localize({
+                      id: "reports.viewTradesForValue0",
+                      message: `View trades for ${{ value0: label }}`,
+                    })
+                  : undefined
+              }
             >
               <p className="text-[10px] font-medium text-muted-foreground">{label}</p>
               <p
@@ -103,7 +115,10 @@ export function ReportsDayStrip({ trades, loading, onDayClick }: ReportsDayStrip
                 {compact ? money.formatCompact(d.pnl) : pnlText}
               </p>
               <p className="mt-1 text-[9px] text-muted-foreground">
-                {d.trades} {d.trades === 1 ? "trade" : "trades"}
+                {localize({
+                  id: "reports.dailyTradeCount",
+                  message: `Trades: ${{ count: d.trades }}`,
+                })}
               </p>
             </CardTag>
           );

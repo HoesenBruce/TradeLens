@@ -1,3 +1,5 @@
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Bookmark, Check, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
@@ -29,6 +31,8 @@ export function ReportsPresetsMenu({
   search: ReportsSearchState;
   onApply: (preset: ReportsViewPreset) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const { presets } = useReportsPresets();
   const save = useSaveReportsPresets();
   const activePresetId = useReportsView((s) => s.activePresetId);
@@ -84,11 +88,13 @@ export function ReportsPresetsMenu({
     <>
       <Menu>
         <MenuTrigger
-          aria-label="Saved views"
+          aria-label={localize({ id: "reports.savedViews", message: "Saved views" })}
           className={cn(filterChipClass, "cursor-pointer", active && "bg-accent")}
         >
           <Bookmark size={14} strokeWidth={1.75} className="shrink-0 text-muted-foreground" />
-          <span className="max-w-32 truncate">{active ? active.name : "Presets"}</span>
+          <span className="max-w-32 truncate">
+            {active ? active.name : localize({ id: "reports.presets", message: "Presets" })}
+          </span>
           <ChevronDown size={12} strokeWidth={1.75} className="shrink-0 text-muted-foreground" />
         </MenuTrigger>
         <MenuPopup align="end" className="w-56">
@@ -103,7 +109,10 @@ export function ReportsPresetsMenu({
             ))
           ) : (
             <p className="px-2 py-1.5 text-xs text-muted-foreground">
-              No saved views yet — set up the view, then save it here.
+              {localize({
+                id: "reports.noSavedViewsYetSetUpTheViewThenSaveItHere",
+                message: "No saved views yet — set up the view, then save it here.",
+              })}
             </p>
           )}
           <MenuSeparator />
@@ -115,14 +124,19 @@ export function ReportsPresetsMenu({
             }}
           >
             {presets.length >= MAX_PRESETS
-              ? `Save (limit of ${MAX_PRESETS} reached)`
-              : "Save current view…"}
+              ? localize({
+                  id: "reports.saveLimitOfValue0Reached",
+                  message: `Save (limit of ${{ value0: MAX_PRESETS }} reached)`,
+                })
+              : localize({ id: "reports.saveCurrentView", message: "Save current view…" })}
           </MenuItem>
           {active && (
             <>
-              <MenuItem onClick={updateActive}>Update “{active.name}”</MenuItem>
+              <MenuItem onClick={updateActive}>
+                <Trans id="reports.updateSentence">Update “{active.name}”</Trans>
+              </MenuItem>
               <MenuItem variant="destructive" onClick={deleteActive}>
-                Delete “{active.name}”
+                <Trans id="reports.deleteSentence">Delete “{active.name}”</Trans>
               </MenuItem>
             </>
           )}
@@ -132,15 +146,15 @@ export function ReportsPresetsMenu({
       <Modal
         open={saveOpen}
         onOpenChange={setSaveOpen}
-        title="Save view"
+        title={localize({ id: "reports.saveView", message: "Save view" })}
         className="max-w-sm"
         footer={
           <>
             <Button type="button" variant="outline" onClick={() => setSaveOpen(false)}>
-              Cancel
+              {localize({ id: "trades.cancel", message: "Cancel" })}
             </Button>
             <Button type="button" onClick={saveNew} disabled={!name.trim()}>
-              Save
+              {localize({ id: "trades.save", message: "Save" })}
             </Button>
           </>
         }
@@ -157,11 +171,18 @@ export function ReportsPresetsMenu({
             value={name}
             maxLength={MAX_PRESET_NAME_LENGTH}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Morning review"
-            aria-label="Preset name"
+            placeholder={localize({
+              id: "reports.eGMorningReview",
+              message: "e.g. Morning review",
+            })}
+            aria-label={localize({ id: "reports.presetName", message: "Preset name" })}
           />
           <p className="text-xs text-muted-foreground">
-            Saves the visible cards, their order, and the current date range and filters.
+            {localize({
+              id: "reports.savesTheVisibleCardsTheirOrderAndTheCurrentDateRangeAnd",
+              message:
+                "Saves the visible cards, their order, and the current date range and filters.",
+            })}
           </p>
         </form>
       </Modal>

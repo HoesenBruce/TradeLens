@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Copy, Pencil, Plus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -24,6 +25,8 @@ export function SessionRail({
   onRemove: (id: string) => void;
   onRename?: (id: string, name: string) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -55,7 +58,7 @@ export function SessionRail({
       {/* Track mirrors SegmentedControl so the rail reads as tabs, not loose chips. */}
       <div
         role="tablist"
-        aria-label="Positions"
+        aria-label={localize({ id: "calculator.positions", message: "Positions" })}
         className={cn(
           "flex flex-wrap items-center gap-0.5 rounded-lg border border-input bg-muted p-0.5 shadow-xs/5",
           "dark:bg-input/32",
@@ -85,7 +88,10 @@ export function SessionRail({
                   }
                 }}
                 className="h-7 min-w-[6rem] max-w-[10rem] rounded-md border-none bg-background px-2 text-[12px] font-medium text-foreground shadow-xs/5 outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring dark:bg-input"
-                aria-label="Rename position"
+                aria-label={localize({
+                  id: "calculator.renamePosition",
+                  message: "Rename position",
+                })}
               />
             );
           }
@@ -107,7 +113,14 @@ export function SessionRail({
                   e.preventDefault();
                   startEdit(s.id, s.name);
                 }}
-                title={onRename ? "Double-click to rename" : undefined}
+                title={
+                  onRename
+                    ? localize({
+                        id: "calculator.doubleClickToRename",
+                        message: "Double-click to rename",
+                      })
+                    : undefined
+                }
                 className={cn(
                   "h-7 max-w-[12rem] truncate rounded-md px-2.5 text-[12px] font-medium outline-none transition-colors",
                   "focus-visible:ring-2 focus-visible:ring-ring",
@@ -123,7 +136,10 @@ export function SessionRail({
                       type="button"
                       variant="ghost"
                       size="icon-xs"
-                      aria-label={`Rename ${s.name}`}
+                      aria-label={localize({
+                        id: "calculator.renameValue0",
+                        message: `Rename ${{ value0: s.name }}`,
+                      })}
                       onClick={() => startEdit(s.id, s.name)}
                       className={tabActionClass}
                     >
@@ -134,7 +150,10 @@ export function SessionRail({
                     type="button"
                     variant="ghost"
                     size="icon-xs"
-                    aria-label={`Duplicate ${s.name}`}
+                    aria-label={localize({
+                      id: "calculator.duplicateValue0",
+                      message: `Duplicate ${{ value0: s.name }}`,
+                    })}
                     onClick={() => onDuplicate(s.id)}
                     className={tabActionClass}
                   >
@@ -145,7 +164,10 @@ export function SessionRail({
                       type="button"
                       variant="ghost"
                       size="icon-xs"
-                      aria-label={`Delete ${s.name}`}
+                      aria-label={localize({
+                        id: "calculator.deleteValue0",
+                        message: `Delete ${{ value0: s.name }}`,
+                      })}
                       onClick={() => onRemove(s.id)}
                       className={cn(tabActionClass, "hover:text-destructive")}
                     >
@@ -166,7 +188,7 @@ export function SessionRail({
           className="h-7 gap-1 rounded-md px-2 text-[12px] font-medium text-muted-foreground hover:bg-background hover:text-foreground sm:h-7 sm:text-[12px] dark:hover:bg-input"
         >
           <Plus size={12} />
-          Add
+          {localize({ id: "calculator.add", message: "Add" })}
         </Button>
       </div>
     </div>

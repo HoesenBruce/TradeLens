@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { AvgMode, PnlMode, UnitMode } from "./ReportsDisplayContext";
 import { SegmentedControl } from "./SegmentedControl";
 
@@ -19,21 +21,66 @@ export interface ReportsControlBarProps {
 }
 
 const SIDE_OPTS = [
-  { value: "all", label: "All" },
-  { value: "long", label: "Long" },
-  { value: "short", label: "Short" },
+  {
+    value: "all",
+    get label() {
+      return localize({ id: "reports.all", message: "All" });
+    },
+  },
+  {
+    value: "long",
+    get label() {
+      return localize({ id: "trades.long", message: "Long" });
+    },
+  },
+  {
+    value: "short",
+    get label() {
+      return localize({ id: "trades.short", message: "Short" });
+    },
+  },
 ];
 
 const DURATION_OPTS = [
-  { value: "all", label: "All" },
-  { value: "scalp", label: "Scalp" },
-  { value: "day", label: "Day" },
-  { value: "swing", label: "Swing" },
+  {
+    value: "all",
+    get label() {
+      return localize({ id: "reports.all", message: "All" });
+    },
+  },
+  {
+    value: "scalp",
+    get label() {
+      return localize({ id: "reports.scalp", message: "Scalp" });
+    },
+  },
+  {
+    value: "day",
+    get label() {
+      return localize({ id: "reports.intraday", message: "Day" });
+    },
+  },
+  {
+    value: "swing",
+    get label() {
+      return localize({ id: "reports.swing", message: "Swing" });
+    },
+  },
 ];
 
 const PNL_OPTS = [
-  { value: "net", label: "Net" },
-  { value: "gross", label: "Gross" },
+  {
+    value: "net",
+    get label() {
+      return localize({ id: "accounts.net", message: "Net" });
+    },
+  },
+  {
+    value: "gross",
+    get label() {
+      return localize({ id: "accounts.gross", message: "Gross" });
+    },
+  },
 ];
 
 const UNIT_OPTS = [
@@ -42,8 +89,18 @@ const UNIT_OPTS = [
 ];
 
 const AVG_OPTS = [
-  { value: "mean", label: "Mean" },
-  { value: "median", label: "Median" },
+  {
+    value: "mean",
+    get label() {
+      return localize({ id: "reports.mean", message: "Mean" });
+    },
+  },
+  {
+    value: "median",
+    get label() {
+      return localize({ id: "reports.median", message: "Median" });
+    },
+  },
 ];
 
 export function ReportsControlBar({
@@ -59,32 +116,43 @@ export function ReportsControlBar({
   onAvgModeChange,
   pctEnabled,
 }: ReportsControlBarProps) {
+  const { t: localize } = useSecondaryLingui();
+
   return (
     <div className="flex flex-wrap items-center gap-2">
       <SegmentedControl
-        ariaLabel="Side"
+        ariaLabel={localize({ id: "imports.fieldSide", message: "Side" })}
         size="xs"
         options={SIDE_OPTS}
         value={side}
         onChange={(v) => onSideChange(v as ReportsSide)}
       />
       <SegmentedControl
-        ariaLabel="Duration"
+        ariaLabel={localize({ id: "reports.duration", message: "Duration" })}
         size="xs"
         options={DURATION_OPTS}
         value={duration}
         onChange={(v) => onDurationChange(v as ReportsDuration)}
       />
       <SegmentedControl
-        ariaLabel="P&L basis"
+        ariaLabel={localize({ id: "reports.pLBasis", message: "P&L basis" })}
         size="xs"
         options={PNL_OPTS}
         value={pnlMode}
         onChange={(v) => onPnlModeChange(v as PnlMode)}
       />
-      <div title={pctEnabled ? undefined : "A funded scope is required to view %"}>
+      <div
+        title={
+          pctEnabled
+            ? undefined
+            : localize({
+                id: "reports.aFundedScopeIsRequiredToView",
+                message: "A funded scope is required to view %",
+              })
+        }
+      >
         <SegmentedControl
-          ariaLabel="Unit"
+          ariaLabel={localize({ id: "reports.unit", message: "Unit" })}
           size="xs"
           options={pctEnabled ? UNIT_OPTS : UNIT_OPTS.filter((o) => o.value === "abs")}
           value={pctEnabled ? unitMode : "abs"}
@@ -92,7 +160,7 @@ export function ReportsControlBar({
         />
       </div>
       <SegmentedControl
-        ariaLabel="Average basis"
+        ariaLabel={localize({ id: "reports.averageBasis", message: "Average basis" })}
         size="xs"
         options={AVG_OPTS}
         value={avgMode}

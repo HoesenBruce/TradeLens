@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { BehaviorReport } from "@/lib/api/types";
 import { usePrivacyMode } from "@/lib/displayPrefs";
 import { fmtDayShort, fmtPct } from "@/lib/format";
@@ -27,21 +28,28 @@ export function BehaviorRevengeCard({
   error,
   onSelectTradeId,
 }: BehaviorRevengeCardProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const money = useReportsMoney();
   const locale = intlLocale();
 
   if (loading) {
     return (
-      <Card title="Revenge trading">
+      <Card title={localize({ id: "reports.revengeTrading", message: "Revenge trading" })}>
         <Skeleton height="160px" />
       </Card>
     );
   }
   if (error) {
     return (
-      <Card title="Revenge trading">
-        <p className="m-0 text-xs text-destructive">Failed to load behavior report.</p>
+      <Card title={localize({ id: "reports.revengeTrading", message: "Revenge trading" })}>
+        <p className="m-0 text-xs text-destructive">
+          {localize({
+            id: "reports.failedToLoadBehaviorReport",
+            message: "Failed to load behavior report.",
+          })}
+        </p>
       </Card>
     );
   }
@@ -49,10 +57,17 @@ export function BehaviorRevengeCard({
   const sec = report?.revenge;
   if (!sec || sec.events.length === 0) {
     return (
-      <Card title="Revenge trading">
+      <Card title={localize({ id: "reports.revengeTrading", message: "Revenge trading" })}>
         <EmptyState
-          title="No revenge patterns detected"
-          hint="Flags trades opened within an hour of a losing close — same-symbol re-entries inside 15 minutes, or entries sized 1.5× above your recent median."
+          title={localize({
+            id: "reports.noRevengePatternsDetected",
+            message: "No revenge patterns detected",
+          })}
+          hint={localize({
+            id: "reports.flagsTradesOpenedWithinAnHourOfALosingCloseSameSymbol",
+            message:
+              "Flags trades opened within an hour of a losing close — same-symbol re-entries inside 15 minutes, or entries sized 1.5× above your recent median.",
+          })}
         />
       </Card>
     );
@@ -62,43 +77,58 @@ export function BehaviorRevengeCard({
 
   return (
     <Card
-      title="Revenge trading"
-      description="Trades opened shortly after a loss, compared against the rest of your book."
+      title={localize({ id: "reports.revengeTrading", message: "Revenge trading" })}
+      description={localize({
+        id: "reports.tradesOpenedShortlyAfterALossComparedAgainstTheRestOfYour",
+        message: "Trades opened shortly after a loss, compared against the rest of your book.",
+      })}
     >
       <div className="flex flex-col gap-5">
         <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
           <StatCard
-            label="Flagged trades"
+            label={localize({ id: "reports.flaggedTrades", message: "Flagged trades" })}
             value={String(sec.flagged.trades)}
-            hint={`${sec.events.length} event${sec.events.length === 1 ? "" : "s"}`}
+            hint={localize({
+              id: "reports.eventCount",
+              message: `Events: ${{ count: sec.events.length }}`,
+            })}
           />
           <StatCard
-            label="Flagged P&L"
+            label={localize({ id: "reports.flaggedPL", message: "Flagged P&L" })}
             value={money.format(sec.flagged.net_pnl)}
             accent={sec.flagged.net_pnl >= 0 ? "pos" : "neg"}
           />
           <StatCard
-            label="Flagged win rate"
+            label={localize({ id: "reports.flaggedWinRate", message: "Flagged win rate" })}
             value={fmtPct(sec.flagged.win_rate, locale)}
-            hint={`baseline ${fmtPct(sec.baseline.win_rate, locale)}`}
+            hint={localize({
+              id: "reports.baselineValue0",
+              message: `baseline ${{ value0: fmtPct(sec.baseline.win_rate, locale) }}`,
+            })}
           />
           <StatCard
-            label="Baseline P&L"
+            label={localize({ id: "reports.baselinePL", message: "Baseline P&L" })}
             value={money.format(sec.baseline.net_pnl)}
             accent={sec.baseline.net_pnl >= 0 ? "pos" : "neg"}
-            hint={`${sec.baseline.trades} trades`}
+            hint={localize({
+              id: "reports.value0Trades",
+              message: `${{ value0: sec.baseline.trades }} trades`,
+            })}
           />
         </div>
 
         {sec.insufficient_data && (
           <p className="m-0 text-[11px] leading-relaxed text-muted-foreground">
-            Small sample — patterns firm up as more closed trades accumulate.
+            {localize({
+              id: "reports.smallSamplePatternsFirmUpAsMoreClosedTradesAccumulate",
+              message: "Small sample — patterns firm up as more closed trades accumulate.",
+            })}
           </p>
         )}
 
         <div className="flex flex-col gap-1.5">
           <p className="m-0 text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
-            Recent events
+            {localize({ id: "reports.recentEvents", message: "Recent events" })}
           </p>
           <ul className="m-0 flex list-none flex-col gap-1 p-0">
             {recent.map((ev) => (
@@ -114,9 +144,14 @@ export function BehaviorRevengeCard({
                     </span>
                     <span className="font-medium text-foreground">{ev.symbol}</span>
                     {ev.reason === "quick_reentry" ? (
-                      <Pill tone="amber">re-entry</Pill>
+                      <Pill tone="amber">
+                        {localize({ id: "reports.reEntry", message: "re-entry" })}
+                      </Pill>
                     ) : (
-                      <Pill tone="amber">size ×{(ev.size_ratio ?? 0).toFixed(1)}</Pill>
+                      <Pill tone="amber">
+                        {localize({ id: "reports.size", message: "size ×" })}
+                        {(ev.size_ratio ?? 0).toFixed(1)}
+                      </Pill>
                     )}
                   </span>
                   <span

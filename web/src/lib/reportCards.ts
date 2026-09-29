@@ -1,3 +1,4 @@
+import { t as localize } from "@lingui/core/macro";
 export type ReportsTab = "overview" | "win-loss" | "detailed" | "risk" | "behavior";
 
 export interface ReportCardDef {
@@ -11,38 +12,167 @@ export interface ReportCardDef {
  * toggling can't strand a lone half-width card in a two-column grid.
  */
 export const REPORT_CARDS: Record<ReportsTab, ReportCardDef[]> = {
-  overview: [
-    { id: "summary", label: "Summary metrics" },
-    { id: "period-returns", label: "Period returns" },
-    { id: "execution-score", label: "Execution quality score" },
-    { id: "playbook", label: "Playbook & Leaks" },
-    { id: "r-multiple", label: "R-Multiple performance" },
-    { id: "execution-grade", label: "Execution grade" },
-  ],
-  "win-loss": [
-    { id: "rolling-win-rate", label: "Rolling win rate" },
-    { id: "metric-evolution", label: "Metric evolution" },
-  ],
-  detailed: [
-    { id: "session-clock", label: "Session clock" },
-    { id: "symbol-tag", label: "Symbol & Tag breakdown" },
-    { id: "day-hour", label: "Day of week & Hourly" },
-    { id: "signed-bars", label: "Win / loss bars" },
-    { id: "duration-scatter", label: "Duration scatter" },
-    { id: "pnl-heatmap", label: "P&L heatmap" },
-    { id: "sessions", label: "Session performance" },
-    { id: "symbol-heatmap", label: "Symbol heatmap" },
-  ],
-  risk: [
-    { id: "drawdown", label: "Risk & drawdown" },
-    { id: "monte-carlo", label: "Monte Carlo simulation" },
-    { id: "rule-compliance", label: "Rule compliance" },
-  ],
-  behavior: [
-    { id: "revenge", label: "Revenge trading" },
-    { id: "overconfidence", label: "Overconfidence" },
-    { id: "loss-aversion", label: "Loss aversion" },
-  ],
+  get overview() {
+    return [
+      {
+        id: "summary",
+        get label() {
+          return localize({ id: "reports.summaryMetrics", message: "Summary metrics" });
+        },
+      },
+      {
+        id: "period-returns",
+        get label() {
+          return localize({ id: "reports.periodReturns", message: "Period returns" });
+        },
+      },
+      {
+        id: "execution-score",
+        get label() {
+          return localize({
+            id: "reports.executionQualityScore",
+            message: "Execution quality score",
+          });
+        },
+      },
+      {
+        id: "playbook",
+        get label() {
+          return localize({ id: "reports.playbookLeaks", message: "Playbook & Leaks" });
+        },
+      },
+      {
+        id: "r-multiple",
+        get label() {
+          return localize({
+            id: "reports.rMultiplePerformance",
+            message: "R-Multiple performance",
+          });
+        },
+      },
+      {
+        id: "execution-grade",
+        get label() {
+          return localize({ id: "reports.executionGrade2", message: "Execution grade" });
+        },
+      },
+    ];
+  },
+  get "win-loss"() {
+    return [
+      {
+        id: "rolling-win-rate",
+        get label() {
+          return localize({ id: "reports.rollingWinRate2", message: "Rolling win rate" });
+        },
+      },
+      {
+        id: "metric-evolution",
+        get label() {
+          return localize({ id: "reports.metricEvolution2", message: "Metric evolution" });
+        },
+      },
+    ];
+  },
+  get detailed() {
+    return [
+      {
+        id: "session-clock",
+        get label() {
+          return localize({ id: "reports.sessionClock", message: "Session clock" });
+        },
+      },
+      {
+        id: "symbol-tag",
+        get label() {
+          return localize({ id: "reports.symbolTagBreakdown", message: "Symbol & Tag breakdown" });
+        },
+      },
+      {
+        id: "day-hour",
+        get label() {
+          return localize({ id: "reports.dayOfWeekHourly", message: "Day of week & Hourly" });
+        },
+      },
+      {
+        id: "signed-bars",
+        get label() {
+          return localize({ id: "reports.winLossBars", message: "Win / loss bars" });
+        },
+      },
+      {
+        id: "duration-scatter",
+        get label() {
+          return localize({ id: "reports.durationScatter", message: "Duration scatter" });
+        },
+      },
+      {
+        id: "pnl-heatmap",
+        get label() {
+          return localize({ id: "reports.pLHeatmap", message: "P&L heatmap" });
+        },
+      },
+      {
+        id: "sessions",
+        get label() {
+          return localize({ id: "reports.sessionPerformance2", message: "Session performance" });
+        },
+      },
+      {
+        id: "symbol-heatmap",
+        get label() {
+          return localize({ id: "reports.symbolHeatmap", message: "Symbol heatmap" });
+        },
+      },
+    ];
+  },
+  get risk() {
+    return [
+      {
+        id: "drawdown",
+        get label() {
+          return localize({ id: "reports.riskDrawdown2", message: "Risk & drawdown" });
+        },
+      },
+      {
+        id: "monte-carlo",
+        get label() {
+          return localize({
+            id: "reports.monteCarloSimulation",
+            message: "Monte Carlo simulation",
+          });
+        },
+      },
+      {
+        id: "rule-compliance",
+        get label() {
+          return localize({ id: "reports.ruleCompliance", message: "Rule compliance" });
+        },
+      },
+    ];
+  },
+  get behavior() {
+    return [
+      {
+        id: "revenge",
+        get label() {
+          return localize({ id: "reports.revengeTrading", message: "Revenge trading" });
+        },
+      },
+      {
+        id: "overconfidence",
+        get label() {
+          return localize({ id: "reports.overconfidence", message: "Overconfidence" });
+        },
+      },
+      {
+        id: "loss-aversion",
+        get label() {
+          return localize({ id: "reports.lossAversion", message: "Loss aversion" });
+        },
+      },
+    ];
+  },
 };
 
 export const REPORT_TAB_IDS = Object.keys(REPORT_CARDS) as ReportsTab[];

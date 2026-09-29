@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import {
   Area,
@@ -47,6 +48,8 @@ export function ReportsRiskDrawdown({
   loading,
   error,
 }: ReportsRiskDrawdownProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   useDisplayTimePrefs();
   const money = useReportsMoney();
@@ -65,9 +68,20 @@ export function ReportsRiskDrawdown({
     loading ? (
       <Skeleton height="240px" />
     ) : error ? (
-      <p className="text-xs text-destructive">Failed to load risk &amp; drawdown.</p>
+      <p className="text-xs text-destructive">
+        {localize({
+          id: "reports.failedToLoadRiskDrawdown",
+          message: "Failed to load risk & drawdown.",
+        })}
+      </p>
     ) : visiblePoints.length === 0 ? (
-      <EmptyState title="No data" hint="Add trades to see risk and drawdown stats." />
+      <EmptyState
+        title={localize({ id: "reports.noData", message: "No data" })}
+        hint={localize({
+          id: "reports.addTradesToSeeRiskAndDrawdownStats",
+          message: "Add trades to see risk and drawdown stats.",
+        })}
+      />
     ) : (
       <>
         {/* Lean row — Max DD $ / worst streak already live in summary bento.
@@ -77,26 +91,29 @@ export function ReportsRiskDrawdown({
           <StatCard
             variant="bento"
             align="center"
-            label="Max Drawdown"
+            label={localize({ id: "reports.maxDrawdown", message: "Max Drawdown" })}
             value={fmtDrawdownPct(maxDd)}
             accent="neg"
-            hint="% of peak equity"
+            hint={localize({ id: "reports.ofPeakEquity", message: "% of peak equity" })}
           />
           <StatCard
             variant="bento"
             align="center"
-            label="Current Drawdown"
+            label={localize({ id: "reports.currentDrawdown", message: "Current Drawdown" })}
             value={fmtDrawdownPct(currentDd)}
             accent={currentDd < 0 ? "neg" : "none"}
           />
           <StatCard
             variant="bento"
             align="center"
-            label="Avg Risk/Trade"
+            label={localize({ id: "reports.avgRiskTrade", message: "Avg Risk/Trade" })}
             value={risk.avg != null ? money.format(risk.avg) : "—"}
             hint={
               risk.avg != null
-                ? `${risk.included} of ${risk.included + risk.excluded} trades`
+                ? localize({
+                    id: "reports.value0OfValue1Trades",
+                    message: `${{ value0: risk.included }} of ${{ value1: risk.included + risk.excluded }} trades`,
+                  })
                 : undefined
             }
           />
@@ -152,7 +169,11 @@ export function ReportsRiskDrawdown({
     );
 
   return (
-    <ChartCard title="Risk & Drawdown" range={range} onRangeChange={setRange}>
+    <ChartCard
+      title={localize({ id: "reports.riskDrawdown", message: "Risk & Drawdown" })}
+      range={range}
+      onRangeChange={setRange}
+    >
       {body}
     </ChartCard>
   );

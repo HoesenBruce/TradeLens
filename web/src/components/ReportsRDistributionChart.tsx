@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import {
   Bar,
   BarChart,
@@ -36,13 +37,15 @@ export function ReportsRDistributionChart({
   loading,
   error,
 }: ReportsRDistributionChartProps) {
+  const { t: localize } = useSecondaryLingui();
+
   return (
     <Card
-      title="R-Multiple Distribution"
+      title={localize({ id: "reports.rMultipleDistribution", message: "R-Multiple Distribution" })}
       action={
         !loading && !error && distribution.length > 0 && totalTrades > 0 ? (
           <span className="text-[11px] font-medium text-muted-foreground">
-            Avg {avgR >= 0 ? "+" : ""}
+            {localize({ id: "reports.avg", message: "Avg" })} {avgR >= 0 ? "+" : ""}
             {avgR.toFixed(2)}R
           </span>
         ) : undefined
@@ -51,14 +54,31 @@ export function ReportsRDistributionChart({
       {loading ? (
         <Skeleton height="200px" />
       ) : error ? (
-        <p className="text-xs text-destructive">Failed to load R-multiple distribution.</p>
+        <p className="text-xs text-destructive">
+          {localize({
+            id: "reports.failedToLoadRMultipleDistribution",
+            message: "Failed to load R-multiple distribution.",
+          })}
+        </p>
       ) : distribution.length === 0 || totalTrades <= 0 ? (
-        <EmptyState title="No R data" hint="Set stops on your trades to see the R distribution." />
+        <EmptyState
+          title={localize({ id: "reports.noRData", message: "No R data" })}
+          hint={localize({
+            id: "reports.setStopsOnYourTradesToSeeTheRDistribution",
+            message: "Set stops on your trades to see the R distribution.",
+          })}
+        />
       ) : (
         <>
           <ChartFrame className="border-0 rounded-none">
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={distribution} margin={{ top: 12, right: 16, bottom: 0, left: 0 }}>
+              <BarChart
+                data={distribution.map((bucket) => ({
+                  ...bucket,
+                  label: bucket.label.replace(" to ", " – "),
+                }))}
+                margin={{ top: 12, right: 16, bottom: 0, left: 0 }}
+              >
                 <CartesianGrid vertical={false} stroke={chartTheme.gridColor} />
                 <XAxis
                   dataKey="label"
@@ -75,7 +95,10 @@ export function ReportsRDistributionChart({
                 />
                 <Tooltip
                   {...chartTooltipStyle}
-                  formatter={(value) => [String(value), "Trades"]}
+                  formatter={(value) => [
+                    String(value),
+                    localize({ id: "reports.trades", message: "Trades" }),
+                  ]}
                   cursor={{ fill: chartTheme.cursorFill }}
                 />
                 <Bar dataKey="count" radius={[2, 2, 0, 0]}>
@@ -87,8 +110,16 @@ export function ReportsRDistributionChart({
             </ResponsiveContainer>
           </ChartFrame>
           <p className="mt-2 text-[11px] text-muted-foreground">
-            Showing {totalTrades} of {totalTrades + excluded} closed trades
-            {excluded > 0 ? `, ${excluded} excluded (no stop)` : ""}
+            {localize({
+              id: "reports.includedClosedTrades",
+              message: `Showing ${{ included: totalTrades }} of ${{ total: totalTrades + excluded }} closed trades`,
+            })}
+            {excluded > 0
+              ? localize({
+                  id: "reports.value0ExcludedNoStop",
+                  message: `, ${{ value0: excluded }} excluded (no stop)`,
+                })
+              : ""}
           </p>
         </>
       )}

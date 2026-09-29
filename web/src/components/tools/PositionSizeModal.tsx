@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { soleAccountId, useFilters } from "@/lib/filters";
@@ -18,6 +19,8 @@ export function PositionSizeModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const accountId = useFilters((s) => soleAccountId(s.accountIds));
   const accounts = useAccounts().data ?? [];
   const account = accounts.find((a) => a.id === accountId) ?? accounts[0];
@@ -52,15 +55,23 @@ export function PositionSizeModal({
   }, [equity, riskPct, entry, stop]);
 
   return (
-    <Modal open={open} onOpenChange={onOpenChange} title="Position size" className="max-w-[420px]">
+    <Modal
+      open={open}
+      onOpenChange={onOpenChange}
+      title={localize({ id: "market.size", message: "Position size" })}
+      className="max-w-[420px]"
+    >
       <p className="m-0 text-xs leading-relaxed text-muted-foreground">
-        Size from account equity, risk %, entry, and stop. Uses your default risk % from Settings
-        when available.
+        {localize({
+          id: "calculator.sizeFromAccountEquityRiskEntryAndStopUsesYourDefaultRisk",
+          message:
+            "Size from account equity, risk %, entry, and stop. Uses your default risk % from Settings when available.",
+        })}
       </p>
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelClass} htmlFor="ps-equity">
-            Equity ($)
+            {localize({ id: "calculator.equity", message: "Equity ($)" })}
           </label>
           <input
             id="ps-equity"
@@ -72,7 +83,7 @@ export function PositionSizeModal({
         </div>
         <div>
           <label className={labelClass} htmlFor="ps-pct">
-            Risk %
+            {localize({ id: "calculator.risk", message: "Risk %" })}
           </label>
           <input
             id="ps-pct"
@@ -84,7 +95,7 @@ export function PositionSizeModal({
         </div>
         <div>
           <label className={labelClass} htmlFor="ps-entry">
-            Entry
+            {localize({ id: "market.entry", message: "Entry" })}
           </label>
           <input
             id="ps-entry"
@@ -97,7 +108,7 @@ export function PositionSizeModal({
         </div>
         <div>
           <label className={labelClass} htmlFor="ps-stop">
-            Stop
+            {localize({ id: "market.stop", message: "Stop" })}
           </label>
           <input
             id="ps-stop"
@@ -112,16 +123,23 @@ export function PositionSizeModal({
       {result ? (
         <div className="rounded-panel border border-border bg-muted px-3.5 py-3">
           <p className="m-0 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-            Suggested size
+            {localize({ id: "calculator.suggestedSize", message: "Suggested size" })}
           </p>
-          <p className="mt-1 mb-0 text-2xl tabular-nums text-foreground">{result.qty} shares</p>
+          <p className="mt-1 mb-0 text-2xl tabular-nums text-foreground">
+            {result.qty} {localize({ id: "calculator.shares", message: "shares" })}
+          </p>
           <p className="mt-1 mb-0 text-[11px] text-muted-foreground">
-            Risk ${result.riskDollars.toFixed(2)} · ${result.perShareRisk.toFixed(2)} / share
+            {localize({ id: "calculator.risk2", message: "Risk $" })}
+            {result.riskDollars.toFixed(2)} · ${result.perShareRisk.toFixed(2)}{" "}
+            {localize({ id: "calculator.share", message: "/ share" })}
           </p>
         </div>
       ) : (
         <p className="m-0 text-xs text-muted-foreground">
-          Enter equity, risk %, entry, and stop to see size.
+          {localize({
+            id: "calculator.enterEquityRiskEntryAndStopToSeeSize",
+            message: "Enter equity, risk %, entry, and stop to see size.",
+          })}
         </p>
       )}
       <Link
@@ -129,7 +147,10 @@ export function PositionSizeModal({
         onClick={() => onOpenChange(false)}
         className="mt-1 inline-flex text-[11px] font-medium text-primary no-underline transition-colors hover:text-foreground"
       >
-        Open full planner — exit ladder &amp; R-axis →
+        {localize({
+          id: "calculator.openFullPlannerExitLadderRAxis",
+          message: "Open full planner — exit ladder & R-axis →",
+        })}
       </Link>
     </Modal>
   );

@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { intlLocale } from "./locale";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Account } from "./api/types";
@@ -39,20 +41,90 @@ export const TIMEZONE_DEFAULT = "America/New_York";
 
 /** Curated IANA zones for Settings → Timezone (plus Local). Labels omit offset — use timezoneSelectOptions(). */
 export const TIMEZONE_CHOICES = [
-  { value: TIMEZONE_LOCAL, name: "Local (browser)" },
-  { value: "America/New_York", name: "Eastern (New York)" },
-  { value: "America/Chicago", name: "Central (Chicago)" },
-  { value: "America/Denver", name: "Mountain (Denver)" },
-  { value: "America/Los_Angeles", name: "Pacific (Los Angeles)" },
-  { value: "Europe/London", name: "London" },
-  { value: "Europe/Berlin", name: "Berlin" },
-  { value: "Europe/Athens", name: "Athens (EET · MT server)" },
-  { value: "Asia/Hong_Kong", name: "Hong Kong" },
-  { value: "Asia/Taipei", name: "Taipei" },
-  { value: "Asia/Shanghai", name: "Shanghai" },
-  { value: "Asia/Singapore", name: "Singapore" },
-  { value: "Asia/Tokyo", name: "Tokyo" },
-  { value: "UTC", name: "UTC" },
+  {
+    value: TIMEZONE_LOCAL,
+    get name() {
+      return localize({ id: "settings.Localbrowser", message: "Local (browser)" });
+    },
+  },
+  {
+    value: "America/New_York",
+    get name() {
+      return localize({ id: "settings.EasternNewYork", message: "Eastern (New York)" });
+    },
+  },
+  {
+    value: "America/Chicago",
+    get name() {
+      return localize({ id: "settings.CentralChicago", message: "Central (Chicago)" });
+    },
+  },
+  {
+    value: "America/Denver",
+    get name() {
+      return localize({ id: "settings.MountainDenver", message: "Mountain (Denver)" });
+    },
+  },
+  {
+    value: "America/Los_Angeles",
+    get name() {
+      return localize({ id: "settings.PacificLosAngeles", message: "Pacific (Los Angeles)" });
+    },
+  },
+  {
+    value: "Europe/London",
+    get name() {
+      return localize({ id: "settings.London", message: "London" });
+    },
+  },
+  {
+    value: "Europe/Berlin",
+    get name() {
+      return localize({ id: "settings.Berlin", message: "Berlin" });
+    },
+  },
+  {
+    value: "Europe/Athens",
+    get name() {
+      return localize({ id: "settings.AthensEETMTserver", message: "Athens (EET · MT server)" });
+    },
+  },
+  {
+    value: "Asia/Hong_Kong",
+    get name() {
+      return localize({ id: "settings.HongKong", message: "Hong Kong" });
+    },
+  },
+  {
+    value: "Asia/Taipei",
+    get name() {
+      return localize({ id: "settings.Taipei", message: "Taipei" });
+    },
+  },
+  {
+    value: "Asia/Shanghai",
+    get name() {
+      return localize({ id: "settings.Shanghai", message: "Shanghai" });
+    },
+  },
+  {
+    value: "Asia/Singapore",
+    get name() {
+      return localize({ id: "settings.Singapore", message: "Singapore" });
+    },
+  },
+  {
+    value: "Asia/Tokyo",
+    get name() {
+      return localize({ id: "settings.Tokyo", message: "Tokyo" });
+    },
+  },
+  {
+    value: "UTC",
+    get name() {
+      return localize({ id: "settings.UTC", message: "UTC" });
+    },
+  },
 ] as const;
 
 export type TimezonePref = (typeof TIMEZONE_CHOICES)[number]["value"];
@@ -72,8 +144,18 @@ export type TimeFormatPref = "h12" | "h23";
 export const TIME_FORMAT_DEFAULT: TimeFormatPref = "h12";
 
 export const TIME_FORMAT_OPTIONS = [
-  { value: "h12" as const, label: "12-hour (1:30 PM)" },
-  { value: "h23" as const, label: "24-hour (13:30)" },
+  {
+    value: "h12" as const,
+    get label() {
+      return localize({ id: "settings.12hour130PM", message: "12-hour (1:30 PM)" });
+    },
+  },
+  {
+    value: "h23" as const,
+    get label() {
+      return localize({ id: "settings.24hour1330", message: "24-hour (13:30)" });
+    },
+  },
 ];
 
 /**
@@ -218,7 +300,13 @@ export function timezoneSelectOptions(
     const offset = formatUtcOffsetPrefix(iana, at);
     if (value === "UTC") return { value, label: "UTC+00" };
     if (value === TIMEZONE_LOCAL) {
-      return { value, label: `${offset} Local (${iana})` };
+      return {
+        value,
+        label: localize({
+          id: "settings.localTimezone",
+          message: `${{ offset }} Local (${{ iana }})`,
+        }),
+      };
     }
     return { value, label: `${offset} ${name}` };
   });
@@ -258,8 +346,12 @@ export function formatHourKeyLabel(hourKey: string, hourCycle?: TimeFormatPref):
   if (!Number.isFinite(hour) || hour < 0 || hour > 23) return hourKey;
   const cycle = hourCycle ?? getDisplayTimeOpts().hourCycle;
   if (cycle === "h23") return `${String(hour).padStart(2, "0")}:00`;
-  const h12 = hour % 12 === 0 ? 12 : hour % 12;
-  return `${h12}:00 ${hour < 12 ? "AM" : "PM"}`;
+  return new Intl.DateTimeFormat(intlLocale(), {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(2026, 0, 1, hour)));
 }
 
 interface DisplayPrefsState {

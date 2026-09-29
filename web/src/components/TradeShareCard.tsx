@@ -1,6 +1,7 @@
+import { useLingui } from "@lingui/react";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useMemo, useState } from "react";
 import type { TradeDetail } from "@/lib/api/types";
-import { intlLocale } from "@/lib/locale";
 import { buildTradeShareCard, type ShareCardData } from "@/lib/shareCard";
 import type { TradeInsights } from "@/lib/tradeInsights";
 import { ShareCardModal } from "@/components/ShareCard";
@@ -21,18 +22,25 @@ export function TradeShareModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
+  const { i18n } = useLingui();
+  const locale = i18n.locale;
   const [showAmounts, setShowAmounts] = useState(false);
 
   const data = useMemo(
-    () => buildTradeShareCard(trade, insights, { showAmounts, locale: intlLocale() }),
-    [trade, insights, showAmounts],
+    () => buildTradeShareCard(trade, insights, { showAmounts, locale }),
+    [trade, insights, showAmounts, locale],
   );
 
   return (
     <ShareCardModal
       data={data}
       filename={cardFilename(data)}
-      privacyHint="Off shares only R multiples and percentages — account size stays private."
+      privacyHint={localize({
+        id: "wrapped.offSharesOnlyRMultiplesAndPercentagesAccountSizeStaysPrivate",
+        message: "Off shares only R multiples and percentages — account size stays private.",
+      })}
       showAmounts={showAmounts}
       onShowAmountsChange={setShowAmounts}
       open={open}

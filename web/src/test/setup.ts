@@ -1,3 +1,4 @@
+import "@/i18n";
 import "@testing-library/jest-dom";
 
 // Polyfill ResizeObserver for jsdom (used by Recharts ResponsiveContainer and

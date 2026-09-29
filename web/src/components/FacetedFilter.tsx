@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { Check, PlusCircle, XCircle } from "lucide-react";
 import { useState, type MouseEvent } from "react";
 import { cn } from "@/lib/cn";
@@ -30,6 +31,7 @@ export function FacetedFilter({
   multiple?: boolean;
   className?: string;
 }) {
+  const { t } = useLingui();
   const [open, setOpen] = useState(false);
 
   const selected = new Set(
@@ -69,7 +71,7 @@ export function FacetedFilter({
           <span
             role="button"
             tabIndex={0}
-            aria-label={`Clear ${title} filter`}
+            aria-label={t({ id: "common.clearNamedFilter", message: `Clear ${{ title }} filter` })}
             onClick={clear}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -152,7 +154,7 @@ export function FacetedFilter({
                 onClick={() => clear()}
                 className="flex min-h-8 cursor-pointer items-center justify-center rounded-md px-2 text-[12px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring"
               >
-                Clear filters
+                {t({ id: "common.clearFilters", message: "Clear filters" })}
               </button>
             </>
           ) : null}

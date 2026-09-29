@@ -1,3 +1,4 @@
+import { t as localize } from "@lingui/core/macro";
 import { t as tr } from "@lingui/core/macro";
 /**
  * The broker catalogue behind the Connect flow.
@@ -87,14 +88,40 @@ export const BROKERS: BrokerDef[] = [
     recognised: true,
     brand: "#D91F26",
     monogram: "IB",
-    formats: "Flex Web Service, or Activity Statement CSV",
-    steps: [
-      "In Client Portal open Performance & Reports → Flex Queries.",
-      "Create a Trade Confirmation Flex Query with the Trades → Executions section, format CSV, and save it.",
-      "Copy the Query ID shown next to the saved query.",
-      "Under Performance & Reports → Settings, enable the Flex Web Service and copy the token.",
-    ],
-    note: "The token expires yearly — IBKR emails a reminder before it does.",
+    get formats() {
+      return localize({
+        id: "broker.flexWebServiceOrActivityStatementCsv",
+        message: "Flex Web Service, or Activity Statement CSV",
+      });
+    },
+    get steps() {
+      return [
+        localize({
+          id: "broker.inClientPortalOpenPerformanceReportsFlexQueries",
+          message: "In Client Portal open Performance & Reports → Flex Queries.",
+        }),
+        localize({
+          id: "broker.createATradeConfirmationFlexQueryWithTheTradesExecutionsSectionFormat",
+          message:
+            "Create a Trade Confirmation Flex Query with the Trades → Executions section, format CSV, and save it.",
+        }),
+        localize({
+          id: "broker.copyTheQueryIdShownNextToTheSavedQuery",
+          message: "Copy the Query ID shown next to the saved query.",
+        }),
+        localize({
+          id: "broker.underPerformanceReportsSettingsEnableTheFlexWebServiceAndCopyThe",
+          message:
+            "Under Performance & Reports → Settings, enable the Flex Web Service and copy the token.",
+        }),
+      ];
+    },
+    get note() {
+      return localize({
+        id: "broker.theTokenExpiresYearlyIbkrEmailsAReminderBeforeItDoes",
+        message: "The token expires yearly — IBKR emails a reminder before it does.",
+      });
+    },
     aliases: ["ib", "tws", "flex", "interactive brokers"],
   },
   {
@@ -106,12 +133,26 @@ export const BROKERS: BrokerDef[] = [
     brand: "#00A0DF",
     monogram: "TS",
     formats: "CSV",
-    steps: [
-      "Open the Monitor tab → Account Statement.",
-      "Set the date range you want to journal.",
-      "Use the menu at the top right of the statement to export it as CSV.",
-      "Upload the file — the Account Trade History section is the part we read.",
-    ],
+    get steps() {
+      return [
+        localize({
+          id: "broker.openTheMonitorTabAccountStatement",
+          message: "Open the Monitor tab → Account Statement.",
+        }),
+        localize({
+          id: "broker.setTheDateRangeYouWantToJournal",
+          message: "Set the date range you want to journal.",
+        }),
+        localize({
+          id: "broker.useTheMenuAtTheTopRightOfTheStatementToExport",
+          message: "Use the menu at the top right of the statement to export it as CSV.",
+        }),
+        localize({
+          id: "broker.uploadTheFileTheAccountTradeHistorySectionIsThePartWe",
+          message: "Upload the file — the Account Trade History section is the part we read.",
+        }),
+      ];
+    },
     aliases: ["tos", "schwab", "td ameritrade", "ameritrade"],
   },
   {
@@ -123,11 +164,16 @@ export const BROKERS: BrokerDef[] = [
     brand: "#00A0DF",
     monogram: "CS",
     formats: "CSV",
-    steps: [
-      "Open Accounts → History.",
-      "Pick the account and the date range, with Transactions selected.",
-      "Export the result as CSV.",
-    ],
+    get steps() {
+      return [
+        localize({ id: "broker.openAccountsHistory", message: "Open Accounts → History." }),
+        localize({
+          id: "broker.pickTheAccountAndTheDateRangeWithTransactionsSelected",
+          message: "Pick the account and the date range, with Transactions selected.",
+        }),
+        localize({ id: "broker.exportTheResultAsCsv", message: "Export the result as CSV." }),
+      ];
+    },
     aliases: ["schwab"],
   },
   {
@@ -139,12 +185,25 @@ export const BROKERS: BrokerDef[] = [
     brand: "#1D68F1",
     monogram: "WB",
     formats: "CSV",
-    steps: [
-      "Open the Webull desktop app (the phone app cannot export).",
-      "Go to Orders and pick the date range.",
-      "Export the orders as CSV.",
-    ],
-    note: "Only filled orders import — cancelled and pending rows are skipped.",
+    get steps() {
+      return [
+        localize({
+          id: "broker.openTheWebullDesktopAppThePhoneAppCannotExport",
+          message: "Open the Webull desktop app (the phone app cannot export).",
+        }),
+        localize({
+          id: "broker.goToOrdersAndPickTheDateRange",
+          message: "Go to Orders and pick the date range.",
+        }),
+        localize({ id: "broker.exportTheOrdersAsCsv", message: "Export the orders as CSV." }),
+      ];
+    },
+    get note() {
+      return localize({
+        id: "broker.onlyFilledOrdersImportCancelledAndPendingRowsAreSkipped",
+        message: "Only filled orders import — cancelled and pending rows are skipped.",
+      });
+    },
     aliases: ["webull"],
   },
   {
@@ -156,12 +215,22 @@ export const BROKERS: BrokerDef[] = [
     brand: "#0B8B3E",
     monogram: "TV",
     formats: "CSV",
-    steps: [
-      "Open the Reports section.",
-      "Choose Fills and set the date range.",
-      "Download the report as CSV.",
-    ],
-    note: "Times are read as exchange (Chicago) time.",
+    get steps() {
+      return [
+        localize({ id: "broker.openTheReportsSection", message: "Open the Reports section." }),
+        localize({
+          id: "broker.chooseFillsAndSetTheDateRange",
+          message: "Choose Fills and set the date range.",
+        }),
+        localize({ id: "broker.downloadTheReportAsCsv", message: "Download the report as CSV." }),
+      ];
+    },
+    get note() {
+      return localize({
+        id: "broker.timesAreReadAsExchangeChicagoTime",
+        message: "Times are read as exchange (Chicago) time.",
+      });
+    },
     aliases: ["futures", "tradovate"],
   },
   {
@@ -173,11 +242,22 @@ export const BROKERS: BrokerDef[] = [
     brand: "#F58220",
     monogram: "NT",
     formats: "CSV",
-    steps: [
-      "In the Control Center open Trade Performance.",
-      "Select the Executions tab and the date range.",
-      "Right-click the grid and export it as CSV.",
-    ],
+    get steps() {
+      return [
+        localize({
+          id: "broker.inTheControlCenterOpenTradePerformance",
+          message: "In the Control Center open Trade Performance.",
+        }),
+        localize({
+          id: "broker.selectTheExecutionsTabAndTheDateRange",
+          message: "Select the Executions tab and the date range.",
+        }),
+        localize({
+          id: "broker.rightClickTheGridAndExportItAsCsv",
+          message: "Right-click the grid and export it as CSV.",
+        }),
+      ];
+    },
     aliases: ["ninja", "futures"],
   },
   {
@@ -189,12 +269,23 @@ export const BROKERS: BrokerDef[] = [
     brand: "#1E6FD9",
     monogram: "cT",
     formats: "CSV",
-    steps: [
-      "Open the History tab.",
-      "Set the period you want to journal.",
-      "Export the history to CSV.",
-    ],
-    note: "Rows are whole positions, and quantities are lots — check the timezone in the preview before confirming.",
+    get steps() {
+      return [
+        localize({ id: "broker.openTheHistoryTab", message: "Open the History tab." }),
+        localize({
+          id: "broker.setThePeriodYouWantToJournal",
+          message: "Set the period you want to journal.",
+        }),
+        localize({ id: "broker.exportTheHistoryToCsv", message: "Export the history to CSV." }),
+      ];
+    },
+    get note() {
+      return localize({
+        id: "broker.rowsAreWholePositionsAndQuantitiesAreLotsCheckTheTimezoneIn",
+        message:
+          "Rows are whole positions, and quantities are lots — check the timezone in the preview before confirming.",
+      });
+    },
     aliases: ["forex", "cfd", "prop"],
   },
   {
@@ -206,12 +297,22 @@ export const BROKERS: BrokerDef[] = [
     brand: "#2A6DF4",
     monogram: "DX",
     formats: "CSV",
-    steps: [
-      "Open Order History in the trading portal.",
-      "Set the date range.",
-      "Export it as CSV.",
-    ],
-    note: "Quantities are lots. Common on prop-firm portals.",
+    get steps() {
+      return [
+        localize({
+          id: "broker.openOrderHistoryInTheTradingPortal",
+          message: "Open Order History in the trading portal.",
+        }),
+        localize({ id: "broker.setTheDateRange", message: "Set the date range." }),
+        localize({ id: "broker.exportItAsCsv", message: "Export it as CSV." }),
+      ];
+    },
+    get note() {
+      return localize({
+        id: "broker.quantitiesAreLotsCommonOnPropFirmPortals",
+        message: "Quantities are lots. Common on prop-firm portals.",
+      });
+    },
     aliases: ["prop", "forex", "funded"],
   },
   {
@@ -223,8 +324,22 @@ export const BROKERS: BrokerDef[] = [
     brand: "#0EA5A0",
     monogram: "MT",
     formats: "CSV",
-    steps: ["Open the Positions or History view.", "Set the date range.", "Export it as CSV."],
-    note: "Rows are positions; still-open ones import with their entry fill only.",
+    get steps() {
+      return [
+        localize({
+          id: "broker.openThePositionsOrHistoryView",
+          message: "Open the Positions or History view.",
+        }),
+        localize({ id: "broker.setTheDateRange", message: "Set the date range." }),
+        localize({ id: "broker.exportItAsCsv", message: "Export it as CSV." }),
+      ];
+    },
+    get note() {
+      return localize({
+        id: "broker.rowsArePositionsStillOpenOnesImportWithTheirEntryFillOnly",
+        message: "Rows are positions; still-open ones import with their entry fill only.",
+      });
+    },
     aliases: ["prop", "forex", "funded"],
   },
   {
@@ -235,13 +350,32 @@ export const BROKERS: BrokerDef[] = [
     recognised: true,
     brand: "#0B7CBF",
     monogram: "M5",
-    formats: "XLSX or HTML statement",
-    steps: [
-      "Open the Toolbox (MT5) or Terminal (MT4) and select the History tab.",
-      "Set the period, then right-click the grid.",
-      "Choose Report → XLSX (MT5) or Save as Report (MT4).",
-    ],
-    note: "Deals import in broker server time (EET by default) — set the timezone in the preview if your broker differs.",
+    get formats() {
+      return localize({ id: "broker.xlsxOrHtmlStatement", message: "XLSX or HTML statement" });
+    },
+    get steps() {
+      return [
+        localize({
+          id: "broker.openTheToolboxMt5OrTerminalMt4AndSelectTheHistoryTab",
+          message: "Open the Toolbox (MT5) or Terminal (MT4) and select the History tab.",
+        }),
+        localize({
+          id: "broker.setThePeriodThenRightClickTheGrid",
+          message: "Set the period, then right-click the grid.",
+        }),
+        localize({
+          id: "broker.chooseReportXlsxMt5OrSaveAsReportMt4",
+          message: "Choose Report → XLSX (MT5) or Save as Report (MT4).",
+        }),
+      ];
+    },
+    get note() {
+      return localize({
+        id: "broker.dealsImportInBrokerServerTimeEetByDefaultSetTheTimezone",
+        message:
+          "Deals import in broker server time (EET by default) — set the timezone in the preview if your broker differs.",
+      });
+    },
     aliases: ["mt4", "mt5", "metaquotes", "forex"],
   },
   {
@@ -253,11 +387,19 @@ export const BROKERS: BrokerDef[] = [
     brand: "#F04E23",
     monogram: "tt",
     formats: "CSV",
-    steps: [
-      "Open History in the desktop or web platform.",
-      "Set the date range and filter to filled transactions.",
-      "Download the CSV.",
-    ],
+    get steps() {
+      return [
+        localize({
+          id: "broker.openHistoryInTheDesktopOrWebPlatform",
+          message: "Open History in the desktop or web platform.",
+        }),
+        localize({
+          id: "broker.setTheDateRangeAndFilterToFilledTransactions",
+          message: "Set the date range and filter to filled transactions.",
+        }),
+        localize({ id: "broker.downloadTheCsv", message: "Download the CSV." }),
+      ];
+    },
     aliases: ["tasty", "options"],
   },
   {
@@ -269,11 +411,19 @@ export const BROKERS: BrokerDef[] = [
     brand: "#368727",
     monogram: "Fi",
     formats: "CSV",
-    steps: [
-      "Open Accounts & Trade → Portfolio → Activity & Orders.",
-      "Set the date range.",
-      "Use Download to save the activity as CSV.",
-    ],
+    get steps() {
+      return [
+        localize({
+          id: "broker.openAccountsTradePortfolioActivityOrders",
+          message: "Open Accounts & Trade → Portfolio → Activity & Orders.",
+        }),
+        localize({ id: "broker.setTheDateRange", message: "Set the date range." }),
+        localize({
+          id: "broker.useDownloadToSaveTheActivityAsCsv",
+          message: "Use Download to save the activity as CSV.",
+        }),
+      ];
+    },
     aliases: ["fidelity"],
   },
   {
@@ -285,11 +435,22 @@ export const BROKERS: BrokerDef[] = [
     brand: "#6633CC",
     monogram: "E*",
     formats: "CSV",
-    steps: [
-      "Open Accounts → Transactions.",
-      "Set the account and date range.",
-      "Download the transactions as CSV.",
-    ],
+    get steps() {
+      return [
+        localize({
+          id: "broker.openAccountsTransactions",
+          message: "Open Accounts → Transactions.",
+        }),
+        localize({
+          id: "broker.setTheAccountAndDateRange",
+          message: "Set the account and date range.",
+        }),
+        localize({
+          id: "broker.downloadTheTransactionsAsCsv",
+          message: "Download the transactions as CSV.",
+        }),
+      ];
+    },
     aliases: ["etrade", "morgan stanley"],
   },
   {
@@ -301,11 +462,19 @@ export const BROKERS: BrokerDef[] = [
     brand: "#FF6C00",
     monogram: "mm",
     formats: "CSV",
-    steps: [
-      "Open the moomoo or FUTU desktop app.",
-      "Go to the account's order or trade history and set the date range.",
-      "Export the history as CSV.",
-    ],
+    get steps() {
+      return [
+        localize({
+          id: "broker.openTheMoomooOrFutuDesktopApp",
+          message: "Open the moomoo or FUTU desktop app.",
+        }),
+        localize({
+          id: "broker.goToTheAccountSOrderOrTradeHistoryAndSetThe",
+          message: "Go to the account's order or trade history and set the date range.",
+        }),
+        localize({ id: "broker.exportHistoryCsv", message: "Export the history as CSV." }),
+      ];
+    },
     aliases: ["futu", "niuniu", "moo moo", "hk"],
   },
   {
@@ -316,13 +485,36 @@ export const BROKERS: BrokerDef[] = [
     recognised: false,
     brand: "#00C805",
     monogram: "RH",
-    formats: "CSV you build from the statement",
-    steps: [
-      "Open Account → Settings → Statements & History.",
-      "Download the monthly account statements covering your trades.",
-      "Copy the trade rows into a spreadsheet with symbol, side, quantity, price and time columns, and save it as CSV.",
-    ],
-    note: "Robinhood only publishes PDF statements, so this one needs a spreadsheet step. Logging trades by hand is often faster for a light month.",
+    get formats() {
+      return localize({
+        id: "broker.csvYouBuildFromTheStatement",
+        message: "CSV you build from the statement",
+      });
+    },
+    get steps() {
+      return [
+        localize({
+          id: "broker.openAccountSettingsStatementsHistory",
+          message: "Open Account → Settings → Statements & History.",
+        }),
+        localize({
+          id: "broker.downloadTheMonthlyAccountStatementsCoveringYourTrades",
+          message: "Download the monthly account statements covering your trades.",
+        }),
+        localize({
+          id: "broker.copyTheTradeRowsIntoASpreadsheetWithSymbolSideQuantityPrice",
+          message:
+            "Copy the trade rows into a spreadsheet with symbol, side, quantity, price and time columns, and save it as CSV.",
+        }),
+      ];
+    },
+    get note() {
+      return localize({
+        id: "broker.robinhoodOnlyPublishesPdfStatementsSoThisOneNeedsASpreadsheetStep",
+        message:
+          "Robinhood only publishes PDF statements, so this one needs a spreadsheet step. Logging trades by hand is often faster for a light month.",
+      });
+    },
     aliases: ["rh", "hood"],
   },
   {
@@ -333,28 +525,66 @@ export const BROKERS: BrokerDef[] = [
     recognised: false,
     brand: "#64748B",
     monogram: "CSV",
-    formats: "Any CSV, or a TraderMemos JSON backup",
-    steps: [
-      "Export your trade, order or execution history from the broker as CSV.",
-      "Keep one row per fill, with symbol, side, quantity, price and a timestamp.",
-      "Upload it — you map the columns onto those fields in the next step.",
-    ],
-    note: "Round-trip exports (one row per closed position) work too — map the open/close columns instead.",
+    get formats() {
+      return localize({
+        id: "broker.anyCsvOrATradermemosJsonBackup",
+        message: "Any CSV, or a TraderMemos JSON backup",
+      });
+    },
+    get steps() {
+      return [
+        localize({
+          id: "broker.exportYourTradeOrderOrExecutionHistoryFromTheBrokerAsCsv",
+          message: "Export your trade, order or execution history from the broker as CSV.",
+        }),
+        localize({
+          id: "broker.keepOneRowPerFillWithSymbolSideQuantityPriceAndA",
+          message: "Keep one row per fill, with symbol, side, quantity, price and a timestamp.",
+        }),
+        localize({
+          id: "broker.uploadItYouMapTheColumnsOntoThoseFieldsInTheNext",
+          message: "Upload it — you map the columns onto those fields in the next step.",
+        }),
+      ];
+    },
+    get note() {
+      return localize({
+        id: "broker.roundTripExportsOneRowPerClosedPositionWorkTooMapThe",
+        message:
+          "Round-trip exports (one row per closed position) work too — map the open/close columns instead.",
+      });
+    },
     aliases: ["csv", "custom", "unknown", "spreadsheet"],
   },
   {
     key: "manual",
-    name: "Manual account",
+    get name() {
+      return localize({ id: "broker.manualAccount", message: "Manual account" });
+    },
     accountBroker: "Manual",
     kind: "manual",
     recognised: false,
     brand: "#1264B2",
     monogram: "✎",
-    steps: [
-      "Name the account and pick its currency.",
-      "Log trades as you take them, or fill in yesterday's at review time.",
-    ],
-    note: "Screenshot scanning and the trade form both write here — nothing about the journal needs a broker file.",
+    get steps() {
+      return [
+        localize({
+          id: "broker.nameTheAccountAndPickItsCurrency",
+          message: "Name the account and pick its currency.",
+        }),
+        localize({
+          id: "broker.logTradesAsYouTakeThemOrFillInYesterdaySAt",
+          message: "Log trades as you take them, or fill in yesterday's at review time.",
+        }),
+      ];
+    },
+    get note() {
+      return localize({
+        id: "broker.screenshotScanningAndTheTradeFormBothWriteHereNothingAboutThe",
+        message:
+          "Screenshot scanning and the trade form both write here — nothing about the journal needs a broker file.",
+      });
+    },
     aliases: ["by hand", "paper", "prop", "backtest", "no broker"],
   },
 ];

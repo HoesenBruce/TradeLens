@@ -1,3 +1,5 @@
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Dialog } from "@base-ui/react";
 import { Command } from "cmdk";
 import { Filter, Search, X } from "lucide-react";
@@ -12,6 +14,8 @@ import { ShortcutKeys } from "./ShortcutKeys";
 const GROUP_ORDER: CommandGroup[] = ["Navigate", "Actions", "Tools"];
 
 export function CommandPalette() {
+  const { t: localize } = useSecondaryLingui();
+
   const paletteLabel = useHotkeyLabel("palette");
   const open = useUI((s) => s.commandOpen);
   const setCommandOpen = useUI((s) => s.setCommandOpen);
@@ -44,7 +48,11 @@ export function CommandPalette() {
               "rounded-lg border border-border bg-card shadow-lg outline-none",
             )}
           >
-            <Command label="Command palette" loop className="flex flex-col">
+            <Command
+              label={localize({ id: "command.commandPalette", message: "Command palette" })}
+              loop
+              className="flex flex-col"
+            >
               <div className="m-2 flex items-center gap-2 rounded-md border border-border bg-muted px-3">
                 <Search
                   size={16}
@@ -56,7 +64,10 @@ export function CommandPalette() {
                   autoFocus
                   value={query}
                   onValueChange={setQuery}
-                  placeholder="Pages, tools, or type a symbol…"
+                  placeholder={localize({
+                    id: "command.pagesToolsOrTypeASymbol",
+                    message: "Pages, tools, or type a symbol…",
+                  })}
                   className={cn(
                     "h-11 w-full border-none bg-transparent text-[13px] text-foreground outline-none",
                     "placeholder:text-muted-foreground",
@@ -64,13 +75,16 @@ export function CommandPalette() {
                 />
                 <ShortcutKeys>esc</ShortcutKeys>
               </div>
-              <Command.List className="max-h-[min(420px,50vh)] overflow-y-auto p-2">
+              <Command.List
+                label={localize({ id: "command.commandPalette", message: "Command palette" })}
+                className="max-h-[min(420px,50vh)] overflow-y-auto p-2"
+              >
                 <Command.Empty className="px-3 py-8 text-center text-xs text-muted-foreground">
-                  No matching commands.
+                  {localize({ id: "command.noMatchingCommands", message: "No matching commands." })}
                 </Command.Empty>
                 {(canFilterSymbol || (symbols?.length ?? 0) > 0) && (
                   <Command.Group
-                    heading="Filters"
+                    heading={localize({ id: "command.filters", message: "Filters" })}
                     className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:[&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest [&_[cmdk-group-heading]]:text-muted-foreground"
                   >
                     {canFilterSymbol && (
@@ -93,7 +107,9 @@ export function CommandPalette() {
                           aria-hidden
                         />
                         <span className="min-w-0 flex-1 truncate">
-                          Filter symbol: {symbolQuery}
+                          <Trans id="command.filterSymbolSentence">
+                            Filter symbol: {symbolQuery}
+                          </Trans>
                         </span>
                       </Command.Item>
                     )}
@@ -117,7 +133,9 @@ export function CommandPalette() {
                           aria-hidden
                         />
                         <span className="min-w-0 flex-1 truncate">
-                          Clear symbol filter ({symbols.join(", ")})
+                          <Trans id="command.clearSymbolFilterSentence">
+                            Clear symbol filter ({symbols.join(", ")})
+                          </Trans>
                         </span>
                       </Command.Item>
                     ) : null}
@@ -126,7 +144,13 @@ export function CommandPalette() {
                 {grouped.map(({ group, items }) => (
                   <Command.Group
                     key={group}
-                    heading={group}
+                    heading={
+                      {
+                        Navigate: localize({ id: "command.navigate", message: "Navigate" }),
+                        Actions: localize({ id: "command.actions", message: "Actions" }),
+                        Tools: localize({ id: "command.tools", message: "Tools" }),
+                      }[group]
+                    }
                     className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:[&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest [&_[cmdk-group-heading]]:text-muted-foreground"
                   >
                     {items.map((item) => {
@@ -157,7 +181,12 @@ export function CommandPalette() {
                 ))}
               </Command.List>
               <div className="flex items-center justify-between gap-3 px-3 py-2 text-[10px] text-muted-foreground">
-                <span>Navigate with ↑↓ · Enter to run · shortcuts when empty</span>
+                <span>
+                  {localize({
+                    id: "command.navigateWithEnterToRunShortcutsWhenEmpty",
+                    message: "Navigate with ↑↓ · Enter to run · shortcuts when empty",
+                  })}
+                </span>
                 <ShortcutKeys>{paletteLabel}</ShortcutKeys>
               </div>
             </Command>

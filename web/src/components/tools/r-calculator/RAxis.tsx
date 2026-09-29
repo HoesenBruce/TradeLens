@@ -1,9 +1,12 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import { money, rLabel, signedMoney } from "@/lib/r-calculator/format";
 import { useRCalculatorStore } from "@/lib/r-calculator/useRCalculatorStore";
 import { cn } from "@/lib/cn";
 
 export function RAxis() {
+  const { t: localize } = useSecondaryLingui();
+
   const store = useRCalculatorStore();
   const session = store.sessions.find((s) => s.id === store.activeId);
   const [active, setActive] = useState<string | null>(null);
@@ -102,7 +105,10 @@ export function RAxis() {
           <PriceLabel
             top="0%"
             tone="profit"
-            caption={`Hold ${rLabel(exitResult.trailerTargetR)}`}
+            caption={localize({
+              id: "calculator.holdValue0",
+              message: `Hold ${{ value0: rLabel(exitResult.trailerTargetR) }}`,
+            })}
             price={money(
               exitResult.tiers.length ? exitPrice(exitResult.trailerTargetR) : result.target3,
             )}
@@ -113,7 +119,10 @@ export function RAxis() {
               key={tier.r}
               top={`${top(tier.r)}%`}
               tone="profit"
-              caption={`Target ${rLabel(tier.r)} · ${tier.pct}%`}
+              caption={localize({
+                id: "calculator.targetValue0Value1",
+                message: `Target ${{ value0: rLabel(tier.r) }} · ${{ value1: tier.pct }}%`,
+              })}
               price={money(tier.price)}
               pl={signedMoney(tier.profit)}
               active={active === `tier-${i}`}
@@ -122,7 +131,7 @@ export function RAxis() {
           <PriceLabel
             top={`${entryTop}%`}
             tone="text"
-            caption="Entry"
+            caption={localize({ id: "market.entry", message: "Entry" })}
             price={money(input.entry)}
             emphasize
             active={active === "entry"}
@@ -130,7 +139,7 @@ export function RAxis() {
           <PriceLabel
             top="100%"
             tone="loss"
-            caption="Stop −1R"
+            caption={localize({ id: "calculator.stopMinus1R", message: "Stop −1R" })}
             price={money(result.stopPrice)}
             pl={result.realRisk > 0 ? signedMoney(-result.realRisk) : "—"}
             active={active === "stop"}

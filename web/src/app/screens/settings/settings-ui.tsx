@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import type { LucideIcon } from "lucide-react";
 import { Eraser, Trash2 } from "lucide-react";
@@ -405,6 +406,8 @@ export function SettingsPrefixedInput({
   "aria-label"?: string;
   className?: string;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const schemeId = useId();
 
   return (
@@ -417,7 +420,7 @@ export function SettingsPrefixedInput({
       )}
     >
       <label htmlFor={schemeId} className="sr-only">
-        URL scheme
+        {localize({ id: "settings.urlScheme", message: "URL scheme" })}
       </label>
       <div className="flex shrink-0 items-center border-r border-border/50">
         <NativeSelect
@@ -427,7 +430,7 @@ export function SettingsPrefixedInput({
           value={scheme}
           disabled={disabled}
           onChange={(e) => onSchemeChange(e.target.value as UrlScheme)}
-          aria-label="URL scheme"
+          aria-label={localize({ id: "settings.urlScheme", message: "URL scheme" })}
           className="h-10 min-w-[5.75rem] border-none pr-6 pl-3 text-[12px] text-muted-foreground"
         >
           <NativeSelectOption value="https">https://</NativeSelectOption>
@@ -585,6 +588,8 @@ export function AccountRow({
   headerAction?: ReactNode;
   footerActions?: ReactNode;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const metaParts = [
     broker || null,
     accountType ? accountType.charAt(0).toUpperCase() + accountType.slice(1) : null,
@@ -605,7 +610,9 @@ export function AccountRow({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex flex-wrap items-center gap-x-2 gap-y-1">
           <h3 className="m-0 text-[15.4px] font-semibold tracking-tight text-foreground">{name}</h3>
-          {isPrimary ? <Pill tone="amber">Primary</Pill> : null}
+          {isPrimary ? (
+            <Pill tone="amber">{localize({ id: "accounts.primary", message: "Primary" })}</Pill>
+          ) : null}
         </div>
         {headerAction ? <div className="shrink-0">{headerAction}</div> : null}
       </div>
@@ -613,7 +620,7 @@ export function AccountRow({
       <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
         <div className="min-w-0">
           <p className="m-0 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-            Deposited
+            {localize({ id: "accounts.deposited", message: "Deposited" })}
           </p>
           <p className="m-0 mt-1 text-[13px] font-semibold tabular-nums tracking-tight text-foreground">
             {depositedLabel}
@@ -621,7 +628,7 @@ export function AccountRow({
         </div>
         <div className="min-w-0 sm:col-start-2">
           <p className="m-0 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-            Equity
+            {localize({ id: "accounts.equity", message: "Equity" })}
           </p>
           <p className="m-0 mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-foreground">
             {equityLabel}
@@ -629,7 +636,7 @@ export function AccountRow({
         </div>
         <div className="min-w-0 col-span-2 sm:col-span-1 sm:col-start-3">
           <p className="m-0 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-            Realized P&L
+            {localize({ id: "accounts.realized", message: "Realized P&L" })}
           </p>
           <p
             className={cn(

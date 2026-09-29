@@ -1,3 +1,4 @@
+import { t as localize } from "@lingui/core/macro";
 import type { TradeDetail } from "@/lib/api/types";
 import { parseJournalNotes } from "./journalNotes";
 import { computeRiskReward } from "./riskReward";
@@ -190,10 +191,21 @@ export function generateTradeCoachNotes(
       id: "no-plan",
       tone: "neg",
       priority: 1,
-      headline: "No plan was recorded before the trade",
+      headline: localize({
+        id: "coach.noPlanWasRecordedBeforeTheTrade",
+        message: "No plan was recorded before the trade",
+      }),
       detail: hasMistakeNoPlan
-        ? "Risk, target, and stop are blank — and you tagged this as no plan. Define all three before entry next time so you can measure R and review honestly."
-        : "Risk, target, and stop are all empty. Without a plan you can't judge whether the loss was bad luck or bad process.",
+        ? localize({
+            id: "coach.riskTargetAndStopAreBlankAndYouTaggedThisAsNo",
+            message:
+              "Risk, target, and stop are blank — and you tagged this as no plan. Define all three before entry next time so you can measure R and review honestly.",
+          })
+        : localize({
+            id: "coach.riskTargetAndStopAreAllEmptyWithoutAPlanYouCan",
+            message:
+              "Risk, target, and stop are all empty. Without a plan you can't judge whether the loss was bad luck or bad process.",
+          }),
     });
   }
 
@@ -202,9 +214,12 @@ export function generateTradeCoachNotes(
       id: "no-entry-reason",
       tone: "warn",
       priority: 4,
-      headline: "Missing entry reason",
-      detail:
-        "Write why you entered while it's fresh. Future you needs the thesis, not just the P&L.",
+      headline: localize({ id: "coach.missingEntryReason", message: "Missing entry reason" }),
+      detail: localize({
+        id: "coach.writeWhyYouEnteredWhileItSFreshFutureYouNeedsThe",
+        message:
+          "Write why you entered while it's fresh. Future you needs the thesis, not just the P&L.",
+      }),
     });
   }
 
@@ -213,9 +228,15 @@ export function generateTradeCoachNotes(
       id: "no-exit-reason",
       tone: "warn",
       priority: 5,
-      headline: "Missing exit reason on a loser",
-      detail:
-        "Document why you closed — stop hit, thesis broken, or emotion — so you can spot repeat patterns.",
+      headline: localize({
+        id: "coach.missingExitReasonOnALoser",
+        message: "Missing exit reason on a loser",
+      }),
+      detail: localize({
+        id: "coach.documentWhyYouClosedStopHitThesisBrokenOrEmotionSoYou",
+        message:
+          "Document why you closed — stop hit, thesis broken, or emotion — so you can spot repeat patterns.",
+      }),
     });
   }
 
@@ -224,11 +245,21 @@ export function generateTradeCoachNotes(
       id: "emotion-loss",
       tone: "neg",
       priority: 2,
-      headline: `${insights.emotion} state paired with a loss`,
+      headline: localize({
+        id: "coach.value0StatePairedWithALoss",
+        message: `${{ value0: insights.emotion }} state paired with a loss`,
+      }),
       detail:
         insights.emotion === "Overconfident"
-          ? "Overconfidence often shows up as oversizing or ignoring your stop. Check whether conviction exceeded your edge on this setup."
-          : `${insights.emotion} can push size or timing. Compare this trade to your playbook rules before taking the next similar signal.`,
+          ? localize({
+              id: "coach.overconfidenceOftenShowsUpAsOversizingOrIgnoringYourStopCheckWhether",
+              message:
+                "Overconfidence often shows up as oversizing or ignoring your stop. Check whether conviction exceeded your edge on this setup.",
+            })
+          : localize({
+              id: "coach.value0CanPushSizeOrTimingCompareThisTradeToYourPlaybook",
+              message: `${{ value0: insights.emotion }} can push size or timing. Compare this trade to your playbook rules before taking the next similar signal.`,
+            }),
     });
   }
 
@@ -237,9 +268,15 @@ export function generateTradeCoachNotes(
       id: "emotion-win",
       tone: "warn",
       priority: 6,
-      headline: `${insights.emotion} but the trade still won`,
-      detail:
-        "You may have cut a winner early. Check MFE vs net — if you left meaningful profit, work on hold rules for this setup.",
+      headline: localize({
+        id: "coach.value0ButTheTradeStillWon",
+        message: `${{ value0: insights.emotion }} but the trade still won`,
+      }),
+      detail: localize({
+        id: "coach.youMayHaveCutAWinnerEarlyCheckMfeVsNetIf",
+        message:
+          "You may have cut a winner early. Check MFE vs net — if you left meaningful profit, work on hold rules for this setup.",
+      }),
     });
   }
 
@@ -248,16 +285,28 @@ export function generateTradeCoachNotes(
       id: "fee-drag-high",
       tone: "neg",
       priority: 3,
-      headline: "Fees took a large bite of gross P&L",
-      detail: `Commissions and fees were ${(insights.feeDragPct * 100).toFixed(0)}% of gross — on a ${isLoss ? "losing" : "winning"} trade that materially changes the outcome. Fewer legs or lower-cost fills would help.`,
+      headline: localize({
+        id: "coach.feesTookALargeBiteOfGrossPL",
+        message: "Fees took a large bite of gross P&L",
+      }),
+      detail: localize({
+        id: "coach.feeImpact",
+        message: `Commissions and fees were ${{ percent: (insights.feeDragPct * 100).toFixed(0) }}% of gross — that materially changes the outcome. Fewer legs or lower-cost fills would help.`,
+      }),
     });
   } else if (insights.feeDragPct != null && insights.feeDragPct >= 0.05 && isLoss) {
     pushNote(notes, {
       id: "fee-drag-moderate",
       tone: "warn",
       priority: 7,
-      headline: "Fees amplified a small loss",
-      detail: `${(insights.feeDragPct * 100).toFixed(1)}% of gross went to fees. With ${insights.fillCount} fill${insights.fillCount === 1 ? "" : "s"}, consider whether every add was worth the cost.`,
+      headline: localize({
+        id: "coach.feesAmplifiedASmallLoss",
+        message: "Fees amplified a small loss",
+      }),
+      detail: localize({
+        id: "coach.fillFeeImpact",
+        message: `${{ percent: (insights.feeDragPct * 100).toFixed(1) }}% of gross went to fees. Fills: ${{ count: insights.fillCount }}. Consider whether every add was worth the cost.`,
+      }),
     });
   }
 
@@ -271,8 +320,14 @@ export function generateTradeCoachNotes(
       id: "poor-capture",
       tone: "warn",
       priority: 4,
-      headline: "Most of the move was left on the table",
-      detail: `You captured ${(insights.mfeCapturePct * 100).toFixed(0)}% of MFE. Review your exit trigger — trailing stop or partial targets may fit this setup better.`,
+      headline: localize({
+        id: "coach.mostOfTheMoveWasLeftOnTheTable",
+        message: "Most of the move was left on the table",
+      }),
+      detail: localize({
+        id: "coach.youCapturedValue0OfMfeReviewYourExitTriggerTrailingStopOr",
+        message: `You captured ${{ value0: (insights.mfeCapturePct * 100).toFixed(0) }}% of MFE. Review your exit trigger — trailing stop or partial targets may fit this setup better.`,
+      }),
     });
   }
 
@@ -289,9 +344,15 @@ export function generateTradeCoachNotes(
         id: "left-on-table",
         tone: "tip",
         priority: 8,
-        headline: `~${leftR.toFixed(1)}R given back from the peak`,
-        detail:
-          "The trade worked but closed well off its best point. Note what would have kept you in for the next similar setup.",
+        headline: localize({
+          id: "coach.value0RGivenBackFromThePeak",
+          message: `~${{ value0: leftR.toFixed(1) }}R given back from the peak`,
+        }),
+        detail: localize({
+          id: "coach.theTradeWorkedButClosedWellOffItsBestPointNoteWhat",
+          message:
+            "The trade worked but closed well off its best point. Note what would have kept you in for the next similar setup.",
+        }),
       });
     }
   }
@@ -304,18 +365,30 @@ export function generateTradeCoachNotes(
         id: "exited-early",
         tone: "tip",
         priority: 8,
-        headline: `~${postR.toFixed(1)}R more ran after your exit`,
-        detail:
-          "Price kept going your way in the window after the close. If this repeats on this setup, consider a runner or a trailing stop.",
+        headline: localize({
+          id: "coach.value0RMoreRanAfterYourExit",
+          message: `~${{ value0: postR.toFixed(1) }}R more ran after your exit`,
+        }),
+        detail: localize({
+          id: "coach.priceKeptGoingYourWayInTheWindowAfterTheCloseIf",
+          message:
+            "Price kept going your way in the window after the close. If this repeats on this setup, consider a runner or a trailing stop.",
+        }),
       });
     } else if (avoidedR >= 1 && postR < 0.5) {
       pushNote(notes, {
         id: "well-timed-exit",
         tone: "pos",
         priority: 9,
-        headline: `Exit dodged ~${avoidedR.toFixed(1)}R of drawdown`,
-        detail:
-          "Price moved against the position soon after you closed. Whatever triggered this exit is worth writing down.",
+        headline: localize({
+          id: "coach.exitDodgedValue0ROfDrawdown",
+          message: `Exit dodged ~${{ value0: avoidedR.toFixed(1) }}R of drawdown`,
+        }),
+        detail: localize({
+          id: "coach.priceMovedAgainstThePositionSoonAfterYouClosedWhateverTriggeredThis",
+          message:
+            "Price moved against the position soon after you closed. Whatever triggered this exit is worth writing down.",
+        }),
       });
     }
   }
@@ -325,9 +398,15 @@ export function generateTradeCoachNotes(
       id: "r-blowout",
       tone: "neg",
       priority: 2,
-      headline: `Loss exceeded plan at ${insights.rMultiple.toFixed(1)}R`,
-      detail:
-        "This is more than a normal stop-out. Check for oversizing, moving the stop, or averaging down against your rules.",
+      headline: localize({
+        id: "coach.lossExceededPlanAtValue0R",
+        message: `Loss exceeded plan at ${{ value0: insights.rMultiple.toFixed(1) }}R`,
+      }),
+      detail: localize({
+        id: "coach.thisIsMoreThanANormalStopOutCheckForOversizingMoving",
+        message:
+          "This is more than a normal stop-out. Check for oversizing, moving the stop, or averaging down against your rules.",
+      }),
     });
   }
 
@@ -338,8 +417,14 @@ export function generateTradeCoachNotes(
         id: "mae-exceeded",
         tone: "warn",
         priority: 5,
-        headline: "Adverse excursion exceeded planned risk",
-        detail: `MAE was ~${maeR.toFixed(1)}× your recorded risk. Either the stop was widened or the plan wasn't followed.`,
+        headline: localize({
+          id: "coach.adverseExcursionExceededPlannedRisk",
+          message: "Adverse excursion exceeded planned risk",
+        }),
+        detail: localize({
+          id: "coach.maeWasValue0YourRecordedRiskEitherTheStopWasWidenedOr",
+          message: `MAE was ~${{ value0: maeR.toFixed(1) }}× your recorded risk. Either the stop was widened or the plan wasn't followed.`,
+        }),
       });
     }
   }
@@ -352,11 +437,22 @@ export function generateTradeCoachNotes(
       id: "many-fills",
       tone: isLoss && scaleNote ? "warn" : "tip",
       priority: 7,
-      headline: `${insights.fillCount} executions on one trade`,
+      headline: localize({
+        id: "coach.value0ExecutionsOnOneTrade",
+        message: `${{ value0: insights.fillCount }} executions on one trade`,
+      }),
       detail:
         scaleNote && isLoss
-          ? "Multiple adds before exit on a loser — classic averaging behavior. Decide in advance whether scaling in is allowed for this setup."
-          : "Multiple fills increase fee drag and slippage. Make sure each add had a defined reason.",
+          ? localize({
+              id: "coach.multipleAddsBeforeExitOnALoserClassicAveragingBehaviorDecideIn",
+              message:
+                "Multiple adds before exit on a loser — classic averaging behavior. Decide in advance whether scaling in is allowed for this setup.",
+            })
+          : localize({
+              id: "coach.multipleFillsIncreaseFeeDragAndSlippageMakeSureEachAddHad",
+              message:
+                "Multiple fills increase fee drag and slippage. Make sure each add had a defined reason.",
+            }),
     });
   }
 
@@ -367,8 +463,14 @@ export function generateTradeCoachNotes(
       id: "setup-exec-gap",
       tone: "warn",
       priority: 6,
-      headline: "Good setup, weak execution",
-      detail: `You rated the setup ${insights.setupGrade} but execution ${insights.executionGrade}. The idea may be fine — focus on entries, sizing, and stop discipline.`,
+      headline: localize({
+        id: "coach.goodSetupWeakExecution",
+        message: "Good setup, weak execution",
+      }),
+      detail: localize({
+        id: "coach.youRatedTheSetupValue0ButExecutionValue1TheIdeaMayBe",
+        message: `You rated the setup ${{ value0: insights.setupGrade }} but execution ${{ value1: insights.executionGrade }}. The idea may be fine — focus on entries, sizing, and stop discipline.`,
+      }),
     });
   }
 
@@ -377,8 +479,14 @@ export function generateTradeCoachNotes(
       id: "weak-setup",
       tone: "tip",
       priority: 8,
-      headline: "Low setup grade on a loser",
-      detail: `You marked setup ${insights.setupGrade}. Filter similar B/C setups from your playbook or tighten entry criteria.`,
+      headline: localize({
+        id: "coach.lowSetupGradeOnALoser",
+        message: "Low setup grade on a loser",
+      }),
+      detail: localize({
+        id: "coach.youMarkedSetupValue0FilterSimilarBCSetupsFromYourPlaybook",
+        message: `You marked setup ${{ value0: insights.setupGrade }}. Filter similar B/C setups from your playbook or tighten entry criteria.`,
+      }),
     });
   }
 
@@ -387,8 +495,14 @@ export function generateTradeCoachNotes(
       id: "quick-loss",
       tone: "tip",
       priority: 9,
-      headline: "Quick loss — thesis failed fast",
-      detail: `Held only ${insights.holdLabel}. That can be good risk control if the stop was planned; bad if you panic-exited before the setup developed.`,
+      headline: localize({
+        id: "coach.quickLossThesisFailedFast",
+        message: "Quick loss — thesis failed fast",
+      }),
+      detail: localize({
+        id: "coach.heldOnlyValue0ThatCanBeGoodRiskControlIfTheStop",
+        message: `Held only ${{ value0: insights.holdLabel }}. That can be good risk control if the stop was planned; bad if you panic-exited before the setup developed.`,
+      }),
     });
   }
 
@@ -397,10 +511,21 @@ export function generateTradeCoachNotes(
       id: "strong-win",
       tone: "pos",
       priority: 10,
-      headline: `Strong +${insights.rMultiple.toFixed(1)}R result`,
+      headline: localize({
+        id: "coach.strongValue0RResult",
+        message: `Strong +${{ value0: insights.rMultiple.toFixed(1) }}R result`,
+      }),
       detail: planRecorded(insights)
-        ? "Process and outcome aligned. Capture what you did right in review notes so you can repeat it."
-        : "Good outcome — still log your plan next time so wins are reproducible, not lucky.",
+        ? localize({
+            id: "coach.processAndOutcomeAlignedCaptureWhatYouDidRightInReviewNotes",
+            message:
+              "Process and outcome aligned. Capture what you did right in review notes so you can repeat it.",
+          })
+        : localize({
+            id: "coach.goodOutcomeStillLogYourPlanNextTimeSoWinsAreReproducible",
+            message:
+              "Good outcome — still log your plan next time so wins are reproducible, not lucky.",
+          }),
     });
   }
 
@@ -409,9 +534,12 @@ export function generateTradeCoachNotes(
       id: "breakeven",
       tone: "tip",
       priority: 10,
-      headline: "Scratch trade",
-      detail:
-        "Break-even after fees is still a process check: did you follow the plan, and was the setup worth the mental capital?",
+      headline: localize({ id: "coach.scratchTrade", message: "Scratch trade" }),
+      detail: localize({
+        id: "coach.breakEvenAfterFeesIsStillAProcessCheckDidYouFollow",
+        message:
+          "Break-even after fees is still a process check: did you follow the plan, and was the setup worth the mental capital?",
+      }),
     });
   }
 
@@ -421,9 +549,12 @@ export function generateTradeCoachNotes(
       id: `mistake-${tag}`,
       tone: "warn",
       priority: 5,
-      headline: `Mistake: ${tag}`,
-      detail:
-        "You flagged this yourself — add one concrete rule in review notes to prevent the same mistake.",
+      headline: localize({ id: "coach.mistakeValue0", message: `Mistake: ${{ value0: tag }}` }),
+      detail: localize({
+        id: "coach.youFlaggedThisYourselfAddOneConcreteRuleInReviewNotesTo",
+        message:
+          "You flagged this yourself — add one concrete rule in review notes to prevent the same mistake.",
+      }),
     });
   }
 

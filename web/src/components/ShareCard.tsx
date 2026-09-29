@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useRef, useState } from "react";
 import type { ShareCardData } from "@/lib/shareCard";
 import { BRAND } from "@/lib/brand";
@@ -169,6 +170,8 @@ export function ShareCardModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const toast = useToastManager();
   const svgRef = useRef<SVGSVGElement>(null);
   const [busy, setBusy] = useState<"copy" | "download" | null>(null);
@@ -190,9 +193,21 @@ export function ShareCardModal({
       const blob = await renderPng();
       if (!blob) return;
       await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-      toast.add({ title: "Card copied", description: "PNG is on your clipboard." });
+      toast.add({
+        title: localize({ id: "wrapped.cardCopied", message: "Card copied" }),
+        description: localize({
+          id: "wrapped.pngIsOnYourClipboard",
+          message: "PNG is on your clipboard.",
+        }),
+      });
     } catch {
-      toast.add({ title: "Copy failed", description: "Try Download PNG instead." });
+      toast.add({
+        title: localize({ id: "wrapped.copyFailed", message: "Copy failed" }),
+        description: localize({
+          id: "wrapped.tryDownloadPngInstead",
+          message: "Try Download PNG instead.",
+        }),
+      });
     } finally {
       setBusy(null);
     }
@@ -204,7 +219,13 @@ export function ShareCardModal({
       const blob = await renderPng();
       if (blob) downloadBlob(blob, filename);
     } catch {
-      toast.add({ title: "Export failed", description: "Could not render the card image." });
+      toast.add({
+        title: localize({ id: "wrapped.exportFailed", message: "Export failed" }),
+        description: localize({
+          id: "wrapped.couldNotRenderTheCardImage",
+          message: "Could not render the card image.",
+        }),
+      });
     } finally {
       setBusy(null);
     }
@@ -214,17 +235,21 @@ export function ShareCardModal({
     <Modal
       open={open}
       onOpenChange={onOpenChange}
-      title="Share card"
+      title={localize({ id: "trades.shareCard", message: "Share card" })}
       className="max-w-[min(640px,94vw)]"
       footer={
         <>
           {canCopy && (
             <Button type="button" variant="soft" disabled={busy != null} onClick={onCopy}>
-              {busy === "copy" ? "Copying…" : "Copy image"}
+              {busy === "copy"
+                ? localize({ id: "wrapped.copying", message: "Copying…" })
+                : localize({ id: "wrapped.copyImage", message: "Copy image" })}
             </Button>
           )}
           <Button type="button" disabled={busy != null} onClick={onDownload}>
-            {busy === "download" ? "Exporting…" : "Download PNG"}
+            {busy === "download"
+              ? localize({ id: "news.export.loading", message: "Exporting…" })
+              : localize({ id: "wrapped.downloadPng", message: "Download PNG" })}
           </Button>
         </>
       }
@@ -235,7 +260,7 @@ export function ShareCardModal({
         </div>
         <label className="flex items-center justify-between gap-3 text-[13px] text-muted-foreground">
           <span>
-            Show dollar amounts
+            {localize({ id: "wrapped.showDollarAmounts", message: "Show dollar amounts" })}
             <span className="block text-[11px]">{privacyHint}</span>
           </span>
           <Switch checked={showAmounts} onCheckedChange={onShowAmountsChange} />

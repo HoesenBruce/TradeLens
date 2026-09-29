@@ -43,8 +43,8 @@ describe("DateRangePicker", () => {
     await userEvent.click(trigger);
 
     const [startDay, endDay] = [
-      screen.getByRole("button", { name: /July 6th, 2026/ }),
-      screen.getByRole("button", { name: /July 10th, 2026/ }),
+      screen.getByRole("button", { name: /July 6, 2026/ }),
+      screen.getByRole("button", { name: /July 10, 2026/ }),
     ];
 
     await userEvent.click(startDay);
@@ -62,7 +62,7 @@ describe("DateRangePicker", () => {
     render(<DateRangePicker />);
 
     await userEvent.click(screen.getByRole("button", { name: "Date range" }));
-    const day = screen.getByRole("button", { name: /July 6th, 2026/ });
+    const day = screen.getByRole("button", { name: /July 6, 2026/ });
     await userEvent.click(day);
     await userEvent.click(day);
 

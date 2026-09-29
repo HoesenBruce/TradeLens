@@ -1,3 +1,6 @@
+import { Trans } from "@lingui/react/macro";
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { AlertCircle, Settings2 } from "lucide-react";
 import { useId, useState } from "react";
 import { AuthShell } from "@/components/AuthShell";
@@ -13,8 +16,18 @@ import { ApiError, editableApiBaseUrl, getCustomApiBaseUrl, setBaseUrl } from "@
 import { useAuth } from "@/lib/auth";
 
 const MODES = [
-  { value: "login", label: "Sign in" },
-  { value: "register", label: "Create account" },
+  {
+    value: "login",
+    get label() {
+      return localize({ id: "auth.signIn", message: "Sign in" });
+    },
+  },
+  {
+    value: "register",
+    get label() {
+      return localize({ id: "auth.createAccount", message: "Create account" });
+    },
+  },
 ] as const;
 
 type AuthMode = (typeof MODES)[number]["value"];
@@ -28,6 +41,8 @@ export function LoginScreen({
   registrationOpen?: boolean;
   banner?: string;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const signIn = useAuth((s) => s.signIn);
   const formId = useId();
 
@@ -68,9 +83,18 @@ export function LoginScreen({
         setError("");
       } else if (err instanceof ApiError && err.code === "totp_invalid") {
         setNeedsTotp(true);
-        setError("That code is not valid. Codes change every 30 seconds.");
+        setError(
+          localize({
+            id: "auth.thatCodeIsNotValidCodesChangeEvery30Seconds",
+            message: "That code is not valid. Codes change every 30 seconds.",
+          }),
+        );
       } else {
-        setError(err instanceof ApiError ? err.message : "Something went wrong");
+        setError(
+          err instanceof ApiError
+            ? err.message
+            : localize({ id: "auth.somethingWentWrong", message: "Something went wrong" }),
+        );
       }
     } finally {
       setBusy(false);
@@ -99,17 +123,24 @@ export function LoginScreen({
     <AuthShell>
       <div className="flex flex-col items-center gap-1 text-center">
         <h1 id={`${formId}-title`} className="text-xl font-semibold tracking-tight text-foreground">
-          {isLogin ? "Sign in" : "Create your account"}
+          {isLogin
+            ? localize({ id: "auth.signIn", message: "Sign in" })
+            : localize({ id: "auth.createYourAccount", message: "Create your account" })}
         </h1>
         <p className="text-sm text-muted-foreground">
-          {isLogin ? "Welcome back." : "Your trade data stays on your stack."}
+          {isLogin
+            ? localize({ id: "auth.welcomeBack", message: "Welcome back." })
+            : localize({
+                id: "auth.yourTradeDataStaysOnYourStack",
+                message: "Your trade data stays on your stack.",
+              })}
         </p>
       </div>
 
       {modes.length > 1 ? (
         <div className="flex justify-center">
           <SegmentedControl
-            ariaLabel="Authentication mode"
+            ariaLabel={localize({ id: "auth.authenticationMode", message: "Authentication mode" })}
             options={modes}
             value={mode}
             onChange={(v) => switchMode(v as AuthMode)}
@@ -127,13 +158,16 @@ export function LoginScreen({
 
       <form onSubmit={submit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-3.5">
-          <Field label="Username" htmlFor="username">
+          <Field label={localize({ id: "auth.username", message: "Username" })} htmlFor="username">
             <FormInput
               id="username"
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your username"
+              placeholder={localize({
+                id: "auth.enterYourUsername",
+                message: "Enter your username",
+              })}
               autoComplete="username"
               autoFocus
               required
@@ -143,31 +177,44 @@ export function LoginScreen({
           </Field>
 
           <Field
-            label="Password"
+            label={localize({ id: "auth.password", message: "Password" })}
             htmlFor="password"
             description={
               isLogin
                 ? undefined
-                : `Use ${MIN_PASSWORD}+ characters with a mix of letters and numbers.`
+                : localize({
+                    id: "auth.useValue0CharactersWithAMixOfLettersAndNumbers",
+                    message: `Use ${{ value0: MIN_PASSWORD }}+ characters with a mix of letters and numbers.`,
+                  })
             }
           >
             <PasswordInput
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={isLogin ? "Enter your password" : `At least ${MIN_PASSWORD} characters`}
+              placeholder={
+                isLogin
+                  ? localize({ id: "auth.enterYourPassword", message: "Enter your password" })
+                  : localize({
+                      id: "auth.atLeastValue0Characters",
+                      message: `At least ${{ value0: MIN_PASSWORD }} characters`,
+                    })
+              }
               autoComplete={isLogin ? "current-password" : "new-password"}
               required
               className={authFieldClass}
             />
           </Field>
           {needsTotp ? (
-            <Field label="Authenticator code" htmlFor="totp-code">
+            <Field
+              label={localize({ id: "auth.authenticatorCode", message: "Authenticator code" })}
+              htmlFor="totp-code"
+            >
               <FormInput
                 id="totp-code"
                 value={totpCode}
                 onChange={(e) => setTotpCode(e.target.value)}
-                placeholder="6-digit code"
+                placeholder={localize({ id: "auth.6DigitCode", message: "6-digit code" })}
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 maxLength={6}
@@ -192,38 +239,38 @@ export function LoginScreen({
         <Button type="submit" variant="default" className="w-full" loading={busy}>
           {busy
             ? isLogin
-              ? "Signing in…"
-              : "Creating account…"
+              ? localize({ id: "auth.signingIn", message: "Signing in…" })
+              : localize({ id: "auth.creatingAccount", message: "Creating account…" })
             : isLogin
-              ? "Sign in"
-              : "Create account"}
+              ? localize({ id: "auth.signIn", message: "Sign in" })
+              : localize({ id: "auth.createAccount", message: "Create account" })}
         </Button>
       </form>
 
       <div className="flex flex-col items-center gap-2">
         {registrationOpen && isLogin ? (
           <p className="text-center text-sm text-muted-foreground">
-            Need an account?{" "}
+            {localize({ id: "auth.needAnAccount", message: "Need an account?" })}{" "}
             <Button
               type="button"
               variant="link"
               className="h-auto p-0"
               onClick={() => switchMode("register")}
             >
-              Sign up
+              {localize({ id: "auth.signUp", message: "Sign up" })}
             </Button>
           </p>
         ) : null}
         {!isLogin ? (
           <p className="text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
+            {localize({ id: "auth.alreadyHaveAnAccount", message: "Already have an account?" })}{" "}
             <Button
               type="button"
               variant="link"
               className="h-auto p-0"
               onClick={() => switchMode("login")}
             >
-              Sign in
+              {localize({ id: "auth.signIn", message: "Sign in" })}
             </Button>
           </p>
         ) : null}
@@ -235,10 +282,10 @@ export function LoginScreen({
           className="text-muted-foreground hover:text-foreground"
         >
           <Settings2 size={12} strokeWidth={1.5} aria-hidden />
-          Advanced
+          {localize({ id: "auth.advanced", message: "Advanced" })}
           {serverUrl ? (
             <span className="max-w-[10rem] truncate text-muted-foreground" title={serverUrl}>
-              · custom server
+              {localize({ id: "auth.customServer", message: "· custom server" })}
             </span>
           ) : null}
         </Button>
@@ -247,7 +294,7 @@ export function LoginScreen({
       <Modal
         open={advancedOpen}
         onOpenChange={setAdvancedOpen}
-        title="Advanced"
+        title={localize({ id: "auth.advanced", message: "Advanced" })}
         className="max-w-[min(400px,94vw)]"
         footer={
           <Button
@@ -259,17 +306,19 @@ export function LoginScreen({
               setAdvancedOpen(false);
             }}
           >
-            Save
+            {localize({ id: "trades.save", message: "Save" })}
           </Button>
         }
       >
         <Field
-          label="API server"
+          label={localize({ id: "auth.apiServer", message: "API server" })}
           htmlFor="server-url"
           info={
             <>
-              Host for this device. Leave blank for the default. Origin only — <code>/api/v1</code>{" "}
-              is added automatically.
+              <Trans id="auth.deviceHostHint">
+                Host for this device. Leave blank for the default. Origin only —{" "}
+                <code>/api/v1</code> is added automatically.
+              </Trans>
             </>
           }
         >
@@ -281,7 +330,7 @@ export function LoginScreen({
             autoFocus
             autoComplete="url"
             placeholder="https://example.com"
-            aria-label="API server"
+            aria-label={localize({ id: "auth.apiServer", message: "API server" })}
             value={serverUrl}
             onChange={(e) => setServerUrl(e.target.value)}
             onBlur={() => {

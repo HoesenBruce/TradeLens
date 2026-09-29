@@ -1,3 +1,5 @@
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { ColumnDef } from "@/lib/table";
 import { useState } from "react";
 import {
@@ -51,6 +53,8 @@ export function ReportsBreakdownCard({
   orientation = "vertical",
   tableColumns,
 }: ReportsBreakdownCardProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const money = useReportsMoney();
   const [view, setView] = useState<"chart" | "table">("chart");
@@ -58,12 +62,12 @@ export function ReportsBreakdownCard({
 
   const action = tableColumns ? (
     <SegmentedControl
-      ariaLabel={`${title} view`}
+      ariaLabel={localize({ id: "reports.value0View", message: `${{ value0: title }} view` })}
       value={view}
       onChange={(v) => setView(v as "chart" | "table")}
       options={[
-        { value: "chart", label: "Chart" },
-        { value: "table", label: "Table" },
+        { value: "chart", label: localize({ id: "market.chart", message: "Chart" }) },
+        { value: "table", label: localize({ id: "reports.table", message: "Table" }) },
       ]}
     />
   ) : undefined;
@@ -73,9 +77,17 @@ export function ReportsBreakdownCard({
       {loading ? (
         <Skeleton height="220px" />
       ) : error ? (
-        <p className="text-xs text-destructive">Failed to load {title.toLowerCase()}.</p>
+        <p className="text-xs text-destructive">
+          <Trans id="reports.failedToLoadSentence">Failed to load {title.toLowerCase()}.</Trans>
+        </p>
       ) : breakdown.length === 0 ? (
-        <EmptyState title="No data" hint="Add trades or adjust filters to see a breakdown." />
+        <EmptyState
+          title={localize({ id: "reports.noData", message: "No data" })}
+          hint={localize({
+            id: "reports.addTradesOrAdjustFiltersToSeeABreakdown",
+            message: "Add trades or adjust filters to see a breakdown.",
+          })}
+        />
       ) : view === "table" && tableColumns ? (
         <div style={{ maxHeight: 280 }}>
           <DataTable columns={tableColumns} data={breakdown} />
