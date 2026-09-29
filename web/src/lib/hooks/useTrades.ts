@@ -12,7 +12,7 @@ export function useTrades(filters: Filters) {
   });
   return {
     ...query,
-    data: query.data?.trades,
+    data: query.isError ? undefined : query.data?.trades,
     currency: query.data?.currency,
     isLoading: accountsQ.isPending || query.isLoading,
     isError: accountsQ.isError || query.isError,

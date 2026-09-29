@@ -29,6 +29,7 @@ export interface RiskRules {
 export interface AnnualGoal {
   year: number;
   amount: number | null;
+  currency?: string;
 }
 
 export interface ChecklistTemplate {
@@ -43,11 +44,11 @@ export const settingsApi = {
       method: "PUT",
       body: JSON.stringify(body),
     }),
-  getAnnualGoal: (year?: number) => {
-    const q = year != null ? `?year=${year}` : "";
+  getAnnualGoal: (year?: number, target_currency?: string) => {
+    const q = `?${new URLSearchParams({ ...(year != null ? { year: String(year) } : {}), ...(target_currency ? { target_currency } : {}) })}`;
     return apiFetch<AnnualGoal>(`/settings/annual-goal${q}`);
   },
-  putAnnualGoal: (body: { year: number; amount: number }) =>
+  putAnnualGoal: (body: { year: number; amount: number; currency?: string }) =>
     apiFetch<AnnualGoal>("/settings/annual-goal", {
       method: "PUT",
       body: JSON.stringify(body),

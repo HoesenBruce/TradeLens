@@ -76,12 +76,6 @@ export function AccountNavPopover({ variant = "rail" }: { variant?: "rail" | "he
     ? tr({ id: "accounts.accountCount", message: `${items.length} accounts` })
     : undefined;
 
-  // Portfolio selections must share one base currency — mixed sums are
-  // meaningless and the API rejects them — so incompatible rows are disabled.
-  const scopeCurrency = selected.length
-    ? normCurrency(items.find((a) => a.id === selected[0])?.base_currency)
-    : "";
-
   const toggleAccount = (id: string) => {
     const next = selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id];
     setAccounts(next);
@@ -134,13 +128,10 @@ export function AccountNavPopover({ variant = "rail" }: { variant?: "rail" | "he
             {items.map((account) => {
               const currency = normCurrency(account.base_currency);
               const isSelected = selected.includes(account.id);
-              const incompatible =
-                Boolean(scopeCurrency) && !isSelected && currency !== scopeCurrency;
               return (
                 <AccountMenuItem
                   key={account.id}
                   checked={isSelected}
-                  disabled={incompatible}
                   onCheckedChange={() => toggleAccount(account.id)}
                   label={account.name}
                   hint={currency || undefined}

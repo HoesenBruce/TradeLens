@@ -52,6 +52,7 @@ export interface AnnualGoalCardProps {
   fxRate?: number;
   variant?: "hero" | "compact";
   loading?: boolean;
+  unavailable?: boolean | string;
   saving?: boolean;
   className?: string;
   onSave: (amount: number) => Promise<void>;
@@ -66,6 +67,7 @@ export function AnnualGoalCard({
   fxRate = 1,
   variant = "hero",
   loading = false,
+  unavailable = false,
   saving = false,
   className,
   onSave,
@@ -87,7 +89,7 @@ export function AnnualGoalCard({
     hasGoal && ytdNetPnl != null ? computeAnnualGoalProgress(goalAmount, ytdNetPnl, year) : null;
 
   function openEditor() {
-    setDraft(hasGoal ? String(goalAmount) : "");
+    setDraft(hasGoal ? String(Number(money(goalAmount!).toFixed(currency === "JPY" ? 0 : 2))) : "");
     setError(null);
     setEditOpen(true);
   }
@@ -100,7 +102,7 @@ export function AnnualGoalCard({
     }
     setError(null);
     try {
-      await onSave(parsed);
+      await onSave(parsed / fxRate);
       setEditOpen(false);
     } catch (err) {
       setError(
@@ -224,6 +226,20 @@ export function AnnualGoalCard({
     );
   }
 
+  if (unavailable || !Number.isFinite(fxRate) || fxRate <= 0 || (hasGoal && !progress)) {
+    return (
+      <>
+        <Card title={cardTitle} action={editAction} className={cardClass}>
+          <p>
+            {typeof unavailable === "string"
+              ? unavailable
+              : "Goal progress unavailable. Check FX or save the goal again with its currency."}
+          </p>
+        </Card>
+        {editModal}
+      </>
+    );
+  }
   if (!hasGoal || !progress) {
     return (
       <>

@@ -86,6 +86,7 @@ type AnnualGoal struct {
 	Year      int64     `json:"year"`
 	Amount    float64   `json:"amount"`
 	UpdatedAt time.Time `json:"updated_at"`
+	Currency  string    `json:"currency"`
 }
 
 type CashTransaction struct {

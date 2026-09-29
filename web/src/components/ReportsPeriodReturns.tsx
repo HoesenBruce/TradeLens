@@ -43,7 +43,7 @@ export function ReportsPeriodReturns({
 
   const format = (raw: number) =>
     usePct
-      ? fmtSignedPct((raw * fxRate) / denominator, locale)
+      ? fmtSignedPct(raw / denominator, locale)
       : fmtSignedMoney(raw * fxRate, currency, locale);
 
   const cells: { label: string; hint: string; value: number }[] = [
