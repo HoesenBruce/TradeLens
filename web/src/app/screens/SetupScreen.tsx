@@ -1,3 +1,5 @@
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { AlertCircle, Check, Settings2 } from "lucide-react";
 import { useId, useState } from "react";
 import { AuthShell } from "@/components/AuthShell";
@@ -22,13 +24,20 @@ import { cn } from "@/lib/cn";
 const MIN_PASSWORD = 10;
 
 function SetupStepIndicator({ step }: { step: 1 | 2 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const steps = [
-    { n: 1 as const, label: "Account" },
-    { n: 2 as const, label: "Import" },
+    { n: 1 as const, label: localize({ id: "market.account", message: "Account" }) },
+    { n: 2 as const, label: localize({ id: "imports.import", message: "Import" }) },
   ];
 
   return (
-    <div aria-label={`Setup step ${step} of 2`}>
+    <div
+      aria-label={localize({
+        id: "auth.setupStepValue0Of2",
+        message: `Setup step ${{ value0: step }} of 2`,
+      })}
+    >
       <div className="flex items-center gap-3">
         {steps.map(({ n, label }, index) => (
           <div key={n} className="contents">
@@ -71,6 +80,8 @@ function SetupStepIndicator({ step }: { step: 1 | 2 }) {
 }
 
 export function SetupScreen() {
+  const { t: localize } = useSecondaryLingui();
+
   const signIn = useAuth((s) => s.signIn);
   const formId = useId();
 
@@ -107,7 +118,10 @@ export function SetupScreen() {
         previewBody.error &&
         typeof (previewBody.error as { message?: unknown }).message === "string"
           ? (previewBody.error as { message: string }).message
-          : "Could not preview initial import ";
+          : localize({
+              id: "auth.previewImportFailed",
+              message: "Could not preview initial import",
+            });
       throw new Error(message);
     }
     const suggestedMapping =
@@ -132,18 +146,26 @@ export function SetupScreen() {
         commitBody.error &&
         typeof (commitBody.error as { message?: unknown }).message === "string"
           ? (commitBody.error as { message: string }).message
-          : "Could not complete initial import ";
+          : localize({
+              id: "auth.completeImportFailed",
+              message: "Could not complete initial import",
+            });
       throw new Error(message);
     }
   }
 
   async function finishSetup(skipImport = false) {
     if (password.length < MIN_PASSWORD) {
-      setError(`Password must be at least ${MIN_PASSWORD} characters.`);
+      setError(
+        localize({
+          id: "auth.passwordMustBeAtLeastValue0Characters",
+          message: `Password must be at least ${{ value0: MIN_PASSWORD }} characters.`,
+        }),
+      );
       return;
     }
     if (password !== confirm) {
-      setError("Passwords do not match.");
+      setError(localize({ id: "auth.passwordsDoNotMatch", message: "Passwords do not match." }));
       return;
     }
     setBusy(true);
@@ -169,7 +191,11 @@ export function SetupScreen() {
       }
       signIn(result.access_token, result.refresh_token);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Something went wrong");
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : localize({ id: "auth.somethingWentWrong", message: "Something went wrong" }),
+      );
     } finally {
       setBusy(false);
     }
@@ -179,15 +205,20 @@ export function SetupScreen() {
     e.preventDefault();
     setError("");
     if (password.length < MIN_PASSWORD) {
-      setError(`Password must be at least ${MIN_PASSWORD} characters.`);
+      setError(
+        localize({
+          id: "auth.passwordMustBeAtLeastValue0Characters",
+          message: `Password must be at least ${{ value0: MIN_PASSWORD }} characters.`,
+        }),
+      );
       return;
     }
     if (password !== confirm) {
-      setError("Passwords do not match.");
+      setError(localize({ id: "auth.passwordsDoNotMatch", message: "Passwords do not match." }));
       return;
     }
     if (!username.trim()) {
-      setError("Username is required.");
+      setError(localize({ id: "auth.usernameIsRequired", message: "Username is required." }));
       return;
     }
     setStep(2);
@@ -197,12 +228,20 @@ export function SetupScreen() {
     <AuthShell>
       <div className="flex flex-col items-center gap-1 text-center">
         <h1 id={`${formId}-title`} className="text-xl font-semibold tracking-tight text-foreground">
-          {step === 1 ? "Set up" : "Optional import"}
+          {step === 1
+            ? localize({ id: "auth.setUp", message: "Set up" })
+            : localize({ id: "auth.optionalImport", message: "Optional import" })}
         </h1>
         <p className="text-sm text-muted-foreground">
           {step === 1
-            ? "One-time bootstrap for a fresh self-hosted deploy."
-            : "Seed your journal from a backup, or start empty."}
+            ? localize({
+                id: "auth.oneTimeBootstrapForAFreshSelfHostedDeploy",
+                message: "One-time bootstrap for a fresh self-hosted deploy.",
+              })
+            : localize({
+                id: "auth.seedYourJournalFromABackupOrStartEmpty",
+                message: "Seed your journal from a backup, or start empty.",
+              })}
         </p>
       </div>
 
@@ -211,7 +250,10 @@ export function SetupScreen() {
       <form onSubmit={handleContinue} className="flex flex-col gap-4">
         {step === 1 ? (
           <div className="flex flex-col gap-3.5">
-            <Field label="Username" htmlFor="setup-username">
+            <Field
+              label={localize({ id: "auth.username", message: "Username" })}
+              htmlFor="setup-username"
+            >
               <FormInput
                 id="setup-username"
                 type="text"
@@ -227,27 +269,21 @@ export function SetupScreen() {
             </Field>
 
             <Field
-              label="Password"
+              label={localize({ id: "auth.password", message: "Password" })}
               htmlFor="setup-password"
-              description={`Minimum ${MIN_PASSWORD} characters.`}
+              description={localize({
+                id: "auth.minimumValue0Characters",
+                message: `Minimum ${{ value0: MIN_PASSWORD }} characters.`,
+              })}
             >
               <PasswordInput
                 id="setup-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={`At least ${MIN_PASSWORD} characters`}
-                autoComplete="new-password"
-                required
-                className={authFieldClass}
-              />
-            </Field>
-
-            <Field label="Confirm password" htmlFor="setup-confirm">
-              <PasswordInput
-                id="setup-confirm"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                placeholder="Repeat password"
+                placeholder={localize({
+                  id: "auth.atLeastValue0Characters",
+                  message: `At least ${{ value0: MIN_PASSWORD }} characters`,
+                })}
                 autoComplete="new-password"
                 required
                 className={authFieldClass}
@@ -255,9 +291,27 @@ export function SetupScreen() {
             </Field>
 
             <Field
-              label="Trading account"
+              label={localize({ id: "auth.confirmPassword", message: "Confirm password" })}
+              htmlFor="setup-confirm"
+            >
+              <PasswordInput
+                id="setup-confirm"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                placeholder={localize({ id: "auth.repeatPassword", message: "Repeat password" })}
+                autoComplete="new-password"
+                required
+                className={authFieldClass}
+              />
+            </Field>
+
+            <Field
+              label={localize({ id: "auth.tradingAccount", message: "Trading account" })}
               htmlFor="setup-account"
-              description="Created for your journal — change anytime in Settings."
+              description={localize({
+                id: "auth.createdForYourJournalChangeAnytimeInSettings",
+                message: "Created for your journal — change anytime in Settings.",
+              })}
             >
               <FormInput
                 id="setup-account"
@@ -272,7 +326,10 @@ export function SetupScreen() {
             </Field>
 
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Currency" htmlFor="setup-currency">
+              <Field
+                label={localize({ id: "auth.currency", message: "Currency" })}
+                htmlFor="setup-currency"
+              >
                 <FormInput
                   id="setup-currency"
                   type="text"
@@ -284,9 +341,13 @@ export function SetupScreen() {
                 />
               </Field>
               <Field
-                label="Starting balance"
+                label={localize({ id: "accounts.startingBalance", message: "Starting balance" })}
                 htmlFor="setup-balance"
-                description="Recorded as the first deposit in your cash ledger. Leave blank to start at zero and add deposits later."
+                description={localize({
+                  id: "auth.recordedAsTheFirstDepositInYourCashLedgerLeaveBlankTo",
+                  message:
+                    "Recorded as the first deposit in your cash ledger. Leave blank to start at zero and add deposits later.",
+                })}
               >
                 <FormInput
                   id="setup-balance"
@@ -304,10 +365,15 @@ export function SetupScreen() {
         ) : (
           <div className="flex flex-col gap-4">
             <div>
-              <p className={cn(fieldLabelClass, "mb-2")}>Optional</p>
+              <p className={cn(fieldLabelClass, "mb-2")}>
+                {localize({ id: "trades.optional", message: "Optional" })}
+              </p>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Drop a TraderMemos export or broker history file. You can always import from
-                Settings → Import & export.
+                {localize({
+                  id: "auth.dropATradermemosExportOrBrokerHistoryFileYouCanAlwaysImport",
+                  message:
+                    "Drop a TraderMemos export or broker history file. You can always import from Settings → Import & export.",
+                })}
               </p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {[".csv", ".json"].map((ext) => (
@@ -322,15 +388,26 @@ export function SetupScreen() {
             </div>
             <CsvDropZone file={importFile} onFileChange={setImportFile} disabled={busy} />
             {!importFile ? (
-              <p className="text-[11px] text-muted-foreground">No file selected — safe to skip.</p>
+              <p className="text-[11px] text-muted-foreground">
+                {localize({
+                  id: "auth.noFileSelectedSafeToSkip",
+                  message: "No file selected — safe to skip.",
+                })}
+              </p>
             ) : (
               <div className="space-y-1">
                 <p className="text-[11px] text-muted-foreground">
-                  Ready to import after your owner account is created.
+                  {localize({
+                    id: "auth.readyToImportAfterYourOwnerAccountIsCreated",
+                    message: "Ready to import after your owner account is created.",
+                  })}
                 </p>
                 <p className="text-[11px] text-muted-foreground">
-                  JSON account id is ignored — data imports into the account you create here.
-                  Broker, starting balance, and cash deposits/withdrawals are restored when present.
+                  {localize({
+                    id: "auth.jsonAccountIdIsIgnoredDataImportsIntoTheAccountYouCreate",
+                    message:
+                      "JSON account id is ignored — data imports into the account you create here. Broker, starting balance, and cash deposits/withdrawals are restored when present.",
+                  })}
                 </p>
               </div>
             )}
@@ -347,7 +424,7 @@ export function SetupScreen() {
         {step === 1 ? (
           <>
             <Button type="submit" variant="default" className="w-full" disabled={busy}>
-              Continue
+              {localize({ id: "auth.continue", message: "Continue" })}
             </Button>
             <div className="flex justify-center">
               <Button
@@ -358,10 +435,10 @@ export function SetupScreen() {
                 className="text-muted-foreground hover:text-foreground"
               >
                 <Settings2 size={12} strokeWidth={1.5} aria-hidden />
-                Advanced
+                {localize({ id: "auth.advanced", message: "Advanced" })}
                 {serverUrl ? (
                   <span className="max-w-[10rem] truncate text-muted-foreground" title={serverUrl}>
-                    · custom server
+                    {localize({ id: "auth.customServer", message: "· custom server" })}
                   </span>
                 ) : null}
               </Button>
@@ -380,7 +457,11 @@ export function SetupScreen() {
               loading={busy && !skipping}
               disabled={busy}
             >
-              {busy ? "Finishing…" : importFile ? "Create & import" : "Create owner account"}
+              {busy
+                ? localize({ id: "auth.finishing", message: "Finishing…" })
+                : importFile
+                  ? localize({ id: "auth.createImport", message: "Create & import" })
+                  : localize({ id: "auth.createOwnerAccount", message: "Create owner account" })}
             </Button>
             <Button
               type="button"
@@ -396,7 +477,7 @@ export function SetupScreen() {
               loading={busy && skipping}
               disabled={busy}
             >
-              Skip for now
+              {localize({ id: "auth.skipForNow", message: "Skip for now" })}
             </Button>
             <Button
               type="button"
@@ -408,7 +489,7 @@ export function SetupScreen() {
               }}
               disabled={busy}
             >
-              Back to account
+              {localize({ id: "auth.backToAccount", message: "Back to account" })}
             </Button>
           </div>
         )}
@@ -417,7 +498,7 @@ export function SetupScreen() {
       <Modal
         open={advancedOpen}
         onOpenChange={setAdvancedOpen}
-        title="Advanced"
+        title={localize({ id: "auth.advanced", message: "Advanced" })}
         className="max-w-[min(400px,94vw)]"
         footer={
           <Button
@@ -429,17 +510,19 @@ export function SetupScreen() {
               setAdvancedOpen(false);
             }}
           >
-            Save
+            {localize({ id: "trades.save", message: "Save" })}
           </Button>
         }
       >
         <Field
-          label="API server"
+          label={localize({ id: "auth.apiServer", message: "API server" })}
           htmlFor="setup-server-url"
           info={
             <>
-              Leave blank for the default. Origin only — <code>/api/v1</code> is added
-              automatically.
+              <Trans id="auth.setupHostHint">
+                Leave blank for the default. Origin only — <code>/api/v1</code> is added
+                automatically.
+              </Trans>
             </>
           }
         >
@@ -451,7 +534,7 @@ export function SetupScreen() {
             autoFocus
             autoComplete="url"
             placeholder="https://example.com"
-            aria-label="API server"
+            aria-label={localize({ id: "auth.apiServer", message: "API server" })}
             value={serverUrl}
             onChange={(e) => setServerUrl(e.target.value)}
             onBlur={() => {

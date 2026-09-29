@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import {
   Bar,
@@ -43,6 +44,8 @@ export function ReportsSignedBars({
   loading,
   error,
 }: ReportsSignedBarsProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   useDisplayTimePrefs();
   const money = useReportsMoney();
@@ -63,13 +66,13 @@ export function ReportsSignedBars({
 
   const controls = (
     <SegmentedControl
-      ariaLabel="Win/loss bar dimension"
+      ariaLabel={localize({ id: "reports.winLossBarDimension", message: "Win/loss bar dimension" })}
       size="xs"
       value={dim}
       onChange={(v) => setDim(v as Dim)}
       options={[
-        { value: "hour", label: "Hour" },
-        { value: "session", label: "Session" },
+        { value: "hour", label: localize({ id: "reports.hour", message: "Hour" }) },
+        { value: "session", label: localize({ id: "reports.session", message: "Session" }) },
       ]}
     />
   );
@@ -78,9 +81,20 @@ export function ReportsSignedBars({
     loading ? (
       <Skeleton height="220px" />
     ) : error ? (
-      <p className="text-xs text-destructive">Failed to load breakdown data.</p>
+      <p className="text-xs text-destructive">
+        {localize({
+          id: "reports.failedToLoadBreakdownData",
+          message: "Failed to load breakdown data.",
+        })}
+      </p>
     ) : chartData.length === 0 ? (
-      <EmptyState title="No data" hint="Add trades to see win/loss volume by time." />
+      <EmptyState
+        title={localize({ id: "reports.noData", message: "No data" })}
+        hint={localize({
+          id: "reports.addTradesToSeeWinLossVolumeByTime",
+          message: "Add trades to see win/loss volume by time.",
+        })}
+      />
     ) : (
       <ChartFrame className="border-0 rounded-none">
         <ResponsiveContainer width="100%" height={height ?? 220}>
@@ -108,7 +122,9 @@ export function ReportsSignedBars({
               {...chartTooltipStyle}
               formatter={(value, name) => [
                 pnlTooltipValue(Number(value ?? 0), money.formatAxis(Number(value ?? 0))),
-                name === "wins" ? "Wins" : "Losses",
+                name === "wins"
+                  ? localize({ id: "trades.wins", message: "Wins" })
+                  : localize({ id: "trades.losses", message: "Losses" }),
               ]}
               cursor={{ fill: chartTheme.cursorFill }}
             />
@@ -135,7 +151,10 @@ export function ReportsSignedBars({
   return (
     // Hour/session buckets come pre-aggregated from the server with no dates
     // to slice, so this card is expand-only — no trailing range.
-    <ChartCard title="Win / Loss by Time" controls={controls}>
+    <ChartCard
+      title={localize({ id: "reports.winLossByTime", message: "Win / Loss by Time" })}
+      controls={controls}
+    >
       {body}
     </ChartCard>
   );

@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import {
   BarChart3,
   Calendar,
@@ -187,6 +188,8 @@ function ApiHealthStatus({
 }
 
 export function AboutTab() {
+  const { t: localize } = useSecondaryLingui();
+
   const { locale } = useLocale();
   const content = aboutContent(locale);
   const updateNotices = useDisplayPrefs((s) => s.updateNotices);
@@ -268,7 +271,10 @@ export function AboutTab() {
                 href={REPO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub repository"
+                aria-label={localize({
+                  id: "settings.githubRepository",
+                  message: "GitHub repository",
+                })}
                 className="inline-flex items-center gap-1.5 rounded-md bg-sidebar px-3 py-2 text-[12px] font-medium text-foreground no-underline transition-colors duration-150 hover:bg-accent hover:text-primary"
               >
                 <Github size={14} strokeWidth={1.5} aria-hidden />

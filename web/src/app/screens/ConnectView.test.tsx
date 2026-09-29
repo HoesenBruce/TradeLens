@@ -128,7 +128,7 @@ describe("ConnectView", () => {
     expect(flexRun).toHaveBeenCalledWith("a1");
     // Reported twice on purpose: inline on the card, and as a toast.
     expect(
-      await screen.findByText("Connected — 3 executions imported, 1 duplicate skipped."),
+      await screen.findByText("Connected — executions imported: 3; duplicates skipped: 1."),
     ).toBeInTheDocument();
     expect(await screen.findByText("Interactive Brokers connected")).toBeInTheDocument();
   });

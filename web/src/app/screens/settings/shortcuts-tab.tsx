@@ -1,9 +1,12 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { KeybindingRecorder } from "@/components/KeybindingRecorder";
 import { Button } from "@/components/ui/button";
 import { HOTKEY_GROUPS, hotkeyCommandName, useKeybindings } from "@/lib/keybindings";
 import { SettingsGroup, SettingsGroupRow, SettingsSection } from "./settings-ui";
 
 export function ShortcutsTab() {
+  const { t: localize } = useSecondaryLingui();
+
   const overrides = useKeybindings((s) => s.overrides);
   const resetAll = useKeybindings((s) => s.resetAll);
   const customCount = Object.keys(overrides).length;
@@ -16,13 +19,17 @@ export function ShortcutsTab() {
           title={group.title}
           description={
             groupIndex === 0
-              ? "Shortcuts are ignored while you're typing in a field or filling in a form."
+              ? localize({
+                  id: "settings.shortcutsTypingHint",
+                  message:
+                    "Shortcuts are ignored while you're typing in a field or filling in a form.",
+                })
               : undefined
           }
           action={
             groupIndex === 0 && customCount > 0 ? (
               <Button type="button" variant="outline" size="sm" onClick={resetAll}>
-                Reset all
+                {localize({ id: "settings.resetAll", message: "Reset all" })}
               </Button>
             ) : undefined
           }

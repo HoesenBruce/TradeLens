@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { Maximize2 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,7 @@ export function ChartCard({
   children,
   className,
 }: ChartCardProps) {
+  const { t } = useLingui();
   const [expanded, setExpanded] = useState(false);
   const [expandedHeight, setExpandedHeight] = useState(480);
 
@@ -70,10 +72,13 @@ export function ChartCard({
         {range != null && onRangeChange ? (
           <div className="max-w-full overflow-x-auto">
             <SegmentedControl
-              ariaLabel="Chart range"
+              ariaLabel={t({ id: "reports.chartRange", message: "Chart range" })}
               value={range}
               onChange={(v) => onRangeChange(v as ChartRange)}
-              options={CHART_RANGES}
+              options={CHART_RANGES.map((o) => ({
+                ...o,
+                label: o.value === "all" ? t({ id: "common.all", message: "All" }) : o.label,
+              }))}
             />
           </div>
         ) : null}
@@ -82,7 +87,7 @@ export function ChartCard({
           variant="ghost"
           size="icon"
           className="size-7 text-muted-foreground hover:text-foreground"
-          aria-label="Expand chart"
+          aria-label={t({ id: "market.expand", message: "Expand chart" })}
           onClick={() => setExpanded(true)}
         >
           <Maximize2 size={14} strokeWidth={1.5} aria-hidden />

@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useId } from "react";
 import { Label } from "@/components/ui/label";
 import {
@@ -36,6 +37,8 @@ export function CalcInputField({
   suffix?: string;
   hint?: string;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const id = useId();
   const hintId = hint ? `${id}-hint` : undefined;
 
@@ -53,7 +56,12 @@ export function CalcInputField({
         {label}
       </Label>
       <NumberFieldGroup>
-        <NumberFieldDecrement aria-label={`Decrease ${label}`} />
+        <NumberFieldDecrement
+          aria-label={localize({
+            id: "calculator.decreaseValue0",
+            message: `Decrease ${{ value0: label }}`,
+          })}
+        />
         <span className="flex min-w-0 flex-1 items-center gap-1">
           {prefix ? <span className="shrink-0 text-muted-foreground">{prefix}</span> : null}
           {/* Prices and R values are fractional — keep the decimal keypad on mobile. */}
@@ -64,7 +72,12 @@ export function CalcInputField({
           />
           {suffix ? <span className="shrink-0 text-muted-foreground">{suffix}</span> : null}
         </span>
-        <NumberFieldIncrement aria-label={`Increase ${label}`} />
+        <NumberFieldIncrement
+          aria-label={localize({
+            id: "calculator.increaseValue0",
+            message: `Increase ${{ value0: label }}`,
+          })}
+        />
       </NumberFieldGroup>
       {hint ? (
         <p id={hintId} className="text-xs text-muted-foreground">

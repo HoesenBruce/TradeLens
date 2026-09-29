@@ -141,6 +141,23 @@ export function AppCalendar({
         labelNext: () => tr({ id: "market.nextMonth", message: "Go to the Next Month" }),
         labelMonthDropdown: () => tr({ id: "market.chooseMonth", message: "Choose the Month" }),
         labelYearDropdown: () => tr({ id: "market.chooseYear", message: "Choose the Year" }),
+        labelDayButton: (date, modifiers) => {
+          let label = date.toLocaleDateString(intlLocale(), { dateStyle: "full" });
+          if (modifiers.today)
+            label = tr({ id: "market.calendarTodayDate", message: `Today, ${{ label: label }}` });
+          if (modifiers.selected)
+            label = tr({
+              id: "market.calendarSelectedDate",
+              message: `${{ label: label }}, selected`,
+            });
+          return label;
+        },
+        labelGridcell: (date, modifiers) => {
+          const label = date.toLocaleDateString(intlLocale(), { dateStyle: "full" });
+          return modifiers?.today
+            ? tr({ id: "market.calendarTodayDate", message: `Today, ${{ label: label }}` })
+            : label;
+        },
         ...props.labels,
       }}
       showOutsideDays={showOutsideDays}

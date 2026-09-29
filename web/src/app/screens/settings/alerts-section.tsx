@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Bell, Plus, Send, Smartphone, Webhook } from "lucide-react";
 import { useState } from "react";
 import { EmptyState } from "@/components/EmptyState";
@@ -91,7 +93,7 @@ function IntInput({
 
 function channelName(ch: AlertChannel): string {
   if (ch.label) return ch.label;
-  if (ch.kind === "expo") return "Mobile push";
+  if (ch.kind === "expo") return localize({ id: "settings.mobilePush", message: "Mobile push" });
   try {
     return new URL(ch.target).host;
   } catch {
@@ -100,8 +102,14 @@ function channelName(ch: AlertChannel): string {
 }
 
 function ChannelStatus({ ch }: { ch: AlertChannel }) {
+  const { t: localize } = useSecondaryLingui();
+
   if (!ch.enabled) {
-    return <span className="text-[11px] text-muted-foreground">Off</span>;
+    return (
+      <span className="text-[11px] text-muted-foreground">
+        {localize({ id: "settings.off", message: "Off" })}
+      </span>
+    );
   }
   if (ch.last_status === "error") {
     return (
@@ -112,13 +120,21 @@ function ChannelStatus({ ch }: { ch: AlertChannel }) {
   }
   if (ch.last_status === "ok" && ch.last_sent_at) {
     return (
-      <span className="text-[11px] text-muted-foreground">Sent {fmtDateTime(ch.last_sent_at)}</span>
+      <span className="text-[11px] text-muted-foreground">
+        {localize({ id: "settings.sent", message: "Sent" })} {fmtDateTime(ch.last_sent_at)}
+      </span>
     );
   }
-  return <span className="text-[11px] text-muted-foreground">Never sent</span>;
+  return (
+    <span className="text-[11px] text-muted-foreground">
+      {localize({ id: "settings.neverSent", message: "Never sent" })}
+    </span>
+  );
 }
 
 export function AlertsSection() {
+  const { t: localize } = useSecondaryLingui();
+
   const toast = useToastManager();
   const settingsQ = useAlertSettings();
   const saveM = useSaveAlertSettings();
@@ -145,7 +161,10 @@ export function AlertsSection() {
       {
         onError: (err) =>
           toast.add({
-            title: "Could not save alert settings",
+            title: localize({
+              id: "settings.couldNotSaveAlertSettings",
+              message: "Could not save alert settings",
+            }),
             description: err instanceof Error ? err.message : undefined,
           }),
       },
@@ -164,9 +183,13 @@ export function AlertsSection() {
       setWebhookUrl("");
       setWebhookLabel("");
       setWebhookError(null);
-      toast.add({ title: "Webhook added" });
+      toast.add({ title: localize({ id: "settings.webhookAdded", message: "Webhook added" }) });
     } catch (err) {
-      setWebhookError(err instanceof Error ? err.message : "Could not add webhook");
+      setWebhookError(
+        err instanceof Error
+          ? err.message
+          : localize({ id: "settings.couldNotAddWebhook", message: "Could not add webhook" }),
+      );
     }
   };
 
@@ -175,13 +198,19 @@ export function AlertsSection() {
     try {
       const res = await testM.mutateAsync(ch.id);
       if (res.ok) {
-        toast.add({ title: "Test alert sent", description: channelName(ch) });
+        toast.add({
+          title: localize({ id: "settings.testAlertSent", message: "Test alert sent" }),
+          description: channelName(ch),
+        });
       } else {
-        toast.add({ title: "Test failed", description: res.error });
+        toast.add({
+          title: localize({ id: "settings.testFailed", message: "Test failed" }),
+          description: res.error,
+        });
       }
     } catch (err) {
       toast.add({
-        title: "Test failed",
+        title: localize({ id: "settings.testFailed", message: "Test failed" }),
         description: err instanceof Error ? err.message : undefined,
       });
     } finally {
@@ -199,18 +228,24 @@ export function AlertsSection() {
   return (
     <>
       <SettingsCard
-        title="Journal Alerts"
-        description="Fired when a journal rule is broken — evaluated on your own server after every trade write and on a background scan. Delivered to mobile push and webhooks, free."
+        title={localize({ id: "settings.journalAlerts", message: "Journal Alerts" })}
+        description={localize({
+          id: "settings.firedWhenAJournalRuleIsBrokenEvaluatedOnYourOwnServer",
+          message:
+            "Fired when a journal rule is broken — evaluated on your own server after every trade write and on a background scan. Delivered to mobile push and webhooks, free.",
+        })}
         action={
           settings ? (
             <span className="flex items-center gap-2 sm:pt-0.5">
               <span className="text-[12px] font-medium text-muted-foreground">
-                {enabled ? "On" : "Off"}
+                {enabled
+                  ? localize({ id: "settings.on", message: "On" })
+                  : localize({ id: "settings.off", message: "Off" })}
               </span>
               <Switch
                 checked={enabled}
                 onCheckedChange={(v) => save({ enabled: v })}
-                aria-label="Enable alerts"
+                aria-label={localize({ id: "settings.enableAlerts", message: "Enable alerts" })}
               />
             </span>
           ) : undefined
@@ -221,7 +256,12 @@ export function AlertsSection() {
             <ListSkeleton rows={4} />
           </div>
         ) : settingsQ.isError ? (
-          <SettingsCardNote tone="destructive">Failed to load alert settings.</SettingsCardNote>
+          <SettingsCardNote tone="destructive">
+            {localize({
+              id: "settings.failedToLoadAlertSettings",
+              message: "Failed to load alert settings.",
+            })}
+          </SettingsCardNote>
         ) : settings ? (
           <div
             className={cn(
@@ -230,52 +270,82 @@ export function AlertsSection() {
             )}
           >
             <SettingsGroupRow
-              label="Risk rule broken"
-              detail="A closed trade risked more than your max risk per trade (set under Risk Rules)."
+              label={localize({ id: "settings.riskRuleBroken", message: "Risk rule broken" })}
+              detail={localize({
+                id: "settings.aClosedTradeRiskedMoreThanYourMaxRiskPerTradeSet",
+                message:
+                  "A closed trade risked more than your max risk per trade (set under Risk Rules).",
+              })}
             >
               <Switch
                 checked={settings.rule_risk}
                 disabled={!enabled}
                 onCheckedChange={(v) => save({ rule_risk: v })}
-                aria-label="Risk rule broken alerts"
+                aria-label={localize({
+                  id: "settings.riskRuleBrokenAlerts",
+                  message: "Risk rule broken alerts",
+                })}
               />
             </SettingsGroupRow>
             <SettingsGroupRow
-              label="Daily loss limit"
-              detail="Realized P&L dipped below your max daily loss, even if the day recovered."
+              label={localize({ id: "accounts.limit", message: "Daily loss limit" })}
+              detail={localize({
+                id: "settings.realizedPLDippedBelowYourMaxDailyLossEvenIfThe",
+                message:
+                  "Realized P&L dipped below your max daily loss, even if the day recovered.",
+              })}
             >
               <Switch
                 checked={settings.rule_daily_loss}
                 disabled={!enabled}
                 onCheckedChange={(v) => save({ rule_daily_loss: v })}
-                aria-label="Daily loss limit alerts"
+                aria-label={localize({
+                  id: "settings.dailyLossLimitAlerts",
+                  message: "Daily loss limit alerts",
+                })}
               />
             </SettingsGroupRow>
             <SettingsGroupRow
-              label="Consecutive losses"
-              detail="This many losing trades in a row, ending today."
+              label={localize({ id: "settings.consecutiveLosses", message: "Consecutive losses" })}
+              detail={localize({
+                id: "settings.thisManyLosingTradesInARowEndingToday",
+                message: "This many losing trades in a row, ending today.",
+              })}
             >
               <span className="flex items-center gap-3">
                 <IntInput
                   value={settings.loss_streak_n}
                   min={1}
                   max={50}
-                  suffix="losses"
+                  suffix={localize({ id: "settings.lossCountUnit", message: "losses" })}
                   disabled={!enabled || !settings.rule_loss_streak}
-                  ariaLabel="Loss streak threshold"
+                  ariaLabel={localize({
+                    id: "settings.lossStreakThreshold",
+                    message: "Loss streak threshold",
+                  })}
                   onCommit={(n) => save({ loss_streak_n: n })}
                 />
                 <Switch
                   checked={settings.rule_loss_streak}
                   disabled={!enabled}
                   onCheckedChange={(v) => save({ rule_loss_streak: v })}
-                  aria-label="Consecutive losses alerts"
+                  aria-label={localize({
+                    id: "settings.consecutiveLossesAlerts",
+                    message: "Consecutive losses alerts",
+                  })}
                 />
               </span>
             </SettingsGroupRow>
             <SettingsGroupRow
-              label="Prop drawdown approaching"
-              detail="A prop account has consumed this share of its drawdown budget. Breaches always alert."
+              label={localize({
+                id: "settings.propDrawdownApproaching",
+                message: "Prop drawdown approaching",
+              })}
+              detail={localize({
+                id: "settings.aPropAccountHasConsumedThisShareOfItsDrawdownBudgetBreaches",
+                message:
+                  "A prop account has consumed this share of its drawdown budget. Breaches always alert.",
+              })}
             >
               <span className="flex items-center gap-3">
                 <IntInput
@@ -284,42 +354,60 @@ export function AlertsSection() {
                   max={99}
                   suffix="%"
                   disabled={!enabled || !settings.rule_prop_drawdown}
-                  ariaLabel="Prop drawdown warning percentage"
+                  ariaLabel={localize({
+                    id: "settings.propDrawdownWarningPercentage",
+                    message: "Prop drawdown warning percentage",
+                  })}
                   onCommit={(n) => save({ prop_warn_pct: n / 100 })}
                 />
                 <Switch
                   checked={settings.rule_prop_drawdown}
                   disabled={!enabled}
                   onCheckedChange={(v) => save({ rule_prop_drawdown: v })}
-                  aria-label="Prop drawdown alerts"
+                  aria-label={localize({
+                    id: "settings.propDrawdownAlerts",
+                    message: "Prop drawdown alerts",
+                  })}
                 />
               </span>
             </SettingsGroupRow>
             <SettingsGroupRow
-              label="Unreviewed trades"
-              detail="A weekly nudge when closed trades older than this have no journal notes."
+              label={localize({ id: "settings.unreviewedTrades", message: "Unreviewed trades" })}
+              detail={localize({
+                id: "settings.aWeeklyNudgeWhenClosedTradesOlderThanThisHaveNoJournal",
+                message: "A weekly nudge when closed trades older than this have no journal notes.",
+              })}
             >
               <span className="flex items-center gap-3">
                 <IntInput
                   value={settings.unreviewed_days}
                   min={1}
                   max={90}
-                  suffix="days"
+                  suffix={localize({ id: "settings.dayCountUnit", message: "days" })}
                   disabled={!enabled || !settings.rule_unreviewed}
-                  ariaLabel="Unreviewed trades age threshold"
+                  ariaLabel={localize({
+                    id: "settings.unreviewedTradesAgeThreshold",
+                    message: "Unreviewed trades age threshold",
+                  })}
                   onCommit={(n) => save({ unreviewed_days: n })}
                 />
                 <Switch
                   checked={settings.rule_unreviewed}
                   disabled={!enabled}
                   onCheckedChange={(v) => save({ rule_unreviewed: v })}
-                  aria-label="Unreviewed trades alerts"
+                  aria-label={localize({
+                    id: "settings.unreviewedTradesAlerts",
+                    message: "Unreviewed trades alerts",
+                  })}
                 />
               </span>
             </SettingsGroupRow>
             <SettingsGroupRow
-              label="Timezone"
-              detail={`Sets when "today" rolls over for daily rules.`}
+              label={localize({ id: "settings.timezone", message: "Timezone" })}
+              detail={localize({
+                id: "settings.setsWhenTodayRollsOverForDailyRules",
+                message: `Sets when "today" rolls over for daily rules.`,
+              })}
               last
             >
               <NativeSelect
@@ -331,7 +419,7 @@ export function AlertsSection() {
                     timezone: v === TIMEZONE_LOCAL ? resolveDisplayTimezone(TIMEZONE_LOCAL) : v,
                   });
                 }}
-                aria-label="Alert timezone"
+                aria-label={localize({ id: "settings.alertTimezone", message: "Alert timezone" })}
                 className="w-full"
                 wrapperClassName="w-full md:max-w-[280px]"
               >
@@ -347,12 +435,16 @@ export function AlertsSection() {
       </SettingsCard>
 
       <SettingsCard
-        title="Alert Channels"
-        description="Where alerts get delivered. Webhooks post JSON that renders natively in Discord, Slack, and ntfy; mobile push registers itself when you sign in on the app."
+        title={localize({ id: "settings.alertChannels", message: "Alert Channels" })}
+        description={localize({
+          id: "settings.whereAlertsGetDeliveredWebhooksPostJsonThatRendersNativelyInDiscord",
+          message:
+            "Where alerts get delivered. Webhooks post JSON that renders natively in Discord, Slack, and ntfy; mobile push registers itself when you sign in on the app.",
+        })}
         action={
           <BtnGhost onClick={() => setWebhookModal(true)} disabled={channelsQ.isLoading}>
             <Plus size={13} strokeWidth={1.5} />
-            Add webhook
+            {localize({ id: "settings.addWebhook", message: "Add webhook" })}
           </BtnGhost>
         }
       >
@@ -361,12 +453,21 @@ export function AlertsSection() {
             <ListSkeleton rows={2} />
           </div>
         ) : channelsQ.isError ? (
-          <SettingsCardNote tone="destructive">Failed to load alert channels.</SettingsCardNote>
+          <SettingsCardNote tone="destructive">
+            {localize({
+              id: "settings.failedToLoadAlertChannels",
+              message: "Failed to load alert channels.",
+            })}
+          </SettingsCardNote>
         ) : channels.length === 0 ? (
           <EmptyState
             className="p-6 py-8"
-            title="No channels yet"
-            hint="Add a Discord, Slack, or ntfy webhook — or sign in on the mobile app to register push."
+            title={localize({ id: "settings.noChannelsYet", message: "No channels yet" })}
+            hint={localize({
+              id: "settings.addADiscordSlackOrNtfyWebhookOrSignInOnThe",
+              message:
+                "Add a Discord, Slack, or ntfy webhook — or sign in on the mobile app to register push.",
+            })}
             icon={<Bell size={24} strokeWidth={1.5} />}
             actions={
               <Button
@@ -376,7 +477,7 @@ export function AlertsSection() {
                 onClick={() => setWebhookModal(true)}
               >
                 <Plus size={13} strokeWidth={1.5} />
-                Add webhook
+                {localize({ id: "settings.addWebhook", message: "Add webhook" })}
               </Button>
             }
           />
@@ -416,12 +517,17 @@ export function AlertsSection() {
                     onClick={() => void runTest(ch)}
                   >
                     <Send size={13} strokeWidth={1.5} />
-                    {testingId === ch.id ? "Sending…" : "Test"}
+                    {testingId === ch.id
+                      ? localize({ id: "settings.sending", message: "Sending…" })
+                      : localize({ id: "settings.test", message: "Test" })}
                   </Button>
                   <Switch
                     checked={ch.enabled}
                     onCheckedChange={(v) => setEnabledM.mutate({ id: ch.id, enabled: v })}
-                    aria-label={`Enable ${channelName(ch)}`}
+                    aria-label={localize({
+                      id: "settings.enableValue0",
+                      message: `Enable ${{ value0: channelName(ch) }}`,
+                    })}
                   />
                   <DeleteButton
                     label={channelName(ch)}
@@ -436,8 +542,11 @@ export function AlertsSection() {
 
       {events.length > 0 ? (
         <SettingsCard
-          title="Recent Alerts"
-          description="The last alerts this server fired, newest first."
+          title={localize({ id: "settings.recentAlerts", message: "Recent Alerts" })}
+          description={localize({
+            id: "settings.theLastAlertsThisServerFiredNewestFirst",
+            message: "The last alerts this server fired, newest first.",
+          })}
         >
           {events.map((ev, index) => (
             <SettingsGroupRow
@@ -460,24 +569,29 @@ export function AlertsSection() {
           setWebhookModal(open);
           if (!open) setWebhookError(null);
         }}
-        title="Add webhook"
+        title={localize({ id: "settings.addWebhook", message: "Add webhook" })}
         footer={
           <>
             <Button type="button" variant="outline" onClick={() => setWebhookModal(false)}>
-              Cancel
+              {localize({ id: "trades.cancel", message: "Cancel" })}
             </Button>
             <Button
               type="button"
               disabled={createWebhookM.isPending}
               onClick={() => void submitWebhook()}
             >
-              {createWebhookM.isPending ? "Adding…" : "Add webhook"}
+              {createWebhookM.isPending
+                ? localize({ id: "accounts.adding", message: "Adding…" })
+                : localize({ id: "settings.addWebhook", message: "Add webhook" })}
             </Button>
           </>
         }
       >
         <div className="flex flex-col gap-4">
-          <Field label="Webhook URL" error={webhookError ?? undefined}>
+          <Field
+            label={localize({ id: "settings.webhookUrl", message: "Webhook URL" })}
+            error={webhookError ?? undefined}
+          >
             <FormInput
               type="url"
               placeholder="https://discord.com/api/webhooks/…"
@@ -489,9 +603,9 @@ export function AlertsSection() {
               autoFocus
             />
           </Field>
-          <Field label="Label (optional)">
+          <Field label={localize({ id: "settings.labelOptional", message: "Label (optional)" })}>
             <FormInput
-              placeholder="Trading Discord"
+              placeholder={localize({ id: "settings.tradingDiscord", message: "Trading Discord" })}
               value={webhookLabel}
               onChange={(e) => setWebhookLabel(e.target.value)}
             />

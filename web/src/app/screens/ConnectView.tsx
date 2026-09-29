@@ -29,15 +29,11 @@ function errorText(err: unknown, fallback: string): string {
   return err instanceof Error && err.message ? err.message : fallback;
 }
 
-function plural(count: number, noun: string): string {
-  return `${count} ${noun}${count === 1 ? "" : "s"}`;
-}
-
 /** The steps card answers a different question per connection kind. */
 const STEPS_TITLE: Record<BrokerConnectKind, (broker: BrokerDef) => string> = {
-  sync: () => "Where to find these",
+  sync: () => tr({ id: "broker.connect.whereToFind", message: "Where to find these" }),
   file: (broker) => tr({ id: "market.exportBroker", message: `Export from ${broker.name}` }),
-  manual: () => "How this works",
+  manual: () => tr({ id: "broker.connect.howWorks", message: "How this works" }),
 };
 
 // ---------------------------------------------------------------------------
@@ -279,7 +275,10 @@ function BrokerSetup({
   async function ensureAccount(): Promise<string> {
     if (resolved.mode === "existing" && resolved.existingId) return resolved.existingId;
     const name = resolved.name.trim();
-    if (!name) throw new Error("Name the account first.");
+    if (!name)
+      throw new Error(
+        tr({ id: "broker.connect.nameRequired", message: "Name the account first." }),
+      );
     const currency = resolved.currency.trim().toUpperCase() || "USD";
     const created = await createAccount.mutateAsync({
       name,
@@ -299,7 +298,12 @@ function BrokerSetup({
       const accountId = await ensureAccount();
       await action(accountId);
     } catch (err) {
-      setError(errorText(err, "Something went wrong. Try again."));
+      setError(
+        errorText(
+          err,
+          tr({ id: "broker.connect.tryAgain", message: "Something went wrong. Try again." }),
+        ),
+      );
     } finally {
       setBusy(false);
     }
@@ -307,11 +311,13 @@ function BrokerSetup({
 
   function handleConnectSync() {
     if (!queryId.trim()) {
-      setError("Flex Query ID is required.");
+      setError(tr({ id: "broker.connect.queryRequired", message: "Flex Query ID is required." }));
       return;
     }
     if (!token.trim() && !(connected && existing?.token_set)) {
-      setError("Flex Web Service token is required.");
+      setError(
+        tr({ id: "broker.connect.tokenRequired", message: "Flex Web Service token is required." }),
+      );
       return;
     }
     void run(async (accountId) => {
@@ -330,8 +336,11 @@ function BrokerSetup({
       setSynced({ inserted: result.inserted, skipped: result.skipped });
       setToken("");
       toast.add({
-        title: "Interactive Brokers connected",
-        description: `${plural(result.inserted, "execution")} imported`,
+        title: tr({ id: "broker.connect.connected", message: "Interactive Brokers connected" }),
+        description: tr({
+          id: "broker.connect.importedCount",
+          message: `Executions imported: ${result.inserted}`,
+        }),
       });
     });
   }
@@ -345,7 +354,10 @@ function BrokerSetup({
   function handleManual() {
     void run(async (accountId) => {
       void accountId;
-      toast.add({ title: "Account ready", description: resolved.name.trim() || broker.name });
+      toast.add({
+        title: tr({ id: "broker.connect.accountReady", message: "Account ready" }),
+        description: resolved.name.trim() || broker.name,
+      });
       if (onLogTrade) onLogTrade();
       else onDone();
     });
@@ -393,13 +405,22 @@ function BrokerSetup({
           {broker.kind === "sync" ? (
             <Card
               title="Flex Web Service"
-              description="Stored on your server and used by the background sync — nothing is sent anywhere else."
+              description={tr({
+                id: "broker.connect.serverOnly",
+                message:
+                  "Stored on your server and used by the background sync — nothing is sent anywhere else.",
+              })}
             >
               <div className="flex flex-col gap-3">
                 {connected && existing ? (
                   <div className="flex flex-col gap-1 rounded-md bg-muted px-3 py-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-[12px] font-medium">Already connected</span>
+                      <span className="text-[12px] font-medium">
+                        {tr({
+                          id: "broker.connect.alreadyConnected",
+                          message: "Already connected",
+                        })}
+                      </span>
                       <Badge
                         variant={
                           flexSyncFailed(existing)
@@ -410,16 +431,19 @@ function BrokerSetup({
                         }
                       >
                         {flexSyncFailed(existing)
-                          ? "Sync failing"
+                          ? tr({ id: "broker.connect.syncFailing", message: "Sync failing" })
                           : existing.enabled
-                            ? "Healthy"
-                            : "Manual only"}
+                            ? tr({ id: "broker.connect.healthy", message: "Healthy" })
+                            : tr({ id: "broker.connect.manualOnly", message: "Manual only" })}
                       </Badge>
                     </div>
                     <p className="m-0 text-[12px] text-muted-foreground">
                       {existing.last_synced_at
-                        ? `Last sync ${new Date(existing.last_synced_at).toLocaleString()} — ${existing.last_status || "done"}`
-                        : "Never synced yet."}
+                        ? tr({
+                            id: "broker.connect.lastSync",
+                            message: `Last sync ${new Date(existing.last_synced_at).toLocaleString()} — ${existing.last_status || tr({ id: "broker.connect.done", message: "Done" })}`,
+                          })
+                        : tr({ id: "broker.connect.neverSynced", message: "Never synced yet." })}
                     </p>
                     {existing.last_error ? (
                       <p className="m-0 text-[12px] text-destructive">{existing.last_error}</p>
@@ -436,7 +460,7 @@ function BrokerSetup({
                   />
                 </Field>
                 <Field
-                  label="Flex Web Service token"
+                  label={tr({ id: "broker.connect.flexToken", message: "Flex Web Service token" })}
                   htmlFor="connect-flex-token"
                   description={
                     connected && existing?.token_set
@@ -448,33 +472,43 @@ function BrokerSetup({
                     id="connect-flex-token"
                     value={token}
                     onChange={(event) => setToken(event.target.value)}
-                    placeholder={connected && existing?.token_set ? "••••••••" : "Paste token"}
-                    aria-label="Flex Web Service token"
+                    placeholder={
+                      connected && existing?.token_set
+                        ? "••••••••"
+                        : tr({ id: "broker.connect.pasteToken", message: "Paste token" })
+                    }
+                    aria-label={tr({
+                      id: "broker.connect.flexToken",
+                      message: "Flex Web Service token",
+                    })}
                     disabled={busy}
                   />
                 </Field>
-                <Field label="Scheduled sync">
+                <Field label={tr({ id: "broker.connect.scheduled", message: "Scheduled sync" })}>
                   <div className="flex items-center gap-2">
                     <Switch
                       checked={scheduled}
                       onCheckedChange={setScheduled}
-                      aria-label="Scheduled sync"
+                      aria-label={tr({ id: "broker.connect.scheduled", message: "Scheduled sync" })}
                       disabled={busy}
                     />
                     <span className="text-[12px] text-muted-foreground">
                       {scheduled
-                        ? "New fills arrive automatically in the background"
-                        : "Sync only when you ask"}
+                        ? tr({
+                            id: "broker.connect.background",
+                            message: "New fills arrive automatically in the background",
+                          })
+                        : tr({ id: "broker.connect.onDemand", message: "Sync only when you ask" })}
                     </span>
                   </div>
                 </Field>
 
                 {synced ? (
                   <p className="rounded-md bg-success/10 px-3 py-2 text-[12px] text-success">
-                    {`Connected — ${plural(synced.inserted, "execution")} imported, ${plural(
-                      synced.skipped,
-                      "duplicate",
-                    )} skipped.`}
+                    {tr({
+                      id: "broker.connect.syncCounts",
+                      message: `Connected — executions imported: ${synced.inserted}; duplicates skipped: ${synced.skipped}.`,
+                    })}
                   </p>
                 ) : null}
                 {error ? <p className="text-[12px] text-destructive">{error}</p> : null}
@@ -484,16 +518,18 @@ function BrokerSetup({
                     {busy ? (
                       <>
                         <RefreshCw size={13} strokeWidth={1.5} className="animate-spin" />
-                        Connecting…
+                        {tr({ id: "broker.connect.connecting", message: "Connecting\u2026" })}
                       </>
                     ) : synced ? (
                       <>
                         <RefreshCw size={13} strokeWidth={1.5} />
-                        Sync again
+                        {tr({ id: "broker.connect.syncAgain", message: "Sync again" })}
                       </>
                     ) : (
                       <>
-                        {connected ? "Save and sync" : "Connect and sync"}
+                        {connected
+                          ? tr({ id: "broker.connect.saveSync", message: "Save and sync" })
+                          : tr({ id: "broker.connect.connectSync", message: "Connect and sync" })}
                         <ArrowRight size={13} strokeWidth={1.5} />
                       </>
                     )}
@@ -501,7 +537,7 @@ function BrokerSetup({
                   {synced ? (
                     <Button type="button" variant="outline" onClick={onDone}>
                       <Check size={13} strokeWidth={1.5} />
-                      Done
+                      {tr({ id: "broker.connect.done", message: "Done" })}
                     </Button>
                   ) : (
                     <Button
@@ -510,7 +546,10 @@ function BrokerSetup({
                       onClick={handleContinueToImport}
                       disabled={!canAct}
                     >
-                      Upload a statement instead
+                      {tr({
+                        id: "broker.connect.uploadInstead",
+                        message: "Upload a statement instead",
+                      })}
                     </Button>
                   )}
                 </div>
@@ -554,11 +593,17 @@ function BrokerSetup({
 
           {broker.kind === "manual" ? (
             <Card
-              title="Start journaling"
+              title={tr({ id: "broker.connect.startJournal", message: "Start journaling" })}
               description={
                 reusesAccount
-                  ? "The trade form opens on the account you picked."
-                  : "The account is created, then the trade form opens."
+                  ? tr({
+                      id: "broker.connect.existingTradeForm",
+                      message: "The trade form opens on the account you picked.",
+                    })
+                  : tr({
+                      id: "broker.connect.newTradeForm",
+                      message: "The account is created, then the trade form opens.",
+                    })
               }
             >
               <div className="flex flex-col gap-3">
@@ -568,12 +613,19 @@ function BrokerSetup({
                     {busy ? (
                       <>
                         <RefreshCw size={13} strokeWidth={1.5} className="animate-spin" />
-                        {reusesAccount ? "Opening…" : "Creating…"}
+                        {reusesAccount
+                          ? tr({ id: "broker.connect.opening", message: "Opening…" })
+                          : tr({ id: "broker.connect.creating", message: "Creating…" })}
                       </>
                     ) : (
                       <>
                         <PenLine size={13} strokeWidth={1.5} />
-                        {reusesAccount ? "Log a trade" : "Create and log a trade"}
+                        {reusesAccount
+                          ? tr({ id: "broker.connect.logTrade", message: "Log a trade" })
+                          : tr({
+                              id: "broker.connect.createLog",
+                              message: "Create and log a trade",
+                            })}
                       </>
                     )}
                   </Button>

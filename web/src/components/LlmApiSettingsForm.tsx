@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { ModelAutocomplete } from "./Autocomplete";
@@ -44,6 +45,8 @@ export function LlmApiSettingsForm({
   onTest: (body: ReturnType<typeof llmApiSettingsTestBody>) => Promise<LlmApiSettingsTestResult>;
   onListModels: (body: ReturnType<typeof llmApiModelsBody>) => Promise<LlmApiModelsResult>;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const toast = useToastManager();
   const [formError, setFormError] = useState<string | null>(null);
   const modelsByBaseUrl = useLlmModelCache((s) => s.modelsByBaseUrl);
@@ -66,7 +69,10 @@ export function LlmApiSettingsForm({
         form.setFieldValue("model", next.model);
         form.setFieldValue("custom_prompt", next.custom_prompt);
         form.setFieldValue("api_key", "");
-        toast.add({ title: "Saved", description: "Settings updated." });
+        toast.add({
+          title: localize({ id: "market.saved", message: "Saved" }),
+          description: localize({ id: "calculator.settingsUpdated", message: "Settings updated." }),
+        });
       } catch (err) {
         setFormError(err instanceof Error ? err.message : saveErrorMessage);
       } finally {
@@ -92,18 +98,24 @@ export function LlmApiSettingsForm({
       restoreDraft(draft);
 
       if (result.ok) {
-        toast.add({ title: "Connection OK", description: "API responded." });
+        toast.add({
+          title: localize({ id: "calculator.connectionOk", message: "Connection OK" }),
+          description: localize({ id: "calculator.apiResponded", message: "API responded." }),
+        });
       } else {
         toast.add({
-          title: "Connection failed",
+          title: localize({ id: "calculator.connectionFailed", message: "Connection failed" }),
           description: result.error || "API rejected the request",
         });
       }
     } catch (err) {
       restoreDraft(draft);
       toast.add({
-        title: "Connection failed",
-        description: err instanceof Error ? err.message : "Request failed",
+        title: localize({ id: "calculator.connectionFailed", message: "Connection failed" }),
+        description:
+          err instanceof Error
+            ? err.message
+            : localize({ id: "accounts.requestFailed", message: "Request failed" }),
       });
     } finally {
       setTesting(false);
@@ -125,12 +137,18 @@ export function LlmApiSettingsForm({
       setCachedModels(value.base_url, result.models);
       toast.add({
         title: labels.fetchModels,
-        description: `${result.models.length} models`,
+        description: localize({
+          id: "calculator.value0Models",
+          message: `${{ value0: result.models.length }} models`,
+        }),
       });
     } catch (err) {
       toast.add({
         title: labels.fetchModels,
-        description: err instanceof Error ? err.message : "Request failed",
+        description:
+          err instanceof Error
+            ? err.message
+            : localize({ id: "accounts.requestFailed", message: "Request failed" }),
       });
     } finally {
       setFetchingModels(false);
@@ -172,7 +190,11 @@ export function LlmApiSettingsForm({
                     <SettingsGroupRow
                       label={labels.baseUrl}
                       detail={labels.baseUrlDetail}
-                      badge={<SettingsBadge tone="required">Required</SettingsBadge>}
+                      badge={
+                        <SettingsBadge tone="required">
+                          {localize({ id: "calculator.required", message: "Required" })}
+                        </SettingsBadge>
+                      }
                     >
                       <SettingsPrefixedInput
                         scheme={parsed.scheme}
@@ -218,7 +240,11 @@ export function LlmApiSettingsForm({
                   <SettingsGroupRow
                     label={labels.apiKey}
                     detail={labels.apiKeyDetail}
-                    badge={<SettingsBadge tone="required">Required</SettingsBadge>}
+                    badge={
+                      <SettingsBadge tone="required">
+                        {localize({ id: "calculator.required", message: "Required" })}
+                      </SettingsBadge>
+                    }
                   >
                     <PasswordInput
                       autoComplete="off"
@@ -231,9 +257,18 @@ export function LlmApiSettingsForm({
                       spellCheck={false}
                       className="h-10 w-full text-[13px]"
                       aria-label={labels.apiKey}
-                      showLabel="Show API key"
-                      hideLabel="Hide API key"
-                      clearLabel="Clear API key"
+                      showLabel={localize({
+                        id: "settings.showLabelApiKey",
+                        message: "Show API key",
+                      })}
+                      hideLabel={localize({
+                        id: "settings.hideLabelApiKey",
+                        message: "Hide API key",
+                      })}
+                      clearLabel={localize({
+                        id: "settings.clearLabelApiKey",
+                        message: "Clear API key",
+                      })}
                     />
                   </SettingsGroupRow>
                 )}

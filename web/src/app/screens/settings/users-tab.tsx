@@ -1,3 +1,5 @@
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import { Modal } from "@/components/Modal";
 import { Pill } from "@/components/Pill";
@@ -51,6 +53,8 @@ function AddUserModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const create = useCreateUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -69,7 +73,12 @@ function AddUserModal({
     event.preventDefault();
     setError(null);
     if (password.length < MIN_LENGTH) {
-      setError(`Use at least ${MIN_LENGTH} characters.`);
+      setError(
+        localize({
+          id: "settings.useAtLeastValue0Characters",
+          message: `Use at least ${{ value0: MIN_LENGTH }} characters.`,
+        }),
+      );
       return;
     }
     create.mutate(
@@ -79,9 +88,16 @@ function AddUserModal({
   }
 
   return (
-    <Modal open={open} onOpenChange={onOpenChange} title="Add user">
+    <Modal
+      open={open}
+      onOpenChange={onOpenChange}
+      title={localize({ id: "settings.addUser", message: "Add user" })}
+    >
       <form onSubmit={submit} className="flex flex-col gap-3">
-        <Field id="new-user-name" label="Username">
+        <Field
+          id="new-user-name"
+          label={localize({ id: "settings.username", message: "Username" })}
+        >
           <Input
             id="new-user-name"
             autoComplete="off"
@@ -91,8 +107,12 @@ function AddUserModal({
         </Field>
         <Field
           id="new-user-password"
-          label="Temporary password"
-          hint="Hand this to them out of band. They can change it from their own account page."
+          label={localize({ id: "settings.temporaryPassword", message: "Temporary password" })}
+          hint={localize({
+            id: "settings.handThisToThemOutOfBandTheyCanChangeItFrom",
+            message:
+              "Hand this to them out of band. They can change it from their own account page.",
+          })}
         >
           <Input
             id="new-user-password"
@@ -110,19 +130,22 @@ function AddUserModal({
             onChange={(e) => setIsAdmin(e.target.checked)}
           />
           <span>
-            Make them an owner
+            {localize({ id: "settings.makeThemAnOwner", message: "Make them an owner" })}
             <span className="mt-0.5 block text-[12px] text-muted-foreground">
-              Owners can add, remove and reset anyone on this server, including you.
+              {localize({
+                id: "settings.ownersCanAddRemoveAndResetAnyoneOnThisServerIncludingYou",
+                message: "Owners can add, remove and reset anyone on this server, including you.",
+              })}
             </span>
           </span>
         </label>
         {error ? <p className="text-[13px] text-destructive">{error}</p> : null}
         <div className="flex justify-end gap-2">
           <Button type="button" variant="ghost" onClick={close}>
-            Cancel
+            {localize({ id: "trades.cancel", message: "Cancel" })}
           </Button>
           <Button type="submit" disabled={!username.trim()} loading={create.isPending}>
-            Add user
+            {localize({ id: "settings.addUser", message: "Add user" })}
           </Button>
         </div>
       </form>
@@ -137,6 +160,8 @@ function ResetPasswordModal({
   user: AdminUser | null;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const reset = useResetUserPassword();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -154,7 +179,12 @@ function ResetPasswordModal({
     if (!user) return;
     setError(null);
     if (password.length < MIN_LENGTH) {
-      setError(`Use at least ${MIN_LENGTH} characters.`);
+      setError(
+        localize({
+          id: "settings.useAtLeastValue0Characters",
+          message: `Use at least ${{ value0: MIN_LENGTH }} characters.`,
+        }),
+      );
       return;
     }
     reset.mutate(
@@ -167,27 +197,34 @@ function ResetPasswordModal({
     <Modal
       open={user !== null}
       onOpenChange={(next) => (next ? undefined : close())}
-      title="Reset password"
+      title={localize({ id: "settings.resetPassword", message: "Reset password" })}
     >
       {done ? (
         <div className="flex flex-col gap-3">
           <p className="text-[13px]">
-            <strong>{user?.email}</strong> now signs in with the password you set. Their other
-            sessions will be signed out.
+            <Trans id="settings.passwordResetSummary">
+              <strong>{user?.email}</strong> now signs in with the password you set. Their other
+              sessions will be signed out.
+            </Trans>
           </p>
           <div className="flex justify-end">
             <Button type="button" onClick={close}>
-              Done
+              {localize({ id: "settings.done", message: "Done" })}
             </Button>
           </div>
         </div>
       ) : (
         <form onSubmit={submit} className="flex flex-col gap-3">
           <p className="text-[13px] text-muted-foreground">
-            Sets a new password for <strong className="text-foreground">{user?.email}</strong>{" "}
-            without their current one. Use it when someone is locked out.
+            <Trans id="settings.setsANewPasswordForWithoutTheirCurrentSentence">
+              Sets a new password for <strong className="text-foreground">{user?.email}</strong>{" "}
+              without their current one. Use it when someone is locked out.
+            </Trans>
           </p>
-          <Field id="reset-password" label="New password">
+          <Field
+            id="reset-password"
+            label={localize({ id: "settings.newPassword", message: "New password" })}
+          >
             <Input
               id="reset-password"
               type="text"
@@ -199,10 +236,10 @@ function ResetPasswordModal({
           {error ? <p className="text-[13px] text-destructive">{error}</p> : null}
           <div className="flex justify-end gap-2">
             <Button type="button" variant="ghost" onClick={close}>
-              Cancel
+              {localize({ id: "trades.cancel", message: "Cancel" })}
             </Button>
             <Button type="submit" loading={reset.isPending}>
-              Reset password
+              {localize({ id: "settings.resetPassword", message: "Reset password" })}
             </Button>
           </div>
         </form>
@@ -223,6 +260,8 @@ function DeleteUserModal({
   user: AdminUser | null;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const remove = useDeleteUser();
   const [typed, setTyped] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -243,14 +282,22 @@ function DeleteUserModal({
     <Modal
       open={user !== null}
       onOpenChange={(next) => (next ? undefined : close())}
-      title="Delete user"
+      title={localize({ id: "settings.deleteUser", message: "Delete user" })}
     >
       <form onSubmit={submit} className="flex flex-col gap-3">
         <p className="text-[13px]">
-          This permanently deletes <strong>{user?.email}</strong> along with every account, trade,
-          note and screenshot they own. There is no undo.
+          <Trans id="settings.deleteUserWarning">
+            This permanently deletes <strong>{user?.email}</strong> along with every account, trade,
+            note and screenshot they own. There is no undo.
+          </Trans>
         </p>
-        <Field id="delete-confirm" label={`Type ${user?.email ?? ""} to confirm`}>
+        <Field
+          id="delete-confirm"
+          label={localize({
+            id: "settings.typeValue0ToConfirm",
+            message: `Type ${{ value0: user?.email ?? "" }} to confirm`,
+          })}
+        >
           <Input
             id="delete-confirm"
             autoComplete="off"
@@ -261,7 +308,7 @@ function DeleteUserModal({
         {error ? <p className="text-[13px] text-destructive">{error}</p> : null}
         <div className="flex justify-end gap-2">
           <Button type="button" variant="ghost" onClick={close}>
-            Cancel
+            {localize({ id: "trades.cancel", message: "Cancel" })}
           </Button>
           <Button
             type="submit"
@@ -269,7 +316,7 @@ function DeleteUserModal({
             disabled={typed !== user?.email}
             loading={remove.isPending}
           >
-            Delete user
+            {localize({ id: "settings.deleteUser", message: "Delete user" })}
           </Button>
         </div>
       </form>
@@ -288,6 +335,8 @@ function UserRow({
   onReset: () => void;
   onDelete: () => void;
 }) {
+  const { t: localize } = useSecondaryLingui();
+
   const setAdmin = useSetUserAdmin();
   const [error, setError] = useState<string | null>(null);
 
@@ -297,9 +346,13 @@ function UserRow({
         <span className="flex flex-wrap items-center gap-2">
           {user.email}
           <Pill tone={user.is_admin ? "accent" : "muted"}>
-            {user.is_admin ? "Owner" : "Member"}
+            {user.is_admin
+              ? localize({ id: "settings.owner", message: "Owner" })
+              : localize({ id: "settings.member", message: "Member" })}
           </Pill>
-          {isSelf ? <Pill tone="muted">You</Pill> : null}
+          {isSelf ? (
+            <Pill tone="muted">{localize({ id: "settings.you", message: "You" })}</Pill>
+          ) : null}
           {user.totp_enabled ? <Pill tone="pos">2FA</Pill> : null}
         </span>
       }
@@ -307,13 +360,16 @@ function UserRow({
         error ? (
           <span className="text-destructive">{error}</span>
         ) : (
-          `Added ${fmtDate(user.created_at)}`
+          localize({
+            id: "settings.addedValue0",
+            message: `Added ${{ value0: fmtDate(user.created_at) }}`,
+          })
         )
       }
       actions={
         <>
           <Button type="button" variant="outline" size="xs" onClick={onReset}>
-            Reset password
+            {localize({ id: "settings.resetPassword", message: "Reset password" })}
           </Button>
           <Button
             type="button"
@@ -328,7 +384,9 @@ function UserRow({
               );
             }}
           >
-            {user.is_admin ? "Make member" : "Make owner"}
+            {user.is_admin
+              ? localize({ id: "settings.makeMember", message: "Make member" })
+              : localize({ id: "settings.makeOwner", message: "Make owner" })}
           </Button>
           {/* Deleting yourself is refused by the server anyway — the account
               page owns that, where the consequences are your own. */}
@@ -340,7 +398,7 @@ function UserRow({
               className="text-muted-foreground hover:text-destructive"
               onClick={onDelete}
             >
-              Delete
+              {localize({ id: "accounts.delete", message: "Delete" })}
             </Button>
           )}
         </>
@@ -355,6 +413,8 @@ function UserRow({
  * hash lands on the empty state rather than an error wall.
  */
 export function UsersTab() {
+  const { t: localize } = useSecondaryLingui();
+
   const me = useMe();
   const isOwner = me.data?.is_admin ?? false;
   const users = useAdminUsers(isOwner);
@@ -369,8 +429,11 @@ export function UsersTab() {
   if (!isOwner) {
     return (
       <SettingsSection
-        title="People"
-        description="Only an owner can see and manage the accounts on this server."
+        title={localize({ id: "settings.people", message: "People" })}
+        description={localize({
+          id: "settings.onlyAnOwnerCanSeeAndManageTheAccountsOnThisServer",
+          message: "Only an owner can see and manage the accounts on this server.",
+        })}
       >
         <SettingsGroup>
           <SettingsRow
@@ -385,11 +448,15 @@ export function UsersTab() {
   return (
     <div className="flex flex-col gap-6">
       <SettingsSection
-        title="People"
-        description="Everyone with an account on this server. Members see only their own trades; owners can also manage accounts here."
+        title={localize({ id: "settings.people", message: "People" })}
+        description={localize({
+          id: "settings.everyoneWithAnAccountOnThisServerMembersSeeOnlyTheirOwn",
+          message:
+            "Everyone with an account on this server. Members see only their own trades; owners can also manage accounts here.",
+        })}
         action={
           <Button type="button" size="sm" onClick={() => setAddOpen(true)}>
-            Add user
+            {localize({ id: "settings.addUser", message: "Add user" })}
           </Button>
         }
       >

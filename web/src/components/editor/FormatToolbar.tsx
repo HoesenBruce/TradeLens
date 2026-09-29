@@ -1,3 +1,4 @@
+import { t as localize } from "@lingui/core/macro";
 import type { Editor } from "@tiptap/react";
 import {
   Bold,
@@ -121,33 +122,33 @@ export function FormatToolbar({
     <div className="flex shrink-0 flex-col gap-1.5 px-2 pt-2 pb-1">
       <div
         role="toolbar"
-        aria-label="Text formatting"
+        aria-label={localize({ id: "editor.format", message: "Text formatting" })}
         className="flex flex-wrap items-center gap-0.5"
       >
         <FormatButton
           active={editor.isActive("bold")}
-          label="Bold"
+          label={localize({ id: "editor.bold", message: "Bold" })}
           onClick={() => editor.chain().focus().toggleBold().run()}
         >
           <Bold size={13} strokeWidth={2} />
         </FormatButton>
         <FormatButton
           active={editor.isActive("italic")}
-          label="Italic"
+          label={localize({ id: "editor.italic", message: "Italic" })}
           onClick={() => editor.chain().focus().toggleItalic().run()}
         >
           <Italic size={13} strokeWidth={2} />
         </FormatButton>
         <FormatButton
           active={editor.isActive("underline")}
-          label="Underline"
+          label={localize({ id: "editor.underline", message: "Underline" })}
           onClick={() => editor.chain().focus().toggleUnderline().run()}
         >
           <Underline size={13} strokeWidth={2} />
         </FormatButton>
         <FormatButton
           active={editor.isActive("strike")}
-          label="Strikethrough"
+          label={localize({ id: "editor.strike", message: "Strikethrough" })}
           onClick={() => editor.chain().focus().toggleStrike().run()}
         >
           <Strikethrough size={13} strokeWidth={2} />
@@ -155,28 +156,28 @@ export function FormatToolbar({
         <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
         <FormatButton
           active={editor.isActive("heading", { level: 2 })}
-          label="Heading"
+          label={localize({ id: "editor.heading", message: "Heading" })}
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         >
           <Heading2 size={13} strokeWidth={2} />
         </FormatButton>
         <FormatButton
           active={editor.isActive("bulletList")}
-          label="Bullet list"
+          label={localize({ id: "editor.bullets", message: "Bullet list" })}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
           <List size={13} strokeWidth={2} />
         </FormatButton>
         <FormatButton
           active={editor.isActive("orderedList")}
-          label="Numbered list"
+          label={localize({ id: "editor.numbered", message: "Numbered list" })}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
         >
           <ListOrdered size={13} strokeWidth={2} />
         </FormatButton>
         <FormatButton
           active={editor.isActive("taskList")}
-          label="Checklist"
+          label={localize({ id: "editor.checklist", message: "Checklist" })}
           onClick={() => editor.chain().focus().toggleTaskList().run()}
         >
           <CheckSquare size={13} strokeWidth={2} />
@@ -184,13 +185,13 @@ export function FormatToolbar({
         <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
         <FormatButton
           active={editor.isActive("link") || linkOpen}
-          label="Link"
+          label={localize({ id: "editor.link", message: "Link" })}
           onClick={onLinkClick}
         >
           <Link2 size={13} strokeWidth={2} />
         </FormatButton>
         <FormatButton
-          label="Add image"
+          label={localize({ id: "editor.image", message: "Add image" })}
           disabled={busy || uploading}
           onClick={() => fileRef.current?.click()}
         >
@@ -201,7 +202,7 @@ export function FormatToolbar({
           type="file"
           accept="image/png,image/jpeg,image/webp"
           className="sr-only"
-          aria-label="Upload image"
+          aria-label={localize({ id: "editor.upload", message: "Upload image" })}
           onChange={(e) => void onPickImage(e.target.files?.[0])}
         />
       </div>
@@ -222,15 +223,15 @@ export function FormatToolbar({
               }
             }}
             placeholder="https://"
-            aria-label="Link URL"
+            aria-label={localize({ id: "editor.url", message: "Link URL" })}
             className="h-8 text-[12px]"
             autoFocus
           />
           <Button type="button" size="xs" onClick={applyLink}>
-            Add
+            {localize({ id: "editor.add", message: "Add" })}
           </Button>
           <Button type="button" size="xs" variant="ghost" onClick={() => setLinkOpen(false)}>
-            Cancel
+            {localize({ id: "trades.cancel", message: "Cancel" })}
           </Button>
         </div>
       ) : null}

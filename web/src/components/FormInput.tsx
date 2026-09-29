@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { Eye, EyeOff, X } from "lucide-react";
 import { forwardRef, useId, useState, type ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
@@ -30,18 +31,13 @@ type PasswordInputProps = Omit<ComponentProps<"input">, "type"> & {
 /** Password / secret field with an eye toggle to reveal the value. */
 export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   function PasswordInput(
-    {
-      className,
-      disabled,
-      showLabel = "Show value",
-      hideLabel = "Hide value",
-      onClear,
-      clearLabel = "Clear value",
-      id,
-      ...props
-    },
+    { className, disabled, showLabel, hideLabel, onClear, clearLabel, id, ...props },
     ref,
   ) {
+    const { t } = useLingui();
+    showLabel ??= t({ id: "auth.showValue", message: "Show value" });
+    hideLabel ??= t({ id: "auth.hideValue", message: "Hide value" });
+    clearLabel ??= t({ id: "auth.clearValue", message: "Clear value" });
     const [visible, setVisible] = useState(false);
     const reactId = useId();
     const inputId = id ?? reactId;

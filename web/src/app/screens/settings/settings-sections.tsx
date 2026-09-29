@@ -1,3 +1,6 @@
+import { t as tr } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { useQueries } from "@tanstack/react-query";
 import { tradesApi } from "@/lib/api/trades";
@@ -200,6 +203,8 @@ export function AccountsTab({
   onUpdateCash,
   onDeleteCash,
 }: AccountsTabProps) {
+  const { t: localize } = useSecondaryLingui();
+
   const { t: tr } = useLinguiMacro();
 
   const CASH_TYPE_OPTIONS = [
@@ -353,7 +358,12 @@ export function AccountsTab({
     onSubmit: async ({ value }) => {
       setAccountFormError(null);
       if (value.accountKind === "brokerage" && !value.cashCapability && !value.marginCapability) {
-        setAccountFormError("Select at least one trading capability.");
+        setAccountFormError(
+          localize({
+            id: "settings.selectAtLeastOneTradingCapability",
+            message: "Select at least one trading capability.",
+          }),
+        );
         return;
       }
       try {
@@ -612,18 +622,22 @@ export function AccountsTab({
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <accountForm.Field name="accountKind">
                 {(field) => (
-                  <Field label="Account kind">
+                  <Field label={localize({ id: "settings.accountKind", message: "Account kind" })}>
                     <NativeSelect
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      aria-label="Account kind"
+                      aria-label={localize({ id: "settings.accountKind", message: "Account kind" })}
                       wrapperClassName="w-full"
                     >
-                      <NativeSelectOption value="brokerage">Brokerage</NativeSelectOption>
+                      <NativeSelectOption value="brokerage">
+                        {localize({ id: "settings.brokerage", message: "Brokerage" })}
+                      </NativeSelectOption>
                       <NativeSelectOption value="prop">
                         {tr({ id: "accounts.prop", message: "Prop" })}
                       </NativeSelectOption>
-                      <NativeSelectOption value="paper">Paper</NativeSelectOption>
+                      <NativeSelectOption value="paper">
+                        {localize({ id: "settings.paper", message: "Paper" })}
+                      </NativeSelectOption>
                       <NativeSelectOption value="backtest">
                         {tr({ id: "accounts.backtest", message: "Backtest (paper)" })}
                       </NativeSelectOption>
@@ -634,8 +648,19 @@ export function AccountsTab({
               <accountForm.Subscribe selector={(state) => state.values.accountKind}>
                 {(kind) =>
                   kind === "brokerage" ? (
-                    <fieldset className="flex flex-col gap-1" aria-label="Trading capabilities">
-                      <legend className="text-sm">Trading capabilities</legend>
+                    <fieldset
+                      className="flex flex-col gap-1"
+                      aria-label={localize({
+                        id: "settings.tradingCapabilities",
+                        message: "Trading capabilities",
+                      })}
+                    >
+                      <legend className="text-sm">
+                        {localize({
+                          id: "settings.tradingCapabilities",
+                          message: "Trading capabilities",
+                        })}
+                      </legend>
                       <accountForm.Field name="cashCapability">
                         {(field) => (
                           <label>
@@ -644,7 +669,7 @@ export function AccountsTab({
                               checked={field.state.value}
                               onChange={(e) => field.handleChange(e.target.checked)}
                             />{" "}
-                            Cash
+                            {localize({ id: "accounts.cash", message: "Cash" })}
                           </label>
                         )}
                       </accountForm.Field>
@@ -656,7 +681,7 @@ export function AccountsTab({
                               checked={field.state.value}
                               onChange={(e) => field.handleChange(e.target.checked)}
                             />{" "}
-                            Margin
+                            {localize({ id: "accounts.margin", message: "Margin" })}
                           </label>
                         )}
                       </accountForm.Field>
@@ -1204,8 +1229,12 @@ const RISK_RULE_ICONS: Record<RiskRuleKey, LucideIcon> = {
 
 /** Bare counts read as orphans ("3") — count rules carry their unit word. */
 const RISK_RULE_COUNT_UNITS: Partial<Record<RiskRuleKey, string>> = {
-  max_trades_per_day: "trades",
-  max_consecutive_losses: "losses",
+  get max_trades_per_day() {
+    return tr({ id: "settings.tradeCountUnit", message: "trades" });
+  },
+  get max_consecutive_losses() {
+    return tr({ id: "settings.lossCountUnit", message: "losses" });
+  },
 };
 
 export function RulesTab({
@@ -1227,6 +1256,8 @@ export function RulesTab({
   checklistSaving,
   onSaveChecklist,
 }: RulesTabProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const toast = useToastManager();
   const locale = intlLocale();
@@ -1298,9 +1329,18 @@ export function RulesTab({
       toast.add({ title: successTitle });
       closeRuleModal();
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Request failed";
+      const message =
+        err instanceof Error
+          ? err.message
+          : localize({ id: "accounts.requestFailed", message: "Request failed" });
       setRuleError(message);
-      toast.add({ title: "Could not save risk rule", description: message });
+      toast.add({
+        title: localize({
+          id: "settings.couldNotSaveRiskRule",
+          message: "Could not save risk rule",
+        }),
+        description: message,
+      });
     }
   }
 
@@ -1320,18 +1360,26 @@ export function RulesTab({
     setRuleError(null);
     await persistRules(
       setRiskRuleValue(riskRules, key, parsed),
-      ruleModal.mode === "edit" ? "Rule updated" : "Rule set",
+      ruleModal.mode === "edit"
+        ? localize({ id: "settings.ruleUpdated", message: "Rule updated" })
+        : localize({ id: "settings.ruleSet", message: "Rule set" }),
     );
   }
 
   async function handleDeleteRule(key: RiskRuleKey) {
     try {
       await onSaveRiskRules(setRiskRuleValue(riskRules, key, null));
-      toast.add({ title: "Rule removed", description: riskRuleDef(key).label });
+      toast.add({
+        title: localize({ id: "settings.ruleRemoved", message: "Rule removed" }),
+        description: riskRuleDef(key).label,
+      });
     } catch (err) {
       toast.add({
-        title: "Could not remove rule",
-        description: err instanceof Error ? err.message : "Request failed",
+        title: localize({ id: "settings.couldNotRemoveRule", message: "Could not remove rule" }),
+        description:
+          err instanceof Error
+            ? err.message
+            : localize({ id: "accounts.requestFailed", message: "Request failed" }),
       });
     }
   }
@@ -1339,12 +1387,18 @@ export function RulesTab({
   async function handleSaveChecklist() {
     try {
       await onSaveChecklist({ content: checklistDraft });
-      toast.add({ title: "Checklist saved" });
+      toast.add({ title: localize({ id: "settings.checklistSaved", message: "Checklist saved" }) });
       setChecklistModalOpen(false);
     } catch (err) {
       toast.add({
-        title: "Could not save checklist",
-        description: err instanceof Error ? err.message : "Request failed",
+        title: localize({
+          id: "settings.couldNotSaveChecklist",
+          message: "Could not save checklist",
+        }),
+        description:
+          err instanceof Error
+            ? err.message
+            : localize({ id: "accounts.requestFailed", message: "Request failed" }),
       });
     }
   }
@@ -1374,45 +1428,73 @@ export function RulesTab({
     setGoalError(null);
     try {
       await onSaveAnnualGoal({ year: goalYear, amount: parsed });
-      toast.add({ title: "Annual goal saved" });
+      toast.add({
+        title: localize({ id: "settings.annualGoalSaved", message: "Annual goal saved" }),
+      });
       setGoalModalOpen(false);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Request failed";
+      const message =
+        err instanceof Error
+          ? err.message
+          : localize({ id: "accounts.requestFailed", message: "Request failed" });
       setGoalError(message);
-      toast.add({ title: "Could not save annual goal", description: message });
+      toast.add({
+        title: localize({
+          id: "settings.couldNotSaveAnnualGoal",
+          message: "Could not save annual goal",
+        }),
+        description: message,
+      });
     }
   }
 
   async function handleClearGoal() {
     try {
       await onClearAnnualGoal(goalYear);
-      toast.add({ title: "Annual goal cleared" });
+      toast.add({
+        title: localize({ id: "settings.annualGoalCleared", message: "Annual goal cleared" }),
+      });
       setGoalModalOpen(false);
     } catch (err) {
       toast.add({
-        title: "Could not clear annual goal",
-        description: err instanceof Error ? err.message : "Request failed",
+        title: localize({
+          id: "settings.couldNotClearAnnualGoal",
+          message: "Could not clear annual goal",
+        }),
+        description:
+          err instanceof Error
+            ? err.message
+            : localize({ id: "accounts.requestFailed", message: "Request failed" }),
       });
     }
   }
 
   const modalDef = ruleModal.open ? riskRuleDef(ruleModal.key) : null;
   const modalTitle = modalDef
-    ? `${ruleModal.open && ruleModal.mode === "edit" ? "Edit" : "Set"} ${modalDef.label}`
+    ? `${ruleModal.open && ruleModal.mode === "edit" ? localize({ id: "accounts.edit", message: "Edit" }) : localize({ id: "settings.set", message: "Set" })} ${modalDef.label}`
     : "";
 
   return (
     <>
       <SettingsCard
-        title="Risk Rules"
-        description="Checked by Check compliance on New Trade. Only the limits you set are enforced."
+        title={localize({ id: "settings.riskRules", message: "Risk Rules" })}
+        description={localize({
+          id: "settings.checkedByCheckComplianceOnNewTradeOnlyTheLimitsYouSet",
+          message:
+            "Checked by Check compliance on New Trade. Only the limits you set are enforced.",
+        })}
       >
         {riskRulesLoading ? (
           <div className="px-5 py-3">
             <ListSkeleton rows={4} />
           </div>
         ) : riskRulesError ? (
-          <SettingsCardNote tone="destructive">Failed to load risk rules.</SettingsCardNote>
+          <SettingsCardNote tone="destructive">
+            {localize({
+              id: "settings.failedToLoadRiskRules",
+              message: "Failed to load risk rules.",
+            })}
+          </SettingsCardNote>
         ) : (
           RISK_RULE_DEFS.map((def) => {
             const value = riskRules?.[def.key];
@@ -1430,7 +1512,10 @@ export function RulesTab({
                       type="button"
                       variant="soft"
                       size="sm"
-                      aria-label={`Edit ${def.label}`}
+                      aria-label={localize({
+                        id: "settings.editValue0",
+                        message: `Edit ${{ value0: def.label }}`,
+                      })}
                       disabled={riskRulesSaving}
                       onClick={() => openEditRule(def.key, value)}
                       className="gap-1.5"
@@ -1458,16 +1543,21 @@ export function RulesTab({
                   </>
                 ) : (
                   <>
-                    <span className="text-[12px] text-muted-foreground/70">Off</span>
+                    <span className="text-[12px] text-muted-foreground/70">
+                      {localize({ id: "settings.off", message: "Off" })}
+                    </span>
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      aria-label={`Set ${def.label}`}
+                      aria-label={localize({
+                        id: "settings.setValue0",
+                        message: `Set ${{ value0: def.label }}`,
+                      })}
                       disabled={riskRulesSaving}
                       onClick={() => openSetRule(def.key)}
                     >
-                      Set
+                      {localize({ id: "settings.set", message: "Set" })}
                     </Button>
                   </>
                 )}
@@ -1478,8 +1568,11 @@ export function RulesTab({
       </SettingsCard>
 
       <SettingsCard
-        title="Annual P&L Goal"
-        description={`Net P&L target for ${goalYear}. Progress shows here and on Home and Reports.`}
+        title={localize({ id: "settings.annualPLGoal", message: "Annual P&L Goal" })}
+        description={localize({
+          id: "settings.netPLTargetForValue0ProgressShowsHereAndOnHome",
+          message: `Net P&L target for ${{ value0: goalYear }}. Progress shows here and on Home and Reports.`,
+        })}
       >
         {annualGoalLoading ? (
           <div className="px-5 py-3">
@@ -1487,26 +1580,32 @@ export function RulesTab({
           </div>
         ) : annualGoalError ? (
           <SettingsCardNote tone="destructive">
-            Annual goal unavailable. Check FX or confirm its currency.
+            {localize({
+              id: "settings.annualGoalUnavailableCheckFxOrConfirmItsCurrency",
+              message: "Annual goal unavailable. Check FX or confirm its currency.",
+            })}
             <Button type="button" variant="outline" onClick={openGoalModal}>
-              Set annual goal
+              {localize({ id: "accounts.setGoal", message: "Set annual goal" })}
             </Button>
           </SettingsCardNote>
         ) : annualGoal?.amount == null ? (
           <SettingsCardRow
             icon={Target}
-            label="No annual goal yet"
-            detail="Set a net P&L target for the year — progress appears on Home and Reports."
+            label={localize({ id: "settings.noAnnualGoalYet", message: "No annual goal yet" })}
+            detail={localize({
+              id: "settings.setANetPLTargetForTheYearProgressAppearsOn",
+              message: "Set a net P&L target for the year — progress appears on Home and Reports.",
+            })}
           >
             <Button
               type="button"
               variant="outline"
               size="sm"
-              aria-label="Set annual goal"
+              aria-label={localize({ id: "accounts.setGoal", message: "Set annual goal" })}
               disabled={annualGoalSaving}
               onClick={openGoalModal}
             >
-              Set goal
+              {localize({ id: "settings.setGoal", message: "Set goal" })}
             </Button>
           </SettingsCardRow>
         ) : (
@@ -1514,14 +1613,21 @@ export function RulesTab({
             <SettingsCardRow
               icon={Target}
               active
-              label={`${goalYear} target`}
-              detail="User-level net P&L goal — respects the account filter on Home and Reports."
+              label={localize({
+                id: "settings.value0Target",
+                message: `${{ value0: goalYear }} target`,
+              })}
+              detail={localize({
+                id: "settings.userLevelNetPLGoalRespectsTheAccountFilterOnHome",
+                message:
+                  "User-level net P&L goal — respects the account filter on Home and Reports.",
+              })}
             >
               <Button
                 type="button"
                 variant="soft"
                 size="sm"
-                aria-label="Edit annual goal"
+                aria-label={localize({ id: "accounts.editGoal", message: "Edit annual goal" })}
                 disabled={annualGoalSaving}
                 onClick={openGoalModal}
                 className="gap-1.5"
@@ -1532,7 +1638,7 @@ export function RulesTab({
                 <Pencil size={12} strokeWidth={1.5} aria-hidden className="text-muted-foreground" />
               </Button>
               <DeleteButton
-                label="annual goal"
+                label={localize({ id: "settings.annualGoal", message: "annual goal" })}
                 disabled={annualGoalSaving}
                 onDelete={() => void handleClearGoal()}
               />
@@ -1542,27 +1648,32 @@ export function RulesTab({
                 <GoalProgressBar
                   progress={goalProgress.progress}
                   className="h-3"
-                  aria-label="Annual goal progress"
+                  aria-label={localize({
+                    id: "settings.annualGoalProgress",
+                    message: "Annual goal progress",
+                  })}
                 />
                 <p className="m-0 text-[12px] text-muted-foreground">
-                  <span
-                    className={cn(
-                      "font-medium tabular-nums",
-                      goalProgress.ytdNetPnl > 0
-                        ? "text-profit"
-                        : goalProgress.ytdNetPnl < 0
-                          ? "text-destructive"
-                          : "text-muted-foreground",
-                    )}
-                  >
-                    {fmtSignedMoney(goalProgress.ytdNetPnl, goalCurrency, locale)}
-                  </span>{" "}
-                  YTD ·{" "}
-                  <span className="tabular-nums">{Math.round(goalProgress.progressPct)}%</span> of
-                  goal ·{" "}
-                  <span className={paceTone(goalProgress.paceStatus)}>
-                    {paceLabel(goalProgress.paceStatus)}
-                  </span>
+                  <Trans id="settings.ytdOfGoalSentence">
+                    <span
+                      className={cn(
+                        "font-medium tabular-nums",
+                        goalProgress.ytdNetPnl > 0
+                          ? "text-profit"
+                          : goalProgress.ytdNetPnl < 0
+                            ? "text-destructive"
+                            : "text-muted-foreground",
+                      )}
+                    >
+                      {fmtSignedMoney(goalProgress.ytdNetPnl, goalCurrency, locale)}
+                    </span>{" "}
+                    YTD ·{" "}
+                    <span className="tabular-nums">{Math.round(goalProgress.progressPct)}%</span> of
+                    goal ·{" "}
+                    <span className={paceTone(goalProgress.paceStatus)}>
+                      {paceLabel(goalProgress.paceStatus)}
+                    </span>
+                  </Trans>
                 </p>
               </div>
             ) : null}
@@ -1571,17 +1682,20 @@ export function RulesTab({
       </SettingsCard>
 
       <SettingsCard
-        title="Daily Checklist"
-        description="Trading rules for New Note — task items appear when you create a daily log."
+        title={localize({ id: "settings.dailyChecklist", message: "Daily Checklist" })}
+        description={localize({
+          id: "settings.tradingRulesForNewNoteTaskItemsAppearWhenYouCreateA",
+          message: "Trading rules for New Note — task items appear when you create a daily log.",
+        })}
         action={
           checklistItems.length > 0 || checklistContent.trim() ? (
             <BtnGhost
               onClick={openChecklistModal}
               disabled={checklistLoading || checklistError}
-              aria-label="Edit checklist"
+              aria-label={localize({ id: "settings.editChecklist", message: "Edit checklist" })}
             >
               <Pencil size={13} strokeWidth={1.5} />
-              Edit
+              {localize({ id: "accounts.edit", message: "Edit" })}
             </BtnGhost>
           ) : undefined
         }
@@ -1591,21 +1705,29 @@ export function RulesTab({
             <ListSkeleton rows={3} />
           </div>
         ) : checklistError ? (
-          <SettingsCardNote tone="destructive">Failed to load checklist template.</SettingsCardNote>
+          <SettingsCardNote tone="destructive">
+            {localize({
+              id: "settings.failedToLoadChecklistTemplate",
+              message: "Failed to load checklist template.",
+            })}
+          </SettingsCardNote>
         ) : checklistItems.length === 0 && !checklistContent.trim() ? (
           <SettingsCardRow
             icon={Check}
-            label="No checklist yet"
-            detail="Add rules and - [ ] items — they show up on New Note."
+            label={localize({ id: "settings.noChecklistYet", message: "No checklist yet" })}
+            detail={localize({
+              id: "settings.addRulesAndItemsTheyShowUpOnNewNote",
+              message: "Add rules and - [ ] items — they show up on New Note.",
+            })}
           >
             <Button
               type="button"
               variant="outline"
               size="sm"
-              aria-label="Edit checklist"
+              aria-label={localize({ id: "settings.editChecklist", message: "Edit checklist" })}
               onClick={openChecklistModal}
             >
-              Create checklist
+              {localize({ id: "settings.createChecklist", message: "Create checklist" })}
             </Button>
           </SettingsCardRow>
         ) : checklistItems.length > 0 ? (
@@ -1622,8 +1744,10 @@ export function RulesTab({
           </div>
         ) : (
           <SettingsCardNote>
-            Checklist text saved — add <code className="text-primary">- [ ]</code> items so they
-            appear on New Note.
+            <Trans id="settings.checklistTextSaved">
+              Checklist text saved — add <code className="text-primary">- [ ]</code> items so they
+              appear on New Note.
+            </Trans>
           </SettingsCardNote>
         )}
       </SettingsCard>
@@ -1633,7 +1757,7 @@ export function RulesTab({
         onOpenChange={(open) => {
           if (!open) closeChecklistModal();
         }}
-        title="Daily checklist"
+        title={localize({ id: "settings.dailyChecklist2", message: "Daily checklist" })}
         className="max-w-[min(560px,94vw)]"
         footer={
           <>
@@ -1643,14 +1767,16 @@ export function RulesTab({
               onClick={closeChecklistModal}
               disabled={checklistSaving}
             >
-              Cancel
+              {localize({ id: "trades.cancel", message: "Cancel" })}
             </Button>
             <Button
               type="button"
               onClick={() => void handleSaveChecklist()}
               disabled={checklistSaving}
             >
-              {checklistSaving ? "Saving…" : "Save"}
+              {checklistSaving
+                ? localize({ id: "market.saving", message: "Saving…" })
+                : localize({ id: "trades.save", message: "Save" })}
             </Button>
           </>
         }
@@ -1660,14 +1786,22 @@ export function RulesTab({
             key={checklistEditorKey}
             value={checklistDraft}
             onChange={setChecklistDraft}
-            placeholder={"- [ ] Check VIX\n- [ ] No revenge trades\n- [ ] Size within risk rules"}
+            placeholder={localize({
+              id: "settings.checklistPlaceholder",
+              message: "- [ ] Check VIX\n- [ ] No revenge trades\n- [ ] Size within risk rules",
+            })}
             minHeight={220}
             showHints
-            aria-label="Daily checklist and rules"
+            aria-label={localize({
+              id: "settings.dailyChecklistAndRules",
+              message: "Daily checklist and rules",
+            })}
           />
           <p className="text-[11px] text-muted-foreground">
-            Tip: use checklist buttons or type <code className="text-primary">- [ ]</code> for each
-            rule.
+            <Trans id="settings.checklistTip">
+              Tip: use checklist buttons or type <code className="text-primary">- [ ]</code> for
+              each rule.
+            </Trans>
           </p>
         </div>
       </Modal>
@@ -1687,14 +1821,14 @@ export function RulesTab({
               onClick={closeRuleModal}
               disabled={riskRulesSaving}
             >
-              Cancel
+              {localize({ id: "trades.cancel", message: "Cancel" })}
             </Button>
             <Button type="button" disabled={riskRulesSaving} onClick={() => void handleSaveRule()}>
               {riskRulesSaving
-                ? "Saving…"
+                ? localize({ id: "market.saving", message: "Saving…" })
                 : ruleModal.open && ruleModal.mode === "edit"
-                  ? "Save"
-                  : "Set rule"}
+                  ? localize({ id: "trades.save", message: "Save" })
+                  : localize({ id: "settings.setRule", message: "Set rule" })}
             </Button>
           </>
         }
@@ -1707,10 +1841,10 @@ export function RulesTab({
             <Field
               label={
                 modalDef.unit === "%"
-                  ? "Value (%)"
+                  ? localize({ id: "settings.value", message: "Value (%)" })
                   : modalDef.unit === "count"
-                    ? "Value (trades)"
-                    : "Value ($)"
+                    ? localize({ id: "settings.valueTrades", message: "Value (trades)" })
+                    : localize({ id: "settings.value2", message: "Value ($)" })
               }
               htmlFor="risk-rule-value"
               error={ruleError ?? undefined}
@@ -1737,7 +1871,10 @@ export function RulesTab({
         onOpenChange={(open) => {
           if (!open) closeGoalModal();
         }}
-        title={`${goalYear} P&L goal`}
+        title={localize({
+          id: "settings.value0PLGoal",
+          message: `${{ value0: goalYear }} P&L goal`,
+        })}
         className="max-w-[min(440px,94vw)]"
         footer={
           <div className="flex w-full items-center justify-between gap-2">
@@ -1750,7 +1887,7 @@ export function RulesTab({
                 onClick={() => void handleClearGoal()}
                 className="text-destructive hover:text-destructive"
               >
-                Clear
+                {localize({ id: "trades.clear", message: "Clear" })}
               </Button>
             ) : (
               <span />
@@ -1762,14 +1899,16 @@ export function RulesTab({
                 onClick={closeGoalModal}
                 disabled={annualGoalSaving}
               >
-                Cancel
+                {localize({ id: "trades.cancel", message: "Cancel" })}
               </Button>
               <Button
                 type="button"
                 disabled={annualGoalSaving}
                 onClick={() => void handleSaveGoal()}
               >
-                {annualGoalSaving ? "Saving…" : "Save goal"}
+                {annualGoalSaving
+                  ? localize({ id: "market.saving", message: "Saving…" })
+                  : localize({ id: "accounts.saveGoal", message: "Save goal" })}
               </Button>
             </div>
           </div>
@@ -1777,7 +1916,10 @@ export function RulesTab({
       >
         <div className="flex flex-col gap-3">
           <Field
-            label={`Target net P&L (${goalCurrency})`}
+            label={localize({
+              id: "settings.targetNetPLValue0",
+              message: `Target net P&L (${{ value0: goalCurrency }})`,
+            })}
             htmlFor="annual-goal-amount"
             error={goalError ?? undefined}
           >
@@ -1789,12 +1931,18 @@ export function RulesTab({
                 if (goalError) setGoalError(null);
               }}
               placeholder="100000"
-              aria-label="Annual P&L goal amount"
+              aria-label={localize({
+                id: "accounts.goalAmount",
+                message: "Annual P&L goal amount",
+              })}
               className="w-full"
             />
           </Field>
           <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
-            Progress uses calendar-year net P&L and appears on Home and Reports.
+            {localize({
+              id: "settings.progressUsesCalendarYearNetPLAndAppearsOnHomeAnd",
+              message: "Progress uses calendar-year net P&L and appears on Home and Reports.",
+            })}
           </p>
         </div>
       </Modal>
@@ -1826,6 +1974,8 @@ export function JournalTab({
   onUpdateTag,
   onDeleteTag,
 }: JournalTabProps) {
+  const { t: localize } = useSecondaryLingui();
+
   const toast = useToastManager();
   const [showTagForm, setShowTagForm] = useState(false);
   const [tagFormError, setTagFormError] = useState<string | null>(null);
@@ -1852,7 +2002,13 @@ export function JournalTab({
     toast.add(
       added.length
         ? { title: `Added ${added.length} mistake type${added.length === 1 ? "" : "s"}` }
-        : { title: "Nothing to add", description: "Those names are already in use." },
+        : {
+            title: localize({ id: "settings.nothingToAdd", message: "Nothing to add" }),
+            description: localize({
+              id: "settings.thoseNamesAreAlreadyInUse",
+              message: "Those names are already in use.",
+            }),
+          },
     );
   }
 
@@ -1866,8 +2022,14 @@ export function JournalTab({
       });
     } catch (err) {
       toast.add({
-        title: "Could not change tag kind",
-        description: err instanceof Error ? err.message : "Request failed",
+        title: localize({
+          id: "settings.couldNotChangeTagKind",
+          message: "Could not change tag kind",
+        }),
+        description:
+          err instanceof Error
+            ? err.message
+            : localize({ id: "accounts.requestFailed", message: "Request failed" }),
       });
     }
   }
@@ -1895,11 +2057,17 @@ export function JournalTab({
     const name = tags.find((tag) => tag.id === id)?.name ?? "Tag";
     try {
       await onDeleteTag(id);
-      toast.add({ title: "Tag deleted", description: name });
+      toast.add({
+        title: localize({ id: "settings.tagDeleted", message: "Tag deleted" }),
+        description: name,
+      });
     } catch (err) {
       toast.add({
-        title: "Could not delete tag",
-        description: err instanceof Error ? err.message : "Request failed",
+        title: localize({ id: "settings.couldNotDeleteTag", message: "Could not delete tag" }),
+        description:
+          err instanceof Error
+            ? err.message
+            : localize({ id: "accounts.requestFailed", message: "Request failed" }),
       });
     }
   }
@@ -1907,12 +2075,15 @@ export function JournalTab({
   return (
     <>
       <SettingsSection
-        title="Tags"
-        description="Annotate trades with mistakes, habits, and custom labels."
+        title={localize({ id: "trades.tags", message: "Tags" })}
+        description={localize({
+          id: "settings.annotateTradesWithMistakesHabitsAndCustomLabels",
+          message: "Annotate trades with mistakes, habits, and custom labels.",
+        })}
         action={
           <BtnGhost active={showTagForm} onClick={() => setShowTagForm((v) => !v)}>
             <Plus size={13} strokeWidth={1.5} />
-            Add tag
+            {localize({ id: "settings.addTag", message: "Add tag" })}
           </BtnGhost>
         }
       >
@@ -1935,7 +2106,7 @@ export function JournalTab({
                 >
                   {(field) => (
                     <Field
-                      label="Name"
+                      label={localize({ id: "accounts.name", message: "Name" })}
                       htmlFor="tag-name"
                       error={fieldError(field.state.meta.errors)}
                     >
@@ -1944,14 +2115,17 @@ export function JournalTab({
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="e.g. FOMO"
+                        placeholder={localize({ id: "settings.exampleFomo", message: "e.g. FOMO" })}
                       />
                     </Field>
                   )}
                 </tagForm.Field>
                 <tagForm.Field name="color">
                   {(field) => (
-                    <Field label="Color" htmlFor="tag-color">
+                    <Field
+                      label={localize({ id: "settings.color", message: "Color" })}
+                      htmlFor="tag-color"
+                    >
                       <input
                         id="tag-color"
                         type="color"
@@ -1964,17 +2138,21 @@ export function JournalTab({
                 </tagForm.Field>
                 <tagForm.Field name="kind">
                   {(field) => (
-                    <Field label="Kind">
+                    <Field label={localize({ id: "settings.kind", message: "Kind" })}>
                       <NativeSelect
                         size="sm"
                         value={field.state.value}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        aria-label="Tag kind"
+                        aria-label={localize({ id: "settings.tagKind", message: "Tag kind" })}
                         className="h-8 w-full text-[12px]"
                         wrapperClassName="w-full"
                       >
-                        <NativeSelectOption value="custom">Custom</NativeSelectOption>
-                        <NativeSelectOption value="mistake">Mistake</NativeSelectOption>
+                        <NativeSelectOption value="custom">
+                          {localize({ id: "trades.custom", message: "Custom" })}
+                        </NativeSelectOption>
+                        <NativeSelectOption value="mistake">
+                          {localize({ id: "settings.mistake", message: "Mistake" })}
+                        </NativeSelectOption>
                       </NativeSelect>
                     </Field>
                   )}
@@ -1986,7 +2164,9 @@ export function JournalTab({
                   {(tagSaving) => (
                     <BtnPrimary type="submit" loading={tagSaving}>
                       <Check size={12} strokeWidth={1.5} />
-                      {tagSaving ? "Creating…" : "Create"}
+                      {tagSaving
+                        ? localize({ id: "accounts.creating", message: "Creating…" })
+                        : localize({ id: "accounts.create", message: "Create" })}
                     </BtnPrimary>
                   )}
                 </tagForm.Subscribe>
@@ -1998,7 +2178,7 @@ export function JournalTab({
                   }}
                 >
                   <X size={12} strokeWidth={1.5} />
-                  Cancel
+                  {localize({ id: "trades.cancel", message: "Cancel" })}
                 </BtnGhost>
               </div>
             </form>
@@ -2016,14 +2196,20 @@ export function JournalTab({
             <div className="flex flex-col gap-2.5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="m-0 text-[12px] text-muted-foreground">
-                  Suggested mistake types — these fill the trade form's Mistake type picker.
+                  {localize({
+                    id: "settings.suggestedMistakeTypesTheseFillTheTradeFormSMistakeTypePicker",
+                    message:
+                      "Suggested mistake types — these fill the trade form's Mistake type picker.",
+                  })}
                 </p>
                 <BtnGhost
                   disabled={addingPresets}
                   onClick={() => void addMistakePresets(suggestedMistakes)}
                 >
                   <Plus size={13} strokeWidth={1.5} />
-                  {addingPresets ? "Adding…" : "Add all"}
+                  {addingPresets
+                    ? localize({ id: "accounts.adding", message: "Adding…" })
+                    : localize({ id: "settings.addAll", message: "Add all" })}
                 </BtnGhost>
               </div>
               <div className="flex flex-wrap gap-1.5">
@@ -2035,7 +2221,10 @@ export function JournalTab({
                     size="sm"
                     disabled={addingPresets}
                     onClick={() => void addMistakePresets([name])}
-                    aria-label={`Add mistake type ${name}`}
+                    aria-label={localize({
+                      id: "settings.addMistakeTypeValue0",
+                      message: `Add mistake type ${{ value0: name }}`,
+                    })}
                     className="h-7 gap-1 rounded-md px-2 text-[12px] font-normal"
                   >
                     <Plus size={12} strokeWidth={1.5} aria-hidden />
@@ -2053,13 +2242,18 @@ export function JournalTab({
           </SettingsPanelBody>
         ) : tagsError ? (
           <SettingsPanelBody>
-            <p className="text-[12px] text-destructive">Failed to load tags.</p>
+            <p className="text-[12px] text-destructive">
+              {localize({ id: "settings.failedToLoadTags", message: "Failed to load tags." })}
+            </p>
           </SettingsPanelBody>
         ) : tags.length === 0 ? (
           <SettingsPanelBody className="py-8">
             <EmptyState
-              title="No tags yet"
-              hint="Create tags to annotate your trades."
+              title={localize({ id: "settings.noTagsYet", message: "No tags yet" })}
+              hint={localize({
+                id: "settings.createTagsToAnnotateYourTrades",
+                message: "Create tags to annotate your trades.",
+              })}
               icon={<Tag size={28} strokeWidth={1.5} />}
             />
           </SettingsPanelBody>
@@ -2080,8 +2274,14 @@ export function JournalTab({
                 }
                 secondary={
                   tag.kind === "mistake"
-                    ? "Offered in the trade form's Mistake type picker."
-                    : "Offered in the trade form's Tags picker."
+                    ? localize({
+                        id: "settings.offeredInTheTradeFormSMistakeTypePicker",
+                        message: "Offered in the trade form's Mistake type picker.",
+                      })
+                    : localize({
+                        id: "settings.offeredInTheTradeFormSTagsPicker",
+                        message: "Offered in the trade form's Tags picker.",
+                      })
                 }
                 actions={
                   <>
@@ -2095,11 +2295,18 @@ export function JournalTab({
                       size="sm"
                       value={tag.kind === "mistake" ? "mistake" : "custom"}
                       onChange={(e) => void changeTagKind(tag, e.target.value)}
-                      aria-label={`Kind for ${tag.name}`}
+                      aria-label={localize({
+                        id: "settings.kindForValue0",
+                        message: `Kind for ${{ value0: tag.name }}`,
+                      })}
                       className="h-8 text-[12px]"
                     >
-                      <NativeSelectOption value="custom">Custom</NativeSelectOption>
-                      <NativeSelectOption value="mistake">Mistake</NativeSelectOption>
+                      <NativeSelectOption value="custom">
+                        {localize({ id: "trades.custom", message: "Custom" })}
+                      </NativeSelectOption>
+                      <NativeSelectOption value="mistake">
+                        {localize({ id: "settings.mistake", message: "Mistake" })}
+                      </NativeSelectOption>
                     </NativeSelect>
                     <DeleteButton label={tag.name} onDelete={() => void handleDeleteTag(tag.id)} />
                   </>
@@ -2111,16 +2318,23 @@ export function JournalTab({
       </SettingsSection>
 
       <SettingsSection
-        title="Playbook setups"
-        description="Manage thesis, checklist, and performance on the Playbook page — not here."
+        title={localize({ id: "settings.playbookSetups", message: "Playbook setups" })}
+        description={localize({
+          id: "settings.manageThesisChecklistAndPerformanceOnThePlaybookPageNotHere",
+          message: "Manage thesis, checklist, and performance on the Playbook page — not here.",
+        })}
       >
         <SettingsPanelBody>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="m-0 max-w-xl text-[12px] leading-relaxed text-muted-foreground">
-              Setups are created and edited in Playbook, then linked when you log a trade.
+              {localize({
+                id: "settings.setupsAreCreatedAndEditedInPlaybookThenLinkedWhenYouLog",
+                message:
+                  "Setups are created and edited in Playbook, then linked when you log a trade.",
+              })}
             </p>
             <Button type="button" variant="outline" render={<a href="/playbook" />}>
-              Open Playbook
+              {localize({ id: "settings.openPlaybook", message: "Open Playbook" })}
             </Button>
           </div>
         </SettingsPanelBody>
@@ -2158,6 +2372,8 @@ function llmApiLabels(locale: string, prefix: "vision" | "coach"): LlmApiSetting
 }
 
 function VisionScanSection() {
+  const { t: localize } = useSecondaryLingui();
+
   const { locale } = useLocale();
   const { data, isPending, isError } = useOcrSettings();
   const save = useSaveOcrSettings();
@@ -2175,13 +2391,21 @@ function VisionScanSection() {
         </SettingsPanelBody>
       ) : isError || !data ? (
         <SettingsPanelBody>
-          <p className="text-[12px] text-destructive">Failed to load vision settings.</p>
+          <p className="text-[12px] text-destructive">
+            {localize({
+              id: "settings.failedToLoadVisionSettings",
+              message: "Failed to load vision settings.",
+            })}
+          </p>
         </SettingsPanelBody>
       ) : (
         <LlmApiSettingsForm
           settings={data}
           labels={llmApiLabels(locale, "vision")}
-          saveErrorMessage="Could not save vision settings."
+          saveErrorMessage={localize({
+            id: "settings.couldNotSaveVisionSettings",
+            message: "Could not save vision settings.",
+          })}
           onSave={(body) => save.mutateAsync(body)}
           onTest={(body) => test.mutateAsync(body)}
           onListModels={(body) => listModels.mutateAsync(body)}
@@ -2192,6 +2416,8 @@ function VisionScanSection() {
 }
 
 function CoachSection() {
+  const { t: localize } = useSecondaryLingui();
+
   const { locale } = useLocale();
   const { data, isPending, isError } = useCoachSettings();
   const save = useSaveCoachSettings();
@@ -2209,13 +2435,21 @@ function CoachSection() {
         </SettingsPanelBody>
       ) : isError || !data ? (
         <SettingsPanelBody>
-          <p className="text-[12px] text-destructive">Failed to load coach settings.</p>
+          <p className="text-[12px] text-destructive">
+            {localize({
+              id: "settings.failedToLoadCoachSettings",
+              message: "Failed to load coach settings.",
+            })}
+          </p>
         </SettingsPanelBody>
       ) : (
         <LlmApiSettingsForm
           settings={data}
           labels={llmApiLabels(locale, "coach")}
-          saveErrorMessage="Could not save coach settings."
+          saveErrorMessage={localize({
+            id: "settings.couldNotSaveCoachSettings",
+            message: "Could not save coach settings.",
+          })}
           onSave={(body) => save.mutateAsync(body)}
           onTest={(body) => test.mutateAsync(body)}
           onListModels={(body) => listModels.mutateAsync(body)}

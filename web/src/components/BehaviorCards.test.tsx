@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render } from "@/test/render";
+import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vite-plus/test";
 import type { BehaviorReport, OutcomeSplit } from "@/lib/api/types";
 import { BehaviorLossAversionCard } from "./BehaviorLossAversionCard";
@@ -109,7 +110,7 @@ describe("BehaviorOverconfidenceCard", () => {
   it("acknowledges disciplined streaks in the empty state", () => {
     const rep = report({ overconfidence: { ...emptySection, streaks: 4 } });
     render(<BehaviorOverconfidenceCard {...props} report={rep} />);
-    expect(screen.getByText(/4 win streaks of 3\+ found/)).toBeInTheDocument();
+    expect(screen.getByText(/Win streaks of 3\+ found: 4/)).toBeInTheDocument();
   });
 
   it("renders inflation events with the size ratio", () => {

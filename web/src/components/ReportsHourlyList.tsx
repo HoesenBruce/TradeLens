@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { BreakGroup } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
 import { formatHourKeyLabel, useDisplayTimePrefs, usePrivacyMode } from "@/lib/displayPrefs";
@@ -16,6 +17,8 @@ export interface ReportsHourlyListProps {
 
 /** Tradervue-style hourly list with magnitude bars. API keys are already on the trader's clock. */
 export function ReportsHourlyList({ breakdown, loading, error }: ReportsHourlyListProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   useDisplayTimePrefs();
   const locale = intlLocale();
@@ -24,14 +27,27 @@ export function ReportsHourlyList({ breakdown, loading, error }: ReportsHourlyLi
 
   return (
     <section className="flex min-h-0 min-w-0 flex-col rounded-lg bg-card p-3">
-      <p className="text-[10px] font-semibold tracking-wide text-chart-3">Hourly</p>
+      <p className="text-[10px] font-semibold tracking-wide text-chart-3">
+        {localize({ id: "reports.hourly", message: "Hourly" })}
+      </p>
       {loading ? (
         <Skeleton height="200px" className="mt-3" />
       ) : error ? (
-        <p className="mt-3 text-xs text-destructive">Failed to load hourly breakdown.</p>
+        <p className="mt-3 text-xs text-destructive">
+          {localize({
+            id: "reports.failedToLoadHourlyBreakdown",
+            message: "Failed to load hourly breakdown.",
+          })}
+        </p>
       ) : breakdown.length === 0 ? (
         <div className="mt-2">
-          <EmptyState title="No data" hint="Add trades to see hourly performance." />
+          <EmptyState
+            title={localize({ id: "reports.noData", message: "No data" })}
+            hint={localize({
+              id: "reports.addTradesToSeeHourlyPerformance",
+              message: "Add trades to see hourly performance.",
+            })}
+          />
         </div>
       ) : (
         <ul className="mt-3 flex max-h-[280px] flex-col gap-2 overflow-y-auto [scrollbar-width:thin]">

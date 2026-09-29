@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import {
   Bar,
   BarChart,
@@ -34,6 +35,8 @@ export function ReportsRMultiplePerformance({
   loading,
   error,
 }: ReportsRMultiplePerformanceProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   // `total_trades` here is already the R-eligible (included) count — `excluded`
   // is a disjoint count of trades skipped for missing risk, not a subset of it.
@@ -43,42 +46,56 @@ export function ReportsRMultiplePerformance({
   const hasData = Boolean(rSummary && included > 0);
 
   return (
-    <Card title="R-Multiples">
+    <Card title={localize({ id: "reports.rMultiples", message: "R-Multiples" })}>
       {loading ? (
         <Skeleton height="280px" />
       ) : error ? (
-        <p className="text-xs text-destructive">Failed to load R-multiple performance.</p>
+        <p className="text-xs text-destructive">
+          {localize({
+            id: "reports.failedToLoadRMultiplePerformance",
+            message: "Failed to load R-multiple performance.",
+          })}
+        </p>
       ) : !hasData ? (
-        <EmptyState title="No R data" hint="Set stops on your trades to see R-multiples." />
+        <EmptyState
+          title={localize({ id: "reports.noRData", message: "No R data" })}
+          hint={localize({
+            id: "reports.setStopsOnYourTradesToSeeRMultiples",
+            message: "Set stops on your trades to see R-multiples.",
+          })}
+        />
       ) : (
         <>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <StatCard
               variant="bento"
               align="center"
-              label="Avg R/Trade"
+              label={localize({ id: "reports.avgRTrade", message: "Avg R/Trade" })}
               value={formatR(rSummary!.avg_r)}
               accent={rSummary!.avg_r >= 0 ? "pos" : "neg"}
-              hint={`${included} of ${included + excluded} trades`}
+              hint={localize({
+                id: "reports.value0OfValue1Trades",
+                message: `${{ value0: included }} of ${{ value1: included + excluded }} trades`,
+              })}
             />
             <StatCard
               variant="bento"
               align="center"
-              label="Avg Winning R"
+              label={localize({ id: "reports.avgWinningR", message: "Avg Winning R" })}
               value={formatR(rSummary!.avg_win_r)}
               accent="pos"
             />
             <StatCard
               variant="bento"
               align="center"
-              label="Avg Losing R"
+              label={localize({ id: "reports.avgLosingR", message: "Avg Losing R" })}
               value={formatR(rSummary!.avg_loss_r)}
               accent="neg"
             />
             <StatCard
               variant="bento"
               align="center"
-              label="Best / Worst R"
+              label={localize({ id: "reports.bestWorstR", message: "Best / Worst R" })}
               value={`${formatR(rSummary!.best_r)} / ${formatR(rSummary!.worst_r)}`}
             />
           </div>
@@ -87,7 +104,13 @@ export function ReportsRMultiplePerformance({
             <div className="mt-4">
               <ChartFrame className="rounded-none border-0">
                 <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={distribution} margin={{ top: 12, right: 16, bottom: 0, left: 0 }}>
+                  <BarChart
+                    data={distribution.map((bucket) => ({
+                      ...bucket,
+                      label: bucket.label.replace(" to ", " – "),
+                    }))}
+                    margin={{ top: 12, right: 16, bottom: 0, left: 0 }}
+                  >
                     <CartesianGrid vertical={false} stroke={chartTheme.gridColor} />
                     <XAxis
                       dataKey="label"
@@ -120,8 +143,16 @@ export function ReportsRMultiplePerformance({
                 </ResponsiveContainer>
               </ChartFrame>
               <p className="mt-2 text-[11px] text-muted-foreground">
-                Showing {included} of {included + excluded} closed trades
-                {excluded > 0 ? `, ${excluded} excluded (no stop)` : ""}
+                {localize({
+                  id: "reports.includedClosedTrades",
+                  message: `Showing ${{ included: included }} of ${{ total: included + excluded }} closed trades`,
+                })}
+                {excluded > 0
+                  ? localize({
+                      id: "reports.value0ExcludedNoStop",
+                      message: `, ${{ value0: excluded }} excluded (no stop)`,
+                    })
+                  : ""}
               </p>
             </div>
           ) : null}

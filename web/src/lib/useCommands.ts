@@ -1,3 +1,5 @@
+import { useLingui } from "@lingui/react";
+import { t as localize } from "@lingui/core/macro";
 import { useNavigate } from "@tanstack/react-router";
 import {
   BookOpen,
@@ -43,44 +45,84 @@ const NAV_COMMANDS: Array<{
 }> = [
   {
     id: "nav-home",
-    label: "Home",
+    get label() {
+      return localize({ id: "command.home", message: "Home" });
+    },
     to: "/home",
     icon: House,
   },
-  { id: "nav-trades", label: "Trades", to: "/trades", icon: List },
+  {
+    id: "nav-trades",
+    get label() {
+      return localize({ id: "imports.trades", message: "Trades" });
+    },
+    to: "/trades",
+    icon: List,
+  },
   {
     id: "nav-calendar",
-    label: "Calendar",
+    get label() {
+      return localize({ id: "command.calendar", message: "Calendar" });
+    },
     to: "/calendar",
     icon: CalendarDays,
   },
-  { id: "nav-stats", label: "Stats", to: "/reports", icon: PieChart },
+  {
+    id: "nav-stats",
+    get label() {
+      return localize({ id: "command.stats", message: "Stats" });
+    },
+    to: "/reports",
+    icon: PieChart,
+  },
   {
     id: "nav-events",
-    label: "Economic Events",
+    get label() {
+      return localize({ id: "command.economicEvents", message: "Economic Events" });
+    },
     to: "/events",
     icon: Newspaper,
     keywords: ["news", "economic calendar", "cpi", "nfp", "fomc"],
   },
-  { id: "nav-playbook", label: "Playbook", to: "/playbook", icon: BookOpen },
+  {
+    id: "nav-playbook",
+    get label() {
+      return localize({ id: "command.playbook", message: "Playbook" });
+    },
+    to: "/playbook",
+    icon: BookOpen,
+  },
   {
     id: "nav-notes",
-    label: "Notes",
+    get label() {
+      return localize({ id: "trades.notes", message: "Notes" });
+    },
     to: "/notes",
     icon: StickyNote,
     keywords: ["journal", "memo"],
   },
   {
     id: "nav-calculator",
-    label: "Calculator",
+    get label() {
+      return localize({ id: "command.calculator", message: "Calculator" });
+    },
     to: "/calculator",
     icon: Calculator,
     keywords: ["r-multiple", "r", "exit ladder", "fvg", "position size", "trade planner"],
   },
-  { id: "nav-import ", label: "Import", to: "/import", icon: Upload },
+  {
+    id: "nav-import ",
+    get label() {
+      return localize({ id: "imports.import", message: "Import" });
+    },
+    to: "/import",
+    icon: Upload,
+  },
   {
     id: "nav-settings",
-    label: "Settings",
+    get label() {
+      return localize({ id: "command.settings", message: "Settings" });
+    },
     to: "/settings",
     icon: Settings,
   },
@@ -95,21 +137,27 @@ const ACTION_COMMANDS: Array<{
 }> = [
   {
     id: "action-new-trade",
-    label: "New Trade",
+    get label() {
+      return localize({ id: "trades.newTradeTitle", message: "New Trade" });
+    },
     modal: "new-trade",
     icon: Plus,
     keywords: ["log", "create"],
   },
   {
     id: "action-new-setup",
-    label: "New Setup",
+    get label() {
+      return localize({ id: "command.newSetup", message: "New Setup" });
+    },
     modal: "new-setup",
     icon: Zap,
     keywords: ["playbook"],
   },
   {
     id: "action-new-note",
-    label: "New Note",
+    get label() {
+      return localize({ id: "command.newNote", message: "New Note" });
+    },
     modal: "new-note",
     icon: StickyNote,
     keywords: ["journal"],
@@ -117,6 +165,8 @@ const ACTION_COMMANDS: Array<{
 ];
 
 export function useCommands(onRun?: () => void) {
+  const { i18n } = useLingui();
+  const locale = i18n.locale;
   const navigate = useNavigate();
   const openModal = useUI((s) => s.openModal);
   const runTool = useToolRunner();
@@ -167,5 +217,5 @@ export function useCommands(onRun?: () => void) {
     });
 
     return [...navigateCommands, ...actionCommands, ...toolCommands];
-  }, [bindings, navigate, onRun, openModal, runTool]);
+  }, [bindings, navigate, onRun, openModal, runTool, locale]);
 }

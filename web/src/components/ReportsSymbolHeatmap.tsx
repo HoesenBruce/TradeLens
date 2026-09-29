@@ -1,3 +1,4 @@
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { ResponsiveContainer, Tooltip, Treemap } from "recharts";
 import { Card } from "./Card";
 import { ChartFrame, chartTooltipStyle, pnlTooltipValue } from "./ChartFrame";
@@ -102,19 +103,29 @@ export function HeatCell({
 }
 
 export function ReportsSymbolHeatmap({ breakdown, loading, error }: ReportsSymbolHeatmapProps) {
+  const { t: localize } = useSecondaryLingui();
+
   usePrivacyMode();
   const money = useReportsMoney();
   const nodes = buildHeatmapNodes(breakdown, (g) => money.pnl(g.summary));
   const maxAbs = Math.max(1, ...nodes.map((n) => Math.abs(n.netPnl)));
 
   return (
-    <Card title="Stock P&L">
+    <Card title={localize({ id: "reports.stockPL", message: "Stock P&L" })}>
       {loading ? (
         <Skeleton height="220px" />
       ) : error ? (
-        <p className="text-xs text-destructive">Failed to load stock P&L.</p>
+        <p className="text-xs text-destructive">
+          {localize({ id: "reports.failedToLoadStockPL", message: "Failed to load stock P&L." })}
+        </p>
       ) : nodes.length === 0 ? (
-        <EmptyState title="No data" hint="Add trades or adjust filters to see the heatmap." />
+        <EmptyState
+          title={localize({ id: "reports.noData", message: "No data" })}
+          hint={localize({
+            id: "reports.addTradesOrAdjustFiltersToSeeTheHeatmap",
+            message: "Add trades or adjust filters to see the heatmap.",
+          })}
+        />
       ) : (
         <ChartFrame className="border-0 rounded-none">
           <ResponsiveContainer width="100%" height={240}>
@@ -132,7 +143,12 @@ export function ReportsSymbolHeatmap({ breakdown, loading, error }: ReportsSymbo
                   return [
                     <>
                       {pnlTooltipValue(p.netPnl, money.format(p.netPnl))}
-                      <span className="text-muted-foreground"> · {p.size} trades</span>
+                      <span className="text-muted-foreground">
+                        {localize({
+                          id: "reports.tooltipTradeCount",
+                          message: ` · Trades: ${{ count: p.size }}`,
+                        })}
+                      </span>
                     </>,
                     p.name,
                   ];

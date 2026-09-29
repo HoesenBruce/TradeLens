@@ -1,3 +1,4 @@
+import { t as localize } from "@lingui/core/macro";
 import { useMemo } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -91,8 +92,14 @@ export const useKeybindings = create<KeybindingsState>()(
         if (conflict) {
           const label = isAppHotkeyId(conflict.id) ? hotkeyCommandName(conflict.id) : conflict.id;
           return conflict.reason === "duplicate"
-            ? `Already used by ${label}.`
-            : `Conflicts with ${label} — one shortcut would block the other.`;
+            ? localize({
+                id: "calculator.alreadyUsedByValue0",
+                message: `Already used by ${{ value0: label }}.`,
+              })
+            : localize({
+                id: "calculator.conflictsWithValue0OneShortcutWouldBlockTheOther",
+                message: `Conflicts with ${{ value0: label }} — one shortcut would block the other.`,
+              });
         }
 
         set((s) => {
@@ -153,20 +160,48 @@ export function useIsCustomBinding(id: AppHotkeyId): boolean {
 
 /** Human-readable command names for the settings list and conflict messages. */
 const HOTKEY_COMMAND_NAMES: Record<AppHotkeyId, string> = {
-  palette: "Command palette",
-  "nav-home": "Home",
-  "nav-trades": "Trades",
-  "nav-calendar": "Calendar",
-  "nav-stats": "Reports",
-  "nav-playbook": "Playbook",
-  "nav-notes": "Notes",
-  "nav-calculator": "Calculator",
-  "nav-import ": "Import",
-  "nav-settings": "Settings",
-  "action-new-trade": "New trade",
-  "action-new-setup": "New setup",
-  "action-new-note": "New note",
-  "tool-size": "Position size",
+  get palette() {
+    return localize({ id: "command.commandPalette", message: "Command palette" });
+  },
+  get "nav-home"() {
+    return localize({ id: "calculator.home", message: "Home" });
+  },
+  get "nav-trades"() {
+    return localize({ id: "accounts.trades", message: "Trades" });
+  },
+  get "nav-calendar"() {
+    return localize({ id: "calculator.calendar", message: "Calendar" });
+  },
+  get "nav-stats"() {
+    return localize({ id: "command.reports", message: "Reports" });
+  },
+  get "nav-playbook"() {
+    return localize({ id: "calculator.playbook", message: "Playbook" });
+  },
+  get "nav-notes"() {
+    return localize({ id: "trades.notes", message: "Notes" });
+  },
+  get "nav-calculator"() {
+    return localize({ id: "calculator.calculator", message: "Calculator" });
+  },
+  get "nav-import "() {
+    return localize({ id: "imports.import", message: "Import" });
+  },
+  get "nav-settings"() {
+    return localize({ id: "calculator.settings", message: "Settings" });
+  },
+  get "action-new-trade"() {
+    return localize({ id: "calculator.newTrade", message: "New trade" });
+  },
+  get "action-new-setup"() {
+    return localize({ id: "calculator.newSetup", message: "New setup" });
+  },
+  get "action-new-note"() {
+    return localize({ id: "calculator.newNote", message: "New note" });
+  },
+  get "tool-size"() {
+    return localize({ id: "market.size", message: "Position size" });
+  },
 };
 
 export function hotkeyCommandName(id: AppHotkeyId): string {
@@ -181,7 +216,9 @@ export interface HotkeyGroup {
 /** Display grouping for Settings → Shortcuts. */
 export const HOTKEY_GROUPS: HotkeyGroup[] = [
   {
-    title: "Navigation",
+    get title() {
+      return localize({ id: "calculator.navigation", message: "Navigation" });
+    },
     ids: [
       "nav-home",
       "nav-trades",
@@ -194,6 +231,16 @@ export const HOTKEY_GROUPS: HotkeyGroup[] = [
       "nav-settings",
     ],
   },
-  { title: "Actions", ids: ["action-new-trade", "action-new-note", "action-new-setup"] },
-  { title: "Tools", ids: ["palette", "tool-size"] },
+  {
+    get title() {
+      return localize({ id: "news.actions", message: "Actions" });
+    },
+    ids: ["action-new-trade", "action-new-note", "action-new-setup"],
+  },
+  {
+    get title() {
+      return localize({ id: "market.tools", message: "Tools" });
+    },
+    ids: ["palette", "tool-size"],
+  },
 ];

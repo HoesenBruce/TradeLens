@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { ChevronDown, Loader2, RefreshCw, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import {
@@ -44,8 +45,8 @@ export function Autocomplete({
   value,
   onValueChange,
   items,
-  placeholder = "Search…",
-  emptyText = "No results found.",
+  placeholder,
+  emptyText,
   ariaLabel,
   id,
   disabled,
@@ -74,6 +75,9 @@ export function Autocomplete({
   endAction?: ReactNode;
   autoHighlight?: boolean | "always";
 }) {
+  const { t } = useLingui();
+  placeholder ??= t({ id: "common.searchPlaceholder", message: "Search…" });
+  emptyText ??= t({ id: "common.noResults", message: "No results found." });
   const [open, setOpen] = useState(false);
   const normalized = toItems(items);
   const trailingCount = (showClear ? 1 : 0) + (showTrigger ? 1 : 0) + (endAction ? 1 : 0);
@@ -113,7 +117,7 @@ export function Autocomplete({
             {showClear ? (
               <AutocompleteClear
                 className={cn(autocompleteActionClass, "static end-auto top-auto translate-y-0")}
-                aria-label="Clear"
+                aria-label={t({ id: "common.clear", message: "Clear" })}
               >
                 <X size={13} strokeWidth={1.75} aria-hidden />
               </AutocompleteClear>
@@ -121,7 +125,7 @@ export function Autocomplete({
             {showTrigger ? (
               <AutocompleteTrigger
                 className={autocompleteActionClass}
-                aria-label="Toggle suggestions"
+                aria-label={t({ id: "common.toggleSuggestions", message: "Toggle suggestions" })}
               >
                 <ChevronDown
                   size={12}
@@ -170,10 +174,10 @@ export function ModelAutocomplete({
   models,
   onFetchModels,
   fetching = false,
-  fetchLabel = "Fetch models",
+  fetchLabel,
   fetchDisabled,
   placeholder = "gpt-4o-mini",
-  emptyText = "No models match.",
+  emptyText,
   ariaLabel,
   id,
   disabled,
@@ -196,6 +200,9 @@ export function ModelAutocomplete({
   className?: string;
   inputClassName?: string;
 }) {
+  const { t } = useLingui();
+  fetchLabel ??= t({ id: "settings.fetchModels", message: "Fetch models" });
+  emptyText ??= t({ id: "settings.noModelMatches", message: "No models match." });
   const items = models ?? [];
 
   return (

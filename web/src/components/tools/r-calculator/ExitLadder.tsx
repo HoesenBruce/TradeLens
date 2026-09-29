@@ -1,3 +1,5 @@
+import { t as localize } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Check } from "lucide-react";
 import { EXIT_PRESETS, matchPreset } from "@/lib/r-calculator/exit";
 import { useRCalculatorStore } from "@/lib/r-calculator/useRCalculatorStore";
@@ -11,18 +13,34 @@ type StopKind = "breakeven" | "original" | "custom";
 
 const PRESET_LABELS: Record<string, { label: string; sub: string }> = {
   aggressive: {
-    label: "Aggressive",
-    sub: "Sell 75% at 2R, trail the rest from breakeven",
+    get label() {
+      return localize({ id: "calculator.aggressive", message: "Aggressive" });
+    },
+    get sub() {
+      return localize({
+        id: "calculator.exitAggressiveHint",
+        message: "Sell 75% at 2R, trail the rest from breakeven",
+      });
+    },
   },
   conservative: {
-    label: "Conservative",
-    sub: "Sell 50% at 1R, 25% at 2R, trail from breakeven",
+    get label() {
+      return localize({ id: "calculator.conservative", message: "Conservative" });
+    },
+    get sub() {
+      return localize({
+        id: "calculator.exitConservativeHint",
+        message: "Sell 50% at 1R, 25% at 2R, trail from breakeven",
+      });
+    },
   },
 };
 
 const groupLabelClass = "text-[13px] font-medium text-muted-foreground";
 
 export function ExitLadder() {
+  const { t: localize } = useSecondaryLingui();
+
   const store = useRCalculatorStore();
   const session = store.sessions.find((s) => s.id === store.activeId);
   if (!session) return null;
@@ -32,14 +50,18 @@ export function ExitLadder() {
   const stopKind = plan.trailerStop.kind;
   const customR = plan.trailerStop.kind === "custom" ? plan.trailerStop.r : 1;
   const isOpt = session.instrument === "options";
-  const unit = isOpt ? "ct" : "sh";
+  const unit = isOpt
+    ? localize({ id: "calculator.contractUnit", message: "ct" })
+    : localize({ id: "calculator.shareUnit", message: "sh" });
   const trailerShares = store.exitResult.trailerShares;
 
   return (
-    <Card title="Exit ladder">
+    <Card title={localize({ id: "calculator.exitLadder", message: "Exit ladder" })}>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
-          <span className={groupLabelClass}>Presets</span>
+          <span className={groupLabelClass}>
+            {localize({ id: "calculator.presets", message: "Presets" })}
+          </span>
           <div className="grid grid-cols-2 gap-2">
             {EXIT_PRESETS.map((preset) => {
               const isActive = activePreset === preset.id;
@@ -88,21 +110,26 @@ export function ExitLadder() {
               </div>
               <div className="min-w-0 flex-1 pb-3">
                 <div className="mb-1.5 flex items-center justify-between">
-                  <span className={groupLabelClass}>Target {i + 1}</span>
+                  <span className={groupLabelClass}>
+                    {localize({ id: "market.target", message: "Target" })} {i + 1}
+                  </span>
                   <Button
                     type="button"
                     variant="ghost"
                     size="xs"
-                    aria-label={`Remove target ${i + 1}`}
+                    aria-label={localize({
+                      id: "calculator.removeTargetValue0",
+                      message: `Remove target ${{ value0: i + 1 }}`,
+                    })}
                     onClick={() => store.removeTier(i)}
                     className="h-auto px-0 text-xs text-muted-foreground opacity-0 hover:bg-transparent hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
                   >
-                    Remove
+                    {localize({ id: "trades.remove", message: "Remove" })}
                   </Button>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <CalcInputField
-                    label="Target"
+                    label={localize({ id: "market.target", message: "Target" })}
                     value={tier.r}
                     onValue={(n) => store.setTier(i, { r: n })}
                     step={0.5}
@@ -110,7 +137,7 @@ export function ExitLadder() {
                     suffix="R"
                   />
                   <CalcInputField
-                    label="Exit %"
+                    label={localize({ id: "calculator.exit", message: "Exit %" })}
                     value={tier.pct}
                     onValue={(n) => store.setTier(i, { pct: n })}
                     step={5}
@@ -129,19 +156,22 @@ export function ExitLadder() {
             onClick={() => store.addTier()}
             className="border-dashed text-muted-foreground hover:border-primary/40 hover:text-primary"
           >
-            Add tier
+            {localize({ id: "calculator.addTier", message: "Add tier" })}
           </Button>
         </div>
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
-            <span className={groupLabelClass}>Trailing stop</span>
+            <span className={groupLabelClass}>
+              {localize({ id: "calculator.trailingStop", message: "Trailing stop" })}
+            </span>
             <span className="text-xs tabular-nums text-muted-foreground">
-              {trailerShares} {unit} trail after tiers
+              {trailerShares} {unit}{" "}
+              {localize({ id: "calculator.trailAfterTiers", message: "trail after tiers" })}
             </span>
           </div>
           <SegmentedControl
-            ariaLabel="Trailing stop"
+            ariaLabel={localize({ id: "calculator.trailingStop", message: "Trailing stop" })}
             fullWidth
             value={stopKind}
             onChange={(v) => {
@@ -155,14 +185,20 @@ export function ExitLadder() {
               );
             }}
             options={[
-              { value: "breakeven", label: "Breakeven 0R" },
-              { value: "original", label: "Original −1R" },
-              { value: "custom", label: "Custom" },
+              {
+                value: "breakeven",
+                label: localize({ id: "calculator.breakeven0r", message: "Breakeven 0R" }),
+              },
+              {
+                value: "original",
+                label: localize({ id: "calculator.original1r", message: "Original −1R" }),
+              },
+              { value: "custom", label: localize({ id: "trades.custom", message: "Custom" }) },
             ]}
           />
           {stopKind === "custom" ? (
             <CalcInputField
-              label="Custom stop"
+              label={localize({ id: "calculator.customStop", message: "Custom stop" })}
               value={customR}
               onValue={(n) => store.setTrailerStop({ kind: "custom", r: n })}
               step={0.5}

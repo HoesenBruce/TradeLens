@@ -1,4 +1,5 @@
-import { render, screen, within } from "@testing-library/react";
+import { render } from "@/test/render";
+import { screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vite-plus/test";
 import type { Summary } from "@/lib/api/types";
 import { ReportsDisplayProvider } from "./ReportsDisplayContext";

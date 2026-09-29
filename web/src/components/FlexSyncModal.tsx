@@ -1,3 +1,5 @@
+import { plural } from "@lingui/core/macro";
+import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useEffect, useState } from "react";
 import {
   useDeleteFlexSync,
@@ -30,6 +32,8 @@ export function FlexSyncButton({
   accountName,
   label = "IBKR sync",
 }: FlexSyncButtonProps) {
+  const { t: localize } = useSecondaryLingui();
+
   const [open, setOpen] = useState(false);
   const toast = useToastManager();
   const settingsQ = useFlexSync(accountId, open);
@@ -51,11 +55,19 @@ export function FlexSyncButton({
 
   function handleSave() {
     if (queryId.trim() === "") {
-      toast.add({ title: "Query ID is required" });
+      toast.add({
+        title: localize({ id: "broker.queryIdIsRequired", message: "Query ID is required" }),
+      });
       return;
     }
     if (!s?.token_set && token.trim() === "") {
-      toast.add({ title: "Token is required", description: "Paste your Flex Web Service token." });
+      toast.add({
+        title: localize({ id: "broker.tokenIsRequired", message: "Token is required" }),
+        description: localize({
+          id: "broker.pasteYourFlexWebServiceToken",
+          message: "Paste your Flex Web Service token.",
+        }),
+      });
       return;
     }
     save.mutate(
@@ -65,11 +77,21 @@ export function FlexSyncButton({
         ...(token.trim() !== "" ? { token: token.trim() } : {}),
       },
       {
-        onSuccess: () => toast.add({ title: "Flex sync saved", description: accountName }),
+        onSuccess: () =>
+          toast.add({
+            title: localize({ id: "broker.flexSyncSaved", message: "Flex sync saved" }),
+            description: accountName,
+          }),
         onError: (err) =>
           toast.add({
-            title: "Could not save flex sync",
-            description: err instanceof Error ? err.message : "Save failed",
+            title: localize({
+              id: "broker.couldNotSaveFlexSync",
+              message: "Could not save flex sync",
+            }),
+            description:
+              err instanceof Error
+                ? err.message
+                : localize({ id: "trades.saveFailed", message: "Save failed" }),
           }),
       },
     );
@@ -79,13 +101,19 @@ export function FlexSyncButton({
     run.mutate(undefined, {
       onSuccess: (res) =>
         toast.add({
-          title: "Sync complete",
-          description: `${res.inserted} new execution${res.inserted === 1 ? "" : "s"}, ${res.skipped} duplicate${res.skipped === 1 ? "" : "s"}`,
+          title: localize({ id: "accounts.syncComplete", message: "Sync complete" }),
+          description: localize({
+            id: "broker.syncCounts",
+            message: `${{ inserted: plural(res.inserted, { one: "# new execution", other: "# new executions" }) }}, ${{ skipped: plural(res.skipped, { one: "# duplicate", other: "# duplicates" }) }}`,
+          }),
         }),
       onError: (err) =>
         toast.add({
-          title: "Sync failed",
-          description: err instanceof Error ? err.message : "Sync failed",
+          title: localize({ id: "accounts.syncFailed", message: "Sync failed" }),
+          description:
+            err instanceof Error
+              ? err.message
+              : localize({ id: "accounts.syncFailed", message: "Sync failed" }),
         }),
     });
   }
@@ -93,7 +121,10 @@ export function FlexSyncButton({
   function handleDisconnect() {
     remove.mutate(undefined, {
       onSuccess: () => {
-        toast.add({ title: "Flex sync removed", description: accountName });
+        toast.add({
+          title: localize({ id: "broker.flexSyncRemoved", message: "Flex sync removed" }),
+          description: accountName,
+        });
         setQueryId("");
         setToken("");
       },
@@ -108,7 +139,10 @@ export function FlexSyncButton({
       <Modal
         open={open}
         onOpenChange={setOpen}
-        title={`IBKR Flex sync — ${accountName}`}
+        title={localize({
+          id: "broker.ibkrFlexSyncValue0",
+          message: `IBKR Flex sync — ${{ value0: accountName }}`,
+        })}
         className="max-w-[min(460px,94vw)]"
         footer={
           <>
@@ -120,52 +154,78 @@ export function FlexSyncButton({
                 onClick={handleDisconnect}
                 disabled={remove.isPending}
               >
-                Remove
+                {localize({ id: "trades.remove", message: "Remove" })}
               </Button>
             ) : null}
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
-              Cancel
+              {localize({ id: "trades.cancel", message: "Cancel" })}
             </Button>
             <Button type="button" onClick={handleSave} disabled={save.isPending}>
-              {save.isPending ? "Saving…" : "Save"}
+              {save.isPending
+                ? localize({ id: "market.saving", message: "Saving…" })
+                : localize({ id: "trades.save", message: "Save" })}
             </Button>
           </>
         }
       >
         <div className="flex flex-col gap-3">
           <p className="m-0 text-[12px] leading-relaxed text-muted-foreground">
-            In IBKR Client Portal, create a Flex Query with the Trades → Executions section in CSV
-            format, and enable the Flex Web Service to get a token. New fills import automatically
-            and duplicates are skipped.
+            {localize({
+              id: "broker.inIbkrClientPortalCreateAFlexQueryWithTheTradesExecutions",
+              message:
+                "In IBKR Client Portal, create a Flex Query with the Trades → Executions section in CSV format, and enable the Flex Web Service to get a token. New fills import automatically and duplicates are skipped.",
+            })}
           </p>
-          <Field label="Flex Query ID">
+          <Field label={localize({ id: "broker.flexQueryId", message: "Flex Query ID" })}>
             <FormInput
               value={queryId}
               onChange={(e) => setQueryId(e.target.value)}
               placeholder="123456"
-              aria-label="Flex Query ID"
+              aria-label={localize({ id: "broker.flexQueryId", message: "Flex Query ID" })}
             />
           </Field>
           <Field
-            label="Flex Web Service token"
+            label={localize({
+              id: "broker.flexWebServiceToken",
+              message: "Flex Web Service token",
+            })}
             description={
               s?.token_set
-                ? `Saved (${s.token_hint ?? "hidden"}) — leave blank to keep it.`
+                ? localize({
+                    id: "broker.savedValue0LeaveBlankToKeepIt",
+                    message: `Saved (${{ value0: s.token_hint ?? "hidden" }}) — leave blank to keep it.`,
+                  })
                 : undefined
             }
           >
             <PasswordInput
               value={token}
               onChange={(e) => setToken(e.target.value)}
-              placeholder={s?.token_set ? "••••••••" : "Paste token"}
-              aria-label="Flex Web Service token"
+              placeholder={
+                s?.token_set
+                  ? "••••••••"
+                  : localize({ id: "broker.pasteToken", message: "Paste token" })
+              }
+              aria-label={localize({
+                id: "broker.flexWebServiceToken",
+                message: "Flex Web Service token",
+              })}
             />
           </Field>
-          <Field label="Scheduled sync">
+          <Field label={localize({ id: "broker.scheduledSync", message: "Scheduled sync" })}>
             <div className="flex items-center gap-2">
-              <Switch checked={enabled} onCheckedChange={setEnabled} aria-label="Scheduled sync" />
+              <Switch
+                checked={enabled}
+                onCheckedChange={setEnabled}
+                aria-label={localize({ id: "broker.scheduledSync", message: "Scheduled sync" })}
+              />
               <span className="text-[12px] text-muted-foreground">
-                {enabled ? "Runs automatically in the background" : "Manual sync only"}
+                {enabled
+                  ? localize({
+                      id: "broker.runsAutomaticallyInTheBackground",
+                      message: "Runs automatically in the background",
+                    })
+                  : localize({ id: "broker.manualSyncOnly", message: "Manual sync only" })}
               </span>
             </div>
           </Field>
@@ -175,10 +235,11 @@ export function FlexSyncButton({
               <div className="flex items-center justify-between gap-3">
                 <p className="m-0 text-[12px] text-muted-foreground">
                   {s.last_synced_at
-                    ? `Last sync ${new Date(s.last_synced_at).toLocaleString()} — ${
-                        s.last_status || "done"
-                      }`
-                    : "Never synced yet."}
+                    ? localize({
+                        id: "broker.lastSyncValue0Value1",
+                        message: `Last sync ${{ value0: new Date(s.last_synced_at).toLocaleString() }} — ${{ value1: s.last_status || "done" }}`,
+                      })
+                    : localize({ id: "accounts.neverSynced", message: "Never synced yet." })}
                 </p>
                 <Button
                   type="button"
@@ -187,7 +248,9 @@ export function FlexSyncButton({
                   onClick={handleRun}
                   disabled={run.isPending}
                 >
-                  {run.isPending ? "Syncing…" : "Sync now"}
+                  {run.isPending
+                    ? localize({ id: "accounts.syncing", message: "Syncing…" })
+                    : localize({ id: "accounts.syncNow", message: "Sync now" })}
                 </Button>
               </div>
               {s.last_error ? (
