@@ -1,4 +1,6 @@
-import { t as localize } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react";
+import { msg } from "@lingui/core/macro";
+import type { MessageDescriptor } from "@lingui/core";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { type ReactNode, useId } from "react";
 import { AppLogo } from "@/components/AppLogo";
@@ -17,7 +19,7 @@ const EQUITY_AREA = `${EQUITY_LINE} L540 320 L0 320 Z`;
 
 type Memo = {
   meta: string;
-  note: string;
+  note: MessageDescriptor;
   r: string;
   tone: "profit" | "loss";
   /** Chip anchor: % offsets + translate that hangs it off the marker. */
@@ -29,12 +31,10 @@ type Memo = {
 const MEMOS: Memo[] = [
   {
     meta: "MAR 14 · NVDA",
-    get note() {
-      return localize({
-        id: "auth.chasedTheOpenCutItFast",
-        message: "Chased the open. Cut it fast.",
-      });
-    },
+    note: msg({
+      id: "auth.chasedTheOpenCutItFast",
+      message: "Chased the open. Cut it fast.",
+    }),
     r: "−1.4R",
     tone: "loss",
     chip: "left-[36.6%] top-[77.5%] -translate-x-1/2 translate-y-3",
@@ -43,9 +43,7 @@ const MEMOS: Memo[] = [
   },
   {
     meta: "APR 02 · ES",
-    get note() {
-      return localize({ id: "auth.waitedForTheRetest", message: "Waited for the retest." });
-    },
+    note: msg({ id: "auth.waitedForTheRetest", message: "Waited for the retest." }),
     r: "+2.1R",
     tone: "profit",
     chip: "left-[65.1%] top-[55.6%] -translate-x-1/2 translate-y-[calc(-100%_-_12px)]",
@@ -54,12 +52,10 @@ const MEMOS: Memo[] = [
   },
   {
     meta: "MAY 21 · AAPL",
-    get note() {
-      return localize({
-        id: "auth.aSetupFollowedThePlan",
-        message: "A+ setup. Followed the plan.",
-      });
-    },
+    note: msg({
+      id: "auth.aSetupFollowedThePlan",
+      message: "A+ setup. Followed the plan.",
+    }),
     r: "+3.2R",
     tone: "profit",
     chip: "left-[82.2%] top-[30%] -translate-x-full translate-y-[calc(-100%_-_14px)]",
@@ -69,6 +65,7 @@ const MEMOS: Memo[] = [
 ];
 
 function EquityArtwork() {
+  const { _ } = useLingui();
   const uid = useId().replace(/:/g, "");
   const glowId = `${uid}-glow`;
   const areaId = `${uid}-area`;
@@ -168,7 +165,7 @@ function EquityArtwork() {
               {m.r}
             </span>
           </div>
-          <p className="mt-0.5 text-[11px] leading-snug text-popover-foreground">{m.note}</p>
+          <p className="mt-0.5 text-[11px] leading-snug text-popover-foreground">{_(m.note)}</p>
         </div>
       ))}
     </div>
