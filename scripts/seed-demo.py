@@ -179,10 +179,14 @@ def main() -> int:
     ap.add_argument("--api", default="http://localhost:3000/api/v1", help="API base URL")
     ap.add_argument("--email", required=True)
     ap.add_argument("--password", required=True)
+    ap.add_argument("--end-date", type=lambda value: datetime.strptime(value, "%Y-%m-%d").replace(tzinfo=timezone.utc),
+                    help="Fixed UTC book end date for reproducible captures")
     ap.add_argument("--account", help="account id (default: first account, else created)")
     ap.add_argument("--seed", type=int, default=20260731, help="RNG seed for reproducibility")
     args = ap.parse_args()
 
+    end = args.end_date or (datetime.now(timezone.utc).replace(
+        hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1))
     rnd = random.Random(args.seed)
     api = Api(args.api)
     api.login(args.email, args.password)
@@ -207,7 +211,7 @@ def main() -> int:
         api("POST", "/cash-transactions", {
             "account_id": account_id, "type": "deposit", "amount": OPENING_BALANCE,
             "currency": "USD", "note": "Opening balance",
-            "occurred_at": (datetime.now(timezone.utc) - timedelta(days=DAYS_BACK + 2))
+            "occurred_at": (end - timedelta(days=DAYS_BACK + 2))
                            .replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         })
         print(f"deposited opening balance ${OPENING_BALANCE:,.0f}")
@@ -226,8 +230,7 @@ def main() -> int:
             tags[name] = api("POST", "/tags",
                              {"name": name, "color": color, "kind": "mistake"})["id"]
 
-    trades = build_book(rnd, datetime.now(timezone.utc).replace(
-        hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1))
+    trades = build_book(rnd, end)
 
     nets = [(t["exit"] - t["entry"] if t["long"] else t["entry"] - t["exit"])
             * t["qty"] * t["mult"] - t["fee"] * 2 for t in trades]

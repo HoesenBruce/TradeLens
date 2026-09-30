@@ -179,15 +179,15 @@ func TestSBIImportEndToEnd(t *testing.T) {
 	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &trades))
 	converted := []map[string]any{}
 	for _, trade := range trades {
-		if trade["symbol"] == "9998" {
+		if trade["symbol"] == "9102" {
 			converted = append(converted, trade)
 		}
 	}
 	require.Len(t, converted, 2)
 	require.ElementsMatch(t, []any{"closed", "open"}, []any{converted[0]["status"], converted[1]["status"]})
 	for _, trade := range trades {
-		if trade["symbol"] == "6501" {
-			require.Equal(t, "匿名銘柄A", trade["stock_name"])
+		if trade["symbol"] == "9101" {
+			require.Equal(t, "合成甲", trade["stock_name"])
 			return
 		}
 	}

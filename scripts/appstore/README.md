@@ -22,8 +22,9 @@ waste an hour: **`simctl.sh` takes points** (440×956 on a 6.9" iPhone) while
 ## 1. Stand up a demo server
 
 Never shoot against a real journal. `docs/demo/tradermemos-demo-trades.json` is
-the curated book (172 trades over 13 months, +$24,990.52, 60.1% win rate) built
-for exactly this.
+an independently generated book. Regenerate it with
+`python3 scripts/generate-financial-fixtures.py`; see
+[provenance](../../docs/security/financial-fixture-provenance.md).
 
 ```sh
 go build -o /tmp/tm-api ./api/cmd/server
