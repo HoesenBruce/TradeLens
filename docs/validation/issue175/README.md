@@ -33,7 +33,7 @@ are unavailable until their native cash/goal inputs can be normalized.
 ## Other consumers
 
 The endpoint audit and remaining normalization work are tracked in
-[#179](https://github.com/HoesenBruce/TraderMemos-Private/issues/179).
+[#179](https://github.com/HoesenBruce/TradeLens/issues/179).
 Equity and Daily normalization is delivered by #181 (part 1 of #179); see
 `../issue179/README.md` for the new contract and validation. Breakdown/Reports/Playbook,
 trade rows/account contribution and Wrapped retain their mixed-currency rejection. Explicit portfolio
