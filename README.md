@@ -44,7 +44,7 @@ TradeLens retains the original project’s AGPL-3.0 license and attribution; see
 </table>
 
 Screenshots show the English TradeLens Web interface on a local instance. Trading results are generated demo data from `scripts/seed-demo.py`, not real trading performance.
-Historical TraderMemos screenshots remain in `docs/screenshots/` for reference.
+Capture inputs and retained-image provenance are recorded in [the screenshot manifest](docs/screenshots/README.md). Old mobile/store captures were removed; new captures are required before mobile publication.
 
 ---
 

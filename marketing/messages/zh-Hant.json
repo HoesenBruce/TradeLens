@@ -13,43 +13,38 @@
     "ticker": [
       {
         "label": "淨盈虧",
-        "value": "+$8,405.81",
+        "value": "+$8,398.72",
         "tone": "profit"
       },
       {
         "label": "勝率",
-        "value": "59%",
+        "value": "57%",
         "tone": "neutral"
       },
       {
         "label": "獲利因子",
-        "value": "1.83",
+        "value": "1.79",
         "tone": "neutral"
       },
       {
         "label": "期望值",
-        "value": "+$45.44 / 筆",
+        "value": "+$45.90 / 筆",
         "tone": "profit"
       },
       {
         "label": "最大回撤",
-        "value": "−$1,057.78",
+        "value": "−$1,082.17",
         "tone": "loss"
       },
       {
         "label": "平均持倉",
-        "value": "1 小時 02 分",
+        "value": "1h",
         "tone": "neutral"
       },
       {
         "label": "交易筆數",
-        "value": "185",
+        "value": "183",
         "tone": "neutral"
-      },
-      {
-        "label": "目標進度",
-        "value": "84% · 超前",
-        "tone": "profit"
       }
     ],
     "eyebrowWhy": "資料主權",
@@ -168,7 +163,8 @@
     ],
     "licenseHeading": "採用 AGPL-3.0 授權",
     "licenseBody": "自由自架、修改，供個人或公司內部使用。",
-    "readDocs": "閱讀文件"
+    "readDocs": "閱讀文件",
+    "screenshotProvenance": "截圖和統計來自獨立生成的示範資料，不代表真實交易表現。"
   },
   "Footer": {
     "tagline": "自架交易日誌。",
