@@ -2,7 +2,7 @@
 
 ## Implementation and boundaries
 
-Reuse Settings → About and its existing cards/navigation. Product description and current/upstream repository URLs live in BRAND. The hero and resources link to HoesenBruce/TraderMemos-Private; attribution links to upstream TraderMemos, LICENSE and NOTICE. Original author/contributors are identified explicitly. New attribution labels cover all five existing locales.
+Reuse Settings → About and its existing cards/navigation. Product description and current/upstream repository URLs live in BRAND. The hero and resources link to the TradeLens repository; attribution links to upstream TraderMemos, LICENSE and NOTICE. Original author/contributors are identified explicitly. New attribution labels cover all five existing locales.
 
 Installed Web version/build still comes from the root VERSION and existing Vite build overrides; API version still comes from the connected API. No new version constant. Existing release/update lookup remains upstream-based; changing release metadata belongs to #103. No repository rename (#104), login change, API change or mobile UI change.
 

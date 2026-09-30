@@ -2,9 +2,9 @@
 
 Parent #179 is split into independently mergeable tasks, in dependency order:
 
-1. [#181](https://github.com/HoesenBruce/TraderMemos-Private/issues/181): this PR, Equity and Daily currency inputs.
-2. [#182](https://github.com/HoesenBruce/TraderMemos-Private/issues/182): grouped analytics and row consumers (Breakdown/Reports/Playbook, trade lists, Calendar row statistics, account contribution, Wrapped).
-3. [#183](https://github.com/HoesenBruce/TraderMemos-Private/issues/183): Header/funding/annual goals and explicit mixed portfolio selection, after all consumers support the contract.
+1. [#181](https://github.com/HoesenBruce/TradeLens/issues/181): this PR, Equity and Daily currency inputs.
+2. [#182](https://github.com/HoesenBruce/TradeLens/issues/182): grouped analytics and row consumers (Breakdown/Reports/Playbook, trade lists, Calendar row statistics, account contribution, Wrapped).
+3. [#183](https://github.com/HoesenBruce/TradeLens/issues/183): Header/funding/annual goals and explicit mixed portfolio selection, after all consumers support the contract.
 
 ## Contract
 
