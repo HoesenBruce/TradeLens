@@ -77,9 +77,9 @@
           "executed_at": "2030-12-02T15:32:59Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -128,9 +128,9 @@
           "executed_at": "2030-12-02T18:48:33Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -179,9 +179,9 @@
           "executed_at": "2030-12-02T19:34:28Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -230,9 +230,9 @@
           "executed_at": "2030-12-02T18:37:19Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -281,9 +281,9 @@
           "executed_at": "2030-12-03T18:00:52Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -332,9 +332,9 @@
           "executed_at": "2030-12-03T17:28:06Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -383,9 +383,9 @@
           "executed_at": "2030-12-03T18:00:55Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -434,9 +434,9 @@
           "executed_at": "2030-12-03T21:41:43Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -485,9 +485,9 @@
           "executed_at": "2030-12-04T15:24:23Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -536,9 +536,9 @@
           "executed_at": "2030-12-04T18:44:27Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -587,9 +587,9 @@
           "executed_at": "2030-12-05T15:01:30Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -638,9 +638,9 @@
           "executed_at": "2030-12-05T17:44:02Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -689,9 +689,9 @@
           "executed_at": "2030-12-05T16:15:41Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -740,9 +740,9 @@
           "executed_at": "2030-12-05T17:02:28Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -791,9 +791,9 @@
           "executed_at": "2030-12-05T18:48:57Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -842,9 +842,9 @@
           "executed_at": "2030-12-10T15:36:17Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -893,9 +893,9 @@
           "executed_at": "2030-12-10T17:18:16Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -944,9 +944,9 @@
           "executed_at": "2030-12-10T19:05:02Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -995,9 +995,9 @@
           "executed_at": "2030-12-10T20:03:29Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1046,9 +1046,9 @@
           "executed_at": "2030-12-10T20:15:05Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1097,9 +1097,9 @@
           "executed_at": "2030-12-13T16:28:25Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1148,9 +1148,9 @@
           "executed_at": "2030-12-13T18:18:37Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1199,9 +1199,9 @@
           "executed_at": "2030-12-13T18:53:42Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1250,9 +1250,9 @@
           "executed_at": "2030-12-16T14:51:47Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1301,9 +1301,9 @@
           "executed_at": "2030-12-16T16:30:10Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1352,9 +1352,9 @@
           "executed_at": "2030-12-16T17:34:18Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1403,9 +1403,9 @@
           "executed_at": "2030-12-16T17:28:41Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1454,9 +1454,9 @@
           "executed_at": "2030-12-16T17:56:59Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1505,9 +1505,9 @@
           "executed_at": "2030-12-17T15:14:28Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1556,9 +1556,9 @@
           "executed_at": "2030-12-17T18:52:44Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1607,9 +1607,9 @@
           "executed_at": "2030-12-17T21:27:50Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1658,9 +1658,9 @@
           "executed_at": "2030-12-23T14:18:37Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1709,9 +1709,9 @@
           "executed_at": "2030-12-23T16:35:30Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1760,9 +1760,9 @@
           "executed_at": "2030-12-23T22:12:27Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1811,9 +1811,9 @@
           "executed_at": "2030-12-25T17:26:03Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1862,9 +1862,9 @@
           "executed_at": "2030-12-25T18:39:53Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1913,9 +1913,9 @@
           "executed_at": "2030-12-26T16:31:09Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -1964,9 +1964,9 @@
           "executed_at": "2030-12-26T20:05:55Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2015,9 +2015,9 @@
           "executed_at": "2030-12-27T15:19:04Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2066,9 +2066,9 @@
           "executed_at": "2030-12-27T18:01:48Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2117,9 +2117,9 @@
           "executed_at": "2030-12-27T19:18:29Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2168,9 +2168,9 @@
           "executed_at": "2030-12-27T19:41:25Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2219,9 +2219,9 @@
           "executed_at": "2030-12-30T15:43:51Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2270,9 +2270,9 @@
           "executed_at": "2030-12-30T18:46:05Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2321,9 +2321,9 @@
           "executed_at": "2030-12-30T16:45:41Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2372,9 +2372,9 @@
           "executed_at": "2030-12-30T20:08:47Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2423,9 +2423,9 @@
           "executed_at": "2030-12-31T15:26:18Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2474,9 +2474,9 @@
           "executed_at": "2030-12-31T17:08:53Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2525,9 +2525,9 @@
           "executed_at": "2030-12-31T19:30:35Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2576,9 +2576,9 @@
           "executed_at": "2030-12-31T18:48:25Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2627,9 +2627,9 @@
           "executed_at": "2030-12-31T20:04:18Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2678,9 +2678,9 @@
           "executed_at": "2031-01-01T14:14:52Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2729,9 +2729,9 @@
           "executed_at": "2031-01-01T16:23:36Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2780,9 +2780,9 @@
           "executed_at": "2031-01-01T17:53:59Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2831,9 +2831,9 @@
           "executed_at": "2031-01-01T18:16:08Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2882,9 +2882,9 @@
           "executed_at": "2031-01-01T19:07:07Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2933,9 +2933,9 @@
           "executed_at": "2031-01-02T16:15:22Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -2984,9 +2984,9 @@
           "executed_at": "2031-01-02T17:28:32Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3035,9 +3035,9 @@
           "executed_at": "2031-01-03T14:56:01Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3086,9 +3086,9 @@
           "executed_at": "2031-01-03T17:02:30Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3137,9 +3137,9 @@
           "executed_at": "2031-01-03T18:43:30Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3188,9 +3188,9 @@
           "executed_at": "2031-01-06T14:41:26Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3239,9 +3239,9 @@
           "executed_at": "2031-01-06T14:39:42Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3290,9 +3290,9 @@
           "executed_at": "2031-01-06T15:39:28Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3341,9 +3341,9 @@
           "executed_at": "2031-01-06T20:50:24Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3392,9 +3392,9 @@
           "executed_at": "2031-01-06T19:43:40Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3443,9 +3443,9 @@
           "executed_at": "2031-01-07T14:30:26Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3494,9 +3494,9 @@
           "executed_at": "2031-01-07T19:21:45Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3545,9 +3545,9 @@
           "executed_at": "2031-01-07T19:32:59Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3596,9 +3596,9 @@
           "executed_at": "2031-01-07T17:56:02Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3647,9 +3647,9 @@
           "executed_at": "2031-01-09T14:01:51Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3698,9 +3698,9 @@
           "executed_at": "2031-01-09T15:24:30Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3749,9 +3749,9 @@
           "executed_at": "2031-01-09T21:23:37Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3800,9 +3800,9 @@
           "executed_at": "2031-01-09T20:28:47Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3851,9 +3851,9 @@
           "executed_at": "2031-01-09T20:16:14Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3902,9 +3902,9 @@
           "executed_at": "2031-01-10T15:47:34Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -3953,9 +3953,9 @@
           "executed_at": "2031-01-10T15:09:00Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4004,9 +4004,9 @@
           "executed_at": "2031-01-10T17:03:26Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4055,9 +4055,9 @@
           "executed_at": "2031-01-10T16:28:47Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4106,9 +4106,9 @@
           "executed_at": "2031-01-10T17:23:39Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4157,9 +4157,9 @@
           "executed_at": "2031-01-10T18:25:22Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4208,9 +4208,9 @@
           "executed_at": "2031-01-13T18:23:27Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4259,9 +4259,9 @@
           "executed_at": "2031-01-13T18:04:29Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4310,9 +4310,9 @@
           "executed_at": "2031-01-16T13:52:33Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4361,9 +4361,9 @@
           "executed_at": "2031-01-16T15:50:25Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4412,9 +4412,9 @@
           "executed_at": "2031-01-16T18:27:46Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4463,9 +4463,9 @@
           "executed_at": "2031-01-16T19:42:19Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4514,9 +4514,9 @@
           "executed_at": "2031-01-16T22:38:08Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4565,9 +4565,9 @@
           "executed_at": "2031-01-17T14:17:24Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4616,9 +4616,9 @@
           "executed_at": "2031-01-17T15:42:11Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4667,9 +4667,9 @@
           "executed_at": "2031-01-17T16:00:18Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4718,9 +4718,9 @@
           "executed_at": "2031-01-17T16:29:22Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4769,9 +4769,9 @@
           "executed_at": "2031-01-20T15:24:10Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4820,9 +4820,9 @@
           "executed_at": "2031-01-20T16:25:08Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4871,9 +4871,9 @@
           "executed_at": "2031-01-20T17:28:07Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4922,9 +4922,9 @@
           "executed_at": "2031-01-20T18:10:34Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -4973,9 +4973,9 @@
           "executed_at": "2031-01-20T20:03:08Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5024,9 +5024,9 @@
           "executed_at": "2031-01-21T15:22:27Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5075,9 +5075,9 @@
           "executed_at": "2031-01-21T14:09:10Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5126,9 +5126,9 @@
           "executed_at": "2031-01-21T20:25:14Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5177,9 +5177,9 @@
           "executed_at": "2031-01-21T19:56:10Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5228,9 +5228,9 @@
           "executed_at": "2031-01-23T17:04:17Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5279,9 +5279,9 @@
           "executed_at": "2031-01-23T16:02:48Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5330,9 +5330,9 @@
           "executed_at": "2031-01-23T15:44:36Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5381,9 +5381,9 @@
           "executed_at": "2031-01-23T17:43:30Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5432,9 +5432,9 @@
           "executed_at": "2031-01-23T20:19:14Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5483,9 +5483,9 @@
           "executed_at": "2031-01-24T17:34:25Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5534,9 +5534,9 @@
           "executed_at": "2031-01-24T19:32:51Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5585,9 +5585,9 @@
           "executed_at": "2031-01-27T15:52:13Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5636,9 +5636,9 @@
           "executed_at": "2031-01-27T16:44:53Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5687,9 +5687,9 @@
           "executed_at": "2031-01-27T20:57:56Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5738,9 +5738,9 @@
           "executed_at": "2031-01-28T16:15:29Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5789,9 +5789,9 @@
           "executed_at": "2031-01-28T14:47:40Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5840,9 +5840,9 @@
           "executed_at": "2031-01-29T17:02:04Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5891,9 +5891,9 @@
           "executed_at": "2031-01-29T16:32:21Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5942,9 +5942,9 @@
           "executed_at": "2031-01-29T19:10:18Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -5993,9 +5993,9 @@
           "executed_at": "2031-01-29T18:58:04Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6044,9 +6044,9 @@
           "executed_at": "2031-01-30T17:20:51Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6095,9 +6095,9 @@
           "executed_at": "2031-01-30T17:31:56Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6146,9 +6146,9 @@
           "executed_at": "2031-01-30T19:31:40Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6197,9 +6197,9 @@
           "executed_at": "2031-01-31T16:08:36Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6248,9 +6248,9 @@
           "executed_at": "2031-01-31T18:23:54Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6299,9 +6299,9 @@
           "executed_at": "2031-01-31T18:37:38Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6350,9 +6350,9 @@
           "executed_at": "2031-01-31T18:54:45Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6401,9 +6401,9 @@
           "executed_at": "2031-01-31T19:23:36Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6452,9 +6452,9 @@
           "executed_at": "2031-02-03T16:16:34Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6503,9 +6503,9 @@
           "executed_at": "2031-02-03T16:47:46Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6554,9 +6554,9 @@
           "executed_at": "2031-02-03T17:00:37Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6605,9 +6605,9 @@
           "executed_at": "2031-02-03T19:09:56Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6656,9 +6656,9 @@
           "executed_at": "2031-02-04T16:12:19Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6707,9 +6707,9 @@
           "executed_at": "2031-02-04T17:20:12Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6758,9 +6758,9 @@
           "executed_at": "2031-02-04T17:31:41Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6809,9 +6809,9 @@
           "executed_at": "2031-02-04T18:50:57Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6860,9 +6860,9 @@
           "executed_at": "2031-02-05T18:25:46Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6911,9 +6911,9 @@
           "executed_at": "2031-02-05T18:12:54Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -6962,9 +6962,9 @@
           "executed_at": "2031-02-06T14:41:44Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7013,9 +7013,9 @@
           "executed_at": "2031-02-06T15:26:24Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7064,9 +7064,9 @@
           "executed_at": "2031-02-06T17:48:52Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7115,9 +7115,9 @@
           "executed_at": "2031-02-06T18:02:27Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7166,9 +7166,9 @@
           "executed_at": "2031-02-06T19:58:12Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7217,9 +7217,9 @@
           "executed_at": "2031-02-07T16:55:12Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7268,9 +7268,9 @@
           "executed_at": "2031-02-07T15:21:22Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7319,9 +7319,9 @@
           "executed_at": "2031-02-07T16:02:38Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7370,9 +7370,9 @@
           "executed_at": "2031-02-07T16:46:19Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7421,9 +7421,9 @@
           "executed_at": "2031-02-07T19:44:49Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7472,9 +7472,9 @@
           "executed_at": "2031-02-10T14:21:54Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7523,9 +7523,9 @@
           "executed_at": "2031-02-10T18:27:30Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7574,9 +7574,9 @@
           "executed_at": "2031-02-10T18:42:34Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7625,9 +7625,9 @@
           "executed_at": "2031-02-10T18:58:06Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7676,9 +7676,9 @@
           "executed_at": "2031-02-11T17:56:06Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7727,9 +7727,9 @@
           "executed_at": "2031-02-11T19:10:11Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7778,9 +7778,9 @@
           "executed_at": "2031-02-11T18:35:35Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7829,9 +7829,9 @@
           "executed_at": "2031-02-11T19:39:28Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7880,9 +7880,9 @@
           "executed_at": "2031-02-11T21:40:31Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7931,9 +7931,9 @@
           "executed_at": "2031-02-12T14:03:08Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -7982,9 +7982,9 @@
           "executed_at": "2031-02-12T15:42:42Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8033,9 +8033,9 @@
           "executed_at": "2031-02-12T17:14:56Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8084,9 +8084,9 @@
           "executed_at": "2031-02-12T18:23:04Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8135,9 +8135,9 @@
           "executed_at": "2031-02-12T17:51:29Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8186,9 +8186,9 @@
           "executed_at": "2031-02-17T18:01:38Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8237,9 +8237,9 @@
           "executed_at": "2031-02-17T18:14:21Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8288,9 +8288,9 @@
           "executed_at": "2031-02-17T21:58:21Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8339,9 +8339,9 @@
           "executed_at": "2031-02-17T19:46:11Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8390,9 +8390,9 @@
           "executed_at": "2031-02-18T16:24:02Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8441,9 +8441,9 @@
           "executed_at": "2031-02-18T16:56:43Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8492,9 +8492,9 @@
           "executed_at": "2031-02-18T17:17:11Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8543,9 +8543,9 @@
           "executed_at": "2031-02-18T19:34:16Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8594,9 +8594,9 @@
           "executed_at": "2031-02-18T19:47:20Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8645,9 +8645,9 @@
           "executed_at": "2031-02-20T19:22:57Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8696,9 +8696,9 @@
           "executed_at": "2031-02-20T20:15:31Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8747,9 +8747,9 @@
           "executed_at": "2031-02-24T17:08:11Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8798,9 +8798,9 @@
           "executed_at": "2031-02-24T15:12:22Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8849,9 +8849,9 @@
           "executed_at": "2031-02-24T15:21:42Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8900,9 +8900,9 @@
           "executed_at": "2031-02-24T16:40:12Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -8951,9 +8951,9 @@
           "executed_at": "2031-02-24T16:56:16Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9002,9 +9002,9 @@
           "executed_at": "2031-02-24T20:15:52Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9053,9 +9053,9 @@
           "executed_at": "2031-02-25T15:08:20Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9104,9 +9104,9 @@
           "executed_at": "2031-02-25T16:12:33Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9155,9 +9155,9 @@
           "executed_at": "2031-02-25T16:18:12Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9206,9 +9206,9 @@
           "executed_at": "2031-02-25T16:31:29Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9257,9 +9257,9 @@
           "executed_at": "2031-02-25T20:31:39Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9308,9 +9308,9 @@
           "executed_at": "2031-02-25T18:32:56Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9359,9 +9359,9 @@
           "executed_at": "2031-02-26T16:25:19Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9410,9 +9410,9 @@
           "executed_at": "2031-02-26T16:36:55Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9461,9 +9461,9 @@
           "executed_at": "2031-02-26T16:16:56Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9512,9 +9512,9 @@
           "executed_at": "2031-02-26T19:38:15Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9563,9 +9563,9 @@
           "executed_at": "2031-02-27T16:49:23Z"
         }
       ],
-      "setups": [
-        "Pullback"
-      ],
+      "setup": {
+        "name": "Pullback"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9614,9 +9614,9 @@
           "executed_at": "2031-02-27T17:55:13Z"
         }
       ],
-      "setups": [
-        "Gap Fill"
-      ],
+      "setup": {
+        "name": "Gap Fill"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9665,9 +9665,9 @@
           "executed_at": "2031-02-27T20:23:25Z"
         }
       ],
-      "setups": [
-        "Reversal"
-      ],
+      "setup": {
+        "name": "Reversal"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9716,9 +9716,9 @@
           "executed_at": "2031-02-28T17:23:43Z"
         }
       ],
-      "setups": [
-        "Scalp"
-      ],
+      "setup": {
+        "name": "Scalp"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9767,9 +9767,9 @@
           "executed_at": "2031-02-28T16:02:05Z"
         }
       ],
-      "setups": [
-        "Mean Reversion"
-      ],
+      "setup": {
+        "name": "Mean Reversion"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9818,9 +9818,9 @@
           "executed_at": "2031-02-28T18:36:58Z"
         }
       ],
-      "setups": [
-        "Swing"
-      ],
+      "setup": {
+        "name": "Swing"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9869,9 +9869,9 @@
           "executed_at": "2031-02-28T16:15:11Z"
         }
       ],
-      "setups": [
-        "Momentum"
-      ],
+      "setup": {
+        "name": "Momentum"
+      },
       "tags": [
         {
           "name": "Generated example",
@@ -9920,9 +9920,9 @@
           "executed_at": "2031-02-28T18:38:25Z"
         }
       ],
-      "setups": [
-        "Breakout"
-      ],
+      "setup": {
+        "name": "Breakout"
+      },
       "tags": [
         {
           "name": "Generated example",

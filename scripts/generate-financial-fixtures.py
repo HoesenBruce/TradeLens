@@ -155,7 +155,7 @@ def export_trade(t):
 
 trades = [export_trade(t) for t in book]
 for i, t in enumerate(trades):
-    t['setups'] = [seed.SETUPS[i % len(seed.SETUPS)]]
+    t['setup'] = dict(name=seed.SETUPS[i % len(seed.SETUPS)])
     t['tags'] = [dict(name='Generated example', color='#38bdf8', kind='custom')]
 # Retain open/partial-close JSON import cases using new quantities/prices.
 open_trade = export_trade(dict(symbol='SYNTH', instrument='stock', long=True, qty=19, mult=1,

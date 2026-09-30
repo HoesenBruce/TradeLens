@@ -17,6 +17,19 @@ func TestGeneratedPublicJSONSamples(t *testing.T) {
 			require.Empty(t, got.Result.Errors)
 			require.NotEmpty(t, got.Result.Executions)
 			require.Equal(t, "journal_trades", got.Format)
+			if len(got.Setups) > 0 {
+				require.NotNil(t, got.Result.Executions[0].Annotation)
+				require.Equal(t, "Momentum", got.Result.Executions[0].Annotation.SetupName)
+				require.NotEmpty(t, got.Result.Executions[0].Annotation.Tags)
+				var options int
+				for _, fill := range got.Result.Executions {
+					if fill.InstrumentType == "option" {
+						options++
+						require.Equal(t, 100.0, fill.Multiplier)
+					}
+				}
+				require.Positive(t, options)
+			}
 		})
 	}
 }
