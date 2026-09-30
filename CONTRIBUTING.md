@@ -94,7 +94,7 @@ repeatedly switching branches in one working directory.
 Recommended model:
 
 ```text
-TraderMemos-Private/          main
+TradeLens/                   main
 ../tm-116/                    feat/116-jp-broker-accounting
 ../tm-118/                    feat/118-genbiki
 ../tm-i18n/                   feat/120-i18n
