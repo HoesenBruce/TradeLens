@@ -207,17 +207,24 @@ Sign in with `tradermemosdemo` / `demopassword`. The demo account carries a seed
 
 If TraderMemos is part of your daily review, consider [sponsoring its development](https://github.com/sponsors/sinhong2011) — it keeps the project free and self-hosted for everyone.
 
-## Upstream star history
+## Star history
+
+### TradeLens
 
 <div align="center">
-<a href="https://www.star-history.com/#sinhong2011/TraderMemos&Date">
+<a href="https://www.star-history.com/#HoesenBruce/TradeLens&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=sinhong2011/TraderMemos&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=sinhong2011/TraderMemos&type=Date" />
-    <img alt="Star history chart for TraderMemos" src="https://api.star-history.com/svg?repos=sinhong2011/TraderMemos&type=Date" width="600" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HoesenBruce/TradeLens&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HoesenBruce/TradeLens&type=Date" />
+    <img alt="Star history chart for TradeLens" src="https://api.star-history.com/svg?repos=HoesenBruce/TradeLens&type=Date" width="600" />
   </picture>
 </a>
 </div>
+
+TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos).
+[View upstream TraderMemos star history](https://www.star-history.com/#sinhong2011/TraderMemos&Date).
+
+<!-- Verify chart rendering after TradeLens becomes public; private-repository history may be unavailable. -->
 
 ## License
 
