@@ -31,8 +31,8 @@ func TestSBIMixedPositionSemanticsPersistAndRegroup(t *testing.T) {
 	wantTypes := []string{"cash", "margin_long", "margin_short", "cash", "margin_long", "margin_short"}
 	wantEffects := []string{"increase", "increase", "increase", "reduce", "reduce", "reduce"}
 	for i, fill := range parsed.Executions {
-		require.Equal(t, "584A", fill.Symbol)
-		require.Equal(t, "匿名銘柄", fill.StockName)
+		require.Equal(t, "733A", fill.Symbol)
+		require.Equal(t, "合成銘柄", fill.StockName)
 		require.Equal(t, wantTypes[i], fill.PositionType)
 		require.Equal(t, wantEffects[i], fill.PositionEffect)
 		if i > 0 {
@@ -71,15 +71,15 @@ func TestSBIMixedPositionSemanticsPersistAndRegroup(t *testing.T) {
 		require.Equal(t, "date", details["source_time_precision"])
 		require.Equal(t, wantEffects[i], details["position_effect"])
 		require.Equal(t, "sbi:"+map[string]string{"cash": "cash", "margin_long": "margin-long", "margin_short": "margin-short"}[wantTypes[i]], details["lot"])
-		require.Equal(t, "匿名銘柄", details["stock_name"])
+		require.Equal(t, "合成銘柄", details["stock_name"])
 		if i == 4 || i == 5 {
 			require.Equal(t, "broker_reported", details["realized_pnl_source"])
-			require.Equal(t, []float64{5000, 2000}[i-4], details["broker_reported_realized_pnl"])
+			require.Equal(t, []float64{390, 340}[i-4], details["broker_reported_realized_pnl"])
 		} else {
 			require.NotContains(t, details, "broker_reported_realized_pnl")
 		}
 		if i >= 3 {
-			require.Equal(t, 1000.0, details["broker_reported_close_basis"])
+			require.Equal(t, 730.0, details["broker_reported_close_basis"])
 		} else {
 			require.NotContains(t, details, "broker_reported_close_basis")
 		}
