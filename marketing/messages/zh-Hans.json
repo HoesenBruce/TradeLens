@@ -13,43 +13,38 @@
     "ticker": [
       {
         "label": "净盈亏",
-        "value": "+$8,405.81",
+        "value": "+$8,398.72",
         "tone": "profit"
       },
       {
         "label": "胜率",
-        "value": "59%",
+        "value": "57%",
         "tone": "neutral"
       },
       {
         "label": "盈利因子",
-        "value": "1.83",
+        "value": "1.79",
         "tone": "neutral"
       },
       {
         "label": "期望值",
-        "value": "+$45.44 / 笔",
+        "value": "+$45.90 / 笔",
         "tone": "profit"
       },
       {
         "label": "最大回撤",
-        "value": "−$1,057.78",
+        "value": "−$1,082.17",
         "tone": "loss"
       },
       {
         "label": "平均持仓",
-        "value": "1 小时 02 分",
+        "value": "1h",
         "tone": "neutral"
       },
       {
         "label": "交易笔数",
-        "value": "185",
+        "value": "183",
         "tone": "neutral"
-      },
-      {
-        "label": "目标进度",
-        "value": "84% · 超前",
-        "tone": "profit"
       }
     ],
     "eyebrowWhy": "数据主权",
@@ -168,7 +163,8 @@
     ],
     "licenseHeading": "采用 AGPL-3.0 许可协议",
     "licenseBody": "自由自托管、修改，供个人或公司内部使用。",
-    "readDocs": "阅读文档"
+    "readDocs": "阅读文档",
+    "screenshotProvenance": "截图和统计来自独立生成的演示数据，不代表真实交易表现。"
   },
   "Footer": {
     "tagline": "自托管交易日志。",

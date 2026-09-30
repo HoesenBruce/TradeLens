@@ -13,43 +13,38 @@
     "ticker": [
       {
         "label": "Net P&L",
-        "value": "+$8,405.81",
+        "value": "+$8,398.72",
         "tone": "profit"
       },
       {
         "label": "Win rate",
-        "value": "59%",
+        "value": "57%",
         "tone": "neutral"
       },
       {
         "label": "Profit factor",
-        "value": "1.83",
+        "value": "1.79",
         "tone": "neutral"
       },
       {
         "label": "Expectancy",
-        "value": "+$45.44 / trade",
+        "value": "+$45.90 / trade",
         "tone": "profit"
       },
       {
         "label": "Max drawdown",
-        "value": "−$1,057.78",
+        "value": "−$1,082.17",
         "tone": "loss"
       },
       {
         "label": "Avg hold",
-        "value": "1h 02m",
+        "value": "1h",
         "tone": "neutral"
       },
       {
         "label": "Trades",
-        "value": "185",
+        "value": "183",
         "tone": "neutral"
-      },
-      {
-        "label": "Goal pace",
-        "value": "84% · ahead",
-        "tone": "profit"
       }
     ],
     "eyebrowWhy": "Own the data",
@@ -168,7 +163,8 @@
     ],
     "licenseHeading": "AGPL-3.0 licensed",
     "licenseBody": "Self-host it, modify it, and run it for yourself or your firm freely.",
-    "readDocs": "Read the docs"
+    "readDocs": "Read the docs",
+    "screenshotProvenance": "Screenshots and statistics use independently generated demo data, not real trading performance."
   },
   "Footer": {
     "tagline": "Self-hosted trading journal.",

@@ -33,7 +33,5 @@ Built-in Codex browser against the working-tree Web dev server (`127.0.0.1:5183`
 
 ## Screenshots
 
-![Chinese Reports at 390px](issue-109/reports-zh-390.png)
-![Japanese Settings at 390px](issue-109/settings-ja-390.png)
-![Japanese single-trade sharing](issue-109/trade-share-ja.png)
-![Generated Japanese Wrapped PNG](issue-109/wrapped-ja-export.png)
+
+Historical screenshots were removed in #211 because input provenance was unproved. The validation record above remains; no replacement mobile screenshots are claimed.

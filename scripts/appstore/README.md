@@ -1,5 +1,13 @@
 # Store screenshots & app previews
 
+**No approved store screenshots or preview videos are currently checked in.**
+Issue #211 removed the old captures/artboards/video whose financial input
+provenance was unproved. Keep these scripts; capture fresh native iOS, Android
+and iPad screens from the generated demo account before the next store release.
+Do not substitute Web screenshots for native captures or upload placeholders.
+Record the seed/end date, app version and platform with each capture.
+
+
 Everything needed to regenerate the App Store and Play Store listing art. The
 marketing layer is code, so re-shooting after a UI change is a capture pass plus
 one command — not an afternoon in a design tool.
@@ -31,7 +39,7 @@ go build -o /tmp/tm-api ./api/cmd/server
 TM_HTTP_PORT=8123 TM_DB_PATH=/tmp/demo.db TM_JWT_SECRET=demo TM_ALLOW_INSECURE_JWT=true /tmp/tm-api &
 
 curl -sX POST localhost:8123/api/v1/setup -H 'Content-Type: application/json' \
-  -d '{"email":"demo@tradermemos.app","password":"demo-screenshots-2026",
+  -d '{"email":"demo@example.com","password":"demo-screenshots-2026",
        "account":{"name":"Main","base_currency":"USD","starting_balance":25000}}'
 
 curl -sX POST localhost:8123/api/v1/imports/commit -H "Authorization: Bearer $TOKEN" \
@@ -45,7 +53,7 @@ last point. Move it in front of the first trade:
 
 ```sh
 sqlite3 /tmp/demo.db \
-  "update cash_transactions set occurred_at='2025-08-01 14:30:00 +0000 UTC' where note='Opening balance';"
+  "update cash_transactions set occurred_at='2030-11-01 14:30:00 +0000 UTC' where note='Opening balance';"
 ```
 
 ## 2. Build a Release app, not the dev client

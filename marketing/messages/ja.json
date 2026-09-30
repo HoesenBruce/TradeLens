@@ -13,43 +13,38 @@
     "ticker": [
       {
         "label": "純損益",
-        "value": "+$8,405.81",
+        "value": "+$8,398.72",
         "tone": "profit"
       },
       {
         "label": "勝率",
-        "value": "59%",
+        "value": "57%",
         "tone": "neutral"
       },
       {
         "label": "プロフィットファクター",
-        "value": "1.83",
+        "value": "1.79",
         "tone": "neutral"
       },
       {
         "label": "期待値",
-        "value": "+$45.44 / トレード",
+        "value": "+$45.90 / トレード",
         "tone": "profit"
       },
       {
         "label": "最大ドローダウン",
-        "value": "−$1,057.78",
+        "value": "−$1,082.17",
         "tone": "loss"
       },
       {
         "label": "平均保有時間",
-        "value": "1時間02分",
+        "value": "1h",
         "tone": "neutral"
       },
       {
         "label": "トレード数",
-        "value": "185",
+        "value": "183",
         "tone": "neutral"
-      },
-      {
-        "label": "目標進捗",
-        "value": "84% · 前倒し",
-        "tone": "profit"
       }
     ],
     "eyebrowWhy": "データを自分の手に",
@@ -168,7 +163,8 @@
     ],
     "licenseHeading": "AGPL-3.0 ライセンス",
     "licenseBody": "セルフホストし、改変し、個人でも会社でも自由に運用できます。",
-    "readDocs": "ドキュメントを読む"
+    "readDocs": "ドキュメントを読む",
+    "screenshotProvenance": "スクリーンショットと統計は独立して生成したデモデータです。実際の取引実績ではありません。"
   },
   "Footer": {
     "tagline": "セルフホスト型トレードジャーナル。",
