@@ -42,7 +42,7 @@ AAPL; ZIP contained valid `export.json` with one trade. Re-entry showed the real
 account and default JSON selection. No control semantics were changed; cancel/reset
 cases do not apply to the filename-only change.
 
-![Actual JSON, CSV and ZIP downloads](exports.png)
+Historical screenshot removed in #211 because input provenance was unproved; the verification record is retained.
 
 - Full Web Docker build failed with a dependency download timeout (error 23)
   for the pnpm-managed Node ARM64 musl runtime and Cloudflare workerd. Local Web

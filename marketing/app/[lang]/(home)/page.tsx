@@ -337,9 +337,9 @@ function DecoSparkline() {
 
 function DecoTradeRows() {
   const rows = [
-    { sym: 'NQ', side: 'L', val: '+$312.50', win: true },
-    { sym: 'ES', side: 'S', val: '−$85.00', win: false },
-    { sym: 'CL', side: 'L', val: '+$1,204.10', win: true },
+    { sym: 'MSFT', side: 'L', val: '+$92.95', win: true },
+    { sym: 'NVDA', side: 'L', val: '−$50.52', win: false },
+    { sym: 'META', side: 'S', val: '+$232.86', win: true },
   ];
   return (
     <div aria-hidden className="mt-5 space-y-1.5 font-mono text-xs">
@@ -385,7 +385,7 @@ function DecoHeatmap() {
 }
 
 const statBars = [
-  { label: 'WIN RATE', width: '59%', className: 'bg-fd-primary' },
+  { label: 'WIN RATE', width: '57%', className: 'bg-fd-primary' },
   { label: 'PROFIT FACTOR', width: '73%', className: 'bg-tm-profit' },
   { label: 'EXPECTANCY', width: '46%', className: 'bg-fd-primary/60' },
 ];
@@ -517,11 +517,12 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
             glare
             image={dashboardShot}
             lightImage={dashboardLightShot}
-            alt="TraderMemos dashboard — equity curve, annual P&L goal, expectancy and win-rate stats"
+            alt="TradeLens dashboard with generated demo equity curve and performance statistics"
             sizes="(max-width: 1200px) 100vw, 1104px"
             priority
           />
         </ZoomFrame>
+        <p className="pb-8 text-center text-sm text-fd-muted-foreground">{t('screenshotProvenance')}</p>
       </section>
 
       <SectionRule />

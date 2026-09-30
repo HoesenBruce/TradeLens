@@ -1,0 +1,69 @@
+{
+  "issue": 211,
+  "capture_date": "2026-09-30",
+  "source": "scripts/seed-demo.py",
+  "seed": 210,
+  "end_date": "2026-09-29",
+  "viewport": {
+    "width": 1002,
+    "height": 871
+  },
+  "files": [
+    {
+      "path": "docs/screenshots/calendar.png",
+      "sha256": "4ddf15b2bfc69d73eb9f129db5b469bddbc60776d431e11aaa7abf07e6f308b4"
+    },
+    {
+      "path": "docs/screenshots/dashboard-light.png",
+      "sha256": "64a60302ba8e25cf703831f9141553043bc07fb4df3f82e98b212433fe22edf4"
+    },
+    {
+      "path": "docs/screenshots/dashboard.png",
+      "sha256": "ce844723c9ecd25cea6620a795be3b0158680d7970238caf63f6e6f69aa16822"
+    },
+    {
+      "path": "docs/screenshots/reports.png",
+      "sha256": "afb3cb28e4f91f8c9b6a7130a70c14ea1e06957caa62f5ed2b1931e9431f43b2"
+    },
+    {
+      "path": "docs/screenshots/tradelens-login-en.png",
+      "sha256": "6394144ba4296848251751d4bdda12d7f4225d763e7a721c5601c9c2a0aac8fe"
+    },
+    {
+      "path": "docs/screenshots/tradelens-playbook-en.png",
+      "sha256": "8556ce231ff385427acced7b16de85210d14ff179f42f3aa705e22d787bacbd8"
+    },
+    {
+      "path": "docs/screenshots/tradelens-reports-en.png",
+      "sha256": "afb3cb28e4f91f8c9b6a7130a70c14ea1e06957caa62f5ed2b1931e9431f43b2"
+    },
+    {
+      "path": "docs/screenshots/tradelens-trades-en.png",
+      "sha256": "7227cc1ce591be4b7a869bb50f731d382fe1955108b9ba72f870c0ac3a4d7f44"
+    },
+    {
+      "path": "docs/screenshots/trades.png",
+      "sha256": "7227cc1ce591be4b7a869bb50f731d382fe1955108b9ba72f870c0ac3a4d7f44"
+    },
+    {
+      "path": "marketing/public/screenshots/calendar.png",
+      "sha256": "4ddf15b2bfc69d73eb9f129db5b469bddbc60776d431e11aaa7abf07e6f308b4"
+    },
+    {
+      "path": "marketing/public/screenshots/dashboard-light.png",
+      "sha256": "64a60302ba8e25cf703831f9141553043bc07fb4df3f82e98b212433fe22edf4"
+    },
+    {
+      "path": "marketing/public/screenshots/dashboard.png",
+      "sha256": "ce844723c9ecd25cea6620a795be3b0158680d7970238caf63f6e6f69aa16822"
+    },
+    {
+      "path": "marketing/public/screenshots/reports.png",
+      "sha256": "afb3cb28e4f91f8c9b6a7130a70c14ea1e06957caa62f5ed2b1931e9431f43b2"
+    },
+    {
+      "path": "marketing/public/screenshots/trades.png",
+      "sha256": "7227cc1ce591be4b7a869bb50f731d382fe1955108b9ba72f870c0ac3a4d7f44"
+    }
+  ]
+}
