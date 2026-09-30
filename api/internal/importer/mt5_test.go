@@ -38,36 +38,36 @@ func TestParseMT5Deals(t *testing.T) {
 	require.Equal(t, 5, res.Errors[0].Row)
 
 	buy := res.Executions[0]
-	require.Equal(t, "400101", buy.ExternalID)
-	require.Equal(t, "EURUSD", buy.Symbol)
+	require.Equal(t, "810001", buy.ExternalID)
+	require.Equal(t, "AUDUSD", buy.Symbol)
 	require.Equal(t, "buy", buy.Side)
 	require.Equal(t, "forex", buy.InstrumentType)
-	require.InDelta(t, 0.5, buy.Quantity, 1e-9)
-	require.InDelta(t, 1.09312, buy.Price, 1e-9)
+	require.InDelta(t, 0.37, buy.Quantity, 1e-9)
+	require.InDelta(t, 0.71234, buy.Price, 1e-9)
 	require.InDelta(t, 100000, buy.Multiplier, 1e-9)
-	// 2024.01.15 10:30 EET (winter, UTC+2) → 08:30Z.
-	require.Equal(t, time.Date(2024, 1, 15, 8, 30, 0, 0, time.UTC), buy.ExecutedAt)
-	require.InDelta(t, 1.75, buy.Commission, 1e-9)
+	// 2031.02.04 11:20 EET (winter, UTC+2) → 09:20Z.
+	require.Equal(t, time.Date(2031, 2, 4, 9, 20, 0, 0, time.UTC), buy.ExecutedAt)
+	require.InDelta(t, 1.11, buy.Commission, 1e-9)
 	require.InDelta(t, 0, buy.Fees, 1e-9)
 
 	sell := res.Executions[1]
 	require.Equal(t, "sell", sell.Side)
 	// Swap stays in Fees, commission stays its own line.
-	require.InDelta(t, 1.75, sell.Commission, 1e-9)
-	require.InDelta(t, 1.20, sell.Fees, 1e-9)
+	require.InDelta(t, 1.11, sell.Commission, 1e-9)
+	require.InDelta(t, 0.73, sell.Fees, 1e-9)
 
 	gold := res.Executions[2]
 	require.Equal(t, "XAUUSD.M", gold.Symbol)
 	require.Equal(t, "cfd", gold.InstrumentType)
 	require.InDelta(t, 100, gold.Multiplier, 1e-9) // 1 lot = 100 oz
-	require.InDelta(t, 2033.25, gold.Price, 1e-9)  // "2 033.25" NBSP thousands
+	require.InDelta(t, 1873.50, gold.Price, 1e-9)  // "1 873.50" NBSP thousands
 }
 
 func TestParseMT5SourceTZOverride(t *testing.T) {
 	st, ok := DetectMTStatement(readFixture(t, "mt5-statement.html"))
 	require.True(t, ok)
 	res := st.Parse("UTC")
-	require.Equal(t, time.Date(2024, 1, 15, 10, 30, 0, 0, time.UTC), res.Executions[0].ExecutedAt)
+	require.Equal(t, time.Date(2031, 2, 4, 11, 20, 0, 0, time.UTC), res.Executions[0].ExecutedAt)
 }
 
 func TestParseMT4Statement(t *testing.T) {
@@ -90,26 +90,26 @@ func TestParseMT4Statement(t *testing.T) {
 	require.Equal(t, 5, res.Errors[0].Row)
 
 	open, closeFill := res.Executions[0], res.Executions[1]
-	require.Equal(t, "7100002-open", open.ExternalID)
-	require.Equal(t, "7100002-close", closeFill.ExternalID)
-	require.Equal(t, "GBPUSD", open.Symbol)
+	require.Equal(t, "830002-open", open.ExternalID)
+	require.Equal(t, "830002-close", closeFill.ExternalID)
+	require.Equal(t, "AUDUSD", open.Symbol)
 	require.Equal(t, "buy", open.Side)
 	require.Equal(t, "sell", closeFill.Side)
-	require.InDelta(t, 0.20, open.Quantity, 1e-9)
-	require.InDelta(t, 1.27015, open.Price, 1e-9)
-	require.InDelta(t, 1.27544, closeFill.Price, 1e-9)
-	require.Equal(t, time.Date(2024, 1, 8, 7, 15, 0, 0, time.UTC), open.ExecutedAt)
-	require.Equal(t, time.Date(2024, 1, 9, 14, 30, 0, 0, time.UTC), closeFill.ExecutedAt)
+	require.InDelta(t, 0.13, open.Quantity, 1e-9)
+	require.InDelta(t, 0.71234, open.Price, 1e-9)
+	require.InDelta(t, 0.71534, closeFill.Price, 1e-9)
+	require.Equal(t, time.Date(2031, 2, 4, 8, 25, 0, 0, time.UTC), open.ExecutedAt)
+	require.Equal(t, time.Date(2031, 2, 5, 15, 40, 0, 0, time.UTC), closeFill.ExecutedAt)
 	// The pair shares a LotKey so overlapping positions regroup separately.
-	require.Equal(t, "mt4-7100002", open.LotKey)
+	require.Equal(t, "mt4-830002", open.LotKey)
 	require.Equal(t, open.LotKey, closeFill.LotKey)
 	// Costs ride the closing fill; swap kept distinct from commission.
 	require.InDelta(t, 0, open.Commission, 1e-9)
-	require.InDelta(t, 2.00, closeFill.Commission, 1e-9)
-	require.InDelta(t, 0.85, closeFill.Fees, 1e-9)
+	require.InDelta(t, 1.31, closeFill.Commission, 1e-9)
+	require.InDelta(t, 0.47, closeFill.Fees, 1e-9)
 
 	short, cover := res.Executions[2], res.Executions[3]
-	require.Equal(t, "USDJPY", short.Symbol)
+	require.Equal(t, "EURJPY", short.Symbol)
 	require.Equal(t, "sell", short.Side)
 	require.Equal(t, "buy", cover.Side)
 }
@@ -122,12 +122,12 @@ func TestDetectMT5XLSXStatement(t *testing.T) {
 	res := st.Parse("")
 	require.Len(t, res.Executions, 2)
 	require.Empty(t, res.Errors)
-	// The buy's Time cell is an Excel date serial for 2024.01.15 08:30 broker
-	// wall time → 06:30Z under the EET default.
-	require.Equal(t, time.Date(2024, 1, 15, 6, 30, 0, 0, time.UTC), res.Executions[0].ExecutedAt)
-	require.Equal(t, time.Date(2024, 1, 15, 12, 45, 30, 0, time.UTC), res.Executions[1].ExecutedAt)
-	require.Equal(t, "EURUSD", res.Executions[0].Symbol)
-	require.InDelta(t, 0.5, res.Executions[0].Quantity, 1e-9)
+	// The buy's Time cell is an Excel date serial for 2031.02.04 09:20 broker
+	// wall time → 07:20Z under the EET default.
+	require.Equal(t, time.Date(2031, 2, 4, 7, 20, 0, 0, time.UTC), res.Executions[0].ExecutedAt)
+	require.Equal(t, time.Date(2031, 2, 4, 13, 35, 30, 0, time.UTC), res.Executions[1].ExecutedAt)
+	require.Equal(t, "AUDUSD", res.Executions[0].Symbol)
+	require.InDelta(t, 0.37, res.Executions[0].Quantity, 1e-9)
 }
 
 func TestDetectRejectsNonStatements(t *testing.T) {
