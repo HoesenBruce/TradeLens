@@ -8,7 +8,7 @@
 
 **Tech Stack:** Go 1.26, Echo v4, `modernc.org/sqlite` (pure-Go, cgo-free), sqlc, golang-migrate, koanf (config), zerolog (logging), cobra (CLI), golang-jwt/v5 + `golang.org/x/crypto/bcrypt` (auth), stretchr/testify (tests); Vite + React + TanStack Query (thin web).
 
-**Reference template:** `/Users/niskan516/Sync/Workspace/dev/milmil` (`api/`) uses these exact libraries — consult it for idiomatic Echo handlers, sqlc layout, migration style, and the auth package. Do not copy blindly; follow the patterns.
+**Reference template:** `/path/to/milmil` (`api/`) uses these exact libraries — consult it for idiomatic Echo handlers, sqlc layout, migration style, and the auth package. Do not copy blindly; follow the patterns.
 
 **Spec:** `docs/superpowers/specs/2026-06-15-phase1-backend-foundation-design.md`
 
@@ -83,7 +83,7 @@ docker-compose.yml
 
 Run:
 ```bash
-cd /Users/niskan516/Sync/Workspace/dev/TraderMemos/api
+cd /path/to/TraderMemos/api
 go mod init github.com/tradermemos/api
 ```
 
@@ -2825,7 +2825,7 @@ The thin client only proves the API. It has: a login form, an account picker, a 
 
 Run:
 ```bash
-cd /Users/niskan516/Sync/Workspace/dev/TraderMemos/web
+cd /path/to/TraderMemos/web
 npm create vite@latest . -- --template react-ts
 npm install
 npm install @tanstack/react-query
@@ -3009,7 +3009,7 @@ dist
 
 Run:
 ```bash
-cd /Users/niskan516/Sync/Workspace/dev/TraderMemos
+cd /path/to/TraderMemos
 docker compose build
 ```
 Expected: both images build successfully.

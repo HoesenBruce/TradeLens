@@ -14,7 +14,7 @@
 
 **Newer/changing libraries — verify before use:** `@expo/ui`, Reacticx, and `@shopify/react-native-skia` APIs change across versions. Before using each, fetch current docs via the **Context7 MCP** (resolve-library-id then query-docs) rather than guessing. Expo UI and Skia require a **dev build** (not Expo Go).
 
-**Conventions:** run from `/Users/niskan516/Sync/Workspace/dev/TraderMemos/mobile`. Commit trailer on every commit: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`. If git identity errors: `git -c user.name='TraderMemos' -c user.email='sinhong2011@gmail.com' commit ...`.
+**Conventions:** run from `/path/to/TraderMemos/mobile`. Commit trailer on every commit: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`. If git identity errors: `git -c user.name='TraderMemos' -c user.email='sinhong2011@gmail.com' commit ...`.
 
 ---
 
@@ -52,7 +52,7 @@ mobile/
 
 - [ ] **Step 1: Scaffold**
 
-From `/Users/niskan516/Sync/Workspace/dev/TraderMemos`:
+From `/path/to/TraderMemos`:
 ```bash
 npx create-expo-app@latest mobile --template default
 cd mobile

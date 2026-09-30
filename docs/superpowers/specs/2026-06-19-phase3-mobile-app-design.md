@@ -17,7 +17,7 @@ Phases 1, 2A, and 2B shipped the backend and the web app. Phase 3 is the **mobil
 - **Aesthetic:** the **apogee house style** — deep near-black (`#070707` bg, `#0c0c0c` surface), subtle white-alpha borders, **lavender accent `#b9a0ff`**, white-alpha text tiers (93/60/40/20%), **Figtree** (sans) + **JetBrains Mono** (numbers) + **Noto Sans TC** (CJK). This is intentionally distinct from the web's blue "Pro Terminal" look.
 
 ### Design references
-- **apogee** (`/Users/niskan516/Sync/Workspace/dev/apogee`) — the house design system (tokens, CVA-variant components, TanStack/Zustand/Zod/Biome stack). It is **Next.js (web/DOM)**, so it is a *style + pattern* reference, not portable code.
+- **apogee** (`/path/to/apogee`) — the house design system (tokens, CVA-variant components, TanStack/Zustand/Zod/Biome stack). It is **Next.js (web/DOM)**, so it is a *style + pattern* reference, not portable code.
 - **Reacticx** (`reacticx.com`) — free, open-source RN component library on **Expo + Reanimated + Gesture Handler + Skia**; **headless, copy-into-codebase** (~50 components land in the repo, fully editable). Scaffolds via `reacticx create`.
 - **Expo UI** (`@expo/ui`) — native platform components (SwiftUI / Jetpack Compose).
 - **TraderMemos web** (`web/`) — the API client shapes, query-hook pattern, formatters, and calendar math to mirror.

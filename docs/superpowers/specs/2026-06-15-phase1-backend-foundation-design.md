@@ -19,7 +19,7 @@ The product is built in phases. This spec is **Phase 1: the foundation** — get
 - **Phase 4 — Hard integrations & social:** broker API sync (SnapTrade/OAuth), options greeks & multi-leg modeling, futures tick/contract depth, prop-firm account rules/payouts, MAE/MFE via historical prices, public share pages.
 
 ### Design references
-- **milmil** (`/Users/niskan516/Sync/Workspace/dev/milmil`) — architectural template (Go/Echo/sqlc/SQLite/golang-migrate/JWT+TOTP/koanf/zerolog/cobra; Vite+React 19/TanStack/shadcn/Tailwind v4; Docker).
+- **milmil** (`/path/to/milmil`) — architectural template (Go/Echo/sqlc/SQLite/golang-migrate/JWT+TOTP/koanf/zerolog/cobra; Vite+React 19/TanStack/shadcn/Tailwind v4; Docker).
 - **Deltalytix** (`hugodemenez/deltalytix`) — confirms keeping raw `Order`s + computed `Trade`s; first-class `Account`; `TickDetails` for futures P&L; `Tag` as an entity; `TradeAnalytics` (MAE/MFE/R:R) as an advanced/later concern.
 - **TradeNote** (`Eleven-Trading/TradeNote`) — confirms server-side import → group → daily aggregation; screenshots/notes per trade; calendar P&L as the centerpiece.
 - **TickerScribe** (`tickerscribe.com`, options-first) — confirms broker auto-detect + universal CSV mapper, P&L calendar, journal w/ mood + screenshots, public share links that **mask tickers/strikes**. Surfaced the **cash-transaction ledger** (deposits/withdrawals/fees/dividends → true balance-based equity & "capital deployed"), now folded into Phase 1. Its options depth (greeks, IV, per-leg P&L, ≤8-leg strategies, rollover chains, assignment/expiration) maps to Phase 4.

@@ -12,7 +12,7 @@
 
 **API (already built & merged on `main`):** base `/api/v1`, JWT bearer. Auth `POST /auth/{register,login,refresh}`; `accounts` CRUD; `GET/POST /executions`; `GET/POST/DELETE /cash-transactions`; imports `POST /imports`, `POST /imports/:id/commit`, `GET /imports`, `DELETE /imports/:id`; trades `GET /trades`(filters), `GET /trades/:id`(enriched: fills/journal/setup/tags/attachments/r_multiple), `PATCH /trades/:id`(notes/setup_id/initial_risk/tag_ids), `POST /trades/regroup`; `setups` CRUD; `tags` CRUD + kind; attachments `POST/GET/DELETE /trades/:id/attachments`, `GET /attachments/:id/file`; analytics `GET /analytics/{summary,equity-curve,daily,breakdown}`. Shared filter query params: `account_id,from,to,symbol`. Error envelope `{error:{code,message,details}}`.
 
-**Conventions:** run web commands from `/Users/niskan516/Sync/Workspace/dev/TraderMemos/web`. Node 22+. Commit trailer on every commit: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`. If git identity errors: `git -c user.name='TraderMemos' -c user.email='sinhong2011@gmail.com' commit ...`.
+**Conventions:** run web commands from `/path/to/TraderMemos/web`. Node 22+. Commit trailer on every commit: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`. If git identity errors: `git -c user.name='TraderMemos' -c user.email='sinhong2011@gmail.com' commit ...`.
 
 ---
 

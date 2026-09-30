@@ -14,7 +14,7 @@
 - Migrations live ONLY in `api/internal/db/migrations/` (single embedded dir). After adding `.sql` queries, run `sqlc generate` from `api/`.
 - Handlers follow the pattern in `api/internal/api/account_handlers.go`: read `auth.UserID(c)`, validate, call `s.deps.Store`, return JSON via the uniform `Fail(...)` envelope; lists never return `null`.
 - Account-ownership guard exists: `s.assertAccount(ctx, userID, accountID)` in `account_handlers.go`.
-- Run Go from `/Users/niskan516/Sync/Workspace/dev/TraderMemos/api`. If `go`/`sqlc` errors with a mise "no version set" message, prefix `mise exec --`.
+- Run Go from `/path/to/TraderMemos/api`. If `go`/`sqlc` errors with a mise "no version set" message, prefix `mise exec --`.
 - Commit trailer on every commit: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`. If git identity errors: `git -c user.name='TraderMemos' -c user.email='sinhong2011@gmail.com' commit ...`.
 
 ---
