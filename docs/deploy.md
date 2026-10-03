@@ -49,6 +49,13 @@ make up-postgres-build  # PostgreSQL
 
 **Where the Docker Hub username comes from**
 
+Source builds use the local-only tags `tradelens-api:local` and
+`tradelens-web:local` in both SQLite and PostgreSQL modes. `DOCKERHUB_USERNAME`
+does not affect these tags; `TM_IMAGE_TAG` still supplies build version metadata.
+The root `.dockerignore` includes API/Web source and `VERSION`, while excluding
+local data, dependencies, caches and unrelated repository content.
+The Hub settings below apply to image pulls and future publishing.
+
 | Context | Where to set it |
 |---------|-----------------|
 | End users / self-host | Root `.env` → `DOCKERHUB_USERNAME` (Compose loads it automatically). Defaults to `sinhong2011`. |

@@ -16,7 +16,7 @@ services:
       args:
         VERSION: ${TM_IMAGE_TAG:-dev}
         COMMIT: ${TM_COMMIT:-local}
-    image: ${DOCKERHUB_USERNAME:-sinhong2011}/tradelens-api:${TM_IMAGE_TAG:-local}
+    image: tradelens-api:local
   web:
     build:
       context: .
@@ -24,4 +24,4 @@ services:
       args:
         APP_VERSION: ${TM_IMAGE_TAG:-dev}
         APP_BUILD: ${TM_COMMIT:-local}
-    image: ${DOCKERHUB_USERNAME:-sinhong2011}/tradelens-web:${TM_IMAGE_TAG:-local}
+    image: tradelens-web:local
