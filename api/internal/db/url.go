@@ -136,6 +136,8 @@ func sqliteFromPath(path string) Database {
 	}
 }
 
+// Normalize bound times before writing so fixed-offset inputs remain readable
+// and compare consistently with existing UTC rows. No schema change is needed.
 func sqliteOpenDSN(path string) string {
-	return "file:" + path + "?_pragma=foreign_keys(1)&_pragma=journal_mode(WAL)&_pragma=busy_timeout(5000)"
+	return "file:" + path + "?_pragma=foreign_keys(1)&_pragma=journal_mode(WAL)&_pragma=busy_timeout(5000)&_timezone=UTC"
 }

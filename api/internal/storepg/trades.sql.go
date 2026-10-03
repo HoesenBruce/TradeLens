@@ -8,6 +8,7 @@ package storepg
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -72,12 +73,14 @@ func (q *Queries) DeleteTradesNotInAccount(ctx context.Context, arg DeleteTrades
 	queryParams = append(queryParams, arg.UserID)
 	queryParams = append(queryParams, arg.AccountID)
 	if len(arg.Keep) > 0 {
-		for _, v := range arg.Keep {
+		placeholders := make([]string, len(arg.Keep))
+		for i, v := range arg.Keep {
 			queryParams = append(queryParams, v)
+			placeholders[i] = fmt.Sprintf("$%d", i+3)
 		}
-		query = strings.Replace(query, "/*SLICE:keep*/?", strings.Repeat(",?", len(arg.Keep))[1:], 1)
+		query = strings.Replace(query, "$3", strings.Join(placeholders, ","), 1)
 	} else {
-		query = strings.Replace(query, "/*SLICE:keep*/?", "NULL", 1)
+		query = strings.Replace(query, "$3", "NULL", 1)
 	}
 	_, err := q.db.ExecContext(ctx, query, queryParams...)
 	return err
