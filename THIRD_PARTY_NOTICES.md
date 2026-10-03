@@ -191,33 +191,11 @@ themselves, remove their notices or apply another license to them. Any future
 font modification must also check the applicable reserved-name conditions.
 No build, font download, deployment or font-binary addition is part of this change.
 
-## ReUI agent-skill documentation — unresolved scope
+## External ReUI development resources
 
-`LICENSE_SCOPE_UNCERTAIN`; `REUI_DOCS_LICENSE_UNCERTAIN`.
-
-The four committed areas `.agents/skills/reui/`, `.claude/skills/reui/`,
-`.cursor/skills/reui/` and `.opencode/skills/reui/` each contain 11 files:
-`SKILL.md`, `tools.md`, and `rules/{adapting,cli,components,craft,icons,quality,registry,styling,workflow}.md`.
-There is also the installer-generated `.cursor/rules/reui.mdc` (45 affected
-files including that additional rule).
-
-The exact distribution channel is the
-[official installer](https://mcp.reui.io/install), which reads the
-[skill download API](https://mcp.reui.io/api/skills/download), described in the
-[official agent-skill documentation](https://reui.io/docs/agent-skills).
-The inspected current bundle (version `0fa9ecfa6e`) contains those 11 paths,
-but no license file or license metadata. The installed copy is older; the
-current bundle version is not asserted to be the installed version. The public
-`keenthemes/reui` tree reviewed does not contain the skill files. No public
-package/repository with a license demonstrably covering the installed skill
-text was identified. Free installation and a link to MIT components do not
-establish redistribution terms for this separately delivered documentation.
-
-These files remain unchanged and are **not cleared for publication by this
-notice**. The smallest proposed remediation, requiring owner approval, is to
-remove the four copied directories and generated Cursor rule and replace them
-with short, original setup instructions linking to the official installer.
-Alternatively, obtain authoritative redistribution terms explicitly covering
-the installed documentation and preserve the required notice. Do not silently
-apply the free component registry's MIT license to this package. Issue #226
-and the #225 rights gate remain open for that decision.
+`REUI_DOCS_LICENSE_UNCERTAIN = RESOLVED_BY_REMOVAL`. The copied ReUI skill
+bundle and generated Cursor rule have been removed from the current repository
+content under Issue #226. No redistribution license is assigned to that removed
+documentation. The confirmed MIT code and examples listed above remain with
+their license notices. ReUI skills/documentation are external resources only;
+see the original TradeLens note in [CONTRIBUTING.md](CONTRIBUTING.md#optional-reui-resources).

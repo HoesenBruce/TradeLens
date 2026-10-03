@@ -5,7 +5,7 @@ in the TradeLens source repository. They preserve third-party terms; they do
 not replace the TradeLens GNU AGPL-3.0 project license.
 Keep this file with distributions containing these components, including
 compiled Web assets. Vite copies this public file into the Web build.
-These notices do not clear the separately reviewed ReUI agent-skill documents.
+ReUI agent-skill documentation is not vendored in this distribution.
 
 shadcn/ui
 Source: https://github.com/shadcn-ui/ui/blob/main/LICENSE.md
