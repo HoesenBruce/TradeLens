@@ -3,6 +3,11 @@ title: Configuration
 description: Every TM_* environment variable the API reads, with defaults and what it controls.
 ---
 
+> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+>
+> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+
+
 All server configuration is environment variables with the `TM_` prefix. Set them in the shell,
 in Compose `environment:`, or in `api/.env` for local development. Restart the API after
 changing any of them.

@@ -3,6 +3,11 @@ title: 部署
 description: Docker 一体化部署、CDN + API 分离，或边缘重写 —— 选择适合你基础设施的方式。
 ---
 
+> **TradeLens 当前状态：** 官方 TradeLens 镜像尚未发布；Docker 镜像发布与 Release Please 均已禁用。请用 `make up-build`（SQLite）或 `make up-postgres-build`（PostgreSQL）从当前源码构建。
+>
+> **数据库边界：**`make up` 与 `make up-postgres` 目前默认拉取上游 TraderMemos 镜像（`sinhong2011/tradermemos-*`）。上游与 TradeLens 的迁移历史已分叉，切勿交替连接同一个已有数据库卷，包括 PostgreSQL。尝试另一产品时使用独立 Compose 项目及全新数据库／数据卷；任何迁移前保留完整备份。
+
+
 三种部署方式：
 
 1. **Docker 一体化部署** —— 默认自托管方式：一个 URL、一个数据卷
@@ -14,19 +19,14 @@ description: Docker 一体化部署、CDN + API 分离，或边缘重写 —— 
 
 ## 1. Docker 一体化部署（推荐默认方式）
 
-拉取 Docker Hub 上已发布的镜像（`sinhong2011/tradermemos-api` + `…-web`）。
-
 ```bash
-# 可选：复制并编辑 Hub 命名空间 / 标签
+git clone https://github.com/HoesenBruce/TradeLens.git
+cd TradeLens
 cp .env.example .env
-# DOCKERHUB_USERNAME=sinhong2011   # 如果你发布自己的镜像，填你的 Hub 用户名
-# TM_IMAGE_TAG=0.7.0               # 生产环境建议锁定具体版本（默认：latest）
-
-make up            # docker compose up -d（拉取 Hub 镜像，使用 SQLite）
-# 打开 http://localhost:3000
-
-make up-postgres   # 同上 + Postgres 覆盖配置
-make up-build      # 从本仓库构建 api/web，而非拉取镜像
+make up-build           # TradeLens / SQLite
+# OR, on a separate new installation:
+make up-postgres-build  # TradeLens / PostgreSQL
+# http://localhost:3000
 ```
 
 ### Docker Hub 用户名的来源
@@ -35,7 +35,7 @@ make up-build      # 从本仓库构建 api/web，而非拉取镜像
 |---------|-----------------|
 | 终端用户 / 自托管 | 根目录 `.env` → `DOCKERHUB_USERNAME`（Compose 会自动加载）。默认为 `sinhong2011`。 |
 | 镜像标签 | 根目录 `.env` → `TM_IMAGE_TAG`（`latest` 或语义化版本号，如 `0.7.0`）。 |
-| CI 发布到 Hub | GitHub 仓库密钥 `DOCKERHUB_USERNAME` + `DOCKERHUB_TOKEN`。 |
+| CI 发布到 Hub | GitHub 仓库密钥 `DOCKERHUB_USERNAME` + `DOCKERHUB_TOKEN`（目前禁用／停用，僅供未來配置）。 |
 
 你将获得：
 
@@ -65,13 +65,13 @@ make up-build      # 从本仓库构建 api/web，而非拉取镜像
 ```bash
 # 类生产环境的 compose 示例
 cp .env.example .env
-# 编辑 .env：TM_IMAGE_TAG=0.7.0、TM_JWT_SECRET=…、TM_ALLOW_INSECURE_JWT=false
+# 编辑 .env：TM_JWT_SECRET=…、TM_ALLOW_INSECURE_JWT=false
 export TM_JWT_SECRET=$(openssl rand -hex 32)
 export TM_ALLOW_INSECURE_JWT=false
-make up
+make up-build
 ```
 
-数据保存在 `tm_data` Docker 数据卷中（SQLite + 附件）。
+SQLite 数据库与附件存入 `tm_data`；PostgreSQL 数据库存入 `tm_pg_data`，附件仍在 `tm_data`。完整备份必须包含数据库（或转储）与附件；账户 ZIP 与研究 Markdown 导出不是实例备份。参见[备份与恢复](/zh-Hans/docs/self-hosting/backup-restore)。
 
 ```bash
 make logs        # 跟踪 compose 日志

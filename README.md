@@ -101,10 +101,14 @@ Mobile is preserved from upstream and **not validated for this fork**. Reactivat
 Web UI and API in one Compose stack, on your own machine:
 
 ```bash
-git clone git@github.com:HoesenBruce/TradeLens.git
+git clone https://github.com/HoesenBruce/TradeLens.git
 cd TradeLens
 make up-build    # → http://localhost:3000
 ```
+
+> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+>
+> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
 
 `make up-build` builds both images from this checkout. `make up` uses the published upstream TraderMemos images by default; set `DOCKERHUB_USERNAME` and `TM_IMAGE_TAG` to use your own published images. The local stack serves Web and `/api` on one origin, so leave the **Server** field blank. On first visit the **setup wizard** creates your owner account.
 
@@ -115,11 +119,13 @@ make up-build    # → http://localhost:3000
 
 ```bash
 cp .env.example .env   # optional: DOCKERHUB_USERNAME, TM_IMAGE_TAG
-make up                # pulls upstream TraderMemos images by default
-make up-build          # or build both images from this repo
+make up-build          # build TradeLens from this repo (SQLite)
+make up-postgres-build # build TradeLens with PostgreSQL
 ```
 
 For production, set `TM_JWT_SECRET=$(openssl rand -hex 32)` and put TLS (Caddy/Traefik) in front — see [docs/deploy.md](docs/deploy.md).
+
+Full-instance backups require **SQLite database + attachments**, or **PostgreSQL dump + attachments**, with deployment configuration/secrets retained securely. Account ZIP and research Markdown exports are not complete instance backups. See [backup and restore](marketing/content/docs/self-hosting/backup-restore.mdx).
 
 Prefer Postgres over the default SQLite? `make up-postgres-build` builds and runs the same stack with a Postgres overlay.
 
@@ -160,7 +166,7 @@ Building it yourself instead: see [mobile/README.md](mobile/README.md).
 ## Development
 
 ```bash
-git clone git@github.com:HoesenBruce/TradeLens.git
+git clone https://github.com/HoesenBruce/TradeLens.git
 cd TradeLens
 make setup && make dev   # API :8080 + web :5173
 ```

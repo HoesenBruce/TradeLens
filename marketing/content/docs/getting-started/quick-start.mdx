@@ -1,38 +1,31 @@
 ---
 title: Quick start
-description: Run the web UI and API in one container, on your own machine.
+description: Run the web UI and API in one source-built Compose stack, on your own machine.
 ---
 
-Web UI and API on your own machine, using the published Docker images:
+> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+>
+> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+
+Build the TradeLens Web UI and API from this checkout:
 
 ```bash
-git clone https://github.com/sinhong2011/TraderMemos.git
-cd TraderMemos
-make up          # → http://localhost:3000
+git clone https://github.com/HoesenBruce/TradeLens.git
+cd TradeLens
+make up-build    # http://localhost:3000
 ```
 
 That's it. Same-origin `/api` — no CORS, leave the **Server** field blank. On first visit the
 **setup wizard** creates your owner account — then head to
 [First steps](/en/docs/getting-started/first-steps).
 
-## Without cloning the repo
-
-Only Docker installed, no `git` or `make`? The compose file pulls prebuilt images, so it's
-all you need:
-
-```bash
-mkdir tradermemos && cd tradermemos
-curl -fsSLO https://raw.githubusercontent.com/sinhong2011/TraderMemos/main/docker-compose.yml
-docker compose up -d       # → http://localhost:3000
-```
-
 ## Options and production notes
 
 ```bash
-cp .env.example .env   # optional: DOCKERHUB_USERNAME, TM_IMAGE_TAG
-make up                # pull prebuilt images from Docker Hub
-make up-build          # or build both images from this repo
-make up-postgres       # SQLite → Postgres overlay
+cp .env.example .env
+make up-build           # SQLite
+# OR, on a separate new installation:
+make up-postgres-build  # PostgreSQL
 ```
 
 For production, set `TM_JWT_SECRET=$(openssl rand -hex 32)` and put TLS in front — see
@@ -43,8 +36,8 @@ For production, set `TM_JWT_SECRET=$(openssl rand -hex 32)` and put TLS in front
 ## Local development
 
 ```bash
-git clone https://github.com/sinhong2011/TraderMemos.git
-cd TraderMemos
+git clone https://github.com/HoesenBruce/TradeLens.git
+cd TradeLens
 make setup && make dev   # API :8080 + web :5173
 ```
 

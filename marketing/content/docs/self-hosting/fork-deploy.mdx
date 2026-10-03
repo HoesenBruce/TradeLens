@@ -3,6 +3,11 @@ title: Fork & deploy
 description: Get TraderMemos web on your own Vercel, Cloudflare, or Netlify account, and the API on Railway.
 ---
 
+> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+>
+> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+
+
 Goal: another GitHub user gets **TraderMemos web** on **their** Vercel / Cloudflare / Netlify,
 and/or the **API** on Railway, then connects them.
 

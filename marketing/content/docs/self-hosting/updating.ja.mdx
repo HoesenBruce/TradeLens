@@ -1,67 +1,31 @@
 ---
-title: アップデート
-description: 稼働中の TraderMemos インスタンスを更新する方法 — プルして再起動するだけ。マイグレーションは自動実行されます。
+title: 更新
+description: ソースから TradeLens を更新し、マイグレーション履歴を維持します。
 ---
 
-データベースのマイグレーションは **API 起動時に自動実行**されるため、アップグレードはプルと
-再起動だけです。とはいえ、メジャーバージョンをまたぐ場合は事前に
-[バックアップ](/ja/docs/self-hosting/backup-restore)を取得してください。
+> **TradeLens の現状：** 公式 TradeLens イメージはまだ公開されていません。Docker イメージ公開と Release Please は無効です。ソースから `make up-build`（SQLite）または `make up-postgres-build`（PostgreSQL）でビルドしてください。
+>
+> **データベースの境界：**`make up` と `make up-postgres` は現在、既定で上流 TraderMemos イメージ（`sinhong2011/tradermemos-*`）を取得します。上流と TradeLens のマイグレーション履歴は分岐しています。同じ既存データベースボリュームに両製品を交互に接続しないでください（PostgreSQL も同様）。別製品には別の Compose プロジェクトと新規データベース／ボリュームを使い、移行前に完全なバックアップを保存してください。
 
-## Docker（既定）
+更新前に毎回インスタンス全体をバックアップしてください。API 起動時にマイグレーションが自動適用されます。自動ダウングレードはありません。ロールバックには更新前のデータベースと添付ファイル、対応するソースリビジョンを使います。 [→ バックアップと復元](/ja/docs/self-hosting/backup-restore)
 
-```bash
-cd TraderMemos
-git pull                     # compose/Makefile の変更があれば取り込む
-docker compose pull          # 新しいイメージを取得
-make up                      # コンテナを再作成（docker compose up -d）
-```
+## ソース更新（現在の TradeLens の方法）
 
-Hub のイメージを取得するのではなく、ソースからビルドしている場合は次のとおりです。
+既存のディレクトリ、Compose プロジェクト名、`.env`、ボリュームを維持し、更新先と変更点を確認します。現在の構成に合わせて SQLite または PostgreSQL のコマンドを選び、同じデータベースに両構成を交互に使わないでください。
 
 ```bash
-git pull
-make up-build                # リポジトリから両方のイメージを再ビルド
+git pull --ff-only
+make up-build           # SQLite
+# OR: existing PostgreSQL installation
+make up-postgres-build
 ```
 
-稼働中のバージョンを確認します。
+`curl -fsS http://localhost:3000/healthz` で実行中のバージョンを確認します。再現可能なビルドのため Git commit を記録してください。`TM_IMAGE_TAG` はローカルイメージのラベルで、ソースリビジョンを選択しません。
 
-```bash
-curl -s http://localhost:3000/healthz
-# {"status":"ok","version":"0.7.0","go":"go1.26","commit":"…"}
-```
+## ビルド済みイメージ（上流または自分の公開元）
 
-## バージョンの固定（本番環境で推奨）
+同じ公開元とマイグレーション履歴を継続する既存イメージ構成だけが対象です。`.env` の `TM_IMAGE_TAG` に実在するタグを指定し、取得後に元の Compose ファイルで再起動します。公式 TradeLens タグやマルチアーキテクチャイメージはまだ提供されていません。TradeLens のソース構成でこの方法を使わないでください。
 
-`latest` はリリースのたびに移動します。ルートの `.env` でリリースを固定し、意図的に上げていく
-運用にしてください。
+## CDN／ホスト API
 
-```bash
-# .env
-TM_IMAGE_TAG=0.7.0
-```
-
-```bash
-# アップグレード: TM_IMAGE_TAG を編集してから
-docker compose pull && make up
-```
-
-公開されるタグは semver に従います（`0.7.0`、`0.7`、`0`、`latest`、および不変のコミット `sha`
-タグ）。イメージはマルチアーキテクチャ対応です（`amd64` + `arm64`）。リリースと主な変更点は
-[CHANGELOG](https://github.com/sinhong2011/TraderMemos/blob/main/CHANGELOG.md) と
-[GitHub Releases](https://github.com/sinhong2011/TraderMemos/releases) に記載されています。
-
-## マイグレーションの挙動
-
-- マイグレーションは API バイナリに埋め込まれ、起動時に適用されます（SQLite と Postgres の両系統）。
-- SQLite の DB の隣に置かれるファイルロック（`tradermemos.db.migrate.lock`）が、2 つのプロセスが
-  同時に起動した場合の同時マイグレーションを防ぎます。
-- **自動ダウングレードはありません**。スキーマのマイグレーション後に古いイメージへ戻すことは
-  サポートされていません。代わりに[アップグレード前のバックアップ](/ja/docs/self-hosting/backup-restore)
-  から復元してください。
-
-## フォーク / CDN 構成の場合
-
-- **Vercel / Cloudflare / Netlify の Web**: 自分のフォークの既定ブランチへプッシュすると自動的に
-  再デプロイされます。フォークを上流と同期することが、そのままアップデートになります。
-- **Railway の API**: プッシュのたびに再デプロイされます。`/data` ボリュームはデプロイをまたいで
-  永続するため、アタッチしたままにしてください。
+選択した TradeLens リビジョンから更新します。自動デプロイはプロバイダー設定に依存します。この fork の Vercel 公開ワークフローは現在無効です。API のデータベースと添付ファイルボリュームを維持してください。上流の同期だけではマイグレーション互換性の確認になりません。

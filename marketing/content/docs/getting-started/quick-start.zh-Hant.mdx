@@ -1,37 +1,31 @@
 ---
 title: 快速開始
-description: 在你自己的機器上，用一個容器同時運行 Web UI 與 API。
+description: 在你自己的機器上，用原始碼建置的 Compose 環境同時運行 Web UI 與 API。
 ---
 
-在你自己的機器上，使用已發佈的 Docker 鏡像同時運行 Web UI 與 API：
+> **TradeLens 目前狀態：** 官方 TradeLens 鏡像尚未發佈；Docker 鏡像發佈與 Release Please 均已停用。請用 `make up-build`（SQLite）或 `make up-postgres-build`（PostgreSQL）從目前原始碼建置。
+>
+> **資料庫邊界：**`make up` 與 `make up-postgres` 目前預設拉取上游 TraderMemos 鏡像（`sinhong2011/tradermemos-*`）。上游與 TradeLens 的遷移歷史已分叉，切勿交替連接同一個既有資料庫卷，包括 PostgreSQL。嘗試另一產品時使用獨立 Compose 專案及全新資料庫／資料卷；任何遷移前保留完整備份。
+
+從目前原始碼建置 TradeLens Web 與 API：
 
 ```bash
-git clone https://github.com/sinhong2011/TraderMemos.git
-cd TraderMemos
-make up          # → http://localhost:3000
+git clone https://github.com/HoesenBruce/TradeLens.git
+cd TradeLens
+make up-build    # http://localhost:3000
 ```
 
 就這麼簡單。同源 `/api`，無需 CORS 配置，登錄時的 **Server** 字段留空即可。首次訪問會出現
 **初始化嚮導**，用於創建你的 owner 賬戶 —— 接下來請看
 [入門指引](/zh-Hant/docs/getting-started/first-steps)。
 
-## 不克隆倉庫的方式
-
-只裝了 Docker，沒有 `git` 或 `make`？compose 文件會自動拉取預構建鏡像，有它就夠了：
-
-```bash
-mkdir tradermemos && cd tradermemos
-curl -fsSLO https://raw.githubusercontent.com/sinhong2011/TraderMemos/main/docker-compose.yml
-docker compose up -d       # → http://localhost:3000
-```
-
 ## 其他選項與生產環境提示
 
 ```bash
-cp .env.example .env   # 可選：DOCKERHUB_USERNAME、TM_IMAGE_TAG
-make up                # 從 Docker Hub 拉取預構建鏡像
-make up-build          # 或者從本倉庫構建兩個鏡像
-make up-postgres       # SQLite → Postgres 覆蓋配置
+cp .env.example .env
+make up-build           # SQLite
+# OR, on a separate new installation:
+make up-postgres-build  # PostgreSQL
 ```
 
 生產環境請設置 `TM_JWT_SECRET=$(openssl rand -hex 32)`，並在前面加一層 TLS —— 詳見
@@ -42,8 +36,8 @@ make up-postgres       # SQLite → Postgres 覆蓋配置
 ## 本地開發
 
 ```bash
-git clone https://github.com/sinhong2011/TraderMemos.git
-cd TraderMemos
+git clone https://github.com/HoesenBruce/TradeLens.git
+cd TradeLens
 make setup && make dev   # API :8080 + web :5173
 ```
 

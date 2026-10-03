@@ -3,6 +3,11 @@ title: Deploy
 description: Docker all-in-one, split CDN + API, or edge rewrite — pick the shape that fits your infrastructure.
 ---
 
+> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+>
+> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+
+
 Three deployment modes:
 
 1. **Docker all-in-one** — default self-host: one URL, one volume
@@ -14,19 +19,14 @@ Just want the UI on your own Vercel / Cloudflare / Netlify with one click? See
 
 ## 1. Docker all-in-one (recommended default)
 
-Pulls published images from Docker Hub (`sinhong2011/tradermemos-api` + `…-web`).
-
 ```bash
-# Optional: copy and edit Hub namespace / tag
+git clone https://github.com/HoesenBruce/TradeLens.git
+cd TradeLens
 cp .env.example .env
-# DOCKERHUB_USERNAME=sinhong2011   # your Hub user if you publish your own images
-# TM_IMAGE_TAG=0.7.0               # pin a release in production (default: latest)
-
-make up            # docker compose up -d  (pull Hub images, SQLite)
-# open http://localhost:3000
-
-make up-postgres   # same + Postgres overlay
-make up-build      # build api/web from this repo instead of pulling
+make up-build           # TradeLens / SQLite
+# OR, on a separate new installation:
+make up-postgres-build  # TradeLens / PostgreSQL
+# http://localhost:3000
 ```
 
 ### Where the Docker Hub username comes from
@@ -35,7 +35,7 @@ make up-build      # build api/web from this repo instead of pulling
 |---------|-----------------|
 | End users / self-host | Root `.env` → `DOCKERHUB_USERNAME` (Compose loads it automatically). Defaults to `sinhong2011`. |
 | Image tag | Root `.env` → `TM_IMAGE_TAG` (`latest` or a semver like `0.7.0`). |
-| CI publish to Hub | GitHub repo secrets `DOCKERHUB_USERNAME` + `DOCKERHUB_TOKEN`. |
+| CI publish to Hub | GitHub repo secrets `DOCKERHUB_USERNAME` + `DOCKERHUB_TOKEN` (disabled; future configuration). |
 
 What you get:
 
@@ -66,13 +66,13 @@ registration stays closed afterward.
 ```bash
 # Production-ish compose example
 cp .env.example .env
-# edit .env: TM_IMAGE_TAG=0.7.0, TM_JWT_SECRET=…, TM_ALLOW_INSECURE_JWT=false
+# edit .env: TM_JWT_SECRET=…, TM_ALLOW_INSECURE_JWT=false
 export TM_JWT_SECRET=$(openssl rand -hex 32)
 export TM_ALLOW_INSECURE_JWT=false
-make up
+make up-build
 ```
 
-Data lives in the `tm_data` Docker volume (SQLite + attachments).
+SQLite database and attachments use `tm_data`. PostgreSQL uses `tm_pg_data` for the database and `tm_data` for attachments. A full backup needs both; account ZIP and research Markdown exports are not instance backups. See [Backup & restore](/en/docs/self-hosting/backup-restore).
 
 ```bash
 make logs        # follow compose logs

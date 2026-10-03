@@ -66,15 +66,15 @@ VPS、NAS、または Railway（ボリューム付き）でホストしてくだ
 
 ### 私のデータは正確にはどこにありますか？
 
-Docker の場合は `tm_data` ボリュームの中です — `/data/tradermemos.db` と `/data/attachments`。
+Docker の SQLite 構成では `tm_data` ボリュームの中です — `/data/tradermemos.db` と `/data/attachments`。
 このボリュームがあなたのジャーナルそのものです。
 [バックアップと復元](/ja/docs/self-hosting/backup-restore)を参照してください。
 
 ### SQLite と Postgres のどちらを選ぶべきですか？
 
-個人インスタンスには SQLite（既定）が適しています — 余計な構成要素がなく、バックアップ対象は
-1 ファイルだけです。Postgres（`make up-postgres`）は複数ユーザーや既存インフラがある構成に
-向いています。両者間の移行は、ZIP でエクスポートして再インポートするだけです。
+個人インスタンスには SQLite（既定）が適しています — 余計な構成要素がなく、バックアップには
+データベースと添付ファイルが必要です。Postgres（`make up-postgres-build`）は複数ユーザーや既存インフラがある構成に
+向いています。アカウントデータは ZIP のエクスポート／インポートで移行できますが、インスタンス全体は移行できません。
 
 ## 機能について
 

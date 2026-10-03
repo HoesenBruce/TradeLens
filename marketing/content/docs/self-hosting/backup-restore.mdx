@@ -1,75 +1,63 @@
 ---
 title: Backup & restore
-description: Everything lives in one volume — the SQLite database and the attachments directory. Back them up together.
+description: "Complete instance backup: database plus attachments, for SQLite or PostgreSQL."
 ---
 
-Your journal is two things on disk, and they must be backed up **together**:
+> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+>
+> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
 
-| What | Default location (Docker) |
-|------|---------------------------|
-| Database | `/data/tradermemos.db` (SQLite) in the `tm_data` volume |
-| Attachments & note media | `/data/attachments` in the same volume |
+A full-instance backup requires **SQLite database + attachments**, or **PostgreSQL database dump + attachments**. Attachment and note-media metadata is in the database; restoring only one side leaves broken references. Securely preserve `.env`, secrets, the source commit and Compose configuration separately so you can recreate the same installation. Customized database or `TM_ATTACH_DIR` paths must also be included.
 
-Attachment metadata lives in the database — restoring one without the other leaves broken
-screenshots or orphaned files.
+## Account exports are not instance backups
 
-## Option 1 — App-level export (works everywhere)
+Account ZIP exports contain `export.json` and exported account attachments. JSON/CSV exports cover selected trading data. Research Markdown exports are research records. None is a complete instance backup: they do not recreate all users, authentication, server settings and all instance data. Use exports for account portability or research; use the database and attachment procedures below for instance recovery.
 
-**Import → Export** in the app (or `GET /api/v1/exports`) produces:
+## SQLite: stop writes and archive the data volume
 
-| Format | Contents |
-|--------|----------|
-| **ZIP** | `export.json` + all screenshots under `attachments/` — the complete portable backup |
-| **JSON** | Trades, fills, journal notes, cash transactions, playbook setups (no images) |
-| **CSV** | Closed-trade journal spreadsheet, for analysis elsewhere |
-
-Restore by importing the ZIP/JSON on any TraderMemos instance — the setup wizard's optional
-import step accepts it on a fresh install, and **Import** handles it any time after. Fills are
-deduplicated server-side, so re-importing is safe.
-
-This is the right choice for moving between hosts, switching databases
-(SQLite ↔ Postgres), or an offsite copy you can actually open.
-
-## Option 2 — Volume snapshot (Docker, exact copy)
-
-SQLite runs in WAL mode, so don't copy the live database file — stop the API first (a few
-seconds of downtime), or you may lose the most recent writes:
+The default `tm_data` volume contains `/data/tradermemos.db` and `/data/attachments`. SQLite uses WAL: stop the API and archive the whole `/data` directory, including any WAL files. Keep the API stopped until backup finishes. These commands assume default paths and the existing Compose project.
 
 ```bash
-cd TraderMemos
 docker compose stop api
 docker run --rm --volumes-from "$(docker compose ps -aq api)" -v "$PWD":/backup alpine \
-  tar czf "/backup/tradermemos-$(date +%F).tar.gz" -C /data .
+  tar czf /backup/tradelens-data.tar.gz -C /data .
 docker compose start api
 ```
 
-Restore onto a fresh host:
+## SQLite restore
+
+Use a separate fresh host/project, the same TradeLens source revision and configuration, and an empty destination volume. Build and create containers without starting the API, extract the archive, then start. Do not overwrite a running instance or an upstream database. Retain the original backup and verify login, account data and attachments after restore.
 
 ```bash
-cd TraderMemos
-make up                       # creates containers + empty volume
-docker compose stop api
+docker compose -f docker-compose.yml -f docker-compose.build.yml build
+docker compose -f docker-compose.yml -f docker-compose.build.yml create
 docker run --rm --volumes-from "$(docker compose ps -aq api)" -v "$PWD":/backup alpine \
-  sh -c "rm -rf /data/* && tar xzf /backup/tradermemos-2026-08-01.tar.gz -C /data"
-docker compose start api
+  tar xzf /backup/tradelens-data.tar.gz -C /data
+make up-build
 ```
 
-Automate it with cron and ship the tarball offsite (rclone, restic, etc.). The
-`tradermemos.db.migrate.lock` file in the volume is transient and safe to exclude.
+## PostgreSQL: dump + attachments
 
-## Postgres
-
-Dump the database and copy the attachments volume:
+The PostgreSQL overlay stores the database in `tm_pg_data` and attachments in `tm_data`. Stop the API (and any other writers) throughout the dump and attachment archive so both represent the same state. Use all three Compose files for every command; the base Compose file alone does not define `postgres`.
 
 ```bash
-docker compose exec postgres pg_dump -U tm tradermemos > tradermemos-$(date +%F).sql
-# attachments still live in the tm_data volume → back up /data/attachments as in Option 2
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml stop api
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml exec -T postgres pg_dump -U tm tradermemos > tradelens-db.sql
+docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml ps -aq api)" -v "$PWD":/backup alpine \
+  tar czf /backup/tradelens-attachments.tar.gz -C /data attachments
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml start api
 ```
 
-Restore with `psql -U tm tradermemos < backup.sql` into an empty database, then start the API
-(migrations reconcile automatically).
+## PostgreSQL restore
 
-## Before every upgrade
+Use a separate fresh project with the same source revision/configuration and empty volumes. Start only PostgreSQL, restore the dump into its empty database and restore the attachment archive before starting the API. Do not restore a SQLite archive as a PostgreSQL database. Verify accounts and attachments; keep backups offsite and test recovery before relying on them.
 
-Take a snapshot before bumping versions — schema migrations run automatically on boot and
-there is no automatic downgrade. See [Updating](/en/docs/self-hosting/updating).
+```bash
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml build
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml create
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml up -d --wait postgres
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml exec -T postgres psql -v ON_ERROR_STOP=1 -U tm -d tradermemos < tradelens-db.sql
+docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml ps -aq api)" -v "$PWD":/backup alpine \
+  tar xzf /backup/tradelens-attachments.tar.gz -C /data
+make up-postgres-build
+```
