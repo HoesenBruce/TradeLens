@@ -15,3 +15,7 @@ claim original authorship of TraderMemos or its third-party dependencies.
 
 Repository names, CLI commands, API identifiers, database names, and the
 preserved mobile client may still use TraderMemos for compatibility.
+
+Third-party copied-source and generated-output notices are recorded in
+THIRD_PARTY_NOTICES.md. Those component-specific terms do not replace
+the TradeLens project license.

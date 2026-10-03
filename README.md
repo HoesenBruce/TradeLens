@@ -231,3 +231,6 @@ TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos).
 TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos), originally developed by [sinhong2011](https://github.com/sinhong2011) and contributors.
 
 TradeLens is distributed under the GNU AGPL-3.0. See [LICENSE](LICENSE) for the full license terms and [NOTICE](NOTICE) for attribution.
+
+See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for copied-component licenses,
+font distribution notices and the remaining ReUI skill-documentation rights question.
