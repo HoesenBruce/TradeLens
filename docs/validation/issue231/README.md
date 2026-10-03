@@ -22,9 +22,9 @@ cover the repair. Broker accounting semantics remain unchanged.
 From the repository root:
 
 ```sh
-docker build -f api/Dockerfile -t tradelens-231-api:qa .
-docker build -f web/Dockerfile -t tradelens-231-web:qa .
-python3 scripts/deployment-smoke.py tradelens-231-api:qa
+docker compose -f docker-compose.yml -f docker-compose.build.yml build
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml build
+python3 scripts/deployment-smoke.py tradelens-api:local
 ```
 
 The standard-library script creates uniquely named disposable containers and
@@ -85,3 +85,36 @@ and attachments were also captured with the API stopped for consistency.
 No Web UI changed. Browser interaction and mobile validation were outside this
 backend deployment change. No official image publication, registry selection,
 NAS/production deployment or remote CI success is implied.
+
+## PR #239 rebase acceptance
+
+Rebased without conflicts from base 5415d82cb629f43037f9290253e9900f0332ad7d
+onto origin/main 68b6857af25d864e1537c133a0314616e3850cc0, which includes
+issue #232 via merged PR #238. Rebased runtime commit: 3f3a88a.
+The root .dockerignore and Compose build override are identical to this base.
+Local image identities remain tradelens-api:local and tradelens-web:local.
+No GHCR/publication changes were added.
+
+Re-executed on the final source:
+
+- Full uncached Go tests with disposable PostgreSQL 16 and go vet.
+- PostgreSQL UTC timestamp test now also asserts TIMESTAMPTZ preserves the instant.
+- Both SQLite and PostgreSQL Compose build commands above (API and Web).
+- Deployment smoke against the final tradelens-api:local image: all four PASS lines.
+- Reused #232's scratch COPY context-export method: excluded synthetic data/tmp,
+  node_modules/dist/cache, .env, DB, log and key probes; retained only api, web,
+  VERSION at the root. Verified 165 required resource files byte-for-byte,
+  including both migration chains, calendar CSVs, OpenAPI, Web public assets,
+  sources and package/lock metadata. Removed all probes afterwards.
+- git diff --check.
+
+No test cases were skipped. Five packages without test files are represented as
+package-level skip events by go test -json. PostgreSQL migration, UTC storage,
+multi-ID keep-list and import conformance cases actually passed.
+A repeat run against the already seeded test database hit the existing news
+fixture's fixed-email unique constraint; the final full run used a fresh empty
+database and passed. Use a fresh disposable database for complete reruns.
+
+The smoke cleanup now removes its anonymous PostgreSQL volume as well as its
+containers. Existing unrelated containers/volumes were preserved. Historical
+timestamp repair and the other limitations above still apply.

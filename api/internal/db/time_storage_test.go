@@ -46,14 +46,15 @@ func TestTimeStoredAsUTC_Postgres(t *testing.T) {
 	defer conn.Close()
 
 	// Not TEMP: the pool may hand each statement a different connection.
-	_, err = conn.Exec(`CREATE TABLE ts_utc_test (at TIMESTAMP NOT NULL)`)
+	_, err = conn.Exec(`CREATE TABLE ts_utc_test (at TIMESTAMP NOT NULL, zoned TIMESTAMPTZ NOT NULL)`)
 	require.NoError(t, err)
 	defer conn.Exec(`DROP TABLE ts_utc_test`)
 
 	at := time.Date(2026, 9, 15, 9, 59, 0, 0, time.FixedZone("", -4*3600))
-	var got time.Time
-	require.NoError(t, conn.QueryRow(`INSERT INTO ts_utc_test (at) VALUES ($1) RETURNING at`, at).Scan(&got))
+	var got, zoned time.Time
+	require.NoError(t, conn.QueryRow(`INSERT INTO ts_utc_test (at, zoned) VALUES ($1, $2) RETURNING at, zoned`, at, at).Scan(&got, &zoned))
 	require.True(t, got.Equal(at), got)
+	require.True(t, zoned.Equal(at), "TIMESTAMPTZ must preserve the same instant", zoned)
 
 	var raw string
 	require.NoError(t, conn.QueryRow(`SELECT at::text FROM ts_utc_test`).Scan(&raw))

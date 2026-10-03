@@ -18,7 +18,7 @@ import urllib.request
 import uuid
 from pathlib import Path
 
-IMAGE = sys.argv[1] if len(sys.argv) > 1 else "tradelens-231-api:qa"
+IMAGE = sys.argv[1] if len(sys.argv) > 1 else "tradelens-api:local"
 PREFIX = "tm-smoke-" + uuid.uuid4().hex[:8]
 containers = []
 calls = []
@@ -212,4 +212,4 @@ except Exception:
 finally:
     provider.shutdown()
     for name in reversed(containers):
-        subprocess.run(["docker", "rm", "-f", name], stdout=subprocess.DEVNULL, check=False)
+        subprocess.run(["docker", "rm", "-fv", name], stdout=subprocess.DEVNULL, check=False)
