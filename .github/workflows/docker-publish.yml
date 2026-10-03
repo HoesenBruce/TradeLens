@@ -1,26 +1,4 @@
-# Publish api + web images to Docker Hub.
-#
-# Repo secrets (Docker Hub → Account Settings → Security → Access Tokens):
-#   DOCKERHUB_USERNAME   — Hub namespace (same value end users put in root .env)
-#   DOCKERHUB_TOKEN
-#
-# Images:
-#   docker.io/<username>/tradelens-api
-#   docker.io/<username>/tradelens-web
-# Legacy tradermemos-* tags are published from the same build for existing installs.
-#
-# Self-host compose pulls those images via DOCKERHUB_USERNAME in root .env
-# (see .env.example). Default namespace in compose is sinhong2011.
-#
-# Triggers:
-#   - GitHub Release published (semver tags from the release tag)
-#   - workflow_call from release-please (version input)
-#   - workflow_dispatch (latest + sha on main; sha only on other branches;
-#     pass version to also push semver tags, e.g. to backfill a failed release)
-#
-# Semver tags are raw values from the resolved version — type=semver only
-# works on tag refs, and this workflow always runs on a branch ref.
-
+# GHCR publication remains disabled until controlled first-release validation.
 name: Publish TradeLens Docker images
 
 on:
@@ -35,11 +13,36 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Semver version without v prefix; empty = latest + sha only
+        description: Semver version without v prefix; empty = full-SHA tag only
         required: false
         type: string
 
+permissions:
+  contents: read
+
+# Serialize releases so moving stable tags cannot race.
+concurrency:
+  group: tradelens-ghcr-publication
+  cancel-in-progress: false
+
 jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      commit: ${{ steps.meta.outputs.commit }}
+      tags: ${{ steps.meta.outputs.tags }}
+      build_time: ${{ steps.meta.outputs.build_time }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: meta
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/docker-release-metadata.py
+
   # Same checks as PR CI — reused so a release can never publish images that
   # skipped tests.
   test-api:
@@ -52,14 +55,13 @@ jobs:
 
   publish:
     name: Push ${{ matrix.image }}
-    needs: [test-api, test-web]
+    needs: [metadata, test-api, test-web]
     runs-on: ubuntu-latest
-    # Manual gate: pushing to Docker Hub is the only irreversible step here, so
-    # it waits for approval instead of firing as a side effect of a merge. The
-    # test jobs above still run ungated, so the approval prompt arrives with CI
-    # already green. Reviewers are configured on the environment itself
-    # (Settings → Environments → docker-hub).
-    environment: docker-hub
+    permissions:
+      contents: read
+      packages: write
+    # Required reviewers must be configured before enabling this workflow.
+    environment: ghcr
     # QEMU arm64 builds can wedge; a hung job otherwise blocks the
     # release-please concurrency group indefinitely.
     timeout-minutes: 90
@@ -74,30 +76,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.metadata.outputs.commit }}
 
-      - name: Resolve build metadata
-        id: buildmeta
+      # Recheck after environment approval: a newer stable release may now exist.
+      - name: Revalidate release before publication
         env:
           INPUT_VERSION: ${{ inputs.version }}
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-        run: |
-          SEMVER=true
-          if [ -n "$INPUT_VERSION" ]; then
-            VERSION="$INPUT_VERSION"
-          elif [ "${{ github.event_name }}" = "release" ]; then
-            VERSION="${RELEASE_TAG#v}"
-          else
-            VERSION=$(cat VERSION 2>/dev/null || echo dev)
-            SEMVER=false
-          fi
-          {
-            echo "version=$VERSION"
-            echo "major_minor=${VERSION%.*}"
-            echo "major=${VERSION%%.*}"
-            echo "semver=$SEMVER"
-            echo "commit=${GITHUB_SHA::7}"
-            echo "build_time=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          } >> "$GITHUB_OUTPUT"
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/docker-release-metadata.py
 
       - uses: docker/setup-qemu-action@v4
 
@@ -105,26 +92,25 @@ jobs:
 
       - uses: docker/login-action@v4
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/tradelens-${{ matrix.image }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/tradermemos-${{ matrix.image }}
+          images: ghcr.io/hoesenbruce/tradelens-${{ matrix.image }}
+          flavor: latest=false
           labels: |
             org.opencontainers.image.title=TradeLens ${{ matrix.image }}
-          tags: |
-            type=raw,value=${{ steps.buildmeta.outputs.version }},enable=${{ steps.buildmeta.outputs.semver == 'true' }}
-            type=raw,value=${{ steps.buildmeta.outputs.major_minor }},enable=${{ steps.buildmeta.outputs.semver == 'true' }}
-            type=raw,value=${{ steps.buildmeta.outputs.major }},enable=${{ steps.buildmeta.outputs.semver == 'true' }}
-            type=raw,value=latest,enable=${{ steps.buildmeta.outputs.semver == 'true' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') }}
-            type=sha,prefix=,format=short
+            org.opencontainers.image.source=https://github.com/HoesenBruce/TradeLens
+            org.opencontainers.image.revision=${{ needs.metadata.outputs.commit }}
+            org.opencontainers.image.version=${{ needs.metadata.outputs.version }}
+          tags: ${{ needs.metadata.outputs.tags }}
 
       - uses: docker/build-push-action@v7
+        id: build
         with:
           context: .
           file: ${{ matrix.dockerfile }}
@@ -135,8 +121,22 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            VERSION=${{ steps.buildmeta.outputs.version }}
-            COMMIT=${{ steps.buildmeta.outputs.commit }}
-            BUILD_TIME=${{ steps.buildmeta.outputs.build_time }}
-            APP_VERSION=${{ steps.buildmeta.outputs.version }}
-            APP_BUILD=${{ steps.buildmeta.outputs.commit }}
+            VERSION=${{ needs.metadata.outputs.version }}
+            COMMIT=${{ needs.metadata.outputs.commit }}
+            BUILD_TIME=${{ needs.metadata.outputs.build_time }}
+            APP_VERSION=${{ needs.metadata.outputs.version }}
+            APP_BUILD=${{ needs.metadata.outputs.commit }}
+
+      - name: Preserve image digest
+        env:
+          IMAGE: ghcr.io/hoesenbruce/tradelens-${{ matrix.image }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+          SOURCE_SHA: ${{ needs.metadata.outputs.commit }}
+          VERSION: ${{ needs.metadata.outputs.version }}
+        run: |
+          printf '%s@%s source=%s version=%s\n' "$IMAGE" "$DIGEST" "$SOURCE_SHA" "$VERSION" | tee image-digest.txt >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v6
+        with:
+          name: ghcr-digest-${{ matrix.image }}-${{ needs.metadata.outputs.commit }}
+          path: image-digest.txt
+          retention-days: 90

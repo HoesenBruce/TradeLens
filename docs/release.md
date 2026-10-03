@@ -21,7 +21,7 @@ the migration histories have diverged. See [deployment](deploy.md).
 The remaining sections describe the configured workflow **if deliberately enabled
 and configured later**, not current release availability. Credentials and required
 reviewers must be verified before enabling; this document does not establish that
-the `docker-hub` environment currently has an approval gate.
+the `ghcr` environment currently has an approval gate.
 
 The retained [release-please](https://github.com/googleapis/release-please) configuration
 handles semver, changelogs, and GitHub Releases when enabled.
@@ -60,7 +60,7 @@ lines release-please reads to build the changelog.
    actually wanted — it is a standing draft, not a queue to drain.
 3. Review the changelog and version bumps (`VERSION`, `web/package.json`, `CHANGELOG.md`).
 4. Merge the Release PR → GitHub Release `vX.Y.Z` is created.
-5. Approve the `docker-hub` deployment → Docker images are published.
+5. Approve the `ghcr` deployment → Docker images are published.
 6. The Android APK builds on EAS — no approval needed — and lands on the GitHub
    Release page as `TradeLens-<version>.apk` (+ `.sha256`).
 7. Build iOS separately: dispatch `ios-release` on the private Forgejo remote
@@ -113,39 +113,52 @@ from the repo.
 
 ## Docker images
 
-The disabled workflow is configured to publish images as `tradelens-api` / `tradelens-web`, with matching legacy
-`tradermemos-*` aliases for existing deployments. Stable Android download names
-are `TradeLens.apk` and the compatibility alias `TraderMemos.apk` (both with checksums).
+The disabled workflow targets only `ghcr.io/hoesenbruce/tradelens-api` and
+`ghcr.io/hoesenbruce/tradelens-web`. No legacy container aliases are published.
+Compose defaults remain upstream until a separate deployment migration.
 
-After enablement, `.github/workflows/release-please.yml` would chain `docker-publish.yml` with the new version (same tags as a manual GitHub Release).
+| Build | Tags |
+|---|---|
+| Latest stable published release | `x.y.z`, `x.y`, `x`, `latest`, `sha-<full SHA>` |
+| Published prerelease | exact version, `sha-<full SHA>` |
+| Manual build without version | `sha-<full SHA>` only |
 
-Manual `workflow_dispatch` is unavailable while **Publish TradeLens Docker images**
-is disabled. Do not enable it as an update or documentation-validation step.
+Versioned dispatch/backfill must run on the release tag's commit. The resolver
+requires a matching non-draft GitHub Release, matching prerelease flag and tag SHA.
+Older stable backfills fail closed rather than roll moving tags backwards. Stable
+moving tags require the version to match GitHub's latest stable Release. Metadata
+Action's automatic `latest` tag is disabled. Builds share one resolved full SHA,
+version and build timestamp; tests check that same workflow source commit.
+Publication is serialized. Each image digest is saved in the run summary and a
+90-day artifact; copy both to the durable first-release validation record.
 
-### Approval gate
+### Approval, visibility and first publication
 
-```mermaid
-flowchart TD
-    A["Release published<br/>· workflow_call from release-please<br/>· workflow_dispatch"] --> B["Test API"]
-    A --> C["Test web"]
-    B --> D{"docker-hub environment<br/>required reviewer"}
-    C --> D
-    D -->|"approve"| E["Docker Hub<br/>X.Y.Z · X.Y · X · latest · sha"]
-    D -->|"no approval in 30 days"| F["run expires<br/>backfill via workflow_dispatch"]
+Keep Docker publishing and Release Please **disabled** until the first-release
+validation issue is ready and publication gates are cleared. Configure the `ghcr`
+environment with a required reviewer before enablement. `GITHUB_TOKEN` uses
+`contents: read` plus `packages: write` only in the publishing job; Docker Hub
+credentials are no longer used. Reusable-workflow callers must grant these permissions.
+
+The intended visibility of **both** packages is **public**, including when the
+source repository is private. First-created packages can be private: after the
+controlled first publication, the owner must explicitly set each package's
+Settings → Change visibility → Public and verify its repository link and Actions
+write access. This workflow does not claim to configure visibility automatically.
+See [GitHub's registry documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
+
+Use an empty Docker config (no login) to pull both recorded digests:
+
+```sh
+qa_config=$(mktemp -d)
+DOCKER_CONFIG="$qa_config" docker pull ghcr.io/hoesenbruce/tradelens-api@sha256:<recorded-api-digest>
+DOCKER_CONFIG="$qa_config" docker pull ghcr.io/hoesenbruce/tradelens-web@sha256:<recorded-web-digest>
 ```
 
-The `publish` job runs in the **`docker-hub`** environment, which must have a required
-reviewer configured and verified before enablement. Every path into it — release, `workflow_call`, `workflow_dispatch` —
-waits for approval before anything reaches Docker Hub, so publishing is a
-deliberate act rather than a side effect of merging the Release PR. The test
-jobs run first and ungated, so the approval prompt arrives with CI already green.
-
-Approve from the workflow run page, or the **Deployments** section of the
-release. Unapproved runs expire after 30 days; re-run **Publish TradeLens Docker images**
-via `workflow_dispatch` with the version to backfill.
-
-Reviewers live in **Settings → Environments → docker-hub**, not in the workflow
-file. `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN` remain repo secrets.
+Record run URL, version, full source SHA, tags, both digests, package visibility
+read-back, anonymous pull output and amd64/arm64 manifest inspection in the
+first-release validation issue. Visibility and anonymous pulls remain **pending**
+until that controlled publication; implementation alone does not close those gates.
 
 ## Mobile releases
 
@@ -249,7 +262,7 @@ Nothing below is in the repo — it lives in the Expo and GitHub accounts.
    managed there.
 4. GitHub repo secret `EXPO_TOKEN` (expo.dev → Account → Access tokens).
 5. Settings → Environments → **`app-store`**: add yourself as a required
-   reviewer. Same shape as the `docker-hub` gate — nothing reaches TestFlight
+   reviewer. Same shape as the `ghcr` gate — nothing reaches TestFlight
    without an explicit approval.
 
 ### Manual builds

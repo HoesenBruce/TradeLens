@@ -54,13 +54,14 @@ Source builds use the local-only tags `tradelens-api:local` and
 does not affect these tags; `TM_IMAGE_TAG` still supplies build version metadata.
 The root `.dockerignore` includes API/Web source and `VERSION`, while excluding
 local data, dependencies, caches and unrelated repository content.
-The Hub settings below apply to image pulls and future publishing.
+The Hub settings below apply only to existing upstream image pulls. Future TradeLens
+publication uses GHCR; see [release policy](release.md).
 
 | Context | Where to set it |
 |---------|-----------------|
 | End users / self-host | Root `.env` → `DOCKERHUB_USERNAME` (Compose loads it automatically). Defaults to `sinhong2011`. |
 | Image tag | Root `.env` → `TM_IMAGE_TAG` (`latest` or a semver like `0.7.0`). |
-| Future CI publish to Hub (currently disabled) | GitHub repo secrets `DOCKERHUB_USERNAME` + `DOCKERHUB_TOKEN` (see `.github/workflows/docker-publish.yml`). |
+| Future TradeLens publication (disabled) | GHCR with `GITHUB_TOKEN`; no Docker Hub credentials. |
 
 What you get:
 

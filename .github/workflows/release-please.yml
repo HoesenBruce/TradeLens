@@ -37,6 +37,9 @@ jobs:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
 
   publish-docker:
+    permissions:
+      contents: read
+      packages: write
     name: Publish Docker images
     needs: release-please
     if: ${{ needs.release-please.outputs.releases_created == 'true' }}

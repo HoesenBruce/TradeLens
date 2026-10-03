@@ -197,7 +197,7 @@ make down
 make logs
 ```
 
-Hub namespace / tag: copy [`.env.example`](.env.example) → `.env` and set `DOCKERHUB_USERNAME` / `TM_IMAGE_TAG`. CI publish uses GitHub secrets `DOCKERHUB_USERNAME` + `DOCKERHUB_TOKEN`.
+Hub namespace / tag: copy [`.env.example`](.env.example) → `.env` and set `DOCKERHUB_USERNAME` / `TM_IMAGE_TAG`. Future TradeLens CI publication uses GHCR with `GITHUB_TOKEN` and remains disabled; see [release policy](docs/release.md).
 
 ### Vite+ commands (run from `web/`)
 
