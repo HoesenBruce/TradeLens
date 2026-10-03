@@ -3,6 +3,11 @@ title: デプロイ
 description: Docker 一体型、CDN + API 分離、エッジリライト — 自分のインフラに合った構成を選べます。
 ---
 
+> **TradeLens の現状：** 公式 TradeLens イメージはまだ公開されていません。Docker イメージ公開と Release Please は無効です。ソースから `make up-build`（SQLite）または `make up-postgres-build`（PostgreSQL）でビルドしてください。
+>
+> **データベースの境界：**`make up` と `make up-postgres` は現在、既定で上流 TraderMemos イメージ（`sinhong2011/tradermemos-*`）を取得します。上流と TradeLens のマイグレーション履歴は分岐しています。同じ既存データベースボリュームに両製品を交互に接続しないでください（PostgreSQL も同様）。別製品には別の Compose プロジェクトと新規データベース／ボリュームを使い、移行前に完全なバックアップを保存してください。
+
+
 デプロイ方式は 3 つあります。
 
 1. **Docker 一体型** — 既定のセルフホスト構成。URL 1 つ、ボリューム 1 つ
@@ -14,19 +19,14 @@ UI だけを自分の Vercel / Cloudflare / Netlify にワンクリックで置�
 
 ## 1. Docker 一体型（推奨の既定構成）
 
-Docker Hub の公開イメージ（`sinhong2011/tradermemos-api` と `…-web`）を取得します。
-
 ```bash
-# 任意: Hub のネームスペース / タグをコピーして編集
+git clone https://github.com/HoesenBruce/TradeLens.git
+cd TradeLens
 cp .env.example .env
-# DOCKERHUB_USERNAME=sinhong2011   # 自分でイメージを公開する場合は自分の Hub ユーザー名
-# TM_IMAGE_TAG=0.7.0               # 本番ではリリースを固定する（既定: latest）
-
-make up            # docker compose up -d （Hub イメージを取得、SQLite）
-# http://localhost:3000 を開く
-
-make up-postgres   # 同上 + Postgres オーバーレイ
-make up-build      # 取得せず、このリポジトリから api/web をビルド
+make up-build           # TradeLens / SQLite
+# OR, on a separate new installation:
+make up-postgres-build  # TradeLens / PostgreSQL
+# http://localhost:3000
 ```
 
 ### Docker Hub ユーザー名はどこから読まれるか
@@ -35,7 +35,7 @@ make up-build      # 取得せず、このリポジトリから api/web をビ�
 |---------|-----------------|
 | エンドユーザー / セルフホスト | ルートの `.env` → `DOCKERHUB_USERNAME`（Compose が自動で読み込みます）。既定値は `sinhong2011`。 |
 | イメージタグ | ルートの `.env` → `TM_IMAGE_TAG`（`latest` または `0.7.0` のような semver）。 |
-| CI から Hub への公開 | GitHub リポジトリシークレット `DOCKERHUB_USERNAME` と `DOCKERHUB_TOKEN`。 |
+| CI から Hub への公開 | GitHub リポジトリシークレット `DOCKERHUB_USERNAME` と `DOCKERHUB_TOKEN`（現在無効、将来の設定）。 |
 
 構成されるもの:
 
@@ -66,13 +66,13 @@ nginx が `api` コンテナへプロキシします — CORS は不要です。
 ```bash
 # 本番相当の compose 例
 cp .env.example .env
-# .env を編集: TM_IMAGE_TAG=0.7.0, TM_JWT_SECRET=…, TM_ALLOW_INSECURE_JWT=false
+# .env を編集: TM_JWT_SECRET=…, TM_ALLOW_INSECURE_JWT=false
 export TM_JWT_SECRET=$(openssl rand -hex 32)
 export TM_ALLOW_INSECURE_JWT=false
-make up
+make up-build
 ```
 
-データは `tm_data` という Docker ボリュームに保存されます（SQLite + 添付ファイル）。
+SQLite のデータベースと添付ファイルは `tm_data` にあります。PostgreSQL のデータベースは `tm_pg_data`、添付ファイルは `tm_data` です。完全なバックアップには両方が必要です。アカウント ZIP と研究 Markdown はインスタンスのバックアップではありません。[バックアップと復元](/ja/docs/self-hosting/backup-restore)を参照してください。
 
 ```bash
 make logs        # compose のログを追跡

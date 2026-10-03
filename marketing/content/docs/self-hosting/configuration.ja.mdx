@@ -3,6 +3,11 @@ title: 設定
 description: API が読み取るすべての TM_* 環境変数と、その既定値・制御内容の一覧です。
 ---
 
+> **TradeLens の現状：** 公式 TradeLens イメージはまだ公開されていません。Docker イメージ公開と Release Please は無効です。ソースから `make up-build`（SQLite）または `make up-postgres-build`（PostgreSQL）でビルドしてください。
+>
+> **データベースの境界：**`make up` と `make up-postgres` は現在、既定で上流 TraderMemos イメージ（`sinhong2011/tradermemos-*`）を取得します。上流と TradeLens のマイグレーション履歴は分岐しています。同じ既存データベースボリュームに両製品を交互に接続しないでください（PostgreSQL も同様）。別製品には別の Compose プロジェクトと新規データベース／ボリュームを使い、移行前に完全なバックアップを保存してください。
+
+
 サーバーの設定はすべて `TM_` プレフィックスの環境変数で行います。シェル、Compose の
 `environment:`、またはローカル開発では `api/.env` に設定してください。変更後は API を再起動する
 必要があります。

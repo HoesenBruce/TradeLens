@@ -1,65 +1,31 @@
 ---
 title: Updating
-description: Upgrade a running TraderMemos instance — pull, restart, done. Migrations run automatically.
+description: Update TradeLens from source and preserve its database migration chain.
 ---
 
-Database migrations run **automatically on API startup** — upgrading is pull + restart.
-Still, [back up](/en/docs/self-hosting/backup-restore) before major version jumps.
+> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+>
+> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
 
-## Docker (default)
+Back up the complete instance before every upgrade. Migrations run automatically on API startup; there is no automatic downgrade. Restore the pre-upgrade database and attachments with the matching source revision for rollback. [→ Backup & restore](/en/docs/self-hosting/backup-restore)
 
-```bash
-cd TraderMemos
-git pull                     # picks up compose/Makefile changes, if any
-docker compose pull          # fetch newer images
-make up                      # recreate containers (docker compose up -d)
-```
+## Source updates (current TradeLens path)
 
-If you built from source instead of pulling Hub images:
+Keep the existing checkout, Compose project name, `.env` and volumes. Review the target revision and changes before updating. Use the SQLite command or the PostgreSQL command matching your existing installation; do not run both against the same database.
 
 ```bash
-git pull
-make up-build                # rebuild both images from the repo
+git pull --ff-only
+make up-build           # SQLite
+# OR: existing PostgreSQL installation
+make up-postgres-build
 ```
 
-Verify the running version:
+Verify the running version with `curl -fsS http://localhost:3000/healthz`. For repeatable source builds, record the Git commit; `TM_IMAGE_TAG` labels local builds but does not select the source revision.
 
-```bash
-curl -s http://localhost:3000/healthz
-# {"status":"ok","version":"0.7.0","go":"go1.26","commit":"…"}
-```
+## Prebuilt images (upstream or your own publisher)
 
-## Pinning versions (recommended for production)
+Only for an existing installation using that same publisher and migration chain: pin its available tag in `.env` with `TM_IMAGE_TAG`, pull, then restart using its original Compose files. No official TradeLens tags or multi-architecture images are promised. Do not run this path on a TradeLens source installation.
 
-`latest` moves with every release. Pin a release in the root `.env` and bump deliberately:
+## CDN / hosted API
 
-```bash
-# .env
-TM_IMAGE_TAG=0.7.0
-```
-
-```bash
-# upgrade: edit TM_IMAGE_TAG, then
-docker compose pull && make up
-```
-
-Published tags follow semver: `0.7.0`, `0.7`, `0`, `latest`, plus immutable commit-`sha` tags.
-Images are multi-arch (`amd64` + `arm64`). Releases and notable changes are listed in the
-[CHANGELOG](https://github.com/sinhong2011/TraderMemos/blob/main/CHANGELOG.md) and
-[GitHub Releases](https://github.com/sinhong2011/TraderMemos/releases).
-
-## How migrations behave
-
-- Migrations are embedded in the API binary and applied on boot (SQLite and Postgres chains).
-- A file lock next to the SQLite DB (`tradermemos.db.migrate.lock`) prevents concurrent
-  migration if two processes start at once.
-- There is **no automatic downgrade**. Rolling back to an older image after a schema migration
-  is not supported — restore the [pre-upgrade backup](/en/docs/self-hosting/backup-restore)
-  instead.
-
-## Fork / CDN deployments
-
-- **Vercel / Cloudflare / Netlify web**: pushes to your fork's default branch redeploy
-  automatically; syncing your fork with upstream *is* the update.
-- **Railway API**: redeploys on push. The `/data` volume persists across deploys — keep it
-  attached.
+Update from your chosen TradeLens revision. Deployment automation depends on your provider configuration; the fork’s Vercel release workflow is currently disabled. Preserve the API database and attachments volume. Syncing upstream code is not a substitute for reviewing migration compatibility.

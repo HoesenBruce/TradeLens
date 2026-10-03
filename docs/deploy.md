@@ -9,7 +9,9 @@
 #   2. Static SPA + API elsewhere (CORS + Server URL)
 #   3. Static SPA with edge rewrite to API (same-origin from the browser)
 
-> TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos). Build this fork with `make up-build`; the default `make up` still pulls upstream images. Repository and internal identifiers remain unchanged.
+> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+>
+> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
 
 ## 0. Deploy web to *your* Vercel / Cloudflare (fork-friendly)
 
@@ -33,19 +35,16 @@ TM_CORS_ORIGINS=https://*.vercel.app,https://*.pages.dev,https://*.workers.dev,h
 
 ## 1. Docker all-in-one (recommended default)
 
-Pulls published images from Docker Hub (`sinhong2011/tradermemos-api` + `…-web`).
+Build this fork from source:
 
 ```bash
-# Optional: copy and edit Hub namespace / tag
+git clone https://github.com/HoesenBruce/TradeLens.git
+cd TradeLens
 cp .env.example .env
-# DOCKERHUB_USERNAME=sinhong2011   # your Hub user if you publish your own images
-# TM_IMAGE_TAG=0.7.0               # pin a release in production (default: latest)
-
-make up            # docker compose up -d  (pull Hub images, SQLite)
+make up-build           # SQLite
+# OR, on a separate new installation:
+make up-postgres-build  # PostgreSQL
 # open http://localhost:3000
-
-make up-postgres   # same + Postgres overlay
-make up-build      # build api/web from this repo instead of pulling
 ```
 
 **Where the Docker Hub username comes from**
@@ -54,7 +53,7 @@ make up-build      # build api/web from this repo instead of pulling
 |---------|-----------------|
 | End users / self-host | Root `.env` → `DOCKERHUB_USERNAME` (Compose loads it automatically). Defaults to `sinhong2011`. |
 | Image tag | Root `.env` → `TM_IMAGE_TAG` (`latest` or a semver like `0.7.0`). |
-| CI publish to Hub | GitHub repo secrets `DOCKERHUB_USERNAME` + `DOCKERHUB_TOKEN` (see `.github/workflows/docker-publish.yml`). |
+| Future CI publish to Hub (currently disabled) | GitHub repo secrets `DOCKERHUB_USERNAME` + `DOCKERHUB_TOKEN` (see `.github/workflows/docker-publish.yml`). |
 
 What you get:
 
@@ -82,13 +81,13 @@ Important env (compose / host):
 ```bash
 # Production-ish compose example
 cp .env.example .env
-# edit .env: TM_IMAGE_TAG=0.7.0, TM_JWT_SECRET=…, TM_ALLOW_INSECURE_JWT=false
+# edit .env: TM_JWT_SECRET=…, TM_ALLOW_INSECURE_JWT=false
 export TM_JWT_SECRET=$(openssl rand -hex 32)
 export TM_ALLOW_INSECURE_JWT=false
-make up
+make up-build
 ```
 
-Data lives in the `tm_data` Docker volume (SQLite + attachments).
+SQLite data and attachments live in `tm_data`. With the PostgreSQL overlay, the database lives in `tm_pg_data`, while attachments remain in `tm_data`. A complete instance backup requires **SQLite database + attachments**, or **PostgreSQL dump + attachments**, plus securely retained deployment configuration/secrets. Account ZIP exports and research Markdown exports are not complete instance backups. See the [backup/restore guide](../marketing/content/docs/self-hosting/backup-restore.mdx).
 
 ```bash
 make logs        # follow compose logs

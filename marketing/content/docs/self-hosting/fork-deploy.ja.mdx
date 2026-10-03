@@ -3,6 +3,11 @@ title: フォークしてデプロイ
 description: TraderMemos の Web を自分の Vercel / Cloudflare / Netlify アカウントに、API を Railway に配置します。
 ---
 
+> **TradeLens の現状：** 公式 TradeLens イメージはまだ公開されていません。Docker イメージ公開と Release Please は無効です。ソースから `make up-build`（SQLite）または `make up-postgres-build`（PostgreSQL）でビルドしてください。
+>
+> **データベースの境界：**`make up` と `make up-postgres` は現在、既定で上流 TraderMemos イメージ（`sinhong2011/tradermemos-*`）を取得します。上流と TradeLens のマイグレーション履歴は分岐しています。同じ既存データベースボリュームに両製品を交互に接続しないでください（PostgreSQL も同様）。別製品には別の Compose プロジェクトと新規データベース／ボリュームを使い、移行前に完全なバックアップを保存してください。
+
+
 目的は、別の GitHub ユーザーが **TraderMemos の Web** を**自分の** Vercel / Cloudflare /
 Netlify に、必要に応じて **API** を Railway に配置し、両者を接続することです。
 

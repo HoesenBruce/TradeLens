@@ -1,38 +1,31 @@
 ---
 title: クイックスタート
-description: Web UI と API を 1 つのコンテナで、自分のマシン上で動かします。
+description: Web UI と API を ソースからビルドした Compose 構成で、自分のマシン上で動かします。
 ---
 
-公開済みの Docker イメージを使って、Web UI と API を自分のマシンで動かします。
+> **TradeLens の現状：** 公式 TradeLens イメージはまだ公開されていません。Docker イメージ公開と Release Please は無効です。ソースから `make up-build`（SQLite）または `make up-postgres-build`（PostgreSQL）でビルドしてください。
+>
+> **データベースの境界：**`make up` と `make up-postgres` は現在、既定で上流 TraderMemos イメージ（`sinhong2011/tradermemos-*`）を取得します。上流と TradeLens のマイグレーション履歴は分岐しています。同じ既存データベースボリュームに両製品を交互に接続しないでください（PostgreSQL も同様）。別製品には別の Compose プロジェクトと新規データベース／ボリュームを使い、移行前に完全なバックアップを保存してください。
+
+このソースから TradeLens Web UI と API をビルドします：
 
 ```bash
-git clone https://github.com/sinhong2011/TraderMemos.git
-cd TraderMemos
-make up          # → http://localhost:3000
+git clone https://github.com/HoesenBruce/TradeLens.git
+cd TradeLens
+make up-build    # http://localhost:3000
 ```
 
 これだけです。`/api` は同一オリジンなので CORS は不要で、**サーバー**欄は空のままにしてください。
 初回アクセス時には**セットアップウィザード**がオーナーアカウントを作成します。その後は
 [最初の一歩](/ja/docs/getting-started/first-steps)へ進んでください。
 
-## リポジトリをクローンせずに使う
-
-Docker だけがあり、`git` も `make` もない場合。compose ファイルはビルド済みイメージを取得する
-ため、これだけで十分です。
-
-```bash
-mkdir tradermemos && cd tradermemos
-curl -fsSLO https://raw.githubusercontent.com/sinhong2011/TraderMemos/main/docker-compose.yml
-docker compose up -d       # → http://localhost:3000
-```
-
 ## オプションと本番運用時の注意
 
 ```bash
-cp .env.example .env   # 任意: DOCKERHUB_USERNAME, TM_IMAGE_TAG
-make up                # Docker Hub からビルド済みイメージを取得
-make up-build          # または、このリポジトリから両方のイメージをビルド
-make up-postgres       # SQLite → Postgres オーバーレイ
+cp .env.example .env
+make up-build           # SQLite
+# OR, on a separate new installation:
+make up-postgres-build  # PostgreSQL
 ```
 
 本番環境では `TM_JWT_SECRET=$(openssl rand -hex 32)` を設定し、前段に TLS を置いてください。
@@ -43,8 +36,8 @@ make up-postgres       # SQLite → Postgres オーバーレイ
 ## ローカル開発
 
 ```bash
-git clone https://github.com/sinhong2011/TraderMemos.git
-cd TraderMemos
+git clone https://github.com/HoesenBruce/TradeLens.git
+cd TradeLens
 make setup && make dev   # API :8080 + web :5173
 ```
 

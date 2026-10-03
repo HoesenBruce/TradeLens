@@ -1,74 +1,63 @@
 ---
 title: 備份與恢復
-description: 一切都在一個數據卷裏 —— SQLite 數據庫與附件目錄，必須一起備份。
+description: "SQLite 或 PostgreSQL 的完整實例備份：資料庫加附件。"
 ---
 
-你的交易日誌在磁盤上就是兩樣東西，且必須**一起備份**：
+> **TradeLens 目前狀態：** 官方 TradeLens 鏡像尚未發佈；Docker 鏡像發佈與 Release Please 均已停用。請用 `make up-build`（SQLite）或 `make up-postgres-build`（PostgreSQL）從目前原始碼建置。
+>
+> **資料庫邊界：**`make up` 與 `make up-postgres` 目前預設拉取上游 TraderMemos 鏡像（`sinhong2011/tradermemos-*`）。上游與 TradeLens 的遷移歷史已分叉，切勿交替連接同一個既有資料庫卷，包括 PostgreSQL。嘗試另一產品時使用獨立 Compose 專案及全新資料庫／資料卷；任何遷移前保留完整備份。
 
-| 內容 | 默認位置（Docker） |
-|------|---------------------------|
-| 數據庫 | `tm_data` 數據卷中的 `/data/tradermemos.db`（SQLite） |
-| 附件與筆記媒體 | 同一數據卷中的 `/data/attachments` |
+完整實例備份需要 **SQLite 資料庫 + 附件**，或 **PostgreSQL 資料庫傾印 + 附件**。附件與筆記媒體的中繼資料在資料庫中，只恢復一側會破壞引用。另行安全保存 `.env`、金鑰、原始碼 commit 及 Compose 設定，以便重建相同實例。自訂資料庫或 `TM_ATTACH_DIR` 路徑也必須納入備份。
 
-附件的元數據保存在數據庫中 —— 只恢復其中之一會造成截圖失效或文件成爲孤兒。
+## 帳戶匯出不是實例備份
 
-## 方式 1 —— 應用層導出（任何部署都適用）
+帳戶 ZIP 包含 `export.json` 與該帳戶匯出的附件；JSON／CSV 涵蓋選定交易資料，研究 Markdown 匯出是研究記錄。這些都不是完整實例備份：不能重建全部使用者、認證資訊、伺服器設定及全部實例資料。帳戶遷移或研究可使用匯出；實例恢復應採用下方資料庫與附件備份步驟。
 
-應用內的**導入 → 導出**（或 `GET /api/v1/exports`）可生成：
+## SQLite：停止寫入並封存資料卷
 
-| 格式 | 內容 |
-|--------|----------|
-| **ZIP** | `export.json` + `attachments/` 下的全部截圖 —— 完整的可攜帶備份 |
-| **JSON** | 交易、成交、日誌筆記、現金流水、策略手冊（不含圖片） |
-| **CSV** | 已平倉交易的日誌表格，便於在其他工具中分析 |
-
-在任意 TraderMemos 實例導入 ZIP / JSON 即可恢復 —— 全新安裝時初始化嚮導的可選導入步驟
-可以直接接收，之後任何時候也可通過**導入**頁面完成。成交記錄在服務端自動去重，重複導入
-是安全的。
-
-在主機之間遷移、切換數據庫（SQLite ↔ Postgres），或想要一份真正能打開的異地副本時，
-用這種方式最合適。
-
-## 方式 2 —— 數據卷快照（Docker，完整拷貝）
-
-SQLite 運行在 WAL 模式下，不要直接複製正在使用的數據庫文件 —— 請先停止 API
-（僅幾秒停機），否則可能丟失最近的寫入：
+預設 `tm_data` 包含 `/data/tradermemos.db` 與 `/data/attachments`。SQLite 使用 WAL：先停止 API，再封存整個 `/data`（包括可能存在的 WAL 檔案），完成前不要啟動 API。命令以預設路徑及既有 Compose 專案為前提。
 
 ```bash
-cd TraderMemos
 docker compose stop api
 docker run --rm --volumes-from "$(docker compose ps -aq api)" -v "$PWD":/backup alpine \
-  tar czf "/backup/tradermemos-$(date +%F).tar.gz" -C /data .
+  tar czf /backup/tradelens-data.tar.gz -C /data .
 docker compose start api
 ```
 
-在全新主機上恢復：
+## SQLite 恢復
+
+使用獨立全新主機／專案、相同 TradeLens 原始碼版本和設定、空目標資料卷。先建置並建立容器而不啟動 API，解壓後再啟動。不要覆蓋執行中的實例或上游資料庫。保留原始備份，恢復後核對登入、帳戶資料與附件。
 
 ```bash
-cd TraderMemos
-make up                       # 創建容器與空數據卷
-docker compose stop api
+docker compose -f docker-compose.yml -f docker-compose.build.yml build
+docker compose -f docker-compose.yml -f docker-compose.build.yml create
 docker run --rm --volumes-from "$(docker compose ps -aq api)" -v "$PWD":/backup alpine \
-  sh -c "rm -rf /data/* && tar xzf /backup/tradermemos-2026-08-01.tar.gz -C /data"
-docker compose start api
+  tar xzf /backup/tradelens-data.tar.gz -C /data
+make up-build
 ```
 
-可用 cron 自動化，並將壓縮包同步到異地（rclone、restic 等）。數據卷中的
-`tradermemos.db.migrate.lock` 是臨時文件，可放心排除。
+## PostgreSQL：傾印 + 附件
 
-## Postgres
-
-導出數據庫並複製附件數據卷：
+PostgreSQL 覆蓋設定將資料庫存入 `tm_pg_data`、附件存入 `tm_data`。整個傾印及附件封存期間停止 API（及其他寫入者），確保二者狀態一致。每條命令使用全部三個 Compose 檔案；基礎檔案本身沒有定義 `postgres` 服務。
 
 ```bash
-docker compose exec postgres pg_dump -U tm tradermemos > tradermemos-$(date +%F).sql
-# 附件仍在 tm_data 數據卷中 → 按方式 2 備份 /data/attachments
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml stop api
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml exec -T postgres pg_dump -U tm tradermemos > tradelens-db.sql
+docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml ps -aq api)" -v "$PWD":/backup alpine \
+  tar czf /backup/tradelens-attachments.tar.gz -C /data attachments
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml start api
 ```
 
-恢復時用 `psql -U tm tradermemos < backup.sql` 導入空數據庫，再啓動 API
-（遷移會自動對齊）。
+## PostgreSQL 恢復
 
-## 每次升級前
+使用獨立全新專案、相同原始碼版本／設定及空資料卷。僅啟動 PostgreSQL，將傾印匯入空資料庫、恢復附件封存後再啟動 API。不要把 SQLite 封存當 PostgreSQL 資料庫恢復。核對帳戶及附件，異地保留備份，並在依賴備份前演練恢復。
 
-升級版本前先做一次快照 —— schema 遷移在啓動時自動執行，且不支持自動降級。參見
-[更新升級](/zh-Hant/docs/self-hosting/updating)。
+```bash
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml build
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml create
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml up -d --wait postgres
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml exec -T postgres psql -v ON_ERROR_STOP=1 -U tm -d tradermemos < tradelens-db.sql
+docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml ps -aq api)" -v "$PWD":/backup alpine \
+  tar xzf /backup/tradelens-attachments.tar.gz -C /data
+make up-postgres-build
+```

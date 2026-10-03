@@ -1,6 +1,30 @@
 # Release workflow
 
-TradeLens uses [release-please](https://github.com/googleapis/release-please) for semver, changelogs, and GitHub Releases.
+## Current publication state
+
+Official TradeLens Docker images are **not yet published**. As verified on 2026-10-03,
+GitHub reports `docker-publish.yml` and `release-please.yml` as `disabled_manually`.
+`mobile-eas.yml`, `tm-sync-release.yml`, and `web-deploy-vercel.yml` are also disabled.
+Workflow files remain as implementation references; their trigger declarations do
+not mean publishing is active. Merging an ordinary PR does not currently launch
+the release chain below. Docker and Release Please must remain disabled while
+#230 is incomplete; completing this documentation issue does not itself authorize
+enabling publication or clear the other publication gates.
+
+Run TradeLens from source with `make up-build` or `make up-postgres-build`.
+`make up` / `make up-postgres` still default to upstream TraderMemos images.
+Never alternate upstream and TradeLens on the same existing database volume:
+the migration histories have diverged. See [deployment](deploy.md).
+
+## Configured release design (inactive)
+
+The remaining sections describe the configured workflow **if deliberately enabled
+and configured later**, not current release availability. Credentials and required
+reviewers must be verified before enabling; this document does not establish that
+the `docker-hub` environment currently has an approval gate.
+
+The retained [release-please](https://github.com/googleapis/release-please) configuration
+handles semver, changelogs, and GitHub Releases when enabled.
 
 ```mermaid
 flowchart TD
@@ -26,7 +50,7 @@ merge commit it depends on is blocked. Squashing a release branch would also
 collapse its commits into one subject, destroying the individual `feat:` / `fix:`
 lines release-please reads to build the changelog.
 
-## Day to day
+## Intended day to day (after enablement)
 
 1. Merge PRs to `main` with **Conventional Commit** titles. Merges are
    squash-only and the PR title becomes the commit subject; the
@@ -89,13 +113,14 @@ from the repo.
 
 ## Docker images
 
-Images publish as `tradelens-api` / `tradelens-web`, with matching legacy
+The disabled workflow is configured to publish images as `tradelens-api` / `tradelens-web`, with matching legacy
 `tradermemos-*` aliases for existing deployments. Stable Android download names
 are `TradeLens.apk` and the compatibility alias `TraderMemos.apk` (both with checksums).
 
-On release, `.github/workflows/release-please.yml` chains `docker-publish.yml` with the new version (same tags as a manual GitHub Release).
+After enablement, `.github/workflows/release-please.yml` would chain `docker-publish.yml` with the new version (same tags as a manual GitHub Release).
 
-You can still run **Publish TradeLens Docker images** manually via `workflow_dispatch`.
+Manual `workflow_dispatch` is unavailable while **Publish TradeLens Docker images**
+is disabled. Do not enable it as an update or documentation-validation step.
 
 ### Approval gate
 
@@ -109,8 +134,8 @@ flowchart TD
     D -->|"no approval in 30 days"| F["run expires<br/>backfill via workflow_dispatch"]
 ```
 
-The `publish` job runs in the **`docker-hub`** environment, which has a required
-reviewer. Every path into it — release, `workflow_call`, `workflow_dispatch` —
+The `publish` job runs in the **`docker-hub`** environment, which must have a required
+reviewer configured and verified before enablement. Every path into it — release, `workflow_call`, `workflow_dispatch` —
 waits for approval before anything reaches Docker Hub, so publishing is a
 deliberate act rather than a side effect of merging the Release PR. The test
 jobs run first and ungated, so the approval prompt arrives with CI already green.
@@ -124,7 +149,7 @@ file. `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN` remain repo secrets.
 
 ## Mobile releases
 
-Android builds on [EAS Build](https://docs.expo.dev/build/introduction/) and has
+The disabled Android workflow is configured to build on [EAS Build](https://docs.expo.dev/build/introduction/) and has
 no store presence: the release-signed APK is attached to the GitHub Release page,
 which is the Android distribution channel (same shape as the tm-sync binaries).
 

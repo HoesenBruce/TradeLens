@@ -126,10 +126,14 @@ In GitHub → **Settings → General → Template repository**, enable the templ
 
 ## Branding compatibility
 
+> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+>
+> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+
 Source builds use `tradelens-api` / `tradelens-web` image names and TradeLens OCI
-labels. The publish workflow tags both `tradelens-*` and legacy `tradermemos-*`
-repositories with the same build; existing Compose/NAS installations keep pulling
-the legacy names. Default upstream pulls remain unchanged; use `make up-build`
+labels. The disabled publish workflow is configured to tag both `tradelens-*` and legacy `tradermemos-*`
+repositories with the same build if publication is enabled later. No official
+TradeLens images are currently available. Default upstream pulls remain unchanged; use `make up-build`
 for this fork. No volume or Compose project rename is required.
 
 Keep existing Compose service keys, `tm_data`, database filenames, `TM_*` settings,
@@ -142,7 +146,9 @@ New Android release artifacts use `TradeLens-<version>.apk` and `TradeLens.apk`;
 Historical releases are unchanged. Mobile app identity/display configuration is
 retained pending mobile reactivation; iOS/Android builds are not validated here.
 PWA metadata already uses TradeLens. Account export download names now use
-`tradelens-export`; the backup format and import compatibility are unchanged.
+`tradelens-export`; the account export format and import compatibility are unchanged. Account ZIP
+exports and research Markdown exports are not full-instance backups; retain the
+database (or PostgreSQL dump) together with attachments.
 
 ## Repository rename (issue #104)
 

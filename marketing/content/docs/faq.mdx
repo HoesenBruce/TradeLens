@@ -63,14 +63,14 @@ See [Fork & deploy](/en/docs/self-hosting/fork-deploy).
 
 ### Where exactly is my data?
 
-Docker: the `tm_data` volume — `/data/tradermemos.db` plus `/data/attachments`. That volume
+Docker with SQLite: the `tm_data` volume — `/data/tradermemos.db` plus `/data/attachments`. That volume
 is your journal; see [Backup & restore](/en/docs/self-hosting/backup-restore).
 
 ### SQLite or Postgres?
 
-SQLite (default) is right for a personal instance — zero extra moving parts, one file to back
-up. Postgres (`make up-postgres`) suits multi-user or existing-infra setups. Moving between
-them: export ZIP, re-import.
+SQLite (default) is right for a personal instance — zero extra moving parts, database plus attachments to back
+up. Postgres (`make up-postgres-build`) suits multi-user or existing-infra setups. Account data can move between
+them via ZIP export/import; this does not migrate the complete instance.
 
 ## Features
 

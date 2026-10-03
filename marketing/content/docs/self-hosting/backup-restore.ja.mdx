@@ -1,77 +1,63 @@
 ---
 title: バックアップと復元
-description: データはすべて 1 つのボリュームにあります — SQLite データベースと添付ファイルディレクトリを、必ずまとめてバックアップしてください。
+description: "SQLite または PostgreSQL のインスタンス全体のバックアップ：データベースと添付ファイル。"
 ---
 
-あなたのジャーナルはディスク上の 2 つの要素で構成されており、**まとめて**バックアップする必要が
-あります。
+> **TradeLens の現状：** 公式 TradeLens イメージはまだ公開されていません。Docker イメージ公開と Release Please は無効です。ソースから `make up-build`（SQLite）または `make up-postgres-build`（PostgreSQL）でビルドしてください。
+>
+> **データベースの境界：**`make up` と `make up-postgres` は現在、既定で上流 TraderMemos イメージ（`sinhong2011/tradermemos-*`）を取得します。上流と TradeLens のマイグレーション履歴は分岐しています。同じ既存データベースボリュームに両製品を交互に接続しないでください（PostgreSQL も同様）。別製品には別の Compose プロジェクトと新規データベース／ボリュームを使い、移行前に完全なバックアップを保存してください。
 
-| 対象 | 既定の場所（Docker） |
-|------|---------------------------|
-| データベース | `tm_data` ボリューム内の `/data/tradermemos.db`（SQLite） |
-| 添付ファイル・ノートメディア | 同じボリューム内の `/data/attachments` |
+完全なバックアップには **SQLite データベース + 添付ファイル**、または **PostgreSQL ダンプ + 添付ファイル**が必要です。添付ファイルとノートメディアのメタデータはデータベースにあるため、片方だけの復元では参照が壊れます。`.env`、秘密情報、ソース commit、Compose 設定も別途安全に保存してください。独自のデータベースや `TM_ATTACH_DIR` のパスも対象です。
 
-添付ファイルのメタデータはデータベースに保存されています。どちらか一方だけを復元すると、
-スクリーンショットが壊れたり、孤立したファイルが残ったりします。
+## アカウントのエクスポートはインスタンスのバックアップではありません
 
-## 方法 1 — アプリからのエクスポート（どの環境でも使えます）
+アカウント ZIP は `export.json` とエクスポート対象の添付ファイルを含みます。JSON／CSV は選択した取引データ、研究 Markdown は研究記録です。全ユーザー、認証情報、サーバー設定、全インスタンスデータを復元できる完全なバックアップではありません。アカウント移行や研究にはエクスポート、インスタンス復元には以下の手順を使ってください。
 
-アプリの**インポート → エクスポート**（または `GET /api/v1/exports`）は、次を生成します。
+## SQLite：書き込みを止めてボリュームを保存
 
-| 形式 | 内容 |
-|--------|----------|
-| **ZIP** | `export.json` と `attachments/` 配下のすべてのスクリーンショット — 完全に持ち運べるバックアップ |
-| **JSON** | トレード、約定、ジャーナルのノート、資金取引、プレイブックのセットアップ（画像は含まれません） |
-| **CSV** | 決済済みトレードのジャーナル表。別のツールでの分析用 |
-
-復元は、任意の TraderMemos インスタンスで ZIP／JSON をインポートするだけです。新規インストール
-ではセットアップウィザードの任意インポートステップが受け付け、それ以降はいつでも**インポート**
-から取り込めます。約定はサーバー側で重複排除されるため、再インポートしても安全です。
-
-ホスト間の移行、データベースの切り替え（SQLite ↔ Postgres）、あるいは実際に中身を開けるオフ
-サイトコピーが必要な場合は、この方法が適しています。
-
-## 方法 2 — ボリュームのスナップショット（Docker、完全なコピー）
-
-SQLite は WAL モードで動作するため、稼働中のデータベースファイルをそのままコピーしないでください。
-先に API を停止するか（数秒のダウンタイム）、直近の書き込みを失う可能性があります。
+既定の `tm_data` は `/data/tradermemos.db` と `/data/attachments` を含みます。SQLite は WAL を使います。API を停止して `/data` 全体（存在する WAL ファイルも含む）を保存し、完了まで API を起動しないでください。以下は既定パスと既存 Compose プロジェクト用です。
 
 ```bash
-cd TraderMemos
 docker compose stop api
 docker run --rm --volumes-from "$(docker compose ps -aq api)" -v "$PWD":/backup alpine \
-  tar czf "/backup/tradermemos-$(date +%F).tar.gz" -C /data .
+  tar czf /backup/tradelens-data.tar.gz -C /data .
 docker compose start api
 ```
 
-新しいホストへ復元する場合:
+## SQLite 復元
+
+別の新規ホスト／プロジェクト、同じ TradeLens ソースと設定、空の復元先ボリュームを使います。API を起動せずにビルドとコンテナ作成を行い、展開後に起動します。稼働中のインスタンスや上流のデータベースを上書きしないでください。元のバックアップを保存し、ログイン、アカウントと添付ファイルを確認します。
 
 ```bash
-cd TraderMemos
-make up                       # コンテナと空のボリュームを作成
-docker compose stop api
+docker compose -f docker-compose.yml -f docker-compose.build.yml build
+docker compose -f docker-compose.yml -f docker-compose.build.yml create
 docker run --rm --volumes-from "$(docker compose ps -aq api)" -v "$PWD":/backup alpine \
-  sh -c "rm -rf /data/* && tar xzf /backup/tradermemos-2026-08-01.tar.gz -C /data"
-docker compose start api
+  tar xzf /backup/tradelens-data.tar.gz -C /data
+make up-build
 ```
 
-cron で自動化し、tarball をオフサイトへ転送してください（rclone、restic など）。ボリューム内の
-`tradermemos.db.migrate.lock` ファイルは一時的なもので、除外して問題ありません。
+## PostgreSQL：ダンプと添付ファイル
 
-## Postgres の場合
-
-データベースをダンプし、添付ファイルのボリュームをコピーします。
+PostgreSQL オーバーレイではデータベースは `tm_pg_data`、添付ファイルは `tm_data` にあります。ダンプと添付ファイル保存の全期間、API と他の書き込み元を停止して状態を揃えます。全コマンドに 3 つの Compose ファイルを指定します。基本ファイルだけでは `postgres` サービスは定義されません。
 
 ```bash
-docker compose exec postgres pg_dump -U tm tradermemos > tradermemos-$(date +%F).sql
-# 添付ファイルは引き続き tm_data ボリューム内にあります → 方法 2 と同様に /data/attachments をバックアップしてください
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml stop api
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml exec -T postgres pg_dump -U tm tradermemos > tradelens-db.sql
+docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml ps -aq api)" -v "$PWD":/backup alpine \
+  tar czf /backup/tradelens-attachments.tar.gz -C /data attachments
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml start api
 ```
 
-復元は、空のデータベースに `psql -U tm tradermemos < backup.sql` を実行してから API を起動します
-（マイグレーションが自動的に整合を取ります）。
+## PostgreSQL 復元
 
-## アップグレードのたびに
+別の新規プロジェクト、同じソース／設定、空のボリュームを使います。PostgreSQL だけを起動し、空のデータベースにダンプを取り込み、添付ファイルを展開してから API を起動します。SQLite アーカイブを PostgreSQL データベースとして復元しないでください。アカウントと添付ファイルを確認し、バックアップを別の場所にも保存して復元を試してください。
 
-バージョンを上げる前にスナップショットを取得してください。スキーママイグレーションは起動時に自動
-実行され、自動ダウングレードは存在しません。[アップデート](/ja/docs/self-hosting/updating)を
-参照してください。
+```bash
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml build
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml create
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml up -d --wait postgres
+docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml exec -T postgres psql -v ON_ERROR_STOP=1 -U tm -d tradermemos < tradelens-db.sql
+docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml ps -aq api)" -v "$PWD":/backup alpine \
+  tar xzf /backup/tradelens-attachments.tar.gz -C /data
+make up-postgres-build
+```

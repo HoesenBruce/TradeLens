@@ -1,4 +1,6 @@
-# Self-host stack — pulls published images from Docker Hub by default.
+# Default pulls are upstream TraderMemos, not TradeLens (no official images yet).
+# TradeLens: make up-build / make up-postgres-build. Never alternate products
+# on the same existing database volume: migration histories have diverged.
 #
 # Username / tag (Compose loads `.env` automatically):
 #   DOCKERHUB_USERNAME  — Hub namespace that owns the images (default: sinhong2011)

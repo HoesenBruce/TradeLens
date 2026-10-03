@@ -61,13 +61,13 @@ Railway（掛數據卷）上；一鍵按鈕只部署 **Web UI**。參見
 
 ### 我的數據到底在哪裏？
 
-Docker：`tm_data` 數據卷 —— `/data/tradermemos.db` 加上 `/data/attachments`。這個數據卷
+Docker 的 SQLite 設定：`tm_data` 數據卷 —— `/data/tradermemos.db` 加上 `/data/attachments`。這個數據卷
 就是你的日誌本體；參見[備份與恢復](/zh-Hant/docs/self-hosting/backup-restore)。
 
 ### 選 SQLite 還是 Postgres？
 
-個人實例選 SQLite（默認）—— 零額外組件，備份就是一個文件。多用戶或已有數據庫設施的
-場景適合 Postgres（`make up-postgres`）。兩者之間遷移：導出 ZIP，再導入即可。
+個人實例選 SQLite（默認）—— 零額外組件，備份需包含資料庫及附件。多用戶或已有數據庫設施的
+場景適合 Postgres（`make up-postgres-build`）。帳戶資料可用 ZIP 匯出／匯入遷移，不能以此遷移完整實例。
 
 ## 功能
 

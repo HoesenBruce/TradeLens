@@ -3,6 +3,11 @@ title: Fork 並部署
 description: 將 TraderMemos Web UI 部署到你自己的 Vercel、Cloudflare 或 Netlify 賬戶，並將 API 部署到 Railway。
 ---
 
+> **TradeLens 目前狀態：** 官方 TradeLens 鏡像尚未發佈；Docker 鏡像發佈與 Release Please 均已停用。請用 `make up-build`（SQLite）或 `make up-postgres-build`（PostgreSQL）從目前原始碼建置。
+>
+> **資料庫邊界：**`make up` 與 `make up-postgres` 目前預設拉取上游 TraderMemos 鏡像（`sinhong2011/tradermemos-*`）。上游與 TradeLens 的遷移歷史已分叉，切勿交替連接同一個既有資料庫卷，包括 PostgreSQL。嘗試另一產品時使用獨立 Compose 專案及全新資料庫／資料卷；任何遷移前保留完整備份。
+
+
 目標：讓另一位 GitHub 用戶將 **TraderMemos Web** 部署到**他們自己的** Vercel / Cloudflare /
 Netlify 賬戶，並 / 或將 **API** 部署到 Railway，然後將兩者連接起來。
 
