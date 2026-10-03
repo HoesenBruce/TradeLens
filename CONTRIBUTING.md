@@ -224,3 +224,10 @@ DESIGN.md    Signal Terminal design system — read before UI work
 ### Design
 
 UI work must follow `DESIGN.md` (Signal Terminal). Do not invent alternate type/color/radius without explicit approval.
+
+## Optional ReUI resources
+
+ReUI is an optional external development resource. TradeLens retains licensed
+MIT components and examples, but does not vendor ReUI skills or their documentation.
+Contributors can obtain those materials through the
+[official ReUI documentation and installer](https://reui.io/docs/agent-skills).
