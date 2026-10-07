@@ -1,0 +1,4 @@
+sqlite restart+migration+persistence PASS
+sqlite backup+restore+migration PASS
+postgres restart+migration+persistence PASS
+postgres backup+restore+migration PASS
