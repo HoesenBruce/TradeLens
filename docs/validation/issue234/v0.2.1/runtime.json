@@ -1,0 +1,41 @@
+[
+  {
+    "container": "tl021qa-api-1",
+    "image": "ghcr.io/hoesenbruce/tradelens-api@sha256:9bf8d718c6c6df96fc02433e82bcb5584dff836d020f800b38a12e01a225263e",
+    "running": true,
+    "uname": "aarch64"
+  },
+  {
+    "container": "tl021qa-web-1",
+    "image": "ghcr.io/hoesenbruce/tradelens-web@sha256:a3694f5fc79aac7291948d829cda845e8e286fe2ce9e2fe7eeed9fe946d35f72",
+    "running": true,
+    "uname": "aarch64",
+    "nginx_test": "nginx: the configuration file /etc/nginx/nginx.conf syntax is ok\nnginx: configuration file /etc/nginx/nginx.conf test is successful\n"
+  },
+  {
+    "container": "tl021qapg-api-1",
+    "image": "ghcr.io/hoesenbruce/tradelens-api@sha256:9bf8d718c6c6df96fc02433e82bcb5584dff836d020f800b38a12e01a225263e",
+    "running": true,
+    "uname": "aarch64"
+  },
+  {
+    "container": "tl021qapg-web-1",
+    "image": "ghcr.io/hoesenbruce/tradelens-web@sha256:a3694f5fc79aac7291948d829cda845e8e286fe2ce9e2fe7eeed9fe946d35f72",
+    "running": true,
+    "uname": "aarch64",
+    "nginx_test": "nginx: the configuration file /etc/nginx/nginx.conf syntax is ok\nnginx: configuration file /etc/nginx/nginx.conf test is successful\n"
+  },
+  {
+    "container": "tl021qax64-api-1",
+    "image": "ghcr.io/hoesenbruce/tradelens-api@sha256:2c6b6168541738ee839326ae320002d7132ebb3aa04028a6c3f2846b2cde00a1",
+    "running": true,
+    "uname": "x86_64"
+  },
+  {
+    "container": "tl021qax64-web-1",
+    "image": "ghcr.io/hoesenbruce/tradelens-web@sha256:70a17fbc5754f1a209b6f4b1aa50d6128fbe2232db8a33d0d3982d581023e965",
+    "running": true,
+    "uname": "x86_64",
+    "nginx_test": "nginx: the configuration file /etc/nginx/nginx.conf syntax is ok\nnginx: configuration file /etc/nginx/nginx.conf test is successful\n"
+  }
+]

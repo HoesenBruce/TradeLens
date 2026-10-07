@@ -1,0 +1,20 @@
+Unable to find image 'ghcr.io/hoesenbruce/tradelens-api@sha256:2c6b6168541738ee839326ae320002d7132ebb3aa04028a6c3f2846b2cde00a1' locally
+ghcr.io/hoesenbruce/tradelens-api@sha256:2c6b6168541738ee839326ae320002d7132ebb3aa04028a6c3f2846b2cde00a1: Pulling from hoesenbruce/tradelens-api
+4a330cd753b6: Pulling fs layer
+4438788b5ec3: Pulling fs layer
+7fd1ebe418b5: Pulling fs layer
+4890b485c063: Pulling fs layer
+4890b485c063: Download complete
+4438788b5ec3: Download complete
+4a330cd753b6: Download complete
+7fd1ebe418b5: Download complete
+7fd1ebe418b5: Pull complete
+4890b485c063: Pull complete
+4438788b5ec3: Pull complete
+4a330cd753b6: Pull complete
+Digest: sha256:2c6b6168541738ee839326ae320002d7132ebb3aa04028a6c3f2846b2cde00a1
+Status: Downloaded newer image for ghcr.io/hoesenbruce/tradelens-api@sha256:2c6b6168541738ee839326ae320002d7132ebb3aa04028a6c3f2846b2cde00a1
+sqlite restart+migration+persistence PASS
+sqlite backup+restore+migration PASS
+postgres restart+migration+persistence PASS
+postgres backup+restore+migration PASS

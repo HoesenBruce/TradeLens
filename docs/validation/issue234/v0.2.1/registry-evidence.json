@@ -1,0 +1,78 @@
+{
+  "api": {
+    "tags": {
+      "0.2.1": "sha256:9bf8d718c6c6df96fc02433e82bcb5584dff836d020f800b38a12e01a225263e",
+      "0.2": "sha256:9bf8d718c6c6df96fc02433e82bcb5584dff836d020f800b38a12e01a225263e",
+      "0": "sha256:9bf8d718c6c6df96fc02433e82bcb5584dff836d020f800b38a12e01a225263e",
+      "latest": "sha256:9bf8d718c6c6df96fc02433e82bcb5584dff836d020f800b38a12e01a225263e",
+      "sha-b78c5925778831e7d2d039a4d0139ff1ddfc6e31": "sha256:9bf8d718c6c6df96fc02433e82bcb5584dff836d020f800b38a12e01a225263e"
+    },
+    "children": {
+      "linux/amd64": {
+        "digest": "sha256:2c6b6168541738ee839326ae320002d7132ebb3aa04028a6c3f2846b2cde00a1",
+        "oci": {
+          "org.opencontainers.image.created": "2026-10-07T08:06:31.956Z",
+          "org.opencontainers.image.description": "Self-hosted trading journal with broker imports, trade analytics, and portfolio analysis.",
+          "org.opencontainers.image.licenses": "AGPL-3.0",
+          "org.opencontainers.image.revision": "b78c5925778831e7d2d039a4d0139ff1ddfc6e31",
+          "org.opencontainers.image.source": "https://github.com/HoesenBruce/TradeLens",
+          "org.opencontainers.image.title": "TradeLens api",
+          "org.opencontainers.image.url": "https://github.com/HoesenBruce/TradeLens",
+          "org.opencontainers.image.version": "0.2.1"
+        }
+      },
+      "linux/arm64": {
+        "digest": "sha256:67cffe1e8960b98a339c581ab103b041ccfc7a77e696838ad5028d98c0589887",
+        "oci": {
+          "org.opencontainers.image.created": "2026-10-07T08:06:31.956Z",
+          "org.opencontainers.image.description": "Self-hosted trading journal with broker imports, trade analytics, and portfolio analysis.",
+          "org.opencontainers.image.licenses": "AGPL-3.0",
+          "org.opencontainers.image.revision": "b78c5925778831e7d2d039a4d0139ff1ddfc6e31",
+          "org.opencontainers.image.source": "https://github.com/HoesenBruce/TradeLens",
+          "org.opencontainers.image.title": "TradeLens api",
+          "org.opencontainers.image.url": "https://github.com/HoesenBruce/TradeLens",
+          "org.opencontainers.image.version": "0.2.1"
+        }
+      }
+    },
+    "authentication": "anonymous registry bearer token; no GitHub/Docker credentials"
+  },
+  "web": {
+    "tags": {
+      "0.2.1": "sha256:a3694f5fc79aac7291948d829cda845e8e286fe2ce9e2fe7eeed9fe946d35f72",
+      "0.2": "sha256:a3694f5fc79aac7291948d829cda845e8e286fe2ce9e2fe7eeed9fe946d35f72",
+      "0": "sha256:a3694f5fc79aac7291948d829cda845e8e286fe2ce9e2fe7eeed9fe946d35f72",
+      "latest": "sha256:a3694f5fc79aac7291948d829cda845e8e286fe2ce9e2fe7eeed9fe946d35f72",
+      "sha-b78c5925778831e7d2d039a4d0139ff1ddfc6e31": "sha256:a3694f5fc79aac7291948d829cda845e8e286fe2ce9e2fe7eeed9fe946d35f72"
+    },
+    "children": {
+      "linux/amd64": {
+        "digest": "sha256:70a17fbc5754f1a209b6f4b1aa50d6128fbe2232db8a33d0d3982d581023e965",
+        "oci": {
+          "org.opencontainers.image.created": "2026-10-07T08:06:32.936Z",
+          "org.opencontainers.image.description": "Self-hosted trading journal with broker imports, trade analytics, and portfolio analysis.",
+          "org.opencontainers.image.licenses": "AGPL-3.0",
+          "org.opencontainers.image.revision": "b78c5925778831e7d2d039a4d0139ff1ddfc6e31",
+          "org.opencontainers.image.source": "https://github.com/HoesenBruce/TradeLens",
+          "org.opencontainers.image.title": "TradeLens web",
+          "org.opencontainers.image.url": "https://github.com/HoesenBruce/TradeLens",
+          "org.opencontainers.image.version": "0.2.1"
+        }
+      },
+      "linux/arm64": {
+        "digest": "sha256:892fed92ef91e9d27a64a24f9a7798f3bdcbba4281302a6fa17d467d38b565f2",
+        "oci": {
+          "org.opencontainers.image.created": "2026-10-07T08:06:32.936Z",
+          "org.opencontainers.image.description": "Self-hosted trading journal with broker imports, trade analytics, and portfolio analysis.",
+          "org.opencontainers.image.licenses": "AGPL-3.0",
+          "org.opencontainers.image.revision": "b78c5925778831e7d2d039a4d0139ff1ddfc6e31",
+          "org.opencontainers.image.source": "https://github.com/HoesenBruce/TradeLens",
+          "org.opencontainers.image.title": "TradeLens web",
+          "org.opencontainers.image.url": "https://github.com/HoesenBruce/TradeLens",
+          "org.opencontainers.image.version": "0.2.1"
+        }
+      }
+    },
+    "authentication": "anonymous registry bearer token; no GitHub/Docker credentials"
+  }
+}
