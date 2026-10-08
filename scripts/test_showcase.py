@@ -52,6 +52,9 @@ spec=importlib.util.spec_from_file_location('market','scripts/showcase-market.py
 market=importlib.util.module_from_spec(spec);spec.loader.exec_module(market)
 rows=list(csv.DictReader(io.StringIO(seed.trade_csv())))
 assert {r['約定日'].replace('/','-') for r in rows} == set(DATES)
+assert len(rows) == 212
+assert len([code for code in market.PRICES if code.startswith('90')]) == 100
+assert sum(len([r for r in rows if r['銘柄コード'] == str(9000+i)]) == 2 for i in range(100)) == 100
 bars=market.response({'symbol':['285A.T'],'interval':['D'],'from':[SESSIONS[0]+'T00:00:00Z'],'to':['2026-10-08T00:00:00Z']})['bars']
 assert [b['market_date'] for b in bars] == SESSIONS
 assert bars[0]['close']==800 and bars[-1]['close']==750

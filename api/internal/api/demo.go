@@ -28,7 +28,7 @@ func demoReadOnly(next echo.HandlerFunc) echo.HandlerFunc {
 				"/api/v1/analytics/compliance", "/api/v1/analytics/behavior",
 				"/api/v1/analytics/montecarlo", "/api/v1/analytics/execution-score",
 				"/api/v1/settings/risk-rules", "/api/v1/settings/annual-goal", "/api/v1/settings/checklist-template",
-				"/api/v1/system/info":
+				"/api/v1/system/info", "/api/v1/economic-events":
 				allowed = true
 			}
 		}

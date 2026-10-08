@@ -147,3 +147,23 @@ Dashboard/external acceptance still required:
 
 To remove: delete the web service/Blueprint in Dashboard. There is no external
 database or disk to clean up. Recreate from the reviewed commit to restore it.
+
+## Calendar and rolling statistics
+
+Render seeds 107 closed fictional trades: the original seven SBI groups plus
+100 independent synthetic cash/margin round trips (50 long, 50 short), spread
+across the startup-relative window. Additional trades net to zero, preserving
+JPY 25,000 total realized P&L and JPY 975,000 closing value. Codes and prices
+are fictional exercises, not claims about actual securities. Standalone showcase
+commands retain the original seven groups unless the runtime date is selected.
+The all-directions view supports windows 10, 20, 50 and 100; narrower filters can
+legitimately have too few trades for larger windows.
+
+Economic events are seeded locally for startup day minus 30 through plus 14 days,
+with JPY/high, USD/medium and EUR/low entries, explicitly titled `[FICTIONAL demo]`.
+Past entries include synthetic actuals; future entries do not. The demo API reads
+this archive with normal authentication, date/impact/currency filters and input
+validation. It never contacts a live calendar feed. Outside this bounded range,
+the calendar correctly shows an empty result. Every service restart regenerates
+both trades and calendar entries; deploying this change requires Render's manual
+deploy of the latest PR revision.

@@ -1,5 +1,8 @@
 # Rolling startup-date showcase — 2026-10-08
 
+Follow-up: [calendar and 107-trade statistics](calendar-stats.md) supersedes
+the seven-trade count below for the latest Render image.
+
 This follow-up to #243 / PR #264 replaces fixed Render sample dates with the
 30 days preceding each service start, based on the startup date in Asia/Tokyo.
 It does not regenerate data on every click or warm request. A visitor waking a

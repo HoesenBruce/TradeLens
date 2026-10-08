@@ -17,6 +17,8 @@ func TestDemoPolicy(t *testing.T) {
 		{"POST", "/api/v1/auth/login", true},
 		{"POST", "/api/v1/auth/refresh", true},
 		{"GET", "/api/v1/trades/:id", true},
+		{"GET", "/api/v1/economic-events", true},
+		{"POST", "/api/v1/economic-events", false},
 		{"GET", "/api/v1/news/:id/predictions/:predictionId/validations", true},
 		{"GET", "/api/v1/analytics/account-value", true},
 		{"POST", "/api/v1/setup", false},

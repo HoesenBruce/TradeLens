@@ -122,6 +122,16 @@ def run():
         stop(bootstrap)
         with sqlite3.connect(directory / 'demo.db') as conn:
             conn.execute('UPDATE users SET is_admin = 0')
+            today = datetime.fromisoformat(os.environ['TRADELENS_SHOWCASE_TODAY']).replace(tzinfo=timezone.utc)
+            # Include this week and adjacent weeks for calendar navigation; all events are fictional.
+            for offset in range(-30, 15):
+                day = today + timedelta(days=offset)
+                for country, impact, hour, title in [('JPY', 'high', 1, 'Policy decision'),
+                        ('USD', 'medium', 12, 'Employment survey'), ('EUR', 'low', 8, 'Price index')]:
+                    stamp = day.replace(hour=hour).isoformat().replace('+00:00', 'Z')
+                    conn.execute("INSERT INTO economic_events (provider,title,country,impact,event_ts,forecast,previous,actual,fetched_at) VALUES (?,?,?,?,?,?,?,?,?)",
+                        ('FICTIONAL-demo', '[FICTIONAL demo] ' + title, country, impact, stamp,
+                         '1.0%', '0.9%', '1.1%' if offset < 0 else '', today.isoformat()))
         api = subprocess.Popen(['/server'], env=api_env(directory, jwt, True))
         children.append(api)
         wait_api(api)

@@ -67,8 +67,10 @@ def check():
     assert len(accounts) == 1 and accounts[0]['base_currency'] == 'JPY'
     account = accounts[0]['id']
     trades = request('GET', '/api/v1/trades', token=token)
-    assert len(trades) == 7 and all(t['qty_remaining'] == 0 for t in trades)
+    assert len(trades) == 107 and all(t['qty_remaining'] == 0 for t in trades)
     assert sum(t['net_pnl'] for t in trades) == 25000
+    assert sum(t['direction'] == 'short' for t in trades) >= 50
+    assert sum(t['net_pnl'] > 0 for t in trades) > 40 and sum(t['net_pnl'] < 0 for t in trades) > 40
     events, sessions = timeline(datetime.now(timezone(timedelta(hours=9))).date())
     assert min(datetime.fromisoformat(t['opened_at'].replace('Z', '+00:00')).astimezone(timezone(timedelta(hours=9))).date().isoformat() for t in trades) == events[0]
     assert all(datetime.fromisoformat(t['closed_at'].replace('Z', '+00:00')).astimezone(timezone(timedelta(hours=9))).date().isoformat() <= events[-1] for t in trades)
@@ -76,6 +78,15 @@ def check():
     values = request('GET', '/api/v1/analytics/account-value?account_id=' + account + '&from=' + sessions[0] + '&to=' + sessions[-1], token=token)
     assert len(values['points']) == len(sessions) and all(p['status'] == 'complete' for p in values['points']), values
     assert values['points'][-1]['estimated_account_value'] == 975000, values
+    today = datetime.now(timezone.utc).date()
+    calendar_path = '/api/v1/economic-events?from=' + (today - timedelta(days=7)).isoformat() + '&to=' + (today + timedelta(days=7)).isoformat()
+    request('GET', calendar_path, expected=401)
+    calendar = request('GET', calendar_path, token=token)
+    assert len(calendar) == 42 and all(e['title'].startswith('[FICTIONAL') and e['provider'] == 'FICTIONAL-demo' for e in calendar), calendar
+    filtered = request('GET', calendar_path + '&impact=high&country=jpy', token=token)
+    assert len(filtered) == 14 and all(e['impact'] == 'high' and e['country'] == 'JPY' for e in filtered)
+    assert request('GET', calendar_path + '&country=GBP', token=token) == []
+    request('GET', '/api/v1/economic-events?from=bad&to=2026-10-08', token=token, expected=400)
     news = request('GET', '/api/v1/news', token=token)
     assert len(news) == 3 and all(n['published_at'][:10] == events[0] for n in news)
     counts = request('GET', '/api/v1/news/performance', token=token)['counts']
@@ -102,7 +113,7 @@ def check():
         request(method, '/api/v1' + path, {}, token, expected=403)
     features = request('GET', '/api/v1/system/info', token=token)['features']
     assert features['market_data'] and not any(features[k] for k in ('ocr', 'coach', 'share_links', 'econ_calendar', 'background_jobs'))
-    assert len(request('GET', '/api/v1/trades', token=token)) == 7
+    assert len(request('GET', '/api/v1/trades', token=token)) == 107
     return me['id'], token
 
 

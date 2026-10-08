@@ -10,7 +10,7 @@ from pathlib import Path
 
 # Also support existing importlib callers outside the scripts directory.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from showcase_dates import DATES, DATE_MAP
+from showcase_dates import DATES, DATE_MAP, FIXED_DATES, startup_day
 
 spec = importlib.util.spec_from_file_location('demo', __file__.replace('seed-showcase.py', 'seed-demo.py'))
 demo = importlib.util.module_from_spec(spec)
@@ -32,6 +32,19 @@ ROWS = [
     ('2026/09/04', '8306', '信用新規売', 100, 950, 0),
     ('2026/09/08', '8306', '現渡', 100, 950, 0),
 ]
+
+
+# Render-only enrichment; preserve the original standalone showcase fixture.
+if startup_day:
+    for i in range(100):
+        symbol = str(9000 + i)
+        day = i // 20
+        short = i % 2 == 1
+        delta = 10 if (i // 2) % 2 == 0 else -10
+        ROWS.extend([
+            (FIXED_DATES[day].replace('-', '/'), symbol, '信用新規売' if short else '現物買', 10, 1000, 0),
+            (FIXED_DATES[day + 1].replace('-', '/'), symbol, '信用返済買' if short else '現物売', 10, 1000 + delta, 0),
+        ])
 
 
 def upload(api, path, account, text, mapping=None):
@@ -72,7 +85,7 @@ def seed(api):
     if preview['detected_broker'] != 'SBI Securities (Execution History)':
         raise SystemExit('SBI detection failed')
     result = upload(api, '/imports/commit', account, text, preview['suggested_mapping'])
-    if result.get('errors') or result['inserted'] != 14:
+    if result.get('errors') or result['inserted'] != (214 if startup_day else 14):
         raise SystemExit(f'Unexpected import result: {result}')
     trades = api('GET', '/trades?account_id=' + account)
     plan = api('POST', '/setups', {'name': LABEL + ' Long plan', 'thesis': LABEL,
