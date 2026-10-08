@@ -4,6 +4,64 @@
 
 Implemented for SBI Securities `約定履歴照会` and `円貨入出金明細` CSV exports.
 
+## Web walkthrough
+
+Create or select a JPY account, then open **Import → Find my broker → SBI Securities**.
+The current Web guide preserves these Japanese menu labels in every UI language:
+
+1. `口座管理 → 取引履歴 → 約定履歴`: export the execution-history CSV for the required period.
+2. `入出金 → 入出金明細`: export the corresponding cash statement (`円貨入出金明細`).
+3. Choose the account and **Continue to upload**. Upload each original file separately;
+   the parser handles CP932 and report headers. Use **Preview import**, inspect the detected
+   format, row counts and errors, then confirm only after checking the destination account.
+
+These labels match `web/src/lib/brokers.ts`; this capture verifies the TradeLens guide,
+not a live SBI website session. A cash statement cannot substitute for execution history:
+you need both to reconstruct trades and contributed capital. Incomplete opening history
+cannot establish missing cost basis or opening holdings.
+
+![Actual SBI broker guide with fictional account](../screenshots/showcase/sbi-guide.jpg)
+
+![Seven fictional SBI trade groups](../screenshots/showcase/trades.jpg)
+
+The deterministic [showcase](../showcase-demo.md) imports 12 synthetic execution-history
+rows through the public preview/commit APIs, expanding 現引/現渡 to 14 executions and
+seven closed groups. Cash, margin long/short and the two settlement cases reconcile to
+JPY 25,000 net P&L. The list does not expose every position/settlement attribute; use
+execution details and the seed audit table to distinguish those cases.
+
+![Fictional deposit and withdrawal in the account ledger](../screenshots/showcase/cash-flow.jpg)
+
+The showcase cash flows use the public ledger API, **not a cash-statement upload**.
+They show +1,000,000 deposit and -50,000 withdrawal; contributed capital is 950,000,
+and balance/account value is 975,000 after P&L. These are invented numbers.
+
+## Browser acceptance
+
+The standard file input supports Playwright `setInputFiles()`; native OS picker interaction
+is unnecessary. `web/e2e/sbi-showcase-import.spec.ts` exercises the production Web build
+and real disposable API with the exact #253 `trade_csv()` synthetic fixture. It verifies
+file removal, upload, SBI detection, preview/Back with no persisted executions or trades,
+confirmation, API read-back of 14 executions and seven closed groups (JPY 25,000 net),
+reload/re-entry, duplicate confirmation (0 inserted, 14 skipped, unchanged stored records),
+and **Import another** reset. All assertions executed and passed on 2026-10-08.
+
+After Back, the upload component reinitializes the account selector. Recheck the destination
+account before previewing again; the test explicitly reselects its synthetic QA account.
+The acceptance account starts at zero with no funding, separately from the funded showcase.
+Its final balance is JPY 25,000. The global header refreshes asynchronously; the first result
+capture still shows zero, while duplicate read-back shows the updated JPY 25,000 summary.
+
+![Actual SBI preview mapping](../screenshots/showcase/sbi-acceptance/sbi-preview.png)
+![Actual confirmation control](../screenshots/showcase/sbi-acceptance/sbi-confirm.png)
+![Actual committed import result](../screenshots/showcase/sbi-acceptance/sbi-result.png)
+![Actual duplicate result: zero inserted, fourteen skipped](../screenshots/showcase/sbi-acceptance/sbi-duplicates.png)
+
+Built-in chooser/native capture failures from the first attempt remain recorded in the
+[provenance](../screenshots/README.md). Direct file injection resolved this environment
+blocker without changing production importer, accounting or UI logic. This acceptance
+covers execution-history CSV; cash-statement browser upload and mobile were not rerun.
+
 ## Goal
 
 Import Japanese equity trades exported by SBI Securities into TraderMemos.
@@ -122,8 +180,9 @@ detection, JPY conversion, deposit/withdrawal/dividend/adjustment classification
 Asia/Tokyo date normalization, malformed-row reporting, duplicate handling, and batch
 rollback. The Web preview/result behavior has a focused component test.
 
-Real-device mobile taps and a live server end-to-end import have not been run in this
-checkout; those remain required before calling the mobile workflow production-verified.
+The #254 showcase API preview/commit and duplicate-import checks passed on disposable
+SQLite. Execution-history browser upload acceptance also passed as described above. Mobile not validated;
+outside current fork scope.
 
 ## Testing
 

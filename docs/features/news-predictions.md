@@ -1,5 +1,39 @@
 # News predictions
 
+## Research workflow in Web
+
+Start with a working API and sign in. In **News**, create a thesis with its source,
+publication date and original text; add affected assets with explicit symbol, market,
+exchange and asset type. News is recorded manually; no automatic news collection is claimed.
+Open the thesis to inspect the source text and asset linkage before creating predictions.
+
+![Fictional thesis and 285A asset linkage](../screenshots/showcase/news-thesis.jpg)
+
+For an affected asset, choose **Add prediction**, select direction and trading-day horizons,
+and optionally enter confidence, reasoning, catalysts, risks and invalidation. Save, reload
+and read back the saved values. Editing replaces the selected horizon set; Cancel discards
+the draft. Asset identity and prediction source cannot be changed by editing a saved record.
+
+![Actual manual prediction editor with synthetic input](../screenshots/showcase/prediction-create.jpg)
+
+The [showcase](../showcase-demo.md) uses invented theses and User predictions only.
+Creation, refresh read-back, editing, Cancel and re-entry were exercised against the real
+API in the production Web build. The additional UI test prediction was removed through
+the public API afterward to restore the six-horizon baseline. This run did not exercise
+UI deletion, every validation error, or optional AI analysis; older suite results below
+are historical evidence, not newly rerun checks.
+
+AI analysis requires your own configured OpenAI-compatible provider in AI Coach settings.
+**Analyze with AI** sends the news content to that provider. Suggestions require explicit
+review/selection and acceptance; analysis alone saves nothing. No live AI provider or
+API key was used for these captures. See the AI review section below for the acceptance contract.
+
+Open **News performance** for persisted evaluation counts and rates; saving a prediction
+does not evaluate it. [Validation requirements](prediction-validation.md) explain the
+market-data, time and API steps. Current list/detail horizon labels still show Pending
+placeholders; use the performance report and validation API for actual evaluation evidence.
+Mobile not validated; outside current fork scope.
+
 A prediction belongs to one affected `news_assets` record, which links it to its news thesis
 and owner. Deleting the asset or news cascades to predictions and their horizons.
 
@@ -37,8 +71,7 @@ E2E_EMAIL=<test-user> E2E_PASSWORD=<test-password> pnpm run e2e e2e/news-predict
 Verified create/edit/delete, refresh read-back, cancel/re-entry, invalid confidence, empty horizons,
 select/unselect horizons, nullable confidence and API read-back. Rendered screenshots:
 [editor](../screenshots/news-predictions/editor.png), [saved](../screenshots/news-predictions/saved.png).
-Mobile not validated; outside current fork scope. Outcomes remain pending; no AI calls or
-validation calculations are implemented here.
+Mobile not validated; outside current fork scope. Manual saving does not run AI or validation; evaluation is a separate API workflow.
 
 ## Overview
 
@@ -48,8 +81,8 @@ Filters combine direction, symbol, published-date range and validation status; d
 same display timezone as the table. News filters persist separately from trading filters,
 and **Reset filters** restores the unfiltered list. Pagination reuses the existing component.
 
-There are no outcome records yet, so all theses explicitly show **Pending validation** and
-**Validated** correctly produces an empty result. Actual result calculation remains in #47.
+The overview validation labels/filter currently use placeholder pending states, even when
+the performance API has retained outcomes. Do not treat this list as validation evidence.
 Filtering/pagination operate on the existing full News response.
 
 `e2e/news-list.spec.ts` exercises real API records on both sides of date/direction filters,
@@ -63,7 +96,7 @@ real API data. Screenshots: [overview](../screenshots/news-predictions/overview.
 News titles link to `/news/{id}`. Direct navigation loads the current API record, with source
 metadata, original text, summary and notes above the affected assets. Each asset contains its
 own User/AI predictions; the existing editors are reused. Prediction details include timestamps,
-catalysts, risks/invalidation and a horizon/status/result table ready for the later outcome data.
+catalysts, risks/invalidation and a horizon/status/result table whose outcome cells currently remain placeholders.
 Missing/deleted records show a not-found state; API failures offer retry.
 
 `e2e/news-detail.spec.ts` verifies direct routing, source links, hierarchy, edit/cancel/re-entry,

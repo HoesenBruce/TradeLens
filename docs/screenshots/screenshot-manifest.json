@@ -1,69 +1,226 @@
 {
-  "issue": 211,
-  "capture_date": "2026-09-30",
-  "source": "scripts/seed-demo.py",
-  "seed": 210,
-  "end_date": "2026-09-29",
+  "issue": 254,
+  "status": "complete: SBI Web upload acceptance passed",
+  "capture_date": "2026-10-08",
+  "source_commit": "eef3752d",
+  "source": "scripts/seed-demo.py --mode showcase",
+  "fixture_identity": "FICTIONAL showcase v1; literal fixtures, no RNG",
+  "fixture_hashes": {
+    "scripts/seed-demo.py": "083417848e9f3c443956a28eef730dd2aba8566f015799f61a397b4296b8114a",
+    "scripts/seed-showcase.py": "22c06636fe54748575308864c857f7ebc516cd1c5cd1c161c081ba9a2ccd6c82",
+    "scripts/showcase-market.py": "934b30b78486928d9402f99012752daaf4c220f97052a86c6a985abe9be0b9ab",
+    "scripts/test_showcase.py": "18544f1709a78925cdf2c807fb29e55ff24bed522d884d7b706f5eca97e85f8f"
+  },
+  "period": "2026-09-01 through 2026-09-08 Asia/Tokyo",
   "viewport": {
-    "width": 1002,
-    "height": 871
+    "width": 1440,
+    "height": 1000
+  },
+  "theme": "dark",
+  "language": "en",
+  "display_timezone": "Asia/Tokyo",
+  "market_timezone": "Asia/Tokyo",
+  "build": "production Vite build, configured disposable API",
+  "capture_provenance": "Codex built-in browser; unedited viewport JPEG pixels; no external-browser screenshots retained",
+  "privacy": "Synthetic SQLite and local Generic Bars fixture only. Visually reviewed: no credentials, emails, user IDs, private URLs or real records. JPEG EXIF/comment/XMP/ICC absent.",
+  "expected": {
+    "closed_trade_groups": 7,
+    "executions": 14,
+    "net_pnl_jpy": 25000,
+    "contributed_capital_jpy": 950000,
+    "balance_jpy": 975000,
+    "prediction_horizons": 6,
+    "pending": 4,
+    "unavailable": 2,
+    "validated": 0,
+    "incomplete": 0
+  },
+  "validation": {
+    "passed": [
+      "production Web build",
+      "TypeScript check",
+      "showcase API acceptance and duplicate import",
+      "manual prediction create/read-back/cancel/re-entry",
+      "performance source exclusion/read-back/reset",
+      "all eight captures visually inspected",
+      "dimensions, metadata and SHA-256",
+      "SBI Playwright setInputFiles: remove/upload/preview/Back/confirm/re-entry/duplicate/reset",
+      "persisted 14 executions and 7 closed groups, JPY 25000; duplicate leaves both collections unchanged",
+      "24 focused Web component/locale tests passed after #253 integration",
+      "new E2E formatting/lint/type check"
+    ],
+    "blocked": [],
+    "not_run": [
+      "live SBI",
+      "live AI",
+      "live market providers",
+      "scored prediction outcomes",
+      "mobile",
+      "Postgres",
+      "remote CI"
+    ]
   },
   "files": [
     {
-      "path": "docs/screenshots/calendar.png",
-      "sha256": "4ddf15b2bfc69d73eb9f129db5b469bddbc60776d431e11aaa7abf07e6f308b4"
+      "path": "docs/screenshots/showcase/cash-flow.jpg",
+      "sha256": "749f27f02cc6768ccd4064b5a7394dee3b9000d2388ec5254d01cba06e887b62",
+      "width": 1440,
+      "height": 1000
     },
     {
-      "path": "docs/screenshots/dashboard-light.png",
-      "sha256": "64a60302ba8e25cf703831f9141553043bc07fb4df3f82e98b212433fe22edf4"
+      "path": "docs/screenshots/showcase/news-thesis.jpg",
+      "sha256": "3e95d6838122e2bca774fe1ed8e2c587eb25a1523e4d3bdb0b36db3a6d31f76f",
+      "width": 1440,
+      "height": 1000
     },
     {
-      "path": "docs/screenshots/dashboard.png",
-      "sha256": "ce844723c9ecd25cea6620a795be3b0158680d7970238caf63f6e6f69aa16822"
+      "path": "docs/screenshots/showcase/plan-review.jpg",
+      "sha256": "f722c9e7ca959c328c989a027973b312078e609331549eafcf125f0a7e5a97e2",
+      "width": 1440,
+      "height": 1000
     },
     {
-      "path": "docs/screenshots/reports.png",
-      "sha256": "afb3cb28e4f91f8c9b6a7130a70c14ea1e06957caa62f5ed2b1931e9431f43b2"
+      "path": "docs/screenshots/showcase/portfolio.jpg",
+      "sha256": "02fb8d1bd536a8403c3cef8d894719b83b22f7f91fa03fed99b741c0153d1cd9",
+      "width": 1440,
+      "height": 1000
     },
     {
-      "path": "docs/screenshots/tradelens-login-en.png",
-      "sha256": "6394144ba4296848251751d4bdda12d7f4225d763e7a721c5601c9c2a0aac8fe"
+      "path": "docs/screenshots/showcase/prediction-create.jpg",
+      "sha256": "76168a381a02b5b775a06eb7c2ad4c1753df5c783344c70d9ae3055cc41c3107",
+      "width": 1440,
+      "height": 1000
     },
     {
-      "path": "docs/screenshots/tradelens-playbook-en.png",
-      "sha256": "8556ce231ff385427acced7b16de85210d14ff179f42f3aa705e22d787bacbd8"
+      "path": "docs/screenshots/showcase/prediction-performance.jpg",
+      "sha256": "c6e6d1ccead13e5247c6d95b01f35fe7bc0d9a925e0e1dc787286ee8b526c67e",
+      "width": 1440,
+      "height": 1000
     },
     {
-      "path": "docs/screenshots/tradelens-reports-en.png",
-      "sha256": "afb3cb28e4f91f8c9b6a7130a70c14ea1e06957caa62f5ed2b1931e9431f43b2"
+      "path": "docs/screenshots/showcase/sbi-guide.jpg",
+      "sha256": "92442113e22088623bf043aa27bd739346749ed4b315181a488761dce179fa3b",
+      "width": 1440,
+      "height": 1000
     },
     {
-      "path": "docs/screenshots/tradelens-trades-en.png",
-      "sha256": "7227cc1ce591be4b7a869bb50f731d382fe1955108b9ba72f870c0ac3a4d7f44"
-    },
-    {
-      "path": "docs/screenshots/trades.png",
-      "sha256": "7227cc1ce591be4b7a869bb50f731d382fe1955108b9ba72f870c0ac3a4d7f44"
-    },
-    {
-      "path": "marketing/public/screenshots/calendar.png",
-      "sha256": "4ddf15b2bfc69d73eb9f129db5b469bddbc60776d431e11aaa7abf07e6f308b4"
-    },
-    {
-      "path": "marketing/public/screenshots/dashboard-light.png",
-      "sha256": "64a60302ba8e25cf703831f9141553043bc07fb4df3f82e98b212433fe22edf4"
-    },
-    {
-      "path": "marketing/public/screenshots/dashboard.png",
-      "sha256": "ce844723c9ecd25cea6620a795be3b0158680d7970238caf63f6e6f69aa16822"
-    },
-    {
-      "path": "marketing/public/screenshots/reports.png",
-      "sha256": "afb3cb28e4f91f8c9b6a7130a70c14ea1e06957caa62f5ed2b1931e9431f43b2"
-    },
-    {
-      "path": "marketing/public/screenshots/trades.png",
-      "sha256": "7227cc1ce591be4b7a869bb50f731d382fe1955108b9ba72f870c0ac3a4d7f44"
+      "path": "docs/screenshots/showcase/trades.jpg",
+      "sha256": "ce1872a8413a2eded442a9022052824d7e10dd2a5080c6d806c3c884ce7542fe",
+      "width": 1440,
+      "height": 1000
     }
-  ]
+  ],
+  "retained_legacy": {
+    "issue": 211,
+    "capture_date": "2026-09-30",
+    "source": "scripts/seed-demo.py",
+    "seed": 210,
+    "end_date": "2026-09-29",
+    "viewport": {
+      "width": 1002,
+      "height": 871
+    },
+    "files": [
+      {
+        "path": "docs/screenshots/calendar.png",
+        "sha256": "4ddf15b2bfc69d73eb9f129db5b469bddbc60776d431e11aaa7abf07e6f308b4"
+      },
+      {
+        "path": "docs/screenshots/dashboard-light.png",
+        "sha256": "64a60302ba8e25cf703831f9141553043bc07fb4df3f82e98b212433fe22edf4"
+      },
+      {
+        "path": "docs/screenshots/dashboard.png",
+        "sha256": "ce844723c9ecd25cea6620a795be3b0158680d7970238caf63f6e6f69aa16822"
+      },
+      {
+        "path": "docs/screenshots/reports.png",
+        "sha256": "afb3cb28e4f91f8c9b6a7130a70c14ea1e06957caa62f5ed2b1931e9431f43b2"
+      },
+      {
+        "path": "docs/screenshots/tradelens-login-en.png",
+        "sha256": "6394144ba4296848251751d4bdda12d7f4225d763e7a721c5601c9c2a0aac8fe"
+      },
+      {
+        "path": "docs/screenshots/tradelens-playbook-en.png",
+        "sha256": "8556ce231ff385427acced7b16de85210d14ff179f42f3aa705e22d787bacbd8"
+      },
+      {
+        "path": "docs/screenshots/tradelens-reports-en.png",
+        "sha256": "afb3cb28e4f91f8c9b6a7130a70c14ea1e06957caa62f5ed2b1931e9431f43b2"
+      },
+      {
+        "path": "docs/screenshots/tradelens-trades-en.png",
+        "sha256": "7227cc1ce591be4b7a869bb50f731d382fe1955108b9ba72f870c0ac3a4d7f44"
+      },
+      {
+        "path": "docs/screenshots/trades.png",
+        "sha256": "7227cc1ce591be4b7a869bb50f731d382fe1955108b9ba72f870c0ac3a4d7f44"
+      },
+      {
+        "path": "marketing/public/screenshots/calendar.png",
+        "sha256": "4ddf15b2bfc69d73eb9f129db5b469bddbc60776d431e11aaa7abf07e6f308b4"
+      },
+      {
+        "path": "marketing/public/screenshots/dashboard-light.png",
+        "sha256": "64a60302ba8e25cf703831f9141553043bc07fb4df3f82e98b212433fe22edf4"
+      },
+      {
+        "path": "marketing/public/screenshots/dashboard.png",
+        "sha256": "ce844723c9ecd25cea6620a795be3b0158680d7970238caf63f6e6f69aa16822"
+      },
+      {
+        "path": "marketing/public/screenshots/reports.png",
+        "sha256": "afb3cb28e4f91f8c9b6a7130a70c14ea1e06957caa62f5ed2b1931e9431f43b2"
+      },
+      {
+        "path": "marketing/public/screenshots/trades.png",
+        "sha256": "7227cc1ce591be4b7a869bb50f731d382fe1955108b9ba72f870c0ac3a4d7f44"
+      }
+    ]
+  },
+  "sbi_acceptance": {
+    "capture_date": "2026-10-08",
+    "browser": "Playwright Chromium using installed Chrome, headless; native chooser not used",
+    "source": "web/e2e/sbi-showcase-import.spec.ts",
+    "source_sha256": "bbbc36dea65004f1c8f5e33387dd1a54729e70820fc0709905bc29b2d12e6625",
+    "fixture": "scripts/seed-showcase.py trade_csv(), unchanged synthetic literal rows",
+    "environment": "fresh disposable SQLite API, separate synthetic upload account, production Web preview, service workers blocked",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "theme": "dark",
+    "language": "en",
+    "initial_account_balance_jpy": 0,
+    "funding": "none; separate upload acceptance account, not the funded 8-image showcase",
+    "ui_header": "All accounts; summary refresh is asynchronous, so the first result capture can still show zero; duplicate capture shows JPY 25000",
+    "prior_blocker": "Built-in chooser timeout and native ScreenCaptureKit failure resolved for acceptance by direct setInputFiles; original eight JPEGs unchanged",
+    "files": [
+      {
+        "path": "docs/screenshots/showcase/sbi-acceptance/sbi-confirm.png",
+        "sha256": "2d656823f4f450b55c3d38e8e47842889cf655a27671cb1df0067a6db16f6bc0",
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "path": "docs/screenshots/showcase/sbi-acceptance/sbi-duplicates.png",
+        "sha256": "b623565d840cde2fbfaa5eb5a221754fb7e75df8aabaa31896c17f69b143b948",
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "path": "docs/screenshots/showcase/sbi-acceptance/sbi-preview.png",
+        "sha256": "12c9991c665fe0471684a6d3615048b8c3ec58380b9496335e0a8a6b629f9e25",
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "path": "docs/screenshots/showcase/sbi-acceptance/sbi-result.png",
+        "sha256": "06d538ffa8e5df51db10632e44849b74dd29897c9c487d33e485f2b0ffbdbab2",
+        "width": 1440,
+        "height": 1000
+      }
+    ]
+  }
 }

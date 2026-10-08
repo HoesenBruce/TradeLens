@@ -28,23 +28,29 @@ TradeLens retains the original project’s AGPL-3.0 license and attribution; see
 
 <br/>
 
-<img src="docs/screenshots/tradelens-login-en.png" alt="TradeLens sign-in screen with language selector" width="100%" />
-
 </div>
 
 ## A look inside
 
-<img src="docs/screenshots/tradelens-reports-en.png" alt="TradeLens English reports with equity curve and daily P&L" width="100%" />
+Actual production-build Web captures using a **fictional JPY showcase**, not real trading
+performance. Prices, news and returns are synthetic; [reproduction and limitations](docs/screenshots/README.md).
+
+<img src="docs/screenshots/showcase/portfolio.jpg" alt="Fictional JPY portfolio: net profit 25,000 and account value 975,000" width="100%" />
 
 <table>
 <tr>
-<td width="50%"><img src="docs/screenshots/tradelens-trades-en.png" alt="TradeLens English trade list" /><p align="center"><strong>Trade log</strong></p></td>
-<td width="50%"><img src="docs/screenshots/tradelens-playbook-en.png" alt="TradeLens English playbook with per-setup performance" /><p align="center"><strong>Playbook</strong></p></td>
+<td width="50%"><img src="docs/screenshots/showcase/trades.jpg" alt="Seven fictional SBI trade groups, including numeric and alphanumeric Japanese codes" /><p>Japanese trade log · <a href="docs/features/sbi-import.md">SBI import guide</a></p></td>
+<td width="50%"><img src="docs/screenshots/showcase/news-thesis.jpg" alt="Fictional news thesis linked to 285A and a manual bearish prediction" /><p>News thesis · <a href="docs/features/news-predictions.md">Research workflow</a></p></td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/screenshots/showcase/prediction-performance.jpg" alt="Six synthetic prediction horizon samples: four pending, two unavailable, zero validated" /><p>Prediction evidence · <a href="docs/features/prediction-validation.md">Validation requirements</a></p></td>
+<td width="50%"><img src="docs/screenshots/showcase/plan-review.jpg" alt="Fictional long trade: planned target 1200 versus actual exit 1100" /><p>Plan versus actual fills</p></td>
 </tr>
 </table>
 
-Screenshots show the English TradeLens Web interface on a local instance. Trading results are generated demo data from `scripts/seed-demo.py`, not real trading performance.
-Capture inputs and retained-image provenance are recorded in [the screenshot manifest](docs/screenshots/README.md). Old mobile/store captures were removed; new captures are required before mobile publication.
+The showcase has no scored predictions: pending/unavailable outcomes are shown honestly.
+Detailed cash-flow, SBI guidance and manual-editor images are in the feature guides.
+Mobile remains outside active fork validation; new captures are required before mobile publication.
 
 ---
 
