@@ -7,6 +7,8 @@ import subprocess
 import time
 import urllib.error
 import urllib.request
+from datetime import datetime, timedelta, timezone
+from showcase_dates import timeline
 
 IMAGE = os.environ.get('DEMO_TEST_IMAGE', 'tradelens-demo:243')
 BASE = 'http://127.0.0.1:19000'
@@ -67,11 +69,15 @@ def check():
     trades = request('GET', '/api/v1/trades', token=token)
     assert len(trades) == 7 and all(t['qty_remaining'] == 0 for t in trades)
     assert sum(t['net_pnl'] for t in trades) == 25000
-    values = request('GET', '/api/v1/analytics/account-value?account_id=' + account + '&from=2026-09-01&to=2026-09-08', token=token)
-    assert len(values['points']) == 6 and all(p['status'] == 'complete' for p in values['points']), values
+    events, sessions = timeline(datetime.now(timezone(timedelta(hours=9))).date())
+    assert min(datetime.fromisoformat(t['opened_at'].replace('Z', '+00:00')).astimezone(timezone(timedelta(hours=9))).date().isoformat() for t in trades) == events[0]
+    assert all(datetime.fromisoformat(t['closed_at'].replace('Z', '+00:00')).astimezone(timezone(timedelta(hours=9))).date().isoformat() <= events[-1] for t in trades)
+    assert events[0].encode() in request('GET', '/demo') and b'__SHOWCASE_RANGE__' not in request('GET', '/demo')
+    values = request('GET', '/api/v1/analytics/account-value?account_id=' + account + '&from=' + sessions[0] + '&to=' + sessions[-1], token=token)
+    assert len(values['points']) == len(sessions) and all(p['status'] == 'complete' for p in values['points']), values
     assert values['points'][-1]['estimated_account_value'] == 975000, values
     news = request('GET', '/api/v1/news', token=token)
-    assert len(news) == 3
+    assert len(news) == 3 and all(n['published_at'][:10] == events[0] for n in news)
     counts = request('GET', '/api/v1/news/performance', token=token)['counts']
     assert counts['total'] == 6 and counts['unavailable'] == 2 and counts['pending'] == 4, counts
     prediction_count = 0

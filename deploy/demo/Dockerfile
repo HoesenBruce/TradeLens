@@ -23,7 +23,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     && useradd --system --uid 10001 --create-home demo
 COPY --from=api /server /server
 COPY --from=web /web/dist /app/web
-COPY scripts/seed-demo.py scripts/seed-showcase.py scripts/showcase-market.py /app/scripts/
+COPY scripts/seed-demo.py scripts/seed-showcase.py scripts/showcase-market.py scripts/showcase_dates.py /app/scripts/
+COPY api/internal/marketdata/calendars/JP.csv /app/api/internal/marketdata/calendars/JP.csv
 COPY deploy/demo/ /app/demo/
 USER demo
 ENV PORT=10000 PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1

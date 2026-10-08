@@ -34,7 +34,11 @@ broker connection, GHCR credential, or real user data is required.
 
 Every process start allocates a new `tradelens-demo-*` temporary directory and
 SQLite database. The API migrates it, first-user setup runs privately, and
-`scripts/seed-demo.py --mode showcase` dispatches to `seed-showcase.py`. The seed
+`scripts/seed-demo.py --mode showcase` dispatches to `seed-showcase.py`. The runtime freezes its startup date in Asia/Tokyo and maps the showcase
+events across the preceding 30 days using the existing versioned JP calendar.
+Trading days, cash flows, news and fictional prices share this one timeline;
+the entry page displays the actual generated range. Warm requests reuse it.
+The seed
 imports the fictional SBI JPY history, journals, cash flows, news and predictions.
 The bootstrap API is stopped, the user is demoted from admin, and the final API
 starts with `TM_DEMO_MODE=true`. Only then does nginx bind `0.0.0.0:$PORT`.
@@ -75,10 +79,21 @@ the normal Dockerfiles, Compose volumes and publishing workflows are unchanged.
 
 The fixture listens only on `127.0.0.1:18964`; neither it nor the API/bootstrap
 ports are published. The provider has no network-download fallback. Unknown
-symbols/resolutions/dates fail or return no fixture data. Prices cover only
-**September 1–8, 2026**, daily JPY bars. Select this date range and JPY to inspect
-reports; on Home choose **All** for both chart time ranges (their ranges are
-independent of the global date filter). Seven closed trades produce JPY 25,000 realized P&L; closing
+symbols/resolutions/dates fail or return no fixture data. In the Render demo, daily fictional JPY bars cover the Japanese sessions in
+the **30 days before startup**, excluding the startup date. Six ordered showcase
+event dates are distributed across that window; intervening sessions use the
+previous fictional event price. These are explicitly generated practice prices,
+not repaired or downloaded market data. Home’s default 30-day charts include
+the sample; select JPY and **1D** for trade charts. The entry page shows the
+current window. Dates remain fixed while the instance stays warm and move
+forward on its next restart/cold start.
+
+Standalone `seed-demo.py --mode showcase` / `showcase-market.py` retain the
+original September 1–8, 2026 timeline unless the demo runtime opts in with its
+shared `TRADELENS_SHOWCASE_TODAY` date. No self-hosted persistence behavior changes.
+The existing JP calendar snapshot covers 2020–2030; startup fails outside its
+coverage rather than guessing trading days, so extend that snapshot before
+expiry. Seven closed trades produce JPY 25,000 realized P&L; closing
 estimated account value is JPY 975,000 on contributed capital JPY 950,000.
 News shows three fictional catalysts and six horizon outcomes (four pending,
 two unavailable). These statuses are intentional fixture coverage, not market
@@ -119,7 +134,7 @@ Dashboard/external acceptance still required:
 
 - Confirm Free plan, one service, no disk, successful build and `/readyz` 200.
 - Open `/demo`, log in, reload, open trades and inspect SBI 現引/現渡 details.
-- Select the fixture date range and confirm account-value chart and totals.
+- Confirm default 30-day Home charts and totals, then verify the date range shown on `/demo`.
 - Open news, predictions, stored validation history and performance statuses.
 - Verify upload, deletion, password change, tokens and administration are denied
   (including direct HTTP requests), and the data remains unchanged.

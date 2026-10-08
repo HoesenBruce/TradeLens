@@ -8,6 +8,7 @@
 !scripts/seed-demo.py
 !scripts/seed-showcase.py
 !scripts/showcase-market.py
+!scripts/showcase_dates.py
 !deploy/
 !deploy/demo/
 !deploy/demo/**

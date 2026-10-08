@@ -5,6 +5,12 @@ import importlib.util
 import io
 import json
 import urllib.request
+import sys
+from pathlib import Path
+
+# Also support existing importlib callers outside the scripts directory.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from showcase_dates import DATES, DATE_MAP
 
 spec = importlib.util.spec_from_file_location('demo', __file__.replace('seed-showcase.py', 'seed-demo.py'))
 demo = importlib.util.module_from_spec(spec)
@@ -48,7 +54,7 @@ def trade_csv():
     writer = csv.writer(out)
     writer.writerow(['約定日', '銘柄', '銘柄コード', '市場', '取引', '約定数量', '約定単価', '手数料/諸経費等'])
     for day, symbol, action, qty, price, fee in ROWS:
-        writer.writerow([day, LABEL, symbol, '東証', action, qty, price, fee])
+        writer.writerow([DATE_MAP[day.replace('/', '-')].replace('-', '/'), LABEL, symbol, '東証', action, qty, price, fee])
     return out.getvalue()
 
 
@@ -58,9 +64,9 @@ def seed(api):
         raise SystemExit('Showcase requires an empty disposable user. Recreate the database/user; no automatic deletion.')
     account = api('POST', '/accounts', {'name': LABEL + ' SBI JPY', 'broker': 'SBI Securities',
         'account_type': 'margin', 'base_currency': 'JPY', 'starting_balance': 0})['id']
-    for kind, amount, day in [('deposit', 1000000, '01'), ('withdrawal', -50000, '08')]:
+    for kind, amount, day in [('deposit', 1000000, DATES[0]), ('withdrawal', -50000, DATES[-1])]:
         api('POST', '/cash-transactions', {'account_id': account, 'type': kind, 'amount': amount,
-            'currency': 'JPY', 'note': LABEL, 'occurred_at': f'2026-09-{day}T00:00:00Z'})
+            'currency': 'JPY', 'note': LABEL, 'occurred_at': day + 'T00:00:00Z'})
     text = trade_csv()
     preview = upload(api, '/imports', account, text)
     if preview['detected_broker'] != 'SBI Securities (Execution History)':
@@ -80,7 +86,7 @@ def seed(api):
                                                ('285A', 'JP', 'bearish', True),
                                                ('7203', 'UNKNOWN', 'neutral', True)]:
         news = api('POST', '/news', {'title': LABEL + ' Synthetic catalyst ' + symbol,
-            'source': LABEL, 'published_at': '2026-09-01T00:00:00Z',
+            'source': LABEL, 'published_at': DATES[0] + 'T00:00:00Z',
             'original_text': 'Fictional exercise; no real company announcement or investment claim.',
             'summary': LABEL + ' Practice thesis', 'category': 'fictional', 'notes': LABEL,
             'assets': [{'asset_type': 'stock', 'symbol': symbol, 'market': market,

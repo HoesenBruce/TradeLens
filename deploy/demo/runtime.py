@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Disposable demo supervisor. No public listener exists until seeding succeeds."""
 import importlib.util
+from datetime import datetime, timedelta, timezone
 import json
 import os
 from pathlib import Path
@@ -21,8 +22,12 @@ SCRIPTS = ROOT / 'scripts'
 EMAIL = 'demo@example.com'
 PASSWORD = 'fictional-demo-password'
 API = 'http://127.0.0.1:18080/api/v1'
+# All children use the same Tokyo startup date, including across midnight.
+os.environ['TRADELENS_SHOWCASE_TODAY'] = datetime.now(timezone(timedelta(hours=9))).date().isoformat()
+sys.path.insert(0, str(SCRIPTS))
+from showcase_dates import SESSIONS
 MARKET_PROBE = ('http://127.0.0.1:18964/v1/bars?symbol=285A.T&interval=D'
-                '&from=2026-09-01T00:00:00Z&to=2026-09-09T00:00:00Z')
+                f'&from={SESSIONS[0]}T00:00:00Z&to={os.environ["TRADELENS_SHOWCASE_TODAY"]}T00:00:00Z')
 
 
 def get(url):
@@ -140,7 +145,10 @@ def run():
 
         readiness = HTTPServer(('127.0.0.1', 18081), Ready)
         threading.Thread(target=readiness.serve_forever, daemon=True).start()
-        config = (ROOT / 'demo' / 'nginx.conf').read_text().replace('__PORT__', str(port))
+        entry = (ROOT / 'demo' / 'index.html').read_text().replace('__SHOWCASE_RANGE__', f'{SESSIONS[0]} – {SESSIONS[-1]}')
+        entry_path = directory / 'entry.html'
+        entry_path.write_text(entry)
+        config = (ROOT / 'demo' / 'nginx.conf').read_text().replace('__PORT__', str(port)).replace('/app/demo/index.html', str(entry_path))
         config_path = directory / 'nginx.conf'
         config_path.write_text(config)
         proxy = subprocess.Popen(['nginx', '-c', str(config_path), '-g', 'daemon off;'])

@@ -1,5 +1,9 @@
 # #243 public Render acceptance — 2026-10-08
 
+> Historical acceptance of implementation `70fab644`. The subsequent rolling
+> startup-date change requires a new Render deployment and public revalidation;
+> see [rolling showcase validation](rolling-showcase.md).
+
 Public URL: https://tradelens-demo.onrender.com
 
 Reviewed branch: `feat/243-render-demo`. Implementation / PR #264 head at the

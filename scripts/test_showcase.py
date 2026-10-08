@@ -25,6 +25,43 @@ assert '285A' in showcase.trade_csv()
 assert market.response({'symbol': ['285A.T'], 'interval': ['D'], 'from': ['2026-09-01T00:00:00Z'],
                         'to': ['2026-09-09T00:00:00Z']})['bars'][2]['close'] == 750
 
+# Rolling dates reuse the actual JP calendar, including holidays and year boundaries.
+from datetime import date, timedelta
+from showcase_dates import timeline
+for today in (date(2026, 10, 8), date(2026, 1, 5), date(2024, 3, 1), date(2026, 9, 24)):
+    events, sessions = timeline(today)
+    assert len(events) == len(set(events)) == 6
+    assert events == sorted(events) and set(events) <= set(sessions)
+    assert all(today - timedelta(days=30) <= date.fromisoformat(day) < today for day in sessions)
+assert '2026-09-22' not in timeline(date(2026, 9, 24))[1]
+assert timeline(date(2026, 10, 8)) != timeline(date(2026, 10, 9))
+for outside in (date(2020, 1, 20), date(2031, 1, 5)):
+    try:
+        timeline(outside)
+        raise AssertionError('must refuse windows outside the versioned calendar')
+    except ValueError:
+        pass
+# Verify scripts agree on both relocated event dates and intervening daily prices.
+import os, subprocess
+subprocess.run([sys.executable, '-c', """
+import importlib.util, csv, io
+from showcase_dates import DATES, SESSIONS
+spec=importlib.util.spec_from_file_location('seed','scripts/seed-showcase.py')
+seed=importlib.util.module_from_spec(spec);spec.loader.exec_module(seed)
+spec=importlib.util.spec_from_file_location('market','scripts/showcase-market.py')
+market=importlib.util.module_from_spec(spec);spec.loader.exec_module(market)
+rows=list(csv.DictReader(io.StringIO(seed.trade_csv())))
+assert {r['約定日'].replace('/','-') for r in rows} == set(DATES)
+bars=market.response({'symbol':['285A.T'],'interval':['D'],'from':[SESSIONS[0]+'T00:00:00Z'],'to':['2026-10-08T00:00:00Z']})['bars']
+assert [b['market_date'] for b in bars] == SESSIONS
+assert bars[0]['close']==800 and bars[-1]['close']==750
+assert market.response({'symbol':['285A.T'],'interval':['D'],'from':['2026-10-08T00:00:00Z'],'to':['2026-10-09T00:00:00Z']})['bars']==[]
+"""], check=True, env={**os.environ, 'TRADELENS_SHOWCASE_TODAY':'2026-10-08', 'PYTHONPATH':str(Path(__file__).resolve().parent)})
+
+# Existing Web E2E imports the seed module from outside scripts/.
+subprocess.run([sys.executable, '-c', "import importlib.util; s=importlib.util.spec_from_file_location('showcase','../scripts/seed-showcase.py'); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); assert '2026/09/01' in m.trade_csv()"],
+               cwd=Path(__file__).resolve().parents[1] / 'web', check=True)
+
 if len(sys.argv) > 1:
     api = legacy.Api(sys.argv[1])
     api('POST', '/setup', {'email': 'fictional@example.com', 'password': 'fictional-showcase-password'})
