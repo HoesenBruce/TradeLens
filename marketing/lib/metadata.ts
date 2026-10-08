@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import { locales } from '@/i18n/locales';
-import { appName, siteUrl, gitConfig, demoConfig } from '@/lib/shared';
+import { appName, siteUrl, gitConfig } from '@/lib/shared';
 
 /* The dashboard shot doubles as the social card for pages with no bespoke image.
    Next derives the Twitter card from OpenGraph, and a page that sets no image
    degrades to the small imageless `summary` card — so this travels with the
    `twitter` block below rather than being set on its own. */
-export const socialImage = { url: '/screenshots/dashboard.png', width: 1440, height: 900 };
+export const socialImage = { url: '/screenshots/showcase/portfolio.jpg', width: 1440, height: 1000 };
 
 /** Canonical plus the hreflang map, for a route that exists under every locale prefix. */
 export function localeAlternates(lang: string, path = ''): Metadata['alternates'] {
@@ -38,7 +38,7 @@ export function softwareSchema(description: string) {
     description,
     url: siteUrl,
     applicationCategory: 'FinanceApplication',
-    operatingSystem: 'Web, iOS, Android, Docker',
+    operatingSystem: 'Web, Docker',
     license: 'https://www.gnu.org/licenses/agpl-3.0.html',
     isAccessibleForFree: true,
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -46,7 +46,6 @@ export function softwareSchema(description: string) {
     downloadUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}/releases/latest`,
     softwareHelp: `${siteUrl}/en/docs`,
     screenshot: `${siteUrl}${socialImage.url}`,
-    ...(demoConfig.url ? { installUrl: demoConfig.url } : {}),
   };
 }
 

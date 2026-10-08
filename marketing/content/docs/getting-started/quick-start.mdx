@@ -3,7 +3,7 @@ title: Quick start
 description: Run the web UI and API in one official GHCR Compose stack, on your own machine.
 ---
 
-> **Current TradeLens status:** official TradeLens GHCR images are published. `make up` (SQLite) and `make up-postgres` (PostgreSQL) use them by default. Source-build fallback remains available through `make up-build` / `make up-postgres-build`. Docker publisher and Release Please remain `disabled_manually`; image availability does not imply continuous publishing is enabled.
+> **Current TradeLens status:** official TradeLens GHCR images are published. `make up` (SQLite) and `make up-postgres` (PostgreSQL) use them by default. Source-build fallback remains available through `make up-build` / `make up-postgres-build`. Docker publishing remains `disabled_manually`; Release Please is enabled. Image availability does not imply continuous publishing.
 >
 > **Database boundary:** TradeLens and upstream TraderMemos migration histories have diverged. Never hand a database used by one product to the other, including PostgreSQL. Use separate projects and fresh databases for different products. Switching an existing TradeLens source deployment to official TradeLens images is a same-product deployment change: take a complete backup, then preserve the checkout, Compose project, configuration and volumes.
 
@@ -42,16 +42,19 @@ cd TradeLens
 make setup && make dev   # API :8080 + web :5173
 ```
 
-See [CONTRIBUTING.md](https://github.com/sinhong2011/TraderMemos/blob/main/CONTRIBUTING.md) for
+See [CONTRIBUTING.md](https://github.com/HoesenBruce/TradeLens/blob/main/CONTRIBUTING.md) for
 targets, Vite+ commands, and project structure.
 
-### Demo data
+### Synthetic TradeLens showcase
 
-Fill any instance with ~200 generated trades over the last three months:
+Use a new disposable API/database and the local synthetic provider from the showcase guide. This seed refuses reruns and is not for real portfolios. Four pending and two unavailable horizons are not scored investment results.
+
+[Showcase / 合成展示](https://github.com/HoesenBruce/TradeLens/blob/main/docs/showcase-demo.md)
 
 ```bash
-make demo-seed API=http://localhost:3000/api/v1 EMAIL=you@example.com PASSWORD='…'
+python3 scripts/seed-demo.py --mode showcase \
+  --api http://127.0.0.1:8093/api/v1 \
+  --email fictional@example.com --password fictional-showcase-password
 ```
 
-It talks to the public API only, so it works against a local stack or a deployed demo.
-Re-running is a no-op — fills are deduplicated server-side.
+Optional legacy USD data: `--mode legacy`. The upstream demo is not a TradeLens deployment.

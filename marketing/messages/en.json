@@ -1,173 +1,52 @@
 {
   "Home": {
-    "metaTitle": "TraderMemos — self-hosted trading journal",
-    "metaDescription": "Own your trading data. TraderMemos is a self-hosted trading journal with a dashboard, P&L calendar, trade log, playbook, and reports — free, AGPL-3.0, on your own infrastructure.",
-    "badge": "Self-hosted · AGPL-3.0 · Go + React",
-    "heroTitleLine1": "Own your data.",
-    "heroTitleLine2": "Review your edge.",
-    "heroSubtitle": "TraderMemos is a self-hosted trading journal — dashboard, P&L calendar, trade log, playbook, and reports on your own infrastructure. No subscription, no vendor lock-in.",
+    "metaTitle": "TradeLens — Japanese equities and news-thesis research",
+    "metaDescription": "Self-hosted SBI imports, cash/margin review, news predictions and historical account-value estimates. Built on TraderMemos; Web-first and AGPL-3.0.",
+    "badge": "TradeLens · Self-hosted · Web-first · AGPL-3.0",
+    "heroTitle": "Japanese equities. Testable theses. Your data.",
+    "heroSubtitle": "Import SBI history, keep cash and margin distinct, record news predictions, and compare trading plans with actual fills. Review the evidence on infrastructure you control.",
     "ctaGetStarted": "Get started",
-    "ctaDemo": "Try the live demo",
-    "demoCreds": "Demo login:",
-    "ctaGithub": "View on GitHub",
-    "ticker": [
-      {
-        "label": "Net P&L",
-        "value": "+$8,398.72",
-        "tone": "profit"
-      },
-      {
-        "label": "Win rate",
-        "value": "57%",
-        "tone": "neutral"
-      },
-      {
-        "label": "Profit factor",
-        "value": "1.79",
-        "tone": "neutral"
-      },
-      {
-        "label": "Expectancy",
-        "value": "+$45.90 / trade",
-        "tone": "profit"
-      },
-      {
-        "label": "Max drawdown",
-        "value": "−$1,082.17",
-        "tone": "loss"
-      },
-      {
-        "label": "Avg hold",
-        "value": "1h",
-        "tone": "neutral"
-      },
-      {
-        "label": "Trades",
-        "value": "183",
-        "tone": "neutral"
-      }
-    ],
-    "eyebrowWhy": "Own the data",
-    "eyebrowFeatures": "Feature set",
-    "eyebrowInside": "Inside the app",
-    "eyebrowStack": "Under the hood",
-    "featuresSub": "From broker statement to daily review — every step of the loop lives in one self-hosted app.",
-    "whyHeading": "Why TraderMemos?",
-    "whyBody": "Cloud journals like TradeZella and TraderSync are polished — but your edge lives in the data. TraderMemos follows the same self-hosting philosophy as Ghost, Umami, and Plane: run it on your infrastructure, own the database, extend without permission.",
-    "comparisonHeaderFeature": "Category",
-    "comparisonHeaderCloud": "Cloud journals",
-    "comparisonHeaderTm": "TraderMemos",
-    "comparison": [
-      {
-        "row": "Data ownership",
-        "cloud": "Vendor-hosted",
-        "tm": "Your SQLite / Postgres, your VPS"
-      },
-      {
-        "row": "Cost",
-        "cloud": "Monthly subscription",
-        "tm": "Free + your hosting"
-      },
-      {
-        "row": "AI keys",
-        "cloud": "Often vendor-managed",
-        "tm": "Your OpenAI-compatible API"
-      },
-      {
-        "row": "Customization",
-        "cloud": "Limited",
-        "tm": "Fork, patch, deploy"
-      }
-    ],
-    "featuresHeading": "Everything a daily review needs",
+    "ctaDemo": "Run the synthetic showcase",
+    "ctaGithub": "View TradeLens on GitHub",
+    "portfolioAlt": "Fictional JPY portfolio: net P&L 25,000, account value 975,000",
+    "screenshotProvenance": "Actual English TradeLens UI, synthetic September 2026 data only. Prices, news and returns are invented. The showcase has four pending and two unavailable prediction horizons, zero scored outcomes. These are not real investment results.",
+    "featuresHeading": "TradeLens extensions",
+    "readGuide": "Read the focused guide",
+    "foundationTitle": "Built on the TraderMemos foundation",
+    "foundationBody": "TraderMemos by sinhong2011 and contributors supplies journaling, grouping, generic analytics, the P&L calendar, Playbook, replay, sharing and risk tools. TradeLens extends SBI accounting, news research, valuation, Generic Bars HTTP integration and Web localization. Provider history may be incomplete; a data collector is a separate service. Attribution and AGPL-3.0 are retained.",
+    "upstreamDemo": "Optional TraderMemos demo — upstream only",
+    "startTitle": "Run it on your own server",
+    "startBody": "No official hosted TradeLens service is implied. Clone the fork, review .env, pin the image version and start the Web/API Compose stack. Open localhost:3000 and create the owner. The synthetic showcase requires its own fresh disposable API/database and local fixture provider.",
+    "deploymentNote": "Compose uses TradeLens GHCR images; source-build fallback is available. Docker publishing is currently disabled manually, so images are not continuously published. Never alternate upstream TraderMemos and TradeLens on an existing database: their migrations diverge. Back up the database, attachments and deployment configuration before upgrades. Put TLS in front for production.",
+    "deployGuide": "Deployment and database boundaries",
+    "inheritedDocs": "Inherited docs reference",
+    "mobileNote": "Web is the active target. The Expo client is preserved but unvalidated for this fork. Upstream TestFlight/APK downloads are not official TradeLens apps.",
+    "referenceNote": "TradeLens fork. Retained docs, feature comparisons and mobile links include upstream references; they do not establish verified TradeLens support or official hosted services.",
     "features": {
-      "dashboard": {
-        "title": "Dashboard",
-        "description": "Equity curve, expectancy, streaks, hold times, and annual goal pacing — per account or across a multi-account portfolio."
+      "sbi": {
+        "title": "SBI and Japanese equities",
+        "description": "Import 約定履歴 and 円貨入出金明細 separately. SBI-specific cash/margin-long/short accounting includes 現引 and 現渡; missing opening history cannot establish cost basis.",
+        "alt": "Actual SBI execution-history mapping and confirmation"
       },
-      "tradeLog": {
-        "title": "Trade log",
-        "description": "Fills grouped into trades — filter, sort, tag, and drill into execution detail."
+      "news": {
+        "title": "News theses and predictions",
+        "description": "Link news to assets and save User predictions. Optional AI requires your provider/key and explicit acceptance. API validation needs eligible sessions and price evidence; unavailable is not a zero return. No automatic news collection.",
+        "alt": "Fictional 285A thesis and manual prediction"
       },
-      "calendar": {
-        "title": "P&L calendar",
-        "description": "Daily and weekly heatmap with weekly totals and a day-detail drill-down."
+      "valuation": {
+        "title": "Historical valuation and currency-aware review",
+        "description": "Replay holdings and cash with available prices. Estimates can be incomplete. Mixed-currency review uses latest FX even for historical values, not historical FX reconstruction.",
+        "alt": "Synthetic account ledger: deposit 1,000,000, withdrawal 50,000"
       },
-      "reports": {
-        "title": "Reports",
-        "description": "Expectancy, SQN, Kelly %, MAE/MFE, Monte Carlo, and execution quality — broken down by setup, hour, and session, saved as reusable views."
-      },
-      "playbook": {
-        "title": "Playbook",
-        "description": "Strategy library linked to the trades that used each setup."
-      },
-      "import": {
-        "title": "Import",
-        "description": "Nine broker CSV presets, MT4/MT5 statements, IBKR Flex sync — or let the tm-sync desktop agent watch your statement folder."
-      },
-      "alerts": {
-        "title": "Alerts",
-        "description": "Risk rules, daily loss limits, and prop drawdown warnings — push and webhook, fired from your own server. All free."
-      },
-      "replay": {
-        "title": "Bar replay",
-        "description": "Backtest any symbol bar by bar against a persistent paper account — results flow into the same analytics as live trades."
-      },
-      "share": {
-        "title": "Sharing",
-        "description": "Revocable read-only links to your performance, share cards for single trades, and a Year Wrapped recap."
-      },
-      "tools": {
-        "title": "Tools",
-        "description": "Position-size, FX, and Kelly calculators, an advanced chart, economic calendar, and cash ledger."
-      },
-      "ai": {
-        "title": "AI (optional)",
-        "description": "Screenshot fill extraction + trade coach via OpenAI-compatible APIs — your keys."
-      },
-      "api": {
-        "title": "API access",
-        "description": "Personal access tokens (tm_pat_…) for MCP/scripts; OpenAPI docs at /docs."
-      },
-      "mobile": {
-        "title": "Mobile app (beta)",
-        "description": "Native companion for iOS and Android — offline journaling on both, plus widgets, Live Activities, and Siri / Action Button quick capture on iOS. TestFlight for iOS · APK from GitHub Releases for Android."
+      "plan": {
+        "title": "Planned versus actual trade review",
+        "description": "Planned direction stays separate from executed direction. Compare the fictional 1,200 target with the actual 1,100 exit; journal and risk tools retain their upstream foundation.",
+        "alt": "Fictional long plan target 1200 versus actual exit 1100"
       }
-    },
-    "lookInsideHeading": "A look inside",
-    "tradeLogCaptionTitle": "Trade log",
-    "tradeLogCaptionBody": "per-trade P&L, hold time, and tags at a glance. Click any row for the full execution timeline.",
-    "calendarCaptionTitle": "P&L calendar",
-    "calendarCaptionBody": "daily and weekly heatmap. Spot the streaks and the bad days at a glance.",
-    "reportsCaptionTitle": "Reports",
-    "reportsCaptionBody": "equity curve, profit factor, expectancy, and goal pacing — plus Monte Carlo simulation, MAE/MFE, and breakdowns by setup, hour, and session.",
-    "techStackHeading": "Tech stack",
-    "stackComment": "# your data, your box",
-    "stack": [
-      {
-        "layer": "API",
-        "value": "Go · Echo · sqlc · golang-migrate · SQLite / Postgres"
-      },
-      {
-        "layer": "Web",
-        "value": "React · Vite+ · TanStack Router/Query/Form · Tailwind"
-      },
-      {
-        "layer": "Mobile",
-        "value": "Expo · PanelUI + Uniwind · TestFlight / APK"
-      },
-      {
-        "layer": "Design",
-        "value": "shadcn/ui + coss ui tokens"
-      }
-    ],
-    "licenseHeading": "AGPL-3.0 licensed",
-    "licenseBody": "Self-host it, modify it, and run it for yourself or your firm freely.",
-    "readDocs": "Read the docs",
-    "screenshotProvenance": "Screenshots and statistics use independently generated demo data, not real trading performance."
+    }
   },
   "Footer": {
-    "tagline": "Self-hosted trading journal.",
+    "tagline": "Japanese equities and news-thesis research",
     "docs": "Docs",
     "changelog": "Changelog",
     "privacy": "Privacy",
@@ -177,7 +56,7 @@
     "discussions": "Discussions",
     "security": "Security",
     "license": "License (AGPL-3.0)",
-    "privacyNote": "No telemetry — your data stays on your server.",
+    "privacyNote": "Self-hosted data; optional AI sends selected content to your configured provider.",
     "features": "Features",
     "compare": "Compare"
   },

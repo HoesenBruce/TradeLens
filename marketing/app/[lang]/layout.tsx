@@ -3,7 +3,7 @@ import { Bricolage_Grotesque, JetBrains_Mono } from 'next/font/google';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { i18nProvider } from 'fumadocs-ui/i18n';
 import { NextIntlClientProvider } from 'next-intl';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { translations } from '@/lib/translations';
 import { i18n } from '@/lib/i18n';
 import { siteUrl } from '@/lib/shared';
@@ -41,6 +41,7 @@ export default async function Layout({
   // locale to next-intl (picked up by i18n/request.ts via `requestLocale`).
   setRequestLocale(locale);
 
+  const t = await getTranslations({ locale, namespace: 'Home' });
   return (
     <html
       lang={lang}
@@ -61,6 +62,7 @@ export default async function Layout({
             theme={{ defaultTheme: 'dark' }}
             i18n={i18nProvider(translations, lang)}
           >
+            <aside className="border-b border-fd-border bg-fd-muted px-6 py-2 text-center text-sm">{t('referenceNote')}</aside>
             {children}
           </RootProvider>
         </NextIntlClientProvider>
