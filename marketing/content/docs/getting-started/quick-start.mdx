@@ -1,18 +1,19 @@
 ---
 title: Quick start
-description: Run the web UI and API in one source-built Compose stack, on your own machine.
+description: Run the web UI and API in one official GHCR Compose stack, on your own machine.
 ---
 
-> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+> **Current TradeLens status:** official TradeLens GHCR images are published. `make up` (SQLite) and `make up-postgres` (PostgreSQL) use them by default. Source-build fallback remains available through `make up-build` / `make up-postgres-build`. Docker publisher and Release Please remain `disabled_manually`; image availability does not imply continuous publishing is enabled.
 >
-> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+> **Database boundary:** TradeLens and upstream TraderMemos migration histories have diverged. Never hand a database used by one product to the other, including PostgreSQL. Use separate projects and fresh databases for different products. Switching an existing TradeLens source deployment to official TradeLens images is a same-product deployment change: take a complete backup, then preserve the checkout, Compose project, configuration and volumes.
 
-Build the TradeLens Web UI and API from this checkout:
+Run the official TradeLens Web UI and API images:
 
 ```bash
 git clone https://github.com/HoesenBruce/TradeLens.git
 cd TradeLens
-make up-build    # http://localhost:3000
+cp .env.example .env   # review JWT secret and pin TM_IMAGE_TAG
+make up          # http://localhost:3000
 ```
 
 That's it. Same-origin `/api` — no CORS, leave the **Server** field blank. On first visit the
@@ -23,9 +24,9 @@ That's it. Same-origin `/api` — no CORS, leave the **Server** field blank. On 
 
 ```bash
 cp .env.example .env
-make up-build           # SQLite
+make up                 # SQLite
 # OR, on a separate new installation:
-make up-postgres-build  # PostgreSQL
+make up-postgres        # PostgreSQL
 ```
 
 For production, set `TM_JWT_SECRET=$(openssl rand -hex 32)` and put TLS in front — see

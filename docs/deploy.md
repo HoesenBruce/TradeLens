@@ -9,9 +9,9 @@
 #   2. Static SPA + API elsewhere (CORS + Server URL)
 #   3. Static SPA with edge rewrite to API (same-origin from the browser)
 
-> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+> **Current TradeLens status:** official TradeLens GHCR images are published. `make up` (SQLite) and `make up-postgres` (PostgreSQL) use them by default. Source-build fallback remains available through `make up-build` / `make up-postgres-build`. Docker publisher and Release Please remain `disabled_manually`; image availability does not imply continuous publishing is enabled.
 >
-> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+> **Database boundary:** TradeLens and upstream TraderMemos migration histories have diverged. Never hand a database used by one product to the other, including PostgreSQL. Use separate projects and fresh databases for different products. Switching an existing TradeLens source deployment to official TradeLens images is a same-product deployment change: take a complete backup, then preserve the checkout, Compose project, configuration and volumes.
 
 ## 0. Deploy web to *your* Vercel / Cloudflare (fork-friendly)
 
@@ -35,33 +35,34 @@ TM_CORS_ORIGINS=https://*.vercel.app,https://*.pages.dev,https://*.workers.dev,h
 
 ## 1. Docker all-in-one (recommended default)
 
-Build this fork from source:
+Run official TradeLens prebuilt images:
 
 ```bash
 git clone https://github.com/HoesenBruce/TradeLens.git
 cd TradeLens
 cp .env.example .env
-make up-build           # SQLite
+# Review TM_JWT_SECRET, set TM_ALLOW_INSECURE_JWT=false, and pin TM_IMAGE_TAG.
+make up                 # SQLite
 # OR, on a separate new installation:
-make up-postgres-build  # PostgreSQL
+make up-postgres        # PostgreSQL
 # open http://localhost:3000
 ```
 
-**Where the Docker Hub username comes from**
+### Image registry and version
 
-Source builds use the local-only tags `tradelens-api:local` and
-`tradelens-web:local` in both SQLite and PostgreSQL modes. `DOCKERHUB_USERNAME`
-does not affect these tags; `TM_IMAGE_TAG` still supplies build version metadata.
-The root `.dockerignore` includes API/Web source and `VERSION`, while excluding
-local data, dependencies, caches and unrelated repository content.
-The Hub settings below apply only to existing upstream image pulls. Future TradeLens
-publication uses GHCR; see [release policy](release.md).
+Compose loads `TM_IMAGE_REGISTRY` and `TM_IMAGE_TAG` from the root `.env`.
+The registry defaults to `ghcr.io/hoesenbruce`, with image names `tradelens-api`
+and `tradelens-web`. `DOCKERHUB_USERNAME` is no longer used; custom publishers
+must set `TM_IMAGE_REGISTRY` and provide these TradeLens image names.
+Production/self-hosted deployments should pin a stable version, such as
+`TM_IMAGE_TAG=0.2.1` (the `.env.example` default). Without a tag setting,
+Compose uses `latest`, a moving stable tag. For exact rollback/audit, use a
+Compose override with each recorded `image@sha256:...` digest; record the paired
+API/Web digests and matching database backup.
 
-| Context | Where to set it |
-|---------|-----------------|
-| End users / self-host | Root `.env` → `DOCKERHUB_USERNAME` (Compose loads it automatically). Defaults to `sinhong2011`. |
-| Image tag | Root `.env` → `TM_IMAGE_TAG` (`latest` or a semver like `0.7.0`). |
-| Future TradeLens publication (disabled) | GHCR with `GITHUB_TOKEN`; no Docker Hub credentials. |
+`make up-build` / `make up-postgres-build` build the current checkout as
+`tradelens-api:local` / `tradelens-web:local`; registry overrides do not change
+these local tags. `TM_IMAGE_TAG` supplies build metadata, not the source revision.
 
 What you get:
 
@@ -89,10 +90,10 @@ Important env (compose / host):
 ```bash
 # Production-ish compose example
 cp .env.example .env
-# edit .env: TM_JWT_SECRET=…, TM_ALLOW_INSECURE_JWT=false
+# edit .env: TM_JWT_SECRET=…, TM_ALLOW_INSECURE_JWT=false, TM_IMAGE_TAG=0.2.1
 export TM_JWT_SECRET=$(openssl rand -hex 32)
 export TM_ALLOW_INSECURE_JWT=false
-make up-build
+make up
 ```
 
 SQLite data and attachments live in `tm_data`. With the PostgreSQL overlay, the database lives in `tm_pg_data`, while attachments remain in `tm_data`. A complete instance backup requires **SQLite database + attachments**, or **PostgreSQL dump + attachments**, plus securely retained deployment configuration/secrets. Account ZIP exports and research Markdown exports are not complete instance backups. See the [backup/restore guide](../marketing/content/docs/self-hosting/backup-restore.mdx).

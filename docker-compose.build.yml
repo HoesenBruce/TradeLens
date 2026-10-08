@@ -1,5 +1,5 @@
 # Contributor / source build override.
-# Default docker-compose.yml pulls Docker Hub images — merge this file to build locally.
+# Default docker-compose.yml pulls official TradeLens GHCR images — merge this file to build locally.
 #
 #   make up-build
 #   # or:

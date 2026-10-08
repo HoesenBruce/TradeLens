@@ -2,18 +2,16 @@
 
 ## Current publication state
 
-Official TradeLens Docker images are **not yet published**. As verified on 2026-10-03,
-GitHub reports `docker-publish.yml` and `release-please.yml` as `disabled_manually`.
-`mobile-eas.yml`, `tm-sync-release.yml`, and `web-deploy-vercel.yml` are also disabled.
-Workflow files remain as implementation references; their trigger declarations do
-not mean publishing is active. Merging an ordinary PR does not currently launch
-the release chain below. Docker and Release Please must remain disabled while
-#230 is incomplete; completing this documentation issue does not itself authorize
-enabling publication or clear the other publication gates.
+Official TradeLens GHCR images are published: **v0.2.1**, source
+`b78c5925778831e7d2d039a4d0139ff1ddfc6e31`. Registry/runtime evidence is in
+[the validation record](validation/issue234/v0.2.1/README.md).
+Docker publisher (`docker-publish.yml`) and Release Please (`release-please.yml`)
+remain `disabled_manually`. Image distribution exists; automated continuous
+publishing is not enabled. This change does not authorize workflow enablement.
 
-Run TradeLens from source with `make up-build` or `make up-postgres-build`.
-`make up` / `make up-postgres` still default to upstream TraderMemos images.
-Never alternate upstream and TradeLens on the same existing database volume:
+`make up` / `make up-postgres` use official GHCR images; source fallback remains
+`make up-build` / `make up-postgres-build`. Pin stable `TM_IMAGE_TAG=0.2.1` in
+production. Never alternate upstream and TradeLens on the same database:
 the migration histories have diverged. See [deployment](deploy.md).
 
 ## Configured release design (inactive)
@@ -115,7 +113,7 @@ from the repo.
 
 The disabled workflow targets only `ghcr.io/hoesenbruce/tradelens-api` and
 `ghcr.io/hoesenbruce/tradelens-web`. No legacy container aliases are published.
-Compose defaults remain upstream until a separate deployment migration.
+Compose defaults use these official images.
 
 | Build | Tags |
 |---|---|
@@ -157,8 +155,8 @@ DOCKER_CONFIG="$qa_config" docker pull ghcr.io/hoesenbruce/tradelens-web@sha256:
 
 Record run URL, version, full source SHA, tags, both digests, package visibility
 read-back, anonymous pull output and amd64/arm64 manifest inspection in the
-first-release validation issue. Visibility and anonymous pulls remain **pending**
-until that controlled publication; implementation alone does not close those gates.
+first-release validation issue. Public visibility and anonymous pulls for v0.2.1 are verified in the linked
+validation record; implementation alone is not publication evidence.
 
 ## Mobile releases
 

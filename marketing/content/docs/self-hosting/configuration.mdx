@@ -3,9 +3,9 @@ title: Configuration
 description: Every TM_* environment variable the API reads, with defaults and what it controls.
 ---
 
-> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+> **Current TradeLens status:** official TradeLens GHCR images are published. `make up` (SQLite) and `make up-postgres` (PostgreSQL) use them by default. Source-build fallback remains available through `make up-build` / `make up-postgres-build`. Docker publisher and Release Please remain `disabled_manually`; image availability does not imply continuous publishing is enabled.
 >
-> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+> **Database boundary:** TradeLens and upstream TraderMemos migration histories have diverged. Never hand a database used by one product to the other, including PostgreSQL. Use separate projects and fresh databases for different products. Switching an existing TradeLens source deployment to official TradeLens images is a same-product deployment change: take a complete backup, then preserve the checkout, Compose project, configuration and volumes.
 
 
 All server configuration is environment variables with the `TM_` prefix. Set them in the shell,
@@ -99,5 +99,5 @@ Read by `docker compose` from the root `.env`, never passed into containers:
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `DOCKERHUB_USERNAME` | `sinhong2011` | Docker Hub namespace for `tradermemos-api` / `tradermemos-web` images |
-| `TM_IMAGE_TAG` | `latest` | Image tag — pin a release like `0.1.6` in production |
+| `TM_IMAGE_REGISTRY` | `ghcr.io/hoesenbruce` | GHCR namespace for `tradelens-api` / `tradelens-web` images |
+| `TM_IMAGE_TAG` | `latest` (production: `0.2.1`) | Image tag — pin a release like `0.2.1` in production |

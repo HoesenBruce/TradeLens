@@ -1,5 +1,10 @@
 # #234 controlled first-release checklist
 
+> Historical pre-publication plan. Completed v0.2.1 registry/runtime and owner-provided
+> NAS results are in [v0.2.1/README.md](v0.2.1/README.md); the final default-image
+> switch is recorded in [v0.2.1/default-ghcr.md](v0.2.1/default-ghcr.md).
+> PENDING entries below describe the original plan, not current release availability.
+
 Preparation only. No registry/runtime result is established by this document.
 Keep #233 and #234 open until their respective evidence requirements pass.
 
