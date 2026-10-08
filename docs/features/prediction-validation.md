@@ -1,5 +1,35 @@
 # Prediction validation
 
+## Using the performance report
+
+In **News**, open **News performance** after saving predictions. It reads persisted
+results; it does not fetch prices or trigger validation. Filter by source, symbol,
+asset type, category, publication date or horizon, then use **Reset filters** to return
+to the baseline. One prediction with 1D and 5D horizons contributes two samples.
+
+![Actual report with synthetic pending and unavailable samples](../screenshots/showcase/prediction-performance.jpg)
+
+The [showcase](../showcase-demo.md) produces six samples: four pending, two unavailable,
+zero validated and zero incomplete. The two unavailable samples come from an explicitly
+unsupported market; there is no hit rate with zero scored samples. Source=AI gives an
+empty report because this seed has no AI predictions. That exclusion, reload read-back
+and Reset were exercised in the production Web build against the disposable API.
+
+To obtain scored outcomes, call the validation POST below with authenticated ownership
+and a configured market-data provider. A prediction must be saved before the next regular
+opening; each horizon becomes eligible only after its closing session plus 60 minutes.
+News publication dates do not backdate predictions. Eligible daily bars need explicit
+market/calendar coverage and sufficient adjustment/source-acquisition evidence.
+Missing or unsupported evidence remains unavailable/incomplete, never a fabricated zero.
+
+A fresh showcase cannot immediately create historical validated/incomplete examples through
+supported APIs because save timestamps belong to the server. The synthetic September bars
+are for valuation, not evidence for newly saved predictions. No database backdating, live
+provider call or scored-outcome screenshot was used. Optional benchmark selection is API-only.
+List/detail Pending placeholders are not a substitute for report/API evidence. Mobile not validated.
+
+## Validation API and evidence rules
+
 `POST /api/v1/news/{id}/predictions/{predictionId}/validate` evaluates and persists
 each selected 1/3/5/10/20 trading-day horizon. No scheduler or Web UI is added.
 `GET .../validations` returns retained evidence; `current=true` selects one evaluation

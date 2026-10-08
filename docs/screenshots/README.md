@@ -1,6 +1,82 @@
 # Screenshot provenance and capture workflow
 
-## Issue #211 captures — 2026-09-30
+## Issue #254 showcase captures — 2026-10-08
+
+**Status: unfinished.** Eight actual production Web captures are available in `showcase/`;
+SBI browser upload/preview/confirm/result remains blocked. API import and the broker-guide
+image do not replace end-to-end browser upload acceptance. Under `AGENTS.md`, do not open
+a PR until this required Web case is completed.
+
+Use [showcase setup and audit](../showcase-demo.md) from #253, source commit `eef3752d`.
+All inputs are synthetic literals, with no RNG: 12 SBI rows, 14 executions, seven closed
+groups, JPY 25,000 P&L, 950,000 contributed capital and 975,000 balance/account value.
+The local Generic Bars fixture covers six September 1–8 JP sessions. Prediction counts
+are six horizon samples: four pending, two unavailable, zero validated/incomplete.
+Server-owned save timestamps cannot be backdated through supported APIs. No scored
+outcome or live AI analysis is fabricated.
+
+### Reproduce the capture setup
+
+Run the local market fixture and a fresh SQLite API per the showcase guide. Set
+`TM_CORS_ORIGINS` to the preview origin. This run used API port 8098, fixture 18964
+and Web 4174. `scripts/test_showcase.py <api-base>` creates the disposable user and
+checks the seed; its duplicate-import test leaves a second import-history batch with
+zero new executions, visible in the cash-flow capture.
+
+```sh
+cd web
+VITE_API=http://127.0.0.1:8098/api/v1 pnpm build
+pnpm exec tsc -b --noEmit
+pnpm run preview --host 127.0.0.1 --port 4174
+```
+
+Log in with the fictional credentials from the showcase guide. Use English, Dark, JPY,
+the fictional account, Tokyo display/market timezone and a **1440×1000** viewport.
+Captures use the Codex built-in browser, without chrome. JPEG viewport pixels are
+unedited; dimensions, metadata absence and hashes are checked in the manifest.
+OS-native date controls can retain the browser locale despite English app labels.
+
+| File | State |
+| --- | --- |
+| `portfolio.jpg` | Home; Equity and Historical account value, ALL ranges |
+| `cash-flow.jpg` | Settings → Accounts; signed deposit and withdrawal |
+| `trades.jpg` | Seven closed groups; Symbol, Status, Direction, Qty, Entry, Exit, P&L, P&L %, Created at, Close date |
+| `plan-review.jpg` | 6501 full trade; long plan target 1,200, actual exit 1,100; 1D fixture chart |
+| `sbi-guide.jpg` | Import → Find my broker → SBI Securities; existing fictional account |
+| `news-thesis.jpg` | 285A fictional thesis, asset and manual Bearish 60% prediction |
+| `prediction-create.jpg` | Manual editor; synthetic Bullish 70%, 1D/5D input |
+| `prediction-performance.jpg` | Six samples; four pending, two unavailable |
+
+The editor capture was followed by Save, reload read-back, edit/Cancel/re-entry and
+public API cleanup of that extra record. Source=AI excluded all samples; reload retained
+that filter and Reset restored six samples. Portfolio/trade/ledger values were checked
+against the running API, not intercepted or cached responses. All eight images were
+visually inspected: no real records, email, user ID, private URL or credential appears.
+
+### Remaining acceptance and limitations
+
+Built-in file-chooser events timed out. Safari was being used for another task and was
+left alone. A separate Chrome tab reached the native picker, then macOS ScreenCaptureKit
+failed to capture UI state. No external-browser image is included. Resume with a working
+chooser and fresh disposable API; capture actual SBI preview/confirm/result and duplicate
+import before marking #254 complete.
+
+No Web code changed. Mobile, live SBI/AI/market data, Postgres and remote CI were not
+validated. List/detail prediction cells remain Pending placeholders; the performance
+report and validation API supply actual outcome evidence. The fixture has no intraday
+coverage for MAE/MFE or intraday replay.
+
+### Reference audit
+
+README uses five new showcase captures. Existing root PNGs and all five marketing copies
+are retained with their #211 hashes under `retained_legacy` in the manifest. Marketing
+continues to label its generated USD demo and metrics; its information architecture and
+branding are separate scope. Verified all 22 new/legacy image hashes, four fixture hashes, 26 documentation image links
+and marketing screenshot references. No referenced image was removed. Root/marketing PNGs are
+fork-generated captures, not unlabeled upstream images. Historical validation folders
+below retain their original provenance and were not recaptured in this run.
+
+## Retained legacy USD captures — issue #211, 2026-09-30
 
 All nine root Web PNGs in this directory and five Web PNGs in
 `marketing/public/screenshots/` were newly captured from a production Web build
