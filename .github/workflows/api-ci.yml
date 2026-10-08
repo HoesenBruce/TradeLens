@@ -11,6 +11,10 @@ on:
   pull_request:
   workflow_call:
     inputs:
+      source_ref:
+        description: Validated release source commit; empty uses event ref
+        type: string
+        default: ""
       concurrency_key:
         description: >-
           Distinguishes callers that reuse this workflow within one run.
@@ -34,6 +38,8 @@ jobs:
         working-directory: api
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
 
       - uses: actions/setup-go@v7
         with:

@@ -19,7 +19,7 @@ the migration histories have diverged. See [deployment](deploy.md).
 The remaining sections describe the configured workflow **if deliberately enabled
 and configured later**, not current release availability. Credentials and required
 reviewers must be verified before enabling; this document does not establish that
-the `ghcr` environment currently has an approval gate.
+the live invocation has passed its approval gate.
 
 The retained [release-please](https://github.com/googleapis/release-please) configuration
 handles semver, changelogs, and GitHub Releases when enabled.
@@ -34,7 +34,6 @@ flowchart TD
     G -->|"not yet"| C
     G -->|"merge the Release PR"| E["tag vX.Y.Z<br/>GitHub Release published"]
     E --> F["docker-publish.yml"]
-    E --> I["mobile-eas.yml (android)<br/>EAS build → APK on the Release page"]
     E -.->|"not automatic"| H["iOS: self-hosted M1 Pro<br/>Forgejo ios-release.yml → TestFlight"]
 ```
 
@@ -42,9 +41,8 @@ There is no hand-cut release branch: `release-please--branches--main` **is** the
 release branch, rebuilt from scratch on every push to `main`. Merging it is the
 release. Nothing else tags or publishes.
 
-A GitFlow-style `release/x.y.z` merged into `main` is not possible here and is
-not wanted — the ruleset requires linear history and squash-only merges, so the
-merge commit it depends on is blocked. Squashing a release branch would also
+The intended workflow uses linear history and squash-only merges instead of
+GitFlow-style release branches. Owner must enforce that policy before activation. Squashing a release branch would also
 collapse its commits into one subject, destroying the individual `feat:` / `fix:`
 lines release-please reads to build the changelog.
 
@@ -59,9 +57,7 @@ lines release-please reads to build the changelog.
 3. Review the changelog and version bumps (`VERSION`, `web/package.json`, `CHANGELOG.md`).
 4. Merge the Release PR → GitHub Release `vX.Y.Z` is created.
 5. Approve the `ghcr` deployment → Docker images are published.
-6. The Android APK builds on EAS — no approval needed — and lands on the GitHub
-   Release page as `TradeLens-<version>.apk` (+ `.sha256`).
-7. Build iOS separately: dispatch `ios-release` on the private Forgejo remote
+6. Build iOS separately: dispatch `ios-release` on the private Forgejo remote
    (see [Mobile releases](#mobile-releases)). It is **not** part of this chain.
 
 ## Commit messages
@@ -121,12 +117,12 @@ Compose defaults use these official images.
 | Published prerelease | exact version, `sha-<full SHA>` |
 | Manual build without version | `sha-<full SHA>` only |
 
-Versioned dispatch/backfill must run on the release tag's commit. The resolver
+Versioned dispatch/backfill must use the exact `refs/tags/v<version>` ref. The resolver
 requires a matching non-draft GitHub Release, matching prerelease flag and tag SHA.
 Older stable backfills fail closed rather than roll moving tags backwards. Stable
 moving tags require the version to match GitHub's latest stable Release. Metadata
 Action's automatic `latest` tag is disabled. Builds share one resolved full SHA,
-version and build timestamp; tests check that same workflow source commit.
+version and build timestamp; API/Web CI explicitly check out that resolved release commit.
 Publication is serialized. Each image digest is saved in the run summary and a
 90-day artifact; copy both to the durable first-release validation record.
 
@@ -177,7 +173,7 @@ point of failure.
 
 ```mermaid
 flowchart TD
-    A["Release published<br/>· workflow_call from release-please (android only)<br/>· workflow_dispatch"] --> B["Test mobile<br/>lint · tsc · catalogs · prebuild"]
+    A["Independent manual workflow_dispatch"] --> B["Test mobile<br/>lint · tsc · catalogs · prebuild"]
     B -.->|"manual dispatch only<br/>(quota fallback)"| C{"app-store environment<br/>required reviewer<br/>(only when submitting)"}
     C -->|"approve"| D["eas build --platform ios --profile production --auto-submit"]
     D --> E["EAS: prebuild → archive → sign"]
@@ -190,9 +186,8 @@ flowchart TD
     H --> I["gh release upload vX.Y.Z<br/>GitHub Release assets"]
 ```
 
-The release-please chain calls `mobile-eas.yml` for Android only, ungated (a
-release asset is replaceable with `--clobber`). A missed or failed APK is
-backfilled via `workflow_dispatch`: platform `android`, profile
+Android is excluded from the Release Please chain. Independent manual builds
+remain available via `workflow_dispatch`: platform `android`, profile
 `production-apk`, *attach-to-release* set to the bare version (`0.8.4`).
 
 ### Build profiles (`mobile/eas.json`)
@@ -285,14 +280,184 @@ builds fine and traps on launch.
 
 ## CI gates
 
-`Test API`, `Test web`, and `Conventional PR title` are required status checks
-on `main`. The same test jobs are reused by `docker-publish.yml`, so a release
+`Test API`, `Test web`, and `Conventional PR title` must be configured as required
+status checks on `main` before activation. On 2026-10-08, the repository rulesets
+API returned an empty list and branch protection returned "Branch not protected";
+these gates are desired policy, not verified active settings. The same test jobs are reused by `docker-publish.yml`, so a release
 can never publish images that skipped tests.
 
 `Test mobile` runs only on PRs touching `mobile/**`, so it is not a required
 check (a required check that never runs blocks every other PR). `mobile-eas.yml`
 reuses it, so a release build still cannot skip it.
 
-`main` also carries an active ruleset with no bypass actors: PRs required,
-squash-only, linear history, no force-push or deletion. Approvals are set to 0
-because the repo is single-maintainer — CI is the gate, not review.
+Owner must configure main protection: PRs required, the three checks above,
+linear history, no force-push/deletion and no bypass actors. Use squash merging
+so Conventional Commit PR titles become commit subjects. A single-maintainer
+repository may use zero required approving reviews while still requiring PRs
+and successful checks. Verify the settings are enforced for this repository
+and account plan before activating releases.
+
+
+## #235 automation repair and owner activation checklist
+
+This design is inactive: both Release Please and Docker publisher remain
+`disabled_manually`. No production release is authorized by this change.
+
+### Baseline and version calculation
+
+The manifest and `VERSION` remain `0.2.1`. Release Please discovers its release
+boundary from the matching GitHub Release/tag, not the first heading in the
+changelog. Removed `bootstrap-sha` referred to an existing commit outside current
+main ancestry; bootstrap is only a fallback before a release boundary exists.
+Do not replace it with a permanently pinned `last-release-sha`.
+The preserved upstream changelog is historical text, not a version baseline.
+From `0.2.1`, an isolated `fix:` yields `0.2.2`; an isolated `feat:` yields
+`0.3.0`. Current post-release main contains only docs/chore changes; this repair's
+`fix:` squash commit is the next release-bearing change. Review actual accumulated
+commits before merging the generated Release PR. Mobile marketing extra-files
+remain synchronized; runtime/build settings are unchanged.
+
+### One Docker publication path
+
+Only Release Please's successful `releases_created` output calls `publish-docker`.
+Docker has no release-event, push or tag trigger. This avoids double publication
+when Release Please uses a PAT. GitHub's default token generally suppresses
+workflow events it creates; the explicit reusable call does not depend on those
+events. PR events created with GITHUB_TOKEN may require approval under current
+GitHub behavior; verify on this repository before relying on automatic PR CI.
+
+The reusable call inherits the caller's `github.ref` (`refs/heads/main`), even
+when checkout selects a tag commit. Environment policy matches the run ref, not
+checkout HEAD. **Owner must add a branch policy for exactly `main` alongside the
+existing tag policy `v*` in `ghcr`.** Keep required reviewer, administrator bypass
+disabled, and the existing single-owner self-review setting. No environment
+setting is changed by this PR. A tag-only environment blocks the automatic call.
+Release Please passes its returned release `sha` to the reusable workflow.
+Initial metadata resolution requires the published tag commit to equal that SHA;
+manual dispatch requires it to equal `github.sha` on the exact tag ref.
+API/Web tests and image builds use the resolved published tag SHA. Validation
+runs from the workflow revision, before checking out the release source.
+
+After approval, metadata is revalidated against the current published Release and
+latest stable release. Exact version and full-SHA image tags must be absent;
+registry errors other than 404 fail closed. Existing immutable tags abort rather
+than silently overwrite. Moving tags are only emitted for latest stable;
+prereleases emit no major/minor/latest tags. Ordinary PR/main pushes cannot
+publish without a newly created Release Please release.
+
+### Environment options and owner UI steps
+
+| Option | Assessment |
+|---|---|
+| A: allow exact main branch plus v* tags | Selected. Direct reusable call works with either token type, has one automatic trigger and preserves tag-ref manual recovery and required reviewer. Main code needs enforced PR/check protection. Live invocation remains to be verified. |
+| B: publish in tag context | Release-event trigger requires PAT/App events; GITHUB_TOKEN release events generally do not trigger it. Explicit dispatch would need a dispatch credential and reliable delivery/recovery. Either replaces the reusable chain or risks duplicates if both remain. More moving parts for this repository. |
+
+Owner: Settings → Environments → ghcr → Deployment branches and tags → Selected
+branches and tags → Add deployment branch or tag rule → Branch → `main`.
+Retain the Tag → `v*` rule, Required reviewers → HoesenBruce, and disable
+administrator bypass. Keep self-review allowed for the current single owner.
+Settings → Rules → Rulesets (or Branches → branch protection): target `main`,
+require PRs and the three CI checks, enforce linear history and prevent
+force-push/deletion; verify enforcement and bypass settings. No settings are
+changed by this PR.
+
+### Authentication and permissions
+
+For this single-maintainer repository, the simplest automatic PR-CI option is a
+fine-grained PAT in `RELEASE_PLEASE_TOKEN`, scoped only to this repository with
+Contents, Pull requests and Issues read/write (metadata read is implicit).
+Set an expiry and rotation reminder outside this workflow. Never paste tokens
+into files or logs. The action falls back to GITHUB_TOKEN; explicitly approve
+its PR checks when GitHub requires it. Current GitHub documentation says token-created
+opened/synchronize/reopened PR events create approval-required runs; push/release
+events from that token remain generally suppressed. No token-generated Release
+PR has been exercised in this repository, so that repository-specific behavior
+is NOT VERIFIED. The human-created PR #252 passing CI does not prove bot PR CI. Repository Actions settings must allow PR
+creation. Existing workflow permissions are narrowed per job; only publishing
+receives Packages write, using GITHUB_TOKEN, never the release PAT.
+
+A GitHub App is an alternative for centralized credential lifecycle: install it
+only on this repository with the same permissions, generate an installation token
+using `actions/create-github-app-token`, and pass that token to Release Please.
+That requires a separately reviewed workflow change and App ID/private-key secrets;
+it is not configured here. A PAT already fits the existing token input.
+
+### Recovery and digest records
+
+Manual backfill uses Docker workflow dispatch on the exact release tag, with its
+bare version input. It still requires a published Release, latest-stable checks,
+API/Web CI and GHCR approval. An arbitrary branch dispatch is skipped.
+Empty version permits only a SHA build on a `v*` tag ref.
+These protections apply to tags containing this repair. Older tags execute their
+historical workflow definition; do not dispatch them as a recovery shortcut.
+Backfilling a pre-repair tag requires a separately reviewed recovery workflow.
+Copy both image digests, version, full source SHA and run URL from the run summary
+and 90-day artifacts into the durable release validation record.
+
+If either image/version/SHA tag already exists, stop and inspect both registries
+and recorded digests. A partial failure can leave one image published; do not
+rerun blindly or delete tags to bypass validation. Owner recovery requires a
+separately reviewed repair that verifies existing digests and publishes only the
+missing image, or a new patch release. This workflow deliberately fails closed.
+Neither tm-sync nor Android is called by Release Please. Their independent
+workflows, sources, credentials and historical assets remain intact; keep the
+independent tm-sync workflow disabled unless its release-event behavior is wanted.
+iOS retains its independent workflow.
+
+### Immutable-tag and timing limits
+
+Registry inspection is a preflight check, **not atomic registry immutability**.
+The publication concurrency group serializes this repository's publisher runs;
+it does not lock external publishers, package administrators or other workflows.
+An external writer can create/change a tag between inspection, a long build and
+push. A new stable Release can also appear after revalidation and before push.
+Before activation, owner must limit package write access to this controlled path
+and avoid out-of-band publication/release creation while a run is in progress.
+Recheck latest stable and tags when reviewing a delayed run. If concurrent
+external writers are required, this design needs registry enforcement or a
+separate publish promotion design before activation.
+
+The guard is for the two known public TradeLens packages. Token endpoint failures,
+401/403 authorization failures, rate limits and server errors abort; only manifest
+404 permits proceeding. Private-package live responses have not been tested;
+changing visibility requires a separate access/absence validation before use.
+Namespace is fixed to `ghcr.io/hoesenbruce/tradelens-{api,web}` by the matrix.
+
+### Failure recovery decision table
+
+| Failure | Safe response |
+|---|---|
+| API succeeds, Web fails (or inverse) | Record successful digest and inspect both tags. No blind rerun; reviewed missing-image repair or a new patch release. |
+| Both builds finish, push fails | Inspect both registries; a failed push may already have uploaded manifests/tags. Retry only after establishing that all immutable tags remain absent. |
+| Approval rejected/expires, no writes | Inspect run/registry; if still absent, retry failed jobs or exact-tag dispatch and reapprove. |
+| New stable appears during approval | Stable revalidation fails; do not move latest backward. Review newer release and abandon obsolete stable publication. |
+| Canceled after one publication | Treat as partial publication; do not infer absence from run status. |
+| Same release rerun / SHA tag exists | Existing version or SHA tag aborts that image job. Release Please usually emits no new release on a fresh run; failed-job reruns retain prior outputs. |
+| GitHub Release exists, Docker incomplete | Keep the Release and inspect digests. Use the same decision rules; never delete tags/releases to reset state. |
+
+There is no generic partial-repair command in this PR. This is a documented
+operational limitation, not a code-merge blocker: owner must accept the new-patch
+fallback before activation, or commission the reviewed digest-aware repair path.
+API/Web moving tags are not updated atomically across images; partial publication
+can temporarily split them. Production deployments should pin verified versions
+or digests and wait for both image records.
+
+### Safe activation order (owner only)
+
+1. Review this Draft PR and its local/simulated evidence. Verify PAT permissions,
+   repository PR creation permission, required checks and ghcr reviewer settings.
+2. Merge the repair after review. Enable Release Please alone; verify its generated
+   PR diff, boundary, version files and CI without merging that Release PR.
+   This is the first real generation acceptance; local simulation is insufficient.
+3. Add exact `main` branch environment policy while retaining `v*`, required
+   reviewer and no administrator bypass. Enable Docker publisher only after this
+   configuration and workflow permissions have been read back.
+4. Owner reviews/merges the first Release PR. Verify tag/Release SHA, API/Web CI
+   source SHA and waiting GHCR deployment before approving either image job.
+5. Approve publication, record both digests, inspect both architectures and perform
+   runtime acceptance. Close #235 only after successful controlled activation.
+
+References: [Release Please manifest semantics](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md),
+[reusable workflow context](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations),
+[deployment ref policy](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments),
+[token event behavior](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).
