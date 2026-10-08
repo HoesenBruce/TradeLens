@@ -36,11 +36,31 @@ The showcase cash flows use the public ledger API, **not a cash-statement upload
 They show +1,000,000 deposit and -50,000 withdrawal; contributed capital is 950,000,
 and balance/account value is 975,000 after P&L. These are invented numbers.
 
-**Capture limitation:** browser file selection failed (built-in chooser timeouts, then
-external native capture-service failure). SBI preview/confirmation/result screens were
-not captured or exercised end to end in this run. API import and duplicate checks passed;
-those do not replace browser upload acceptance. This documentation refresh remains
-unfinished until that required Web case is run. Mobile was not validated.
+## Browser acceptance
+
+The standard file input supports Playwright `setInputFiles()`; native OS picker interaction
+is unnecessary. `web/e2e/sbi-showcase-import.spec.ts` exercises the production Web build
+and real disposable API with the exact #253 `trade_csv()` synthetic fixture. It verifies
+file removal, upload, SBI detection, preview/Back with no persisted executions or trades,
+confirmation, API read-back of 14 executions and seven closed groups (JPY 25,000 net),
+reload/re-entry, duplicate confirmation (0 inserted, 14 skipped, unchanged stored records),
+and **Import another** reset. All assertions executed and passed on 2026-10-08.
+
+After Back, the upload component reinitializes the account selector. Recheck the destination
+account before previewing again; the test explicitly reselects its synthetic QA account.
+The acceptance account starts at zero with no funding, separately from the funded showcase.
+Its final balance is JPY 25,000. The global header refreshes asynchronously; the first result
+capture still shows zero, while duplicate read-back shows the updated JPY 25,000 summary.
+
+![Actual SBI preview mapping](../screenshots/showcase/sbi-acceptance/sbi-preview.png)
+![Actual confirmation control](../screenshots/showcase/sbi-acceptance/sbi-confirm.png)
+![Actual committed import result](../screenshots/showcase/sbi-acceptance/sbi-result.png)
+![Actual duplicate result: zero inserted, fourteen skipped](../screenshots/showcase/sbi-acceptance/sbi-duplicates.png)
+
+Built-in chooser/native capture failures from the first attempt remain recorded in the
+[provenance](../screenshots/README.md). Direct file injection resolved this environment
+blocker without changing production importer, accounting or UI logic. This acceptance
+covers execution-history CSV; cash-statement browser upload and mobile were not rerun.
 
 ## Goal
 
@@ -161,7 +181,7 @@ Asia/Tokyo date normalization, malformed-row reporting, duplicate handling, and 
 rollback. The Web preview/result behavior has a focused component test.
 
 The #254 showcase API preview/commit and duplicate-import checks passed on disposable
-SQLite. Browser upload acceptance remains blocked as described above. Mobile not validated;
+SQLite. Execution-history browser upload acceptance also passed as described above. Mobile not validated;
 outside current fork scope.
 
 ## Testing
