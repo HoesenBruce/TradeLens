@@ -3,9 +3,9 @@ title: 部署
 description: Docker 一體化部署、CDN + API 分離，或邊緣重寫 —— 選擇適合你基礎設施的方式。
 ---
 
-> **TradeLens 目前狀態：** 官方 TradeLens 鏡像尚未發佈；Docker 鏡像發佈與 Release Please 均已停用。請用 `make up-build`（SQLite）或 `make up-postgres-build`（PostgreSQL）從目前原始碼建置。
+> **TradeLens 目前狀態：** `make up` / `make up-postgres` 預設使用官方 `ghcr.io/hoesenbruce/tradelens-*` 映像；原始碼建置可用 `make up-build` / `make up-postgres-build`。自動發布仍被停用。
 >
-> **資料庫邊界：**`make up` 與 `make up-postgres` 目前預設拉取上游 TraderMemos 鏡像（`sinhong2011/tradermemos-*`）。上游與 TradeLens 的遷移歷史已分叉，切勿交替連接同一個既有資料庫卷，包括 PostgreSQL。嘗試另一產品時使用獨立 Compose 專案及全新資料庫／資料卷；任何遷移前保留完整備份。
+> **資料庫邊界：** 上游 TraderMemos 與 TradeLens 的遷移歷史已分岔，不可共用既有資料庫或資料卷（包括 PostgreSQL）。切換產品應使用獨立專案與全新資料庫；任何部署變更前保留完整備份。
 
 
 三種部署方式：

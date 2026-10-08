@@ -1,14 +1,15 @@
 ---
 title: フォークしてデプロイ
-description: TraderMemos の Web を自分の Vercel / Cloudflare / Netlify アカウントに、API を Railway に配置します。
+description: TradeLens の Web を自分の Vercel / Cloudflare / Netlify アカウントに、API を Railway に配置します。
 ---
 
-> **TradeLens の現状：** 公式 TradeLens イメージはまだ公開されていません。Docker イメージ公開と Release Please は無効です。ソースから `make up-build`（SQLite）または `make up-postgres-build`（PostgreSQL）でビルドしてください。
+> TradeLens の配置は[フォークガイド](https://github.com/HoesenBruce/TradeLens/blob/main/docs/fork-deploy.md)を参照してください。非公開リポジトリへのアクセスとプロバイダーの認可が必要です。Vercel/Cloudflare/Netlify は `web/` SPA のみ、Railway は Go API を GitHub から手動で取り込み、`/data` ボリュームを設定します。検証済み Railway テンプレートはありません。`marketing/` Next.js サイトや全スタックは配置しません。
+
+> **TradeLens の現在の状態：** `make up` / `make up-postgres` は公式 `ghcr.io/hoesenbruce/tradelens-*` イメージを使用します。ソースビルドは `make up-build` / `make up-postgres-build` です。自動公開は無効のままです。
 >
-> **データベースの境界：**`make up` と `make up-postgres` は現在、既定で上流 TraderMemos イメージ（`sinhong2011/tradermemos-*`）を取得します。上流と TradeLens のマイグレーション履歴は分岐しています。同じ既存データベースボリュームに両製品を交互に接続しないでください（PostgreSQL も同様）。別製品には別の Compose プロジェクトと新規データベース／ボリュームを使い、移行前に完全なバックアップを保存してください。
+> **データベースの境界：** 上流 TraderMemos と TradeLens のマイグレーション履歴は分岐しています。既存のデータベースやボリュームを共用しないでください（PostgreSQL も同様）。製品を切り替える場合は別プロジェクトと新規データベースを使い、配置変更前に完全なバックアップを保存してください。
 
-
-目的は、別の GitHub ユーザーが **TraderMemos の Web** を**自分の** Vercel / Cloudflare /
+目的は、別の GitHub ユーザーが **TradeLens の Web** を**自分の** Vercel / Cloudflare /
 Netlify に、必要に応じて **API** を Railway に配置し、両者を接続することです。
 
 ```
@@ -17,10 +18,9 @@ Netlify に、必要に応じて **API** を Railway に配置し、両者を接
 └─ ログインの「サーバー」= https://your-api.up.railway.app
 ```
 
-## パス A — ワンクリック（最も簡単）
+## パス A — プロバイダー設定
 
-手動でのフォークは不要です。プラットフォームが*あなたの* GitHub にクローンし、*あなたの*
-アカウントでデプロイします。
+リポジトリへのアクセスとプロバイダーの認可が必要です。配置前に上記のフォークガイドを確認してください。
 
 | プラットフォーム | 得られるもの |
 |----------|---------------|
@@ -29,7 +29,7 @@ Netlify に、必要に応じて **API** を Railway に配置し、両者を接
 | **Netlify** | ルートの `netlify.toml`（`base = web`）を使用 |
 | **Railway** | `railway.toml` による Go API。`/data` にボリュームをアタッチ |
 
-デプロイボタンは[プロジェクトの README](https://github.com/sinhong2011/TraderMemos#readme)に
+デプロイボタンは[フォーク配置ガイド](https://github.com/HoesenBruce/TradeLens/blob/main/docs/fork-deploy.md)に
 あります。
 
 任意の環境変数 **`VITE_API`**: 既定の API ベース（`https://api.example.com/api/v1`）を埋め込め
@@ -41,7 +41,7 @@ GitHub で**フォーク**をクリック済みで、*自分の*フォークか�
 
 ### Vercel
 
-1. [vercel.com/new](https://vercel.com/new) を開き、自分のフォーク（`youruser/TraderMemos`）を**インポート**します。
+1. [vercel.com/new](https://vercel.com/new) を開き、自分のフォーク（`youruser/TradeLens`）を**インポート**します。
 2. **Root Directory** を `web` に設定します（重要）。
 3. ビルド設定はそのままにしてください — `web/vercel.json` がインストール／ビルド／出力設定と SPA リライトを提供します。
 4. 任意: 環境変数 `VITE_API`。
@@ -70,15 +70,14 @@ Workers アセットにおいて `/* /index.html 200` の `_redirects` ルール
 
 ### Netlify
 
-1. [app.netlify.com/start/deploy](https://app.netlify.com/start/deploy?repository=https://github.com/sinhong2011/TraderMemos) を開くか、**Add new site → Import** で自分のフォークを取り込みます。
+1. [app.netlify.com/start/deploy](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TradeLens) を開くか、**Add new site → Import** で自分のフォークを取り込みます。
 2. ルートの `netlify.toml` に `base = web`、ビルド、公開設定、SPA リダイレクトがすでに定義されています。
 3. 任意の環境変数: `VITE_API`。
 4. `TM_CORS_ORIGINS` に `https://*.netlify.app` を許可します。
 
 ### Railway（API）
 
-Railway は **Go API** のワンクリックホストとして最適です（SQLite 用のディスクボリュームを
-使えます）。上記の CDN への Web デプロイと組み合わせてください。
+Railway は Go API を GitHub から手動で取り込みます。SQLite 用に永続ボリュームを設定し、上記の SPA と接続します。
 
 1. Railway にデプロイします。または New Project → Deploy from GitHub → 自分のフォークを選択します。
 2. ルートの `railway.toml` が `api/Dockerfile` をビルドし、`/healthz` でヘルスチェックします。
@@ -124,4 +123,4 @@ API の Docker / compose 構成は[デプロイ](/ja/docs/self-hosting/deploy)�
 ## なぜ API を Vercel / Workers に置かないのか
 
 API は Go + SQLite + ファイルアップロードという構成です。Docker / VPS / NAS に置いてください。
-ワンクリックボタンは設計上**Web 専用**です。
+Vercel/Cloudflare/Netlify は SPA のみ、Railway の手順は API のみです。
