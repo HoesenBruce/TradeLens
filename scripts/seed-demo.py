@@ -176,6 +176,8 @@ def build_book(rnd: random.Random, end: datetime) -> list[dict]:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--mode", choices=["legacy", "showcase"], default="legacy",
+                    help="showcase: fixed fictional JPY dataset; requires an empty disposable user")
     ap.add_argument("--api", default="http://localhost:3000/api/v1", help="API base URL")
     ap.add_argument("--email", required=True)
     ap.add_argument("--password", required=True)
@@ -190,6 +192,17 @@ def main() -> int:
     rnd = random.Random(args.seed)
     api = Api(args.api)
     api.login(args.email, args.password)
+
+    if args.mode == "showcase":
+        if args.account or args.end_date or args.seed != 20260731:
+            ap.error("showcase has fixed dates/seed and creates its own account")
+        import importlib.util
+        from pathlib import Path
+        spec = importlib.util.spec_from_file_location("showcase", Path(__file__).with_name("seed-showcase.py"))
+        showcase = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(showcase)
+        showcase.seed(api)
+        return 0
 
     account_id = args.account
     if not account_id:
