@@ -1,0 +1,26 @@
+{
+  "version": "0.2.1",
+  "started_at": "2026-10-08T15:41:30.391813449Z",
+  "db_driver": "sqlite",
+  "features": {
+    "background_jobs": false,
+    "coach": false,
+    "econ_calendar": false,
+    "market_data": true,
+    "ocr": false,
+    "share_links": false
+  },
+  "result": "PASS",
+  "trades": 107,
+  "realized_pnl": 25000,
+  "closing_value": 975000,
+  "checks": [
+    "health and readiness GET 200",
+    "calendar filters/empty/auth",
+    "setup and registration disabled",
+    "JWT auth/login/refresh",
+    "SBI valuation and news history",
+    "all demo write-deny cases",
+    "post-denial trade count unchanged"
+  ]
+}

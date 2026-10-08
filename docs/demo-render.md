@@ -93,7 +93,8 @@ original September 1–8, 2026 timeline unless the demo runtime opts in with its
 shared `TRADELENS_SHOWCASE_TODAY` date. No self-hosted persistence behavior changes.
 The existing JP calendar snapshot covers 2020–2030; startup fails outside its
 coverage rather than guessing trading days, so extend that snapshot before
-expiry. Seven closed trades produce JPY 25,000 realized P&L; closing
+expiry. The fixed standalone showcase has seven closed trades; the Render
+fixture has 107 (see below). Both produce JPY 25,000 realized P&L; closing
 estimated account value is JPY 975,000 on contributed capital JPY 950,000.
 News shows three fictional catalysts and six horizon outcomes (four pending,
 two unavailable). These statuses are intentional fixture coverage, not market
