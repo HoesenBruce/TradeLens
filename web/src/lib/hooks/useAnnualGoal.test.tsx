@@ -38,8 +38,23 @@ it("requests goals in the same currency as scope analytics, separates display ke
   rerender({ id: "j" });
   await waitFor(() => expect(result.current.data?.currency).toBe("JPY"));
   expect(result.current.currency).toBe("JPY");
-  vi.mocked(settingsApi.getAnnualGoal).mockRejectedValueOnce(new Error("FX unavailable"));
+  // Returning to the cached JPY key also starts a background fetch.
+  await waitFor(() => expect(result.current.isFetching).toBe(false));
+  const previousGoal = result.current.data;
+  const error = new Error("FX unavailable");
+  const callsBeforeRefetch = vi.mocked(settingsApi.getAnnualGoal).mock.calls.length;
+  vi.mocked(settingsApi.getAnnualGoal).mockRejectedValueOnce(error);
   await act(() => result.current.refetch());
-  expect(result.current.isError).toBe(true);
+  await waitFor(() => expect(result.current.isError).toBe(true));
+  expect(result.current.isRefetchError).toBe(true);
+  expect(result.current.error).toBe(error);
   expect(result.current.data).toBeUndefined();
+  expect(settingsApi.getAnnualGoal).toHaveBeenCalledTimes(callsBeforeRefetch + 1);
+  expect(settingsApi.getAnnualGoal).toHaveBeenLastCalledWith(2026, "JPY");
+  // Query retains successful data; the hook deliberately hides it on error.
+  expect(client.getQueryState(["settings", "annual-goal", 2026, "JPY"])).toMatchObject({
+    status: "error",
+    data: previousGoal,
+    error,
+  });
 });
