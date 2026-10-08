@@ -1,7 +1,7 @@
 import { render } from "@/test/render";
 import type { ColumnDef } from "@/lib/table";
 import { flexRender, getCoreRowModel, useReactTable, type RowData } from "@/lib/table";
-import { act, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vite-plus/test";
@@ -147,7 +147,7 @@ function filterUser() {
 }
 
 async function openFilter(user: ReturnType<typeof filterUser>, field: string) {
-  await act(() => user.click(screen.getByRole("button", { name: "Add filter" })));
+  await user.click(screen.getByRole("button", { name: "Add filter" }));
   // Keyboard navigation avoids jsdom's layout-dependent submenu hover handling.
   const search = await screen.findByPlaceholderText("Search filters…");
   await waitFor(() => expect(search).toHaveFocus());
@@ -155,7 +155,7 @@ async function openFilter(user: ReturnType<typeof filterUser>, field: string) {
   const option = await screen.findByRole("option", { name: field });
   await user.keyboard("{ArrowDown}");
   await waitFor(() => expect(option).toHaveAttribute("aria-selected", "true"));
-  await act(() => user.keyboard("{ArrowRight}"));
+  await user.keyboard("{ArrowRight}");
 }
 
 describe("TradesView", () => {
