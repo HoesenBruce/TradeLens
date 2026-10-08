@@ -3,9 +3,9 @@ title: 更新升级
 description: 从源码更新 TradeLens，保持数据库迁移链一致。
 ---
 
-> **TradeLens 当前状态：** 官方 TradeLens 镜像尚未发布；Docker 镜像发布与 Release Please 均已禁用。请用 `make up-build`（SQLite）或 `make up-postgres-build`（PostgreSQL）从当前源码构建。
+> **TradeLens 当前状态：** `make up` / `make up-postgres` 默认使用官方 `ghcr.io/hoesenbruce/tradelens-*` 镜像；源码构建可用 `make up-build` / `make up-postgres-build`。自动发布仍被禁用。
 >
-> **数据库边界：**`make up` 与 `make up-postgres` 目前默认拉取上游 TraderMemos 镜像（`sinhong2011/tradermemos-*`）。上游与 TradeLens 的迁移历史已分叉，切勿交替连接同一个已有数据库卷，包括 PostgreSQL。尝试另一产品时使用独立 Compose 项目及全新数据库／数据卷；任何迁移前保留完整备份。
+> **数据库边界：** 上游 TraderMemos 与 TradeLens 的迁移历史已分叉，不可共用已有数据库或数据卷（包括 PostgreSQL）。切换产品应使用独立项目和全新数据库；任何部署变更前保留完整备份。
 
 每次升级前都备份完整实例。API 启动时自动执行迁移，不支持自动降级；回滚时使用匹配的源码版本恢复升级前的数据库与附件。 [→ 备份与恢复](/zh-Hans/docs/self-hosting/backup-restore)
 

@@ -51,3 +51,5 @@ The optional hosted demo belongs to TraderMemos. Screenshots in
 `public/screenshots/showcase/` are exact copies of #254 synthetic UI captures;
 see `docs/screenshots/screenshot-manifest.json` and its #255 copy records.
 Legacy USD screenshots remain for inherited feature-reference pages.
+
+Deployment: follow the [TradeLens fork guide](../docs/fork-deploy.md) for the `web/` SPA and separate Go API. Those provider links do not deploy this Next.js site. To host this site, import `HoesenBruce/TradeLens`, set the project root to `marketing`, use its build/start scripts and configure `NEXT_PUBLIC_SITE_URL`. Provider login, private repository access and a real deployment remain unverified.

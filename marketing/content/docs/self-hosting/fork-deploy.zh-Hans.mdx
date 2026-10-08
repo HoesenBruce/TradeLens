@@ -1,14 +1,15 @@
 ---
 title: Fork 并部署
-description: 将 TraderMemos Web UI 部署到你自己的 Vercel、Cloudflare 或 Netlify 账户，并将 API 部署到 Railway。
+description: 将 TradeLens Web UI 部署到你自己的 Vercel、Cloudflare 或 Netlify 账户，并将 API 部署到 Railway。
 ---
 
-> **TradeLens 当前状态：** 官方 TradeLens 镜像尚未发布；Docker 镜像发布与 Release Please 均已禁用。请用 `make up-build`（SQLite）或 `make up-postgres-build`（PostgreSQL）从当前源码构建。
+> TradeLens 部署请以[分支部署指南](https://github.com/HoesenBruce/TradeLens/blob/main/docs/fork-deploy.md)为准。需要私有仓库访问权及平台授权。Vercel/Cloudflare/Netlify 仅部署 `web/` SPA；Railway 需从 GitHub 手动导入 Go API 并挂载 `/data`。没有经过验证的 Railway 模板。这些入口不部署 `marketing/` Next.js 网站或完整栈。
+
+> **TradeLens 当前状态：** `make up` / `make up-postgres` 默认使用官方 `ghcr.io/hoesenbruce/tradelens-*` 镜像；源码构建可用 `make up-build` / `make up-postgres-build`。自动发布仍被禁用。
 >
-> **数据库边界：**`make up` 与 `make up-postgres` 目前默认拉取上游 TraderMemos 镜像（`sinhong2011/tradermemos-*`）。上游与 TradeLens 的迁移历史已分叉，切勿交替连接同一个已有数据库卷，包括 PostgreSQL。尝试另一产品时使用独立 Compose 项目及全新数据库／数据卷；任何迁移前保留完整备份。
+> **数据库边界：** 上游 TraderMemos 与 TradeLens 的迁移历史已分叉，不可共用已有数据库或数据卷（包括 PostgreSQL）。切换产品应使用独立项目和全新数据库；任何部署变更前保留完整备份。
 
-
-目标：让另一位 GitHub 用户将 **TraderMemos Web** 部署到**他们自己的** Vercel / Cloudflare /
+目标：让另一位 GitHub 用户将 **TradeLens Web** 部署到**他们自己的** Vercel / Cloudflare /
 Netlify 账户，并 / 或将 **API** 部署到 Railway，然后将两者连接起来。
 
 ```
@@ -17,9 +18,9 @@ Netlify 账户，并 / 或将 **API** 部署到 Railway，然后将两者连接�
 └─ 登录时 "Server" = https://your-api.up.railway.app
 ```
 
-## 方式 A —— 一键部署（最简单）
+## 方式 A —— 平台部署设置
 
-无需手动 Fork。平台会直接将仓库克隆到*你自己*的 GitHub 并部署到*你自己*的账户下。
+需要仓库访问权和平台授权；部署前请核对上方的分支部署指南。
 
 | 平台 | 你将获得 |
 |----------|---------------|
@@ -28,7 +29,7 @@ Netlify 账户，并 / 或将 **API** 部署到 Railway，然后将两者连接�
 | **Netlify** | 使用根目录 `netlify.toml`（`base = web`） |
 | **Railway** | 通过 `railway.toml` 部署 Go API；需挂载数据卷到 `/data` |
 
-部署按钮位于[项目 README](https://github.com/sinhong2011/TraderMemos#readme)。
+部署按钮位于[分支部署指南](https://github.com/HoesenBruce/TradeLens/blob/main/docs/fork-deploy.md)。
 
 可选环境变量 **`VITE_API`**：将默认 API 地址（`https://api.example.com/api/v1`）打包进构建产物。
 留空则登录时手动填写 Server URL。
@@ -39,7 +40,7 @@ Netlify 账户，并 / 或将 **API** 部署到 Railway，然后将两者连接�
 
 ### Vercel
 
-1. 打开 [vercel.com/new](https://vercel.com/new) → **Import** 你的 fork（`youruser/TraderMemos`）。
+1. 打开 [vercel.com/new](https://vercel.com/new) → **Import** 你的 fork（`youruser/TradeLens`）。
 2. 将 **Root Directory** 设为 `web`（重要）。
 3. 构建设置保持默认 —— `web/vercel.json` 已提供 install/build/output 及 SPA 重写规则。
 4. 可选：设置环境变量 `VITE_API`。
@@ -68,15 +69,14 @@ Cloudflare 会拒绝 Workers assets 上的 `/* /index.html 200` `_redirects` 规
 
 ### Netlify
 
-1. 打开 [app.netlify.com/start/deploy](https://app.netlify.com/start/deploy?repository=https://github.com/sinhong2011/TraderMemos) —— 或 **Add new site → Import** 你的 fork。
+1. 打开 [app.netlify.com/start/deploy](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TradeLens) —— 或 **Add new site → Import** 你的 fork。
 2. 根目录 `netlify.toml` 已设置好 `base = web`、构建、发布目录与 SPA 重定向。
 3. 可选环境变量：`VITE_API`。
 4. 在 `TM_CORS_ORIGINS` 中允许 `https://*.netlify.app`。
 
 ### Railway（API）
 
-Railway 是部署 **Go API**（含 SQLite 磁盘卷）最简便的一键托管平台。可搭配上面任意一种
-CDN Web 部署方式使用。
+Railway：从 GitHub 手动导入 Go API，配置 SQLite 持久卷，再连接独立部署的 SPA。
 
 1. 部署到 Railway —— 或 New Project → Deploy from GitHub → 选择你的 fork。
 2. 根目录 `railway.toml` 会构建 `api/Dockerfile`，并对 `/healthz` 做健康检查。
@@ -122,4 +122,4 @@ API 的 Docker / compose 部署方式参见[部署](/zh-Hans/docs/self-hosting/d
 
 ## 为什么不把 API 放在 Vercel/Workers 上？
 
-API 基于 Go + SQLite + 文件上传，需要放在 Docker/VPS/NAS 上。一键部署按钮设计上**仅用于 Web**。
+API 基于 Go + SQLite + 文件上传，需要放在 Docker/VPS/NAS 上。Vercel/Cloudflare/Netlify 按钮仅部署 SPA，Railway 步骤单独部署 API。

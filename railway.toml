@@ -1,5 +1,6 @@
 # Railway config-as-code — deploys the Go API (SQLite + attachments).
-# One-click: https://railway.com/new/template?template=https://github.com/sinhong2011/TraderMemos
+# Import HoesenBruce/TradeLens from GitHub; see docs/fork-deploy.md#railway-api.
+# No verified public Railway template is provided.
 #
 # After deploy: attach a Volume mounted at /data (persists SQLite + attachments).
 # Default image env: TM_DATABASE_URL=sqlite:///data/tradermemos.db

@@ -15,16 +15,16 @@ You                    CDN (Vercel / CF / Netlify)     API (Railway / Docker)
 
 ---
 
-## Path A — One-click (easiest)
+## Path A — Provider setup
 
-No manual fork. The platform clones into *your* GitHub and deploys under *your* account.
+Vercel, Cloudflare and Netlify links request deployment of the `web/` SPA only. Private repository access and provider authorization are required; provider setup must be checked in your account. Railway uses manual GitHub import for the Go API; no verified public template is provided. None of these links deploys the complete stack or the `marketing/` Next.js site.
 
 | Platform | Button / link | What you get |
 |----------|---------------|--------------|
 | **Vercel** | [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens&root-directory=web&project-name=tradelens&repository-name=tradelens&env=VITE_API&envDescription=Optional%20API%20base%20URL%20(e.g.%20https%3A%2F%2Fapi.example.com%2Fapi%2Fv1).%20Leave%20empty%20to%20set%20Server%20at%20login.&envLink=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens%2Fblob%2Fmain%2Fdocs%2Ffork-deploy.md) | Full monorepo clone; project Root = `web` |
 | **Cloudflare** | [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens%2Ftree%2Fmain%2Fweb) | New repo from `web/` only; Workers static SPA |
 | **Netlify** | [Deploy to Netlify](https://app.netlify.com/start/deploy?repository=https://github.com/HoesenBruce/TradeLens) | Uses root [`netlify.toml`](../netlify.toml) (`base = web`) |
-| **Railway** | [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens&utm_medium=integration&utm_source=button&utm_campaign=tradelens) | Go API via [`railway.toml`](../railway.toml); attach Volume at `/data` |
+| **Railway** | [Railway API setup](https://github.com/HoesenBruce/TradeLens/blob/main/docs/fork-deploy.md#railway-api) | Go API via [`railway.toml`](../railway.toml); attach Volume at `/data` |
 
 Optional env **`VITE_API`**: bake in a default API base (`https://api.example.com/api/v1`). Leave blank to type the Server URL at login.
 
@@ -36,7 +36,7 @@ Use this when you clicked **Fork** on GitHub and want continuous deploys from *y
 
 ### Vercel
 
-1. Open [vercel.com/new](https://vercel.com/new) → **Import** your fork (`youruser/TraderMemos`).
+1. Open [vercel.com/new](https://vercel.com/new) → **Import** your fork (`youruser/TradeLens`).
 2. Set **Root Directory** to `web` (important).
 3. Leave build settings alone — [`web/vercel.json`](../web/vercel.json) supplies install/build/output + SPA rewrites.
 4. Optional: Environment Variable `VITE_API`.
@@ -45,7 +45,7 @@ Use this when you clicked **Fork** on GitHub and want continuous deploys from *y
 ### Cloudflare
 
 **Option 1 — Workers (matches one-click config)**  
-1. [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2FYOURUSER%2FTraderMemos%2Ftree%2Fmain%2Fweb) — replace `YOURUSER`, or connect the `web/` app in the dashboard.  
+1. [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2FYOURUSER%2FTradeLens%2Ftree%2Fmain%2Fweb) — replace `YOURUSER`, or connect the `web/` app in the dashboard.
 2. Uses [`web/wrangler.toml`](../web/wrangler.toml) (`assets` + SPA `not_found_handling`).
 
 **Option 2 — Pages Connect to Git**  
@@ -68,9 +68,9 @@ Prefer Option 1 (Workers + [`web/wrangler.toml`](../web/wrangler.toml)) for SPA 
 
 ### Railway (API)
 
-Railway is the best one-click host for the **Go API** (disk volume for SQLite). Pair it with a CDN web deploy above.
+Railway can host the **Go API** with a persistent SQLite volume. Pair it with a CDN web deploy above. Import from GitHub manually; no verified public template is provided.
 
-1. [Deploy on Railway](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2FHoesenBruce%2FTradeLens&utm_medium=integration&utm_source=button&utm_campaign=tradelens) — or New Project → Deploy from GitHub → your fork.
+1. In Railway, choose **New Project → Deploy from GitHub** → `HoesenBruce/TradeLens` (or your fork). Keep the build context at the repository root so `railway.toml` and `api/Dockerfile` resolve correctly.
 2. Root [`railway.toml`](../railway.toml) builds `api/Dockerfile` and health-checks `/healthz`.  
 3. **Attach a Volume** mounted at `/data` (keeps SQLite + attachments across deploys).  
 4. Variables:
@@ -116,13 +116,13 @@ API Docker / compose: see [deploy.md](deploy.md).
 
 ## Why not put the API on Vercel/Workers?
 
-The API is Go + SQLite + uploads. Keep it on Docker/VPS/NAS. The one-click buttons are **web-only** by design.
+The API is Go + SQLite + uploads. Keep it on Docker/VPS/NAS. Vercel, Cloudflare and Netlify buttons deploy the SPA only; Railway instructions deploy the API separately.
 
 ---
 
 ## Maintainer tip (upstream)
 
-In GitHub → **Settings → General → Template repository**, enable the template flag so “Use this template” appears next to Fork. One-click Deploy buttons already clone without requiring a template.
+In GitHub → **Settings → General → Template repository**, enable the template flag so “Use this template” appears next to Fork.
 
 ## Branding compatibility
 
