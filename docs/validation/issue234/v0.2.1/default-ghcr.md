@@ -19,17 +19,26 @@ Date: 2026-10-08. Base main: `4c4868564a64c661a23d815df95f49f05327db93`.
 - PASS: official-image pull; isolated SQLite API health, production Web HTTP and
   same-origin `/api/v1/setup/status`. Built-in browser renders fresh setup.
 - PASS: source overlay startup with existing local images, same three HTTP checks.
-  Fresh source rebuild and subsequent smoke: pending final validation update.
+  LIMITATION: fresh source rebuild failed twice at `pnpm install --frozen-lockfile`
+  with npm download TimeoutError (exit 1), before Web compilation. API build was
+  canceled by the failed parallel Web target. This does not establish fresh
+  source-build success; PR remains draft until that required check is resolved.
 - PASS: Go vet, all Go tests and Go build.
 - PASS: marketing production build; built-in browser inspected Deploy and followed
   its Backup & restore link, confirming rendered content. No product Web UI changed.
 - PASS: `git diff --check`; release metadata regression check.
-- Web local check/test/build and remote PR CI: pending final validation update.
+- PASS: Web check, 183 test files / 1045 tests, TypeScript and production build.
+  Existing jsdom `window.scrollTo` warnings were nonfatal.
+- PASS: marketing lint/typecheck and final production build.
+- PASS: initial PR #251 head `ebd862915433fc456869ad63cf2a5cc045e4c2a1`
+  remote API/Web/marketing and Conventional PR title checks. The suggested
+  `release:` prefix was rejected; the final title uses accepted `chore:`.
+  Documentation-only evidence follow-up checks are tracked on the PR.
 
 An initial QA configuration export retained the original Compose resource names.
 Test containers briefly mounted the existing local volume before this was detected;
 no business data was submitted. They were stopped/removed; the original volume
-was retained (in use by its original deployment). Subsequent QA explicitly set
+was retained (referenced by the pre-existing stopped `tradermemos-api-1` container). Subsequent QA explicitly set
 independent project/network/volume names and removed only disposable resources.
 This was a local QA isolation error, not a NAS operation.
 
