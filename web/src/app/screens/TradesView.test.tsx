@@ -141,41 +141,21 @@ const base = {
   onNewTrade: vi.fn<(...args: any[]) => any>(),
 };
 
-// `pointerEventsCheck: 0` — the popup keeps Base UI's `data-starting-style`
-// (pointer-events: none) until its enter transition ends, and jsdom runs no
-// animation frames, so that guard never clears. The clicks are still real.
-/**
- * Click a value in an open Filters submenu, retrying until it takes.
- *
- * Base UI opens the submenu on hover and keeps re-rendering while it positions,
- * and a click that lands during that window is swallowed — the item exists and
- * the click dispatches, but no handler runs. A fixed yield before clicking only
- * guesses at how long that window is: it holds on macOS and missed on every CI
- * attempt. So re-query and re-click until the handler actually fires, which also
- * lets real time elapse past the popup's open grace period.
- *
- * `fired` is the test's own callback mock. Once it has a call the popup is
- * settled, so we stop clicking rather than toggling the value back off.
- */
-async function pickOption(
-  user: ReturnType<typeof filterUser>,
-  name: string | RegExp,
-  fired: ReturnType<typeof vi.fn>,
-) {
-  await screen.findByRole("option", { name });
-  await waitFor(
-    async () => {
-      if (fired.mock.calls.length === 0) {
-        await user.click(screen.getByRole("option", { name }));
-      }
-      expect(fired).toHaveBeenCalled();
-    },
-    { timeout: 5000 },
-  );
+function filterUser() {
+  // jsdom cannot finish popup transitions, which leave pointer-events disabled.
+  return userEvent.setup({ pointerEventsCheck: 0 });
 }
 
-function filterUser() {
-  return userEvent.setup({ pointerEventsCheck: 0 });
+async function openFilter(user: ReturnType<typeof filterUser>, field: string) {
+  await user.click(screen.getByRole("button", { name: "Add filter" }));
+  // Keyboard navigation avoids jsdom's layout-dependent submenu hover handling.
+  const search = await screen.findByPlaceholderText("Search filters…");
+  await waitFor(() => expect(search).toHaveFocus());
+  await user.type(search, field);
+  const option = await screen.findByRole("option", { name: field });
+  await user.keyboard("{ArrowDown}");
+  await waitFor(() => expect(option).toHaveAttribute("aria-selected", "true"));
+  await user.keyboard("{ArrowRight}");
 }
 
 describe("TradesView", () => {
@@ -227,7 +207,7 @@ describe("TradesView", () => {
     expect(onNewTrade).toHaveBeenCalledOnce();
   });
 
-  it("wires status faceted filter", { retry: 2 }, async () => {
+  it("wires status faceted filter", async () => {
     const user = filterUser();
     const onToggleTradeStatus = vi.fn<(...args: any[]) => any>();
     render(
@@ -239,13 +219,15 @@ describe("TradesView", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "Add filter" }));
-    await user.hover(await screen.findByRole("option", { name: "Status" }));
-    await pickOption(user, /Wins/i, onToggleTradeStatus);
+    await openFilter(user, "Status");
+    const wins = await screen.findByRole("option", { name: /Wins/i });
+    await waitFor(() => expect(wins.closest('[role="listbox"]')).toHaveFocus());
+    await user.click(wins);
+    await waitFor(() => expect(onToggleTradeStatus).toHaveBeenCalledOnce());
     expect(onToggleTradeStatus).toHaveBeenCalledWith("win");
   });
 
-  it("wires symbol combobox options", { retry: 2 }, async () => {
+  it("wires symbol combobox options", async () => {
     const user = filterUser();
     const onSymbolsChange = vi.fn<(...args: any[]) => any>();
     render(
@@ -264,13 +246,24 @@ describe("TradesView", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "Add filter" }));
-    await user.hover(await screen.findByRole("option", { name: "Symbol" }));
-    await pickOption(user, /MSFT/i, onSymbolsChange);
+    await openFilter(user, "Symbol");
+    const symbolSearch = await screen.findByPlaceholderText("Search symbol...");
+    await waitFor(() => expect(symbolSearch).toHaveFocus());
+    expect(screen.getByRole("option", { name: /AAPL/i })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: /MSFT/i })).toBeInTheDocument();
+    await user.type(symbolSearch, "MSFT");
+    await waitFor(() =>
+      expect(screen.queryByRole("option", { name: /AAPL/i })).not.toBeInTheDocument(),
+    );
+    const msft = screen.getByRole("option", { name: /MSFT/i });
+    await user.keyboard("{ArrowDown}");
+    await waitFor(() => expect(symbolSearch).toHaveAttribute("aria-activedescendant", msft.id));
+    await user.keyboard("{Enter}");
+    await waitFor(() => expect(onSymbolsChange).toHaveBeenCalledOnce());
     expect(onSymbolsChange).toHaveBeenCalledWith(["MSFT"]);
   });
 
-  it("wires tags faceted filter", { retry: 2 }, async () => {
+  it("wires tags faceted filter", async () => {
     const user = filterUser();
     const onTagIdsChange = vi.fn<(...args: any[]) => any>();
     render(
@@ -298,9 +291,11 @@ describe("TradesView", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "Add filter" }));
-    await user.hover(await screen.findByRole("option", { name: "Tags" }));
-    await pickOption(user, /Breakout/i, onTagIdsChange);
+    await openFilter(user, "Tags");
+    const tagSearch = await screen.findByPlaceholderText("Search tags...");
+    await waitFor(() => expect(tagSearch).toHaveFocus());
+    await user.click(await screen.findByRole("option", { name: /Breakout/i }));
+    await waitFor(() => expect(onTagIdsChange).toHaveBeenCalledOnce());
     expect(onTagIdsChange).toHaveBeenCalledWith(["tag1"]);
   });
 
@@ -317,13 +312,7 @@ describe("TradesView", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "Add filter" }));
-    // Keyboard navigation avoids jsdom's layout-dependent submenu hover handling.
-    const search = await screen.findByPlaceholderText("Search filters…");
-    await waitFor(() => expect(search).toHaveFocus());
-    await user.type(search, "Market");
-    await screen.findByRole("option", { name: "Market" });
-    await user.keyboard("{ArrowDown}{ArrowRight}");
+    await openFilter(user, "Market");
     const marketSearch = await screen.findByPlaceholderText("Search market...");
     await waitFor(() => expect(marketSearch).toHaveFocus());
     await screen.findByRole("option", { name: /Stock/i });
