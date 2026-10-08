@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: tradelens-demo
+    runtime: docker
+    plan: free
+    dockerfilePath: ./deploy/demo/Dockerfile
+    dockerContext: .
+    healthCheckPath: /readyz
+    autoDeployTrigger: 'off'
+    envVars:
+      - key: TM_JWT_SECRET
+        generateValue: true
