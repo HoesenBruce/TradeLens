@@ -29,13 +29,12 @@ make up-postgres-build  # TradeLens / PostgreSQL
 # http://localhost:3000
 ```
 
-### Docker Hub 用戶名的來源
+### 鏡像 registry
 
 | 場景 | 設置位置 |
 |---------|-----------------|
-| 終端用戶 / 自託管 | 根目錄 `.env` → `DOCKERHUB_USERNAME`（Compose 會自動加載）。默認爲 `sinhong2011`。 |
-| 鏡像標籤 | 根目錄 `.env` → `TM_IMAGE_TAG`（`latest` 或語義化版本號，如 `0.7.0`）。 |
-| CI 發佈到 Hub | GitHub 倉庫密鑰 `DOCKERHUB_USERNAME` + `DOCKERHUB_TOKEN`（目前禁用／停用，僅供未來配置）。 |
+| 終端用戶 / 自託管 | 根目錄 `.env` → `TM_IMAGE_REGISTRY`（Compose 會自動加載）。默認爲 `ghcr.io/hoesenbruce`。 |
+| 鏡像標籤 | 根目錄 `.env` → `TM_IMAGE_TAG`（`latest` 或語義化版本號，如 `0.2.1`）。 |
 
 你將獲得：
 

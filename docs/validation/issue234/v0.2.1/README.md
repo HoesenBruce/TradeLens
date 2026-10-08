@@ -83,17 +83,25 @@ All disposable Compose containers, networks and data volumes were removed after
 validation, along with temporary Docker configs and provider process. Browser test
 tabs were closed. Published images/packages were retained.
 
-## Remaining #234 acceptance
+## NAS acceptance — owner-provided handoff, 2026-10-08
 
-OWNER/NAS REQUIRED:
-- NAS anonymous pull and Web/API deployment/startup.
-- NAS restart persistence, full backup/restore and restored startup.
-- NAS update procedure preserving existing volumes; feed result back to #98.
+The owner supplied these completed HomeNAS results for recording; this closing
+change did not repeat them or perform any NAS writes. No financial data is recorded.
 
-AFTER NAS:
-- Separately reviewed default prebuilt Compose migration to official GHCR images.
-- Relevant CI, final deployment/updating documentation and update validation.
+| Case | Result |
+|---|---|
+| NAS fresh deploy / anonymous pull | PASS |
+| NAS native amd64 | PASS |
+| NAS API/Web startup | PASS |
+| NAS same-origin proxy | PASS |
+| NAS restart persistence | PASS |
+| NAS container recreate persistence | PASS |
+| NAS SQLite backup | PASS |
+| NAS restore to independent volume | PASS |
+| NAS restored startup | PASS |
+| NAS restored data consistency | PASS |
+| Existing NAS in-place migration | NOT APPLICABLE — no pre-existing TradeLens NAS deployment existed. |
 
-#233 registry acceptance is complete. #234 remains open for the above work.
-#235 is not started. Publishers remain disabled_manually. No visibility setting,
-Compose default, production database, mobile or tm-sync release was changed.
+Default GHCR Compose switch and final validation are tracked in
+[default-ghcr.md](default-ghcr.md). #234 remains open until that PR merges.
+#233 is complete/closed. #235 is not started. Publishers remain disabled_manually.

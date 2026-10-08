@@ -103,14 +103,15 @@ Web UI and API in one Compose stack, on your own machine:
 ```bash
 git clone https://github.com/HoesenBruce/TradeLens.git
 cd TradeLens
-make up-build    # → http://localhost:3000
+cp .env.example .env   # review JWT secret and pin TM_IMAGE_TAG
+make up          # → http://localhost:3000
 ```
 
-> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+> **Current TradeLens status:** official TradeLens GHCR images are published. `make up` (SQLite) and `make up-postgres` (PostgreSQL) use them by default. Source-build fallback remains available through `make up-build` / `make up-postgres-build`. Docker publisher and Release Please remain `disabled_manually`; image availability does not imply continuous publishing is enabled.
 >
-> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+> **Database boundary:** TradeLens and upstream TraderMemos migration histories have diverged. Never hand a database used by one product to the other, including PostgreSQL. Use separate projects and fresh databases for different products. Switching an existing TradeLens source deployment to official TradeLens images is a same-product deployment change: take a complete backup, then preserve the checkout, Compose project, configuration and volumes.
 
-`make up-build` builds both images from this checkout. `make up` uses the published upstream TraderMemos images by default; set `DOCKERHUB_USERNAME` and `TM_IMAGE_TAG` to use your own published images. The local stack serves Web and `/api` on one origin, so leave the **Server** field blank. On first visit the **setup wizard** creates your owner account.
+`make up` uses official TradeLens GHCR images; `make up-build` builds this checkout. Set `TM_IMAGE_REGISTRY` / `TM_IMAGE_TAG` in `.env`; pin a stable version in production (example: `0.2.1`). Without a tag setting, `latest` moves with stable releases. The local stack serves Web and `/api` on one origin, so leave **Server** blank. First visit creates the owner through the setup wizard.
 
 <details>
 <summary><strong>Options and production notes</strong></summary>
@@ -118,16 +119,16 @@ make up-build    # → http://localhost:3000
 <br/>
 
 ```bash
-cp .env.example .env   # optional: DOCKERHUB_USERNAME, TM_IMAGE_TAG
-make up-build          # build TradeLens from this repo (SQLite)
-make up-postgres-build # build TradeLens with PostgreSQL
+cp .env.example .env   # review JWT secret, TM_IMAGE_REGISTRY, TM_IMAGE_TAG
+make up                # official TradeLens GHCR images (SQLite)
+make up-postgres       # official images with PostgreSQL
 ```
 
 For production, set `TM_JWT_SECRET=$(openssl rand -hex 32)` and put TLS (Caddy/Traefik) in front — see [docs/deploy.md](docs/deploy.md).
 
 Full-instance backups require **SQLite database + attachments**, or **PostgreSQL dump + attachments**, with deployment configuration/secrets retained securely. Account ZIP and research Markdown exports are not complete instance backups. See [backup and restore](marketing/content/docs/self-hosting/backup-restore.mdx).
 
-Prefer Postgres over the default SQLite? `make up-postgres-build` builds and runs the same stack with a Postgres overlay.
+Prefer Postgres over the default SQLite? `make up-postgres` runs the same stack with a Postgres overlay.
 
 </details>
 

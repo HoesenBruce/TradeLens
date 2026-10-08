@@ -191,13 +191,13 @@ Vite+ proxies `/api` → `http://localhost:8080` during `vp dev`.
 See **[docs/fork-deploy.md](docs/fork-deploy.md)** to put the SPA on your Vercel/Cloudflare account, and **[docs/deploy.md](docs/deploy.md)** for Docker / CORS / edge rewrite. Deploy buttons: [README](README.md).
 
 ```bash
-make up          # pull Hub images: web :3000 (SPA + /api proxy), api :8080
+make up          # pull official TradeLens images: web :3000 (SPA + /api proxy), api :8080
 make up-build    # build Dockerfiles from this checkout instead
 make down
 make logs
 ```
 
-Hub namespace / tag: copy [`.env.example`](.env.example) → `.env` and set `DOCKERHUB_USERNAME` / `TM_IMAGE_TAG`. Future TradeLens CI publication uses GHCR with `GITHUB_TOKEN` and remains disabled; see [release policy](docs/release.md).
+Registry / tag: copy [`.env.example`](.env.example) → `.env` and review `TM_IMAGE_REGISTRY` / `TM_IMAGE_TAG`. Pin a stable version for production (example: `0.2.1`); unset tags default to moving `latest`. Official GHCR images are available; automated publishing remains disabled. See [release policy](docs/release.md).
 
 ### Vite+ commands (run from `web/`)
 

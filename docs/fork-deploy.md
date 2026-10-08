@@ -126,15 +126,15 @@ In GitHub → **Settings → General → Template repository**, enable the templ
 
 ## Branding compatibility
 
-> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+> **Current TradeLens status:** official TradeLens GHCR images are published. `make up` (SQLite) and `make up-postgres` (PostgreSQL) use them by default. Source-build fallback remains available through `make up-build` / `make up-postgres-build`. Docker publisher and Release Please remain `disabled_manually`; image availability does not imply continuous publishing is enabled.
 >
-> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+> **Database boundary:** TradeLens and upstream TraderMemos migration histories have diverged. Never hand a database used by one product to the other, including PostgreSQL. Use separate projects and fresh databases for different products. Switching an existing TradeLens source deployment to official TradeLens images is a same-product deployment change: take a complete backup, then preserve the checkout, Compose project, configuration and volumes.
 
-Source builds use `tradelens-api` / `tradelens-web` image names and TradeLens OCI
-labels. The disabled publish workflow targets only GHCR `hoesenbruce/tradelens-api`
-and `hoesenbruce/tradelens-web`, without legacy aliases. Official images remain
-unavailable until controlled first publication; see [release policy](release.md).
-Default upstream pulls remain unchanged; use `make up-build` for this fork.
+Official GHCR images are published as `ghcr.io/hoesenbruce/tradelens-api` and
+`ghcr.io/hoesenbruce/tradelens-web`; self-hosters can use `make up` directly.
+Source builds remain available with local tags `tradelens-api:local` /
+`tradelens-web:local`. See [deployment](deploy.md) for registry overrides and
+stable version pinning, and [release policy](release.md) for disabled automation.
 No volume or Compose project rename is required.
 
 Keep existing Compose service keys, `tm_data`, database filenames, `TM_*` settings,
@@ -171,10 +171,11 @@ instead of relying indefinitely on that redirect.
 
 For an existing NAS install, keep its checkout directory, Compose project name,
 `.env`, bind mounts and named volumes. After updating origin, use the existing
-source-build update procedure (`git pull --ff-only`, then `make up-build`). Do not
-clone into a new directory or run `docker compose down -v`. Docker Hub image
-names and namespaces are independent of the GitHub rename; this fork does not
-publish GHCR images. Existing image-based installs keep their configured tags.
+update procedure documented in the [updating guide](../marketing/content/docs/self-hosting/updating.mdx).
+Do not clone into a new directory or run `docker compose down -v`.
+An existing TradeLens source build can switch to official GHCR images after a
+complete backup while retaining its volumes. An upstream TraderMemos database
+cannot be switched this way because the migration chains differ.
 
 Actions use relative reusable workflows and `GITHUB_REPOSITORY` for release
 uploads, so no hard-coded private repository name needs changing. Check external

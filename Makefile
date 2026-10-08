@@ -170,13 +170,13 @@ sqlc: ## Regenerate sqlc code
 
 ## --- docker ---
 
-up: ## Start upstream TraderMemos Hub images (SQLite; not TradeLens)
+up: ## Start official TradeLens images (SQLite)
 	docker compose up -d
 
 up-build: ## Build images from source, then start (SQLite)
 	docker compose -f docker-compose.yml -f docker-compose.build.yml up --build -d
 
-up-postgres: ## Upstream TraderMemos Hub images + Postgres overlay
+up-postgres: ## Start official TradeLens images + PostgreSQL
 	docker compose -f docker-compose.yml -f docker-compose.postgres.yml up -d
 
 up-postgres-build: ## Build from source + Postgres overlay

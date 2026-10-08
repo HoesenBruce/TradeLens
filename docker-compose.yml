@@ -1,22 +1,14 @@
-# Default pulls are upstream TraderMemos, not TradeLens (no official images yet).
-# TradeLens: make up-build / make up-postgres-build. Never alternate products
-# on the same existing database volume: migration histories have diverged.
-#
-# Username / tag (Compose loads `.env` automatically):
-#   DOCKERHUB_USERNAME  — Hub namespace that owns the images (default: sinhong2011)
-#   TM_IMAGE_TAG        — image tag (default: latest; prefer a semver in production)
-#
-#   cp .env.example .env   # then edit DOCKERHUB_USERNAME if you fork/publish your own
-#
-# Build from source instead:
-#   docker compose -f docker-compose.yml -f docker-compose.build.yml up --build -d
-#   # or: make up-build
+# Official TradeLens GHCR images. Compose loads registry/tag overrides from .env.
+# TM_IMAGE_REGISTRY defaults to ghcr.io/hoesenbruce; TM_IMAGE_TAG to latest.
+# Pin a stable version in production (see .env.example).
+# Source fallback: make up-build / make up-postgres-build.
+# Never alternate upstream TraderMemos and TradeLens on an existing database.
 
 services:
   api:
     labels:
       org.opencontainers.image.title: TradeLens API
-    image: ${DOCKERHUB_USERNAME:-sinhong2011}/tradermemos-api:${TM_IMAGE_TAG:-latest}
+    image: ${TM_IMAGE_REGISTRY:-ghcr.io/hoesenbruce}/tradelens-api:${TM_IMAGE_TAG:-latest}
     ports:
       - "8080:8080"
     environment:
@@ -59,7 +51,7 @@ services:
   web:
     labels:
       org.opencontainers.image.title: TradeLens Web
-    image: ${DOCKERHUB_USERNAME:-sinhong2011}/tradermemos-web:${TM_IMAGE_TAG:-latest}
+    image: ${TM_IMAGE_REGISTRY:-ghcr.io/hoesenbruce}/tradelens-web:${TM_IMAGE_TAG:-latest}
     ports:
       - "3000:80"
     depends_on:

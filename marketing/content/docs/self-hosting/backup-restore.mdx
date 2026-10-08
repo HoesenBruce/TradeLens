@@ -3,9 +3,9 @@ title: Backup & restore
 description: "Complete instance backup: database plus attachments, for SQLite or PostgreSQL."
 ---
 
-> **Current TradeLens status:** official TradeLens images are not yet published. Docker image publishing and Release Please are disabled. Use `make up-build` (SQLite) or `make up-postgres-build` (PostgreSQL) to build this checkout.
+> **Current TradeLens status:** official TradeLens GHCR images are published. `make up` (SQLite) and `make up-postgres` (PostgreSQL) use them by default. Source-build fallback remains available through `make up-build` / `make up-postgres-build`. Docker publisher and Release Please remain `disabled_manually`; image availability does not imply continuous publishing is enabled.
 >
-> **Database boundary:** `make up` and `make up-postgres` currently pull upstream TraderMemos images (`sinhong2011/tradermemos-*`) by default. Upstream and TradeLens migration histories have diverged. Never alternate them against the same existing database volume, including PostgreSQL. Use a separate Compose project and fresh database/volumes for a different product; retain a complete backup before any migration.
+> **Database boundary:** TradeLens and upstream TraderMemos migration histories have diverged. Never hand a database used by one product to the other, including PostgreSQL. Use separate projects and fresh databases for different products. Switching an existing TradeLens source deployment to official TradeLens images is a same-product deployment change: take a complete backup, then preserve the checkout, Compose project, configuration and volumes.
 
 A full-instance backup requires **SQLite database + attachments**, or **PostgreSQL database dump + attachments**. Attachment and note-media metadata is in the database; restoring only one side leaves broken references. Securely preserve `.env`, secrets, the source commit and Compose configuration separately so you can recreate the same installation. Customized database or `TM_ATTACH_DIR` paths must also be included.
 
@@ -26,38 +26,43 @@ docker compose start api
 
 ## SQLite restore
 
-Use a separate fresh host/project, the same TradeLens source revision and configuration, and an empty destination volume. Build and create containers without starting the API, extract the archive, then start. Do not overwrite a running instance or an upstream database. Retain the original backup and verify login, account data and attachments after restore.
+Use a separate fresh host/project, the same TradeLens image version and configuration, and an empty destination volume. Pull and create containers without starting the API, extract the archive, then start. Do not overwrite a running instance or an upstream database. Retain the original backup and verify login, account data and attachments after restore.
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.build.yml build
-docker compose -f docker-compose.yml -f docker-compose.build.yml create
+docker compose -f docker-compose.yml pull
+docker compose -f docker-compose.yml create
 docker run --rm --volumes-from "$(docker compose ps -aq api)" -v "$PWD":/backup alpine \
   tar xzf /backup/tradelens-data.tar.gz -C /data
-make up-build
+make up
 ```
 
 ## PostgreSQL: dump + attachments
 
-The PostgreSQL overlay stores the database in `tm_pg_data` and attachments in `tm_data`. Stop the API (and any other writers) throughout the dump and attachment archive so both represent the same state. Use all three Compose files for every command; the base Compose file alone does not define `postgres`.
+The PostgreSQL overlay stores the database in `tm_pg_data` and attachments in `tm_data`. Stop the API (and any other writers) throughout the dump and attachment archive so both represent the same state. Use both Compose files for every command; the base Compose file alone does not define `postgres`.
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml stop api
-docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml exec -T postgres pg_dump -U tm tradermemos > tradelens-db.sql
-docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml ps -aq api)" -v "$PWD":/backup alpine \
+docker compose -f docker-compose.yml -f docker-compose.postgres.yml stop api
+docker compose -f docker-compose.yml -f docker-compose.postgres.yml exec -T postgres pg_dump -U tm tradermemos > tradelens-db.sql
+docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker-compose.postgres.yml ps -aq api)" -v "$PWD":/backup alpine \
   tar czf /backup/tradelens-attachments.tar.gz -C /data attachments
-docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml start api
+docker compose -f docker-compose.yml -f docker-compose.postgres.yml start api
 ```
 
 ## PostgreSQL restore
 
-Use a separate fresh project with the same source revision/configuration and empty volumes. Start only PostgreSQL, restore the dump into its empty database and restore the attachment archive before starting the API. Do not restore a SQLite archive as a PostgreSQL database. Verify accounts and attachments; keep backups offsite and test recovery before relying on them.
+Use a separate fresh project with the same image version/configuration and empty volumes. Start only PostgreSQL, restore the dump into its empty database and restore the attachment archive before starting the API. Do not restore a SQLite archive as a PostgreSQL database. Verify accounts and attachments; keep backups offsite and test recovery before relying on them.
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml build
-docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml create
-docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml up -d --wait postgres
-docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml exec -T postgres psql -v ON_ERROR_STOP=1 -U tm -d tradermemos < tradelens-db.sql
-docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker-compose.build.yml -f docker-compose.postgres.yml ps -aq api)" -v "$PWD":/backup alpine \
+docker compose -f docker-compose.yml -f docker-compose.postgres.yml pull
+docker compose -f docker-compose.yml -f docker-compose.postgres.yml create
+docker compose -f docker-compose.yml -f docker-compose.postgres.yml up -d --wait postgres
+docker compose -f docker-compose.yml -f docker-compose.postgres.yml exec -T postgres psql -v ON_ERROR_STOP=1 -U tm -d tradermemos < tradelens-db.sql
+docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker-compose.postgres.yml ps -aq api)" -v "$PWD":/backup alpine \
   tar xzf /backup/tradelens-attachments.tar.gz -C /data
-make up-postgres-build
+make up-postgres
 ```
+
+For source-build recovery, add `-f docker-compose.build.yml` immediately after the base
+file on every Compose command, use `build` instead of `pull`, and start with
+`make up-build` / `make up-postgres-build`. Restore before API startup so the
+selected version can check/run migrations normally. Retain deployment secrets separately.

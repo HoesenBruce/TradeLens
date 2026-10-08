@@ -29,13 +29,12 @@ make up-postgres-build  # TradeLens / PostgreSQL
 # http://localhost:3000
 ```
 
-### Docker Hub ユーザー名はどこから読まれるか
+### イメージレジストリ
 
 | 場面 | 設定場所 |
 |---------|-----------------|
-| エンドユーザー / セルフホスト | ルートの `.env` → `DOCKERHUB_USERNAME`（Compose が自動で読み込みます）。既定値は `sinhong2011`。 |
-| イメージタグ | ルートの `.env` → `TM_IMAGE_TAG`（`latest` または `0.7.0` のような semver）。 |
-| CI から Hub への公開 | GitHub リポジトリシークレット `DOCKERHUB_USERNAME` と `DOCKERHUB_TOKEN`（現在無効、将来の設定）。 |
+| エンドユーザー / セルフホスト | ルートの `.env` → `TM_IMAGE_REGISTRY`（Compose が自動で読み込みます）。既定値は `ghcr.io/hoesenbruce`。 |
+| イメージタグ | ルートの `.env` → `TM_IMAGE_TAG`（`latest` または `0.2.1` のような semver）。 |
 
 構成されるもの:
 
