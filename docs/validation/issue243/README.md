@@ -89,3 +89,10 @@ this local ARM64 run. The final public URL must be verified before a README link
 Mobile was not validated; outside current fork scope. No live integrations,
 real-market data, load testing, production migration, release publication or
 self-hosted persistence changes were required or performed.
+
+## Subsequent public acceptance
+
+See [public Render acceptance](public-render-acceptance.md) for independent
+HTTPS, browser, security, actual idle recovery/reset and remote-CI evidence
+collected after the owner deployed the service. The local record above remains
+a historical snapshot; Dashboard settings and deployed SHA still need owner evidence.

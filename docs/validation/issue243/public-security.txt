@@ -1,0 +1,15 @@
+POST /api/v1/executions -> 403
+DELETE /api/v1/trades/8876e1b6-7e20-4391-948e-3abe2fe0a1ea -> 403
+PUT /api/v1/accounts/da062d77-38fa-497c-95e8-912d3f691507 -> 403
+PATCH /api/v1/me -> 403
+POST /api/v1/ocr/parse -> 403
+GET /api/v1/settings/coach -> 403
+GET /api/v1/settings/ocr -> 403
+POST /api/v1/accounts/da062d77-38fa-497c-95e8-912d3f691507/flex-sync/run -> 403
+GET /api/v1/accounts/da062d77-38fa-497c-95e8-912d3f691507/flex-sync -> 403
+POST /api/v1/trades/8876e1b6-7e20-4391-948e-3abe2fe0a1ea/coach -> 403
+PUT /api/v1/me/password -> 403
+POST /api/v1/imports -> 403
+POST /api/v1/imports/commit -> 403
+multipart SBI import -> 403
+Before/after snapshot equality: PASS
