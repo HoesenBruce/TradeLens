@@ -38,8 +38,9 @@ flowchart TD
 ```
 
 There is no hand-cut release branch: `release-please--branches--main` **is** the
-release branch, rebuilt from scratch on every push to `main`. Merging it is the
-release. Nothing else tags or publishes.
+release branch, maintained by Release Please. An unchanged generated PR body
+can leave it behind `main`; use the recovery procedure below before release.
+Merging the Release PR triggers release creation; updating its branch does not.
 
 The intended workflow uses linear history and squash-only merges instead of
 GitFlow-style release branches. Owner must enforce that policy before activation. Squashing a release branch would also
@@ -59,6 +60,48 @@ lines release-please reads to build the changelog.
 5. Approve the `ghcr` deployment → Docker images are published.
 6. Build iOS separately: dispatch `ios-release` on the private Forgejo remote
    (see [Mobile releases](#mobile-releases)). It is **not** part of this chain.
+
+## Recover a Release PR that is behind main
+
+Release Please 17.6.0 skips updating an existing PR when its generated body is
+unchanged. Documentation or maintenance commits omitted from release notes can
+therefore leave the release branch behind even after a successful main run.
+This can recur; rerunning the same action does not guarantee a branch refresh.
+See the [Release Please implementation](https://github.com/googleapis/release-please/blob/v17.6.0/src/manifest.ts#L1089-L1102).
+
+Use GitHub's supported [Update branch merge](https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/keeping-your-pull-request-in-sync-with-the-base-branch)
+or `gh pr update-branch <number> --repo HoesenBruce/TradeLens` (without
+`--rebase`). This merges latest main into the release branch without rewriting
+history. It does not merge the PR into main. The repository currently has
+`allow_update_branch=false`; the head-guarded REST update endpoint was verified
+for #258 without changing that setting:
+
+```sh
+gh api --method PUT repos/HoesenBruce/TradeLens/pulls/<number>/update-branch \
+  -f expected_head_sha=<verified-release-pr-head-sha>
+```
+
+Before updating, confirm the PR is open, targets main, has no conflicts, and its
+only diff is the expected generated release files. Record main/head SHAs and
+the exact diff. Stop on conflicts or version discrepancies; do not hand-edit
+VERSION, manifest, CHANGELOG or package versions, force-push, or bypass rules.
+After updating, verify main is an ancestor of the new head, the generated diff
+is unchanged, all version files agree, and fresh required API/Web/title checks
+pass on that head. Recheck main immediately before a separately authorized
+squash merge. A merge commit on the release branch is compatible with main's
+linear-history rule because the final PR merge is squash; do not merge that
+merge commit directly into main.
+
+Release Please still owns version calculation and generated files. Future
+release-note changes may regenerate its branch, so always repeat these checks.
+No new token, automatic updater workflow, weakened branch protection or forced
+version is needed. Keep recovery manual before release; this also avoids granting
+an unattended updater permission to modify arbitrary PR branches. Any later docs
+PR merged into main can require another refresh of the open Release PR.
+
+Branch refresh is not release acceptance: verify tag/Release absence, publication
+workflow safety and GHCR approval separately. Never approve deployments or create
+release artifacts as part of this recovery.
 
 ## Commit messages
 
