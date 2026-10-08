@@ -304,7 +304,7 @@ describe("TradesView", () => {
     expect(onTagIdsChange).toHaveBeenCalledWith(["tag1"]);
   });
 
-  it("wires market faceted filter", { retry: 2 }, async () => {
+  it("wires market faceted filter", async () => {
     const user = filterUser();
     const onMarketsChange = vi.fn<(...args: any[]) => any>();
     render(
@@ -318,8 +318,17 @@ describe("TradesView", () => {
     );
 
     await user.click(screen.getByRole("button", { name: "Add filter" }));
-    await user.hover(await screen.findByRole("option", { name: "Market" }));
-    await pickOption(user, /Stock/i, onMarketsChange);
+    // Keyboard navigation avoids jsdom's layout-dependent submenu hover handling.
+    const search = await screen.findByPlaceholderText("Search filters…");
+    await waitFor(() => expect(search).toHaveFocus());
+    await user.type(search, "Market");
+    await screen.findByRole("option", { name: "Market" });
+    await user.keyboard("{ArrowDown}{ArrowRight}");
+    const marketSearch = await screen.findByPlaceholderText("Search market...");
+    await waitFor(() => expect(marketSearch).toHaveFocus());
+    await screen.findByRole("option", { name: /Stock/i });
+    await user.keyboard("{Enter}");
+    await waitFor(() => expect(onMarketsChange).toHaveBeenCalledOnce());
     expect(onMarketsChange).toHaveBeenCalledWith(["stock"]);
   });
 
