@@ -27,6 +27,7 @@ jobs:
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       version: ${{ steps.release.outputs.version }}
+      sha: ${{ steps.release.outputs.sha }}
     steps:
       # With a RELEASE_PLEASE_TOKEN PAT (contents + pull-requests write), the
       # Release PR triggers CI like a human PR — no per-release run approval.
@@ -46,39 +47,5 @@ jobs:
     uses: ./.github/workflows/docker-publish.yml
     with:
       version: ${{ needs.release-please.outputs.version }}
-    secrets: inherit
-
-  publish-tm-sync:
-    name: Release tm-sync binaries
-    needs: release-please
-    if: ${{ needs.release-please.outputs.releases_created == 'true' }}
-    uses: ./.github/workflows/tm-sync-release.yml
-    with:
-      version: ${{ needs.release-please.outputs.version }}
-    secrets: inherit
-
-  # iOS is not built here any more. EAS cloud builds are metered and a release
-  # spent two of them — one per platform — so the month's quota ran out and the
-  # iOS build of v0.12.0 failed while the Android one squeaked through. iOS now
-  # builds on the self-hosted M1 Pro, which is unmetered and runs the same
-  # Xcode EAS would (26.6 GM); see the ios-release workflow on the private
-  # Forgejo remote, where the App Store Connect key lives.
-  #
-  # `mobile-eas.yml` is deliberately still here and still works by manual
-  # dispatch: the quota resets monthly, and a single self-hosted Mac is a
-  # single point of failure worth having a spare for.
-
-  # Android has no store presence: the release-signed APK attached to the
-  # GitHub Release page IS the distribution channel (sideload / self-hosters),
-  # so this runs ungated like the tm-sync binaries.
-  build-android:
-    name: Build Android APK
-    needs: release-please
-    if: ${{ needs.release-please.outputs.releases_created == 'true' }}
-    uses: ./.github/workflows/mobile-eas.yml
-    with:
-      profile: production-apk
-      platform: android
-      attach-to-release: ${{ needs.release-please.outputs.version }}
-      message: v${{ needs.release-please.outputs.version }}
+      source_sha: ${{ needs.release-please.outputs.sha }}
     secrets: inherit

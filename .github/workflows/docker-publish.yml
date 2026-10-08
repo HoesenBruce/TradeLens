@@ -4,12 +4,14 @@ name: Publish TradeLens Docker images
 on:
   workflow_call:
     inputs:
+      source_sha:
+        description: Source SHA returned by Release Please
+        required: true
+        type: string
       version:
         description: Semver version without v prefix (from release-please)
         required: false
         type: string
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       version:
@@ -27,6 +29,7 @@ concurrency:
 
 jobs:
   metadata:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main' && inputs.version != '' && inputs.source_sha != '') || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/tags/v')) }}
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.meta.outputs.version }}
@@ -39,6 +42,7 @@ jobs:
           fetch-depth: 0
       - id: meta
         env:
+          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
           INPUT_VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/docker-release-metadata.py
@@ -46,12 +50,17 @@ jobs:
   # Same checks as PR CI — reused so a release can never publish images that
   # skipped tests.
   test-api:
+    needs: metadata
     uses: ./.github/workflows/api-ci.yml
     with:
       concurrency_key: docker-publish
+      source_ref: ${{ needs.metadata.outputs.commit }}
 
   test-web:
+    needs: metadata
     uses: ./.github/workflows/web-ci.yml
+    with:
+      source_ref: ${{ needs.metadata.outputs.commit }}
 
   publish:
     name: Push ${{ matrix.image }}
@@ -77,16 +86,28 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ needs.metadata.outputs.commit }}
-          # Revalidation resolves the annotated release tag to its commit.
+          # Run validation from this workflow revision, then checkout the release.
+          ref: ${{ github.sha }}
           fetch-depth: 0
 
       # Recheck after environment approval: a newer stable release may now exist.
       - name: Revalidate release before publication
         env:
+          EXPECTED_SOURCE_SHA: ${{ needs.metadata.outputs.commit }}
           INPUT_VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/docker-release-metadata.py
+
+      - name: Refuse existing immutable image tags
+        env:
+          IMAGE: tradelens-${{ matrix.image }}
+          VERSION: ${{ needs.metadata.outputs.version }}
+          SOURCE_SHA: ${{ needs.metadata.outputs.commit }}
+        run: python3 scripts/docker-release-metadata.py --check-registry
+
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.metadata.outputs.commit }}
 
       - uses: docker/setup-qemu-action@v4
 
