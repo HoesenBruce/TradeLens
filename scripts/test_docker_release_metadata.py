@@ -48,7 +48,8 @@ class Tags(unittest.TestCase):
         with tempfile.NamedTemporaryFile() as output:
             env = dict(GITHUB_EVENT_NAME='push', GITHUB_REF='refs/heads/main',
                        GITHUB_REPOSITORY='HoesenBruce/TradeLens', INPUT_VERSION='0.2.1',
-                       GITHUB_OUTPUT=output.name)
+                       GITHUB_OUTPUT=output.name,
+                       EXPECTED_SOURCE_SHA='b78c5925778831e7d2d039a4d0139ff1ddfc6e31')
             with patch.dict(os.environ, env), patch('subprocess.check_output', read_only_api):
                 runpy.run_path(str(Path(__file__).with_name('docker-release-metadata.py')), run_name='__main__')
             result = Path(output.name).read_text()
@@ -74,12 +75,26 @@ class Tags(unittest.TestCase):
             return io.StringIO('{"token":"public-read"}')
         with self.assertRaises(ValueError):
             module.check_registry('tradelens-api', ['0.2.2'], existing)
-        def denied(request):
+        for status in [401, 403, 429, 500]:
+            def denied(request):
+                if isinstance(request, str):
+                    return io.StringIO('{"token":"public-read"}')
+                raise urllib.error.HTTPError(request.full_url, status, 'registry error', {}, None)
+            with self.subTest(status=status), self.assertRaises(urllib.error.HTTPError):
+                module.check_registry('tradelens-api', ['0.2.2'], denied)
+        def token_error(request):
+            raise urllib.error.HTTPError(request, 404, 'token endpoint error', {}, None)
+        with self.assertRaises(urllib.error.HTTPError):
+            module.check_registry('tradelens-api', ['0.2.2'], token_error)
+        # Inspect every immutable tag, even if the first one is absent.
+        def sha_exists(request):
             if isinstance(request, str):
                 return io.StringIO('{"token":"public-read"}')
-            raise urllib.error.HTTPError(request.full_url, 403, 'denied', {}, None)
-        with self.assertRaises(urllib.error.HTTPError):
-            module.check_registry('tradelens-api', ['0.2.2'], denied)
+            if request.full_url.endswith('/0.2.2'):
+                raise urllib.error.HTTPError(request.full_url, 404, 'absent', {}, None)
+            return io.StringIO('{}')
+        with self.assertRaises(ValueError):
+            module.check_registry('tradelens-web', ['0.2.2', 'sha-'+'a'*40], sha_exists)
 
 
 if __name__ == '__main__':

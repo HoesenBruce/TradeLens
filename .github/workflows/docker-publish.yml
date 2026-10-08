@@ -4,6 +4,10 @@ name: Publish TradeLens Docker images
 on:
   workflow_call:
     inputs:
+      source_sha:
+        description: Source SHA returned by Release Please
+        required: true
+        type: string
       version:
         description: Semver version without v prefix (from release-please)
         required: false
@@ -25,7 +29,7 @@ concurrency:
 
 jobs:
   metadata:
-    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main' && inputs.version != '') || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/tags/v')) }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main' && inputs.version != '' && inputs.source_sha != '') || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/tags/v')) }}
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.meta.outputs.version }}
@@ -38,6 +42,7 @@ jobs:
           fetch-depth: 0
       - id: meta
         env:
+          EXPECTED_SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
           INPUT_VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/docker-release-metadata.py

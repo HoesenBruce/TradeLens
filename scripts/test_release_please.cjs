@@ -46,4 +46,5 @@ async function simulate(message, expected) {
   await simulate('', null);
   await simulate('fix: repair TradeLens Release Please automation', '0.2.2');
   await simulate('feat: next feature', '0.3.0');
+  await simulate('feat!: incompatible API', '1.0.0');
 })().catch(error => {console.error(error); process.exitCode=1;});

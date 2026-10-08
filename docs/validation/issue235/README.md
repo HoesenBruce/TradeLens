@@ -69,3 +69,81 @@ required API/Web/title checks. Validate real release PR creation before merging
 it. Validate tag SHA, both source-bound test jobs, approval wait, both images and
 digests during the first authorized production release. Partial image publication
 requires reviewed recovery; immutable tags are never silently overwritten.
+
+## Final release-path review — 2026-10-08
+
+Refreshed PR #252: OPEN/Draft/MERGEABLE at `1b1270f765fea15db3f71033120560fce915a8b9`,
+base main unchanged. All API/Web/title CI checks passed on that head. Latest
+stable and tag SHAs remain as above; both publication workflows remain disabled.
+Review changes are limited to release workflows, regression checks and docs.
+
+### Confirmed gap fixed
+
+Initial metadata previously compared tag/version files but had no independently
+supplied Release Please SHA. Release Please now exports its created release `sha`
+and passes required `source_sha` to Docker. Initial validation compares tag commit
+to that value (manual dispatch compares to the tag-context `github.sha`). Post-
+approval validation compares again to the metadata commit. Missing automatic
+source SHA cannot enter the metadata job. The action v5 source outputs every
+CreatedRelease property including sha for the root package.
+
+Caller context is main ref / push event / caller commit SHA. Inputs.version is
+the action's created-release version. Metadata.commit is the explicitly resolved
+published tag commit after independent SHA, VERSION and manifest comparisons.
+API/Web checkout, Docker checkout, build args and OCI revision all bind to this
+metadata commit. Reusable workflows cannot elevate caller token permissions.
+Publisher receives packages write; metadata/tests receive contents read.
+
+### Owner gates corrected
+
+The previous docs overstated main branch protection. Live `rulesets` returns `[]`;
+`branches/main/protection` returns 404 "Branch not protected". Required checks
+are therefore **not currently enforced** despite this PR's successful CI.
+Owner must configure and verify main protection before release enablement.
+Current ghcr reviewer remains HoesenBruce, administrator bypass false, self-review
+allowed; only v* tag policy exists. Option A (exact main plus v* and reviewer) is
+selected; tag-context Option B needs different event/dispatch authentication and
+adds delivery/duplicate risks. Exact Settings steps are in release.md.
+
+GITHUB_TOKEN PR-event approval behavior is supported by current GitHub docs, but
+has not been exercised with Release Please on this repository. Human-created PR
+CI is not evidence for bot-created PR CI. PAT remains the simplest existing input;
+App installation tokens are an alternative requiring a separate workflow change.
+No secret was read, printed or changed.
+
+### Rerun checks
+
+| Check | Result |
+|---|---|
+| actionlint; workflow YAML; official config schema | PASS |
+| Source SHA wiring, approval dependency and trigger graph assertions | PASS (STATIC) |
+| Real engine 17.6.0, mocked API: docs/chore none, fix 0.2.2, feat 0.3.0 | PASS (SIMULATED) |
+| Breaking `feat!` from 0.2.1 → 1.0.0 | PASS (SIMULATED); bump-minor-pre-major is not enabled |
+| Version/changelog and exclusion of old breaking history | PASS (SIMULATED) |
+| Metadata/tag ref/SHA mismatch tests | PASS (SIMULATED API, real local git) |
+| Exact-version and full-SHA duplicate probes; token 404; manifest 401/403/429/500 | PASS (SIMULATED) |
+| git diff --check | PASS |
+| Actual main reusable invocation, token-generated PR checks, deployments and releases | NOT VERIFIED; prohibited in this review |
+
+### Residual risks and recovery
+
+The registry probe is not an atomic lock. Repository concurrency cannot prevent
+an external package writer creating/overwriting a tag between inspection/build/
+push. Nor does it prevent a new external stable Release after validation.
+Official packages are public; private-package live behavior is NOT VERIFIED.
+Owner must restrict publication writers and serialize out-of-band release work,
+or require stronger registry/promotion enforcement before activation.
+
+Both API-only and Web-only success, ambiguous push failures, approval expiry,
+new stable while waiting, cancellation, same-release reruns and an already
+published SHA are covered in release.md's recovery table. Never infer registry
+absence from workflow failure. Read both digests first. Partial recovery needs a
+reviewed missing-image repair or a new patch release; no blind overwrite/delete.
+Moving tags across the two images are not atomic. This is an explicit operating
+limit, not a code-merge blocker if the owner accepts new-patch recovery and pins
+verified versions/digests until both images complete. It remains an activation
+gate if the owner requires generic partial repair or concurrent external writers.
+
+No tag/Release/image/deployment or environment mutation was performed. No merge,
+workflow enablement, NAS/Compose/database/mobile/tm-sync release, or issue closure
+was attempted. New-head CI and final PR review status are reported in PR #252.
