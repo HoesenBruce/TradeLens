@@ -25,19 +25,19 @@ const pillarShots: Partial<Record<FeatureSlug, PillarShot>> = {
   'self-hosted': {
     image: dashboardShot,
     lightImage: dashboardLightShot,
-    alt: 'TraderMemos dashboard running on localhost — equity curve, expectancy and win-rate stats',
+    alt: 'Legacy synthetic USD TradeLens capture of inherited functionality: dashboard running on localhost — equity curve, expectancy and win-rate stats',
   },
   'behavior-analytics': {
     image: reportsShot,
-    alt: 'TraderMemos reports — equity curve, profit factor gauge, win-rate donut, goal pacing',
+    alt: 'Legacy synthetic USD TradeLens capture of inherited functionality: reports — equity curve, profit factor gauge, win-rate donut, goal pacing',
   },
   'prop-firm-mode': {
     image: calendarShot,
-    alt: 'TraderMemos P&L calendar heatmap — daily results against loss limits',
+    alt: 'Legacy synthetic USD TradeLens capture of inherited functionality: P&L calendar heatmap — daily results against loss limits',
   },
   'rule-compliance': {
     image: tradesShot,
-    alt: 'TraderMemos trade log with per-trade P&L, hold time, and tags',
+    alt: 'Legacy synthetic USD TradeLens capture of inherited functionality: trade log with per-trade P&L, hold time, and tags',
   },
 };
 

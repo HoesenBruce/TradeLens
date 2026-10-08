@@ -1,173 +1,52 @@
 {
   "Home": {
-    "metaTitle": "TraderMemos — 自架交易日誌",
-    "metaDescription": "交易資料由你掌控。TraderMemos 是一款自架交易日誌，內建儀表板、盈虧日曆、交易紀錄、策略手冊與報表 —— 免費、AGPL-3.0，執行於你自己的基礎設施。",
-    "badge": "自架 · AGPL-3.0 · Go + React",
-    "heroTitleLine1": "資料由你掌控。",
-    "heroTitleLine2": "復盤由你主導。",
-    "heroSubtitle": "TraderMemos 是一款自架交易日誌 —— 儀表板、盈虧日曆、交易紀錄、策略手冊與報表，全部執行於你自己的基礎設施。免訂閱，也不被廠商綁定。",
+    "metaTitle": "TradeLens — 日本股票與新聞論點研究",
+    "metaDescription": "自架 SBI 匯入、現貨與信用交易檢視、新聞預測與歷史帳戶估值。基於 TraderMemos，Web 優先，AGPL-3.0。",
+    "badge": "TradeLens · 自架服務 · Web 優先 · AGPL-3.0",
+    "heroTitle": "日本股票。可檢驗的論點。自己的資料。",
+    "heroSubtitle": "匯入 SBI 歷史，區分現貨與信用持倉，記錄新聞預測，比對計畫與實際成交。在自己的伺服器上檢視證據。",
     "ctaGetStarted": "開始使用",
-    "ctaDemo": "試用線上 Demo",
-    "demoCreds": "Demo 帳號:",
-    "ctaGithub": "前往 GitHub",
-    "ticker": [
-      {
-        "label": "淨盈虧",
-        "value": "+$8,398.72",
-        "tone": "profit"
-      },
-      {
-        "label": "勝率",
-        "value": "57%",
-        "tone": "neutral"
-      },
-      {
-        "label": "獲利因子",
-        "value": "1.79",
-        "tone": "neutral"
-      },
-      {
-        "label": "期望值",
-        "value": "+$45.90 / 筆",
-        "tone": "profit"
-      },
-      {
-        "label": "最大回撤",
-        "value": "−$1,082.17",
-        "tone": "loss"
-      },
-      {
-        "label": "平均持倉",
-        "value": "1h",
-        "tone": "neutral"
-      },
-      {
-        "label": "交易筆數",
-        "value": "183",
-        "tone": "neutral"
-      }
-    ],
-    "eyebrowWhy": "資料主權",
-    "eyebrowFeatures": "功能總覽",
-    "eyebrowInside": "產品導覽",
-    "eyebrowStack": "技術底層",
-    "featuresSub": "從券商對帳單到每日復盤 —— 整個循環的每一步，都在同一套自架應用中完成。",
-    "whyHeading": "為什麼選擇 TraderMemos？",
-    "whyBody": "TradeZella、TraderSync 等雲端交易日誌固然精緻 —— 但你的交易優勢藏在資料裡。TraderMemos 延續 Ghost、Umami、Plane 的自架理念：執行於你自己的基礎設施，資料庫由你掌控，不需任何人許可即可自由擴充。",
-    "comparisonHeaderFeature": "項目",
-    "comparisonHeaderCloud": "雲端交易日誌",
-    "comparisonHeaderTm": "TraderMemos",
-    "comparison": [
-      {
-        "row": "資料歸屬",
-        "cloud": "廠商託管",
-        "tm": "你的 SQLite / Postgres，你的 VPS"
-      },
-      {
-        "row": "費用",
-        "cloud": "按月訂閱",
-        "tm": "免費 + 自架主機成本"
-      },
-      {
-        "row": "AI 金鑰",
-        "cloud": "通常由廠商管理",
-        "tm": "你自己的相容 OpenAI API"
-      },
-      {
-        "row": "客製化",
-        "cloud": "有限",
-        "tm": "可 Fork、修改、自由部署"
-      }
-    ],
-    "featuresHeading": "日常復盤所需的一切",
+    "ctaDemo": "執行合成展示資料",
+    "ctaGithub": "在 GitHub 查看 TradeLens",
+    "portfolioAlt": "虛構日圓組合：淨損益 25,000，帳戶估值 975,000",
+    "screenshotProvenance": "實際英文 TradeLens 介面，僅使用 2026 年 9 月合成資料。價格、新聞及報酬皆屬虛構。展示包含四個待驗證、兩個不可用的預測期間，沒有已評分結果，不代表真實投資績效。",
+    "featuresHeading": "TradeLens 擴充",
+    "readGuide": "閱讀功能指南",
+    "foundationTitle": "建構於 TraderMemos 基礎之上",
+    "foundationBody": "sinhong2011 與貢獻者開發的 TraderMemos 提供交易日誌、分組、通用分析、損益日曆、策略庫、回放、分享與風險工具。TradeLens 擴充 SBI 會計、新聞研究、估值、Generic Bars HTTP 串接及 Web 在地化。行情歷史可能不完整；蒐集器為獨立服務。保留上游署名與 AGPL-3.0。",
+    "upstreamDemo": "選用 TraderMemos 示範 — 僅屬上游",
+    "startTitle": "在自己的伺服器上執行",
+    "startBody": "此處不提供官方代管 TradeLens 服務。複製分支儲存庫，檢查 .env、固定映像版本，再啟動 Web/API Compose。開啟 localhost:3000 建立擁有者。合成展示需要獨立且全新的暫存 API、資料庫與本機行情測試服務。",
+    "deploymentNote": "Compose 使用 TradeLens GHCR 映像，亦保留原始碼建構方案。Docker 發佈目前為手動停用，並非持續發佈。TradeLens 與上游資料庫遷移已分歧，切勿交替使用同一資料庫。升級前備份資料庫、附件與部署設定，正式環境設定 TLS。",
+    "deployGuide": "部署與資料庫界線",
+    "inheritedDocs": "繼承文件參考",
+    "mobileNote": "Web 是目前驗收目標。Expo 用戶端保留，但未於此分支驗證。上游 TestFlight/APK 下載並非官方 TradeLens 應用程式。",
+    "referenceNote": "TradeLens 分支：保留的文件、功能比較與行動端連結包含上游參考，不代表已驗證的 TradeLens 支援或官方代管服務。",
     "features": {
-      "dashboard": {
-        "title": "儀表板",
-        "description": "權益曲線、期望值、連勝連虧、持倉時間與年度目標進度 — 可按單一帳戶檢視，也可跨多帳戶組合檢視。"
+      "sbi": {
+        "title": "SBI 與日本股票",
+        "description": "分別匯入 約定履歴 與 円貨入出金明細。SBI 專屬規則區分現貨、信用多空，支援 現引、現渡；缺少期初歷史無法推定成本基礎。",
+        "alt": "實際 SBI 約定歷史映射與確認"
       },
-      "tradeLog": {
-        "title": "交易紀錄",
-        "description": "成交明細自動彙整為交易 —— 篩選、排序、加標籤，並可深入檢視執行細節。"
+      "news": {
+        "title": "新聞論點與預測",
+        "description": "將新聞連結至資產並儲存使用者預測。選用 AI 需自行設定服務與金鑰，明確接受建議。API 驗證需要符合交易日條件及價格證據；不可用不等於零報酬。不自動蒐集新聞。",
+        "alt": "虛構 285A 新聞論點與手動預測"
       },
-      "calendar": {
-        "title": "盈虧日曆",
-        "description": "按日 / 按週熱力圖，含每週合計與單日明細檢視。"
+      "valuation": {
+        "title": "歷史估值與多幣別檢視",
+        "description": "以可用價格重播持倉與現金，證據不足時估值可能不完整。跨幣別檢視對歷史值亦使用最新匯率，不重建歷史匯率。",
+        "alt": "合成帳戶流水：入金 1,000,000、出金 50,000"
       },
-      "reports": {
-        "title": "報表",
-        "description": "期望值、SQN、凱利比例、MAE/MFE、蒙地卡羅與執行品質 — 按策略 / 小時 / 交易時段細分，並可儲存為常用檢視。"
-      },
-      "playbook": {
-        "title": "策略手冊",
-        "description": "策略庫與使用該策略的交易紀錄相互連結。"
-      },
-      "import": {
-        "title": "匯入",
-        "description": "九家券商 CSV 預設、MT4/MT5 對帳單、IBKR Flex 同步 — 也可讓 tm-sync 桌面代理自動監控你的對帳單資料夾。"
-      },
-      "alerts": {
-        "title": "警示",
-        "description": "風控規則、每日虧損上限與 Prop 回撤預警 — 推播與 Webhook 由你自己的伺服器發出，全部免費。"
-      },
-      "replay": {
-        "title": "K 線回放",
-        "description": "對任意商品逐根 K 線回測，成績記入可持久保存的模擬帳戶 — 並進入與實盤相同的分析體系。"
-      },
-      "share": {
-        "title": "分享",
-        "description": "可隨時撤銷的唯讀績效連結、單筆交易分享卡片，以及年度回顧 Year Wrapped。"
-      },
-      "tools": {
-        "title": "工具",
-        "description": "部位 / 匯率 / 凱利計算器、進階圖表、財經日曆與現金流水帳。"
-      },
-      "ai": {
-        "title": "AI（選用）",
-        "description": "截圖自動擷取成交資訊 + AI 交易教練，透過相容 OpenAI 的 API —— 使用你自己的金鑰。"
-      },
-      "api": {
-        "title": "API 存取",
-        "description": "個人存取權杖（tm_pat_…）可用於 MCP / 指令稿；OpenAPI 文件位於 /docs。"
-      },
-      "mobile": {
-        "title": "行動 App（測試版）",
-        "description": "iOS 與 Android 原生隨身版 — 雙平台離線記錄；iOS 另有小工具、即時動態與 Siri / 動作按鈕快速記帳。iOS 經 TestFlight 發佈，Android 可從 GitHub Releases 下載 APK。"
+      "plan": {
+        "title": "計畫與實際成交對照",
+        "description": "計畫方向獨立於成交方向。比較虛構目標價 1,200 與實際出場價 1,100；日誌及風險工具繼承上游基礎。",
+        "alt": "虛構做多計畫目標 1200 與實際出場 1100"
       }
-    },
-    "lookInsideHeading": "實際畫面",
-    "tradeLogCaptionTitle": "交易紀錄",
-    "tradeLogCaptionBody": "每筆交易的盈虧、持倉時間與標籤一目了然。點選任一列即可檢視完整執行時間軸。",
-    "calendarCaptionTitle": "盈虧日曆",
-    "calendarCaptionBody": "按日 / 按週熱力圖，一眼看出連勝與失手的日子。",
-    "reportsCaptionTitle": "報表",
-    "reportsCaptionBody": "權益曲線、獲利因子、期望值與目標進度 — 還有蒙地卡羅模擬、MAE/MFE，以及按策略 / 小時 / 時段的細分。",
-    "techStackHeading": "技術堆疊",
-    "stackComment": "# 你的資料，跑在你自己的主機上",
-    "stack": [
-      {
-        "layer": "API",
-        "value": "Go · Echo · sqlc · golang-migrate · SQLite / Postgres"
-      },
-      {
-        "layer": "Web",
-        "value": "React · Vite+ · TanStack Router/Query/Form · Tailwind"
-      },
-      {
-        "layer": "行動裝置",
-        "value": "Expo · PanelUI + Uniwind · TestFlight / APK"
-      },
-      {
-        "layer": "設計",
-        "value": "shadcn/ui + coss ui 設計 token"
-      }
-    ],
-    "licenseHeading": "採用 AGPL-3.0 授權",
-    "licenseBody": "自由自架、修改，供個人或公司內部使用。",
-    "readDocs": "閱讀文件",
-    "screenshotProvenance": "截圖和統計來自獨立生成的示範資料，不代表真實交易表現。"
+    }
   },
   "Footer": {
-    "tagline": "自架交易日誌。",
+    "tagline": "日本股票與新聞論點研究",
     "docs": "文件",
     "changelog": "更新日誌",
     "privacy": "隱私權",
@@ -177,7 +56,7 @@
     "discussions": "社群討論",
     "security": "安全政策",
     "license": "授權條款（AGPL-3.0）",
-    "privacyNote": "無遙測 —— 資料只留在你的伺服器上。",
+    "privacyNote": "資料自架；選用 AI 會將所選內容傳送至你設定的服務。",
     "features": "功能",
     "compare": "比較"
   },

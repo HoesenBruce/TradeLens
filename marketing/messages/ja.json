@@ -1,173 +1,52 @@
 {
   "Home": {
-    "metaTitle": "TraderMemos — セルフホスト型トレードジャーナル",
-    "metaDescription": "トレードデータを自分の手に。TraderMemos は、ダッシュボード・損益カレンダー・トレードログ・プレイブック・レポートを備えたセルフホスト型のトレードジャーナルです。無料、AGPL-3.0、あなた自身のインフラで動作します。",
-    "badge": "セルフホスト · AGPL-3.0 · Go + React",
-    "heroTitleLine1": "データは、自分のものに。",
-    "heroTitleLine2": "エッジを、検証する。",
-    "heroSubtitle": "TraderMemos はセルフホスト型のトレードジャーナルです。ダッシュボード、損益カレンダー、トレードログ、プレイブック、レポートを、すべてあなた自身のインフラ上で。サブスクリプションもベンダーロックインもありません。",
-    "ctaGetStarted": "使ってみる",
-    "ctaDemo": "ライブデモを試す",
-    "demoCreds": "デモアカウント:",
-    "ctaGithub": "GitHub で見る",
-    "ticker": [
-      {
-        "label": "純損益",
-        "value": "+$8,398.72",
-        "tone": "profit"
-      },
-      {
-        "label": "勝率",
-        "value": "57%",
-        "tone": "neutral"
-      },
-      {
-        "label": "プロフィットファクター",
-        "value": "1.79",
-        "tone": "neutral"
-      },
-      {
-        "label": "期待値",
-        "value": "+$45.90 / トレード",
-        "tone": "profit"
-      },
-      {
-        "label": "最大ドローダウン",
-        "value": "−$1,082.17",
-        "tone": "loss"
-      },
-      {
-        "label": "平均保有時間",
-        "value": "1h",
-        "tone": "neutral"
-      },
-      {
-        "label": "トレード数",
-        "value": "183",
-        "tone": "neutral"
-      }
-    ],
-    "eyebrowWhy": "データを自分の手に",
-    "eyebrowFeatures": "機能一覧",
-    "eyebrowInside": "アプリの中身",
-    "eyebrowStack": "技術的な裏側",
-    "featuresSub": "証券会社の明細から日次レビューまで — 振り返りサイクルのすべてが、ひとつのセルフホストアプリに収まります。",
-    "whyHeading": "なぜ TraderMemos なのか",
-    "whyBody": "TradeZella や TraderSync のようなクラウド型ジャーナルは洗練されています。しかし、あなたのエッジはデータの中にあります。TraderMemos は Ghost、Umami、Plane と同じセルフホストの哲学に従います。自分のインフラで動かし、データベースを自分で所有し、誰の許可も得ずに拡張できます。",
-    "comparisonHeaderFeature": "項目",
-    "comparisonHeaderCloud": "クラウド型ジャーナル",
-    "comparisonHeaderTm": "TraderMemos",
-    "comparison": [
-      {
-        "row": "データの所有権",
-        "cloud": "ベンダーがホスト",
-        "tm": "あなたの SQLite / Postgres、あなたの VPS"
-      },
-      {
-        "row": "コスト",
-        "cloud": "月額サブスクリプション",
-        "tm": "無料 + ホスティング費用のみ"
-      },
-      {
-        "row": "AI キー",
-        "cloud": "多くはベンダー管理",
-        "tm": "あなたの OpenAI 互換 API"
-      },
-      {
-        "row": "カスタマイズ性",
-        "cloud": "限定的",
-        "tm": "フォーク・改変・デプロイ自由"
-      }
-    ],
-    "featuresHeading": "日々のレビューに必要なすべて",
+    "metaTitle": "TradeLens — 日本株とニュース仮説の検証",
+    "metaDescription": "セルフホストの SBI 取込、現物・信用取引の振り返り、ニュース予測と過去の口座評価額。TraderMemos を基盤とした Web 優先の AGPL-3.0 ソフトウェア。",
+    "badge": "TradeLens · セルフホスト · Web 優先 · AGPL-3.0",
+    "heroTitle": "日本株。検証できる仮説。自分のデータ。",
+    "heroSubtitle": "SBI の履歴を取り込み、現物と信用を区別し、ニュース予測を記録。計画と実際の約定を、自分のサーバー上で証拠とともに振り返ります。",
+    "ctaGetStarted": "利用を開始",
+    "ctaDemo": "合成データの展示を実行",
+    "ctaGithub": "GitHub で TradeLens を見る",
+    "portfolioAlt": "架空の円建て口座：純損益 25,000、口座評価額 975,000",
+    "screenshotProvenance": "実際の英語版 TradeLens UI と、2026年9月の合成データです。価格・ニュース・損益は架空。予測期間は待機4件、利用不可2件で、採点済み結果はありません。実際の投資成績ではありません。",
+    "featuresHeading": "TradeLens の拡張",
+    "readGuide": "機能ガイドを読む",
+    "foundationTitle": "TraderMemos の基盤を継承",
+    "foundationBody": "sinhong2011 と貢献者による TraderMemos は、取引日誌、グループ化、汎用分析、損益カレンダー、Playbook、リプレイ、共有、リスク管理を提供します。TradeLens は SBI 会計、ニュース研究、評価額、Generic Bars HTTP 接続と Web 翻訳を拡張します。相場履歴は不完全な場合があり、収集サービスは別途必要です。帰属表示と AGPL-3.0 を維持します。",
+    "upstreamDemo": "任意の TraderMemos デモ — 上流のみ",
+    "startTitle": "自分のサーバーで実行",
+    "startBody": "公式のホスト型 TradeLens サービスを示すものではありません。フォークを取得し、.env と固定イメージ版を確認して Web/API Compose を起動。localhost:3000 で所有者を作成します。合成展示には独立した新規の一時 API・DB とローカル相場フィクスチャが必要です。",
+    "deploymentNote": "Compose は TradeLens GHCR イメージを使用し、ソースビルドも可能です。Docker 公開は現在手動停止中で、継続公開ではありません。上流と TradeLens の DB マイグレーションは分岐済みです。同じ DB を交互に使用しないでください。更新前に DB・添付ファイル・設定をバックアップし、本番には TLS を設定してください。",
+    "deployGuide": "デプロイと DB 境界",
+    "inheritedDocs": "継承ドキュメントの参照",
+    "mobileNote": "現在の検証対象は Web です。Expo は保持していますが、このフォークでは未検証です。上流の TestFlight/APK は公式 TradeLens アプリではありません。",
+    "referenceNote": "TradeLens フォーク：保持された文書・機能比較・モバイルリンクには上流の参照が含まれます。検証済みの TradeLens 対応や公式ホストサービスを示すものではありません。",
     "features": {
-      "dashboard": {
-        "title": "ダッシュボード",
-        "description": "資産曲線、期待値、連勝・連敗、保有時間、年間目標の進捗ペース — 口座ごとにも、複数口座のポートフォリオ全体でも。"
+      "sbi": {
+        "title": "SBI と日本株",
+        "description": "約定履歴と円貨入出金明細を別々に取り込みます。SBI 固有の現物・信用買い・信用売りの会計は現引・現渡に対応。期首履歴の欠落から取得原価を推測しません。",
+        "alt": "実際の SBI 約定履歴マッピングと確認"
       },
-      "tradeLog": {
-        "title": "トレードログ",
-        "description": "約定をトレード単位にグループ化 — フィルタ、並べ替え、タグ付け、約定明細へのドリルダウン。"
+      "news": {
+        "title": "ニュース仮説と予測",
+        "description": "ニュースを資産に関連付けてユーザー予測を保存。任意の AI は自分の接続設定・キーと明示的な採用操作が必要です。API 検証には適格な取引日と価格証拠が必要で、利用不可はゼロリターンではありません。ニュース自動収集はありません。",
+        "alt": "架空の 285A 仮説と手動予測"
       },
-      "calendar": {
-        "title": "損益カレンダー",
-        "description": "日次・週次のヒートマップ。週間合計と日別詳細へのドリルダウン付き。"
+      "valuation": {
+        "title": "過去の評価額と通貨別レビュー",
+        "description": "利用可能な価格で保有と現金を再現します。証拠不足時は評価が不完全になります。複数通貨では過去の値にも最新為替を使用し、過去の為替は再現しません。",
+        "alt": "合成の入出金：入金 1,000,000、出金 50,000"
       },
-      "reports": {
-        "title": "レポート",
-        "description": "期待値、SQN、ケリー%、MAE/MFE、モンテカルロ、執行クオリティ — セットアップ別・時間帯別・セッション別に分析し、ビューとして保存可能。"
-      },
-      "playbook": {
-        "title": "プレイブック",
-        "description": "各セットアップを使ったトレードに紐づく戦略ライブラリ。"
-      },
-      "import": {
-        "title": "インポート",
-        "description": "9社のブローカー CSV プリセット、MT4/MT5 明細、IBKR Flex 同期 — tm-sync デスクトップエージェントに明細フォルダを監視させることも。"
-      },
-      "alerts": {
-        "title": "アラート",
-        "description": "リスクルール、日次損失上限、プロップのドローダウン警告 — プッシュ通知と Webhook を自分のサーバーから送信。すべて無料。"
-      },
-      "replay": {
-        "title": "バーリプレイ",
-        "description": "任意のシンボルをバー単位でリプレイし、ペーパーアカウントで検証 — 結果は実トレードと同じ分析に反映されます。"
-      },
-      "share": {
-        "title": "共有",
-        "description": "パフォーマンスを共有する取り消し可能な読み取り専用リンク、トレード単位のシェアカード、Year Wrapped の年間まとめ。"
-      },
-      "tools": {
-        "title": "ツール",
-        "description": "ポジションサイズ・FX・ケリー計算機、高機能チャート、経済指標カレンダー、資金台帳。"
-      },
-      "ai": {
-        "title": "AI（任意）",
-        "description": "OpenAI 互換 API によるスクリーンショットからの約定抽出とトレードコーチ — キーはあなたのもの。"
-      },
-      "api": {
-        "title": "API アクセス",
-        "description": "MCP／スクリプト向けのパーソナルアクセストークン（tm_pat_…）。OpenAPI ドキュメントは /docs にあります。"
-      },
-      "mobile": {
-        "title": "モバイルアプリ（ベータ）",
-        "description": "iOS / Android 両対応のネイティブコンパニオンアプリ — 両プラットフォームでオフライン記帳、iOS ではさらにウィジェット、Live Activities、Siri / アクションボタンでのクイック記録に対応。iOS は TestFlight、Android は GitHub Releases の APK で配信。"
+      "plan": {
+        "title": "計画と実際の約定を比較",
+        "description": "計画方向は実際の売買方向と別に保持。架空の目標 1,200 と実際の決済 1,100 を比較できます。日誌とリスクツールは上流の基盤を継承します。",
+        "alt": "架空の買い計画：目標1200と実際の決済1100"
       }
-    },
-    "lookInsideHeading": "中を見てみる",
-    "tradeLogCaptionTitle": "トレードログ",
-    "tradeLogCaptionBody": "トレードごとの損益、保有時間、タグをひと目で。任意の行をクリックすれば、約定のタイムライン全体を確認できます。",
-    "calendarCaptionTitle": "損益カレンダー",
-    "calendarCaptionBody": "日次・週次のヒートマップ。好調の連続も、崩れた日も、ひと目で見つかります。",
-    "reportsCaptionTitle": "レポート",
-    "reportsCaptionBody": "資産曲線、プロフィットファクター、期待値、目標ペース — さらにモンテカルロ・シミュレーション、MAE/MFE、セットアップ別・時間帯別・セッション別の内訳も。",
-    "techStackHeading": "技術スタック",
-    "stackComment": "# あなたのデータは、あなたのマシンに",
-    "stack": [
-      {
-        "layer": "API",
-        "value": "Go · Echo · sqlc · golang-migrate · SQLite / Postgres"
-      },
-      {
-        "layer": "Web",
-        "value": "React · Vite+ · TanStack Router/Query/Form · Tailwind"
-      },
-      {
-        "layer": "モバイル",
-        "value": "Expo · PanelUI + Uniwind · TestFlight / APK"
-      },
-      {
-        "layer": "デザイン",
-        "value": "shadcn/ui + coss ui トークン"
-      }
-    ],
-    "licenseHeading": "AGPL-3.0 ライセンス",
-    "licenseBody": "セルフホストし、改変し、個人でも会社でも自由に運用できます。",
-    "readDocs": "ドキュメントを読む",
-    "screenshotProvenance": "スクリーンショットと統計は独立して生成したデモデータです。実際の取引実績ではありません。"
+    }
   },
   "Footer": {
-    "tagline": "セルフホスト型トレードジャーナル。",
+    "tagline": "日本株とニュース仮説の検証",
     "docs": "ドキュメント",
     "changelog": "更新履歴",
     "privacy": "プライバシー",
@@ -177,7 +56,7 @@
     "discussions": "ディスカッション",
     "security": "セキュリティ",
     "license": "ライセンス（AGPL-3.0）",
-    "privacyNote": "テレメトリなし — データはあなたのサーバーにのみ保存されます。",
+    "privacyNote": "データはセルフホスト。任意の AI は選択内容を設定済みのプロバイダーに送信します。",
     "features": "機能",
     "compare": "比較"
   },

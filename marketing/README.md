@@ -1,6 +1,7 @@
-# TraderMemos marketing site
+# TradeLens marketing site
 
-Marketing + docs site for [TraderMemos](https://github.com/sinhong2011/TraderMemos), built with
+Marketing + inherited docs for [TradeLens](https://github.com/HoesenBruce/TradeLens),
+based on [TraderMemos](https://github.com/sinhong2011/TraderMemos). Built with
 [Next.js](https://nextjs.org) and [Fumadocs](https://fumadocs.dev). Supports English (`en`),
 Japanese (`ja`), Simplified Chinese (`zh-Hans`), and Traditional Chinese (`zh-Hant`).
 
@@ -39,3 +40,14 @@ locale suffix (`quick-start.ja.mdx`, `quick-start.zh-Hans.mdx`, `quick-start.zh-
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Fumadocs](https://fumadocs.dev)
 - [Fumadocs i18n (Next.js)](https://fumadocs.dev/docs/internationalization/next)
+
+## Fork publication boundary
+
+No hosted TradeLens origin is assumed. Set `NEXT_PUBLIC_SITE_URL` to your own public
+origin before publishing; the default is localhost for preview. Home is localized in
+four languages. Inherited docs/SEO/mobile content is marked as upstream reference,
+not a support guarantee; focused fork guides link to the TradeLens repository.
+The optional hosted demo belongs to TraderMemos. Screenshots in
+`public/screenshots/showcase/` are exact copies of #254 synthetic UI captures;
+see `docs/screenshots/screenshot-manifest.json` and its #255 copy records.
+Legacy USD screenshots remain for inherited feature-reference pages.

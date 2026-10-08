@@ -1,18 +1,19 @@
 ---
 title: 快速開始
-description: 在你自己的機器上，用原始碼建置的 Compose 環境同時運行 Web UI 與 API。
+description: 透過官方 TradeLens GHCR Compose 在自己的機器執行 Web 與 API。
 ---
 
-> **TradeLens 目前狀態：** 官方 TradeLens 鏡像尚未發佈；Docker 鏡像發佈與 Release Please 均已停用。請用 `make up-build`（SQLite）或 `make up-postgres-build`（PostgreSQL）從目前原始碼建置。
+> **TradeLens:** 官方 TradeLens GHCR 映像已發佈，`make up` / `make up-postgres` 預設使用它們。原始碼方案為 `make up-build` / `make up-postgres-build`。Docker 發佈仍為手動停用，Release Please 已啟用，不代表映像持續發佈。
 >
-> **資料庫邊界：**`make up` 與 `make up-postgres` 目前預設拉取上游 TraderMemos 鏡像（`sinhong2011/tradermemos-*`）。上游與 TradeLens 的遷移歷史已分叉，切勿交替連接同一個既有資料庫卷，包括 PostgreSQL。嘗試另一產品時使用獨立 Compose 專案及全新資料庫／資料卷；任何遷移前保留完整備份。
+> **TradeLens / TraderMemos DB:** TradeLens 與上游 TraderMemos 資料庫遷移已分歧。不要交替使用同一資料庫；不同產品使用獨立專案及新資料庫。同一 TradeLens 從原始碼部署切換至官方映像時，先完整備份，再保留原專案、設定與卷。
 
-從目前原始碼建置 TradeLens Web 與 API：
+執行官方 TradeLens Web/API 映像：
 
 ```bash
 git clone https://github.com/HoesenBruce/TradeLens.git
 cd TradeLens
-make up-build    # http://localhost:3000
+cp .env.example .env  # review JWT secret and pin TM_IMAGE_TAG
+make up    # http://localhost:3000
 ```
 
 就這麼簡單。同源 `/api`，無需 CORS 配置，登錄時的 **Server** 字段留空即可。首次訪問會出現
@@ -23,9 +24,9 @@ make up-build    # http://localhost:3000
 
 ```bash
 cp .env.example .env
-make up-build           # SQLite
+make up           # SQLite
 # OR, on a separate new installation:
-make up-postgres-build  # PostgreSQL
+make up-postgres  # PostgreSQL
 ```
 
 生產環境請設置 `TM_JWT_SECRET=$(openssl rand -hex 32)`，並在前面加一層 TLS —— 詳見
@@ -42,15 +43,18 @@ make setup && make dev   # API :8080 + web :5173
 ```
 
 關於各項 make 目標、Vite+ 命令與項目結構，參見
-[CONTRIBUTING.md](https://github.com/sinhong2011/TraderMemos/blob/main/CONTRIBUTING.md)。
+[CONTRIBUTING.md](https://github.com/HoesenBruce/TradeLens/blob/main/CONTRIBUTING.md)。
 
-### 演示數據
+### TradeLens 合成展示
 
-爲任意實例填充約 200 條最近三個月生成的交易記錄：
+使用展示指南中的全新暫存 API、資料庫及本機合成行情服務。此種子拒絕重複執行，不用於真實組合。四個待驗證和兩個不可用期間並非已評分投資結果。
+
+[Showcase / 合成展示](https://github.com/HoesenBruce/TradeLens/blob/main/docs/showcase-demo.md)
 
 ```bash
-make demo-seed API=http://localhost:3000/api/v1 EMAIL=you@example.com PASSWORD='…'
+python3 scripts/seed-demo.py --mode showcase \
+  --api http://127.0.0.1:8093/api/v1 \
+  --email fictional@example.com --password fictional-showcase-password
 ```
 
-該腳本只調用公開 API，因此無論是本地服務棧還是已部署的演示環境都可以使用。重複運行不會產生
-副作用 —— 成交記錄會在服務端自動去重。
+選用舊 USD 資料：`--mode legacy`。上游示範並非 TradeLens 部署。

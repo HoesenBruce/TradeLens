@@ -202,3 +202,13 @@ and this PR makes no mobile validation claim. Historical Git blobs still need
 - No native mobile runtime was available; no native validation or new store
   imagery is claimed. The owner chose deletion rather than retaining unproved
   mobile captures.
+
+## Issue #255 marketing integration
+
+`marketing/public/screenshots/showcase/` holds five byte-identical #254 captures:
+portfolio, SBI confirmation, news thesis, cash flow and plan review. The manifest's
+`marketing_255` records their original paths and SHA-256 hashes. Landing pages in all
+four locales explicitly identify the English UI and synthetic values. Theme switching
+does not fabricate a light screenshot; the actual dark captures remain in both themes.
+Legacy USD captures remain for inherited feature-reference pages, which are labeled
+as upstream references by the shared site notice. No #254 screenshot was modified.

@@ -222,5 +222,36 @@
         "height": 1000
       }
     ]
+  },
+  "marketing_255": {
+    "source": "Exact copies of #254 captures; no new app UI capture or pixel edits",
+    "date": "2026-10-08",
+    "files": [
+      {
+        "path": "marketing/public/screenshots/showcase/cash-flow.jpg",
+        "source_path": "docs/screenshots/showcase/cash-flow.jpg",
+        "sha256": "749f27f02cc6768ccd4064b5a7394dee3b9000d2388ec5254d01cba06e887b62"
+      },
+      {
+        "path": "marketing/public/screenshots/showcase/news-thesis.jpg",
+        "source_path": "docs/screenshots/showcase/news-thesis.jpg",
+        "sha256": "3e95d6838122e2bca774fe1ed8e2c587eb25a1523e4d3bdb0b36db3a6d31f76f"
+      },
+      {
+        "path": "marketing/public/screenshots/showcase/plan-review.jpg",
+        "source_path": "docs/screenshots/showcase/plan-review.jpg",
+        "sha256": "f722c9e7ca959c328c989a027973b312078e609331549eafcf125f0a7e5a97e2"
+      },
+      {
+        "path": "marketing/public/screenshots/showcase/portfolio.jpg",
+        "source_path": "docs/screenshots/showcase/portfolio.jpg",
+        "sha256": "02fb8d1bd536a8403c3cef8d894719b83b22f7f91fa03fed99b741c0153d1cd9"
+      },
+      {
+        "path": "marketing/public/screenshots/showcase/sbi-confirm.png",
+        "source_path": "docs/screenshots/showcase/sbi-acceptance/sbi-confirm.png",
+        "sha256": "2d656823f4f450b55c3d38e8e47842889cf655a27671cb1df0067a6db16f6bc0"
+      }
+    ]
   }
 }
