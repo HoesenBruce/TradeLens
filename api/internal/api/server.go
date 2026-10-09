@@ -27,6 +27,7 @@ import (
 
 // Deps holds the services handlers need. Populated in cmd/server.
 type Deps struct {
+	DemoMode       bool
 	JWTSecret      string
 	Auth           *auth.Service
 	JWT            *auth.JWT
@@ -82,6 +83,9 @@ func New(deps Deps) *Server {
 	e.Logger = lg
 	e.HTTPErrorHandler = errorHandler
 	e.Use(middleware.RequestID())
+	if deps.DemoMode {
+		e.Use(demoReadOnly)
+	}
 	// Bind the request id into the logger handlers reach through c.Logger(),
 	// so a warning raised deep in a handler ties back to the request line
 	// carrying its route, status and latency.

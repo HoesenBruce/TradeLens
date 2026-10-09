@@ -1,0 +1,13 @@
+{
+  "idle_seconds_without_agent_traffic": 971.49,
+  "first_ready_seconds": 22.82,
+  "previous_api_started_at": "2026-10-08T15:41:30.391813449Z",
+  "new_api_started_at": "2026-10-08T16:02:47.654645493Z",
+  "fresh_user_identity": true,
+  "unexpired_old_refresh_rejected": true,
+  "post_wake_full_read_permission_calendar_SBI_news_checks": "PASS",
+  "trades": 107,
+  "realized_pnl": 25000,
+  "closing_account_value": 975000,
+  "note": "Observed restart/reseed after idle; platform restart cause requires Dashboard confirmation."
+}

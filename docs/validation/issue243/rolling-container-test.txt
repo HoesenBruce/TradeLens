@@ -1,0 +1,4 @@
+ready in 1.6s
+ready in 1.1s
+32.39MiB / 512MiB
+demo initialization, reset, auth, permissions, SBI and news checks passed

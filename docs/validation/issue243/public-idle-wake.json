@@ -1,0 +1,18 @@
+{
+  "finished_utc": "2026-10-08T10:31:45.181755+00:00",
+  "idle_seconds": 967.75,
+  "wake_seconds": 23.08,
+  "readiness_observations": [
+    {
+      "status": 200,
+      "body_bytes": 0,
+      "content_type": null
+    }
+  ],
+  "user_changed": true,
+  "api_restarted": true,
+  "started_at_before": "2026-10-08T09:58:47.853182957Z",
+  "started_at_after": "2026-10-08T10:30:58.198663715Z",
+  "post_wake_checks": "PASS",
+  "old_unexpired_refresh_rejected": true
+}
