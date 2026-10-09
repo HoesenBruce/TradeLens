@@ -5,24 +5,35 @@
 Official TradeLens GHCR images are published: **v0.2.1**, source
 `b78c5925778831e7d2d039a4d0139ff1ddfc6e31`. Registry/runtime evidence is in
 [the validation record](validation/issue234/v0.2.1/README.md).
-Docker publisher (`docker-publish.yml`) and Release Please (`release-please.yml`)
-remain `disabled_manually`. Image distribution exists; automated continuous
-publishing is not enabled. This change does not authorize workflow enablement.
+Read-only GitHub audit on 2026-10-09 found Docker publisher (`docker-publish.yml`)
+and Release Please (`release-please.yml`) **active**. Release Please run
+[37901765805](https://github.com/HoesenBruce/TradeLens/actions/runs/37901765805)
+succeeded after the Demo merge; its publisher was skipped because no release was
+created. The last successful standalone publisher is
+[37590176429](https://github.com/HoesenBruce/TradeLens/actions/runs/37590176429)
+for v0.2.1. This verifies current configuration, not a new automatic release
+publication. The `ghcr` environment has a required owner reviewer and no admin
+bypass. Recheck these mutable settings before release.
+
+Demo release deployment is implemented but **not activated or live-accepted**.
+It is opt-in through repository variable `DEMO_AUTO_DEPLOY_ENABLED=true`, only
+after controlled acceptance. See [Render release deployment](demo-render.md#release-gated-deployment-286).
+No workflow enablement, release, GHCR approval or Render deployment is authorized
+by the implementation PR.
 
 `make up` / `make up-postgres` use official GHCR images; source fallback remains
 `make up-build` / `make up-postgres-build`. Pin stable `TM_IMAGE_TAG=0.2.1` in
 production. Never alternate upstream and TradeLens on the same database:
 the migration histories have diverged. See [deployment](deploy.md).
 
-## Configured release design (inactive)
+## Configured release design
 
-The remaining sections describe the configured workflow **if deliberately enabled
-and configured later**, not current release availability. Credentials and required
-reviewers must be verified before enabling; this document does not establish that
-the live invocation has passed its approval gate.
+The following describes the configured chain. Credentials and required reviewers
+must be verified before release; a successful non-release main run does not prove
+the live publication or Demo deployment path has passed its approval gates.
 
 The retained [release-please](https://github.com/googleapis/release-please) configuration
-handles semver, changelogs, and GitHub Releases when enabled.
+handles semver, changelogs, and GitHub Releases.
 
 ```mermaid
 flowchart TD
@@ -47,7 +58,7 @@ GitFlow-style release branches. Owner must enforce that policy before activation
 collapse its commits into one subject, destroying the individual `feat:` / `fix:`
 lines release-please reads to build the changelog.
 
-## Intended day to day (after enablement)
+## Day to day
 
 1. Merge PRs to `main` with **Conventional Commit** titles. Merges are
    squash-only and the PR title becomes the commit subject; the
@@ -57,7 +68,9 @@ lines release-please reads to build the changelog.
    actually wanted — it is a standing draft, not a queue to drain.
 3. Review the changelog and version bumps (`VERSION`, `web/package.json`, `CHANGELOG.md`).
 4. Merge the Release PR → GitHub Release `vX.Y.Z` is created.
-5. Approve the `ghcr` deployment → Docker images are published.
+5. Approve the `ghcr` deployment → both Docker images are published. After Demo
+   activation, the publisher calls `demo-deploy.yml`; `render-demo` approval and
+   fresh source/publication checks precede the pinned Render deployment.
 6. Build iOS separately: dispatch `ios-release` on the private Forgejo remote
    (see [Mobile releases](#mobile-releases)). It is **not** part of this chain.
 
@@ -150,7 +163,7 @@ from the repo.
 
 ## Docker images
 
-The disabled workflow targets only `ghcr.io/hoesenbruce/tradelens-api` and
+The Docker workflow targets only `ghcr.io/hoesenbruce/tradelens-api` and
 `ghcr.io/hoesenbruce/tradelens-web`. No legacy container aliases are published.
 Compose defaults use these official images.
 
@@ -171,9 +184,9 @@ Publication is serialized. Each image digest is saved in the run summary and a
 
 ### Approval, visibility and first publication
 
-Keep Docker publishing and Release Please **disabled** until the first-release
-validation issue is ready and publication gates are cleared. Configure the `ghcr`
-environment with a required reviewer before enablement. `GITHUB_TOKEN` uses
+Retain the `ghcr` environment required reviewer and release publication gates.
+The first-publication procedure below remains useful for new package visibility
+or credential setup; the two workflows are currently active as recorded above. `GITHUB_TOKEN` uses
 `contents: read` plus `packages: write` only in the publishing job; Docker Hub
 credentials are no longer used. Reusable-workflow callers must grant these permissions.
 
@@ -343,8 +356,10 @@ and account plan before activating releases.
 
 ## #235 automation repair and owner activation checklist
 
-This design is inactive: both Release Please and Docker publisher remain
-`disabled_manually`. No production release is authorized by this change.
+The checklist below records the #235 activation design and its historical
+validation limits. The current workflow state is recorded at the top of this
+document; historical instructions to enable workflows are not a request to
+toggle them again. No production release is authorized by this documentation.
 
 ### Baseline and version calculation
 
