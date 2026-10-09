@@ -108,6 +108,24 @@ For AI-assisted development, prefer:
 
 This reduces context leakage, unrelated file changes, and accidental cross-issue commits.
 
+### Codex Cloud and local parallel development
+
+Use one existing isolated Cloud task environment per Issue, with its own branch,
+PR, checkout and runtime data. Do not create extra Cloud worktrees by default;
+the local worktree recommendation above still applies to coordinated local work.
+
+For same-host stacks, choose unused API/Web ports and separate runtime directories.
+Set `TM_HTTP_PORT`, `TM_DB_PATH` and `TM_ATTACH_DIR` to task-local resources;
+build the API into that runtime directory before startup. Set `VITE_API` to that
+API's `/api/v1` URL and `TM_CORS_ORIGINS` to the exact Web origin. Start Web with
+`pnpm run dev -- --host 127.0.0.1 --port <web-port> --strictPort`.
+Defaults 8080/5173 and existing single-task startup commands remain unchanged.
+
+Smoke/E2E uses disposable SQLite data and test-only accounts. Never overwrite
+another task's files or database. Record and stop only owned processes; do not
+use the current global `make kill` for parallel work. Stop and report conflicts.
+Agent authorization limits are defined in `AGENTS.md`.
+
 ### Keeping a branch up to date
 
 For short-lived private branches, prefer rebasing onto the latest `main` before final review

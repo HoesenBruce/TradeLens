@@ -32,6 +32,27 @@ Allowed branch prefixes:
 
 When an issue exists, prefer including its number in the branch name.
 
+## Agent authorization and parallel task safety
+
+- For parallel Issue work, use one Issue per branch and PR. Never push `main`,
+  enable auto-merge, or merge a PR without separate human authorization.
+- Development authorization does not authorize creating GitHub Releases,
+  publishing images, or deploying Demo/production. Require explicit authorization
+  for those actions; review existing automation before a human-authorized merge.
+- Never force-push a shared branch. Preserve other tasks' files and uncommitted
+  work; never reset, clean, or force-switch an occupied or dirty checkout.
+- Prefer Codex Cloud's existing isolated task environments. Do not add a Git
+  worktree by default in Cloud; coordinated local worktrees remain supported.
+- Same-host tasks require independent checkouts and runtime directories, ports,
+  databases, binaries, logs, PID records, and temporary files. Rebuild the API
+  from the selected checkout before starting it and verify its source SHA.
+- Stop and report shared-resource conflicts. Never reclaim another task's port
+  or terminate processes by broad name matching. Stop only task-owned processes
+  with recorded, verified identities.
+- Do not invoke `make kill` or `scripts/release-ports.sh` for parallel work: the
+  current script matches `air` globally. Use the owning runner's Ctrl-C and
+  PID-scoped cleanup. A script replacement needs a separate reviewed patch.
+
 ## Private-fork platform policy
 
 This repository currently follows a **Web-first, mobile-preserving** development policy.
