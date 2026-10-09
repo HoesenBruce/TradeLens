@@ -891,7 +891,7 @@ paths:
                   type: string
                   enum: [day_first, month_first]
                   description: Explicit slash-date order; required to parse ambiguous dates.
-                option_overrides:
+                journal_option_overrides:
                   type: string
                   description: JSON object of option overrides, as used for commit.
       responses:

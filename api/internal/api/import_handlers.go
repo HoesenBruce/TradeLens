@@ -824,6 +824,7 @@ func parseImport(c *echo.Context, loaded loadedImport, suggested map[string]stri
 		return parsed, info, nil
 	}
 	opts := journalOptionOverrides(c)
+	hasJournalOverrides := opts != nil
 	if opts == nil {
 		opts = &importer.JournalParseOptions{}
 	}
@@ -831,7 +832,7 @@ func parseImport(c *echo.Context, loaded loadedImport, suggested map[string]stri
 	switch {
 	case loaded.Source == "json":
 		parsed = loaded.JSON.Result
-		if loaded.Format == "journal_trades" && c.FormValue("option_overrides") != "" && len(loaded.Rows) > 0 {
+		if loaded.Format == "journal_trades" && hasJournalOverrides && len(loaded.Rows) > 0 {
 			parsed = importer.NewJournal().ParseRowsWithOptions(loaded.Rows, opts)
 		}
 	case loaded.Source == "statement":

@@ -112,3 +112,25 @@ func TestSBIYearFirstPreviewHasSyntheticTimesWithoutDatePrompt(t *testing.T) {
 	require.Equal(t, "date", fills[0].Precision)
 	require.Contains(t, fills[0].At, "2026-09-01")
 }
+
+func TestJSONJournalOptionOverridesRemainEffective(t *testing.T) {
+	s := testServer(t)
+	tok := registerAndLogin(t, s, "json-option-date@x.com")
+	acc := accountID(t, s, tok)
+	body := `[{"Symbol":"TSLA","Market":"OPTION","Side":"LONG","Qty":"1","Entry":"1.8","Exit":"2","Open Date":"2026-07-10T15:18:34Z","Date":"2026-07-10T15:40:17Z"}]`
+	fields := map[string]string{"account_id": acc, "journal_option_overrides": `{"1":"call"}`}
+	for _, path := range []string{"/api/v1/imports", "/api/v1/imports/commit"} {
+		rec := httptest.NewRecorder()
+		s.Echo.ServeHTTP(rec, multipartFileReq(t, path, tok, "journal.json", body, fields))
+		require.Equal(t, http.StatusOK, rec.Code, rec.Body.String())
+		var result map[string]json.RawMessage
+		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &result))
+		if path == "/api/v1/imports" {
+			var fills []any
+			require.NoError(t, json.Unmarshal(result["parsed_executions"], &fills))
+			require.Len(t, fills, 2)
+		} else {
+			require.JSONEq(t, `2`, string(result["inserted"]))
+		}
+	}
+}
