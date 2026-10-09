@@ -444,3 +444,58 @@ it("localizes mapping labels without changing the submitted CSV mapping", async 
     await act(() => loadLocale("en"));
   }
 });
+
+it("requires a chosen date order and a refreshed timestamp preview before commit", async () => {
+  const user = (await import("@testing-library/user-event")).default.setup();
+  const ambiguous: ImportPreview = {
+    ...mockPreview,
+    date_order: {
+      order: "ambiguous",
+      example: "05/01/2026",
+      example_day_first: "2026-01-05",
+      example_month_first: "2026-05-01",
+    },
+    parsed_executions: [],
+  };
+  const onPreview = vi
+    .fn<ComponentProps<typeof ImportView>["onPreview"]>()
+    .mockResolvedValueOnce(ambiguous)
+    .mockResolvedValue({
+      ...ambiguous,
+      parsed_executions: [{ symbol: "AAPL", side: "buy", executed_at: "2026-01-05T09:30:00Z" }],
+    });
+  const onCommit = vi
+    .fn<ComponentProps<typeof ImportView>["onCommit"]>()
+    .mockResolvedValue(mockResult);
+  renderImportView({
+    accounts,
+    accountsLoading: false,
+    onPreview,
+    onCommit,
+    onDone: vi.fn<() => void>(),
+  });
+  fireEvent.change(screen.getByLabelText("Import file input"), {
+    target: { files: [new File(["test"], "dates.csv", { type: "text/csv" })] },
+  });
+  await user.click(screen.getByRole("button", { name: "Preview import" }));
+  const confirm = await screen.findByRole("button", { name: "Confirm import" });
+  expect(confirm).toBeDisabled();
+  await user.click(screen.getByLabelText("Date order"));
+  await user.click(await screen.findByRole("option", { name: "Day / Month / Year" }));
+  expect(confirm).toBeDisabled();
+  await user.click(screen.getByRole("button", { name: "Refresh timestamp preview" }));
+  await waitFor(() => expect(confirm).toBeEnabled());
+  expect(screen.getByText(/2026-01-05T09:30:00Z/)).toBeInTheDocument();
+  await user.click(screen.getByLabelText("Date order"));
+  await user.click(await screen.findByRole("option", { name: "Month / Day / Year" }));
+  expect(confirm).toBeDisabled();
+  expect(screen.queryByText(/2026-01-05T09:30:00Z/)).not.toBeInTheDocument();
+  await user.click(screen.getByLabelText("Date order"));
+  await user.click(await screen.findByRole("option", { name: "Day / Month / Year" }));
+  expect(confirm).toBeEnabled();
+  await user.click(confirm);
+  await waitFor(() => expect(onCommit).toHaveBeenCalledOnce());
+  const form = onCommit.mock.calls[0][1] as FormData;
+  expect(form.get("date_order")).toBe("day_first");
+  expect(form.get("source_tz")).toBe("UTC");
+});

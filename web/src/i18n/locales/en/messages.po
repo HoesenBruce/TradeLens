@@ -12304,3 +12304,53 @@ msgstr "Attribution notices"
 #. js-lingui-explicit-id
 msgid "imports.sbiFiles"
 msgstr "Account reconstruction uses both {0} and {1}. Import each file separately."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrder"
+msgstr "Date order"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrderAuto"
+msgstr "Choose or use detected order"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dayFirst"
+msgstr "Day / Month / Year"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.monthFirst"
+msgstr "Month / Day / Year"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrderHint"
+msgstr "Slash dates can change the month. Review both interpretations and choose when ambiguous."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.detectedDateOrder"
+msgstr "Detected date order"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.effectiveTimes"
+msgstr "Effective timestamps (UTC)"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.refreshTimesHint"
+msgstr "Choose any ambiguous date order, then refresh this preview before confirming."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.syntheticTime"
+msgstr "Synthetic time — source contains only a date"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.refreshTimes"
+msgstr "Refresh timestamp preview"

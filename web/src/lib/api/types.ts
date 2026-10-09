@@ -532,6 +532,19 @@ export interface ImportPreview {
   row_count?: number;
   journal_summary?: JournalPreviewSummary;
   sample_trades?: JournalTradePreview[];
+  date_order?: {
+    order: "day_first" | "month_first" | "ambiguous";
+    example?: string;
+    example_month_first?: string;
+    example_day_first?: string;
+  };
+  parsed_executions?: {
+    symbol: string;
+    side: string;
+    executed_at: string;
+    source_time_precision?: string;
+  }[];
+  parse_errors?: { row: number; message: string }[];
   enrichment_rows?: SBIEnrichmentRow[];
 }
 

@@ -12301,3 +12301,53 @@ msgstr "專案授權條款"
 #. js-lingui-explicit-id
 msgid "settings.attributionNotices"
 msgstr "署名聲明"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrder"
+msgstr "日期順序"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrderAuto"
+msgstr "選擇或使用偵測到的順序"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dayFirst"
+msgstr "日 / 月 / 年"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.monthFirst"
+msgstr "月 / 日 / 年"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrderHint"
+msgstr "斜線日期的順序會改變月份。請查看兩種解讀，並在有歧義時選擇。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.detectedDateOrder"
+msgstr "偵測到的日期順序"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.effectiveTimes"
+msgstr "實際匯入時間（UTC）"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.refreshTimesHint"
+msgstr "請先選擇有歧義的日期順序，再重新整理預覽，然後確認匯入。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.syntheticTime"
+msgstr "合成時間 — 來源僅包含日期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.refreshTimes"
+msgstr "重新整理時間預覽"
