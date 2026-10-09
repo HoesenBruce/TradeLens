@@ -43,6 +43,10 @@ type Journal struct{}
 
 type JournalParseOptions struct {
 	OptionRightByRow map[int]string // 1-based CSV row → call|put
+	// DateOrder pins the slash-date order the user chose for an ambiguous
+	// file (DateOrderDayFirst or DateOrderMonthFirst); empty detects it.
+	DateOrder string
+	SourceTZ  string
 }
 
 func NewJournal() *Journal { return &Journal{} }
@@ -57,12 +61,26 @@ func (j *Journal) ParseRows(rows []map[string]string) ParseResult {
 
 func (j *Journal) ParseRowsWithOptions(rows []map[string]string, opts *JournalParseOptions) ParseResult {
 	res := ParseResult{Format: "journal_trades"}
+	order := ""
+	if opts != nil {
+		order = opts.DateOrder
+	}
+	dayFirst, err := ResolveDayFirst(order, JournalDateStamps(rows))
+	if err != nil {
+		dayFirst = DetectDayFirst(JournalDateStamps(rows))
+	}
+	loc := time.UTC
+	if opts != nil && opts.SourceTZ != "" {
+		if zone, err := time.LoadLocation(opts.SourceTZ); err == nil {
+			loc = zone
+		}
+	}
 	for i, row := range rows {
 		override := ""
 		if opts != nil && opts.OptionRightByRow != nil {
 			override = opts.OptionRightByRow[i+1]
 		}
-		exs, ann, err := parseJournalRow(row, override)
+		exs, ann, err := parseJournalRow(row, override, dayFirst, loc)
 		if err != nil {
 			res.Errors = append(res.Errors, RowError{Row: i + 1, Message: err.Error()})
 			continue
@@ -80,7 +98,28 @@ func (j *Journal) ParseRowsWithOptions(rows []map[string]string, opts *JournalPa
 	return res
 }
 
-func parseJournalRow(row map[string]string, optionRightOverride string) ([]ParsedExecution, *TradeAnnotation, error) {
+// Every header a journal row's open or close date may sit under.
+var journalDateKeys = []string{"open date", "opendate", "open_date", "date", "close date", "closed at"}
+
+// JournalDateStamps returns every open/close date cell in a journal file, the
+// input to slash-date order detection.
+func JournalDateStamps(rows []map[string]string) []string {
+	var stamps []string
+	for _, row := range rows {
+		for _, key := range journalDateKeys {
+			if v := lookup(row, key); v != "" {
+				stamps = append(stamps, v)
+			}
+		}
+	}
+	return stamps
+}
+
+func parseJournalRow(row map[string]string, optionRightOverride string, dayFirst bool, zones ...*time.Location) ([]ParsedExecution, *TradeAnnotation, error) {
+	loc := time.UTC
+	if len(zones) > 0 {
+		loc = zones[0]
+	}
 	get := func(keys ...string) string {
 		for _, k := range keys {
 			if v := lookup(row, k); v != "" {
@@ -145,7 +184,7 @@ func parseJournalRow(row map[string]string, optionRightOverride string) ([]Parse
 		Override: optionRightOverride,
 	})
 
-	openAt, err := parseTime(get("open date", "opendate", "open_date"))
+	openAt, err := parseTimeOrdered(get("open date", "opendate", "open_date"), loc, dayFirst)
 	if err != nil {
 		return nil, nil, fmt.Errorf("invalid open date")
 	}
@@ -179,7 +218,7 @@ func parseJournalRow(row map[string]string, optionRightOverride string) ([]Parse
 		if err != nil {
 			return nil, nil, fmt.Errorf("invalid exit")
 		}
-		closeAt, err = parseTime(get("date", "close date", "closed at"))
+		closeAt, err = parseTimeOrdered(get("date", "close date", "closed at"), loc, dayFirst)
 		if err != nil {
 			return nil, nil, fmt.Errorf("invalid close date")
 		}

@@ -2,6 +2,7 @@ package api_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -181,4 +182,27 @@ func TestCreateExecutionAcceptsNonUTCOffset(t *testing.T) {
 	}
 	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &detail))
 	require.True(t, detail.OpenedAt.Equal(time.Date(2026, 9, 15, 14, 30, 0, 0, time.UTC)), detail.OpenedAt)
+}
+
+func TestCreateExecutionRejectsNonpositiveQuantity(t *testing.T) {
+	s := testServer(t)
+	tok := registerAndLogin(t, s, "qty@x.com")
+	acc := accountID(t, s, tok)
+	for _, qty := range []string{"0", "-1", "null"} {
+		body := fmt.Sprintf(`{"account_id":%q,"symbol":"AAPL","side":"buy","quantity":%s,"price":10,"executed_at":"2026-01-01T10:00:00Z"}`, acc, qty)
+		rec := do(s, http.MethodPost, "/api/v1/executions", body, tok)
+		require.Equal(t, http.StatusBadRequest, rec.Code, rec.Body.String())
+		var failure struct {
+			Error struct {
+				Message string `json:"message"`
+			} `json:"error"`
+		}
+		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &failure))
+		require.Equal(t, "quantity must be > 0", failure.Error.Message)
+	}
+	rec := do(s, http.MethodGet, "/api/v1/executions?account_id="+acc, "", tok)
+	require.Equal(t, http.StatusOK, rec.Code)
+	var rows []map[string]any
+	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &rows))
+	require.Empty(t, rows)
 }

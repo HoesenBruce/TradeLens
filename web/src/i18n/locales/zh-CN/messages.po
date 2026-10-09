@@ -12304,3 +12304,53 @@ msgstr "署名声明"
 #. js-lingui-explicit-id
 msgid "imports.sbiFiles"
 msgstr "账户重建使用 {0} 和 {1} 两种数据。请分别导入每个文件。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrder"
+msgstr "日期顺序"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrderAuto"
+msgstr "选择或使用检测到的顺序"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dayFirst"
+msgstr "日 / 月 / 年"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.monthFirst"
+msgstr "月 / 日 / 年"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrderHint"
+msgstr "斜杠日期的顺序会改变月份。请查看两种解释，并在存在歧义时选择。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.detectedDateOrder"
+msgstr "检测到的日期顺序"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.effectiveTimes"
+msgstr "实际导入时间（UTC）"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.refreshTimesHint"
+msgstr "请先选择有歧义的日期顺序，再刷新预览，然后确认导入。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.syntheticTime"
+msgstr "合成时间 — 来源仅包含日期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.refreshTimes"
+msgstr "刷新时间预览"
