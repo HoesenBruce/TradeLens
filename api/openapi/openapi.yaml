@@ -881,6 +881,19 @@ paths:
                 account_id:
                   type: string
                   description: Target account. Optional for JSON backups only.
+                column_mapping:
+                  type: string
+                  description: JSON object of field-to-column mappings, as used for commit.
+                source_tz:
+                  type: string
+                  description: IANA timezone for timestamps without an explicit offset.
+                date_order:
+                  type: string
+                  enum: [day_first, month_first]
+                  description: Explicit slash-date order; required to parse ambiguous dates.
+                option_overrides:
+                  type: string
+                  description: JSON object of option overrides, as used for commit.
       responses:
         "200":
           description: Preview
@@ -2309,6 +2322,42 @@ components:
             type: object
             additionalProperties: true
 
+        date_order:
+          type: object
+          description: Detected file-wide slash-date order; ambiguous requires an explicit choice.
+          properties:
+            order:
+              type: string
+              enum: [day_first, month_first, ambiguous]
+            example:
+              type: string
+            example_month_first:
+              type: string
+              format: date
+            example_day_first:
+              type: string
+              format: date
+        parsed_executions:
+          type: array
+          description: Up to five effective executions parsed by the same rules as commit; UTC instants. Empty until ambiguity is resolved.
+          items:
+            type: object
+            properties:
+              symbol:
+                type: string
+              side:
+                type: string
+              executed_at:
+                type: string
+                format: date-time
+              source_time_precision:
+                type: string
+                description: date marks a synthetic time for a date-only source.
+        parse_errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/RowError"
+
     ImportCommitForm:
       type: object
       required: [file]
@@ -2339,6 +2388,11 @@ components:
           description: >
             Journal CSVs only — JSON object of row number → option right
             (`call`/`put`) for ambiguous option rows.
+
+        date_order:
+          type: string
+          enum: [day_first, month_first]
+          description: Required for ambiguous slash dates. Omit to detect unambiguous order. Also accepted by preview, alongside column_mapping, source_tz and journal_option_overrides.
 
     RowError:
       type: object

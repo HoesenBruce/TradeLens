@@ -12305,3 +12305,53 @@ msgstr "帰属に関する告知"
 #. js-lingui-explicit-id
 msgid "imports.sbiFiles"
 msgstr "口座の再構築には {0} と {1} の両方を使用します。各ファイルを個別に取り込んでください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrder"
+msgstr "日付の順序"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrderAuto"
+msgstr "選択するか検出された順序を使用"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dayFirst"
+msgstr "日 / 月 / 年"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.monthFirst"
+msgstr "月 / 日 / 年"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrderHint"
+msgstr "スラッシュ区切りの日付は順序で月が変わります。両方の解釈を確認し、曖昧な場合は選択してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.detectedDateOrder"
+msgstr "検出された日付の順序"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.effectiveTimes"
+msgstr "実際の取込時刻（UTC）"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.refreshTimesHint"
+msgstr "曖昧な日付の順序を選択し、プレビューを更新してから確定してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.syntheticTime"
+msgstr "合成時刻 — 元データは日付のみ"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.refreshTimes"
+msgstr "時刻プレビューを更新"

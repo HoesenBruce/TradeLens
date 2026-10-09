@@ -233,6 +233,23 @@ func (s *Server) handleImportPreview(c *echo.Context) error {
 		// Preview is parse-only — batch is created on confirm.
 		"import_batch_id": "",
 	}
+	parsed, dateInfo, parseErr := parseImport(c, loaded, suggested, false)
+	if parseErr != nil {
+		return parseErr
+	}
+	if dateInfo.Order != "" {
+		resp["date_order"] = dateInfo
+	}
+	samples := []map[string]any{}
+	for i, fill := range parsed.Executions {
+		if i == 5 {
+			break
+		}
+		samples = append(samples, map[string]any{"symbol": fill.Symbol, "side": fill.Side, "executed_at": fill.ExecutedAt, "source_time_precision": fill.SourceTimePrecision})
+	}
+	resp["parsed_executions"] = samples
+	resp["parse_errors"] = parsed.Errors
+
 	if loaded.Format == "journal_trades" {
 		summary, sampleTrades := importer.BuildJournalPreview(loaded.Rows)
 		resp["journal_summary"] = summary
@@ -367,6 +384,11 @@ func (s *Server) handleImportCommitFresh(c *echo.Context) error {
 		return Fail(http.StatusBadRequest, "bad_request", "could not parse upload", err.Error())
 	}
 
+	parsed, _, err := parseImport(c, loaded, nil, true)
+	if err != nil {
+		return err
+	}
+
 	accountID := strings.TrimSpace(c.FormValue("account_id"))
 	if accountID == "" {
 		matched, pending, rerr := s.matchJSONImportAccount(ctx, uid, loaded)
@@ -401,7 +423,7 @@ func (s *Server) handleImportCommitFresh(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not create import batch", nil)
 	}
-	return s.finishImportCommit(c, uid, batch, loaded)
+	return s.finishImportCommit(c, uid, batch, loaded, parsed)
 }
 
 func (s *Server) handleImportCommit(c *echo.Context) error {
@@ -425,69 +447,18 @@ func (s *Server) handleImportCommit(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusBadRequest, "bad_request", "could not parse upload", err.Error())
 	}
-	return s.finishImportCommit(c, uid, batch, loaded)
+	parsed, _, err := parseImport(c, loaded, nil, true)
+	if err != nil {
+		return err
+	}
+	return s.finishImportCommit(c, uid, batch, loaded, parsed)
 }
 
-func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.ImportBatch, loaded loadedImport) error {
+func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.ImportBatch, loaded loadedImport, parsed importer.ParseResult) error {
 	// The upload is fully read by now. Detach from the request context so a
 	// client or proxy disconnect (e.g. a 120s proxy timeout on a large file)
 	// cannot cancel the import halfway through.
 	ctx := context.WithoutCancel(c.Request().Context())
-
-	var parsed importer.ParseResult
-	switch {
-	case loaded.Source == "json":
-		parsed = loaded.JSON.Result
-		if loaded.Format == "journal_trades" {
-			if opts := journalOptionOverrides(c); opts != nil && len(loaded.Rows) > 0 {
-				parsed = importer.NewJournal().ParseRowsWithOptions(loaded.Rows, opts)
-			}
-		}
-	case loaded.Source == "statement":
-		sourceTZ := strings.TrimSpace(c.FormValue("source_tz"))
-		if sourceTZ != "" {
-			if _, err := time.LoadLocation(sourceTZ); err != nil {
-				return Fail(http.StatusBadRequest, "bad_request", "invalid 'source_tz' (want IANA timezone name)", nil)
-			}
-		}
-		// Empty override keeps the MetaTrader server-time default (EET) —
-		// reading broker wall clocks as UTC is the historical tz trap.
-		parsed = loaded.Statement.Parse(sourceTZ)
-	case loaded.Format == "cash_transactions":
-		parsed = importer.ParseResult{Format: loaded.Format, Errors: loaded.Cash.Errors}
-	case loaded.Format == "sbi_margin_pnl":
-		parsed = importer.ParseResult{Format: loaded.Format}
-	case loaded.Format == "journal_trades":
-		opts := journalOptionOverrides(c)
-		parsed = importer.NewJournal().ParseRowsWithOptions(loaded.Rows, opts)
-	default:
-		var mapping map[string]string
-		if raw := c.FormValue("column_mapping"); raw != "" {
-			if err := json.Unmarshal([]byte(raw), &mapping); err != nil || len(mapping) == 0 {
-				return Fail(http.StatusBadRequest, "bad_request", "column_mapping (JSON) is required", nil)
-			}
-		} else {
-			return Fail(http.StatusBadRequest, "bad_request", "column_mapping (JSON) is required", nil)
-		}
-		sourceTZ := strings.TrimSpace(c.FormValue("source_tz"))
-		if sourceTZ != "" {
-			if _, err := time.LoadLocation(sourceTZ); err != nil {
-				return Fail(http.StatusBadRequest, "bad_request", "invalid 'source_tz' (want IANA timezone name)", nil)
-			}
-		} else if _, _, presetTZ, ok := importer.MatchBroker(loaded.Headers); ok {
-			// No explicit override: naive broker times are the broker's wall
-			// clock (US Eastern / exchange time), not UTC.
-			sourceTZ = presetTZ
-		}
-		if importer.IsSBI(loaded.Headers) {
-			parsed = importer.ParseSBIRows(loaded.Rows, mapping, sourceTZ)
-		} else {
-			parsed = importer.NewGeneric(mapping).WithSourceTZ(sourceTZ).
-				WithLotSizedQuantity(importer.LotSizedBroker(loaded.Headers)).
-				ParseRows(loaded.Rows)
-		}
-		parsed.Format = "executions"
-	}
 
 	var committed importer.CommitResult
 	var enrichmentRows []importer.SBIMarginPnLRow
@@ -808,4 +779,79 @@ func (s *Server) handleDeleteImport(c *echo.Context) error {
 		return Fail(http.StatusInternalServerError, "internal", "could not regroup trades", nil)
 	}
 	return c.NoContent(http.StatusNoContent)
+}
+
+// parseImport is the shared interpretation used by preview and commit.
+func parseImport(c *echo.Context, loaded loadedImport, suggested map[string]string, requireChoice bool) (importer.ParseResult, importer.DateOrderInfo, error) {
+	var parsed importer.ParseResult
+	var info importer.DateOrderInfo
+	fail := func(message string) (importer.ParseResult, importer.DateOrderInfo, error) {
+		return parsed, info, Fail(http.StatusBadRequest, "bad_request", message, nil)
+	}
+	order := strings.TrimSpace(c.FormValue("date_order"))
+	if _, err := importer.ResolveDayFirst(order, nil); err != nil {
+		return fail("invalid 'date_order' (want day_first or month_first)")
+	}
+	tz := strings.TrimSpace(c.FormValue("source_tz"))
+	if tz != "" {
+		if _, err := time.LoadLocation(tz); err != nil {
+			return fail("invalid 'source_tz' (want IANA timezone name)")
+		}
+	}
+	if tz == "" {
+		if loaded.Source == "statement" {
+			tz = importer.MTServerTZ
+		} else if _, _, preset, ok := importer.MatchBroker(loaded.Headers); ok {
+			tz = preset
+		}
+	}
+	mapping := suggested
+	if raw := c.FormValue("column_mapping"); raw != "" {
+		if err := json.Unmarshal([]byte(raw), &mapping); err != nil {
+			return fail("invalid column_mapping JSON")
+		}
+	}
+	isGeneric := loaded.Source == "csv" && loaded.Format == "executions" && !importer.IsSBI(loaded.Headers)
+	if loaded.Source == "csv" && loaded.Format == "journal_trades" {
+		info = importer.DetectDateOrder(importer.JournalDateStamps(loaded.Rows))
+	} else if isGeneric {
+		info = importer.DetectDateOrder(importer.NewGeneric(mapping).DateStamps(loaded.Rows))
+	}
+	if info.Order == importer.DateOrderAmbiguous && order == "" {
+		if requireChoice {
+			return fail("ambiguous slash dates: choose date_order (day_first or month_first) after reviewing the preview")
+		}
+		return parsed, info, nil
+	}
+	opts := journalOptionOverrides(c)
+	if opts == nil {
+		opts = &importer.JournalParseOptions{}
+	}
+	opts.DateOrder, opts.SourceTZ = order, tz
+	switch {
+	case loaded.Source == "json":
+		parsed = loaded.JSON.Result
+		if loaded.Format == "journal_trades" && c.FormValue("option_overrides") != "" && len(loaded.Rows) > 0 {
+			parsed = importer.NewJournal().ParseRowsWithOptions(loaded.Rows, opts)
+		}
+	case loaded.Source == "statement":
+		parsed = loaded.Statement.Parse(tz)
+	case loaded.Format == "cash_transactions":
+		parsed = importer.ParseResult{Format: loaded.Format, Errors: loaded.Cash.Errors}
+	case loaded.Format == "sbi_margin_pnl":
+		parsed = importer.ParseResult{Format: loaded.Format}
+	case loaded.Format == "journal_trades":
+		parsed = importer.NewJournal().ParseRowsWithOptions(loaded.Rows, opts)
+	default:
+		if len(mapping) == 0 && requireChoice {
+			return fail("column_mapping (JSON) is required")
+		}
+		if importer.IsSBI(loaded.Headers) {
+			parsed = importer.ParseSBIRows(loaded.Rows, mapping, tz)
+		} else {
+			parsed = importer.NewGeneric(mapping).WithSourceTZ(tz).WithDateOrder(order).WithLotSizedQuantity(importer.LotSizedBroker(loaded.Headers)).ParseRows(loaded.Rows)
+		}
+		parsed.Format = "executions"
+	}
+	return parsed, info, nil
 }

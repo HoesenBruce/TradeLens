@@ -647,13 +647,29 @@ interface Step2Props {
     mapping: Record<string, string>,
     optionOverrides?: Record<number, OptionRightOverride>,
     sourceTz?: string,
+    dateOrder?: string,
   ) => Promise<void>;
+  onRepreview: (
+    mapping: Record<string, string>,
+    optionOverrides: Record<number, OptionRightOverride>,
+    sourceTz: string,
+    dateOrder: string,
+  ) => Promise<ImportPreview>;
   onBack: () => void;
   error: string | null;
   loading: boolean;
 }
 
-function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loading }: Step2Props) {
+function Step2Map({
+  preview,
+  currency,
+  accountId,
+  onCommit,
+  onRepreview,
+  onBack,
+  error,
+  loading,
+}: Step2Props) {
   const { _ } = useLingui();
   const { t: tr } = useLinguiMacro();
   const isJournal = preview.format === "journal_trades";
@@ -680,6 +696,39 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
   // suggest their export zone; "UTC" is the legacy interpretation.
   const [sourceTz, setSourceTz] = useState(() => preview.suggested_source_tz || "UTC");
 
+  const [dateOrder, setDateOrder] = useState("");
+  const [effectivePreview, setEffectivePreview] = useState(preview);
+  const signature = JSON.stringify([
+    skipMapping ? {} : mapping,
+    optionOverrides,
+    sourceTz,
+    dateOrder,
+  ]);
+  const [reviewedSignature, setReviewedSignature] = useState(signature);
+  const [refreshing, setRefreshing] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+  const ambiguous = effectivePreview.date_order?.order === "ambiguous" && !dateOrder;
+  const ready = signature === reviewedSignature && !ambiguous && !refreshing && !previewError;
+
+  async function refreshPreview() {
+    setRefreshing(true);
+    setPreviewError(null);
+    try {
+      const data = await onRepreview(
+        skipMapping ? {} : mapping,
+        optionOverrides,
+        sourceTz,
+        dateOrder,
+      );
+      setEffectivePreview(data);
+      setReviewedSignature(signature);
+    } catch (e) {
+      setPreviewError(describeImportFailure(e, "preview").description);
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
   function setField(field: string, value: string) {
     setMapping((prev) => ({ ...prev, [field]: value }));
   }
@@ -689,11 +738,7 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
   }
 
   async function handleCommit() {
-    await onCommit(
-      skipMapping ? {} : mapping,
-      optionOverrides,
-      skipMapping && !isStatement ? undefined : sourceTz,
-    );
+    await onCommit(skipMapping ? {} : mapping, optionOverrides, sourceTz, dateOrder);
   }
 
   return (
@@ -851,7 +896,7 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
             </div>
           )}
 
-          {(!skipMapping || isStatement) && (
+          {(!skipMapping || isStatement || isJournal) && (
             <div className="flex flex-col gap-1.5">
               <Field
                 label={tr({ id: "imports.zone", message: "Timestamps timezone" })}
@@ -881,6 +926,61 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
                         "Zone the file's times were exported in — most US broker exports are Eastern. Times that carry their own offset are unaffected.",
                     })}
               </p>
+            </div>
+          )}
+
+          {effectivePreview.date_order && (
+            <div className="flex flex-col gap-1.5">
+              <Field
+                label={tr({ id: "imports.dateOrder", message: "Date order" })}
+                className="w-full items-stretch sm:max-w-xs"
+              >
+                <OptionsSelect
+                  value={dateOrder}
+                  onValueChange={setDateOrder}
+                  ariaLabel={tr({ id: "imports.dateOrder", message: "Date order" })}
+                  options={[
+                    {
+                      value: "",
+                      label: tr({
+                        id: "imports.dateOrderAuto",
+                        message: "Choose or use detected order",
+                      }),
+                    },
+                    {
+                      value: "day_first",
+                      label: tr({ id: "imports.dayFirst", message: "Day / Month / Year" }),
+                    },
+                    {
+                      value: "month_first",
+                      label: tr({ id: "imports.monthFirst", message: "Month / Day / Year" }),
+                    },
+                  ]}
+                  triggerClassName="h-8 w-full text-[12px]"
+                />
+              </Field>
+              <p className="text-[11px] text-muted-foreground">
+                {tr({
+                  id: "imports.dateOrderHint",
+                  message:
+                    "Slash dates can change the month. Review both interpretations and choose when ambiguous.",
+                })}
+              </p>
+              <p className="text-[12px] tabular-nums">
+                {effectivePreview.date_order.example} ·{" "}
+                {tr({ id: "imports.dayFirst", message: "Day / Month / Year" })}:{" "}
+                {effectivePreview.date_order.example_day_first || "—"} ·{" "}
+                {tr({ id: "imports.monthFirst", message: "Month / Day / Year" })}:{" "}
+                {effectivePreview.date_order.example_month_first || "—"}
+              </p>
+              {effectivePreview.date_order.order !== "ambiguous" && (
+                <p className="text-[11px] text-muted-foreground">
+                  {tr({ id: "imports.detectedDateOrder", message: "Detected date order" })}:{" "}
+                  {effectivePreview.date_order.order === "day_first"
+                    ? tr({ id: "imports.dayFirst", message: "Day / Month / Year" })
+                    : tr({ id: "imports.monthFirst", message: "Month / Day / Year" })}
+                </p>
+              )}
             </div>
           )}
 
@@ -942,12 +1042,48 @@ function Step2Map({ preview, currency, accountId, onCommit, onBack, error, loadi
         </Card>
       )}
 
+      <Card title={tr({ id: "imports.effectiveTimes", message: "Effective timestamps (UTC)" })}>
+        <div className="space-y-2 text-[12px]" aria-live="polite">
+          {!ready && (
+            <p className="text-warning">
+              {tr({
+                id: "imports.refreshTimesHint",
+                message:
+                  "Choose any ambiguous date order, then refresh this preview before confirming.",
+              })}
+            </p>
+          )}
+          {(ready ? (effectivePreview.parsed_executions ?? []) : []).map((fill, index) => (
+            <p key={index} className="tabular-nums">
+              {fill.symbol} · {fill.side} · {fill.executed_at}
+              {fill.source_time_precision === "date"
+                ? ` · ${tr({ id: "imports.syntheticTime", message: "Synthetic time — source contains only a date" })}`
+                : ""}
+            </p>
+          ))}
+          {(effectivePreview.parse_errors ?? []).map((issue, index) => (
+            <p key={index} className="text-destructive">
+              {issue.row}: {issue.message}
+            </p>
+          ))}
+          {previewError && <p className="text-destructive">{previewError}</p>}
+          <Button
+            type="button"
+            variant="outline"
+            disabled={loading || refreshing || ambiguous}
+            onClick={() => void refreshPreview()}
+          >
+            {tr({ id: "imports.refreshTimes", message: "Refresh timestamp preview" })}
+          </Button>
+        </div>
+      </Card>
+
       <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-start">
         <Button
           type="button"
           variant="default"
           onClick={() => void handleCommit()}
-          disabled={loading}
+          disabled={loading || !ready}
           className="w-full sm:w-auto"
         >
           {loading ? (
@@ -1495,24 +1631,34 @@ export function ImportView({
     }
   }
 
+  function importForm(
+    mapping: Record<string, string>,
+    optionOverrides: Record<number, OptionRightOverride>,
+    sourceTz?: string,
+    dateOrder?: string,
+  ) {
+    const fd = new FormData();
+    if (stagedFile) fd.append("file", stagedFile);
+    fd.append("column_mapping", JSON.stringify(mapping));
+    if (stagedAccountId) fd.append("account_id", stagedAccountId);
+    if (sourceTz) fd.append("source_tz", sourceTz);
+    if (dateOrder) fd.append("date_order", dateOrder);
+    if (preview?.format === "journal_trades" && Object.keys(optionOverrides).length > 0)
+      fd.append("journal_option_overrides", JSON.stringify(optionOverrides));
+    return fd;
+  }
+
   async function handleCommit(
     mapping: Record<string, string>,
     optionOverrides: Record<number, OptionRightOverride> = {},
     sourceTz?: string,
+    dateOrder?: string,
   ) {
     if (!preview || !stagedFile) return;
     setLoading(true);
     setStepError(null);
     try {
-      const fd = new FormData();
-      fd.append("file", stagedFile);
-      fd.append("column_mapping", JSON.stringify(mapping));
-      if (sourceTz) fd.append("source_tz", sourceTz);
-      // Confirm is the only write — always use fresh commit (no preview batch).
-      if (stagedAccountId) fd.append("account_id", stagedAccountId);
-      if (preview.format === "journal_trades" && Object.keys(optionOverrides).length > 0) {
-        fd.append("journal_option_overrides", JSON.stringify(optionOverrides));
-      }
+      const fd = importForm(mapping, optionOverrides, sourceTz, dateOrder);
       const data = await onCommit("", fd);
       setResult(data);
       setStep(3);
@@ -1611,6 +1757,9 @@ export function ImportView({
                 currency={importCurrency}
                 accountId={stagedAccountId || preview.account_id || ""}
                 onCommit={handleCommit}
+                onRepreview={(mapping, overrides, tz, order) =>
+                  onPreview(importForm(mapping, overrides, tz, order))
+                }
                 onBack={() => {
                   setStep(1);
                   setStepError(null);

@@ -309,3 +309,17 @@ are skipped with an explicit import-result error. Review the source and affected
 batch before explicitly removing/reimporting it; recovered fills can change
 positions, trade grouping and P&L. Single-fill historical imports stay idempotent.
 No production data migration or automatic backfill is performed.
+
+### Slash-date import interpretation
+
+Generic and journal CSV imports detect DD/MM versus MM/DD across the file. Ambiguous
+files require an explicit choice before commit; the Web preview shows the resulting
+UTC timestamps from the same server parser used by commit. Refresh the preview after
+changing mapping, date order, timezone, or option overrides. Explicit timestamp
+offsets take precedence over the source timezone. SBI YYYY/MM/DD dates retain their
+broker-specific synthetic session times and are labelled as date-only sources.
+
+This change does not rewrite historical imports. Correcting an old import requires
+a backup and deliberate removal/reimport of the affected batch: choosing a different
+interpretation changes execution identity and may create duplicates if the old batch
+is retained. Review dates, linked trade annotations, and statistics before proceeding.

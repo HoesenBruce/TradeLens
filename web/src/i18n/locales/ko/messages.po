@@ -12301,3 +12301,53 @@ msgstr "프로젝트 라이선스"
 #. js-lingui-explicit-id
 msgid "settings.attributionNotices"
 msgstr "저작자 표시 고지"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrder"
+msgstr "날짜 순서"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrderAuto"
+msgstr "선택하거나 감지된 순서 사용"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dayFirst"
+msgstr "일 / 월 / 년"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.monthFirst"
+msgstr "월 / 일 / 년"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.dateOrderHint"
+msgstr "슬래시 날짜는 순서에 따라 월이 달라집니다. 두 해석을 확인하고 모호하면 선택하세요."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.detectedDateOrder"
+msgstr "감지된 날짜 순서"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.effectiveTimes"
+msgstr "실제 가져오기 시각 (UTC)"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.refreshTimesHint"
+msgstr "모호한 날짜 순서를 선택한 뒤 미리보기를 새로 고치고 확정하세요."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.syntheticTime"
+msgstr "합성 시각 — 원본에는 날짜만 있음"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ImportView.tsx
+msgid "imports.refreshTimes"
+msgstr "시각 미리보기 새로 고침"
