@@ -20,6 +20,11 @@ const serwist = new Serwist({
   clientsClaim: true,
   navigationPreload: false,
   runtimeCaching: [
+    // Release checks must never fall back to an obsolete offline update prompt.
+    {
+      matcher: ({ url }) => url.origin === "https://api.github.com" && url.pathname.includes("/releases/"),
+      handler: new NetworkOnly(),
+    },
     // Exports must recheck ownership and current records, never download an offline snapshot.
     {
       matcher: ({ url }) => /\/news\/(?:[^/]+\/)?export$/.test(url.pathname),

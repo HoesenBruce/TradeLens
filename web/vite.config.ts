@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -19,12 +20,24 @@ function readRepoVersion(): string {
   }
 }
 
+function readRepoCommit(): string {
+  try {
+    return execFileSync("git", ["rev-parse", "HEAD"], {
+      cwd: repoRoot,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return "";
+  }
+}
+
 const appVersion = process.env.VITE_APP_VERSION?.trim() || readRepoVersion();
 const appBuild =
   process.env.VITE_APP_BUILD?.trim() ||
-  process.env.GITHUB_SHA?.slice(0, 7) ||
+  process.env.GITHUB_SHA?.trim() ||
   process.env.VITE_APP_COMMIT?.trim() ||
-  "";
+  readRepoCommit();
 
 export default defineConfig({
   define: {

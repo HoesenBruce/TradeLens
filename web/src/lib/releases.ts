@@ -11,23 +11,39 @@ export type GitHubRelease = {
   prerelease: boolean;
 };
 
-/** Compare dotted versions (e.g. `0.1.0` vs `v0.2.0`). Returns negative if a < b. */
+/** Invalid/dev versions are incomparable, so they never produce an update prompt. */
+function parseSemver(version: string) {
+  const match = normalizeVersion(version).match(
+    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/,
+  );
+  if (!match) return null;
+  const pre = match[4]?.split(".") ?? [];
+  if (pre.some((part) => /^0\d+$/.test(part))) return null;
+  const core = match.slice(1, 4).map(Number);
+  if (!core.every(Number.isSafeInteger)) return null;
+  return { core, pre };
+}
+
 export function compareSemver(a: string, b: string): number {
-  const parse = (v: string) =>
-    v
-      .trim()
-      .replace(/^v/i, "")
-      .split(/[.+-]/)
-      .map((part) => {
-        const n = Number.parseInt(part, 10);
-        return Number.isFinite(n) ? n : 0;
-      });
-  const aa = parse(a);
-  const bb = parse(b);
-  const len = Math.max(aa.length, bb.length);
-  for (let i = 0; i < len; i++) {
-    const d = (aa[i] ?? 0) - (bb[i] ?? 0);
-    if (d !== 0) return d;
+  const aa = parseSemver(a);
+  const bb = parseSemver(b);
+  if (!aa || !bb) return Number.NaN;
+  for (let i = 0; i < 3; i++) {
+    const difference = aa.core[i] - bb.core[i];
+    if (difference) return difference;
+  }
+  if (!aa.pre.length || !bb.pre.length) return Number(!aa.pre.length) - Number(!bb.pre.length);
+  for (let i = 0; i < Math.max(aa.pre.length, bb.pre.length); i++) {
+    const x = aa.pre[i];
+    const y = bb.pre[i];
+    if (x === y) continue;
+    if (x === undefined) return -1;
+    if (y === undefined) return 1;
+    const xn = /^\d+$/.test(x);
+    const yn = /^\d+$/.test(y);
+    if (xn && yn) return x.length === y.length ? (x < y ? -1 : 1) : x.length - y.length;
+    if (xn !== yn) return xn ? -1 : 1;
+    return x < y ? -1 : 1;
   }
   return 0;
 }
@@ -129,6 +145,7 @@ export async function fetchLatestRelease(): Promise<GitHubRelease | null> {
   const url = githubReleasesUrl();
   if (!url) return null;
   const res = await fetch(url, {
+    cache: "no-store",
     headers: { Accept: "application/vnd.github+json" },
   });
   if (res.status === 404) return null;
@@ -142,9 +159,11 @@ export async function fetchLatestRelease(): Promise<GitHubRelease | null> {
     html_url?: string;
     published_at?: string;
     prerelease?: boolean;
+    draft?: boolean;
   };
   const tag = body.tag_name?.trim();
-  if (!tag) return null;
+  const parsed = tag ? parseSemver(tag) : null;
+  if (!tag || !parsed || parsed.pre.length || body.prerelease || body.draft) return null;
   const notes = body.body?.trim() ?? "";
   return {
     version: normalizeVersion(tag),
@@ -153,7 +172,7 @@ export async function fetchLatestRelease(): Promise<GitHubRelease | null> {
     body: notes,
     excerpt: releaseExcerpt(notes),
     publishedAt: body.published_at ?? "",
-    url: body.html_url || `${REPO_URL}/releases`,
+    url: `${REPO_URL}/releases/tag/${encodeURIComponent(tag)}`,
     prerelease: Boolean(body.prerelease),
   };
 }

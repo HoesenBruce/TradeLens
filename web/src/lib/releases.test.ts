@@ -21,6 +21,25 @@ describe("compareSemver", () => {
     expect(isNewerVersion("0.1.0", "0.1.0")).toBe(false);
   });
 
+  it("orders prereleases and ignores metadata and invalid versions", () => {
+    const ordered = [
+      "1.0.0-alpha",
+      "1.0.0-alpha.1",
+      "1.0.0-alpha.beta",
+      "1.0.0-beta",
+      "1.0.0-beta.2",
+      "1.0.0-beta.11",
+      "1.0.0-rc.1",
+      "1.0.0",
+    ];
+    for (let i = 1; i < ordered.length; i++)
+      expect(isNewerVersion(ordered[i], ordered[i - 1])).toBe(true);
+    expect(compareSemver("v0.3.0+build.1", "0.3.0+build.2")).toBe(0);
+    for (const version of ["dev", "", "0.3", "01.3.0", "1.0.0-01"]) {
+      expect(isNewerVersion("0.15.0", version)).toBe(false);
+      expect(isNewerVersion(version, "0.3.0")).toBe(false);
+    }
+  });
   it("normalizes leading v", () => {
     expect(normalizeVersion("v1.2.3")).toBe("1.2.3");
   });
@@ -99,7 +118,7 @@ describe("fetchLatestRelease", () => {
           tag_name: "v0.2.0",
           name: "TraderMemos 0.2.0",
           body: "Bug fixes and polish.",
-          html_url: "https://example.com/r",
+          html_url: "https://github.com/HoesenBruce/TradeLens/releases/tag/v0.2.0",
           published_at: "2026-07-01T12:00:00Z",
           prerelease: false,
         }),
@@ -113,11 +132,46 @@ describe("fetchLatestRelease", () => {
       body: "Bug fixes and polish.",
       excerpt: "Bug fixes and polish.",
       publishedAt: "2026-07-01T12:00:00Z",
-      url: "https://example.com/r",
+      url: "https://github.com/HoesenBruce/TradeLens/releases/tag/v0.2.0",
       prerelease: false,
     });
   });
 
+  it("uses TradeLens even when upstream has v0.15.0", async () => {
+    const request = vi.spyOn(globalThis, "fetch").mockImplementation(
+      async (url) =>
+        new Response(
+          JSON.stringify({
+            tag_name: String(url).includes("HoesenBruce/TradeLens") ? "v0.3.0" : "v0.15.0",
+          }),
+        ),
+    );
+    const latest = await fetchLatestRelease();
+    expect(latest?.version).toBe("0.3.0");
+    expect(isNewerVersion(latest!.version, "0.3.0")).toBe(false);
+    expect(request).toHaveBeenCalledWith(
+      "https://api.github.com/repos/HoesenBruce/TradeLens/releases/latest",
+      expect.objectContaining({ cache: "no-store" }),
+    );
+  });
+  it.each([
+    { tag_name: "v0.4.0-rc.1" },
+    { tag_name: "v0.4.0", prerelease: true },
+    { tag_name: "v0.4.0", draft: true },
+    { tag_name: "garbage" },
+  ])("ignores non-stable payload %j", async (payload) => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(payload)));
+    await expect(fetchLatestRelease()).resolves.toBeNull();
+  });
+  it("reports offline failure", async () => {
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(new TypeError("Failed to fetch"));
+    await expect(fetchLatestRelease()).rejects.toThrow("Failed to fetch");
+  });
+
+  it("reports API failure", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response("", { status: 503 }));
+    await expect(fetchLatestRelease()).rejects.toThrow("Release check failed (503)");
+  });
   it("returns null when no releases exist", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response("", { status: 404 }));
     await expect(fetchLatestRelease()).resolves.toBeNull();
