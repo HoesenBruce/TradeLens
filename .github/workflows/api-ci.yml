@@ -49,6 +49,12 @@ jobs:
       - name: Vet
         run: go vet ./...
 
+      - name: Release and demo deployment regression tests (offline)
+        working-directory: .
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_*deploy*.py'
+          python3 -m unittest discover -s scripts -p 'test_docker_release_metadata.py'
+
       - name: Test
         run: go test ./...
 

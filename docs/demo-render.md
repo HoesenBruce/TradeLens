@@ -47,7 +47,9 @@ JPY display currency so SBI dates agree with the fixture.
 No public traffic can reach the writable bootstrap server. Its separate random
 JWT secret also prevents bootstrap tokens from authenticating to the final API.
 
-Reset via **Manual Deploy → Deploy latest commit** or Render's restart control.
+Reset via Render's restart control, or redeploy an explicitly recorded approved
+release commit. After release deployment activation, avoid **Deploy latest commit**:
+it can substitute unapproved main source for the pinned release.
 Every restart reseeds, even if files survive a particular restart. There is no
 public reset endpoint and no caller-controlled delete path. Partial initialization
 fails the container rather than opening an incomplete demo. Old login tokens
@@ -168,3 +170,171 @@ validation. It never contacts a live calendar feed. Outside this bounded range,
 the calendar correctly shows an empty result. Every service restart regenerates
 both trades and calendar entries; deploying this change requires Render's manual
 deploy of the latest PR revision.
+
+
+## Release-gated deployment (#286)
+
+Implementation is ready for offline review; **no live deploy, secrets setup or
+activation is claimed**. `DEMO_AUTO_DEPLOY_ENABLED` must remain unset/false until
+owner-authorized controlled acceptance succeeds. Public service settings were
+not accessed or changed by this implementation.
+
+The chain is Release Please → reusable Docker publisher → both matrix image
+jobs succeed (including API/Web CI and `ghcr` approval) → reusable
+`demo-deploy.yml` → `render-demo` approval → validation → Render API → Live SHA
+verification → bounded public smoke. It does not depend on `release: published`:
+GITHUB_TOKEN event suppression cannot break a direct reusable-workflow call.
+An ordinary main push produces no release and therefore never calls publication
+or Demo deployment. Prereleases/SHA-only builds do not call Demo deployment.
+A manual publisher running on a tag does not automatically deploy Demo; use the
+main-based guarded Demo recovery dispatch after successful publication.
+
+The deploy script accepts only published, latest stable `vX.Y.Z` releases on
+main, with matching immutable full SHA, VERSION and release manifest. It requires
+two non-expired digest artifacts from the trusted successful publisher/Release
+Please run for that exact source/ref/version, then anonymously checks both GHCR
+version and full-SHA tags against those digests. The automatic call can inspect
+its still-running parent because both publisher jobs and artifact uploads have
+already succeeded. Manual recovery requires a completed successful run.
+Missing, failed, rejected, partially published, expired or mismatched evidence
+fails closed. An arbitrary SHA/branch is never a target input.
+
+The release's own `deploy/demo/smoke.json` supplies fixture expectations. Schema 1
+checks 107 closed trades / 214 executions, JPY 25,000 P&L, contributed capital
+950,000, account value 975,000 and three fictional news items. Update this contract
+alongside intentional fixture changes. Releases without this contract and the
+Demo Dockerfile are rejected: **v0.2.1 cannot serve as the first acceptance target**.
+The script also checks `/demo`, authentication, non-admin user, fictional calendar,
+backend `demo_read_only` responses for funding/import/security/AI/admin writes and
+reads, and unchanged trades after attempted writes. Public requests occur only
+in the bounded post-deploy smoke, never as periodic keep-alive traffic.
+
+### Owner setup (after Draft review, before controlled acceptance)
+
+1. GitHub → repository Settings → Environments → create **render-demo**. Select
+   **main** as the only allowed deployment branch; require HoesenBruce review,
+   disable administrator bypass. Single-owner self-review may stay enabled.
+   Protect main with PR/review/check requirements; never expose secrets to PR jobs.
+2. In that environment, add these **environment secrets**, not repository-wide
+   credentials:
+
+   | Name | Value / source |
+   |---|---|
+   | `RENDER_API_KEY` | Render Account Settings → API Keys → create a dedicated key for this automation; paste it directly into GitHub's secret input. |
+   | `RENDER_SERVICE_ID` | Existing `tradelens-demo` service's `srv-…` ID from its Dashboard URL (20 lowercase alphanumeric characters after `srv-`). |
+
+   The API key needs service/deploy read access and permission to trigger deploys.
+   Render documents account keys as accessing every workspace the account belongs
+   to, not single-service tokens. Use the least privileged available existing
+   account with Demo access, rotate/revoke the dedicated key, and review the actual
+   credential scope before storing it. Do not add paid memberships/resources to
+   achieve narrower scope. The script only reads service/deploy data and POSTs
+   deployments; it never reads/writes environment secrets or changes resources.
+3. GitHub's built-in `GITHUB_TOKEN` needs **contents: read** and **actions: read**
+   to validate releases and download digest evidence. These are declared through
+   all reusable callers. Existing package write stays confined to publication;
+   no PAT/dispatch token or extra package write is needed for Demo.
+4. Read back the existing Render service: repository HoesenBruce/TradeLens,
+   branch main, one Docker **Free** Web Service, root/context `.` (or blank),
+   `deploy/demo/Dockerfile`, no command override/pre-deploy command, health
+   `/readyz`, URL `https://tradelens-demo.onrender.com`, no disk/autoscaling and
+   **Auto-Deploy Off**. The script refuses a different configuration rather than
+   changing it. Retain the generated `TM_JWT_SECRET` in Render; never copy it to
+   GitHub. Blueprint management and the single service remain intact.
+5. Leave repository variable **DEMO_AUTO_DEPLOY_ENABLED unset/false**. No real
+   secrets are required for Mock CI. Do not set the variable merely to merge code.
+
+A deploy hook is deliberately unnecessary. A hook alone cannot establish actual
+Live completion/source; authenticated API access is needed for status anyway.
+Using the documented API `commitId` avoids storing a redundant secret or mishandling
+hook query strings. If a legacy hook exists (Dashboard → Settings → Deploy Hook),
+leave it unused; never paste its URL into logs or records. API deployment does
+**not** turn off Auto-Deploy, so the workflow verifies it is already Off both
+before and after deployment.
+
+### Controlled acceptance and activation
+
+After this workflow is reviewed and merged, obtain separate owner authorization
+for one redeploy. Choose a newly approved latest stable release containing the
+Demo and smoke contract, with a successful publisher run and both digest artifacts.
+Do not create/merge a release solely to complete this issue without release authority.
+
+GitHub Actions → **Deploy Render demo** → Run workflow → branch **main**:
+set `version` to the bare stable version and `publication_run_id` to its successful
+publication run ID. Only for the first transition from the pre-release feature
+branch Demo, set `bootstrap_live_sha` to the exact current Dashboard Live SHA
+separately reviewed by the owner. This pins the source being replaced; it can
+only replace a lower VERSION and cannot deploy an older release over a newer one.
+Leave it empty on normal retries. Review the environment approval after inputs
+are visible, then approve only this controlled attempt.
+
+Record text only: workflow URL, release/version/SHA, both publication digests/run,
+Render deploy ID, started/finished timestamps, actual Live commit, Free/no-disk/
+Auto-Deploy-Off read-back, and smoke results. The run summary and 90-day
+`render-demo-<run>-<attempt>` artifact contain a sanitized JSON record. Copy it into
+a durable validation record; do not upload Dashboard screenshots. Independently
+open public `/demo`, log in and confirm Web routes. A trigger 201/202 alone is
+not acceptance. Deployment polling is capped at 30 minutes; public readiness at
+5 minutes; the whole job at 45 minutes. A failed smoke marks the workflow failed
+even when Render has already promoted the source.
+
+Only after this controlled run passes and its record is reviewed, owner sets
+repository variable `DEMO_AUTO_DEPLOY_ENABLED=true`. Keep `render-demo` review
+protection unless the owner separately approves a policy change. Validate one
+subsequent legitimate Release Please release-chain run before closing #286;
+offline mocks do not prove GitHub approvals, nesting, registry access or Render
+configuration. No such run is claimed by the implementation PR.
+
+### Races, retry and recovery
+
+All automatic and manual Demo invocations share one concurrency group with
+`cancel-in-progress: false`, including environment approval wait and smoke.
+GitHub may replace a pending run with a newer pending run; it does not guarantee
+FIFO. Every run revalidates latest stable, tag/SHA, publication evidence and current
+Live immediately before deployment. An obsolete approval therefore fails closed.
+The Live source must be an ancestor of the intended release (or the explicit
+older-version bootstrap described above). A newer main/release or divergent
+Live source blocks deployment. Existing queued/building/updating Render deploys
+also block retries; a runner timeout does not mean Render canceled the build.
+
+Avoid out-of-band Render deployments and release/tag mutation during a run.
+GitHub concurrency cannot lock Dashboard operators, external API callers or tag
+administrators. Configure stable tag protection and restrict access to those
+paths. A new release while a build is underway waits for the existing run; the
+next attempt resolves the current latest stable. Before/after Live-ID checks catch
+interference, but these remote checks are not an atomic cross-provider transaction.
+
+| Failure | Action |
+|---|---|
+| Approval rejected, publication failed/missing/partial | No Render trigger. Inspect publication and repair it under the existing release policy; never bypass the two-image gate. |
+| POST timeout/network failure | May already have created a deploy. Inspect Render history first; no automatic POST retry. |
+| Render build failed, canceled or timed out | Inspect exact deploy ID/history; wait for any ongoing deployment. Record the last verified Live SHA; do not infer rollback. |
+| Live SHA mismatch or smoke failed | Workflow fails. Record actual Live SHA and diagnose the failed probe; Render may already be serving the new release. |
+| Safe retry of current release | Dispatch main with the same validated version and successful publication run ID after Render is idle; reapproval and all checks still apply. |
+| Digest artifacts expired | Fail closed. Recover verified evidence through a separately reviewed recovery change or a new approved release; do not republish immutable tags blindly. |
+| Roll back to an older known-good release | This workflow intentionally rejects old releases. Obtain explicit rollback authority, use Dashboard **Deploy a specific commit** for the recorded previously good SHA, retain Auto-Deploy Off, wait for Live, then smoke using that release's contract and record the outcome. Never use deploy-latest. |
+
+There is **no automatic rollback**. A redeploy recreates the ephemeral fictional
+SQLite database and invalidates sessions as designed. Build-minute/free-hour
+allowances remain the owner's responsibility; do not upgrade the plan to recover.
+
+### Offline regression checks
+
+```sh
+python3 -m unittest discover -s scripts -p 'test_*deploy*.py'
+python3 -m unittest discover -s scripts -p 'test_docker_release_metadata.py'
+actionlint .github/workflows/demo-deploy.yml .github/workflows/docker-publish.yml \
+  .github/workflows/release-please.yml .github/workflows/api-ci.yml
+```
+
+Deployment tests are included in API CI and the publisher's reused API CI. Mock
+Render + public API tests exercise exact POST body, credential separation,
+completion, fixture smoke, write rejection, failed builds, timeout/mismatch,
+release changes and invalid configuration. Local container smoke is useful extra
+evidence; it does not satisfy the controlled live acceptance requirement.
+
+References: [Render pinned-commit deployment](https://render.com/docs/deploys#deploying-a-specific-commit),
+[trigger API](https://api-docs.render.com/reference/create-deploy),
+[retrieve deployment](https://api-docs.render.com/reference/retrieve-deploy),
+[API credential scope](https://api-docs.render.com/reference/authentication),
+[GitHub token events](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).

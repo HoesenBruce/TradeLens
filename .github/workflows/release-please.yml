@@ -41,6 +41,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      actions: read
     name: Publish Docker images
     needs: release-please
     if: ${{ needs.release-please.outputs.releases_created == 'true' }}
