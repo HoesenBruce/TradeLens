@@ -1,4 +1,7 @@
-import { describe, expect, it } from "vite-plus/test";
+import { useDisplayPrefs } from "./displayPrefs";
+import { emptySymbolTrade, validateSymbolTrades } from "./newTradeFormSchema";
+import { mergeTradeExtracts } from "./ocrSymbolGroups";
+import { afterEach, describe, expect, it } from "vite-plus/test";
 import type { TradeExtract } from "./api/ocr";
 import type { Execution, TradeDetail } from "./api/types";
 import {
@@ -80,6 +83,7 @@ const trade: TradeDetail = {
 };
 
 describe("rowsFromOcrExtract", () => {
+  afterEach(() => useDisplayPrefs.setState({ timezone: "America/New_York" }));
   const extract = (executed_at: string): TradeExtract => ({
     symbol: "INTC",
     instrument_type: "option",
@@ -115,6 +119,59 @@ describe("rowsFromOcrExtract", () => {
     expect(rows[0]?.executed_at).toBe("2026-07-31T22:06:33");
   });
 
+  it("converts an exact instant into the display timezone's wall clock", () => {
+    // A server that resolved the screen's zone (Hong Kong here) sets
+    // `timezone`; the offset is real. Display timezone defaults to New York.
+    const rows = rowsFromOcrExtract(
+      { ...extract("2026-10-01T10:30:27+08:00"), timezone: "Asia/Hong_Kong" },
+      "long",
+    );
+    expect(rows[0]?.executed_at).toBe("2026-09-30T22:30:27");
+  });
+
+  it("keeps unknown times blank and requires correction", () => {
+    for (const raw of ["", "sometime", "2026-02-30", "2026-10-01"]) {
+      const block = {
+        ...emptySymbolTrade(),
+        symbol: "INTC",
+        rows: rowsFromOcrExtract(extract(raw), "long"),
+      };
+      expect(block.rows[0]?.executed_at).toBe("");
+      expect(validateSymbolTrades([block])).toBeDefined();
+    }
+  });
+  it("keeps instants across zones, DST folds, and mixed screenshot merges", () => {
+    for (const timezone of ["Asia/Tokyo", "America/New_York", "UTC"] as const) {
+      useDisplayPrefs.setState({ timezone });
+      for (const instant of [
+        "2026-10-01T10:30:27+09:00",
+        "2026-11-01T01:30:00-05:00",
+        "2026-03-08T03:30:00-04:00",
+      ]) {
+        const merged = mergeTradeExtracts([
+          { ...extract(instant), timezone: "Asia/Tokyo" },
+          extract("2026-10-02T10:00:00Z"),
+        ]);
+        const rows = rowsFromOcrExtract(merged, "long");
+        const saved = flattenSymbolTradesToExecutions([
+          { ...emptySymbolTrade(), symbol: "INTC", rows },
+        ]);
+        expect(saved.some((row) => Date.parse(row.executed_at) === Date.parse(instant))).toBe(true);
+        expect(rows.some((row) => row.executed_at === "2026-10-02T10:00:00")).toBe(true);
+      }
+    }
+  });
+  it("sorts mixed resolved zones by instant", () => {
+    const merged = mergeTradeExtracts([
+      {
+        ...extract("2026-10-01T00:00:00Z"),
+        timezone: "UTC",
+        rows: extract("2026-10-01T00:00:00Z").rows.map((r) => ({ ...r, side: "sell" })),
+      },
+      { ...extract("2026-10-01T08:00:00+09:00"), timezone: "Asia/Tokyo" },
+    ]);
+    expect(rowsFromOcrExtract(merged, "long")[0]?.side).toBe("buy");
+  });
   it("fills missing seconds", () => {
     const rows = rowsFromOcrExtract(extract("2026-07-31 22:06"), "long");
     expect(rows[0]?.executed_at).toBe("2026-07-31T22:06:00");

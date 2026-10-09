@@ -2,6 +2,17 @@
 
 import type { ExtractedFill, TradeExtract } from "./api/ocr";
 
+/** Resolved offsets compare as instants; legacy extracts keep literal order. */
+export function compareOcrFillTimes(a: ExtractedFill, b: ExtractedFill): number {
+  if (!a.executed_at) return b.executed_at ? 1 : 0;
+  if (!b.executed_at) return -1;
+  if (a.timezone && b.timezone) {
+    const delta = Date.parse(a.executed_at) - Date.parse(b.executed_at);
+    if (Number.isFinite(delta)) return delta;
+  }
+  return a.executed_at.localeCompare(b.executed_at);
+}
+
 export type OcrSymbolGroup = {
   symbol: string;
   fillCount: number;
@@ -36,7 +47,7 @@ export function filterOcrExtractBySymbol(extract: TradeExtract, symbol: string):
     if (!rs) return !allHaveSymbol;
     return rs === sym;
   });
-  const sorted = [...rows].sort((a, b) => (a.executed_at ?? "").localeCompare(b.executed_at ?? ""));
+  const sorted = [...rows].sort(compareOcrFillTimes);
   const earliest = sorted[0];
   const side =
     earliest?.side === "sell" ? "short" : earliest?.side === "buy" ? "long" : extract.side;
@@ -200,7 +211,9 @@ export function mergeTradeExtracts(parts: TradeExtract[]): TradeExtract {
   }
   if (parts.length === 1) return parts[0]!;
 
-  const rows = parts.flatMap((p) => p.rows ?? []);
+  const rows = parts.flatMap((p) =>
+    (p.rows ?? []).map((row) => ({ ...row, timezone: row.timezone ?? p.timezone })),
+  );
   const symbolSet = new Set<string>();
   for (const p of parts) {
     for (const s of ocrSymbolsInExtract(p)) symbolSet.add(s);
@@ -228,7 +241,7 @@ export function mergeTradeExtracts(parts: TradeExtract[]): TradeExtract {
   const majority = defaultOcrSymbol(merged);
   if (majority) merged.symbol = majority;
 
-  const sorted = [...rows].sort((a, b) => (a.executed_at ?? "").localeCompare(b.executed_at ?? ""));
+  const sorted = [...rows].sort(compareOcrFillTimes);
   const earliest = sorted[0];
   if (earliest?.side === "sell") merged.side = "short";
   else if (earliest?.side === "buy") merged.side = "long";

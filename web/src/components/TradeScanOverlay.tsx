@@ -1,3 +1,4 @@
+import { resolveMarketTimezone, useDisplayPrefs } from "@/lib/displayPrefs";
 import {
   AlertCircle,
   CheckCircle2,
@@ -418,6 +419,7 @@ export function TradeScanOverlay({
           if (item.isImage) {
             const fd = new FormData();
             fd.append("file", item.file);
+            fd.append("tz", resolveMarketTimezone(useDisplayPrefs.getState().marketTimezone));
             extract = await ocrApi.parse(fd);
           } else {
             extract = parseFillFile(item.file.name, await item.file.text());
