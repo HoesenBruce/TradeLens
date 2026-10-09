@@ -5,6 +5,13 @@ All notable changes to TraderMemos are documented in this file.
 Release versioning is managed by [release-please](https://github.com/googleapis/release-please).
 See [docs/release.md](docs/release.md) for the release workflow.
 
+## [0.3.1](https://github.com/HoesenBruce/TradeLens/compare/v0.3.0...v0.3.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* **web:** use TradeLens releases for About update checks ([#290](https://github.com/HoesenBruce/TradeLens/issues/290)) ([e4f2974](https://github.com/HoesenBruce/TradeLens/commit/e4f2974c64880a06e461aa082deb837363f6ef70))
+
 ## [0.3.0](https://github.com/HoesenBruce/TradeLens/compare/v0.2.1...v0.3.0) (2026-10-09)
 
 
