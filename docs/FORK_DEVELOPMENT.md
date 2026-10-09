@@ -292,3 +292,20 @@ Existing trade rows are not rewritten by the schema migration. Rebuild affected
 accounts via `POST /api/v1/trades/regroup` with `{"account_id":"..."}` and working
 market data. This can change historical P&L/statistics or exclude unsafe results
 from P&L aggregates; original imported executions and journal annotations remain.
+
+### Generic import occurrence identities (#266)
+
+Imports without a broker-stable `DedupKey` retain identical same-second fills by
+indexing their occurrence within the statement. Occurrence zero keeps the legacy
+hash; all new generic rows store a string `details.occ`, including `"0"`. Option
+normalization and execution edits preserve this identity. SBI occurrence/leg keys,
+position conversions, and cash/margin accounting remain unchanged.
+
+Reimporting the same complete statement adds no executions. Without stable source
+IDs, separate or overlapping files cannot distinguish a new identical fill from an
+existing one; use consistent complete statements. This is not a historical repair.
+If repeated fills match an old row without an occurrence marker, the extra fills
+are skipped with an explicit import-result error. Review the source and affected
+batch before explicitly removing/reimporting it; recovered fills can change
+positions, trade grouping and P&L. Single-fill historical imports stay idempotent.
+No production data migration or automatic backfill is performed.

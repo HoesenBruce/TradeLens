@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 	"uuid"
 
@@ -42,20 +43,44 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 	// that lot so a re-import does not insert an orphan avg-exit sell as an OPEN short.
 	skippedLots := map[string]bool{}
 
-	// One round trip answers the dedup question for the whole file. `seen` then
-	// grows as rows are accepted, so a fill repeated inside the same file is
-	// still skipped — the row-at-a-time path got that from its own prior insert.
+	// Stable broker keys keep their existing identity; only economic keys count occurrences.
+	// ponytail: overlapping files cannot identify extra identical fills; use stable source IDs when available.
 	hashes := make([]string, len(parsed.Executions))
+	bases := make([]string, len(parsed.Executions))
+	occurrences := make([]int, len(parsed.Executions))
+	counts := map[string]int{}
 	for i, pe := range parsed.Executions {
 		if pe.DedupKey != "" {
 			hashes[i] = dedupHash(pe.DedupKey)
 		} else {
-			hashes[i] = DedupHash(dedupSymbol(pe), pe.Side, pe.Quantity, pe.Price, pe.ExecutedAt)
+			base := DedupHash(dedupSymbol(pe), pe.Side, pe.Quantity, pe.Price, pe.ExecutedAt)
+			bases[i] = base
+			occurrences[i] = counts[base]
+			counts[base]++
+			hashes[i] = DedupHashOccurrence(dedupSymbol(pe), pe.Side, pe.Quantity, pe.Price, pe.ExecutedAt, occurrences[i])
 		}
 	}
 	seen, err := store.BulkExistingDedupHashes(ctx, q, accountID, hashes)
 	if err != nil {
 		return res, fmt.Errorf("dedup check for %d executions: %w", len(hashes), err)
+	}
+
+	// Legacy rows cannot prove whether a repeat was previously dropped. Do not repair history implicitly.
+	legacy := map[string]bool{}
+	for base, count := range counts {
+		if count < 2 {
+			continue
+		}
+		if _, exists := seen[base]; !exists {
+			continue
+		}
+		row, err := q.GetExecutionByDedup(ctx, store.GetExecutionByDedupParams{AccountID: accountID, DedupHash: base})
+		if err != nil {
+			return res, fmt.Errorf("check legacy fill: %w", err)
+		}
+		details := map[string]string{}
+		_ = json.Unmarshal([]byte(row.Details.String), &details)
+		legacy[base] = details["occ"] != "0"
 	}
 
 	multipliers := map[string]float64{}
@@ -68,6 +93,15 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 			res.Skipped++
 			continue
 		}
+		if occurrences[i] > 0 && legacy[bases[i]] {
+			if guardLot {
+				skippedLots[pe.LotKey] = true
+			}
+			res.Skipped++
+			res.Errors = append(res.Errors, RowError{Row: 0, Message: fmt.Sprintf("%s: repeated fill conflicts with legacy import; review and explicitly remove/reimport the affected batch to restore missing fills (positions and P&L may change)", pe.Symbol)})
+			continue
+		}
+
 		hash := hashes[i]
 		if _, exists := seen[hash]; exists {
 			if guardLot {
@@ -83,8 +117,11 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 		}
 		id := uuid.New().String()
 		details := sql.NullString{}
-		if pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" || pe.ReportedRealizedPnl != nil || pe.ReportedCloseBasis != nil || pe.EventType != "" || pe.SourceTimePrecision != "" {
+		if pe.DedupKey == "" || pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" || pe.ReportedRealizedPnl != nil || pe.ReportedCloseBasis != nil || pe.EventType != "" || pe.SourceTimePrecision != "" {
 			payload := map[string]any{}
+			if pe.DedupKey == "" {
+				payload["occ"] = strconv.Itoa(occurrences[i])
+			}
 			if pe.SourceTimePrecision != "" {
 				payload["source_time_precision"] = pe.SourceTimePrecision
 			}
