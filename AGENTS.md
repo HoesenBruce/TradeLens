@@ -1,5 +1,13 @@
 # Agent rules
 
+## Ponytail for repository work
+
+For coding tasks, read and apply `.agents/skills/ponytail/SKILL.md` at the start
+of the session. Use `full` by default; honor the user's level changes and
+`stop ponytail` / `normal mode` requests. Repository guardrails and required
+validation still apply. Read the other `ponytail-*` skills only when requested
+or relevant to the task. See `.agents/skills/README.md` for installation details.
+
 ## Git workflow guardrail
 
 Follow the canonical Git workflow in `CONTRIBUTING.md`.
