@@ -86,9 +86,15 @@ def publication(run_id, version, sha, automatic=False):
     run = gh('actions/runs/' + run_id)
     require(run['path'] in ('.github/workflows/release-please.yml', '.github/workflows/docker-publish.yml'), 'Untrusted publication workflow')
     require(run['event'] in ('push', 'workflow_dispatch'), 'Untrusted publication event')
-    require((run['status'] == 'completed' and run['conclusion'] == 'success') or
-            (automatic and run_id == os.environ['GITHUB_RUN_ID'] and run['status'] == 'in_progress'), 'Publication must have succeeded')
+    require(run['status'] == 'completed' or
+            (automatic and run_id == os.environ['GITHUB_RUN_ID'] and run['status'] == 'in_progress'), 'Publication run must be complete or the current automatic parent')
     require(run['head_sha'] == sha and run['head_branch'] == ('main' if run['event'] == 'push' else 'v' + version), 'Publication run must target this release commit on main or its exact tag')
+    jobs = gh(f'actions/runs/{run_id}/jobs?filter=all&per_page=100')['jobs']
+    for image in ('api', 'web'):
+        candidates = [j for j in jobs if j['name'] == f'Push {image}' or j['name'].endswith(f' / Push {image}')]
+        require(bool(candidates), f'Missing {image} publishing job')
+        latest_job = max(candidates, key=lambda j: j['id'])
+        require(latest_job['status'] == 'completed' and latest_job['conclusion'] == 'success', f'{image} publication must have succeeded')
     artifacts = gh(f'actions/runs/{run_id}/artifacts?per_page=100')['artifacts']
     for image in ('api', 'web'):
         matches = [a for a in artifacts if a['name'] == f'ghcr-digest-{image}-{sha}' and not a['expired']]

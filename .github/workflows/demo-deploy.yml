@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       publication_run_id:
-        description: Successful Release Please or Docker publisher run with both digest artifacts
+        description: Release Please or Docker run with both successful publishing jobs and digest artifacts
         required: true
         type: string
       bootstrap_live_sha:

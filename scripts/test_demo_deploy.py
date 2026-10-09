@@ -164,8 +164,11 @@ class Deployment(unittest.TestCase):
     def test_publication_both_images_and_registry(self):
         digest = 'sha256:' + 'c' * 64
         run = {'path': '.github/workflows/docker-publish.yml', 'event': 'workflow_dispatch', 'status': 'completed', 'conclusion': 'success', 'head_sha': SHA, 'head_branch': 'v1.2.3'}
+        jobs = [{'id': i, 'name': 'Push ' + image, 'status': 'completed', 'conclusion': 'success'} for i, image in enumerate(('api', 'web'))]
         artifacts = [{'id': i, 'name': f'ghcr-digest-{image}-{SHA}', 'expired': False} for i, image in enumerate(('api', 'web'))]
         def api(path, binary=False):
+            if '/jobs?' in path:
+                return {'jobs': jobs}
             if path.endswith('/artifacts?per_page=100'):
                 return {'artifacts': artifacts}
             if path.endswith('/zip'):
@@ -180,9 +183,13 @@ class Deployment(unittest.TestCase):
         with patch.object(m, 'gh', side_effect=api), patch.object(m, 'http', side_effect=http):
             m.publication('123', '1.2.3', SHA)
             for conclusion in ('failure', 'cancelled', None):
-                run['conclusion'] = conclusion
+                jobs[1]['conclusion'] = conclusion
                 with self.assertRaises(ValueError):
                     m.publication('123', '1.2.3', SHA)
+            jobs[1]['conclusion'] = 'success'
+            # Demo-only failure does not erase successful publication evidence.
+            run['conclusion'] = 'failure'
+            m.publication('123', '1.2.3', SHA)
             run['conclusion'] = 'success'
             run['head_branch'] = 'feature'
             with self.assertRaisesRegex(ValueError, 'exact tag'):

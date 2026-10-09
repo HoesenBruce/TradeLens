@@ -24,7 +24,7 @@ Branch: `chore/286-render-release-deploy`.
 - 10 unittest methods passed with multiple subcases: stable/prerelease/draft/tag
   validation, old/divergent Live rejection, explicit older-version bootstrap,
   successful two-image evidence/registry checks, missing/failed/mismatched
-  publication, same-parent in-progress automatic call, full Mock Render/public
+  publication, same-parent in-progress automatic call and recovery from a Demo-only parent failure, full Mock Render/public
   HTTP flow, exact commitId POST, credential separation, failure/timeout/mismatch,
   failed smoke, sanitized failure record, workflow integration guards.
 - Existing Docker release metadata regression: 3 unittest methods passed.

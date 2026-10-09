@@ -195,7 +195,9 @@ two non-expired digest artifacts from the trusted successful publisher/Release
 Please run for that exact source/ref/version, then anonymously checks both GHCR
 version and full-SHA tags against those digests. The automatic call can inspect
 its still-running parent because both publisher jobs and artifact uploads have
-already succeeded. Manual recovery requires a completed successful run.
+already succeeded. Manual recovery requires a completed run with both publishing jobs successful.
+A Demo-only failure of the overall release chain does not invalidate those jobs
+or their digest records.
 Missing, failed, rejected, partially published, expired or mismatched evidence
 fails closed. An arbitrary SHA/branch is never a target input.
 
@@ -260,8 +262,8 @@ Demo and smoke contract, with a successful publisher run and both digest artifac
 Do not create/merge a release solely to complete this issue without release authority.
 
 GitHub Actions → **Deploy Render demo** → Run workflow → branch **main**:
-set `version` to the bare stable version and `publication_run_id` to its successful
-publication run ID. Only for the first transition from the pre-release feature
+set `version` to the bare stable version and `publication_run_id` to its completed
+publication run ID with both publishing jobs successful. Only for the first transition from the pre-release feature
 branch Demo, set `bootstrap_live_sha` to the exact current Dashboard Live SHA
 separately reviewed by the owner. This pins the source being replaced; it can
 only replace a lower VERSION and cannot deploy an older release over a newer one.
@@ -310,7 +312,7 @@ interference, but these remote checks are not an atomic cross-provider transacti
 | POST timeout/network failure | May already have created a deploy. Inspect Render history first; no automatic POST retry. |
 | Render build failed, canceled or timed out | Inspect exact deploy ID/history; wait for any ongoing deployment. Record the last verified Live SHA; do not infer rollback. |
 | Live SHA mismatch or smoke failed | Workflow fails. Record actual Live SHA and diagnose the failed probe; Render may already be serving the new release. |
-| Safe retry of current release | Dispatch main with the same validated version and successful publication run ID after Render is idle; reapproval and all checks still apply. |
+| Safe retry of current release | Dispatch main with the same validated version and completed publication run ID with both image jobs successful after Render is idle; reapproval and all checks still apply. |
 | Digest artifacts expired | Fail closed. Recover verified evidence through a separately reviewed recovery change or a new approved release; do not republish immutable tags blindly. |
 | Roll back to an older known-good release | This workflow intentionally rejects old releases. Obtain explicit rollback authority, use Dashboard **Deploy a specific commit** for the recorded previously good SHA, retain Auto-Deploy Off, wait for Live, then smoke using that release's contract and record the outcome. Never use deploy-latest. |
 
