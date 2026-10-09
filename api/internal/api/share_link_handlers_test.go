@@ -59,7 +59,7 @@ func TestShareLinkLifecycle(t *testing.T) {
 	s := shareTestServer(t)
 	tok := registerAndLogin(t, s, "share@x.com")
 	acc := accountID(t, s, tok)
-	seedShareClosedTrade(t, s, tok, acc, "AAPL", "2026-01-05", 10, 12) // +20
+	seedShareClosedTrade(t, s, tok, acc, "AAPL", "2026-01-05", 10, 12)  // +20
 	seedShareClosedTrade(t, s, tok, acc, "MSFT", "2026-01-06", 100, 95) // -50
 
 	rec := do(s, http.MethodPost, "/api/v1/share-links",
@@ -225,4 +225,53 @@ func TestShareLinkUserIsolation(t *testing.T) {
 
 	// Unknown token 404s.
 	require.Equal(t, http.StatusNotFound, do(s, http.MethodGet, "/api/v1/public/share/does-not-exist", "", "").Code)
+}
+
+func TestShareMarketTimezoneKeepsAccountScope(t *testing.T) {
+	s := shareTestServer(t)
+	tok := registerAndLogin(t, s, "sharemarket@x.com")
+	a := accountID(t, s, tok)
+	b := accountWithCurrency(t, s, tok, "Other", "USD")
+	paper := backtestAccountID(t, s, tok)
+	for _, acc := range []string{a, b, paper} {
+		for i, side := range []string{"buy", "sell"} {
+			at := []string{"2026-01-31T14:55:00Z", "2026-01-31T15:05:00Z"}[i]
+			body, err := json.Marshal(map[string]any{"account_id": acc, "symbol": "MONTH", "instrument_type": "stock", "side": side, "quantity": 1, "price": 10 + i, "executed_at": at})
+			require.NoError(t, err)
+			require.Equal(t, http.StatusCreated, do(s, http.MethodPost, "/api/v1/executions", string(body), tok).Code)
+		}
+	}
+	for _, tc := range []struct {
+		zone, day, scope string
+		count            float64
+	}{
+		{"Asia/Tokyo", "2026-02-01", a, 1},
+		{"America/New_York", "2026-01-31", a, 1},
+		{"Asia/Tokyo", "2026-02-01", "", 2},
+	} {
+		body, err := json.Marshal(map[string]any{"account_id": tc.scope, "tz": tc.zone, "show_amounts": false})
+		require.NoError(t, err)
+		rec := do(s, http.MethodPost, "/api/v1/share-links", string(body), tok)
+		require.Equal(t, http.StatusCreated, rec.Code, rec.Body.String())
+		var link struct {
+			Token string `json:"token"`
+		}
+		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &link))
+		rec = do(s, http.MethodGet, "/api/v1/public/share/"+link.Token, "", "")
+		require.Equal(t, http.StatusOK, rec.Code)
+		var pub struct {
+			FirstDay string `json:"first_day"`
+			Summary  struct {
+				TotalTrades float64 `json:"total_trades"`
+			}
+		}
+		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &pub))
+		require.Equal(t, tc.day, pub.FirstDay)
+		require.Equal(t, tc.count, pub.Summary.TotalTrades)
+	}
+	require.Equal(t, http.StatusBadRequest, do(s, http.MethodPost, "/api/v1/share-links", `{"tz":"Not/AZone"}`, tok).Code)
+	summary := summaryFor(t, s, tok, "?account_id="+a+"&account_id="+b+"&duration=swing&tz=Asia/Tokyo")
+	require.Equal(t, float64(2), summary["total_trades"])
+	summary = summaryFor(t, s, tok, "?duration=day&tz=America/New_York")
+	require.Equal(t, float64(2), summary["total_trades"])
 }
