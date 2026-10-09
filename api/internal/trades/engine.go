@@ -49,6 +49,11 @@ type Trade struct {
 // Group folds executions for a SINGLE (account,symbol,instrument) stream into round-trip trades
 // using average-cost. Callers must pre-partition by symbol+instrument+account.
 func Group(fills []Execution) []Trade {
+	return group(fills, true)
+}
+
+// SBI retains its existing review-trade fee semantics through its strategies.
+func group(fills []Execution, splitReversalFees bool) []Trade {
 	sort.SliceStable(fills, func(i, j int) bool {
 		if fills[i].ExecutedAt.Equal(fills[j].ExecutedAt) {
 			return fills[i].ID < fills[j].ID
@@ -82,21 +87,26 @@ func Group(fills []Execution) []Trade {
 
 		// opposite direction → reduce/close, possibly cross zero
 		closeQty := min(abs(signed), abs(cur.position))
-		cur.reduce(f, closeQty, mult)
-
 		remaining := abs(signed) - closeQty
+		closing := f
+		if splitReversalFees && remaining > 1e-9 {
+			// Allocate once in cents; the opening leg receives the exact remainder.
+			closing.Fees = money.Round2((f.Fees + f.Commission) * closeQty / abs(signed))
+			closing.Commission = 0
+			f.Fees = f.Fees + f.Commission - closing.Fees
+			f.Commission = 0
+		}
+		cur.reduce(closing, closeQty, mult)
 		if abs(cur.position) < 1e-9 {
 			trades = append(trades, cur.finalize(f.ExecutedAt))
 			cur = nil
 			if remaining > 1e-9 {
-				// The crossing fill closed the prior trade AND opens an opposite
-				// trade with the remainder. Its fees were already attributed to the
-				// closed trade in reduce(), so do not count them again here.
+				// A reversal also opens an opposite trade with the remaining quantity.
 				crossSigned := remaining
 				if signed < 0 {
 					crossSigned = -remaining
 				}
-				cur = newOpen(f, crossSigned, mult, false)
+				cur = newOpen(f, crossSigned, mult, splitReversalFees)
 			}
 		}
 	}

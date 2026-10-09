@@ -9,7 +9,7 @@ import (
 // SBIMarginAccounting prefers the settlement result supplied by SBI. Without
 // it, only a single opening can be costed without inventing a lot match.
 func SBIMarginAccounting(fills []Execution) AccountingResult {
-	result := AccountingResult{Trades: Group(append([]Execution(nil), fills...))}
+	result := AccountingResult{Trades: group(append([]Execution(nil), fills...), false)}
 	ordered := append([]Execution(nil), fills...)
 	sort.SliceStable(ordered, func(i, j int) bool {
 		if ordered[i].ExecutedAt.Equal(ordered[j].ExecutedAt) {
