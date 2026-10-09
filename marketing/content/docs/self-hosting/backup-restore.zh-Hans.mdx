@@ -61,3 +61,22 @@ docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker
   tar xzf /backup/tradelens-attachments.tar.gz -C /data
 make up-postgres-build
 ```
+
+## 定时 SQLite 快照
+
+SQLite 默认每天备份一次，保留 14 份。所有者可在「设置 → 关于 → 备份」查看失败和立即备份。
+`TM_BACKUP_ENABLED=false`、`TM_JOBS_ENABLED=false` 或 `TM_BACKUP_INTERVAL_MIN=0`
+关闭定时任务，仍可手动备份；`TM_DEMO_MODE=true` 同时禁用定时和手动备份。
+PostgreSQL 不支持内置快照，请使用上面的 pg_dump 流程。
+
+`TM_BACKUP_DIR` 默认是数据库旁的 backups 目录（Docker `/data/backups`）。
+持久保存的 `<数据库文件>.backup-id` 标识选择独立的 `tradelens-<数据库标识>/` 子目录，
+请随数据库卷保留。只清理本实例子目录内匹配的快照；即使不同容器使用相同路径，也不清理其他实例。
+存储需支持文件锁、原子重命名和 fsync；NAS 推荐写入本地持久卷，再同步异地。
+Render 临时磁盘不构成可恢复备份。快照仅含数据库，附件、配置和密钥需要另行保存。
+
+恢复演练：先留回滚副本，停止全部 API 实例，将选定快照复制到配置的数据库路径，
+删除该数据库旧的 `-wal` 和 `-shm`，恢复对应附件和密钥。运行 SQLite
+`PRAGMA integrity_check` 并确认 `ok`，启动同版本 TradeLens，读回登录、账户、交易及附件。
+禁止混用上游 TraderMemos 与 TradeLens 数据库。上面的整卷归档方案仍可使用。
+详见[部署文档](https://github.com/HoesenBruce/TradeLens/blob/main/docs/deploy.md#backups--restore)。

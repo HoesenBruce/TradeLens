@@ -61,3 +61,25 @@ docker run --rm --volumes-from "$(docker compose -f docker-compose.yml -f docker
   tar xzf /backup/tradelens-attachments.tar.gz -C /data
 make up-postgres-build
 ```
+
+## SQLite の定期スナップショット
+
+SQLite は既定で毎日バックアップし、14 個を保持します。オーナーは設定 → このアプリについて →
+バックアップで失敗を確認し、手動で実行できます。`TM_BACKUP_ENABLED=false`、
+`TM_JOBS_ENABLED=false` または `TM_BACKUP_INTERVAL_MIN=0` で定期実行を停止します。
+手動実行は可能ですが、`TM_DEMO_MODE=true` では両方を無効化します。
+PostgreSQL は内蔵スナップショットに対応せず、上記の pg_dump を使用します。
+
+`TM_BACKUP_DIR` の既定値は DB の隣の backups（Docker `/data/backups`）です。
+永続化した `<DBファイル>.backup-id` が専用の `tradelens-<DB識別子>/` を選びます。
+この識別子を DB ボリュームと一緒に保持してください。そのディレクトリ内の一致する快照だけを削除し、
+同じパスを使う別コンテナのバックアップには触れません。ファイルロック、原子的なリネーム、fsync に
+対応する永続ストレージを使い、別の場所へ同期してください。NAS ではローカル永続ボリュームを推奨します。
+Render の一時ディスクは復旧用バックアップになりません。快照は DB のみで、添付・設定・秘密情報は別途保存します。
+
+復旧訓練：ロールバック用のコピーを確保し、すべての API を停止して、選択した快照を設定済みの DB に
+コピーします。古い `-wal` と `-shm` を削除し、対応する添付・秘密情報を戻します。
+SQLite の `PRAGMA integrity_check` が `ok` を返すことを確認し、同じ TradeLens バージョンを起動して
+ログイン・口座・取引・添付を読み戻します。上流 TraderMemos と TradeLens の DB は混用しないでください。
+上記のボリューム全体の保存手順も引き続き使用できます。
+[詳しい部署手順](https://github.com/HoesenBruce/TradeLens/blob/main/docs/deploy.md#backups--restore)を参照してください。

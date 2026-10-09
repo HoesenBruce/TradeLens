@@ -198,6 +198,94 @@ Leave `TM_CORS_ORIGINS` empty when using rewrites — the browser never talks cr
 
 ---
 
+## Backups & restore
+
+With SQLite the whole journal is one file, so the API snapshots it on a schedule. Every
+interval (daily by default) it writes a consistent copy with `VACUUM INTO`, fsyncs it and
+atomically renames it into place as `tradelens-YYYYMMDD-HHMMSS.NNNNNNNNNZ-<random>.db` (UTC), then deletes
+the oldest snapshots beyond the keep count. Only files with exactly that name pattern are
+ever pruned inside this database’s namespace — anything else in the directory is left alone. A run that fails leaves no
+partial file behind. The job also runs ~30 s after boot whenever the newest snapshot is
+already due. A directory lock rejects overlapping runs with HTTP 409, including runs
+from other processes using the same namespace. Each database has its own
+`tradelens-<database-id>/` directory below `TM_BACKUP_DIR`; retention
+and crash-temp cleanup never enumerate another namespace. Keep the database’s `.backup-id` sidecar beside the database. This random identity survives restarts and
+container path changes. Retain it with the database volume; deleting it starts a new
+namespace and preserves existing backups. Different volumes get distinct identities,
+even when containers use identical `/data` paths. Use a local persistent filesystem that supports
+advisory locks, atomic rename and fsync. NAS network shares must provide these guarantees;
+otherwise snapshot on the NAS local volume and sync offsite.
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `TM_BACKUP_ENABLED` | `true` | Scheduled snapshots on/off. **Back up now** in the UI works either way. Also off when `TM_JOBS_ENABLED=false` |
+| `TM_BACKUP_DIR` | `<dbDir>/backups` | Where snapshots land (Docker: `/data/backups`) |
+| `TM_BACKUP_KEEP` | `14` | Snapshots kept; older ones are pruned after each successful run |
+| `TM_BACKUP_INTERVAL_MIN` | `1440` | Minutes between snapshots (`0` disables the schedule) |
+
+**Settings → About → Backups** (owner only) shows the last backup, how many are kept, the
+directory and the last error, with a **Back up now** button. The Settings icon in the nav
+gets a red dot when the last attempt failed or the newest snapshot is older than twice the
+interval. The same status is `GET /api/v1/admin/backup`; `POST` takes a snapshot now.
+
+**Take it off the box.** A snapshot on the same disk does not survive that disk. Sync the
+directory somewhere else yourself (rclone, restic, Syncthing, a NAS share…). In Docker the
+default `/data/backups` lives inside the `tm_data` volume — bind-mount a host path instead so
+your sync tool can see it:
+
+```yaml
+# docker-compose.override.yml
+services:
+  api:
+    environment:
+      TM_BACKUP_DIR: /backups
+    volumes:
+      - /srv/tradelens-backups:/backups
+```
+
+Snapshots cover the **database only**. Trade screenshots and note images stay in
+`TM_ATTACH_DIR` (`/data/attachments`) as plain files — copy that directory alongside the
+snapshots. Postgres is not snapshotted (the About block says so); use `pg_dump` or your
+provider's backups. Retain deployment configuration and secrets separately and protect
+all copies; the database includes password hashes, broker credentials and every user's journal.
+Snapshots do not include attachments, env files or external secret stores.
+
+`TM_DEMO_MODE=true` disables scheduled **and manual** backups regardless of the backup
+switches: Render Free storage is ephemeral and cannot provide recoverable snapshots. The
+status is `disabled`, `manual_allowed=false`, and POST returns 403 without touching disk.
+Postgres reports `unsupported` with pg_dump guidance and never attempts VACUUM.
+
+If the database identity cannot be created/read (permissions, full disk, invalid sidecar),
+the API stays available and reports `failed` without writing or pruning anywhere. Fix the
+filesystem/sidecar and restart the API to establish the identity.
+
+Directory contents survive restart; the last attempt error is held in memory and resets
+on restart. A published snapshot may remain after a directory-fsync or retention failure;
+the failure remains visible and should be investigated.
+
+**Restore** (SQLite):
+
+1. Preserve the current database, attachments and secrets in a separate recovery copy.
+   Stop every API process/replica (`docker compose stop api`, or stop the binary/service).
+2. Replace the database file with a snapshot, and delete any `-wal` / `-shm` sidecars left
+   next to it — a stale write-ahead log must not be replayed onto the restored file:
+
+   ```bash
+   cp /srv/tradelens-backups/tradelens-<database-path-hash>/<snapshot>.db /data/tradermemos.db
+   rm -f /data/tradermemos.db-wal /data/tradermemos.db-shm
+   ```
+
+   (In Docker, run these through a throwaway container with `--volumes-from`, as in the
+   volume-snapshot recipe on the docs site.)
+3. Restore the corresponding attachments and deployment secrets. Before startup run
+   `sqlite3 <restored-db> 'PRAGMA integrity_check;'` and expect `ok`. Use the same TradeLens
+   version first, then verify sign-in, accounts, trades and image read-back. Never restore
+   an upstream TraderMemos database into TradeLens.
+4. Start the API. Migrations run on boot, so a snapshot from an older version upgrades
+   itself; there is no automatic downgrade.
+
+---
+
 ## Choosing a mode
 
 | Goal | Mode |
@@ -215,6 +303,7 @@ Do **not** run the Go + SQLite API on Vercel serverless or Cloudflare Workers fo
 
 - [ ] Changed `TM_JWT_SECRET` from the default
 - [ ] SQLite/attachments on a persistent volume
+- [ ] SQLite: `TM_BACKUP_DIR` (and attachments) synced off the server
 - [ ] Docker: open the **web** port; Server field blank
 - [ ] Split host: `TM_CORS_ORIGINS` matches the SPA origin(s)
 - [ ] Uploads: nginx/proxy `client_max_body_size` ≥ API `TM_*_MAX_BYTES` (compose web image uses 20m)
