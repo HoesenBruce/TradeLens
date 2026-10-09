@@ -98,3 +98,54 @@ func TestRegroupPersistsSplitSettlementAndWarning(t *testing.T) {
 		})
 	}
 }
+
+func TestRegroupExistingDefaultReversalPreservesIdentityAndNotes(t *testing.T) {
+	conn, err := db.Open(filepath.Join(t.TempDir(), "reversal.db"))
+	require.NoError(t, err)
+	defer conn.Close()
+	require.NoError(t, db.Migrate(conn))
+	q, ctx := store.New(conn), context.Background()
+	u, err := q.CreateUser(ctx, store.CreateUserParams{ID: "u", Email: "flip@test.com", PasswordHash: "x"})
+	require.NoError(t, err)
+	acc, err := q.CreateAccount(ctx, store.CreateAccountParams{ID: "a", UserID: u.ID, Name: "IBKR", Broker: "ibkr", AccountType: "margin", BaseCurrency: "USD"})
+	require.NoError(t, err)
+	opened := time.Date(2026, 1, 1, 10, 0, 0, 0, time.UTC)
+	closed := opened.Add(time.Hour)
+	for _, fill := range []store.InsertExecutionParams{
+		{ID: "opening", UserID: u.ID, AccountID: acc.ID, Symbol: "AAPL", InstrumentType: "stock", Side: "buy", Quantity: 100, Price: 10, Fees: 3, ExecutedAt: opened, Multiplier: 1, DedupHash: "1"},
+		{ID: "reversal", UserID: u.ID, AccountID: acc.ID, Symbol: "AAPL", InstrumentType: "stock", Side: "sell", Quantity: 150, Price: 12, Fees: 4, Commission: 2, ExecutedAt: closed, Multiplier: 1, DedupHash: "2"},
+	} {
+		_, err := q.InsertExecution(ctx, fill)
+		require.NoError(t, err)
+	}
+	// Seed the historical full-fee closing trade and zero-fee reversal remainder.
+	for _, tr := range []store.UpsertTradeParams{
+		{ID: "opening", UserID: u.ID, AccountID: acc.ID, Symbol: "AAPL", InstrumentType: "stock", Direction: "long", Status: "closed", OpenedAt: opened, ClosedAt: sql.NullTime{Time: closed, Valid: true}, QtyOpened: 100, AvgEntryPrice: 10, FeesTotal: 9, NetPnl: sql.NullFloat64{Float64: 191, Valid: true}, PnlCurrency: "USD"},
+		{ID: "reversal", UserID: u.ID, AccountID: acc.ID, Symbol: "AAPL", InstrumentType: "stock", Direction: "short", Status: "open", OpenedAt: closed, QtyOpened: 50, QtyRemaining: 50, AvgEntryPrice: 12, PnlCurrency: "USD"},
+	} {
+		require.NoError(t, q.UpsertTrade(ctx, tr))
+		require.NoError(t, q.UpdateTradeNotes(ctx, store.UpdateTradeNotesParams{ID: tr.ID, UserID: u.ID, Notes: "keep annotation"}))
+	}
+	before, err := q.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: u.ID, AccountID: acc.ID})
+	require.NoError(t, err)
+	old, err := q.GetTrade(ctx, store.GetTradeParams{ID: "opening", UserID: u.ID})
+	require.NoError(t, err)
+	require.Equal(t, 191.0, old.NetPnl.Float64) // no migration or read-time rewrite
+	svc := trades.NewService(q)
+	for range 2 {
+		require.NoError(t, svc.Regroup(ctx, u.ID, acc.ID))
+		closing, err := q.GetTrade(ctx, store.GetTradeParams{ID: "opening", UserID: u.ID})
+		require.NoError(t, err)
+		opening, err := q.GetTrade(ctx, store.GetTradeParams{ID: "reversal", UserID: u.ID})
+		require.NoError(t, err)
+		require.Equal(t, 7.0, closing.FeesTotal)
+		require.Equal(t, 193.0, closing.NetPnl.Float64)
+		require.Equal(t, 2.0, opening.FeesTotal)
+		require.False(t, opening.NetPnl.Valid)
+		require.Equal(t, "keep annotation", closing.Notes)
+		require.Equal(t, "keep annotation", opening.Notes)
+	}
+	after, err := q.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: u.ID, AccountID: acc.ID})
+	require.NoError(t, err)
+	require.Equal(t, before, after)
+}

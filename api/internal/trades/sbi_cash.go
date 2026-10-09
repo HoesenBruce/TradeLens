@@ -15,7 +15,7 @@ var tokyo = time.FixedZone("Asia/Tokyo", 9*60*60)
 // remain chronological review trades; their existing NetPnl semantics do not
 // change when a same-day acquisition changes the broker cost basis.
 func SBICashAccounting(fills []Execution) AccountingResult {
-	result := AccountingResult{Trades: Group(append([]Execution(nil), fills...))}
+	result := AccountingResult{Trades: group(append([]Execution(nil), fills...), false)}
 	ordered := append([]Execution(nil), fills...)
 	sort.SliceStable(ordered, func(i, j int) bool {
 		a, b := ordered[i].ExecutedAt.In(tokyo), ordered[j].ExecutedAt.In(tokyo)
