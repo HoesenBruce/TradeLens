@@ -1920,8 +1920,8 @@ components:
       name: tz
       in: query
       description: >
-        IANA timezone for day / hour-of-day / weekday bucketing
-        (e.g. `America/New_York`). Defaults to UTC. Session bucketing
+        IANA timezone for duration trading-day comparison and day / hour-of-day / weekday bucketing
+        (e.g. `America/New_York`). Day bucketing defaults to UTC; duration defaults to America/New_York. Invalid zones return 400. Session bucketing
         always uses the US-equity clock (Eastern).
       schema:
         type: string

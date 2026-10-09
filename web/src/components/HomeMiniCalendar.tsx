@@ -1,4 +1,5 @@
 import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
+import { useMarketToday } from "@/lib/today";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { ArrowRight } from "lucide-react";
 import { type DayRecord, monthGrid } from "@/lib/calendar";
@@ -51,8 +52,7 @@ export function HomeMiniCalendar({
     }),
   );
   const grid = monthGrid(year, month, dailyPnl);
-  const now = new Date();
-  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const today = useMarketToday();
 
   return (
     <section className="flex h-full flex-col rounded-lg bg-card">

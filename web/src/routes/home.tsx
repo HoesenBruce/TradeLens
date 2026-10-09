@@ -1,10 +1,11 @@
+import { useMarketToday } from "@/lib/today";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { HomeView } from "@/app/screens/HomeView";
 import type { HomeBreakdownDim } from "@/components/HomeBreakdownChart";
 import { TradeDetailSheet } from "@/components/TradeDetailSheet";
 import { ytdFiltersForYear } from "@/lib/annualGoal";
-import { buildDayRecords, dayKeyInTz } from "@/lib/calendar";
+import { buildDayRecords } from "@/lib/calendar";
 import { normalizeFilterDate, useFilterParams, useFilters } from "@/lib/filters";
 import { computeHeaderStats } from "@/lib/headerStats";
 import { useAccounts } from "@/lib/hooks/useAccounts";
@@ -56,9 +57,9 @@ function HomePage() {
     }
   });
 
-  const now = new Date();
-  const calendarYear = now.getFullYear();
-  const calendarMonth = now.getMonth() + 1;
+  const today = useMarketToday();
+  const calendarYear = Number(today.slice(0, 4));
+  const calendarMonth = Number(today.slice(5, 7));
   const range = monthRange(calendarYear, calendarMonth, filters.tz);
   const monthFilters = { ...filters, from: range.from, to: range.to };
   const ytdFilters = useMemo(
@@ -158,7 +159,7 @@ function HomePage() {
         calendarMonth={calendarMonth}
         dailyPnl={dailyQ.data?.pnl ?? {}}
         dailyCurrency={dailyQ.data?.currency}
-        todayNetPnl={dailyQ.data?.pnl[dayKeyInTz(now.toISOString(), filters.tz)] ?? 0}
+        todayNetPnl={dailyQ.data?.pnl[today] ?? 0}
         dayRecords={calendarDayRecords}
         dailyLoading={dailyQ.isLoading}
         dailyError={dailyQ.isError}
