@@ -1,9 +1,10 @@
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
-import { useDisplayTimePrefs, usePrivacyMode } from "@/lib/displayPrefs";
-import { fmtSignedMoney, fmtSignedPct, fmtTradeDay } from "@/lib/format";
+import { useDisplayTimePrefs } from "@/lib/displayPrefs";
+import { fmtSignedPct, fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { periodReturns } from "@/lib/reportsAnalytics";
 import { useReportsMoney } from "./ReportsDisplayContext";
@@ -33,7 +34,7 @@ export function ReportsPeriodReturns({
 }: ReportsPeriodReturnsProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
+  const { fmtSignedMoney } = useMoneyFormatters();
   useDisplayTimePrefs();
   const locale = intlLocale();
   const money = useReportsMoney();

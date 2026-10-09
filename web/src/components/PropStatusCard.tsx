@@ -1,10 +1,11 @@
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import type { Account } from "@/lib/api/types";
 import { usePropStatus } from "@/lib/hooks/useProp";
 import { cn } from "@/lib/cn";
-import { usePrivacyMode } from "@/lib/displayPrefs";
+
 import { marketTz } from "@/lib/filters";
-import { fmtMoney, fmtSignedMoney } from "@/lib/format";
+
 import { intlLocale } from "@/lib/locale";
 import { Card } from "./Card";
 import { Pill } from "./Pill";
@@ -58,7 +59,7 @@ function RuleBar({
 export function PropStatusCard({ accounts, selectedAccountId }: PropStatusCardProps) {
   const { t: tr } = useLinguiMacro();
 
-  usePrivacyMode();
+  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   const locale = intlLocale();
   const account = accounts.find((a) => a.id === selectedAccountId);
   const isProp = account?.account_type === "prop";

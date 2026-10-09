@@ -12,7 +12,7 @@ import {
 import type { EquityPoint, Trade } from "@/lib/api/types";
 import { type ChartRange, equityPointsInRange, tradesInRange } from "@/lib/chartRange";
 import { uniqueDayTicks } from "@/lib/chartTicks";
-import { useDisplayTimePrefs, usePrivacyMode } from "@/lib/displayPrefs";
+import { useDisplayTimePrefs } from "@/lib/displayPrefs";
 import { fmtDayShort } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import {
@@ -50,7 +50,6 @@ export function ReportsRiskDrawdown({
 }: ReportsRiskDrawdownProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
   useDisplayTimePrefs();
   const money = useReportsMoney();
   const locale = intlLocale();

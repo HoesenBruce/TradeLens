@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/react/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { BehaviorReport } from "@/lib/api/types";
-import { usePrivacyMode } from "@/lib/displayPrefs";
+
 import { fmtDayShort, fmtDuration } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { Card } from "./Card";
@@ -30,7 +30,6 @@ export function BehaviorLossAversionCard({
 }: BehaviorLossAversionCardProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
   const money = useReportsMoney();
   const locale = intlLocale();
 

@@ -1,7 +1,7 @@
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
-import { useDisplayTimePrefs, usePrivacyMode } from "@/lib/displayPrefs";
+import { useDisplayTimePrefs } from "@/lib/displayPrefs";
 import { fmtDayShort, fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { useReportsMoney } from "./ReportsDisplayContext";
@@ -50,7 +50,6 @@ export interface ReportsDayStripProps {
 export function ReportsDayStrip({ trades, loading, onDayClick }: ReportsDayStripProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
   useDisplayTimePrefs();
   const money = useReportsMoney();
   const locale = intlLocale();

@@ -6,7 +6,7 @@ import { useReportsMoney } from "./ReportsDisplayContext";
 import { Skeleton } from "./Skeleton";
 import { pnlColor } from "./theme-tokens";
 import type { BreakGroup } from "@/lib/api/types";
-import { usePrivacyMode } from "@/lib/displayPrefs";
+
 import { TRADE_GRADES, gradeFromInt } from "@/lib/tradeGrades";
 
 export interface ReportsExecutionGradeProps {
@@ -33,7 +33,6 @@ function pfText(pf: number): string {
 export function ReportsExecutionGrade({ breakdown, loading, error }: ReportsExecutionGradeProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
   const money = useReportsMoney();
 
   const rows = breakdown.map((g) => ({ g, ...labelFor(g.key) })).sort((a, b) => a.rank - b.rank);

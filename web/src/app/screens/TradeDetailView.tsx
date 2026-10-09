@@ -44,7 +44,7 @@ import {
 } from "@/components/ui/menu";
 import { cn } from "@/lib/cn";
 import type { Setup, Tag, TradeDetail } from "@/lib/api/types";
-import { fmtDateTime, fmtMoney } from "@/lib/format";
+import { fmtDateTime } from "@/lib/format";
 
 import {
   updateStructuredJournalNotes,
@@ -74,6 +74,7 @@ import {
   JournalScreenshotUpload,
   type ScreenshotAttachmentItem,
 } from "@/components/JournalScreenshotUpload";
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 // ---------------------------------------------------------------------------
 // Coach
@@ -500,6 +501,7 @@ function JournalReadOnlyView({
   currency: string;
   children?: ReactNode;
 }) {
+  const { fmtMoney } = useMoneyFormatters();
   useLingui();
   const hydrated = hydrateJournalForm(form);
   const setupGrade = gradeFromInt(

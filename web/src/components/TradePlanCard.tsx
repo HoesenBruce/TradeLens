@@ -7,10 +7,10 @@ import { TradeExcursionChart } from "./TradeExcursionChart";
 import { Button } from "./ui/button";
 import type { TradeDetail } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
-import { usePrivacyMode } from "@/lib/displayPrefs";
-import { fmtMoney, fmtSignedMoney } from "@/lib/format";
+
 import { intlLocale } from "@/lib/locale";
 import type { TradeInsights } from "@/lib/tradeInsights";
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 /** Bar row: planned risk, planned reward, and what actually landed. */
 function PlanBar({
@@ -28,6 +28,7 @@ function PlanBar({
   tone: "risk" | "reward" | "result";
   note?: string;
 }) {
+  const { fmtSignedMoney } = useMoneyFormatters();
   const width = scale > 0 ? Math.min(100, (Math.abs(amount) / scale) * 100) : 0;
   const fill =
     tone === "risk"
@@ -98,7 +99,7 @@ export function TradePlanCard({
   autoExcursionPending = false,
 }: TradePlanCardProps) {
   useLingui();
-  usePrivacyMode();
+  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   const locale = intlLocale();
   const currency = trade.pnl_currency;
 

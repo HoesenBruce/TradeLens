@@ -1,0 +1,20 @@
+[
+  {"name": "Home + account value charts", "before": {"amounts": 96, "masks": 0}, "hidden": {"amounts": 0, "masks": 95}, "after": {"amounts": 96, "masks": 1}},
+  {"name": "Reports Overview", "before": {"amounts": 45, "masks": 0}, "hidden": {"amounts": 0, "masks": 43}, "after": {"amounts": 45, "masks": 0}},
+  {"name": "Reports Win / Loss", "before": {"amounts": 8, "masks": 0}, "hidden": {"amounts": 0, "masks": 6}, "after": {"amounts": 8, "masks": 0}},
+  {"name": "Reports Detailed", "before": {"amounts": 34, "masks": 0}, "hidden": {"amounts": 0, "masks": 32}, "after": {"amounts": 34, "masks": 0}},
+  {"name": "Reports Behavior", "before": {"amounts": 12, "masks": 0}, "hidden": {"amounts": 0, "masks": 10}, "after": {"amounts": 12, "masks": 0}},
+  {"name": "Trades table", "before": {"amounts": 122, "masks": 0}, "hidden": {"amounts": 0, "masks": 120}, "after": {"amounts": 122, "masks": 0}},
+  {"name": "SBI trade detail + excursions + executions", "before": {"amounts": 25, "masks": 0}, "hidden": {"amounts": 0, "masks": 23}, "after": {"amounts": 25, "masks": 0}},
+  {"name": "Calendar month", "before": {"amounts": 10, "masks": 0}, "hidden": {"amounts": 0, "masks": 8}, "after": {"amounts": 10, "masks": 0}},
+  {"name": "Calendar year", "before": {"amounts": 5, "masks": 0}, "hidden": {"amounts": 0, "masks": 3}, "after": {"amounts": 5, "masks": 0}},
+  {"name": "Day review", "before": {"amounts": 17, "masks": 0}, "hidden": {"amounts": 0, "masks": 15}, "after": {"amounts": 17, "masks": 0}},
+  {"name": "Settings accounts + cash ledger", "before": {"amounts": 8, "masks": 0}, "hidden": {"amounts": 0, "masks": 6}, "after": {"amounts": 8, "masks": 0}},
+  {"name": "SBI JPY account detail", "before": {"amounts": 5, "masks": 0}, "hidden": {"amounts": 0, "masks": 3}, "after": {"amounts": 5, "masks": 0}},
+  {"name": "Playbook populated", "before": {"amounts": 6, "masks": 0}, "hidden": {"amounts": 0, "masks": 4}, "after": {"amounts": 6, "masks": 0}},
+  {"name": "Home account value tooltip (keyboard open)", "before": {"amounts": 99, "masks": 0}, "hidden": {"amounts": 0, "masks": 94}, "after": {"amounts": 96, "masks": 0}},
+  {"name": "Year Wrapped", "before": {"amounts": 12, "masks": 0}, "hidden": {"amounts": 0, "masks": 10}, "after": {"amounts": 12, "masks": 0}},
+  {"name": "Journal import preview", "before": {"amounts": 4, "masks": 0}, "hidden": {"amounts": 0, "masks": 2}, "after": {"amounts": 4, "masks": 0}},
+  {"name": "Trade replay", "before": {"amounts": 32, "masks": 0}, "hidden": {"amounts": 0, "masks": 30}, "after": {"amounts": 32, "masks": 0}},
+  {"name": "Reports Risk loaded", "before": {"amounts": 14, "masks": 0}, "hidden": {"amounts": 0, "masks": 12}, "after": {"amounts": 14, "masks": 0}}
+]

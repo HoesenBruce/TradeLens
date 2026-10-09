@@ -11,13 +11,13 @@ import {
 } from "recharts";
 import { ArrowRight } from "lucide-react";
 import type { BreakGroup } from "@/lib/api/types";
-import { fmtMoneyCompact, fmtSignedMoney } from "@/lib/format";
+
 import { intlLocale } from "@/lib/locale";
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { ChartFrame, chartTheme, chartTooltipStyle, pnlTooltipValue } from "./ChartFrame";
 import { SegmentedControl } from "./SegmentedControl";
 import { Skeleton } from "./Skeleton";
 import { Button } from "./ui/button";
-import { usePrivacyMode } from "@/lib/displayPrefs";
 
 export type HomeBreakdownDim = "day_of_week" | "setup" | "symbol";
 
@@ -53,7 +53,7 @@ export function HomeBreakdownChart({
     { value: "symbol", label: tr({ id: "accounts.symbol", message: "Symbol" }) },
   ];
 
-  usePrivacyMode();
+  const { fmtMoneyCompact, fmtSignedMoney } = useMoneyFormatters();
   const locale = intlLocale();
   const chartData = breakdown.slice(0, 8).map((g) => {
     const weekday = [

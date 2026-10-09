@@ -2,7 +2,7 @@ import { Trans } from "@lingui/react/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
 import type { ComplianceReport } from "@/lib/api/types";
-import { usePrivacyMode } from "@/lib/displayPrefs";
+
 import { fmtDayShort } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { Card } from "./Card";
@@ -26,7 +26,6 @@ export interface ReportsRuleComplianceProps {
 export function ReportsRuleCompliance({ report, loading, error }: ReportsRuleComplianceProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
   const money = useReportsMoney();
   const locale = intlLocale();
 

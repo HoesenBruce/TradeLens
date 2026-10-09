@@ -5,9 +5,10 @@ import { fieldInputClass } from "@/components/field-styles";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/ui/button";
 import { DISPLAY_CURRENCIES } from "@/lib/displayPrefs";
-import { fmtMoney } from "@/lib/format";
+
 import { useFxRate } from "@/lib/hooks/useMoneyFx";
 import { intlLocale } from "@/lib/locale";
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 const labelClass =
   "mb-1 block text-[10px] font-medium uppercase tracking-widest text-muted-foreground";
@@ -51,6 +52,7 @@ export function FxConverterModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { fmtMoney } = useMoneyFormatters();
   const { t: localize } = useSecondaryLingui();
 
   const [amount, setAmount] = useState("100");

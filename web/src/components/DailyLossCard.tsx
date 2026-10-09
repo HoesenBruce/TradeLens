@@ -1,7 +1,7 @@
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { useRiskRules } from "@/lib/hooks/useRiskRules";
-import { usePrivacyMode } from "@/lib/displayPrefs";
-import { fmtMoney, fmtSignedMoney } from "@/lib/format";
+
 import { intlLocale } from "@/lib/locale";
 import { Card } from "./Card";
 import { cn } from "@/lib/cn";
@@ -21,7 +21,7 @@ export interface DailyLossCardProps {
 export function DailyLossCard({ todayNetPnl, currency, fxRate = 1 }: DailyLossCardProps) {
   const { t: tr } = useLinguiMacro();
 
-  usePrivacyMode();
+  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   const locale = intlLocale();
   const { data: rules } = useRiskRules();
   const limit = rules?.max_daily_loss ?? null;

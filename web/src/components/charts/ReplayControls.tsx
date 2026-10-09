@@ -1,3 +1,4 @@
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { t as tr } from "@lingui/core/macro";
 import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
@@ -5,7 +6,7 @@ import { SegmentedControl } from "@/components/SegmentedControl";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/cn";
-import { fmtSignedMoney } from "@/lib/format";
+
 import { intlLocale } from "@/lib/locale";
 import type { ReplayPnl } from "./replayPnl";
 import { REPLAY_SPEEDS, type ReplayController } from "./useReplayController";
@@ -38,7 +39,8 @@ export function ReplayControls({
   currency: string;
   priceMismatch?: boolean;
 }) {
-  "use no memo";
+  const { fmtSignedMoney } = useMoneyFormatters();
+  ("use no memo");
   const { t: tr } = useLinguiMacro();
 
   const { cursor, playing, speed } = controller;

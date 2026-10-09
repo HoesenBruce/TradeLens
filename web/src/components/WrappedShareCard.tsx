@@ -1,3 +1,4 @@
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui } from "@lingui/react";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useMemo, useState } from "react";
@@ -24,6 +25,7 @@ export function WrappedShareModal({
 
   const { i18n } = useLingui();
   const locale = i18n.locale;
+  const { fmtSignedMoney } = useMoneyFormatters();
   const [showAmounts, setShowAmounts] = useState(false);
 
   const data = useMemo(
@@ -34,8 +36,9 @@ export function WrappedShareModal({
         currency,
         fxRate,
         inProgress,
+        fmtSignedMoney,
       }),
-    [wrapped, showAmounts, currency, fxRate, inProgress, locale],
+    [wrapped, showAmounts, currency, fxRate, inProgress, locale, fmtSignedMoney],
   );
 
   return (
