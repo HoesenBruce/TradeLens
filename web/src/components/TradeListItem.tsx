@@ -4,8 +4,8 @@ import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { ArrowDownRight, ArrowUpRight, NotebookPen } from "lucide-react";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
-import { usePrivacyMode } from "@/lib/displayPrefs";
-import { fmtDuration, fmtMoney, fmtSignedMoney, fmtTradeDay } from "@/lib/format";
+
+import { fmtDuration, fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { resolveTradeDirection } from "@/lib/tradeDirection";
 import { DIR_TONE_CLASS } from "./DirCell";
@@ -14,6 +14,7 @@ import { Pill } from "./Pill";
 import { outlineSurfaceClass } from "./surface-styles";
 import { pnlColor } from "./theme-tokens";
 import { marketLabel, tradeNotional, tradeRMultiple, tradeStatus } from "./tradeColumns";
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 /** Tags beyond this get rolled into a "+N", as in the table's Tags column. */
 const MAX_TAGS = 2;
@@ -53,7 +54,12 @@ export function tradeListMeta(trade: Trade, showDate = false): TradeMetaPart[] {
 }
 
 /** Price line: size at entry, then the exit once there is one. */
-export function tradeListPrices(trade: Trade, currency: string, fxRate = 1): string {
+export function tradeListPrices(
+  fmtMoney: (v: number, currency: string, locale: string) => string,
+  trade: Trade,
+  currency: string,
+  fxRate = 1,
+): string {
   const locale = intlLocale();
   const qty = trade.qty_opened.toFixed(trade.qty_opened % 1 === 0 ? 0 : 2);
   const entry = fmtMoney(trade.avg_entry_price * fxRate, currency, locale);
@@ -87,7 +93,7 @@ export function TradeListItem({
   className,
 }: TradeListItemProps) {
   useLingui();
-  usePrivacyMode();
+  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   const status = tradeStatus(trade);
   const dir = resolveTradeDirection({
     direction: trade.direction,
@@ -198,7 +204,7 @@ export function TradeListItem({
 
         <div className="flex items-baseline justify-between gap-3 text-[14px] tabular-nums">
           <span className="min-w-0 truncate text-foreground">
-            {tradeListPrices(trade, currency, fxRate)}
+            {tradeListPrices(fmtMoney, trade, currency, fxRate)}
             {/* Position size, so an option's P&L reconciles: 1 contract moving
                 $0.18 is $18, not $0.18, and the ×100 is invisible otherwise. */}
             <span className="text-muted-foreground @max-[19rem]/trade-row:hidden">

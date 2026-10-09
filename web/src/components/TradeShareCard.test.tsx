@@ -1,7 +1,8 @@
+import { PRIVACY_MASK, useDisplayPrefs } from "@/lib/displayPrefs";
 import { render } from "@/test/render";
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vite-plus/test";
+import { afterEach, describe, expect, it } from "vite-plus/test";
 import type { TradeDetail } from "@/lib/api/types";
 import { computeTradeInsights } from "@/lib/tradeInsights";
 import { Toaster } from "@/components/Toaster";
@@ -61,6 +62,7 @@ function renderModal() {
 }
 
 describe("TradeShareModal", () => {
+  afterEach(() => useDisplayPrefs.setState({ privacyMode: false }));
   it("renders a privacy-first card: R hero, no dollar values", () => {
     renderModal();
     const svg = screen.getByRole("img", { name: "NVDA trade card" });
@@ -77,5 +79,16 @@ describe("TradeShareModal", () => {
     const svg = screen.getByRole("img", { name: "NVDA trade card" });
     expect(svg.textContent).toContain("+$396.00");
     expect(svg.textContent).toContain("+1.98R"); // R demoted to the stat row
+  });
+  it("remasks an opted-in share preview while it stays open", async () => {
+    renderModal();
+    await userEvent.click(screen.getByRole("switch", { name: /show dollar amounts/i }));
+    const card = screen.getByRole("img", { name: "NVDA trade card" });
+    expect(card.textContent).toContain("+$396.00");
+    act(() => useDisplayPrefs.getState().setPrivacyMode(true));
+    expect(card.textContent).toContain(PRIVACY_MASK);
+    expect(card.textContent).not.toContain("$396");
+    act(() => useDisplayPrefs.getState().setPrivacyMode(false));
+    expect(card.textContent).toContain("+$396.00");
   });
 });

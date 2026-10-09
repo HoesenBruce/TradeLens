@@ -15,7 +15,7 @@ import type { Trade } from "@/lib/api/types";
 import { type ChartRange, tradesInRange } from "@/lib/chartRange";
 import { fmtDuration } from "@/lib/format";
 import { durationScatter, medianDurationSecs } from "@/lib/reportsAnalytics";
-import { usePrivacyMode } from "@/lib/displayPrefs";
+
 import { ChartCard } from "./ChartCard";
 import { ChartFrame, chartTheme, chartTooltipStyle, pnlTooltipValue } from "./ChartFrame";
 import { EmptyState } from "./EmptyState";
@@ -47,7 +47,6 @@ export function ReportsDurationScatter({
 }: ReportsDurationScatterProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
   const money = useReportsMoney();
   const [range, setRange] = useState<ChartRange>("all");
 

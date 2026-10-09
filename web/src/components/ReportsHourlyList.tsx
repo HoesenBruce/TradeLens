@@ -1,7 +1,7 @@
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { BreakGroup } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
-import { formatHourKeyLabel, useDisplayTimePrefs, usePrivacyMode } from "@/lib/displayPrefs";
+import { formatHourKeyLabel, useDisplayTimePrefs } from "@/lib/displayPrefs";
 import { fmtPct } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { EmptyState } from "./EmptyState";
@@ -19,7 +19,6 @@ export interface ReportsHourlyListProps {
 export function ReportsHourlyList({ breakdown, loading, error }: ReportsHourlyListProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
   useDisplayTimePrefs();
   const locale = intlLocale();
   const money = useReportsMoney();

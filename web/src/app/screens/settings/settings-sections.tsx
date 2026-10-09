@@ -70,9 +70,9 @@ import {
   useSaveOcrSettings,
   useTestOcrSettings,
 } from "@/lib/hooks/useOcrSettings";
-import { formatCashDisplay, signedCashAmount } from "@/lib/cashAmount";
+import { signedCashAmount } from "@/lib/cashAmount";
 import { parseAmountToNumber } from "@/lib/amountInput";
-import { fmtDate, fmtMoney, fmtSignedMoney } from "@/lib/format";
+import { fmtDate } from "@/lib/format";
 import { intlLocale, LOCALE_OPTIONS, settingsLabel, type SettingsLabelKey } from "@/lib/locale";
 import type { LlmApiSettingsLabels } from "@/lib/llmApiSettings";
 import { useAuth } from "@/lib/auth";
@@ -88,7 +88,6 @@ import {
   type TimezonePref,
   type TradeDateBasis,
   type PriceColorConvention,
-  usePrivacyMode,
   useDisplayPrefs,
 } from "@/lib/displayPrefs";
 import {
@@ -122,6 +121,7 @@ import {
   SettingsRow,
   SettingsSection,
 } from "./settings-ui";
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 export function primaryAccountId(accounts: Account[]): string | undefined {
   if (accounts.length === 0) return undefined;
@@ -216,7 +216,7 @@ export function AccountsTab({
     { value: "adjustment", label: tr({ id: "accounts.adjustment", message: "Adjustment" }) },
   ] as const;
 
-  usePrivacyMode();
+  const { fmtMoney, fmtSignedMoney, formatCashDisplay } = useMoneyFormatters();
   const toast = useToastManager();
   // One request for all accounts' sync state: drives the per-row status pill
   // and keeps the IBKR-sync affordance off accounts that have no connection.
@@ -1258,7 +1258,7 @@ export function RulesTab({
 }: RulesTabProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
+  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   const toast = useToastManager();
   const locale = intlLocale();
   const goalYear = annualGoal?.year ?? new Date().getFullYear();

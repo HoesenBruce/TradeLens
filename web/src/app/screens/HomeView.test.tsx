@@ -1,7 +1,8 @@
+import { PRIVACY_MASK, useDisplayPrefs } from "@/lib/displayPrefs";
 import { render } from "@/test/render";
 import type { ColumnDef } from "@/lib/table";
 import { flexRender, getCoreRowModel, useReactTable, type RowData } from "@/lib/table";
-import { screen, waitFor, within } from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vite-plus/test";
 import type { AccountValueWarning, Summary, Trade } from "@/lib/api/types";
@@ -256,6 +257,20 @@ describe("HomeView", () => {
     );
     expect(screen.getByText(/Gain \/ Loss:/)).toHaveTextContent(gainLoss);
     expect(screen.queryByText(/Contributed Capital:/)).not.toBeInTheDocument();
+  });
+
+  it("remasks account value tooltip while mounted and across currency changes", () => {
+    const point = { estimated_account_value: 1000, contributed_capital: 900 };
+    const { rerender } = render(
+      <AccountValueTooltip point={point} currency="USD" label={Date.UTC(2026, 9, 8)} />,
+    );
+    expect(screen.getByText(/Account Value:/)).toHaveTextContent("$1,000.00");
+    act(() => useDisplayPrefs.getState().setPrivacyMode(true));
+    expect(screen.getAllByText(new RegExp(PRIVACY_MASK))).toHaveLength(3);
+    rerender(<AccountValueTooltip point={point} currency="JPY" label={Date.UTC(2026, 9, 8)} />);
+    expect(screen.getAllByText(new RegExp(PRIVACY_MASK))).toHaveLength(3);
+    act(() => useDisplayPrefs.getState().setPrivacyMode(false));
+    expect(screen.getByText(/Account Value:/)).toHaveTextContent("¥1,000");
   });
 
   it("omits account value and gain/loss when reconstruction is unavailable", () => {

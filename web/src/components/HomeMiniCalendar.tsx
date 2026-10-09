@@ -1,13 +1,13 @@
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { ArrowRight } from "lucide-react";
 import { type DayRecord, monthGrid } from "@/lib/calendar";
 import { cn } from "@/lib/cn";
-import { fmtSignedMoneyCompact } from "@/lib/format";
+
 import { intlLocale } from "@/lib/locale";
 import { CalendarDayHoverCard } from "./CalendarDayHoverCard";
 import { pnlBgTint, pnlColor } from "./theme-tokens";
 import { Button } from "./ui/button";
-import { usePrivacyMode } from "@/lib/displayPrefs";
 
 export interface HomeMiniCalendarProps {
   year: number;
@@ -42,7 +42,7 @@ export function HomeMiniCalendar({
 }: HomeMiniCalendarProps) {
   const { t: tr } = useLinguiMacro();
 
-  usePrivacyMode();
+  const { fmtSignedMoneyCompact } = useMoneyFormatters();
   const locale = intlLocale();
   const DOW = Array.from({ length: 7 }, (_, i) =>
     new Date(Date.UTC(2026, 0, 4 + i)).toLocaleDateString(locale, {

@@ -1,3 +1,4 @@
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui } from "@lingui/react";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { t as tr } from "@lingui/core/macro";
@@ -68,11 +69,11 @@ import type {
 } from "@/lib/api/types";
 import type { DayRecord } from "@/lib/calendar";
 import { uniqueDayTicks } from "@/lib/chartTicks";
-import { accountBaseCurrency, useDisplayTimePrefs, usePrivacyMode } from "@/lib/displayPrefs";
+import { accountBaseCurrency, useDisplayTimePrefs } from "@/lib/displayPrefs";
 import { soleAccountId } from "@/lib/filters";
 import { COMPACT_VIEWPORT, useMediaQuery } from "@/lib/hooks/use-mobile";
 import { useMoneyFx } from "@/lib/hooks/useMoneyFx";
-import { fmtDayShort, fmtMoney, fmtMoneyCompact, fmtSignedMoney } from "@/lib/format";
+import { fmtDayShort } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import type { TradeStatusFilter } from "@/lib/tradeFilters";
 
@@ -161,7 +162,7 @@ function EquityCurveChart({
 }) {
   const { t: tr } = useLinguiMacro();
 
-  usePrivacyMode();
+  const { fmtMoney, fmtMoneyCompact } = useMoneyFormatters();
   useDisplayTimePrefs();
   const cutoff = rangeCutoff(range);
   const visible = useMemo(() => {
@@ -250,6 +251,7 @@ export function AccountValueTooltip({
   currency: string;
   label: number;
 }) {
+  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   const { t: tr } = useLinguiMacro();
   const value = point.estimated_account_value;
   const gainLoss = value == null ? null : value - point.contributed_capital;
@@ -294,6 +296,7 @@ function AccountValueChart({
   error: boolean;
   currency: string;
 }) {
+  const { fmtMoneyCompact } = useMoneyFormatters();
   const { t: tr } = useLinguiMacro();
   const points = useMemo(
     () =>

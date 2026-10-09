@@ -5,7 +5,7 @@ import type { EquityCurve, Summary, Trade } from "@/lib/api/types";
 import { pnlColor } from "./theme-tokens";
 import { cn } from "@/lib/cn";
 import { computeHomeInsights } from "@/lib/homeInsights";
-import { usePrivacyMode } from "@/lib/displayPrefs";
+
 import { fmtDuration, fmtPct } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { DonutRing } from "./charts/DonutRing";
@@ -114,7 +114,6 @@ function sqnLabel(sqn: number): string {
 export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryBentoProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
   const money = useReportsMoney();
   const locale = intlLocale();
   const insights = computeHomeInsights(trades);

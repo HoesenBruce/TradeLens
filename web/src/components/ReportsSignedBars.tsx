@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import type { BreakGroup } from "@/lib/api/types";
-import { formatHourKeyLabel, useDisplayTimePrefs, usePrivacyMode } from "@/lib/displayPrefs";
+import { formatHourKeyLabel, useDisplayTimePrefs } from "@/lib/displayPrefs";
 import { ChartCard } from "./ChartCard";
 import { ChartFrame, chartTheme, chartTooltipStyle, pnlTooltipValue } from "./ChartFrame";
 import { EmptyState } from "./EmptyState";
@@ -46,7 +46,6 @@ export function ReportsSignedBars({
 }: ReportsSignedBarsProps) {
   const { t: localize } = useSecondaryLingui();
 
-  usePrivacyMode();
   useDisplayTimePrefs();
   const money = useReportsMoney();
   const [dim, setDim] = useState<Dim>("hour");

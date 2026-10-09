@@ -43,8 +43,8 @@ import type {
 } from "@/lib/api/types";
 import { findBroker } from "@/lib/brokers";
 import { cn } from "@/lib/cn";
-import { marketTimezoneSelectOptions, usePrivacyMode } from "@/lib/displayPrefs";
-import { fmtSignedMoney } from "@/lib/format";
+import { marketTimezoneSelectOptions } from "@/lib/displayPrefs";
+
 import {
   effectiveOptionRight,
   mergeOptionOverrides,
@@ -53,6 +53,7 @@ import {
 import { tradeDetailFromJournalPreview } from "@/lib/importTradePreview";
 import { intlLocale } from "@/lib/locale";
 import { useUI } from "@/lib/ui";
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 // Canonical trade fields we want to map
 const CANONICAL_FIELDS = [
@@ -519,7 +520,7 @@ function JournalSummaryStrip({
   currency: string;
 }) {
   const { t: tr } = useLinguiMacro();
-  usePrivacyMode();
+  const { fmtSignedMoney } = useMoneyFormatters();
   const locale = intlLocale();
   const netPnl = fmtSignedMoney(summary.net_pnl, currency, locale);
   const pnlTone =

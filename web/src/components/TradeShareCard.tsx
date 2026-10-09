@@ -1,3 +1,4 @@
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui } from "@lingui/react";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useMemo, useState } from "react";
@@ -26,11 +27,12 @@ export function TradeShareModal({
 
   const { i18n } = useLingui();
   const locale = i18n.locale;
+  const { fmtSignedMoney } = useMoneyFormatters();
   const [showAmounts, setShowAmounts] = useState(false);
 
   const data = useMemo(
-    () => buildTradeShareCard(trade, insights, { showAmounts, locale }),
-    [trade, insights, showAmounts, locale],
+    () => buildTradeShareCard(trade, insights, { showAmounts, locale, fmtSignedMoney }),
+    [trade, insights, showAmounts, locale, fmtSignedMoney],
   );
 
   return (

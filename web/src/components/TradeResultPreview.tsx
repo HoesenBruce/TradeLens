@@ -1,9 +1,10 @@
+import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui } from "@lingui/react";
 import { t as tr } from "@lingui/core/macro";
 import type { ReactNode } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { fmtMoney, fmtSignedMoney, fmtSignedPct } from "@/lib/format";
+import { fmtSignedPct } from "@/lib/format";
 import type { BatchTradePnlPreview, TradePnlPreview } from "@/lib/tradePnlPreview";
 import { pnlColor } from "./theme-tokens";
 
@@ -53,6 +54,7 @@ export function TradeResultPreview({
   actual = false,
   className,
 }: TradeResultPreviewProps) {
+  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   useLingui();
   const hasEntry = preview.avgEntry != null;
   if (!hasEntry && preview.net == null) return null;
@@ -173,6 +175,7 @@ export function AfterSaveResultPreview({
   initialRisk,
   className,
 }: AfterSaveResultPreviewProps) {
+  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   useLingui();
   if (preview.avgEntry == null && preview.net == null) return null;
 
@@ -290,6 +293,7 @@ export function BatchTradeResultPreview({
   depositedCapital,
   className,
 }: BatchTradeResultPreviewProps) {
+  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   useLingui();
   if (batch.withFills === 0 && batch.net == null) return null;
 
