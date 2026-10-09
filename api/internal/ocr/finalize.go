@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"time"
 )
 
 func mapSideToBuySell(word string) string {
@@ -56,6 +57,11 @@ func finalizeExtract(out TradeExtract) TradeExtract {
 		}
 		if b == "" {
 			return true
+		}
+		if ai, err := time.Parse(time.RFC3339, a); err == nil {
+			if bi, err := time.Parse(time.RFC3339, b); err == nil {
+				return ai.Before(bi)
+			}
 		}
 		return a < b
 	})

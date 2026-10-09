@@ -15,6 +15,8 @@ export interface ExecutionRow {
   key?: string;
   side: "buy" | "sell";
   executed_at: string;
+  /** Preserve the server instant through an unchanged wall clock, including DST folds. */
+  ocrInstant?: string;
   quantity: string;
   price: string;
   fees: string;
@@ -235,6 +237,12 @@ export function validateSymbolTrades(trades: SymbolTradeBlock[]): string | undef
     return tr({ id: "trades.fillRequired", message: "Add at least one valid execution row." });
   }
   for (const t of trades) {
+    if (
+      t.symbol.trim() &&
+      t.rows.some((row) => row.quantity && row.price && !row.executed_at.trim())
+    ) {
+      return tr({ id: "accounts.dateRequired", message: "Date is required." });
+    }
     if (t.symbol.trim() && parseTradeRows(t.rows).length === 0) {
       return `${t.symbol.toUpperCase()}: add at least one valid execution.`;
     }

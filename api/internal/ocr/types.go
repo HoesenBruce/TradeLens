@@ -8,6 +8,7 @@ type ExtractedFill struct {
 	Price       float64 `json:"price"`
 	Fees        float64 `json:"fees"`
 	Commission  float64 `json:"commission"`
+	Timezone    string  `json:"timezone,omitempty"`     // resolved per-row source zone
 	ExecutedAt  string  `json:"executed_at"`            // RFC3339 when known; empty otherwise
 	OptionRight string  `json:"option_right,omitempty"` // call | put
 	Strike      float64 `json:"strike,omitempty"`
@@ -25,4 +26,7 @@ type TradeExtract struct {
 	Warnings       []string        `json:"warnings"`
 	// Symbols lists every ticker found when a screenshot spans multiple underlyings.
 	Symbols []string `json:"symbols,omitempty"`
+	// Timezone is the IANA zone the fill times were read in — from the screen's
+	// label when it had one, else the caller's market timezone.
+	Timezone string `json:"timezone,omitempty"`
 }
