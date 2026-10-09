@@ -5,7 +5,8 @@ COPY api/go.mod api/go.sum ./
 RUN go mod download
 COPY api/ ./
 COPY VERSION /VERSION
-RUN CGO_ENABLED=0 go build -ldflags "-s -w -X github.com/tradermemos/api/internal/version.Version=$(cat /VERSION)" -o /server ./cmd/server
+ARG RENDER_GIT_COMMIT=
+RUN CGO_ENABLED=0 go build -ldflags "-s -w -X github.com/tradermemos/api/internal/version.Version=$(cat /VERSION) -X github.com/tradermemos/api/internal/version.Commit=${RENDER_GIT_COMMIT}" -o /server ./cmd/server
 
 FROM --platform=$BUILDPLATFORM node:24-bookworm-slim AS web
 WORKDIR /web
@@ -15,7 +16,8 @@ COPY web/package.json web/pnpm-lock.yaml web/pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY web/ ./
 COPY VERSION /VERSION
-RUN pnpm run build
+ARG RENDER_GIT_COMMIT=
+RUN VITE_APP_BUILD=${RENDER_GIT_COMMIT} pnpm run build
 
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates nginx python3 \

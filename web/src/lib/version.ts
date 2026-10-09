@@ -1,8 +1,10 @@
+import { BRAND } from "./brand";
+
 /** Injected at build time from repo root VERSION (+ optional VITE_APP_* overrides). */
 export const APP_VERSION: string = __APP_VERSION__;
 export const APP_BUILD: string = __APP_BUILD__;
 
-export const REPO_URL = "https://github.com/sinhong2011/TraderMemos";
+export const REPO_URL = BRAND.repositoryUrl;
 
 export function formatVersion(version: string, build?: string): string {
   const v = version.trim().replace(/^v/i, "");

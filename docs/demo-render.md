@@ -340,3 +340,23 @@ References: [Render pinned-commit deployment](https://render.com/docs/deploys#de
 [retrieve deployment](https://api-docs.render.com/reference/retrieve-deploy),
 [API credential scope](https://api-docs.render.com/reference/authentication),
 [GitHub token events](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).
+
+### About and build metadata
+
+Settings → About uses `HoesenBruce/TradeLens` stable releases for update checks;
+TraderMemos is credited separately. Installed Web/API versions come from `VERSION`.
+The demo Dockerfile injects Render's [`RENDER_GIT_COMMIT`](https://render.com/docs/environment-variables)
+[Docker build argument](https://render.com/docs/docker#environment-variable-translation) into both
+Web build metadata and API `/healthz.commit`; no credentials are required. Local
+image builds can supply `--build-arg RENDER_GIT_COMMIT=<source SHA>`.
+Normal self-hosted images retain their existing version/commit build arguments.
+
+Release checks bypass HTTP/service-worker caches. Missing releases, prereleases,
+invalid versions and request failures show a neutral unavailable state; a failed
+check clears the previous release prompt. A waiting Web service worker remains a
+separate reload notification.
+
+After the next authorized release/deploy, verify Web/API versions and full SHA
+against the deployed release, check the TradeLens release link, and confirm a
+current stable release shows no update. Local verification does not establish
+that the public demo has deployed this fix.

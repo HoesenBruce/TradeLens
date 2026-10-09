@@ -149,6 +149,10 @@ export const useAppUpdate = create<AppUpdateState>((set, get) => ({
       });
     } catch (err) {
       set({
+        remote: null,
+        remoteNewer: false,
+        webBehind: false,
+        apiBehind: false,
         checking: false,
         lastCheckedAt: Date.now(),
         checkError: err instanceof Error ? err.message : "Could not check for updates.",
