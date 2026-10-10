@@ -12,7 +12,7 @@ Local macOS arm64, Go **1.27.0** (module-selected toolchain), disposable SQLite 
 | Final `go vet ./...` | PASS, exit 0 | [go-vet.txt](evidence/go-vet.txt), empty successful output |
 | `git diff --check` | PASS | Run before commit |
 
-The full race API package took 380.279 seconds. It ran on the same production fixes, before the last harness-only strengthening (normalizing token usage timestamps while comparing token metadata, exact generic scope errors, multi-own-account selections and explicit owner regroup). The final security subset was rerun with race after those changes and passed in 66.017 seconds. Final full ordinary tests and vet also passed. No unsupported race fallback was needed.
+The full race API package took 380.279 seconds. It ran on the same production fixes, before the last harness-only strengthening (normalizing token usage timestamps while comparing token metadata, exact generic scope errors, multi-own-account selections explicit owner regroup and secret-safe assertion output). The final security subset was rerun with race after those changes and passed in 66.657 seconds. Final full ordinary tests and vet also passed. No unsupported race fallback was needed.
 
 Regression evidence before fixes:
 

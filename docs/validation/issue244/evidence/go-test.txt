@@ -4,7 +4,7 @@ ok  	github.com/tradermemos/api/cmd/tm-sync	(cached)
 ok  	github.com/tradermemos/api/internal/accountvalue	(cached)
 ok  	github.com/tradermemos/api/internal/alerts	(cached)
 ok  	github.com/tradermemos/api/internal/analytics	(cached)
-ok  	github.com/tradermemos/api/internal/api	32.690s
+ok  	github.com/tradermemos/api/internal/api	31.759s
 ok  	github.com/tradermemos/api/internal/auth	(cached)
 ok  	github.com/tradermemos/api/internal/backup	(cached)
 ok  	github.com/tradermemos/api/internal/coach	(cached)

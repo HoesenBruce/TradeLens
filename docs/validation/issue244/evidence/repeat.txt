@@ -1,1 +1,1 @@
-ok  	github.com/tradermemos/api/internal/api	14.098s
+ok  	github.com/tradermemos/api/internal/api	14.643s

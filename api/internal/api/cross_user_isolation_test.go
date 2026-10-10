@@ -35,6 +35,20 @@ import (
 	"github.com/tradermemos/api/internal/trades"
 )
 
+// Compare canonical response digests so failed assertions do not print bearer secrets.
+func isolationJSONEqual(t *testing.T, expected, actual string, context ...any) {
+	t.Helper()
+	var left, right any
+	require.NoError(t, json.Unmarshal([]byte(expected), &left))
+	require.NoError(t, json.Unmarshal([]byte(actual), &right))
+	require.Equal(t, sha256.Sum256([]byte(isolationJSON(t, left))), sha256.Sum256([]byte(isolationJSON(t, right))), context...)
+}
+
+func isolationContains(t *testing.T, body, needle string, present bool) {
+	t.Helper()
+	require.Equal(t, present, strings.Contains(body, needle), "response-content assertion failed")
+}
+
 type isolationFixture struct {
 	s     *api.Server
 	conn  *sql.DB
@@ -282,10 +296,10 @@ func TestCrossUserIsolationIDOR(t *testing.T) {
 				for _, token := range []string{caller.session, caller.pat} {
 					before, files := f.databaseState(t), f.fileState(t)
 					rec := do(f.s, tc.method, "/api/v1"+tc.path, tc.body, token)
-					require.Equal(t, tc.denied, rec.Code, "%s", rec.Body.String())
+					require.Equal(t, tc.denied, rec.Code)
 					require.Equal(t, before, f.databaseState(t), "denied request changed rows")
 					require.Equal(t, files, f.fileState(t), "denied request changed files")
-					require.NotContains(t, rec.Body.String(), owner.marker)
+					isolationContains(t, rec.Body.String(), owner.marker, false)
 					require.False(t, strings.Contains(rec.Body.String(), owner.pat), "response leaked a token")
 				}
 				require.Equal(t, 401, do(f.s, tc.method, "/api/v1"+tc.path, tc.body, "").Code)
@@ -296,7 +310,7 @@ func TestCrossUserIsolationIDOR(t *testing.T) {
 		}
 		for _, path := range []string{acc, trade, news, "/notes/" + owner.note, "/setups/" + owner.setup} {
 			missing := path[:strings.LastIndex(path, "/")+1] + "missing"
-			require.Equal(t, do(f.s, "GET", "/api/v1"+missing, "", caller.session).Body.String(), do(f.s, "GET", "/api/v1"+path, "", caller.session).Body.String())
+			isolationJSONEqual(t, do(f.s, "GET", "/api/v1"+missing, "", caller.session).Body.String(), do(f.s, "GET", "/api/v1"+path, "", caller.session).Body.String())
 		}
 	}
 }
@@ -315,7 +329,7 @@ func TestCrossUserIsolationAggregatesAndLists(t *testing.T) {
 	baseline := map[string]string{}
 	for _, path := range paths {
 		rec := do(f.s, "GET", "/api/v1"+path, "", a.session)
-		require.Equal(t, 200, rec.Code, "%s: %s", path, rec.Body.String())
+		require.Equal(t, 200, rec.Code, "%s", path)
 		baseline[path] = rec.Body.String()
 	}
 	b := f.seed(t, "b", "ISOB", 9876)
@@ -331,17 +345,17 @@ func TestCrossUserIsolationAggregatesAndLists(t *testing.T) {
 				strictScope := strings.HasPrefix(path, "/trades") || strings.HasPrefix(path, "/analytics/") && !strings.HasPrefix(path, "/analytics/account-value")
 				if (strings.Contains(suffix, b.accounts[0]) || strings.Contains(suffix, b.accounts[1])) && strictScope {
 					require.Equal(t, 400, rec.Code)
-					require.JSONEq(t, `{"error":{"code":"unknown_currency","message":"account scope currency could not be resolved"}}`, rec.Body.String())
+					isolationJSONEqual(t, `{"error":{"code":"unknown_currency","message":"account scope currency could not be resolved"}}`, rec.Body.String())
 					continue
 				}
-				require.Equal(t, 200, rec.Code, "%s", rec.Body.String())
-				require.NotContains(t, rec.Body.String(), b.marker)
-				require.NotContains(t, rec.Body.String(), b.symbol)
-				require.NotContains(t, rec.Body.String(), b.accounts[0])
-				require.NotContains(t, rec.Body.String(), b.id)
+				require.Equal(t, 200, rec.Code)
+				isolationContains(t, rec.Body.String(), b.marker, false)
+				isolationContains(t, rec.Body.String(), b.symbol, false)
+				isolationContains(t, rec.Body.String(), b.accounts[0], false)
+				isolationContains(t, rec.Body.String(), b.id, false)
 				// Mixed IDs must have the same aggregates as both owned accounts.
 				if suffix == "" || strings.Contains(suffix, "account_id=") {
-					require.JSONEq(t, baseline[path], rec.Body.String(), "%s", path)
+					isolationJSONEqual(t, baseline[path], rec.Body.String(), "%s", path)
 				}
 			}
 			require.Equal(t, 401, do(f.s, "GET", "/api/v1"+path, "", "").Code)
@@ -356,11 +370,11 @@ func TestCrossUserIsolationAggregatesAndLists(t *testing.T) {
 			rec := do(f.s, "GET", "/api/v1"+path+"?account_id="+account+extra, "", a.session)
 			if account != a.accounts[0] && (path == "/trades" || path == "/analytics/summary") {
 				require.Equal(t, 400, rec.Code)
-				require.JSONEq(t, `{"error":{"code":"unknown_currency","message":"account scope currency could not be resolved"}}`, rec.Body.String())
+				isolationJSONEqual(t, `{"error":{"code":"unknown_currency","message":"account scope currency could not be resolved"}}`, rec.Body.String())
 				continue
 			}
 			require.Equal(t, 200, rec.Code)
-			require.NotContains(t, rec.Body.String(), b.symbol)
+			isolationContains(t, rec.Body.String(), b.symbol, false)
 			if path == "/trades" || path == "/cash-transactions" || path == "/executions" {
 				var rows []any
 				require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &rows))
@@ -411,7 +425,7 @@ func TestCrossUserIsolationInstanceSettings(t *testing.T) {
 			rec := do(f.s, tc.method, "/api/v1"+path+tc.suffix, `{"base_url":"https://example.invalid","model":"synthetic"}`, member)
 			require.Equal(t, 403, rec.Code)
 			require.Equal(t, before, f.databaseState(t))
-			require.NotContains(t, rec.Body.String(), "owner-private-prompt")
+			isolationContains(t, rec.Body.String(), "owner-private-prompt", false)
 			require.Equal(t, 401, do(f.s, tc.method, "/api/v1"+path+tc.suffix, `{}`, "").Code)
 		}
 	}
@@ -462,15 +476,15 @@ func TestCrossUserIsolationFilesImportsExports(t *testing.T) {
 						require.NoError(t, err)
 						require.NoError(t, rc.Close())
 						bodies = append(bodies, string(data))
-						require.NotContains(t, entry.Name, "..")
-						require.NotContains(t, entry.Name, foreign.id)
+						isolationContains(t, entry.Name, "..", false)
+						isolationContains(t, entry.Name, foreign.id, false)
 					}
 				}
 				found := false
 				for _, body := range bodies {
 					found = found || strings.Contains(body, u.symbol)
 					for _, secret := range []string{foreign.symbol, foreign.marker, foreign.id, foreign.trade, foreign.accounts[0], foreign.attachment} {
-						require.NotContains(t, body, secret)
+						isolationContains(t, body, secret, false)
 					}
 				}
 				require.True(t, found, "export must contain owner data")
@@ -480,8 +494,8 @@ func TestCrossUserIsolationFilesImportsExports(t *testing.T) {
 		}
 		rec := do(f.s, "GET", "/api/v1/news/export", "", u.session)
 		require.Equal(t, 200, rec.Code)
-		require.Contains(t, rec.Body.String(), u.marker)
-		require.NotContains(t, rec.Body.String(), foreign.marker)
+		isolationContains(t, rec.Body.String(), u.marker, true)
+		isolationContains(t, rec.Body.String(), foreign.marker, false)
 		for _, query := range []string{"id=" + foreign.news, "id=" + u.news + "&id=" + foreign.news} {
 			require.Equal(t, 404, do(f.s, "GET", "/api/v1/news/export?"+query, "", u.session).Code)
 		}
@@ -492,7 +506,7 @@ func TestCrossUserIsolationFilesImportsExports(t *testing.T) {
 	for _, path := range []string{"/imports", "/imports/commit"} {
 		r := httptest.NewRecorder()
 		f.s.Echo.ServeHTTP(r, multipartReq(t, "/api/v1"+path, a.session, csv, map[string]string{"account_id": a.accounts[0], "column_mapping": mapping}))
-		require.Equal(t, 200, r.Code, r.Body.String())
+		require.Equal(t, 200, r.Code)
 	}
 	require.Equal(t, files, f.fileState(t), "CSV uploads are not persisted as retrievable files")
 }
@@ -508,29 +522,29 @@ func TestCrossUserIsolationTokensAndSharing(t *testing.T) {
 		}
 		rec := do(f.s, "GET", "/api/v1/access-tokens", "", u.pat)
 		require.Equal(t, 200, rec.Code)
-		require.NotContains(t, rec.Body.String(), foreign.patID)
+		isolationContains(t, rec.Body.String(), foreign.patID, false)
 		require.False(t, strings.Contains(rec.Body.String(), u.pat), "list leaked a token")
 		rec = do(f.s, "GET", "/api/v1/access-tokens/"+u.patID+"/uses", "", u.session)
 		require.Equal(t, 200, rec.Code)
 		var uses []any
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &uses))
 		require.NotEmpty(t, uses)
-		require.Equal(t, "[]\n", do(f.s, "GET", "/api/v1/access-tokens/"+foreign.patID+"/uses", "", u.session).Body.String())
+		isolationJSONEqual(t, "[]\n", do(f.s, "GET", "/api/v1/access-tokens/"+foreign.patID+"/uses", "", u.session).Body.String())
 		// The bearer link deliberately exposes a scoped aggregate, never private details.
 		rec = do(f.s, "GET", "/api/v1/public/share/"+u.shareToken, "", "")
 		require.Equal(t, 200, rec.Code)
 		for _, secret := range []string{u.marker, foreign.marker, u.id, u.trade, u.accounts[0], foreign.symbol, "net_pnl"} {
-			require.NotContains(t, rec.Body.String(), secret)
+			isolationContains(t, rec.Body.String(), secret, false)
 		}
 		var pub map[string]any
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &pub))
 		require.Equal(t, float64(1), pub["summary"].(map[string]any)["total_trades"])
 		// URL query parameters cannot expand the scope encoded by the owner.
-		require.JSONEq(t, rec.Body.String(), do(f.s, "GET", "/api/v1/public/share/"+u.shareToken+"?account_id="+foreign.accounts[0]+"&show_amounts=true", "", "").Body.String())
+		isolationJSONEqual(t, rec.Body.String(), do(f.s, "GET", "/api/v1/public/share/"+u.shareToken+"?account_id="+foreign.accounts[0]+"&show_amounts=true", "", "").Body.String())
 		require.Equal(t, 204, do(f.s, "DELETE", "/api/v1/share-links/"+u.share, "", u.session).Code)
 		revoked := do(f.s, "GET", "/api/v1/public/share/"+u.shareToken, "", "")
 		require.Equal(t, 404, revoked.Code)
-		require.Equal(t, do(f.s, "GET", "/api/v1/public/share/missing", "", "").Body.String(), revoked.Body.String())
+		isolationJSONEqual(t, do(f.s, "GET", "/api/v1/public/share/missing", "", "").Body.String(), revoked.Body.String())
 		require.Equal(t, 204, do(f.s, "DELETE", "/api/v1/access-tokens/"+u.patID, "", u.session).Code)
 		rec = do(f.s, "GET", "/api/v1/me", "", u.pat)
 		require.Equal(t, 401, rec.Code)
@@ -571,8 +585,8 @@ func TestCrossUserIsolationSelfSettings(t *testing.T) {
 		if strings.Contains(tc.path, "?") {
 			sep = "&"
 		}
-		require.JSONEq(t, before.Body.String(), do(f.s, "GET", "/api/v1"+tc.path+sep+"user_id="+a.id, "", b.session).Body.String())
-		require.NotEqual(t, before.Body.String(), do(f.s, "GET", "/api/v1"+tc.path, "", a.session).Body.String())
+		isolationJSONEqual(t, before.Body.String(), do(f.s, "GET", "/api/v1"+tc.path+sep+"user_id="+a.id, "", b.session).Body.String())
+		require.NotEqual(t, sha256.Sum256(before.Body.Bytes()), sha256.Sum256(do(f.s, "GET", "/api/v1"+tc.path, "", a.session).Body.Bytes()))
 	}
 	before := do(f.s, "GET", "/api/v1/trades/"+a.trade, "", a.session)
 	after := isolationObject(t, f.s, "PATCH", "/trades/"+a.trade, `{"notes":"updated-owner-note"}`, a.session, 200)
@@ -597,7 +611,7 @@ func TestCrossUserIsolationAdminBackupAndAnonymousRoutes(t *testing.T) {
 		for _, tok := range []string{member.session, member.pat} {
 			rec := do(f.s, tc.method, "/api/v1"+tc.path, tc.body, tok)
 			require.Equal(t, 403, rec.Code)
-			require.NotContains(t, rec.Body.String(), filepath.Dir(f.files))
+			isolationContains(t, rec.Body.String(), filepath.Dir(f.files), false)
 		}
 		require.Equal(t, before, f.databaseState(t))
 	}
@@ -615,7 +629,7 @@ func TestCrossUserIsolationAdminBackupAndAnonymousRoutes(t *testing.T) {
 			want = 403
 		}
 		require.Equal(t, want, rec.Code)
-		require.NotContains(t, rec.Body.String(), dir)
+		isolationContains(t, rec.Body.String(), dir, false)
 	}
 	unchanged, err := os.ReadFile(filepath.Join(dir, name))
 	require.NoError(t, err)
@@ -659,8 +673,8 @@ func TestCrossUserIsolationNotificationDelivery(t *testing.T) {
 	require.NoError(t, err)
 	rec := do(s, "GET", "/api/v1/alerts/events?user_id="+uid+"&limit=1", "", a)
 	require.Equal(t, 200, rec.Code)
-	require.JSONEq(t, `[]`, rec.Body.String())
-	require.Contains(t, do(s, "GET", "/api/v1/alerts/events", "", b).Body.String(), "B-private-alert")
+	isolationJSONEqual(t, `[]`, rec.Body.String())
+	isolationContains(t, do(s, "GET", "/api/v1/alerts/events", "", b).Body.String(), "B-private-alert", true)
 	isolationObject(t, s, "POST", "/me/push-tokens", `{"token":"ExpoPushToken[synthetic-B]","label":"B-private-push"}`, b, 200)
 	before = f.databaseState(t)
 	require.Equal(t, 204, do(s, "DELETE", "/api/v1/me/push-tokens", `{"token":"ExpoPushToken[synthetic-B]"}`, a).Code)
@@ -703,12 +717,12 @@ func TestCrossUserIsolationOwnerMutations(t *testing.T) {
 		{"DELETE", "/imports/" + a.batch, "", 204}, {"DELETE", "/accounts/" + a.accounts[0] + "/trades", "", 204}, {"DELETE", "/accounts/" + a.accounts[0], "", 204},
 	} {
 		rec := do(f.s, tc.method, "/api/v1"+tc.path, tc.body, a.session)
-		require.Equal(t, tc.status, rec.Code, "%s %s: %s", tc.method, tc.path, rec.Body.String())
+		require.Equal(t, tc.status, rec.Code, "%s %s", tc.method, tc.path)
 	}
 	for _, path := range readback {
 		rec := do(f.s, "GET", "/api/v1"+path, "", b.session)
 		require.Equal(t, 200, rec.Code)
-		require.Equal(t, baseline[path], rec.Body.String(), "owner operation changed B")
+		require.Equal(t, sha256.Sum256([]byte(baseline[path])), sha256.Sum256(rec.Body.Bytes()), "owner operation changed B")
 	}
 }
 
@@ -811,13 +825,13 @@ func TestCrossUserIsolationConfiguredServices(t *testing.T) {
 		}
 		rec := do(s, "POST", "/api/v1/trades/"+u.trade+"/coach", `{}`, u.session)
 		require.Equal(t, 200, rec.Code)
-		require.Contains(t, rec.Body.String(), `"source":"llm"`)
+		isolationContains(t, rec.Body.String(), `"source":"llm"`, true)
 		rec = do(s, "POST", "/api/v1/trades/"+u.trade+"/coach/stream", `{}`, u.session)
 		require.Equal(t, 200, rec.Code)
-		require.Contains(t, rec.Body.String(), "event: done")
+		isolationContains(t, rec.Body.String(), "event: done", true)
 		rec = do(s, "GET", "/api/v1/trades/"+u.trade+"/coach/reviews", "", u.session)
 		require.Equal(t, 200, rec.Code)
-		require.Contains(t, rec.Body.String(), "private fixture review")
+		isolationContains(t, rec.Body.String(), "private fixture review", true)
 		require.Equal(t, 200, do(s, "POST", "/api/v1/accounts/"+u.accounts[0]+"/flex-sync/run", `{}`, u.session).Code)
 	}
 	// The legacy batch commit must still use the authenticated batch's parent,
@@ -826,7 +840,7 @@ func TestCrossUserIsolationConfiguredServices(t *testing.T) {
 	rec := httptest.NewRecorder()
 	f.s.Echo.ServeHTTP(rec, multipartFileReq(t, "/api/v1/imports/"+a.batch+"/commit", a.session, "fixture.html", mt5StatementHTML, map[string]string{"account_id": b.accounts[1]}))
 	require.Equal(t, 200, rec.Code)
-	require.Equal(t, before.Body.String(), do(f.s, "GET", "/api/v1/executions?account_id="+b.accounts[1], "", b.session).Body.String())
+	isolationJSONEqual(t, before.Body.String(), do(f.s, "GET", "/api/v1/executions?account_id="+b.accounts[1], "", b.session).Body.String())
 }
 
 func TestCrossUserIsolationExcursionAndGoalDelete(t *testing.T) {
@@ -838,7 +852,7 @@ func TestCrossUserIsolationExcursionAndGoalDelete(t *testing.T) {
 	}
 	baseline := do(f.s, "GET", "/api/v1/settings/annual-goal?year=2026", "", b.session)
 	require.Equal(t, 200, do(f.s, "DELETE", "/api/v1/settings/annual-goal?year=2026&user_id="+b.id, "", a.session).Code)
-	require.JSONEq(t, baseline.Body.String(), do(f.s, "GET", "/api/v1/settings/annual-goal?year=2026", "", b.session).Body.String())
+	isolationJSONEqual(t, baseline.Body.String(), do(f.s, "GET", "/api/v1/settings/annual-goal?year=2026", "", b.session).Body.String())
 	provider := marketdata.NewYahooProvider()
 	// A fixed holding period over 120 days always selects daily bars, independent
 	// of the current date and Yahoo's moving intraday retention window.
@@ -873,8 +887,8 @@ func TestCrossUserIsolationExcursionAndGoalDelete(t *testing.T) {
 		require.Equal(t, before, f.databaseState(t))
 	}
 	rec := do(s, "POST", path, `{}`, a.session)
-	require.Equal(t, 200, rec.Code, rec.Body.String())
-	require.Contains(t, rec.Body.String(), `"interval":"D"`)
+	require.Equal(t, 200, rec.Code)
+	isolationContains(t, rec.Body.String(), `"interval":"D"`, true)
 	detail := isolationObject(t, f.s, "GET", "/trades/"+trade, "", a.session, 200)
 	require.NotNil(t, detail["mae"])
 	require.NotNil(t, detail["mfe"])
