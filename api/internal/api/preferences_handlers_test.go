@@ -132,3 +132,17 @@ func TestPreferencesGoWithTheDeletedUser(t *testing.T) {
 	require.Equal(t, http.StatusNoContent,
 		adminCall(t, s, http.MethodDelete, "/admin/users/"+target.ID, "", owner).Code)
 }
+
+func TestReviewBacklogPreferencesKeepAccountAndUserScope(t *testing.T) {
+	s := testServer(t)
+	tok := registerAndLogin(t, s, "review-owner@example.com")
+	other := registerAndLogin(t, s, "review-other@example.com")
+	rec := prefsCall(t, s, http.MethodPatch, `{"reviewBacklogCutoff:account-a":"2026-09-26T12:00:00Z"}`, tok)
+	require.Equal(t, http.StatusOK, rec.Code)
+	rec = prefsCall(t, s, http.MethodPatch, `{"displayCurrency":"JPY","reviewBacklogCutoff:account-b":"2026-09-01T12:00:00Z"}`, tok)
+	require.Equal(t, "2026-09-26T12:00:00Z", readPrefs(t, rec).Prefs["reviewBacklogCutoff:account-a"])
+	require.Empty(t, readPrefs(t, prefsCall(t, s, http.MethodGet, "", other)).Prefs)
+	rec = prefsCall(t, s, http.MethodPatch, `{"reviewBacklogCutoff:account-a":null}`, tok)
+	require.Nil(t, readPrefs(t, rec).Prefs["reviewBacklogCutoff:account-a"])
+	require.Equal(t, "2026-09-01T12:00:00Z", readPrefs(t, rec).Prefs["reviewBacklogCutoff:account-b"])
+}

@@ -7322,7 +7322,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/app/screens/settings/alerts-section.tsx:376
 msgid "settings.aWeeklyNudgeWhenClosedTradesOlderThanThisHaveNoJournal"
-msgstr ""
+msgstr "설정한 일수보다 오래된 청산 거래에 실행 평가가 없으면 매주 알림을 보냅니다. 집계를 해제한 미처리 거래는 제외됩니다."
 
 #. js-lingui-explicit-id
 #: src/components/AuthShell.tsx:58
@@ -12351,3 +12351,136 @@ msgstr "합성 시각 — 원본에는 날짜만 있음"
 #: src/app/screens/ImportView.tsx
 msgid "imports.refreshTimes"
 msgstr "시각 미리보기 새로 고침"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:128
+msgid "review.back"
+msgstr "뒤로"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:77
+msgid "review.backlog"
+msgstr "미처리 거래"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:69
+msgid "review.cancelDismiss"
+msgstr "해제 취소"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:281
+msgid "review.cancel"
+msgstr "편집 취소"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:44
+msgid "review.hint"
+msgstr "청산된 거래는 실행 평가를 저장해야 복기한 것으로 계산됩니다. 선택한 계좌를 사용하며 전체 날짜 및 거래 필터는 적용되지 않습니다."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:69
+msgid "review.confirm"
+msgstr "해제 확인"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:262
+msgid "review.tagsError"
+msgstr "실수 태그를 불러올 수 없습니다. 기존 선택은 유지됩니다."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:94
+#: src/app/screens/ReviewInboxView.tsx:148
+msgid "review.loadError"
+msgstr "거래를 불러올 수 없습니다."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:70
+msgid "review.dismissError"
+msgstr "미처리 거래 설정을 갱신할 수 없습니다. 다시 시도하세요."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:66
+msgid "review.dismiss"
+msgstr "미처리 거래 집계 해제"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:64
+msgid "review.dismissScope"
+msgstr "선택한 계좌의 오래된 거래를 복기 집계와 향후 알림에서 제외합니다. 모든 기기에 적용되며 거래는 미평가 상태로 남습니다. 복원하면 다시 집계됩니다."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:215
+msgid "review.grade"
+msgstr "실행 평가"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:91
+#: src/app/screens/ReviewInboxView.tsx:161
+msgid "review.loading"
+msgstr "불러오는 중…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:239
+msgid "review.mistakes"
+msgstr "실수"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:140
+msgid "review.done"
+msgstr "대기열을 완료했습니다. 건너뛴 거래는 미복기 상태입니다. 페이지를 다시 열어 복기하세요."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:73
+msgid "review.recent"
+msgstr "최근"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:51
+msgid "review.days"
+msgstr "최근 일수"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:87
+msgid "review.reset"
+msgstr "초기화"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:67
+msgid "review.restore"
+msgstr "미처리 거래 복원"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:96
+#: src/app/screens/ReviewInboxView.tsx:150
+msgid "review.retry"
+msgstr "다시 시도"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:41
+msgid "review.title"
+msgstr "복기함"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:231
+msgid "review.notes"
+msgstr "복기 메모"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:278
+msgid "review.save"
+msgstr "저장 후 다음"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:270
+msgid "review.saveError"
+msgstr "저장하지 못했습니다. 초안은 유지됩니다. 다시 시도하거나 취소하세요."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:135
+msgid "review.skip"
+msgstr "건너뛰기"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:69
+msgid "review.confirmDismiss"
+msgstr "이 계좌의 최근 기간보다 오래된 미평가 거래를 집계에서 제외할까요？"

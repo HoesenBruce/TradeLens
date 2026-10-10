@@ -241,6 +241,7 @@ export interface Trade {
   notes: string;
   tags: Tag[];
   initial_risk?: number | null;
+  trade_quality?: number | null;
 }
 
 // TradeDetail matches tradeDetailDTO from api/internal/api/trade_detail.go

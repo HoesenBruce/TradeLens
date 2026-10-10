@@ -7331,7 +7331,7 @@ msgstr "A prop account has consumed this share of its drawdown budget. Breaches 
 #. js-lingui-explicit-id
 #: src/app/screens/settings/alerts-section.tsx:376
 msgid "settings.aWeeklyNudgeWhenClosedTradesOlderThanThisHaveNoJournal"
-msgstr "A weekly nudge when closed trades older than this have no journal notes."
+msgstr "A weekly nudge when closed trades older than this have no execution grade. Dismissed backlog is excluded."
 
 #. js-lingui-explicit-id
 #: src/components/AuthShell.tsx:58
@@ -12354,3 +12354,136 @@ msgstr "Synthetic time — source contains only a date"
 #: src/app/screens/ImportView.tsx
 msgid "imports.refreshTimes"
 msgstr "Refresh timestamp preview"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:128
+msgid "review.back"
+msgstr "Back"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:77
+msgid "review.backlog"
+msgstr "Backlog"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:69
+msgid "review.cancelDismiss"
+msgstr "Cancel dismissal"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:281
+msgid "review.cancel"
+msgstr "Cancel edits"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:44
+msgid "review.hint"
+msgstr "Closed trades are reviewed only after an execution grade is saved. Uses the selected accounts; global date and trade filters do not apply."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:69
+msgid "review.confirm"
+msgstr "Confirm dismissal"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:262
+msgid "review.tagsError"
+msgstr "Could not load mistakes. Existing selections are preserved."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:94
+#: src/app/screens/ReviewInboxView.tsx:148
+msgid "review.loadError"
+msgstr "Could not load trades."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:70
+msgid "review.dismissError"
+msgstr "Could not update backlog. Please retry."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:66
+msgid "review.dismiss"
+msgstr "Dismiss backlog"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:64
+msgid "review.dismissScope"
+msgstr "Dismiss older trades from review counts and future alerts for the selected accounts, across devices. Trades remain ungraded. Restore brings them back."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:215
+msgid "review.grade"
+msgstr "Execution grade"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:91
+#: src/app/screens/ReviewInboxView.tsx:161
+msgid "review.loading"
+msgstr "Loading…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:239
+msgid "review.mistakes"
+msgstr "Mistakes"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:140
+msgid "review.done"
+msgstr "Queue complete. Skipped trades remain unreviewed; reopen this page to review them."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:73
+msgid "review.recent"
+msgstr "Recent"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:51
+msgid "review.days"
+msgstr "Recent days"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:87
+msgid "review.reset"
+msgstr "Reset"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:67
+msgid "review.restore"
+msgstr "Restore backlog"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:96
+#: src/app/screens/ReviewInboxView.tsx:150
+msgid "review.retry"
+msgstr "Retry"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:41
+msgid "review.title"
+msgstr "Review inbox"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:231
+msgid "review.notes"
+msgstr "Review notes"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:278
+msgid "review.save"
+msgstr "Save and next"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:270
+msgid "review.saveError"
+msgstr "Save failed. Your draft is retained; retry or cancel."
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:135
+msgid "review.skip"
+msgstr "Skip"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:69
+msgid "review.confirmDismiss"
+msgstr "Stop counting ungraded trades older than the recent window for these accounts?"
