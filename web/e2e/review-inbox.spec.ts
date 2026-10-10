@@ -195,9 +195,20 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
     },
     { token: auth.access_token, api, id: a.id },
   );
-  await devicePage.route("**/trades?**", (route) => route.fulfill({ status: 500, body: "{}" }));
+  let releaseLoad!: () => void;
+  const loading = new Promise<void>((resolve) => {
+    releaseLoad = resolve;
+  });
+  await devicePage.route("**/trades?**", async (route) => {
+    await loading;
+    await route.fulfill({ status: 500, body: "{}" });
+  });
   await devicePage.goto(`${info.project.use.baseURL}/review`);
+  await expect(devicePage.getByText("Loading…", { exact: true })).toBeVisible();
+  await devicePage.screenshot({ path: info.outputPath("review-loading.png"), fullPage: true });
+  releaseLoad();
   await expect(devicePage.getByText("Could not load trades.")).toBeVisible();
+  await devicePage.screenshot({ path: info.outputPath("review-load-error.png"), fullPage: true });
   await devicePage.unroute("**/trades?**");
   await devicePage.getByRole("button", { name: "Retry", exact: true }).click();
   await expect(devicePage.getByRole("button", { name: "Backlog (0)" })).toBeVisible();
