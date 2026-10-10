@@ -1,0 +1,31 @@
+?   	github.com/tradermemos/api/cmd/cli	[no test files]
+?   	github.com/tradermemos/api/cmd/server	[no test files]
+ok  	github.com/tradermemos/api/cmd/tm-sync	(cached)
+ok  	github.com/tradermemos/api/internal/accountvalue	(cached)
+ok  	github.com/tradermemos/api/internal/alerts	(cached)
+ok  	github.com/tradermemos/api/internal/analytics	(cached)
+ok  	github.com/tradermemos/api/internal/api	32.690s
+ok  	github.com/tradermemos/api/internal/auth	(cached)
+ok  	github.com/tradermemos/api/internal/backup	(cached)
+ok  	github.com/tradermemos/api/internal/coach	(cached)
+ok  	github.com/tradermemos/api/internal/config	(cached)
+ok  	github.com/tradermemos/api/internal/db	(cached)
+ok  	github.com/tradermemos/api/internal/econdata	(cached)
+ok  	github.com/tradermemos/api/internal/excursion	(cached)
+ok  	github.com/tradermemos/api/internal/exporter	(cached)
+ok  	github.com/tradermemos/api/internal/flexsync	(cached)
+ok  	github.com/tradermemos/api/internal/importer	(cached)
+ok  	github.com/tradermemos/api/internal/jobs	(cached)
+ok  	github.com/tradermemos/api/internal/logging	(cached)
+ok  	github.com/tradermemos/api/internal/marketdata	(cached)
+ok  	github.com/tradermemos/api/internal/money	(cached)
+ok  	github.com/tradermemos/api/internal/ocr	(cached)
+ok  	github.com/tradermemos/api/internal/positions	(cached)
+ok  	github.com/tradermemos/api/internal/predictionvalidation	(cached)
+ok  	github.com/tradermemos/api/internal/prop	(cached)
+ok  	github.com/tradermemos/api/internal/storage	(cached)
+ok  	github.com/tradermemos/api/internal/store	(cached)
+?   	github.com/tradermemos/api/internal/storepg	[no test files]
+ok  	github.com/tradermemos/api/internal/trades	(cached)
+?   	github.com/tradermemos/api/internal/version	[no test files]
+?   	github.com/tradermemos/api/openapi	[no test files]

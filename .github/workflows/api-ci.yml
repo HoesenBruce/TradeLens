@@ -57,6 +57,12 @@ jobs:
           python3 -m unittest discover -s scripts -p 'test_*deploy*.py'
           python3 -m unittest discover -s scripts -p 'test_docker_release_metadata.py'
 
+      - name: Cross-user isolation security gate (offline)
+        run: go test ./internal/api ./internal/backup -run 'TestCrossUserIsolation|TestBackup|TestDemoBackup|TestInstanceIsolation|TestRetention' -count=1
+
+      - name: Cross-user isolation race checks (offline)
+        run: go test -race ./internal/api ./internal/backup -run 'TestCrossUserIsolation|TestBackup|TestDemoBackup|TestInstanceIsolation|TestRetention' -count=1
+
       - name: Test
         run: go test ./...
 
