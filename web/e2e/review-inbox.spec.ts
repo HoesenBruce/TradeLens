@@ -178,10 +178,13 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
   await page.reload();
   await expect(page.getByRole("button", { name: "Backlog (0)" })).toBeVisible();
   // A different device reads the authenticated cutoff, with no local state.
-  const device = await page.context().browser()!.newContext();
+  const device = await page.context().browser()!.newContext({ serviceWorkers: "block" });
   const devicePage = await device.newPage();
+  devicePage.on("pageerror", (error) => errors.push(error.message));
   await devicePage.addInitScript(
     ({ token, api, id }) => {
+      // Exercise a browser without offline caching so failures reach the UI.
+      Reflect.deleteProperty(Navigator.prototype, "serviceWorker");
       localStorage.setItem("tm_token", token);
       localStorage.setItem("tm_api_base", api);
       localStorage.setItem("tm-locale", "en");
@@ -192,7 +195,11 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
     },
     { token: auth.access_token, api, id: a.id },
   );
+  await devicePage.route("**/trades?**", (route) => route.fulfill({ status: 500, body: "{}" }));
   await devicePage.goto(`${info.project.use.baseURL}/review`);
+  await expect(devicePage.getByText("Could not load trades.")).toBeVisible();
+  await devicePage.unroute("**/trades?**");
+  await devicePage.getByRole("button", { name: "Retry", exact: true }).click();
   await expect(devicePage.getByRole("button", { name: "Backlog (0)" })).toBeVisible();
   await device.close();
   await page.getByRole("button", { name: "Restore backlog" }).click();
@@ -254,11 +261,5 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
   await page.keyboard.press("Enter");
   await expect(grade).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Cancel edits" }).click();
-  await page.route("**/trades?**", (route) => route.fulfill({ status: 500, body: "{}" }));
-  await page.reload();
-  await expect(page.getByText("Could not load trades.")).toBeVisible({ timeout: 20000 });
-  await page.unroute("**/trades?**");
-  await page.getByRole("button", { name: "Retry", exact: true }).click();
-  await expect(page.getByRole("heading", { name: /REVIEW273B/ })).toBeVisible();
   expect(errors).toEqual([]);
 });
