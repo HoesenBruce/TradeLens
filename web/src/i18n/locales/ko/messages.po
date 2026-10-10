@@ -12484,3 +12484,107 @@ msgstr "건너뛰기"
 #: src/app/screens/ReviewInboxView.tsx:69
 msgid "review.confirmDismiss"
 msgstr "이 계좌의 최근 기간보다 오래된 미평가 거래를 집계에서 제외할까요？"
+#: src/app/screens/settings/backups-section.tsx:94
+msgid "A backup is already running"
+msgstr "이미 백업이 실행 중입니다"
+
+#: src/app/screens/settings/backups-section.tsx:155
+msgid "Back up now"
+msgstr "지금 백업"
+
+#: src/app/screens/settings/backups-section.tsx:155
+msgid "Backing up…"
+msgstr "백업 중…"
+
+#: src/app/screens/settings/backups-section.tsx:94
+msgid "Backup failed"
+msgstr "백업 실패"
+
+#: src/app/screens/settings/backups-section.tsx:106
+msgid "Backup status is unavailable from this server."
+msgstr "이 서버에서 백업 상태를 가져올 수 없습니다."
+
+#: src/app/screens/settings/backups-section.tsx:86
+msgid "Backup written"
+msgstr "백업을 저장했습니다"
+
+#: src/app/screens/settings/backups-section.tsx:78
+msgid "Backups"
+msgstr "백업"
+
+#: src/app/screens/settings/backups-section.tsx:133
+msgid "Backups are current"
+msgstr "백업이 최신 상태입니다"
+
+#: src/app/screens/settings/backups-section.tsx:136
+msgid "Backups are overdue"
+msgstr "백업이 지연되었습니다"
+
+#: src/app/screens/settings/backups-section.tsx:115
+msgid "Backups are unavailable in the ephemeral demo."
+msgstr "임시 데모 환경에서는 백업을 사용할 수 없습니다."
+
+#: src/app/screens/settings/backups-section.tsx:164
+msgid "Checking…"
+msgstr "확인 중…"
+
+#: src/app/screens/settings/backups-section.tsx:213
+msgid "Directory"
+msgstr "디렉터리"
+
+#: src/app/screens/settings/backups-section.tsx:168
+msgid "Every {interval}"
+msgstr "{interval}마다"
+
+#: src/app/screens/settings/backups-section.tsx:226
+msgid "Failed"
+msgstr "실패"
+
+#. placeholder {0}: fmtRelativeAge(data.last_attempt_at, now, intlLocale)
+#: src/app/screens/settings/backups-section.tsx:225
+msgid "Failed {0}"
+msgstr "실패 ({0})"
+
+#: src/app/screens/settings/backups-section.tsx:175
+msgid "Last backup"
+msgstr "마지막 백업"
+
+#: src/app/screens/settings/backups-section.tsx:135
+msgid "Last backup failed"
+msgstr "마지막 백업이 실패했습니다"
+
+#: src/app/screens/settings/backups-section.tsx:198
+msgid "Latest file"
+msgstr "최신 파일"
+
+#: src/app/screens/settings/backups-section.tsx:168
+msgid "Manual only"
+msgstr "수동 전용"
+
+#: src/app/screens/settings/backups-section.tsx:182
+msgid "Never"
+msgstr "없음"
+
+#: src/app/screens/settings/backups-section.tsx:134
+msgid "No backup yet"
+msgstr "아직 백업이 없습니다"
+
+#: src/app/screens/settings/backups-section.tsx:204
+msgid "None"
+msgstr "없음"
+
+#: src/app/screens/settings/backups-section.tsx:137
+msgid "Scheduled backups are off"
+msgstr "예약 백업이 꺼져 있습니다"
+
+#: src/app/screens/settings/backups-section.tsx:192
+msgid "Snapshots kept"
+msgstr "보관된 스냅샷"
+
+#: src/app/screens/settings/backups-section.tsx:79
+msgid "Snapshots of the database, written to a folder on the server. Sync that folder off-site — a copy on the same disk doesn't survive the disk."
+msgstr "데이터베이스 스냅샷을 서버의 폴더에 저장합니다. 이 폴더를 외부 저장소로 동기화하세요 — 같은 디스크에 있는 사본은 디스크 장애를 견디지 못합니다."
+
+#: src/app/screens/settings/backups-section.tsx:124
+msgid "This server runs on Postgres. Built-in backups cover SQLite only — back up Postgres with pg_dump or your provider's snapshots."
+msgstr "이 서버는 Postgres에서 실행 중입니다. 기본 제공 백업은 SQLite만 지원합니다 — Postgres는 pg_dump 또는 제공업체의 스냅샷으로 백업하세요."

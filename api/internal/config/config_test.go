@@ -102,3 +102,33 @@ func TestLoadMarketDataRouting(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, "http,yahoo", cfg.MarketDataProviders)
 }
+
+func TestLoadBackupDefaultsAndOverrides(t *testing.T) {
+	cfg, err := Load()
+	require.NoError(t, err)
+	require.True(t, cfg.BackupEnabled)
+	require.Empty(t, cfg.BackupDir)
+	require.Equal(t, 14, cfg.BackupKeep)
+	require.Equal(t, 1440, cfg.BackupIntervalMin)
+
+	t.Setenv("TM_BACKUP_ENABLED", "false")
+	t.Setenv("TM_BACKUP_DIR", "/srv/backups")
+	t.Setenv("TM_BACKUP_KEEP", "30")
+	t.Setenv("TM_BACKUP_INTERVAL_MIN", "720")
+	cfg, err = Load()
+	require.NoError(t, err)
+	require.False(t, cfg.BackupEnabled)
+	require.Equal(t, "/srv/backups", cfg.BackupDir)
+	require.Equal(t, 30, cfg.BackupKeep)
+	require.Equal(t, 720, cfg.BackupIntervalMin)
+}
+
+func TestDemoDisablesManualAndAutomaticBackups(t *testing.T) {
+	t.Setenv("TM_DEMO_MODE", "true")
+	t.Setenv("TM_BACKUP_ENABLED", "true")
+	t.Setenv("TM_JOBS_ENABLED", "true")
+	cfg, err := Load()
+	require.NoError(t, err)
+	require.True(t, cfg.BackupDisabled)
+	require.False(t, cfg.JobsEnabled)
+}

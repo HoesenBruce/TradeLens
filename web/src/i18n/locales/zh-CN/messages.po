@@ -12487,3 +12487,107 @@ msgstr "跳过"
 #: src/app/screens/ReviewInboxView.tsx:69
 msgid "review.confirmDismiss"
 msgstr "不再计入这些账户中早于近期窗口的未评分交易？"
+#: src/app/screens/settings/backups-section.tsx:94
+msgid "A backup is already running"
+msgstr "已有备份正在运行"
+
+#: src/app/screens/settings/backups-section.tsx:155
+msgid "Back up now"
+msgstr "立即备份"
+
+#: src/app/screens/settings/backups-section.tsx:155
+msgid "Backing up…"
+msgstr "正在备份…"
+
+#: src/app/screens/settings/backups-section.tsx:94
+msgid "Backup failed"
+msgstr "备份失败"
+
+#: src/app/screens/settings/backups-section.tsx:106
+msgid "Backup status is unavailable from this server."
+msgstr "此服务器的备份状态不可用。"
+
+#: src/app/screens/settings/backups-section.tsx:86
+msgid "Backup written"
+msgstr "备份已写入"
+
+#: src/app/screens/settings/backups-section.tsx:78
+msgid "Backups"
+msgstr "备份"
+
+#: src/app/screens/settings/backups-section.tsx:133
+msgid "Backups are current"
+msgstr "备份已更新"
+
+#: src/app/screens/settings/backups-section.tsx:136
+msgid "Backups are overdue"
+msgstr "备份已逾期"
+
+#: src/app/screens/settings/backups-section.tsx:115
+msgid "Backups are unavailable in the ephemeral demo."
+msgstr "临时演示环境不支持备份。"
+
+#: src/app/screens/settings/backups-section.tsx:164
+msgid "Checking…"
+msgstr "正在检查…"
+
+#: src/app/screens/settings/backups-section.tsx:213
+msgid "Directory"
+msgstr "目录"
+
+#: src/app/screens/settings/backups-section.tsx:168
+msgid "Every {interval}"
+msgstr "每 {interval}"
+
+#: src/app/screens/settings/backups-section.tsx:226
+msgid "Failed"
+msgstr "失败"
+
+#. placeholder {0}: fmtRelativeAge(data.last_attempt_at, now, intlLocale)
+#: src/app/screens/settings/backups-section.tsx:225
+msgid "Failed {0}"
+msgstr "失败于 {0}"
+
+#: src/app/screens/settings/backups-section.tsx:175
+msgid "Last backup"
+msgstr "上次备份"
+
+#: src/app/screens/settings/backups-section.tsx:135
+msgid "Last backup failed"
+msgstr "上次备份失败"
+
+#: src/app/screens/settings/backups-section.tsx:198
+msgid "Latest file"
+msgstr "最新文件"
+
+#: src/app/screens/settings/backups-section.tsx:168
+msgid "Manual only"
+msgstr "仅手动"
+
+#: src/app/screens/settings/backups-section.tsx:182
+msgid "Never"
+msgstr "从未"
+
+#: src/app/screens/settings/backups-section.tsx:134
+msgid "No backup yet"
+msgstr "尚无备份"
+
+#: src/app/screens/settings/backups-section.tsx:204
+msgid "None"
+msgstr "无"
+
+#: src/app/screens/settings/backups-section.tsx:137
+msgid "Scheduled backups are off"
+msgstr "定时备份已关闭"
+
+#: src/app/screens/settings/backups-section.tsx:192
+msgid "Snapshots kept"
+msgstr "保留的快照"
+
+#: src/app/screens/settings/backups-section.tsx:79
+msgid "Snapshots of the database, written to a folder on the server. Sync that folder off-site — a copy on the same disk doesn't survive the disk."
+msgstr "数据库快照保存在服务器文件夹中。请将该文件夹同步至异地，同一磁盘上的副本无法抵御磁盘故障。"
+
+#: src/app/screens/settings/backups-section.tsx:124
+msgid "This server runs on Postgres. Built-in backups cover SQLite only — back up Postgres with pg_dump or your provider's snapshots."
+msgstr "此服务器使用 Postgres。内置备份仅支持 SQLite，请使用 pg_dump 或服务商快照备份 Postgres。"

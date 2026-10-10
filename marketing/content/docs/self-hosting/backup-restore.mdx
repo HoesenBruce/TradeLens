@@ -66,3 +66,26 @@ For source-build recovery, add `-f docker-compose.build.yml` immediately after t
 file on every Compose command, use `build` instead of `pull`, and start with
 `make up-build` / `make up-postgres-build`. Restore before API startup so the
 selected version can check/run migrations normally. Retain deployment secrets separately.
+
+## Scheduled SQLite snapshots
+
+SQLite takes daily database snapshots by default, keeping 14. Owners can view failures
+and trigger **Back up now** in Settings → About → Backups. `TM_BACKUP_ENABLED=false`,
+`TM_JOBS_ENABLED=false` or `TM_BACKUP_INTERVAL_MIN=0` disables the schedule; manual
+backup still works. `TM_DEMO_MODE=true` disables both. PostgreSQL uses pg_dump above.
+
+`TM_BACKUP_DIR` defaults to `<dbDir>/backups` (Docker `/data/backups`). The persistent
+`<database>.backup-id` sidecar selects an isolated `tradelens-<database-id>/` directory.
+Retain that identity with the database volume. Only matching snapshots in that directory
+are pruned; other instances remain untouched even when containers use identical paths.
+Use persistent local storage with advisory locks, atomic rename and fsync. Sync offsite;
+ephemeral Render storage is not a recoverable backup. Snapshots contain the database only;
+retain attachments and configuration/secrets separately.
+
+Restore drill: stop all API replicas, preserve a rollback copy including remaining WAL files,
+verify it contains the expected application data, then copy a selected snapshot
+over the configured database, remove its stale `-wal` and `-shm`, restore matching
+attachments/secrets, run SQLite `PRAGMA integrity_check` and expect `ok`, then start the
+same TradeLens version and verify login, accounts, trades and attachment read-back.
+Never mix upstream TraderMemos and TradeLens databases. The full-volume archive procedure
+above remains available. See [deployment details](https://github.com/HoesenBruce/TradeLens/blob/main/docs/deploy.md#backups--restore).

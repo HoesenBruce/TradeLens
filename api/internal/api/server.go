@@ -15,6 +15,7 @@ import (
 	"github.com/tradermemos/api/internal/accountvalue"
 	"github.com/tradermemos/api/internal/alerts"
 	"github.com/tradermemos/api/internal/auth"
+	"github.com/tradermemos/api/internal/backup"
 	"github.com/tradermemos/api/internal/econdata"
 	"github.com/tradermemos/api/internal/flexsync"
 	"github.com/tradermemos/api/internal/marketdata"
@@ -45,6 +46,7 @@ type Deps struct {
 	CoachDefaults  ocr.VisionConfig
 	// FlexClient talks to IBKR's Flex Web Service; nil disables manual sync.
 	FlexClient *flexsync.Client
+	Backup     *backup.Service
 	// Alerts evaluates journal alerts and delivers notifications; nil disables
 	// the test-send endpoint and write-path evaluation.
 	Alerts *alerts.Service

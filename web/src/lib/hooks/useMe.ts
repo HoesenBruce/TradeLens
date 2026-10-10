@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/lib/auth";
 import { authApi } from "@/lib/api/auth";
 import { setTokens } from "@/lib/api/client";
 
@@ -7,8 +8,9 @@ import { setTokens } from "@/lib/api/client";
  * email or has to gate on `is_admin` reads this one query.
  */
 export function useMe() {
+  const session = useAuth((s) => s.session);
   return useQuery({
-    queryKey: ["me"],
+    queryKey: ["me", session],
     queryFn: () => authApi.me(),
     staleTime: 5 * 60_000,
   });
