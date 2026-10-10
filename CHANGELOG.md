@@ -5,6 +5,34 @@ All notable changes to TraderMemos are documented in this file.
 Release versioning is managed by [release-please](https://github.com/googleapis/release-please).
 See [docs/release.md](docs/release.md) for the release workflow.
 
+## [0.3.1](https://github.com/HoesenBruce/TradeLens/compare/v0.3.0...v0.3.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* **web:** use TradeLens releases for About update checks ([#290](https://github.com/HoesenBruce/TradeLens/issues/290)) ([e4f2974](https://github.com/HoesenBruce/TradeLens/commit/e4f2974c64880a06e461aa082deb837363f6ef70))
+
+## [0.3.0](https://github.com/HoesenBruce/TradeLens/compare/v0.2.1...v0.3.0) (2026-10-09)
+
+
+### Features
+
+* add deterministic fictional TradeLens showcase ([#253](https://github.com/HoesenBruce/TradeLens/issues/253)) ([#256](https://github.com/HoesenBruce/TradeLens/issues/256)) ([ecb5aa0](https://github.com/HoesenBruce/TradeLens/commit/ecb5aa038be5744bad0dd5a1ab07562a7cf485ae))
+* add isolated read-only Render demo ([#243](https://github.com/HoesenBruce/TradeLens/issues/243)) ([#264](https://github.com/HoesenBruce/TradeLens/issues/264)) ([11427da](https://github.com/HoesenBruce/TradeLens/commit/11427daad2956847a5735bc2cc96e2408b13e163))
+
+
+### Bug Fixes
+
+* **accounting:** allocate default reversal fees and validate quantity ([#268](https://github.com/HoesenBruce/TradeLens/issues/268)) ([#283](https://github.com/HoesenBruce/TradeLens/issues/283)) ([411b98c](https://github.com/HoesenBruce/TradeLens/commit/411b98c9688e7d4d4e2f03af92e808e7f7eb0d78))
+* **analytics:** use market timezone for duration and Home ([#271](https://github.com/HoesenBruce/TradeLens/issues/271)) ([#280](https://github.com/HoesenBruce/TradeLens/issues/280)) ([055b4d8](https://github.com/HoesenBruce/TradeLens/commit/055b4d815c7e05de800a0a353c8e5bf4b000ef2a))
+* **importer:** preserve identical fills without changing SBI identities ([#266](https://github.com/HoesenBruce/TradeLens/issues/266)) ([#278](https://github.com/HoesenBruce/TradeLens/issues/278)) ([34ca68b](https://github.com/HoesenBruce/TradeLens/commit/34ca68b206a1b53b405d001e11694e85ce9afd8e))
+* **import:** resolve slash dates and preview effective timestamps ([#267](https://github.com/HoesenBruce/TradeLens/issues/267)) ([#282](https://github.com/HoesenBruce/TradeLens/issues/282)) ([9ace784](https://github.com/HoesenBruce/TradeLens/commit/9ace784e4987512d0abe0d1d46ddf8e303f839b2))
+* **ocr:** preserve resolved fill instants through Web save ([#270](https://github.com/HoesenBruce/TradeLens/issues/270)) ([#279](https://github.com/HoesenBruce/TradeLens/issues/279)) ([e8fa08c](https://github.com/HoesenBruce/TradeLens/commit/e8fa08c9d870f5add31a8add91ec856dd76a323c))
+* repair TradeLens Release Please automation ([#252](https://github.com/HoesenBruce/TradeLens/issues/252)) ([60738c1](https://github.com/HoesenBruce/TradeLens/commit/60738c1964313d9b1e77f45e00212ae31068af16))
+* stabilize Web query and filter tests ([#265](https://github.com/HoesenBruce/TradeLens/issues/265)) ([5ec0f20](https://github.com/HoesenBruce/TradeLens/commit/5ec0f20d0d0ee3a7ad268a0fdb1ba75b9300d517))
+* synchronize market filter test with keyboard focus ([#263](https://github.com/HoesenBruce/TradeLens/issues/263)) ([e214637](https://github.com/HoesenBruce/TradeLens/commit/e214637e0d73949abe6f26277574e5278c5b8490))
+* **web:** make money masking reactive under React Compiler ([#269](https://github.com/HoesenBruce/TradeLens/issues/269)) ([#281](https://github.com/HoesenBruce/TradeLens/issues/281)) ([3dd8b5e](https://github.com/HoesenBruce/TradeLens/commit/3dd8b5e8bf800b13bfc08fe36a4063d1889019cf))
+
 ## [0.13.0](https://github.com/sinhong2011/TraderMemos/compare/v0.12.1...v0.13.0) (2026-08-23)
 
 

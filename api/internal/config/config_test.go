@@ -126,7 +126,9 @@ func TestLoadBackupDefaultsAndOverrides(t *testing.T) {
 func TestDemoDisablesManualAndAutomaticBackups(t *testing.T) {
 	t.Setenv("TM_DEMO_MODE", "true")
 	t.Setenv("TM_BACKUP_ENABLED", "true")
+	t.Setenv("TM_JOBS_ENABLED", "true")
 	cfg, err := Load()
 	require.NoError(t, err)
 	require.True(t, cfg.BackupDisabled)
+	require.False(t, cfg.JobsEnabled)
 }

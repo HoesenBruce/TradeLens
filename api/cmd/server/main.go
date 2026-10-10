@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"net"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -165,6 +166,7 @@ func main() {
 	tradesSvc.AfterRegroup = func(userID, _ string) { alertsSvc.TradeWritten(userID) }
 	s := api.New(api.Deps{
 		JWTSecret:         cfg.JWTSecret,
+		DemoMode:          cfg.DemoMode,
 		JWT:               jwt,
 		Auth:              auth.NewService(q, jwt, cfg.AllowRegistration),
 		Store:             q,
@@ -237,7 +239,7 @@ func main() {
 	}
 	logger.Info("tradermemos api listening", "port", cfg.HTTPPort, "version", version.Version, "db", db.RedactDatabaseURL(cfg.DatabaseURL), "log_level", cfg.LogLevel)
 	// Start returns nil once SIGINT/SIGTERM has drained in-flight requests.
-	if err := s.Start(":" + cfg.HTTPPort); err != nil {
+	if err := s.Start(net.JoinHostPort(cfg.HTTPHost, cfg.HTTPPort)); err != nil {
 		logger.Error("tradermemos api stopped", "err", err)
 		os.Exit(1)
 	}

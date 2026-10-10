@@ -19,6 +19,8 @@ const (
 
 type Config struct {
 	HTTPPort string
+	HTTPHost string
+	DemoMode bool
 	// DatabaseURL is the unified DB connection string (TM_DATABASE_URL).
 	// Examples: sqlite:data/tradermemos.db, sqlite:///data/tradermemos.db,
 	// postgres://user:pass@host:5432/db?sslmode=require
@@ -166,6 +168,8 @@ func Load() (Config, error) {
 
 	cfg := Config{
 		HTTPPort:                   httpPort,
+		HTTPHost:                   k.String("http_host"),
+		DemoMode:                   k.Bool("demo_mode"),
 		JWTSecret:                  k.String("jwt_secret"),
 		AllowInsecureJWT:           k.Bool("allow_insecure_jwt"),
 		AllowRegistration:          k.Bool("allow_registration"),
@@ -210,6 +214,9 @@ func Load() (Config, error) {
 	}
 	if err := cfg.resolveDatabase(k.String("database_url"), k.String("db_path")); err != nil {
 		return Config{}, err
+	}
+	if cfg.DemoMode {
+		cfg.applyDemoPolicy()
 	}
 	return cfg, nil
 }

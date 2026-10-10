@@ -42,7 +42,7 @@ export function StatTile({
           {value}
         </p>
       )}
-      {sub ? <p className="m-0 mt-0.5 truncate text-[11px] text-muted-foreground">{sub}</p> : null}
+      {sub ? <p className="m-0 mt-0.5 break-all text-[11px] text-muted-foreground">{sub}</p> : null}
     </div>
   );
 }

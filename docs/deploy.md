@@ -271,7 +271,7 @@ the failure remains visible and should be investigated.
    next to it — a stale write-ahead log must not be replayed onto the restored file:
 
    ```bash
-   cp /srv/tradelens-backups/tradelens-<database-path-hash>/<snapshot>.db /data/tradermemos.db
+   cp /srv/tradelens-backups/tradelens-<backup-id>/<snapshot>.db /data/tradermemos.db
    rm -f /data/tradermemos.db-wal /data/tradermemos.db-shm
    ```
 

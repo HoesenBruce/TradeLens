@@ -1,4 +1,4 @@
-# GHCR publication remains disabled until controlled first-release validation.
+# Publication requires the ghcr environment approval.
 name: Publish TradeLens Docker images
 
 on:
@@ -163,3 +163,15 @@ jobs:
           name: ghcr-digest-${{ matrix.image }}-${{ needs.metadata.outputs.commit }}
           path: image-digest.txt
           retention-days: 90
+
+  deploy-demo:
+    needs: [metadata, publish]
+    if: ${{ vars.DEMO_AUTO_DEPLOY_ENABLED == 'true' && needs.metadata.outputs.version != 'dev' && !contains(needs.metadata.outputs.version, '-') }}
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/demo-deploy.yml
+    with:
+      version: ${{ needs.metadata.outputs.version }}
+      source_sha: ${{ needs.metadata.outputs.commit }}
+    secrets: inherit

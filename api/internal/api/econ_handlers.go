@@ -41,12 +41,15 @@ func (s *Server) handleListEconomicEvents(c *echo.Context) error {
 		return Fail(http.StatusBadRequest, "bad_request", "range too large (max 366 days)", nil)
 	}
 
-	if s.deps.Econ == nil {
+	if s.deps.Econ == nil && !s.deps.DemoMode {
 		return Fail(http.StatusServiceUnavailable, "unavailable", "economic calendar not configured", nil)
 	}
 	// Refresh is best-effort: a feed outage degrades to cached rows.
-	if err := s.deps.Econ.EnsureFresh(c.Request().Context()); err != nil {
-		c.Logger().Warn("economic events refresh failed", "err", err)
+	// Demo reads only the fictional local archive; never fetch an external feed.
+	if !s.deps.DemoMode {
+		if err := s.deps.Econ.EnsureFresh(c.Request().Context()); err != nil {
+			c.Logger().Warn("economic events refresh failed", "err", err)
+		}
 	}
 
 	rows, err := s.deps.Store.ListEconomicEvents(c.Request().Context(), store.ListEconomicEventsParams{

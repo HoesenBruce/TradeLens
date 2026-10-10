@@ -1,6 +1,7 @@
 package api_test
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -117,4 +118,34 @@ func TestEconomicEventsValidation(t *testing.T) {
 	// Date-only params are accepted; service not configured on testServer → 503.
 	rec = do(s, http.MethodGet, "/api/v1/economic-events?from=2026-08-01&to=2026-08-10", "", tok)
 	require.Equal(t, http.StatusServiceUnavailable, rec.Code)
+}
+
+func TestEconomicEventsDemoArchive(t *testing.T) {
+	conn, err := db.Open(filepath.Join(t.TempDir(), "demo.db"))
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = conn.Close() })
+	require.NoError(t, db.Migrate(conn))
+	q := store.New(conn)
+	jwt := auth.NewJWT("test")
+	deps := api.Deps{JWT: jwt, Auth: auth.NewService(q, jwt, true), Store: q}
+	token := registerAndLogin(t, api.New(deps), "calendar-demo@example.com")
+	_, err = conn.ExecContext(context.Background(), `INSERT INTO economic_events
+        (provider,title,country,impact,event_ts,fetched_at) VALUES
+        ('FICTIONAL-demo','[FICTIONAL demo] Policy decision','JPY','high','2026-10-08T01:00:00Z','2026-10-08T00:00:00Z')`)
+	require.NoError(t, err)
+	deps.DemoMode = true
+	s := api.New(deps)
+	path := "/api/v1/economic-events?from=2026-10-08&to=2026-10-09"
+	require.Equal(t, http.StatusUnauthorized, do(s, http.MethodGet, path, "", "").Code)
+	rec := do(s, http.MethodGet, path+"&country=jpy&impact=high", "", token)
+	require.Equal(t, http.StatusOK, rec.Code, rec.Body.String())
+	var rows []map[string]any
+	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &rows))
+	require.Len(t, rows, 1)
+	require.Equal(t, "FICTIONAL-demo", rows[0]["provider"])
+	rec = do(s, http.MethodGet, path+"&country=USD", "", token)
+	require.Equal(t, http.StatusOK, rec.Code)
+	require.JSONEq(t, "[]", rec.Body.String())
+	require.Equal(t, http.StatusBadRequest, do(s, http.MethodGet, "/api/v1/economic-events?from=bad&to=2026-10-09", "", token).Code)
+	require.Equal(t, http.StatusForbidden, do(s, http.MethodPost, "/api/v1/economic-events", "{}", token).Code)
 }

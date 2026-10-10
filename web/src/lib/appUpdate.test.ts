@@ -20,6 +20,7 @@ vi.mock("./hooks/useApiHealth", () => ({
 }));
 
 import { fetchLatestRelease } from "./releases";
+import { APP_VERSION } from "./version";
 
 function release(version: string): GitHubRelease {
   return {
@@ -120,5 +121,34 @@ describe("initAppUpdates", () => {
     expect(serwist.register).toHaveBeenCalledOnce();
     listeners.get("waiting")?.();
     expect(useAppUpdate.getState().swReady).toBe(true);
+  });
+});
+
+describe("release checks", () => {
+  it("reports current and newer stable TradeLens releases", async () => {
+    vi.mocked(fetchLatestRelease).mockResolvedValue(release(APP_VERSION));
+    await useAppUpdate.getState().checkForUpdates();
+    expect(useAppUpdate.getState().remoteNewer).toBe(false);
+    vi.mocked(fetchLatestRelease).mockResolvedValue(release("99.0.0"));
+    await useAppUpdate.getState().checkForUpdates();
+    expect(useAppUpdate.getState().remoteNewer).toBe(true);
+  });
+  it("clears a previous update on failure and recovers on retry", async () => {
+    vi.mocked(fetchLatestRelease).mockResolvedValue(release("99.0.0"));
+    await useAppUpdate.getState().checkForUpdates();
+    vi.mocked(fetchLatestRelease).mockRejectedValueOnce(new Error("offline"));
+    await useAppUpdate.getState().checkForUpdates();
+    expect(useAppUpdate.getState()).toMatchObject({
+      remote: null,
+      remoteNewer: false,
+      webBehind: false,
+      apiBehind: false,
+      checkError: "offline",
+    });
+    await useAppUpdate.getState().checkForUpdates();
+    expect(useAppUpdate.getState()).toMatchObject({ remoteNewer: true, checkError: null });
+    vi.mocked(fetchLatestRelease).mockResolvedValue(null);
+    await useAppUpdate.getState().checkForUpdates();
+    expect(useAppUpdate.getState()).toMatchObject({ remote: null, remoteNewer: false });
   });
 });

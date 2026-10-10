@@ -67,5 +67,45 @@ download; the container drill used the locally built binary in a runtime image.
 Physical disk exhaustion, power loss, Windows runtime, real NAS locking/fsync,
 off-site synchronization, public Render deployment, and native iOS/Android were
 not exercised. Disk-full handling uses fault injection. The demo flag is tested
-locally; the separate demo PR is not part of this branch. Last-attempt/error status
+locally; the demo PR was subsequently integrated from main during final review. Last-attempt/error status
 is in memory and resets on restart; snapshots and the latest success remain on disk.
+
+## Final merge review — 2026-10-10
+
+Integrated `origin/main` at `58f6a3c1` into the existing #272 branch without rewriting
+its prior commit. The sole conflict was About's moved `StatTile`; the shared
+component retains main's `break-all` subline, and main's TradeLens release source,
+full commit display and unavailable-release handling are preserved. Corrected the
+restore path placeholder to the actual persisted backup ID. Backup core behavior,
+database schema and accounting semantics are unchanged.
+
+- `go test ./...`, `go vet ./...`, and backup/jobs race tests passed again.
+- Web production build and check passed (0 errors, 347 warnings). The first
+  full run timed out in the existing NewTradeDrawer batch-P&L test while builds
+  ran concurrently; a second full run passed all 189 files / 1,091 tests.
+- Offline deployment/release-metadata regression tests passed (10 + 3 tests).
+- Built-in-browser production smoke against a fresh API passed manual backup,
+  latest-file/count read-back and leave/re-entry. About links to TradeLens v0.3.1;
+  [review-main-integrated.png](review-main-integrated.png) shows the live API and
+  backup card. Build metadata still identifies the pre-merge HEAD because the
+  integration was exercised before committing.
+- **Full `api/Dockerfile` build now passed**, superseding the earlier build gap.
+  Its local Linux arm64 image passed manual snapshot, integrity, user read-back,
+  0600 permissions and persistent-volume restart with the same namespace/file.
+- The existing stop/restore/restart drill is sufficient for this DB-only feature's
+  merge gate: the backup core and schema did not change in integration. It does
+  not establish uploaded-attachment recovery or a complete disaster-recovery plan.
+- Review found no critical data-loss, authorization, concurrency or retention
+  blocker for a single API on a local POSIX filesystem. Admin authorization is
+  re-read from the DB; snapshot publication precedes retention under the directory
+  lock, with separate DB namespaces. Root/host access remains trusted.
+- Render demo runtime strips caller `TM_*` settings and sets jobs off. Config
+  also disables jobs in demo mode, and the backup service refuses manual and
+  scheduled writes. The config regression explicitly sets both jobs/backups on
+  and confirms they remain ineffective in demo mode.
+- Real NAS locking/atomic rename/fsync and off-site recovery remain deployment
+  follow-up, not a merge blocker for local storage. Before using a network share,
+  validate those guarantees or write locally and sync off-site. Do not reuse a
+  copied `.backup-id` for an independent instance sharing the same backup root.
+
+Remote checks and final mergeability are recorded on PR #285 for its final HEAD.

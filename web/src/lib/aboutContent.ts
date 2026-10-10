@@ -56,6 +56,7 @@ export type AboutContent = {
   updateViewRelease: string;
   updateLastChecked: string;
   updateNeverChecked: string;
+  updateUnavailable: string;
   updateBannerTitle: string;
   updateBannerSw: string;
   updateDismiss: string;
@@ -171,6 +172,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     updateViewRelease: "View release",
     updateLastChecked: "Last checked",
     updateNeverChecked: "Not checked yet",
+    updateUnavailable: "Unavailable",
     updateBannerTitle: "Update available",
     updateBannerSw: `A new version of ${BRAND.name} is ready. Reload to apply it.`,
     updateDismiss: "Dismiss",
@@ -283,6 +285,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     updateViewRelease: "查看發佈說明",
     updateLastChecked: "上次檢查",
     updateNeverChecked: "尚未檢查",
+    updateUnavailable: "暫時無法確認",
     updateBannerTitle: "有可用更新",
     updateBannerSw: `${BRAND.name} 有新版本就緒。重新載入以套用。`,
     updateDismiss: "關閉",
@@ -402,6 +405,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     updateViewRelease: "リリースを見る",
     updateLastChecked: "最終確認",
     updateNeverChecked: "未確認",
+    updateUnavailable: "確認できません",
     updateBannerTitle: "アップデートがあります",
     updateBannerSw: `${BRAND.name} の新しいバージョンが準備できました。再読み込みして適用してください。`,
     updateDismiss: "閉じる",
@@ -516,6 +520,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     updateViewRelease: "릴리스 보기",
     updateLastChecked: "마지막 확인",
     updateNeverChecked: "아직 확인 안 함",
+    updateUnavailable: "확인할 수 없음",
     updateBannerTitle: "업데이트 사용 가능",
     updateBannerSw: `${BRAND.name} 새 버전이 준비되었습니다. 새로고침하여 적용하세요.`,
     updateDismiss: "닫기",
@@ -546,6 +551,7 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
 
 ABOUT["zh-CN"] = {
   ...ABOUT.en,
+  updateUnavailable: "暂时无法确认",
   intro: "自托管交易日志、投资组合分析和市场复盘平台。",
   attribution: "TradeLens 基于 TraderMemos，由 sinhong2011 和贡献者最初开发。",
   developerTitle: "原始上游作者",

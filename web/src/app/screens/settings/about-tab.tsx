@@ -187,11 +187,15 @@ export function AboutTab() {
             ? content.updateMismatch
             : remoteNewer
               ? content.updateStatusAvailable
-              : content.updateStatusCurrent;
+              : !remote
+                ? lastCheckedAt
+                  ? content.updateUnavailable
+                  : content.updateNeverChecked
+                : content.updateStatusCurrent;
 
   const apiVersionValue =
     storeApiVersion ?? (healthOk && health.data?.version ? health.data.version : null);
-  const apiCommit = health.data?.commit?.slice(0, 7);
+  const apiCommit = health.data?.commit;
 
   const releaseSections = remote ? parseReleaseNotes(remote.body) : [];
 
@@ -222,7 +226,9 @@ export function AboutTab() {
               <h2 className="m-0 text-[26px] font-bold tracking-[-0.03em] text-foreground">
                 {BRAND.name}
               </h2>
-              <Pill tone="muted">{formatVersion(APP_VERSION, APP_BUILD || undefined)}</Pill>
+              <Pill tone="muted" title={APP_BUILD || undefined}>
+                {formatVersion(APP_VERSION, APP_BUILD.slice(0, 7) || undefined)}
+              </Pill>
             </div>
             <p className="m-0 mt-0.5 text-[13px] text-muted-foreground">{BRAND.tagline}</p>
             <p className="m-0 mt-3 max-w-2xl text-[13px] leading-relaxed text-muted-foreground">
@@ -331,7 +337,7 @@ export function AboutTab() {
                   formatVersion(remote.version)
                 ) : (
                   <span className="text-[12px] font-normal text-muted-foreground">
-                    {content.updateNeverChecked}
+                    {lastCheckedAt ? content.updateUnavailable : content.updateNeverChecked}
                   </span>
                 )
               }
@@ -354,11 +360,14 @@ export function AboutTab() {
             <span
               className={cn(
                 "inline-flex items-center gap-1.5 text-[12px] font-medium",
-                attention ? "text-chart-3" : "text-success",
+                attention ? "text-chart-3" : remote ? "text-success" : "text-muted-foreground",
               )}
             >
               <span
-                className={cn("size-1.5 rounded-full", attention ? "bg-chart-3" : "bg-success")}
+                className={cn(
+                  "size-1.5 rounded-full",
+                  attention ? "bg-chart-3" : remote ? "bg-success" : "bg-muted-foreground",
+                )}
                 aria-hidden
               />
               {updateStatus}
