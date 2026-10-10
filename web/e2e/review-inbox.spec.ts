@@ -121,7 +121,9 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
   await page.getByRole("textbox", { name: "Review notes" }).fill("new lesson");
   await page.getByRole("checkbox", { name: mistake.name }).uncheck();
   let failed = false;
+  let writes = 0;
   await page.route(`**/trades/${first.id}`, async (route) => {
+    if (route.request().method() === "PATCH") writes++;
     if (route.request().method() === "PATCH" && !failed) {
       failed = true;
       await route.fulfill({
@@ -145,11 +147,16 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
   ))
     expect(after[key], key).toEqual(before[key]);
   expect(after.trade_quality).toBe(5);
+  expect(writes).toBe(2); // One failed request and one successful retry.
+  expect(after.notes).toBe(notes.replace("old lesson", "new lesson"));
   expect(after.notes).toContain("Legacy preserved");
   expect(after.notes).toContain("## Planned direction\nshort");
   expect(after.tags.map((t: { id: string }) => t.id)).toEqual([custom.id]);
   await page.reload();
   await expect(page.getByRole("button", { name: "Recent (1)" })).toBeVisible();
+  await page.goto("/settings");
+  await page.goto("/review");
+  await expect(page.getByRole("heading", { name: /REVIEW273B/ })).toBeVisible();
   await page.getByRole("button", { name: "Skip", exact: true }).click();
   await expect(page.getByText(/^Queue complete/)).toBeVisible();
   await page.getByRole("button", { name: "Back", exact: true }).click();
@@ -170,6 +177,24 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
   expect(prefs.prefs[`reviewBacklogCutoff:${b.id}`]).toBeUndefined();
   await page.reload();
   await expect(page.getByRole("button", { name: "Backlog (0)" })).toBeVisible();
+  // A different device reads the authenticated cutoff, with no local state.
+  const device = await page.context().browser()!.newContext();
+  const devicePage = await device.newPage();
+  await devicePage.addInitScript(
+    ({ token, api, id }) => {
+      localStorage.setItem("tm_token", token);
+      localStorage.setItem("tm_api_base", api);
+      localStorage.setItem("tm-locale", "en");
+      localStorage.setItem(
+        "tm_filters",
+        JSON.stringify({ state: { accountIds: [id] }, version: 1 }),
+      );
+    },
+    { token: auth.access_token, api, id: a.id },
+  );
+  await devicePage.goto(`${info.project.use.baseURL}/review`);
+  await expect(devicePage.getByRole("button", { name: "Backlog (0)" })).toBeVisible();
+  await device.close();
   await page.getByRole("button", { name: "Restore backlog" }).click();
   await expect(page.getByRole("button", { name: "Backlog (1)" })).toBeVisible();
   await page.getByRole("spinbutton", { name: "Recent days" }).fill("30");
@@ -205,5 +230,35 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
   await page.reload();
   await expect(page.getByRole("heading", { name: "レビュー受信箱" })).toBeVisible();
   await expect(page.getByRole("button", { name: "最近 (1)" })).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const [locale, title] of [
+    ["en", "Review inbox"],
+    ["zh-CN", "复盘收件箱"],
+    ["ja", "レビュー受信箱"],
+    ["zh-HK", "復盤收件箱"],
+    ["ko", "복기함"],
+  ]) {
+    await page.evaluate((locale) => localStorage.setItem("tm-locale", locale), locale);
+    await page.reload();
+    await expect(page.getByRole("heading", { name: title, exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /REVIEW273B/ })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      390,
+    );
+    await page.screenshot({ path: info.outputPath(`review-${locale}-390.png`), fullPage: true });
+  }
+  await page.evaluate(() => localStorage.setItem("tm-locale", "en"));
+  await page.reload();
+  const grade = page.getByRole("button", { name: "A+", exact: true });
+  await grade.focus();
+  await page.keyboard.press("Enter");
+  await expect(grade).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Cancel edits" }).click();
+  await page.route("**/trades?**", (route) => route.fulfill({ status: 500, body: "{}" }));
+  await page.reload();
+  await expect(page.getByText("Could not load trades.")).toBeVisible({ timeout: 20000 });
+  await page.unroute("**/trades?**");
+  await page.getByRole("button", { name: "Retry", exact: true }).click();
+  await expect(page.getByRole("heading", { name: /REVIEW273B/ })).toBeVisible();
   expect(errors).toEqual([]);
 });
