@@ -5,6 +5,13 @@ All notable changes to TraderMemos are documented in this file.
 Release versioning is managed by [release-please](https://github.com/googleapis/release-please).
 See [docs/release.md](docs/release.md) for the release workflow.
 
+## [0.4.0](https://github.com/HoesenBruce/TradeLens/compare/v0.3.1...v0.4.0) (2026-10-10)
+
+
+### Features
+
+* **backup:** add isolated owner-only SQLite snapshots ([#285](https://github.com/HoesenBruce/TradeLens/issues/285)) ([005dd36](https://github.com/HoesenBruce/TradeLens/commit/005dd367879b1564e2add665a73dee3e0c26a333))
+
 ## [0.3.1](https://github.com/HoesenBruce/TradeLens/compare/v0.3.0...v0.3.1) (2026-10-09)
 
 
