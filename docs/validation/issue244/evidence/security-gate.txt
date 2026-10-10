@@ -1,0 +1,2 @@
+ok  	github.com/tradermemos/api/internal/api	5.947s
+ok  	github.com/tradermemos/api/internal/backup	1.000s

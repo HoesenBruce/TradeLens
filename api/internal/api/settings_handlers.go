@@ -22,14 +22,14 @@ func (s *Server) settingsRoutes(g *echo.Group) {
 	g.GET("/settings/annual-goal", s.handleGetAnnualGoal)
 	g.PUT("/settings/annual-goal", s.handlePutAnnualGoal)
 	g.DELETE("/settings/annual-goal", s.handleDeleteAnnualGoal)
-	g.GET("/settings/ocr", s.handleGetOcrSettings)
-	g.PUT("/settings/ocr", s.handlePutOcrSettings)
-	g.POST("/settings/ocr/test", s.handleTestOcrSettings)
-	g.POST("/settings/ocr/models", s.handleListOcrModels)
-	g.GET("/settings/coach", s.handleGetCoachSettings)
-	g.PUT("/settings/coach", s.handlePutCoachSettings)
-	g.POST("/settings/coach/test", s.handleTestCoachSettings)
-	g.POST("/settings/coach/models", s.handleListCoachModels)
+	g.GET("/settings/ocr", s.handleGetOcrSettings, s.requireAdmin)
+	g.PUT("/settings/ocr", s.handlePutOcrSettings, s.requireAdmin)
+	g.POST("/settings/ocr/test", s.handleTestOcrSettings, s.requireAdmin)
+	g.POST("/settings/ocr/models", s.handleListOcrModels, s.requireAdmin)
+	g.GET("/settings/coach", s.handleGetCoachSettings, s.requireAdmin)
+	g.PUT("/settings/coach", s.handlePutCoachSettings, s.requireAdmin)
+	g.POST("/settings/coach/test", s.handleTestCoachSettings, s.requireAdmin)
+	g.POST("/settings/coach/models", s.handleListCoachModels, s.requireAdmin)
 }
 
 type riskRulesDTO struct {

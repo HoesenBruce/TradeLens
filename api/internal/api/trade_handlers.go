@@ -191,6 +191,23 @@ func (s *Server) handlePatchTrade(c *echo.Context) error {
 		return Fail(http.StatusBadRequest, "bad_request", "invalid body", nil)
 	}
 
+	// Validate child ownership before any journal or link mutation.
+	if in.TagIDs != nil {
+		owned, err := s.deps.Store.ListTags(ctx, uid)
+		if err != nil {
+			return Fail(http.StatusInternalServerError, "internal", "could not load tags", nil)
+		}
+		ownedSet := make(map[string]bool, len(owned))
+		for _, t := range owned {
+			ownedSet[t.ID] = true
+		}
+		for _, tagID := range in.TagIDs {
+			if !ownedSet[tagID] {
+				return Fail(http.StatusBadRequest, "bad_request", "unknown tag id: "+tagID, nil)
+			}
+		}
+	}
+
 	// Journal fields are merged with any existing journal so a partial PATCH
 	// does not clobber untouched fields.
 	journalTouched := in.Notes != nil || in.SetupID != nil || in.SetupIDs != nil ||
@@ -335,20 +352,6 @@ func (s *Server) handlePatchTrade(c *echo.Context) error {
 		}
 	}
 	if in.TagIDs != nil {
-		// Only allow attaching tags the user owns (IDOR guard).
-		owned, err := s.deps.Store.ListTags(ctx, uid)
-		if err != nil {
-			return Fail(http.StatusInternalServerError, "internal", "could not load tags", nil)
-		}
-		ownedSet := make(map[string]bool, len(owned))
-		for _, t := range owned {
-			ownedSet[t.ID] = true
-		}
-		for _, tagID := range in.TagIDs {
-			if !ownedSet[tagID] {
-				return Fail(http.StatusBadRequest, "bad_request", "unknown tag id: "+tagID, nil)
-			}
-		}
 		if err := s.deps.Store.ClearTradeTags(ctx, id); err != nil {
 			return Fail(http.StatusInternalServerError, "internal", "could not clear tags", nil)
 		}
