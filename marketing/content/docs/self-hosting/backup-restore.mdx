@@ -82,7 +82,8 @@ Use persistent local storage with advisory locks, atomic rename and fsync. Sync 
 ephemeral Render storage is not a recoverable backup. Snapshots contain the database only;
 retain attachments and configuration/secrets separately.
 
-Restore drill: preserve a rollback copy, stop all API replicas, copy a selected snapshot
+Restore drill: stop all API replicas, preserve a rollback copy including remaining WAL files,
+verify it contains the expected application data, then copy a selected snapshot
 over the configured database, remove its stale `-wal` and `-shm`, restore matching
 attachments/secrets, run SQLite `PRAGMA integrity_check` and expect `ok`, then start the
 same TradeLens version and verify login, accounts, trades and attachment read-back.

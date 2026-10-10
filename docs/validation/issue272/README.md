@@ -51,7 +51,7 @@ while VACUUM was running. The published snapshot passed `PRAGMA integrity_check`
 Built the current branch as a Linux arm64 API binary and ran it in a local Debian
 runtime image with a persistent `/data` bind mount. Seeded one account and two
 executions, took a snapshot, and confirmed status/identity survived container
-restart. Stopped the container, preserved a rollback DB and an attachment-directory
+restart. Stopped the container, attempted a rollback DB copy and preserved an attachment-directory
 sentinel separately, changed the live DB, restored the selected snapshot, removed
 WAL/SHM sidecars, checked integrity, restarted and read back the original account
 and both executions. Repeated snapshot/integrity checks with the final binary.
@@ -93,8 +93,17 @@ database schema and accounting semantics are unchanged.
   Its local Linux arm64 image passed manual snapshot, integrity, user read-back,
   0600 permissions and persistent-volume restart with the same namespace/file.
 - The existing stop/restore/restart drill is sufficient for this DB-only feature's
-  merge gate: the backup core and schema did not change in integration. It does
+  snapshot recovery gate: the backup core and schema did not change in integration. It does
   not establish uploaded-attachment recovery or a complete disaster-recovery plan.
+  On inspecting the retained artifacts, both snapshots, selected DB and restored
+  application DB had valid schema, `integrity_check=ok`, one user and two executions.
+  However, the old `pre-restore.db` was schema-empty and is **not valid rollback evidence**.
+  Corrected all four restore-guide locales to stop writers before preserving the
+  rollback copy, including remaining WAL files, and to verify application data.
+  Added a fresh full-Dockerfile-image drill: stop container, change the disposable
+  user after the snapshot, copy the complete stopped volume, verify rollback schema,
+  changed user and integrity, replace DB with snapshot/remove sidecars, restart and
+  successfully log in/read back the original user. This closes the rollback gap.
 - Review found no critical data-loss, authorization, concurrency or retention
   blocker for a single API on a local POSIX filesystem. Admin authorization is
   re-read from the DB; snapshot publication precedes retention under the directory

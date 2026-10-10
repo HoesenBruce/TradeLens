@@ -265,8 +265,10 @@ the failure remains visible and should be investigated.
 
 **Restore** (SQLite):
 
-1. Preserve the current database, attachments and secrets in a separate recovery copy.
-   Stop every API process/replica (`docker compose stop api`, or stop the binary/service).
+1. Stop every API process/replica (`docker compose stop api`, or stop the binary/service).
+   Then preserve the current database, any remaining WAL/SHM sidecars, attachments and
+   secrets in a separate recovery copy. Check that the rollback copy contains the expected
+   application data; `integrity_check=ok` alone also passes for an empty database.
 2. Replace the database file with a snapshot, and delete any `-wal` / `-shm` sidecars left
    next to it — a stale write-ahead log must not be replayed onto the restored file:
 
