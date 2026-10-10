@@ -12,6 +12,8 @@ api/.env.local
 *.dump
 *.bak
 *.backup
+*.backup-id
+.backup-id-*
 *.sql.gz
 *.zip
 *.tar.gz

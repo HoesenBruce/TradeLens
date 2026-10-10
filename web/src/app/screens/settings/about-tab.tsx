@@ -10,11 +10,9 @@ import {
 } from "lucide-react";
 import { Github } from "@/components/icons/github";
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
 import { AppLogo } from "@/components/AppLogo";
 import { BRAND } from "@/lib/brand";
 import { Pill } from "@/components/Pill";
-import { Skeleton } from "@/components/Skeleton";
 import { Button } from "@/components/ui/button";
 import {
   aboutContent,
@@ -35,6 +33,10 @@ import { useLocale } from "@/i18n";
 import { SettingsGroup, SettingsGroupRow, SettingsSection, SettingsToggle } from "./settings-ui";
 import { useDisplayPrefs } from "@/lib/displayPrefs";
 
+import { AboutCard, StatTile } from "./about-ui";
+import { BackupsSection } from "./backups-section";
+import { useMe } from "@/lib/hooks/useMe";
+
 const FEATURE_ICONS: LucideIcon[] = [
   House,
   ScrollText,
@@ -43,47 +45,6 @@ const FEATURE_ICONS: LucideIcon[] = [
   FileSpreadsheet,
   Sparkles,
 ];
-
-/** Borderless elevated block — About-page section surface. */
-function AboutCard({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("rounded-xl bg-card", className)}>{children}</div>;
-}
-
-/** Compact stat: uppercase label on top, prominent value, optional subline. */
-function StatTile({
-  label,
-  value,
-  sub,
-  tone = "default",
-  loading,
-}: {
-  label: string;
-  value?: ReactNode;
-  sub?: ReactNode;
-  tone?: "default" | "warn";
-  loading?: boolean;
-}) {
-  return (
-    <div className="min-w-0 rounded-lg bg-sidebar/60 px-4 py-3.5">
-      <p className="m-0 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      {loading ? (
-        <Skeleton height="20px" width="4.5rem" className="mt-1.5" />
-      ) : (
-        <p
-          className={cn(
-            "m-0 mt-1 truncate text-[17px] font-semibold tabular-nums tracking-tight",
-            tone === "warn" ? "text-chart-3" : "text-foreground",
-          )}
-        >
-          {value}
-        </p>
-      )}
-      {sub ? <p className="m-0 mt-0.5 break-all text-[11px] text-muted-foreground">{sub}</p> : null}
-    </div>
-  );
-}
 
 function AboutFeatureCard({
   icon: Icon,
@@ -188,6 +149,7 @@ function ApiHealthStatus({
 }
 
 export function AboutTab() {
+  const me = useMe();
   const { t: localize } = useSecondaryLingui();
 
   const { locale } = useLocale();
@@ -560,6 +522,8 @@ export function AboutTab() {
           ) : null}
         </AboutCard>
       </SettingsSection>
+
+      {me.data?.is_admin ? <BackupsSection /> : null}
 
       {/* Features */}
       <SettingsSection title={content.featuresTitle}>

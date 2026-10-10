@@ -13,6 +13,7 @@ import (
 	"github.com/tradermemos/api/internal/alerts"
 	"github.com/tradermemos/api/internal/api"
 	"github.com/tradermemos/api/internal/auth"
+	"github.com/tradermemos/api/internal/backup"
 	"github.com/tradermemos/api/internal/config"
 	"github.com/tradermemos/api/internal/db"
 	"github.com/tradermemos/api/internal/econdata"
@@ -125,6 +126,37 @@ func main() {
 		APIKey:  cfg.CoachAPIKey,
 		Model:   cfg.CoachModel,
 	}
+	backupDir := cfg.BackupDir
+	if backupDir == "" {
+		backupDir = backup.DefaultDir(cfg.DBPath)
+	}
+	// The schedule needs both the backup switch and the global job switch;
+	// manual "back up now" works regardless.
+	var backupInitErr error
+	if cfg.Driver == db.DriverSQLite && !cfg.BackupDisabled {
+		backupDir, backupInitErr = backup.InstanceDir(backupDir, cfg.DBPath)
+		if backupInitErr != nil {
+			logger.Warn("resolve backup directory", "err", backupInitErr)
+		}
+	}
+	backupScheduled := !cfg.BackupDisabled && cfg.BackupEnabled && cfg.JobsEnabled && cfg.BackupIntervalMin > 0
+	backupConn := conn
+	if cfg.Driver == db.DriverSQLite && !cfg.BackupDisabled && backupInitErr == nil {
+		// VACUUM must not occupy the application's single SQLite connection.
+		backupConn, backupInitErr = db.Open(cfg.DatabaseURL)
+		if backupInitErr == nil {
+			defer backupConn.Close()
+		}
+	}
+	backupSvc := backup.New(backupConn, backup.Config{
+		Driver:    cfg.Driver,
+		Dir:       backupDir,
+		Keep:      cfg.BackupKeep,
+		Interval:  time.Duration(cfg.BackupIntervalMin) * time.Minute,
+		Scheduled: backupScheduled,
+		Disabled:  cfg.BackupDisabled,
+		InitError: backupInitErr,
+	}, logger)
 	flexClient := &flexsync.Client{}
 	alertsSvc := alerts.NewService(q, logger, cfg.AlertsAllowPrivateWebhooks)
 	tradesSvc := trades.NewService(q)
@@ -156,6 +188,7 @@ func main() {
 		ShareLinksEnabled: cfg.ShareLinksEnabled,
 		PublicWebURL:      cfg.PublicWebURL,
 		Driver:            cfg.Driver,
+		Backup:            backupSvc,
 		Features: map[string]bool{
 			"market_data":     cfg.MarketDataEnabled,
 			"econ_calendar":   cfg.EconCalendarEnabled,
@@ -191,8 +224,16 @@ func main() {
 				logger,
 			))
 		}
+		if backupScheduled && backupSvc.Supported() {
+			runner.Register(jobs.NewBackup(backupSvc, logger))
+			logger.Info("database backups scheduled", "dir", backupDir,
+				"keep", backupSvc.Config().Keep, "interval", backupSvc.Config().Interval.String())
+		} else if cfg.BackupEnabled && !backupSvc.Supported() {
+			logger.Info("built-in database backups cover SQLite only; back up Postgres with pg_dump")
+		}
 		if names := runner.Names(); len(names) > 0 {
 			runner.Start(context.Background())
+			defer runner.Stop()
 			logger.Info("background jobs started", "jobs", names)
 		}
 	}
