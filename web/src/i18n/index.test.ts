@@ -72,3 +72,17 @@ it("refreshes secondary labels without changing broker, rule or hotkey identifie
     expect(broker.steps.join(" ")).toContain("Flex Queries");
   }
 });
+
+it("translates review actions in every supported locale", async () => {
+  for (const [locale, title, save] of [
+    ["en", "Review inbox", "Save and next"],
+    ["zh-CN", "复盘收件箱", "保存并进入下一笔"],
+    ["zh-HK", "復盤收件箱", "儲存並進入下一筆"],
+    ["ja", "レビュー受信箱", "保存して次へ"],
+    ["ko", "복기함", "저장 후 다음"],
+  ]) {
+    await loadLocale(locale);
+    expect(i18n._("review.title")).toBe(title);
+    expect(i18n._("review.save")).toBe(save);
+  }
+});

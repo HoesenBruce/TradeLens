@@ -157,16 +157,11 @@ func (s *Service) EvaluateUser(ctx context.Context, userID string) error {
 
 	if cfg.UnreviewedEnabled && cfg.UnreviewedDays > 0 {
 		cutoff := now.AddDate(0, 0, -cfg.UnreviewedDays)
-		count := 0
-		for _, t := range rows {
-			if !t.ClosedAt.Valid || t.ClosedAt.Time.After(cutoff) {
-				continue
-			}
-			j, ok := journalByTrade[t.ID]
-			if !ok || (j.Notes == "" && !j.TradeQuality.Valid) {
-				count++
-			}
+		prefs, perr := s.q.GetUserPreferences(ctx, userID)
+		if perr != nil && !errors.Is(perr, sql.ErrNoRows) {
+			return perr
 		}
+		count := CountUnreviewed(rows, journalByTrade, cutoff, ReviewCutoffs(prefs.Prefs))
 		events = append(events, Unreviewed(count, cfg.UnreviewedDays, now, loc)...)
 	}
 

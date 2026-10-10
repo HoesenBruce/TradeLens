@@ -7274,7 +7274,7 @@ msgstr "自营账户已使用此比例的回撤额度，超限时始终提醒。
 #. js-lingui-explicit-id
 #: src/app/screens/settings/alerts-section.tsx:376
 msgid "settings.aWeeklyNudgeWhenClosedTradesOlderThanThisHaveNoJournal"
-msgstr "超过此天数的已平仓交易没有日志笔记时，每周提醒。"
+msgstr "当早于此天数的已平仓交易尚无执行评分时，每周提醒一次。已解除计数的积压交易除外。"
 
 #. js-lingui-explicit-id
 #: src/components/AuthShell.tsx:58
@@ -12355,6 +12355,138 @@ msgstr "合成时间 — 来源仅包含日期"
 msgid "imports.refreshTimes"
 msgstr "刷新时间预览"
 
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:128
+msgid "review.back"
+msgstr "返回"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:77
+msgid "review.backlog"
+msgstr "积压"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:69
+msgid "review.cancelDismiss"
+msgstr "取消解除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:281
+msgid "review.cancel"
+msgstr "取消编辑"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:44
+msgid "review.hint"
+msgstr "只有保存执行评分的已平仓交易才算已复盘。使用所选账户；不使用全局日期和交易筛选。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:69
+msgid "review.confirm"
+msgstr "确认解除"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:262
+msgid "review.tagsError"
+msgstr "无法加载错误标签。现有选择会保留。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:94
+#: src/app/screens/ReviewInboxView.tsx:148
+msgid "review.loadError"
+msgstr "无法加载交易。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:70
+msgid "review.dismissError"
+msgstr "无法更新积压设置，请重试。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:66
+msgid "review.dismiss"
+msgstr "解除积压计数"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:64
+msgid "review.dismissScope"
+msgstr "为所选账户解除旧交易的复盘计数和未来提醒，跨设备生效。交易仍未评分；恢复后重新计数。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:215
+msgid "review.grade"
+msgstr "执行评分"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:91
+#: src/app/screens/ReviewInboxView.tsx:161
+msgid "review.loading"
+msgstr "加载中…"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:239
+msgid "review.mistakes"
+msgstr "错误"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:140
+msgid "review.done"
+msgstr "队列已完成。跳过的交易仍未复盘；重新打开此页面可继续复盘。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:73
+msgid "review.recent"
+msgstr "近期"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:51
+msgid "review.days"
+msgstr "最近天数"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:87
+msgid "review.reset"
+msgstr "重置"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:67
+msgid "review.restore"
+msgstr "恢复积压计数"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:96
+#: src/app/screens/ReviewInboxView.tsx:150
+msgid "review.retry"
+msgstr "重试"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:41
+msgid "review.title"
+msgstr "复盘收件箱"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:231
+msgid "review.notes"
+msgstr "复盘笔记"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:278
+msgid "review.save"
+msgstr "保存并进入下一笔"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:270
+msgid "review.saveError"
+msgstr "保存失败，草稿已保留；请重试或取消。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:135
+msgid "review.skip"
+msgstr "跳过"
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx:69
+msgid "review.confirmDismiss"
+msgstr "不再计入这些账户中早于近期窗口的未评分交易？"
 #: src/app/screens/settings/backups-section.tsx:94
 msgid "A backup is already running"
 msgstr "已有备份正在运行"
