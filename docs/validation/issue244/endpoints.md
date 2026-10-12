@@ -102,7 +102,7 @@ Scope codes: U = authenticated principal in user_id query; A = account lookup wi
 | DELETE | `/api/v1/notes/:id` | JWT or PAT / own user | authenticated uid / notes | U | HIGH | No dedicated pre-244 test; see family tests in README | IDOR + OwnerMutations / AggregatesAndLists | COVERED |
 | GET | `/api/v1/notes/:id` | JWT or PAT / own user | authenticated uid / notes | U | HIGH | No dedicated pre-244 test; see family tests in README | IDOR + OwnerMutations / AggregatesAndLists | COVERED |
 | PATCH | `/api/v1/notes/:id` | JWT or PAT / own user | authenticated uid / notes | U | HIGH | No dedicated pre-244 test; see family tests in README | IDOR + OwnerMutations / AggregatesAndLists | COVERED |
-| POST | `/api/v1/ocr/parse` | JWT or PAT / no private object selection | shared cache or request body / ocr_handlers.go | M | LOW | `ocr_handlers_test.go` (family; see README) | anonymous gate; existing mock-provider tests | NOT APPLICABLE |
+| POST | `/api/v1/ocr/parse` | JWT or PAT / owner configuration hidden in errors | request body and instance OCR configuration / ocr_handlers.go | M + I | HIGH | `ocr_handlers_test.go` (family; see README) | OCRErrorRedaction (JWT/PAT); anonymous gate; existing mock-provider tests | COVERED |
 | GET | `/api/v1/public/share/:token` | Public; enabled, scoped, unexpired, unrevoked token | share_links.user_id | P | HIGH | `share_link_handlers_test.go` (family; see README) | TokensAndSharing | INTENTIONALLY PUBLIC |
 | GET | `/api/v1/settings/alert-channels` | JWT or PAT / own user | authenticated uid / personal settings or credentials | S | HIGH | No dedicated pre-244 test; see family tests in README | IDOR + NotificationDelivery / OwnerMutations | COVERED |
 | POST | `/api/v1/settings/alert-channels` | JWT or PAT / own user | authenticated uid / personal settings or credentials | S | HIGH | No dedicated pre-244 test; see family tests in README | IDOR + NotificationDelivery / OwnerMutations | COVERED |
@@ -157,6 +157,6 @@ Scope codes: U = authenticated principal in user_id query; A = account lookup wi
 | GET | `/healthz` | Public; auth/setup policy | installation/auth/docs metadata | M | LOW | `server_test.go` (family; see README) | existing auth/setup/docs/health tests | INTENTIONALLY PUBLIC |
 | GET | `/openapi.yaml` | Public; auth/setup policy | installation/auth/docs metadata | M | LOW | `docs_handlers_test.go` (family; see README) | existing auth/setup/docs/health tests | INTENTIONALLY PUBLIC |
 
-Total: 150 routes. COVERED: 134, INTENTIONALLY PUBLIC: 10, NOT APPLICABLE: 6.
+Total: 150 routes. COVERED: 135, INTENTIONALLY PUBLIC: 10, NOT APPLICABLE: 5.
 
 Absent APIs: no standalone positions/holdings, Home, review-inbox, import-preview retrieval, import job-status by ID, export artifact download, backup download/restore, or per-user SQLite backup. Positions/Home are composed from trades and analytics; uploads/exports use transient request memory. Guessed download paths and stored filenames are denied. Do not count absent APIs as covered endpoints.
