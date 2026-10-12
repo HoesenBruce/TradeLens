@@ -2,9 +2,11 @@ package api_test
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -16,6 +18,51 @@ import (
 	"github.com/tradermemos/api/internal/store"
 	"github.com/tradermemos/api/internal/trades"
 )
+
+func TestReviewAcceptanceNarrowPatchPreservesRows(t *testing.T) {
+	f := newIsolationFixture(t)
+	a := f.seed(t, "review-a", "ISOA", 2)
+	b := f.seed(t, "review-b", "ISOB", 9876)
+	second := isolationObject(t, f.s, "POST", "/setups", `{"name":"second plan","direction":"short"}`, a.session, 201)["id"].(string)
+	mistake := isolationObject(t, f.s, "POST", "/tags", `{"name":"review mistake","kind":"mistake"}`, a.session, 201)["id"].(string)
+	notes := "Legacy preserved\n\n## Session\nAsia\n\n## Planned direction\nshort\n\n## Entry reason\nentry\n\n## Exit reason\nexit\n\n## Review notes\nold lesson"
+	path := "/trades/" + a.trade
+	isolationObject(t, f.s, "PATCH", path, isolationJSON(t, map[string]any{
+		"notes": notes, "setup_ids": []string{a.setup, second}, "confidence": 4,
+		"emotional_state": "calm", "mae": -2, "mfe": 5, "tag_ids": []string{a.tag, mistake},
+	}), a.session, 200)
+	q := store.NewForDriver(f.conn, "sqlite")
+	params := store.GetTradeJournalParams{TradeID: a.trade, UserID: a.id}
+	journal, err := q.GetTradeJournal(context.Background(), params)
+	require.NoError(t, err)
+	before := isolationObject(t, f.s, "GET", path, "", a.session, 200)
+	state := f.databaseState(t)
+	files := f.fileState(t)
+	updated := strings.Replace(notes, "old lesson", "new lesson", 1)
+	patch := isolationJSON(t, map[string]any{"notes": updated, "trade_quality": 5, "tag_ids": []string{a.tag}})
+	// Reuse the security fixture to verify the exact review payload under PAT too.
+	require.Equal(t, 404, do(f.s, "PATCH", "/api/v1"+path, patch, b.pat).Code)
+	require.Equal(t, state, f.databaseState(t))
+	after := isolationObject(t, f.s, "PATCH", path, patch, a.pat, 200)
+	for _, key := range []string{"notes", "trade_quality", "tags"} {
+		delete(before, key)
+		delete(after, key)
+	}
+	require.Equal(t, before, after, "review must preserve every unrelated API field")
+	stored, err := q.GetTradeJournal(context.Background(), params)
+	require.NoError(t, err)
+	require.Equal(t, updated, stored.Notes)
+	require.Equal(t, sql.NullInt64{Int64: 5, Valid: true}, stored.TradeQuality)
+	stored.Notes, stored.TradeQuality, stored.UpdatedAt = journal.Notes, journal.TradeQuality, journal.UpdatedAt
+	require.Equal(t, journal, stored, "review must preserve every unrelated SQL journal column")
+	current := f.databaseState(t)
+	for _, table := range []string{"trade_journal", "trade_tags"} {
+		delete(state, table)
+		delete(current, table)
+	}
+	require.Equal(t, state, current, "review must preserve executions, setups and all other rows")
+	require.Equal(t, files, f.fileState(t))
+}
 
 func TestReviewAcceptanceIsolationAndAlertPersistence(t *testing.T) {
 	conn, err := db.Open(filepath.Join(t.TempDir(), "review.db"))

@@ -102,6 +102,13 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
     { token: auth.access_token, api, ids: [a.id] },
   );
   const errors: string[] = [];
+  const consoleErrors: string[] = [];
+  function inspectConsole(target: typeof page) {
+    target.on("console", (message) => {
+      if (message.type() === "error") consoleErrors.push(message.text());
+    });
+  }
+  inspectConsole(page);
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/review");
   await expect(page.getByRole("button", { name: "Recent (2)" })).toBeVisible();
@@ -180,6 +187,7 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
   // A different device reads the authenticated cutoff, with no local state.
   const device = await page.context().browser()!.newContext({ serviceWorkers: "block" });
   const devicePage = await device.newPage();
+  inspectConsole(devicePage);
   devicePage.on("pageerror", (error) => errors.push(error.message));
   await devicePage.addInitScript(
     ({ token, api, id }) => {
@@ -273,4 +281,10 @@ test("review queue preserves fields, navigation, account scope, errors and dismi
   await expect(grade).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Cancel edits" }).click();
   expect(errors).toEqual([]);
+  await info.attach("console-errors", {
+    body: JSON.stringify(consoleErrors, null, 2),
+    contentType: "application/json",
+  });
+  // Injected load/save failures produce Chromium resource errors, not app exceptions.
+  expect(consoleErrors.filter((error) => !/^Failed to load resource:/.test(error))).toEqual([]);
 });
