@@ -1,0 +1,31 @@
+?   	github.com/tradermemos/api/cmd/cli	[no test files]
+?   	github.com/tradermemos/api/cmd/server	[no test files]
+ok  	github.com/tradermemos/api/cmd/tm-sync	3.890s
+ok  	github.com/tradermemos/api/internal/accountvalue	1.449s
+ok  	github.com/tradermemos/api/internal/alerts	2.121s
+ok  	github.com/tradermemos/api/internal/analytics	1.698s
+ok  	github.com/tradermemos/api/internal/api	380.279s
+ok  	github.com/tradermemos/api/internal/auth	3.914s
+ok  	github.com/tradermemos/api/internal/backup	1.869s
+ok  	github.com/tradermemos/api/internal/coach	1.483s
+ok  	github.com/tradermemos/api/internal/config	1.786s
+ok  	github.com/tradermemos/api/internal/db	7.082s
+ok  	github.com/tradermemos/api/internal/econdata	3.939s
+ok  	github.com/tradermemos/api/internal/excursion	1.438s
+ok  	github.com/tradermemos/api/internal/exporter	1.469s
+ok  	github.com/tradermemos/api/internal/flexsync	3.597s
+ok  	github.com/tradermemos/api/internal/importer	13.767s
+ok  	github.com/tradermemos/api/internal/jobs	3.900s
+ok  	github.com/tradermemos/api/internal/logging	2.375s
+ok  	github.com/tradermemos/api/internal/marketdata	3.701s
+ok  	github.com/tradermemos/api/internal/money	1.339s
+ok  	github.com/tradermemos/api/internal/ocr	1.669s
+ok  	github.com/tradermemos/api/internal/positions	1.443s
+ok  	github.com/tradermemos/api/internal/predictionvalidation	3.512s
+ok  	github.com/tradermemos/api/internal/prop	1.434s
+ok  	github.com/tradermemos/api/internal/storage	1.537s
+ok  	github.com/tradermemos/api/internal/store	7.058s
+?   	github.com/tradermemos/api/internal/storepg	[no test files]
+ok  	github.com/tradermemos/api/internal/trades	4.878s
+?   	github.com/tradermemos/api/internal/version	[no test files]
+?   	github.com/tradermemos/api/openapi	[no test files]
