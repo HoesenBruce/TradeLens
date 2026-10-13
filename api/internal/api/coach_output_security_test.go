@@ -114,6 +114,11 @@ func TestCoachOutputSecurityRouting(t *testing.T) {
 		fmt.Fprintf(&htmlText, "&#%d;", r)
 	}
 	scenarios = append(scenarios, scenario{name: "unicode escaped", text: unicodeText.String()}, scenario{name: "HTML entities", text: htmlText.String()})
+	pieces := map[string]string{}
+	for i := 0; i < len(key); i += 3 {
+		pieces[fmt.Sprintf("p%02d", i)] = key[i:min(i+3, len(key))]
+	}
+	scenarios = append(scenarios, scenario{name: "structured pieces", text: isolationJSON(t, pieces)})
 	q := store.NewForDriver(f.conn, "sqlite")
 	for _, tc := range scenarios {
 		for _, token := range []string{member.session, member.pat} {

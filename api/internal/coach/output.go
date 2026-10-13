@@ -206,6 +206,15 @@ func (g *outputGuard) check(text string) error {
 		if err := add(decoded); err != nil {
 			return err
 		}
+		parts, err := structuredOutputText(v.text)
+		if err != nil {
+			return err
+		}
+		for _, part := range parts {
+			if err := add(part); err != nil {
+				return err
+			}
+		}
 		for _, token := range encodedToken.FindAllString(v.text, -1) {
 			for _, encoding := range []*base64.Encoding{base64.StdEncoding, base64.RawStdEncoding, base64.URLEncoding, base64.RawURLEncoding} {
 				decoded, err := encoding.DecodeString(token)
@@ -218,6 +227,65 @@ func (g *outputGuard) check(text string) error {
 		}
 	}
 	return nil
+}
+
+// Preserve JSON source order while checking values without intervening property names.
+func structuredOutputText(text string) ([]string, error) {
+	if !json.Valid([]byte(text)) {
+		return nil, nil
+	}
+	d := json.NewDecoder(strings.NewReader(text))
+	d.UseNumber()
+	var keys, values strings.Builder
+	var visit func(int) error
+	visit = func(depth int) error {
+		if depth > 16 {
+			return errUnsafeOutput
+		}
+		token, err := d.Token()
+		if err != nil {
+			return errUnsafeOutput
+		}
+		switch value := token.(type) {
+		case string:
+			values.WriteString(value)
+		case json.Number:
+			values.WriteString(value.String())
+		case bool:
+			if value {
+				values.WriteString("true")
+			} else {
+				values.WriteString("false")
+			}
+		case nil:
+			values.WriteString("null")
+		case json.Delim:
+			for d.More() {
+				if value == '{' {
+					key, err := d.Token()
+					if err != nil {
+						return errUnsafeOutput
+					}
+					name, ok := key.(string)
+					if !ok {
+						return errUnsafeOutput
+					}
+					keys.WriteString(name)
+				}
+				if err := visit(depth + 1); err != nil {
+					return err
+				}
+			}
+			if _, err := d.Token(); err != nil {
+				return errUnsafeOutput
+			}
+		}
+		return nil
+	}
+	if err := visit(0); err != nil {
+		return nil, err
+	}
+	return []string{keys.String(), values.String()}, nil
 }
 
 func (g *outputGuard) review(review Review) error {
