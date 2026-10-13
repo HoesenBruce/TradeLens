@@ -17,10 +17,13 @@ import (
 
 const maxReviewBytes = 64 << 10
 const maxStreamBytes = 4 << 20
+const maxInspectionViews = 128
+const maxInspectionBytes = 4 * maxReviewBytes
+const maxBase64Candidates = 1024
+const maxProtectedFragments = 16384
 
 var errUnsafeOutput = errors.New("coach output rejected")
 var credentialText = regexp.MustCompile(`(?i)(authorization\s*["']?\s*[:=]|bearer\s+[a-z0-9+/_=.-]+|basic\s+(?:[a-z0-9+/_-]*=|[a-z0-9+/_-]{8,})|(?:api[_ -]?key|access[_ -]?token|password|secret)\s*["']?\s*[:=])`)
-var encodedToken = regexp.MustCompile(`[A-Za-z0-9+/_=-]{4,}`)
 var unicodeEscape = regexp.MustCompile(`(?:\\u[0-9a-fA-F]{4})+`)
 
 func transportCredentials(cfg ocr.VisionConfig) []string {
@@ -69,7 +72,11 @@ type outputGuard struct {
 }
 
 func newOutputGuard(cfg ocr.VisionConfig) (*outputGuard, error) {
+	if len(cfg.BaseURL) > maxReviewBytes || len(cfg.APIKey) > maxReviewBytes || len(cfg.CustomPrompt) > maxReviewBytes {
+		return nil, errUnsafeOutput
+	}
 	g := &outputGuard{fragments: make(map[int]map[string]bool)}
+	sourceBudget, fragmentCount := maxReviewBytes, 0
 	items := []struct {
 		value  string
 		window int
@@ -87,9 +94,10 @@ func newOutputGuard(cfg ocr.VisionConfig) (*outputGuard, error) {
 		}{credential, 12})
 	}
 	for _, item := range items {
-		if len(item.value) > maxReviewBytes {
+		if len(item.value) > sourceBudget {
 			return nil, errUnsafeOutput
 		}
+		sourceBudget -= len(item.value)
 		if item.value == "" {
 			continue
 		}
@@ -109,7 +117,14 @@ func newOutputGuard(cfg ocr.VisionConfig) (*outputGuard, error) {
 				g.fragments[item.window] = make(map[string]bool)
 			}
 			for i := 0; i+item.window <= len(value); i++ {
-				g.fragments[item.window][value[i:i+item.window]] = true
+				fragment := value[i : i+item.window]
+				if !g.fragments[item.window][fragment] {
+					if fragmentCount >= maxProtectedFragments {
+						return nil, errUnsafeOutput
+					}
+					g.fragments[item.window][fragment] = true
+					fragmentCount++
+				}
 			}
 		}
 		// A short private line is identifiable even inside a longer custom prompt.
@@ -137,23 +152,27 @@ func outputCanonical(text string) string {
 }
 
 func (g *outputGuard) check(text string) error {
+	return g.checkText(text, false)
+}
+
+func (g *outputGuard) checkText(text string, joined bool) error {
 	// The decoding budget bounds both memory and work on adversarial output.
+	type content struct {
+		text   string
+		joined bool
+	}
 	type view struct {
-		text  string
+		content
 		depth int
 	}
-	queue := []view{{text, 0}}
-	seen := make(map[string]bool)
-	budget := 4 * maxReviewBytes
+	queue := []view{{content{text, joined}, 0}}
+	scheduled := map[content]bool{{text, joined}: true}
+	budget := maxInspectionBytes - len(text)
+	candidates := 0
 	for len(queue) > 0 {
 		v := queue[0]
 		queue = queue[1:]
-		if seen[v.text] {
-			continue
-		}
-		seen[v.text] = true
-		budget -= len(v.text)
-		if len(v.text) > maxReviewBytes || budget < 0 || len(seen) > 128 || !utf8.ValidString(v.text) || strings.ContainsRune(v.text, utf8.RuneError) {
+		if len(v.text) > maxReviewBytes || !utf8.ValidString(v.text) || strings.ContainsRune(v.text, utf8.RuneError) {
 			return errUnsafeOutput
 		}
 		canonical := outputCanonical(v.text)
@@ -186,21 +205,24 @@ func (g *outputGuard) check(text string) error {
 				}
 			}
 		}
-		add := func(decoded string) error {
-			if decoded == v.text || seen[decoded] {
+		add := func(decoded string, joined bool) error {
+			c := content{decoded, joined}
+			if scheduled[c] {
 				return nil
 			}
-			if v.depth >= 3 {
+			if v.depth >= 3 || len(decoded) > maxReviewBytes || len(scheduled) >= maxInspectionViews || len(decoded) > budget {
 				return errUnsafeOutput
 			}
-			queue = append(queue, view{decoded, v.depth + 1})
+			budget -= len(decoded)
+			scheduled[c] = true
+			queue = append(queue, view{c, v.depth + 1})
 			return nil
 		}
-		if err := add(html.UnescapeString(v.text)); err != nil {
+		if err := add(html.UnescapeString(v.text), v.joined); err != nil {
 			return err
 		}
 		if decoded, err := url.QueryUnescape(v.text); err == nil {
-			if err := add(decoded); err != nil {
+			if err := add(decoded, v.joined); err != nil {
 				return err
 			}
 		}
@@ -215,7 +237,7 @@ func (g *outputGuard) check(text string) error {
 		if invalidEscape {
 			return errUnsafeOutput
 		}
-		if err := add(decoded); err != nil {
+		if err := add(decoded, v.joined); err != nil {
 			return err
 		}
 		parts, err := structuredOutputText(v.text)
@@ -223,19 +245,64 @@ func (g *outputGuard) check(text string) error {
 			return err
 		}
 		for _, part := range parts {
-			if err := add(part); err != nil {
+			if err := add(part, true); err != nil {
 				return err
 			}
 		}
-		for _, token := range encodedToken.FindAllString(v.text, -1) {
-			for _, encoding := range []*base64.Encoding{base64.StdEncoding, base64.RawStdEncoding, base64.URLEncoding, base64.RawURLEncoding} {
-				decoded, err := encoding.DecodeString(token)
-				if err == nil && utf8.Valid(decoded) {
-					if err := add(string(decoded)); err != nil {
-						return err
-					}
-				}
+		if err := inspectBase64Output(v.text, &candidates, !v.joined, func(decoded string) error { return add(decoded, false) }); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// CR/LF belongs to the encoded value; decode it whole, never as separate lines.
+func inspectBase64Output(text string, candidates *int, rejectMalformed bool, add func(string) error) error {
+	alphabet := func(c byte) bool {
+		return c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' || c >= '0' && c <= '9' || strings.ContainsRune("+/_-=", rune(c))
+	}
+	for i := 0; i < len(text); {
+		if !alphabet(text[i]) {
+			i++
+			continue
+		}
+		start := i
+		padded, breakAfterPadding := false, false
+		for i < len(text) {
+			c := text[i]
+			if c == '\r' || c == '\n' {
+				breakAfterPadding = padded
+			} else if !alphabet(c) || breakAfterPadding && c != '=' {
+				break
 			}
+			padded = padded || c == '='
+			i++
+		}
+		value := strings.TrimRight(text[start:i], "\r\n")
+		marked := strings.HasSuffix(value, "=") || strings.Contains(value, "==")
+		if len(value) < 4 && !marked {
+			continue
+		}
+		*candidates++
+		if *candidates > maxBase64Candidates {
+			return errUnsafeOutput
+		}
+		textDecoded := false
+		partialText := false
+		for _, encoding := range []*base64.Encoding{base64.StdEncoding, base64.RawStdEncoding, base64.URLEncoding, base64.RawURLEncoding} {
+			decoded, err := encoding.DecodeString(value)
+			partialText = partialText || err != nil && len(decoded) >= 4 && utf8.Valid(decoded)
+			if err == nil && utf8.Valid(decoded) {
+				textDecoded = true
+				if err := add(string(decoded)); err != nil {
+					return err
+				}
+				break
+			}
+		}
+		// Padding identifies encoded data; malformed/binary values cannot be approved as text.
+		if rejectMalformed && !textDecoded && (marked || partialText) {
+			return errUnsafeOutput
 		}
 	}
 	return nil
@@ -319,16 +386,16 @@ func (g *outputGuard) review(review Review) error {
 		return err
 	}
 	text.WriteString(review.NextAction)
-	return g.check(text.String())
+	return g.checkText(text.String(), true)
 }
 
 func (g *outputGuard) note(n Note) error {
-	for _, text := range []string{n.Headline, n.Detail, n.Headline + n.Detail} {
+	for _, text := range []string{n.Headline, n.Detail} {
 		if err := g.check(text); err != nil {
 			return err
 		}
 	}
-	return nil
+	return g.checkText(n.Headline+n.Detail, true)
 }
 
 // ValidateReviewOutput also protects stored history and blocking/fallback responses.
