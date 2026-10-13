@@ -147,3 +147,87 @@ Commands and **new final-head** outcomes/CI URLs are recorded in the updated PR 
 7. Without that redesign, realistic guarantees are scoped ownership, safe diagnostic formatting, known-secret/identifiable-prompt rejection under the documented transformations and limits, plus failure atomicity. Unknown secrets, arbitrary transformations, semantic paraphrase, steganography and unknown/rotated historical secrets remain outside the claim.
 
 [Follow-up Issue proposal](coach-structured-output-proposal.md) is a design proposal only. No Issue is created automatically and no Coach redesign is implemented in #295. Actual vendors, PostgreSQL, deployed proxies and mobile remain unverified; these must be assessed against the intended deployment before a later release gate.
+
+## Provenance remediation — third independent review
+
+The third independent review at `e7563eba4387bf380fd66dc1dc55b1b6d1cfa92b`
+identified actual decoded JSON strings incorrectly marked as joined inspection views.
+An escaped, folded raw Base64 value with a corrupt terminal quantum could therefore
+skip malformed-encoding rejection. Failed SSE could flush a note before its error;
+successful SSE/JSON/fallback could persist it and history could return it.
+
+The earlier independent temporary checkout was unavailable. The permanent tests
+`api/internal/api/coach_provenance_routing_test.go` and
+`api/internal/coach/provenance_security_test.go` were **reconstructed** from
+[the published finding](https://github.com/HoesenBruce/TradeLens/pull/295#issuecomment-6142014668),
+not imported from inaccessible source. Before production edits, both packages failed
+on the unchanged vulnerable head. Reports identify FIXTURE_CONFIG_A,
+FIXTURE_PRIVATE_TEXT_B and FIXTURE_HEADER_C only. Exact generated values, encoded
+payloads and responses remain internal to assertions.
+
+### Invariants and trust boundary
+
+- `inspectionContent` carries a private `outputOrigin`: actual output, decoded
+  content or synthetic inspection. Zero and unrecognized origins are strict.
+- The public validation entry points always start strict. Only internal note/review
+  concatenations and JSON key/value aggregates construct non-emittable synthetic views.
+- JSON strings, keys and other scalar representations are individually scheduled as
+  decoded content before aggregate construction. Nested strings retain their real origin.
+- Every changed HTML, URL, Unicode or Base64 decoded value is strict regardless of
+  its parent's origin. Identity transforms produce no new content. Scheduling keys
+  include origin, so a previous synthetic visit cannot suppress strict inspection.
+- Malformed encoding with recoverable UTF-8 text and marked/padded invalid candidates
+  fails closed on actual/decoded/unknown views. A corrupt terminal byte may make a
+  partial decoder result invalid UTF-8; its recovered valid text prefix is also
+  inspected strictly instead of being discarded. This closes the additional suffix
+  fixture without reclassifying ordinary multiline prose as malformed Base64.
+- Only the non-emittable joined view itself retains the previous narrow malformed
+  concatenation exception. Its decoded children never inherit that exception.
+  Independent padded fields remain valid; no client caller can request an exception.
+
+Provider -> parser -> guard -> callback -> SSE flush remains incremental per complete
+note. Final JSON/SSE, blocking fallback, model metadata, persistence and owned history
+use the same guard. Failed generation changes no durable review/journal data; history
+hides unsafe rows without rewriting them. Existing cancellation, timeouts and retry
+logic are unchanged.
+
+### Bounds, compatibility and interpretation
+
+Existing limits remain: 64 KiB per output/view, 4 MiB SSE wire, three transformation
+levels, 16 JSON nesting levels, 128 scheduled views, 256 KiB scheduled text, 1,024
+candidate segments, 16,384 protected fragments and 64 KiB aggregate protected input.
+Decoded scalar extraction is additionally capped before allocation/enqueue. A single
+64 KiB Base64 candidate yields at most 48 KiB decoded data. Four standard-library
+decoder variants and finite view/candidate limits bound CPU work; runtime allocation
+overhead is not an exact RSS guarantee.
+
+Permanent route tests use actual JWT/PAT routing and disposable SQLite for failed and
+successful SSE, JSON, fallback, persisted rows and seeded legacy readback. An internal
+oracle checks recovered bytes even when a decoder returns an error. Whole-table hashes
+verify unrelated journals/trades and failure state are preserved. Compatibility tests
+retain independent encoded fields, LF/CRLF, safe encoded JSON, long ordinary text,
+CJK/Unicode, ordinary mathematical/malformed-looking prose, multiple callbacks,
+concurrent users, retry, cancellation and timeout. Additional tests enforce strict
+unknown provenance, strict children of every synthetic transformation, JSON depth,
+view/candidate/size limits and invalid Unicode.
+
+This is finite recognition, not a general-purpose Base64 syntax validator: ordinary
+prose can resemble raw Base64 and is not rejected merely for resembling it. Unknown
+ciphers, arbitrary binary envelopes, semantic paraphrase, steganography, unknown or
+rotated historical secrets and arbitrary provider transformations are outside the
+contract. Current-owner recognizable credentials/private text and the documented
+standard text encodings are the protection target.
+
+Recommendation **B** is conditional on the completed validation ledger linked in the
+Draft PR: retain this bounded mitigation temporarily, with independent review next.
+The typed provenance defect has a local correction and its permanent reproduction
+does not require a new compatibility exception. The separate structured-results and
+server-controlled-rendering proposal remains necessary for stronger guarantees.
+Do not extend representation support indefinitely. Any ambiguity or known in-scope
+disclosure at final validation changes the recommendation to C.
+
+The exact final tested SHA, before/after outcomes, commands and new-head CI links are
+recorded in [PR #295's validation ledger](https://github.com/HoesenBruce/TradeLens/pull/295).
+A commit cannot embed its own SHA; that external ledger is the authoritative head
+binding. No prior-head green CI is reused. Keep #295 Draft; no merge, other PR/Issue
+change, release, image publication or deployment is part of this remediation.

@@ -98,7 +98,7 @@ func TestCoachBase64LogicalValuesAndLimits(t *testing.T) {
 	large := base64.StdEncoding.EncodeToString([]byte(strings.Repeat("!", (maxReviewBytes/4)*3-3)))
 	require.NoError(t, g.check(large))
 	inspected := 0
-	err = inspectBase64Output("YWJjZA==\r\nZWZnaA==", new(int), true, func(value string) error { inspected++; return nil })
+	err = inspectBase64Output("YWJjZA==\r\nZWZnaA==", new(int), actualOutput, func(value string) error { inspected++; return nil })
 	require.NoError(t, err)
 	require.Equal(t, 2, inspected, "separately padded values are not concatenated")
 }

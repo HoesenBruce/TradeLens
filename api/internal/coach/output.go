@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"html"
 	"net/url"
 	"regexp"
@@ -151,23 +152,33 @@ func outputCanonical(text string) string {
 	}, text)
 }
 
-func (g *outputGuard) check(text string) error {
-	return g.checkText(text, false)
+// The zero value and unrecognized origins are strict; only internal joins get an exception.
+type outputOrigin uint8
+
+const (
+	actualOutput outputOrigin = iota
+	decodedContent
+	syntheticInspection
+)
+
+type inspectionContent struct {
+	text   string
+	origin outputOrigin
 }
 
-func (g *outputGuard) checkText(text string, joined bool) error {
+func (g *outputGuard) check(text string) error {
+	return g.checkText(inspectionContent{text, actualOutput})
+}
+
+func (g *outputGuard) checkText(initial inspectionContent) error {
 	// The decoding budget bounds both memory and work on adversarial output.
-	type content struct {
-		text   string
-		joined bool
-	}
 	type view struct {
-		content
+		inspectionContent
 		depth int
 	}
-	queue := []view{{content{text, joined}, 0}}
-	scheduled := map[content]bool{{text, joined}: true}
-	budget := maxInspectionBytes - len(text)
+	queue := []view{{initial, 0}}
+	scheduled := map[inspectionContent]bool{initial: true}
+	budget := maxInspectionBytes - len(initial.text)
 	candidates := 0
 	for len(queue) > 0 {
 		v := queue[0]
@@ -205,8 +216,8 @@ func (g *outputGuard) checkText(text string, joined bool) error {
 				}
 			}
 		}
-		add := func(decoded string, joined bool) error {
-			c := content{decoded, joined}
+		add := func(c inspectionContent) error {
+			decoded := c.text
 			if scheduled[c] {
 				return nil
 			}
@@ -218,11 +229,18 @@ func (g *outputGuard) checkText(text string, joined bool) error {
 			queue = append(queue, view{c, v.depth + 1})
 			return nil
 		}
-		if err := add(html.UnescapeString(v.text), v.joined); err != nil {
+		// Identity transforms create no new decoded value, especially for synthetic joins.
+		addDecoded := func(text string) error {
+			if text == v.text {
+				return nil
+			}
+			return add(inspectionContent{text, decodedContent})
+		}
+		if err := addDecoded(html.UnescapeString(v.text)); err != nil {
 			return err
 		}
 		if decoded, err := url.QueryUnescape(v.text); err == nil {
-			if err := add(decoded, v.joined); err != nil {
+			if err := addDecoded(decoded); err != nil {
 				return err
 			}
 		}
@@ -237,7 +255,7 @@ func (g *outputGuard) checkText(text string, joined bool) error {
 		if invalidEscape {
 			return errUnsafeOutput
 		}
-		if err := add(decoded, v.joined); err != nil {
+		if err := addDecoded(decoded); err != nil {
 			return err
 		}
 		parts, err := structuredOutputText(v.text)
@@ -245,11 +263,11 @@ func (g *outputGuard) checkText(text string, joined bool) error {
 			return err
 		}
 		for _, part := range parts {
-			if err := add(part, true); err != nil {
+			if err := add(part); err != nil {
 				return err
 			}
 		}
-		if err := inspectBase64Output(v.text, &candidates, !v.joined, func(decoded string) error { return add(decoded, false) }); err != nil {
+		if err := inspectBase64Output(v.text, &candidates, v.origin, func(decoded string) error { return add(inspectionContent{decoded, decodedContent}) }); err != nil {
 			return err
 		}
 	}
@@ -257,7 +275,7 @@ func (g *outputGuard) checkText(text string, joined bool) error {
 }
 
 // CR/LF belongs to the encoded value; decode it whole, never as separate lines.
-func inspectBase64Output(text string, candidates *int, rejectMalformed bool, add func(string) error) error {
+func inspectBase64Output(text string, candidates *int, origin outputOrigin, add func(string) error) error {
 	alphabet := func(c byte) bool {
 		return c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' || c >= '0' && c <= '9' || strings.ContainsRune("+/_-=", rune(c))
 	}
@@ -292,6 +310,22 @@ func inspectBase64Output(text string, candidates *int, rejectMalformed bool, add
 		for _, encoding := range []*base64.Encoding{base64.StdEncoding, base64.RawStdEncoding, base64.URLEncoding, base64.RawURLEncoding} {
 			decoded, err := encoding.DecodeString(value)
 			partialText = partialText || err != nil && len(decoded) >= 4 && utf8.Valid(decoded)
+			if err != nil && !utf8.Valid(decoded) {
+				// Inspect recovered text even when corrupt terminal bytes make the whole partial result invalid.
+				prefix := 0
+				for prefix < len(decoded) {
+					r, size := utf8.DecodeRune(decoded[prefix:])
+					if r == utf8.RuneError && size == 1 {
+						break
+					}
+					prefix += size
+				}
+				if prefix >= 4 {
+					if err := add(string(decoded[:prefix])); err != nil {
+						return err
+					}
+				}
+			}
 			if err == nil && utf8.Valid(decoded) {
 				textDecoded = true
 				if err := add(string(decoded)); err != nil {
@@ -301,7 +335,7 @@ func inspectBase64Output(text string, candidates *int, rejectMalformed bool, add
 			}
 		}
 		// Padding identifies encoded data; malformed/binary values cannot be approved as text.
-		if rejectMalformed && !textDecoded && (marked || partialText) {
+		if origin != syntheticInspection && !textDecoded && (marked || partialText) {
 			return errUnsafeOutput
 		}
 	}
@@ -309,13 +343,21 @@ func inspectBase64Output(text string, candidates *int, rejectMalformed bool, add
 }
 
 // Preserve JSON source order while checking values without intervening property names.
-func structuredOutputText(text string) ([]string, error) {
+func structuredOutputText(text string) ([]inspectionContent, error) {
 	if !json.Valid([]byte(text)) {
 		return nil, nil
 	}
 	d := json.NewDecoder(strings.NewReader(text))
 	d.UseNumber()
 	var keys, values strings.Builder
+	var parts []inspectionContent
+	leaf := func(text string) error {
+		if len(parts) >= maxInspectionViews {
+			return errUnsafeOutput
+		}
+		parts = append(parts, inspectionContent{text, decodedContent})
+		return nil
+	}
 	var visit func(int) error
 	visit = func(depth int) error {
 		if depth > 16 {
@@ -327,16 +369,28 @@ func structuredOutputText(text string) ([]string, error) {
 		}
 		switch value := token.(type) {
 		case string:
+			if err := leaf(value); err != nil {
+				return err
+			}
 			values.WriteString(value)
 		case json.Number:
+			if err := leaf(value.String()); err != nil {
+				return err
+			}
 			values.WriteString(value.String())
 		case bool:
+			if err := leaf(fmt.Sprint(value)); err != nil {
+				return err
+			}
 			if value {
 				values.WriteString("true")
 			} else {
 				values.WriteString("false")
 			}
 		case nil:
+			if err := leaf("null"); err != nil {
+				return err
+			}
 			values.WriteString("null")
 		case json.Delim:
 			for d.More() {
@@ -348,6 +402,9 @@ func structuredOutputText(text string) ([]string, error) {
 					name, ok := key.(string)
 					if !ok {
 						return errUnsafeOutput
+					}
+					if err := leaf(name); err != nil {
+						return err
 					}
 					keys.WriteString(name)
 				}
@@ -364,7 +421,9 @@ func structuredOutputText(text string) ([]string, error) {
 	if err := visit(0); err != nil {
 		return nil, err
 	}
-	return []string{keys.String(), values.String()}, nil
+	return append(parts,
+		inspectionContent{keys.String(), syntheticInspection},
+		inspectionContent{values.String(), syntheticInspection}), nil
 }
 
 func (g *outputGuard) review(review Review) error {
@@ -386,7 +445,7 @@ func (g *outputGuard) review(review Review) error {
 		return err
 	}
 	text.WriteString(review.NextAction)
-	return g.checkText(text.String(), true)
+	return g.checkText(inspectionContent{text.String(), syntheticInspection})
 }
 
 func (g *outputGuard) note(n Note) error {
@@ -395,7 +454,7 @@ func (g *outputGuard) note(n Note) error {
 			return err
 		}
 	}
-	return g.checkText(n.Headline+n.Detail, true)
+	return g.checkText(inspectionContent{n.Headline + n.Detail, syntheticInspection})
 }
 
 // ValidateReviewOutput also protects stored history and blocking/fallback responses.
