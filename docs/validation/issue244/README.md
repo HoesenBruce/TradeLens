@@ -92,3 +92,7 @@ The API isolation gate can be accepted only after local checks and final-head AP
 - No Web code changed. Web permission UX after the owner-only AI configuration change is unverified; mobile is not validated and is outside current fork scope.
 - Existing instance owners intentionally administer users and backups. They are trusted operators; the suite does not claim owner protection against filesystem/database administrators.
 - No invitation/registration redesign, billing, mobile implementation, accounting reinterpretation, dependency upgrade, live restore, release or Render action.
+
+## Issue #298 provider follow-up
+
+[Provider diagnostic extraction and development evidence](../issue298/provider-errors.md) adds OCR confidentiality coverage and safe notification/Flex status write/readback. The endpoint ledger now counts OCR as covered (135/150). This supplements the historical #244 run above; it does not approve legacy Coach output or release readiness. Independent #298 security review remains required.

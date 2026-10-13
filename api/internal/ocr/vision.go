@@ -12,6 +12,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/tradermemos/api/internal/providererrors"
 )
 
 const visionConfidenceFloor = 0.45
@@ -225,7 +227,8 @@ func ExtractTradeFromImageIn(
 	image []byte,
 	contentType string,
 	fallbackZone *time.Location,
-) (TradeExtract, error) {
+) (result TradeExtract, err error) {
+	defer func() { err = providererrors.Safe(err) }()
 	if !cfg.Ready() {
 		return TradeExtract{}, fmt.Errorf("%w: vision not configured", ErrUnavailable)
 	}
@@ -445,7 +448,7 @@ func postVision(ctx context.Context, cfg VisionConfig, base string, payload []by
 			return raw, nil
 		}
 
-		statusErr := fmt.Errorf("vision api %s: %s", res.Status, upstreamMessage(raw))
+		statusErr := providererrors.HTTPStatus(res.StatusCode)
 		if !retryableStatus(res.StatusCode) {
 			return nil, statusErr
 		}

@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v5"
 	"github.com/tradermemos/api/internal/auth"
 	"github.com/tradermemos/api/internal/flexsync"
+	"github.com/tradermemos/api/internal/providererrors"
 	"github.com/tradermemos/api/internal/store"
 )
 
@@ -54,7 +55,9 @@ func toFlexSyncDTO(r store.FlexSyncSetting) flexSyncDTO {
 		TokenSet:   r.Token != "",
 		TokenHint:  tokenHint(r.Token),
 		LastStatus: r.LastStatus,
-		LastError:  r.LastError,
+	}
+	if r.LastError != "" {
+		dto.LastError = "external service request failed"
 	}
 	if r.LastSyncedAt.Valid {
 		dto.LastSyncedAt = r.LastSyncedAt.Time.UTC().Format(time.RFC3339)
@@ -197,12 +200,11 @@ func (s *Server) handleRunFlexSync(c *echo.Context) error {
 		// IBKR behaviour on the first request — the report keeps generating
 		// server-side and a retry moments later succeeds. Say that instead of
 		// surfacing a raw "not ready after N attempts".
-		if errors.Is(syncErr, flexsync.ErrStatementPending) ||
-			strings.Contains(syncErr.Error(), "statement not ready") {
+		if errors.Is(syncErr, flexsync.ErrStatementPending) {
 			return Fail(http.StatusServiceUnavailable, "statement_pending",
 				"IBKR is still generating the report — try again in a minute.", nil)
 		}
-		return Fail(http.StatusBadGateway, "upstream_error", syncErr.Error(), nil)
+		return Fail(http.StatusBadGateway, "upstream_error", providererrors.Safe(syncErr).Error(), nil)
 	}
 	return c.JSON(http.StatusOK, res)
 }

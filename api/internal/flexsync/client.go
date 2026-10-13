@@ -15,6 +15,8 @@ import (
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/tradermemos/api/internal/providererrors"
 )
 
 const (
@@ -70,7 +72,8 @@ func (c *Client) baseURL() string {
 
 // FetchStatement runs the full two-step flow and returns the raw statement
 // bytes (CSV when the query is configured for CSV).
-func (c *Client) FetchStatement(ctx context.Context, token, queryID string) ([]byte, error) {
+func (c *Client) FetchStatement(ctx context.Context, token, queryID string) (result []byte, err error) {
+	defer func() { err = providererrors.Safe(err) }()
 	ref, stmtURL, err := c.sendRequest(ctx, token, queryID)
 	if err != nil {
 		return nil, err
@@ -98,7 +101,7 @@ func (c *Client) FetchStatement(ctx context.Context, token, queryID string) ([]b
 		}
 		return data, err
 	}
-	return nil, fmt.Errorf("statement not ready after %d attempts", attempts)
+	return nil, fmt.Errorf("%w: statement not ready after %d attempts", ErrStatementPending, attempts)
 }
 
 func (c *Client) sendRequest(ctx context.Context, token, queryID string) (ref, stmtURL string, err error) {
