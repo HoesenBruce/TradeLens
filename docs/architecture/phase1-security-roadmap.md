@@ -92,6 +92,10 @@ D1 has **no dependency on B, C or D2**. D2 never blocks an isolated Core release
 
 ## Issue B — Approve structured AI Coach output contract
 
+Live work item: [#300](https://github.com/HoesenBruce/TradeLens/issues/300).
+[Exact contract and approval packet](coach-output-contract-v1.md); independent
+approval and named boundary owners remain pending. This does not change D1.
+
 **Priority:** P1.
 
 **Background:** aggregate rejection occurs after irreversible note disclosure; finite free-text recognition cannot be the primary boundary.
