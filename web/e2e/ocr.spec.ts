@@ -66,8 +66,9 @@ test("scan screenshot prefills new trade and saves", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Prefill trade from screenshot" })).toBeVisible();
 
   await page.getByTestId("ocr-scan-input").setInputFiles(FIXTURE);
+  await page.getByRole("button", { name: "Fill form", exact: true }).click();
 
-  // The scan may append its own symbol block; every Symbol input gets the ticker.
+  // Apply the reviewed scan before asserting the populated form.
   await expect(page.getByRole("textbox", { name: "Symbol", exact: true }).first()).toHaveValue(
     symbol,
   );

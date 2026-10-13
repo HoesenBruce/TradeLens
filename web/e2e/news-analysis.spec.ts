@@ -164,8 +164,16 @@ test("AI review through real API", async ({ page, request }, info) => {
     expect(saved.predictions).toContainEqual(baseline.predictions[0]);
     await page.screenshot({ path: info.outputPath("accepted.png"), fullPage: true });
     fail = true;
+    const failedAnalysis = page.waitForResponse(
+      (response) =>
+        response.url().endsWith(`/news/${news.id}/analyze`) &&
+        response.request().method() === "POST",
+    );
     await page.getByRole("button", { name: "Analyze with AI" }).click();
-    await expect(d.getByRole("alert")).toContainText("No data was changed");
+    const failureResponse = await failedAnalysis;
+    expect(failureResponse.status()).toBe(502);
+    expect((await failureResponse.json()).error.message).toContain("No data was changed");
+    await expect(d.getByRole("alert")).toHaveText("Analysis failed.");
     expect(await read()).toEqual(saved);
     await page.screenshot({ path: info.outputPath("provider-error.png"), fullPage: true });
     fail = false;

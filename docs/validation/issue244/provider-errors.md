@@ -27,6 +27,8 @@ Sentinels represent owner API keys, Bearer/Authorization values, private prompts
 
 New API regressions fail on the previous #295 production code with only the tests added. The earlier tests asserting raw provider text now assert exact sanitized text and absence of the original text. No assertions, timeout limits or successful-flow cases were removed. Local CSV layout guidance remains intact.
 
+Existing browser fixtures are aligned with the current login form and title-cased News fields. OCR now exercises the existing `Fill form` confirmation before asserting prefilled values. News retains the original “No data was changed” assertion against the actual API response and adds the current generic UI error assertion; its before/after data equality remains.
+
 ## Commands
 
 From `api/`:
@@ -46,6 +48,7 @@ From `web/`, after starting a disposable API at :8098 and Vite at :5195:
 ./node_modules/.bin/vp check
 ./node_modules/.bin/vp build
 E2E_API_URL=http://localhost:8098/api/v1 E2E_BASE_URL=http://localhost:5195 PLAYWRIGHT_BROWSERS_PATH=/private/tmp/tradelens-phase1-pw ./node_modules/.bin/playwright test e2e/provider-errors.spec.ts --timeout=120000 --reporter=json
+E2E_EMAIL=owner295@example.invalid E2E_PASSWORD=Synthetic295-acceptance-password E2E_API_URL=http://localhost:8098/api/v1 E2E_WEB_URL=http://localhost:5195 E2E_BASE_URL=http://localhost:5195 PLAYWRIGHT_BROWSERS_PATH=/private/tmp/tradelens-phase1-pw ./node_modules/.bin/playwright test e2e/ocr.spec.ts e2e/news-analysis.spec.ts --timeout=120000 --reporter=json
 ```
 
 From root: `git diff --check`. Exact final head, outcomes and CI URLs are recorded in the updated Draft PR #295 description.
