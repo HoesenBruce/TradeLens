@@ -22,7 +22,7 @@ async function signIn(page: Page) {
   await page.reload();
   await page.locator("#username").fill(EMAIL);
   await page.locator("#password").fill(PASSWORD);
-  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.locator("form").getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByText(/Wins/i).first()).toBeVisible();
 }
 
