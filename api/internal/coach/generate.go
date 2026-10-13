@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/tradermemos/api/internal/ocr"
+	"github.com/tradermemos/api/internal/providererrors"
 )
 
 // ErrUnavailable means coach LLM is disabled or not configured.
@@ -180,7 +181,8 @@ var errStreamUnsupported = errors.New("streaming unsupported")
 // OpenAI, LM Studio and recent Ollama, but the compat layers self-hosters put
 // in front of local models are uneven, and a coach that used to work must not
 // start erroring because of a format upgrade.
-func GenerateReview(ctx context.Context, cfg ocr.VisionConfig, trade TradeContext) (Review, error) {
+func GenerateReview(ctx context.Context, cfg ocr.VisionConfig, trade TradeContext) (result Review, err error) {
+	defer func() { err = providererrors.Safe(err) }()
 	if !cfg.Ready() {
 		return Review{}, fmt.Errorf("%w: coach not configured", ErrUnavailable)
 	}
@@ -250,7 +252,7 @@ func requestContent(
 		return "", err
 	}
 	if res.StatusCode >= 300 {
-		apiErr := fmt.Errorf("coach api %s: %s", res.Status, truncateRunes(string(raw), 300))
+		apiErr := providererrors.HTTPStatus(res.StatusCode)
 		if isSchemaRequest(format) && rejectsRequestShape(res.StatusCode) {
 			return "", fmt.Errorf("%w: %w", errFormatRejected, apiErr)
 		}

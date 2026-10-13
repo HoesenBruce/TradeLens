@@ -77,10 +77,7 @@ func (s *Server) handleTradeCoach(c *echo.Context) error {
 		if errors.Is(err, coach.ErrUnavailable) {
 			return c.JSON(http.StatusOK, coachReviewDTO{Source: "off", Notes: []coach.Note{}})
 		}
-		msg := strings.TrimSpace(err.Error())
-		if msg == "" {
-			msg = "coach generation failed"
-		}
+		msg := "coach generation failed"
 		if errors.Is(err, coach.ErrTimeout) {
 			c.Logger().Warn("coach review timed out", "trade_id", tradeID, "err", err)
 		} else {

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/tradermemos/api/internal/ocr"
+	"github.com/tradermemos/api/internal/providererrors"
 )
 
 // NewsAnalysis is an untrusted suggestion, never a persistence command.
@@ -54,7 +55,8 @@ const newsSchema = `{
 
 // AnalyzeNews uses the existing Coach configuration, client and format fallback.
 // The entire call, including fallback, shares one deadline. No data is persisted.
-func AnalyzeNews(ctx context.Context, cfg ocr.VisionConfig, news string) (NewsAnalysis, error) {
+func AnalyzeNews(ctx context.Context, cfg ocr.VisionConfig, news string) (result NewsAnalysis, err error) {
+	defer func() { err = providererrors.Safe(err) }()
 	if !cfg.Ready() {
 		return NewsAnalysis{}, ErrUnavailable
 	}

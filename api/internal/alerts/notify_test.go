@@ -7,9 +7,50 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 )
+
+func TestProviderExpoErrorBoundary(t *testing.T) {
+	const secret = "expo-private-token-244"
+	var calls int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		_, _ = w.Write([]byte(`{"data":[{"status":"error","message":"Authorization Bearer ` + secret + `","details":{"error":"InvalidCredentials"}}]}`))
+	}))
+	t.Cleanup(srv.Close)
+	original := expoPushURL
+	expoPushURL = srv.URL
+	t.Cleanup(func() { expoPushURL = original })
+	errs, err := testService().sendExpo(context.Background(), []string{secret}, Event{Title: "synthetic"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if calls != 1 || len(errs) != 1 || errs[0] == nil {
+		t.Fatal("provider failure did not reach the ticket boundary")
+	}
+	if strings.Contains(errs[0].Error(), secret) || strings.Contains(errs[0].Error(), "Authorization") {
+		t.Fatal("provider ticket disclosed secret")
+	}
+}
+
+func TestProviderWebhookErrorBoundary(t *testing.T) {
+	const secret = "webhook-private-secret-244"
+	var calls int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		http.Redirect(w, r, "/private?token="+secret, 302)
+	}))
+	t.Cleanup(srv.Close)
+	err := testService().sendWebhook(context.Background(), srv.URL+"?token="+secret, Event{Title: "synthetic"}, time.Now())
+	if err == nil || calls != 1 {
+		t.Fatal("redirect failure was not triggered")
+	}
+	if strings.Contains(err.Error(), secret) {
+		t.Fatal("webhook error disclosed private URL token")
+	}
+}
 
 func testService() *Service {
 	// httptest servers listen on loopback, so the webhook client must allow

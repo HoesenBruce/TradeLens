@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/tradermemos/api/internal/ocr"
+	"github.com/tradermemos/api/internal/providererrors"
 )
 
 // NoteFunc receives each note as soon as it is complete in the stream.
@@ -47,7 +48,8 @@ func GenerateReviewStream(
 	cfg ocr.VisionConfig,
 	trade TradeContext,
 	onNote NoteFunc,
-) (Review, error) {
+) (result Review, err error) {
+	defer func() { err = providererrors.Safe(err) }()
 	if !cfg.Ready() {
 		return Review{}, fmt.Errorf("%w: coach not configured", ErrUnavailable)
 	}
@@ -112,8 +114,8 @@ func streamReview(
 	defer res.Body.Close()
 
 	if res.StatusCode >= 300 {
-		raw, _ := io.ReadAll(io.LimitReader(res.Body, 8<<10))
-		apiErr := fmt.Errorf("coach api %s: %s", res.Status, truncateRunes(string(raw), 300))
+		_, _ = io.Copy(io.Discard, io.LimitReader(res.Body, 8<<10))
+		apiErr := providererrors.HTTPStatus(res.StatusCode)
 		if !rejectsRequestShape(res.StatusCode) {
 			return Review{}, apiErr
 		}

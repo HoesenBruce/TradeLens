@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/labstack/echo/v5"
 	"github.com/tradermemos/api/internal/auth"
@@ -105,10 +104,7 @@ func (s *Server) handleTradeCoachStream(c *echo.Context) error {
 			emit("done", coachReviewDTO{Source: "off", Notes: []coach.Note{}})
 			return nil
 		}
-		msg := strings.TrimSpace(err.Error())
-		if msg == "" {
-			msg = "coach generation failed"
-		}
+		msg := "coach generation failed"
 		if errors.Is(err, coach.ErrTimeout) {
 			c.Logger().Warn("coach stream timed out", "trade_id", tradeID, "err", err)
 		} else {
