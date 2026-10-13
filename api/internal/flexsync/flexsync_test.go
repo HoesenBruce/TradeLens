@@ -81,7 +81,8 @@ func TestClientReportsFlexErrors(t *testing.T) {
 
 	c := &flexsync.Client{BaseURL: srv.URL + "/send", PollInterval: time.Millisecond}
 	_, err := c.FetchStatement(context.Background(), "tok", "q")
-	require.ErrorContains(t, err, "Token has expired")
+	require.EqualError(t, err, "external service request failed")
+	require.NotContains(t, err.Error(), "Token has expired")
 }
 
 func newSyncFixture(t *testing.T) (*store.Queries, store.FlexSyncSetting) {
@@ -194,5 +195,6 @@ func TestRecordOutcome(t *testing.T) {
 	row, err = q.GetFlexSyncSettings(ctx, store.GetFlexSyncSettingsParams{AccountID: settings.AccountID, UserID: settings.UserID})
 	require.NoError(t, err)
 	require.Equal(t, "error", row.LastStatus)
-	require.Equal(t, "token expired", row.LastError)
+	require.Equal(t, "external service request failed", row.LastError)
+	require.NotContains(t, row.LastError, "token expired")
 }

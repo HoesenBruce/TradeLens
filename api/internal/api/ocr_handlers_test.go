@@ -105,7 +105,7 @@ func TestOCRParse_unavailableWithoutReadyConfig(t *testing.T) {
 	require.Equal(t, http.StatusServiceUnavailable, rec.Code)
 }
 
-func TestOCRParse_surfacesUpstreamError(t *testing.T) {
+func TestOCRParse_hidesUpstreamError(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadGateway)
 		_, _ = w.Write([]byte("Hello from gateway"))
@@ -133,7 +133,8 @@ func TestOCRParse_surfacesUpstreamError(t *testing.T) {
 	s.Echo.ServeHTTP(rec, req)
 	require.Equal(t, http.StatusBadGateway, rec.Code)
 	require.Contains(t, rec.Body.String(), "ocr_failed")
-	require.Contains(t, rec.Body.String(), "Hello from gateway")
+	require.Contains(t, rec.Body.String(), "could not extract fills from image")
+	require.NotContains(t, rec.Body.String(), "Hello from gateway")
 }
 
 func TestOCRParse_busyUpstream(t *testing.T) {

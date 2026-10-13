@@ -54,7 +54,9 @@ func toFlexSyncDTO(r store.FlexSyncSetting) flexSyncDTO {
 		TokenSet:   r.Token != "",
 		TokenHint:  tokenHint(r.Token),
 		LastStatus: r.LastStatus,
-		LastError:  r.LastError,
+	}
+	if r.LastError != "" {
+		dto.LastError = "external service request failed"
 	}
 	if r.LastSyncedAt.Valid {
 		dto.LastSyncedAt = r.LastSyncedAt.Time.UTC().Format(time.RFC3339)

@@ -30,6 +30,7 @@ import (
 	"github.com/tradermemos/api/internal/db"
 	"github.com/tradermemos/api/internal/flexsync"
 	"github.com/tradermemos/api/internal/marketdata"
+	"github.com/tradermemos/api/internal/ocr"
 	"github.com/tradermemos/api/internal/storage"
 	"github.com/tradermemos/api/internal/store"
 	"github.com/tradermemos/api/internal/trades"
@@ -428,6 +429,30 @@ func TestCrossUserIsolationInstanceSettings(t *testing.T) {
 			isolationContains(t, rec.Body.String(), "owner-private-prompt", false)
 			require.Equal(t, 401, do(f.s, tc.method, "/api/v1"+path+tc.suffix, `{}`, "").Code)
 		}
+	}
+}
+
+func TestCrossUserIsolationOCRErrorRedaction(t *testing.T) {
+	const secret = "synthetic-owner-only-ocr-key"
+	remote := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "Bearer "+secret, r.Header.Get("Authorization"))
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(map[string]any{"error": map[string]string{"message": "Invalid API key: " + secret}})
+	}))
+	t.Cleanup(remote.Close)
+	s := testServerWithOCR(t, ocr.VisionConfig{})
+	owner := registerAndLogin(t, s, "ocr-owner@isolation.invalid")
+	member := registerAndLogin(t, s, "ocr-member@isolation.invalid")
+	isolationObject(t, s, "PUT", "/settings/ocr", isolationJSON(t, map[string]any{
+		"enabled": true, "base_url": remote.URL, "api_key": secret, "model": "synthetic",
+	}), owner, 200)
+	pat := isolationObject(t, s, "POST", "/access-tokens", `{"name":"member"}`, member, 201)["token"].(string)
+	for _, token := range []string{member, pat} {
+		require.Equal(t, 403, do(s, "GET", "/api/v1/settings/ocr", "", token).Code)
+		rec := httptest.NewRecorder()
+		s.Echo.ServeHTTP(rec, multipartFileReq(t, "/api/v1/ocr/parse", token, "fictional.png", "synthetic image", nil))
+		require.Equal(t, 502, rec.Code)
+		require.False(t, strings.Contains(rec.Body.String(), secret), "OCR error disclosed instance-owner credential")
 	}
 }
 

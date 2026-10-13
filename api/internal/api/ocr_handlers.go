@@ -86,11 +86,8 @@ func (s *Server) handleOCRParse(c *echo.Context) error {
 			)
 		}
 		c.Logger().Warn("ocr parse failed", "err", err)
-		msg := strings.TrimSpace(err.Error())
-		if msg == "" {
-			msg = "could not extract fills from image"
-		}
-		return Fail(http.StatusBadGateway, "ocr_failed", msg, nil)
+		// Provider errors can contain the instance owner's credentials or private settings.
+		return Fail(http.StatusBadGateway, "ocr_failed", "could not extract fills from image", nil)
 	}
 	if out.Rows == nil {
 		out.Rows = []ocr.ExtractedFill{}

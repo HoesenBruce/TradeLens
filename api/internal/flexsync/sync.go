@@ -12,6 +12,7 @@ import (
 	"uuid"
 
 	"github.com/tradermemos/api/internal/importer"
+	"github.com/tradermemos/api/internal/providererrors"
 	"github.com/tradermemos/api/internal/store"
 	"github.com/tradermemos/api/internal/trades"
 )
@@ -86,7 +87,7 @@ func Sync(ctx context.Context, q store.Querier, client *Client, s store.FlexSync
 func RecordOutcome(ctx context.Context, q store.Querier, s store.FlexSyncSetting, res Result, syncErr error) {
 	status, errMsg := res.Summary(), ""
 	if syncErr != nil {
-		status, errMsg = "error", syncErr.Error()
+		status, errMsg = "error", providererrors.Safe(syncErr).Error()
 	}
 	_ = q.UpdateFlexSyncStatus(ctx, store.UpdateFlexSyncStatusParams{
 		LastSyncedAt: sql.NullTime{Time: time.Now().UTC(), Valid: true},

@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/tradermemos/api/internal/ocr"
+	"github.com/tradermemos/api/internal/providererrors"
 )
 
 // ErrUnavailable means coach LLM is disabled or not configured.
@@ -124,7 +125,7 @@ type notesPayload struct {
 
 func systemPrompt(cfg ocr.VisionConfig) string {
 	if p := strings.TrimSpace(cfg.CustomPrompt); p != "" {
-		return p
+		return withoutTransportCredentials(p, cfg)
 	}
 	return DefaultCoachPrompt
 }
@@ -180,12 +181,13 @@ var errStreamUnsupported = errors.New("streaming unsupported")
 // OpenAI, LM Studio and recent Ollama, but the compat layers self-hosters put
 // in front of local models are uneven, and a coach that used to work must not
 // start erroring because of a format upgrade.
-func GenerateReview(ctx context.Context, cfg ocr.VisionConfig, trade TradeContext) (Review, error) {
+func GenerateReview(ctx context.Context, cfg ocr.VisionConfig, trade TradeContext) (result Review, err error) {
+	defer func() { err = providererrors.Safe(err) }()
 	if !cfg.Ready() {
 		return Review{}, fmt.Errorf("%w: coach not configured", ErrUnavailable)
 	}
 
-	userMsg := FormatTradeContext(trade) + "\n\n" + responseFormatPrompt
+	userMsg := withoutTransportCredentials(FormatTradeContext(trade), cfg) + "\n\n" + responseFormatPrompt
 	messages := []chatMessage{
 		{Role: "system", Content: systemPrompt(cfg)},
 		{Role: "user", Content: userMsg},
@@ -199,11 +201,28 @@ func GenerateReview(ctx context.Context, cfg ocr.VisionConfig, trade TradeContex
 }
 
 func requestReview(ctx context.Context, cfg ocr.VisionConfig, messages []chatMessage, format *chatFmt) (Review, error) {
+	guard, err := newOutputGuard(cfg)
+	if err != nil {
+		return Review{}, err
+	}
+	if err := guard.check(cfg.Model); err != nil {
+		return Review{}, err
+	}
 	content, err := requestContent(ctx, cfg, messages, format)
 	if err != nil {
 		return Review{}, err
 	}
-	return parseReview(content)
+	if len(content) > maxReviewBytes {
+		return Review{}, errUnsafeOutput
+	}
+	review, err := parseReview(content)
+	if err != nil {
+		return Review{}, err
+	}
+	if err := guard.review(review); err != nil {
+		return Review{}, err
+	}
+	return review, nil
 }
 
 // requestContent shares the bounded OpenAI-compatible transport across structured tasks.
@@ -250,7 +269,7 @@ func requestContent(
 		return "", err
 	}
 	if res.StatusCode >= 300 {
-		apiErr := fmt.Errorf("coach api %s: %s", res.Status, truncateRunes(string(raw), 300))
+		apiErr := providererrors.HTTPStatus(res.StatusCode)
 		if isSchemaRequest(format) && rejectsRequestShape(res.StatusCode) {
 			return "", fmt.Errorf("%w: %w", errFormatRejected, apiErr)
 		}

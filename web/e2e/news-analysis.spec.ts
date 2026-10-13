@@ -129,7 +129,7 @@ test("AI review through real API", async ({ page, request }, info) => {
     await expect(first.getByLabel("Direction")).toHaveCount(0);
     await first.getByRole("checkbox", { name: "Include prediction" }).check();
     await first.getByLabel("Direction").selectOption("bearish");
-    await first.getByLabel("reasoning", { exact: true }).fill("Reviewed AI risk");
+    await first.getByLabel("Reasoning", { exact: true }).fill("Reviewed AI risk");
     await first.getByRole("checkbox", { name: "1D", exact: true }).uncheck();
     await first.getByRole("checkbox", { name: "5D", exact: true }).uncheck();
     await d.getByRole("button", { name: "Save selected suggestions" }).click();
@@ -141,10 +141,10 @@ test("AI review through real API", async ({ page, request }, info) => {
       .click();
     await d.getByRole("button", { name: "Add manual asset" }).click();
     const second = d.getByRole("region", { name: "Suggestion 2", exact: true });
-    await second.getByLabel("symbol", { exact: true }).fill("1306");
+    await second.getByLabel("Symbol", { exact: true }).fill("1306");
     await second.getByLabel("Type").selectOption("etf");
-    await second.getByLabel("market", { exact: true }).fill("JP");
-    await second.getByLabel("reasoning", { exact: true }).fill("Manual ETF thesis");
+    await second.getByLabel("Market", { exact: true }).fill("JP");
+    await second.getByLabel("Reasoning", { exact: true }).fill("Manual ETF thesis");
     await page.screenshot({ path: info.outputPath("review.png"), fullPage: true });
     await d.getByRole("button", { name: "Save selected suggestions" }).click();
     await expect(d).toHaveCount(0);
@@ -164,8 +164,16 @@ test("AI review through real API", async ({ page, request }, info) => {
     expect(saved.predictions).toContainEqual(baseline.predictions[0]);
     await page.screenshot({ path: info.outputPath("accepted.png"), fullPage: true });
     fail = true;
+    const failedAnalysis = page.waitForResponse(
+      (response) =>
+        response.url().endsWith(`/news/${news.id}/analyze`) &&
+        response.request().method() === "POST",
+    );
     await page.getByRole("button", { name: "Analyze with AI" }).click();
-    await expect(d.getByRole("alert")).toContainText("No data was changed");
+    const failureResponse = await failedAnalysis;
+    expect(failureResponse.status()).toBe(502);
+    expect((await failureResponse.json()).error.message).toContain("No data was changed");
+    await expect(d.getByRole("alert")).toHaveText("Analysis failed.");
     expect(await read()).toEqual(saved);
     await page.screenshot({ path: info.outputPath("provider-error.png"), fullPage: true });
     fail = false;

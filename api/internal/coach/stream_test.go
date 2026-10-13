@@ -68,20 +68,25 @@ func TestCompleteNoteObjectsAnchorsOnTheArrayKey(t *testing.T) {
 func TestEmitNewNotesEmitsEachNoteOnce(t *testing.T) {
 	var got []Note
 	onNote := func(n Note) { got = append(got, n) }
+	guard, err := newOutputGuard(ocr.VisionConfig{})
+	require.NoError(t, err)
 
 	buf := `{"notes":[{"tone":"tip","headline":"A","detail":"D"}`
-	emitted := emitNewNotes(buf, 0, onNote)
+	emitted, err := emitNewNotes(buf, 0, onNote, guard)
+	require.NoError(t, err)
 	require.Equal(t, 1, emitted)
 	require.Len(t, got, 1)
 	require.Equal(t, "A", got[0].Headline)
 
 	// The same prefix again must not re-emit.
-	emitted = emitNewNotes(buf, emitted, onNote)
+	emitted, err = emitNewNotes(buf, emitted, onNote, guard)
+	require.NoError(t, err)
 	require.Equal(t, 1, emitted)
 	require.Len(t, got, 1)
 
 	buf += `,{"tone":"warn","headline":"B","detail":"D"}`
-	emitted = emitNewNotes(buf, emitted, onNote)
+	emitted, err = emitNewNotes(buf, emitted, onNote, guard)
+	require.NoError(t, err)
 	require.Equal(t, 2, emitted)
 	require.Len(t, got, 2)
 	require.Equal(t, "B", got[1].Headline)

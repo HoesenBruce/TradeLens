@@ -77,10 +77,7 @@ func (s *Server) handleTradeCoach(c *echo.Context) error {
 		if errors.Is(err, coach.ErrUnavailable) {
 			return c.JSON(http.StatusOK, coachReviewDTO{Source: "off", Notes: []coach.Note{}})
 		}
-		msg := strings.TrimSpace(err.Error())
-		if msg == "" {
-			msg = "coach generation failed"
-		}
+		msg := "coach generation failed"
 		if errors.Is(err, coach.ErrTimeout) {
 			c.Logger().Warn("coach review timed out", "trade_id", tradeID, "err", err)
 		} else {
@@ -161,12 +158,17 @@ func (s *Server) handleListTradeCoachReviews(c *echo.Context) error {
 	}
 
 	out := make([]storedCoachReviewDTO, 0, len(rows))
+	cfg := s.effectiveCoachConfig(ctx)
 	for _, r := range rows {
 		notes := []coach.Note{}
 		// A row whose notes will not parse is skipped rather than failing the
 		// list — one bad record should not hide the rest of the history.
 		if err := json.Unmarshal([]byte(r.Notes), &notes); err != nil {
 			c.Logger().Warn("skipping unreadable coach review", "review_id", r.ID, "err", err)
+			continue
+		}
+		if err := coach.ValidateReviewOutput(cfg, coach.Review{Notes: notes, NextAction: r.NextAction}, r.Model); err != nil {
+			c.Logger().Warn("skipping unsafe coach review", "review_id", r.ID)
 			continue
 		}
 		out = append(out, storedCoachReviewDTO{
