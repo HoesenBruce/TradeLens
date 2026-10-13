@@ -1,38 +1,51 @@
-# Phase 1 security roadmap and proposed Issues
+# TradeLens Core and AI Coach security roadmap
 
-Status: proposed Issues only; none created. No implementation PR, merge, settings change, release or deployment authorized by this document. Snapshot 2026-10-13; [verified SHAs and inventory](pr295-split-assessment.md).
+Status: two-track planning, superseding the original combined D proposal in #296. No production change or operational enablement is part of this document. AI Coach remains planned and supported; retain its code, data, API design and migration roadmap.
 
-## Recommendation and dependency graph
+## Interrupted-work recovery
 
-Merge independently reviewed provider fixes first; do not wait for Coach redesign to reduce unrelated exposure. In parallel planning terms, prioritize central server-side Coach containment; do not ship multi-user Coach free text while #295's known P1 remains. Containment must also cover historical output and shared Coach transport consumers. Four requested Issues A–D plus a small urgent Issue E make five, because a kill switch should not depend on completing a redesign.
+Recovery snapshot: main `51866f51e05d0cbabd751cd2d2d6a362f67e7cc8`; #296 already merged at that SHA from head `744eb98293cefc68044e8737d2fb9c8209cbcff1`. API/Web/title CI passed on that exact head; no unresolved review threads. Original P1 evidence and all 39 file classifications are preserved. The owner checkout and original documentation worktree are clean; no implementation branches or new Issues were created by the interrupted run. Open and closed Issues were searched; News #46/#57, localization #109 and IBKR #15 are not equivalent remediation work items.
+
+| Item | Existing state at recovery | Already completed | Remaining action |
+|---|---|---|---|
+| PR #296 acceptance | MERGED | Documentation review, CI, normal squash merge | Preserve; new docs-only PR for revised policy |
+| Issue A | Not created | Detailed proposal | Create from accepted roadmap |
+| Issue E | Not created | Detailed proposal | Tighten safe enablement; create |
+| Issue B | Not created | Contract draft | Create independent design review |
+| Issue C | Not created | Implementation proposal | Create; blocked on B approval |
+| Original Issue D | Proposal only, no Issue/discussion to migrate | Combined acceptance definition | Preserve history in #296; replace with D1/D2 |
+| Core gate D1 | Not created | New owner decision | Create independent Core acceptance |
+| Coach gate D2 | Not created | New owner decision | Create independent recovery acceptance |
+
+The live central work-item index is the **Security recovery roadmap** section of [Issue #244](https://github.com/HoesenBruce/TradeLens/issues/244). Populate it with actual Issue URLs only after this revised plan is accepted on main; keep the historical #296 snapshot unchanged. Labels A/E/B/C/D1/D2 below are symbolic, not invented GitHub numbers.
+
+## Product boundary and dependencies
+
+Core development proceeds independently: SBI import/accounting, account/portfolio valuation, analytics, journals/trade plans, Review Inbox #292/#273, OCR after A, News analysis, multi-account analysis, Setup analytics/Mistake Tax #274. Core **release eligibility** requires independently proven server isolation E and D1; unrelated development need not wait for C.
+
+News analysis has its own Core confidentiality boundary even though it currently shares Coach transport. E inventories/isolates unsafe shared paths, and D1 must validate whichever News functions the candidate exposes. A fixes errors, not arbitrary successful News text. If that path is unsafe it stays unavailable pending independent remediation, without coupling to Coach C/D2. Manual News workflows remain available.
 
 ```mermaid
 flowchart TD
-  M[Current main: PR 294 merged] --> A[A: provider safety extraction]
-  M --> E[E: server containment and legacy withholding]
-  M --> B[B: architecture C contract review]
-  B --> C[C: backend + Web + additive migration]
-  A --> C
-  E --> C
-  A --> I[PR 292 isolated integration acceptance]
-  E --> I
-  I --> D[D: independent final security acceptance]
-  A --> D
-  E --> D
-  C --> ON[Coach-enabled acceptance]
-  ON --> D
-  D --> OFF[v0.4.0 candidate: Coach disabled]
-  D --> FULL[v0.4.0 or later: Coach v2 enabled]
-  C --> FULL
-  OFF --> P[Separate authorized publication/deployment gate]
-  FULL --> P
+  P[Accepted planning: 296 plus two-track revision] --> A[A: provider fixes]
+  P --> E[E: legacy Coach isolation]
+  A --> D1[D1: Core acceptance]
+  E --> D1
+  R[292: Review Inbox if included] --> D1
+  D1 --> V[Core v0.4.0 eligibility; 293 separately reviewed]
+  P --> B[B: Coach contract approval]
+  B --> C[C: structured Coach]
+  B --> D2[D2: independent Coach acceptance]
+  C --> D2
+  E --> D2
+  D2 --> ON[Explicit controlled v2 re-enablement]
 ```
 
-Graph interpretation: C→ON→D is mandatory for the **enabled** profile only. The disabled profile can complete D after A+E+accepted #292 with C outstanding; D must explicitly label that reduced scope and prove all unsafe paths unreachable. Neither profile currently passes. Diagram nodes are prerequisites, not permission to merge or deploy. B is this contract's future review/ratification; it does not require implementing production code.
-
-Proposed PR sequence: **A provider safety → E containment/history → #292 integration after new-head verification → C implementation (after B approval) → D acceptance evidence → refreshed #293 candidate**. A and E can be reviewed independently from the same main; integrate each on the latest main without assuming tests on an earlier head apply. If E can safely land sooner, reverse A/E: minimize exposed time. No implementation branches or PRs are created in this task. Documentation is a separate Draft PR.
+D1 has **no dependency on B, C or D2**. D2 never blocks an isolated Core release. A/E/B may proceed in separate environments in parallel. C starts only after B is accepted. E is mandatory before exposing an integrated Coach path, and remains effective until D2 and explicit operational authorization. Neither track authorizes release/deployment automatically.
 
 ## Issue A — Extract independent provider-error confidentiality fixes from #295
+
+**Priority:** P0.
 
 **Background:** main lacks OCR, IBKR and notification provider-diagnostic protection even though #294's ownership fixes merged. #295 mixes reusable fixes with blocked Coach output guards.
 
@@ -40,7 +53,7 @@ Proposed PR sequence: **A provider safety → E containment/history → #292 int
 
 **Non-goals:** Coach free-text acceptance, News successful-output redesign, accounting/import semantics, historical row deletion/rewrites, provider success-payload audit, new vendor SDK or dependency.
 
-**Dependencies:** current main/#294; helper included in this PR, not a mandatory separate foundation PR. No dependency on C or #295 merge.
+**Dependencies:** current main/#294; helper included in this PR, not a mandatory separate foundation PR. No dependency on B, C, D2 or #295 merge. Independently build against current main; independent security review required before merge.
 
 **Acceptance:**
 
@@ -54,29 +67,32 @@ Proposed PR sequence: **A provider safety → E containment/history → #292 int
 
 **Release impact:** removes independent blockers; does not make Coach or Phase 1 release-ready. Complexity small–medium, estimated 1–3 engineer-days plus review, contingent on extraction validation.
 
-## Issue E — Contain Coach server-side and withhold unsafe historical output
+## Issue E — Isolate legacy AI Coach behind server-enforced availability policy
 
-**Background:** current free-text output can disclose owner configuration to members. Hiding a button or disabling only SSE leaves JSON/fallback/history and shared transport consumers exposed.
+**Priority:** P0. **Background:** confirmed ordered cross-note SSE disclosure in #295 occurs before final rejection. Disabling only a Web button leaves APIs/history accessible.
 
-**Scope:** centralized effective access policy, default disabled, optional explicitly accepted owner-only mode, all Coach generation/readback/service paths and shared Coach-powered News analysis, in-flight cancellation and minimal non-sensitive capabilities; legacy placeholders without data rewrite. Manual journals, News editing and review inbox remain functional.
+**Scope:** centralized server availability, default disabled for new and upgraded deployments; JSON/SSE/fallback/alternate/direct service routes; raw legacy history, shared unsafe AI paths, exports/shares/caches; JWT/PAT; clear non-sensitive Web unavailable capability. Preserve existing code/data for future migration. Inventory News separately as described above.
 
-**Non-goals:** architecture C implementation, claiming safe owner-only output, deleting reviews, changing live feature flags/deployment in the implementation PR itself.
+**Non-goals:** permanent Coach removal, deleting/reinterpreting historical data, C implementation, unrelated auth/accounting changes, or changing live configuration/deployment in this task.
 
-**Dependencies:** main/#294 role enforcement; A recommended before release but independent patch review is possible.
+**Dependencies:** accepted planning and main/#294; independent of A/B/C for development. Independent security acceptance required.
 
 **Acceptance:**
 
-1. Disabled state rejects/returns safe off before provider access for JSON/SSE/fallback/News and cannot return legacy text/model metadata. JWT, PAT, anonymous, stale token, DB/env precedence, restart and direct service/job invocation covered.
-2. Owner-only mode rereads authoritative role rather than JWT claim alone; a member owning the requested trade is still denied. No cross-user/account read/write or provider call on denial.
-3. Disable/demotion during a stream cancels future output; no open-stream bypass. Logs/metrics/errors contain only fixed categories. No private settings are added to capabilities.
-4. Enabling generation never automatically makes raw legacy history readable. Old/new Web/offline cache behavior is documented and safe; no automatic fallback bypass.
-5. A rollback-to-containment build exists and stays disabled by default; no unreviewed default enables Coach or News AI.
+1. Real JWT/PAT owner/member/anonymous routes cannot emit unsafe JSON/SSE/history when disabled; zero upstream calls, zero review writes, unchanged unrelated table hashes. Direct/alternate/fallback/job invocation cannot bypass policy.
+2. Default disabled, precedence of DB/env configuration, restart/hot reload and stale tokens tested. No environment variable or owner-only setting can re-enable unsafe legacy generation. Enabled requests require a capable v2 build plus D2-approved candidate and explicit configuration; otherwise fail closed.
+3. Existing legacy rows remain byte-for-byte intact and return fixed safe placeholders; no unsafe model metadata/snippets via readback, exports, shares or caches. User change/logout and old service-worker/open-tab behavior tested; already copied bytes cannot be recalled.
+4. Disable/revocation cancels in-flight operations before further emission. Unavailable/error/progress messages and logs are server controlled. No private settings added to capability DTOs.
+5. Web unavailable state is exercised through a real API; hiding controls is never isolation proof. Core/manual News and Review Inbox flows remain independently usable.
+6. Independent reviewer verifies full entry-point inventory and bypass attempts; document configuration semantics and safe rollback. No live setting is changed by merging the implementation alone.
 
-**Tests:** complete route inventory plus synthetic spy provider proving zero calls; two-user JWT/PAT, history hashes, restart/hot policy/in-flight tests under race; Web disabled/enabled conditional capability, cancel/re-entry/reset and manual News/Review Inbox unaffected; full Go/vet/race and Web/type/build/Chromium CI.
+**Tests:** two-user real-route JWT/PAT and spy provider, status/DB hashes, restart/race/in-flight/caching; full Go/vet/race, Web/type/check/build, Chromium E2E and exact-head required CI. Synthetic data only; mobile outside current scope.
 
-**Release impact:** permits consideration of disabled-Coach release only after D. Complexity small–medium, 1–3 engineer-days plus security review; historical cache/readback coverage may dominate.
+**Release impact:** primary prerequisite for D1; no B/C/D2 prerequisite for proving legacy isolation. D2 is mandatory to restore v2 Coach. Complexity small–medium, estimated 1–3 engineer-days plus independent review.
 
-## Issue B — Ratify Coach architecture C structured contract and threat model
+## Issue B — Approve structured AI Coach output contract
+
+**Priority:** P1.
 
 **Background:** aggregate rejection occurs after irreversible note disclosure; finite free-text recognition cannot be the primary boundary.
 
@@ -96,17 +112,19 @@ Proposed PR sequence: **A provider safety → E containment/history → #292 int
 
 **Tests:** design traceability review, disposable mock schema/template proof (16 illustrative tests already pass), adversarial review of possible escape fields and fact registry. B does not need full product test reruns solely for prose changes.
 
-**Release impact:** design approval enables C, does not unblock release. Complexity medium, 1–2 focused review days after stakeholder response.
+**Release impact:** independent design approval enables C; B does not block Core D1 or a Core-only release. Complexity medium, 1–2 focused review days after stakeholder response.
 
 ## Issue C — Implement versioned Coach findings, server rendering and safe migration
 
+**Priority:** P1.
+
 **Background:** #295's per-note guard cannot be accepted. The Web Coach must retain useful incremental feedback through a strict output vocabulary.
 
-**Scope:** transport/input separation; exact decoder and template predicates; request-local account-scoped fact snapshots; versioned renderer and five locales; v2 SSE/blocking/fallback; additive SQLite/PostgreSQL storage; readback validation/placeholders; safe v1 client adapter; Web parser/hook/capability/cache/privacy/cancel changes; permanent security regression. Keep News AI disabled unless separately secured under an approved contract.
+**Scope:** transport/input separation; exact decoder and template predicates; request-local account-scoped fact snapshots; versioned renderer and five locales; v2 SSE/blocking/fallback; additive SQLite/PostgreSQL storage; readback validation/placeholders; safe v1 client adapter; Web parser/hook/capability/cache/privacy/cancel changes; permanent security regression. News analysis is independently developed/accepted on the Core track; do not make its recovery depend on C.
 
 **Non-goals:** arbitrary-text “advanced mode”, automatic historical text conversion, new accounting or review-journal semantics, mobile UI implementation, trade execution, broad AI platform abstractions.
 
-**Dependencies:** B approved; A and E integrated. May split C into C1 backend/schema/storage (disabled), C2 Web/adapter/catalog integration, C3 acceptance regressions if review size requires; every intermediate merge stays disabled and runnable. Those are implementation stages under one coherent Issue, not pre-created PRs.
+**Dependencies:** B must be approved before C begins. E availability controls must remain enforced for any integrated/exposed C path; E is not a prerequisite for isolated development after B. Reuse A helpers when integrated without importing unsafe Coach guards. Recommended scoped PRs: C1 backend schema, typed fact resolution and rendering; C2 safe SSE/JSON and Web integration; C3 structured persistence and legacy migration. Each intermediate merge stays disabled and runnable; C2 cannot advertise completed persistence before C3 exists. D2, not a configuration switch or C merge alone, gates re-enablement.
 
 **Acceptance:**
 
@@ -117,84 +135,68 @@ Proposed PR sequence: **A provider safety → E containment/history → #292 int
 5. Completed transaction survives restart/readback; legacy and corrupt/unknown versions return placeholders unchanged; migrations and rollback validated on SQLite/PostgreSQL. Locale switch uses pinned catalogs; current ownership checked again.
 6. Old-client contract works through safe adapter only; new Web happy/inverse/empty/read-back/re-entry/cancel/reset/both transition directions exercised against real disposable API, five locales, keyboard and mobile-width Web layouts, stale tab/service worker and privacy masking. Screenshots inspected for material states. No unhandled Coach promise errors allowed.
 
-**Tests:** all preceding plus `go test ./... -count=1`, `go vet ./...`, `go test -race ./... -count=1`; repeated targeted security/concurrency suite; Web full tests, TypeScript, Vite+ check/build; Chromium Playwright against real disposable API with synthetic mock provider; required exact-head CI. Mobile not validated/outside scope. Real vendors and deployed proxy/storage require D/deployment evidence separately.
+**Tests:** all preceding plus `go test ./... -count=1`, `go vet ./...`, `go test -race ./... -count=1`; repeated targeted security/concurrency suite; Web full tests, TypeScript, Vite+ check/build; Chromium Playwright against real disposable API with synthetic mock provider; required exact-head CI. Mobile not validated/outside scope. Real vendors and deployed proxy/storage require D2/deployment evidence separately.
 
 **Release impact:** required only to enable v2 Coach. Complexity high, rough 7–12 engineer-days plus independent review; no confidence interval from implementation exists yet. Avoid deadline-driven free-text fallback.
 
-## Issue D — Independently accept Phase 1 security and integrate Review Inbox
+## Issue D1 — Validate TradeLens Core with legacy Coach isolated
 
-**Background:** green prior CI missed an independently reproducible P1. #292 changes review writes/alerts and #293 is an open release candidate, not security approval.
+**Priority:** P0 release gate. **Background:** the original combined D proposal coupled two products' acceptance. Core may ship safely while Coach recovery remains open only if isolation is independently proven.
 
-**Scope:** independently constructed adversarial tests, exact merged-main verification, #292 isolation/field preservation/alerts compatibility, current source-to-release dependency ledger, disabled or v2-enabled acceptance profile, publication prerequisites. Record evidence as local, remote CI, provider/deployment or owner-confirmed.
+**Scope:** independent A/E review, cross-user/account authorization, included Review Inbox #292/#273 integration, accounting/analytics/main regression, exact candidate CI/E2E and deployment safety evidence. Retain the confirmed Coach vulnerability as unresolved in legacy code but unreachable through supported release surfaces.
 
-**Non-goals:** automatic merge/Issue closure/release/deploy, changing #292/#293 in this planning task, claiming universal security, treating passing old-head tests as integration proof.
+**Non-goals:** approving/implementing Coach C, closing D2, declaring the unsafe generator fixed, automatic #292/#293 merge, release, deployment, tag or Issue #244/#273 closure.
 
-**Dependencies:** A+E and accepted #292 integration for disabled profile; additionally B+C for enabled profile. #294 verified in main. If #292 is excluded from release scope, explicitly revise version/release contents and rerun D rather than claiming Review Inbox integration.
+**Dependencies:** A and E. #292 integration only if included in the selected release; document included/excluded contents explicitly. **No dependency on B, C or D2.**
 
 **Acceptance:**
 
-1. Independent reviewer reproduces old P1 on the historical SHA, then demonstrates permanent regression rejection on current candidate; inspect whole event transcript before any terminal error, DB/logs/headers and successful/readback paths.
-2. Disabled profile: all Coach/News free-text generation and raw legacy readback unreachable from every principal/route, zero upstream calls for disabled requests, disablement survives restart and rollback. C remains openly deferred.
-3. Enabled profile: full C criteria independently pass including live flush timing and input/config separation; any unresolved confidential-output path blocks enabling.
-4. #292 integrated on current main with JWT/PAT own/foreign account/trade/tag/preference tests; failed save leaves all journal fields unchanged; account/window filters, dismiss/restore, two-device readback and alert weekly dedup pass. Review Inbox has no dependency that silently invokes Coach or broadens instance-settings access.
-5. Final-head full Go/race/Web/TypeScript/build/Chromium and required CI pass; no skipped required Web cases. Release Please #293 contents/base/head refreshed after accepted integrations by separately authorized work; exact candidate SHA and artifact provenance recorded.
-6. Before publication, validate intended auth/registration/demo policy, server disable or approved v2 capability, legacy history, proxy incremental flush/cancel/timeouts and actual storage migration/rollback in target-like deployment. Real-vendor checks use separately authorized disposable credentials; do not claim them from mock tests. Published artifact/source/live SHA acceptance and release/deploy authorization remain separate gates.
+1. Independent provider-error and legacy Coach isolation reviews PASS on current candidate: every JSON/SSE/fallback/history/alternate/cache path tested; zero disabled provider calls or review writes; fail-closed defaults and rollback configuration confirmed.
+2. User/account JWT/PAT isolation PASS. Included Review Inbox filters, own/foreign trade/tag/preference writes, field preservation, dismiss/restore/readback, two-device behavior and alert dedup PASS on integrated main. If excluded, record exclusion; do not claim integration PASS.
+3. SBI/import/reversal/accounting, portfolio valuation, analytics, journal/plans, multi-account, OCR and exposed News regressions PASS. No new semantics or historical rewrite. Unsafe shared News paths remain contained independently of Coach redesign.
+4. Full `go test ./...`, `go vet ./...`, `go test -race ./...`; Web tests, TypeScript/check/build; Chromium real-API E2E; required CI and final-main security smoke PASS on actual release-candidate SHA. No inherited old-head PASS or skipped required Web case.
+5. Release configuration leaves unsafe Coach unavailable, cannot enable legacy via env/owner exception, and preserves data. #293 is refreshed/reviewed separately after accepted contents; no release readiness from documentation alone.
+6. Explicit Docker, Render Demo and NAS verification plan records intended artifacts/source SHA, config precedence, auth/registration/demo policy, storage migrations/backup rollback, proxy buffering/timeouts/cancellation, cache behavior and provider boundaries. Run checks in the intended target before publication under separate authorization; record untested targets as blocked/excluded, never PASS.
 
-**Tests:** complete adversarial/API/race/Web suites plus #292 end-to-end acceptance and deployment-specific smoke. Evidence must include exact head, commands, pass/fail counts and remaining limitations, without raw payloads/tokens. Independent review must not reuse only developer-authored tests as its attack corpus.
+**Tests/evidence:** independent adversarial corpus plus permanent pre-error multi-note regressions; API/database/header/log evidence with sanitized IDs/hashes, full local and exact-head remote suites. Distinguish local/mock, actual deployment and owner-confirmed results. A verified inaccessible legacy path is an isolation PASS, not a free-text security fix.
 
-**Release impact:** final blocker for both release profiles. Complexity medium–high, 2–4 engineer-days plus deployment access/review scheduling; estimates across Issues may overlap and are not a delivery promise.
+**Release impact:** after all D1 gates, Core may be eligible for v0.4.0 with Coach unavailable while C/D2 remain open. Publication/deployment still need separate explicit authorization. Complexity medium–high, 2–4 engineer-days plus independent review/access.
 
-## Release-blocker map and choices
+## Issue D2 — Validate structured AI Coach before re-enablement
 
-| Blocker | Current evidence | Resolution / release consequence |
-|---|---|---|
-| Independent provider disclosure on main | #295 fixes are unmerged | A before release; apply soon, independently of Coach |
-| Coach pre-error cross-note output | Exact head reproduced FAIL in this turn | E closes exposure; C required for re-enable; #295 stays Draft |
-| Historical free-text readback and rotated secrets | #295 recognizes current config only | E placeholders; C versioned validation; no raw fallback |
-| Shared Coach News transport/output | Static code shares credentials, arbitrary successful fields | E gate; no claim that News error fix proves safe output |
-| Review Inbox #292 | Actual head differs from body evidence head | Conditional independent progress; fresh main integration and D field/isolation acceptance |
-| v0.4.0 #293 | OPEN; no current integration acceptance | Refresh only after accepted contents; do not merge release PR now |
-| Deployment behavior | Not inspected/tested in this task | Separate intended storage/provider/proxy validation and explicit publication authority |
+**Priority:** P1. **Background:** AI Coach is retained, but C implementation/green CI alone cannot authorize exposing it after the confirmed #295 confidentiality defect.
 
-**Non-Coach fixes first:** yes, after A tests/review on actual extraction head. Merge alone does not remove risk from already deployed old versions; authorized safe deployment/backport is a subsequent operational task.
+**Scope:** independent B/C implementation review, schema/template/fact ownership, pre-flush SSE/JSON, persistence/readback/migration, old/new clients, functional Web, full historical attack corpus and controlled re-enablement plan.
 
-**Temporary non-owner Coach disable:** yes, centrally enforced on server. Stronger recommended default is all-user disabled including News AI and raw history. “Owner-only” is a conditional operational exception, not the release default.
+**Non-goals:** blocking an isolated Core release, authorizing legacy bypass, replacing D1/Core regressions, automatic production enablement or publication.
 
-**Single-user Coach continuation:** possible only as explicit risk acceptance under the conditions in migration; never label the current free-text implementation secure. No settings changed here.
+**Dependencies:** B, C and E. No change to D1 dependencies.
 
-**#292 independent progress:** CONDITIONAL. Its business flow can proceed without Coach, but need A+E security integration and independent current-head ownership/field-preservation acceptance before Phase 1 integration readiness. This task leaves #292 untouched and does not assert its new head passed.
+**Acceptance:**
 
-**v0.4.0 with Coach disabled:** POSSIBLE after A+E+D disabled-profile gates, all raw output entry points closed and release contents verified. Full redesign need not block this narrower safe release. If disablement cannot be proven at API/service/history/shared-provider boundaries, release stays blocked. v0.4.0 with Coach enabled requires B+C+D. Merely documenting the P1 or hiding the UI cannot waive either gate.
+1. No arbitrary provider text enters display fields, error/progress/model metadata, logs or stored display content. Reject unknown/duplicate/missing fields, invalid versions/templates, arbitrary strings/numbers and unauthorized fact references before emission.
+2. Template predicates and user/account/trade references validated before every finding flush. Whole event transcript, successful JSON/fallback and pre-error cross-note attack corpus independently checked; no final-rejection-after-disclosure loophole.
+3. Safe finding arrives before withheld provider completion; progress, cancellation, timeouts, disconnect/commit/retry/idempotency and concurrent JWT/PAT remain functional and isolated.
+4. Structured completion persists safely; legacy/unknown/corrupt/rotated-secret history is safely withheld without destructive changes. SQLite/PostgreSQL migration/rollback and pinned catalog versions pass.
+5. Old/new clients, five locales, privacy mode, stale cache, re-entry/reset/cancel/error/retry and real-API Coach Chromium E2E pass. Full Go/vet/race/Web/type/build/required CI pass on accepted head.
+6. Independent security reviewer approves the actual enabled implementation and explicit residual indirect-channel limitations. D2 records exact accepted candidate, deployment-specific smoke and rollback plan; operator enablement separately authorized and capability checked. No public/multi-user enablement before D2 PASS; no unsafe single-user legacy bypass.
 
-## Planning evidence and delivery state
+**Tests:** permanent historical P1 regressions plus independently authored schema/fact/stream/storage adversarial tests, full suites and target proxy/provider validation. Mock proof alone is insufficient for deployment acceptance.
 
-- Current state fetched and 39/39 changed paths classified; no production code changes.
-- Disposable archive of exact #295 head + verbatim published regression: `go test ./internal/coach -run '^TestFinalIndependentAggregateBeforeCallback$' -count=1` **FAIL**, exit 1, package 0.936s; both ordered disclosure and unsafe callback approval assertions fail. This is expected evidence of the unresolved blocker, not a task failure hidden as PASS.
-- Disposable structured sketch: Python unittest **16/16 PASS**. No real HTTP, database or security completion claim from this sketch.
-- Documentation inventory/link/diff checks run separately. Full Go/race/Web/Chromium not rerun for prose-only work; prior results are attributed to the independent review, not claimed current execution.
-- Documents: [split assessment](pr295-split-assessment.md), [architecture](coach-secure-output-design.md), [migration](coach-security-migration-plan.md), this roadmap. Draft documentation delivery only. Proposed Issues remain uncreated.
+**Release impact:** blocks AI Coach availability only; does not block D1/Core-only release. Complexity medium–high, 2–4 engineer-days plus independent review.
 
-```text
-PR_295_SPLIT_FEASIBILITY = PARTIAL
-INDEPENDENT_PROVIDER_FIXES = EXTRACTABLE
-COACH_SECURITY_ARCHITECTURE = C
-STRUCTURED_SCHEMA_DEFINED = YES
-SERVER_RENDERING_DEFINED = YES
-SAFE_STREAMING_DEFINED = YES
-PERSISTENCE_MIGRATION_DEFINED = YES
-TEMPORARY_COACH_DISABLE_RECOMMENDED = YES
-PR_292_CAN_PROCEED_INDEPENDENTLY = CONDITIONAL
-V040_RELEASE_WITH_COACH_DISABLED = POSSIBLE
-PROPOSED_ISSUE_COUNT = 5
-PROPOSED_PR_SEQUENCE = A -> E -> #292 integration -> C (after B) -> D -> refreshed #293
-DOCUMENTATION_STATUS = COMPLETE
-PR_295_STATUS = DRAFT
-PR_292_STATUS = UNCHANGED
-PR_293_STATUS = UNCHANGED
-MAIN_SHA = 25fe2f97d41053f2eb8e84362e28ad950c35f55e
-READY_FOR_IMPLEMENTATION = YES
-READY_FOR_V040_RELEASE = NO
-NEXT_ACTION = Review this plan; authorize/create A and E; ratify B; implement A/E without merging #295
-```
+## Ordered execution and release policy
 
-Ready for implementation means the remediation backlog is concrete; C implementation depends on design ratification B, and no implementation or release acceptance is implied.
+1. Accept this docs-only two-track revision; create/reuse A/E/B/C/D1/D2 and record actual URLs in the central #244 roadmap index. Do not create original D as a seventh item.
+2. Cloud environment A: provider extraction; Cloud environment E: containment and unavailable Web UX; independent architecture reviewer B in parallel. Separate short-lived branches/worktrees and focused PRs; refresh each against latest main before merge acceptance.
+3. After independent A/E acceptance, assess #292 integration on current main, then D1. Core feature work including #274 remains independently developable; no Coach dependency is introduced.
+4. After B approval, implement C in scoped disabled PRs. Assign D2 to an independent reviewer after C; keep E effective until D2 and explicit re-enablement authorization.
+5. For v0.4.0: A PASS + E independent PASS + included #292 acceptance + final-candidate D1 PASS + safe unavailable Coach configuration. Refresh/review #293 separately. **C and D2 are not prerequisites.**
+
+Planning acceptance is not security implementation acceptance. Current #295 stays Draft, #292/#293 stay unmerged, #244/#273 stay open. No production code, config, release/tag/image or deployment action is part of this recovery task.
+
+## Evidence and retained limitations
+
+#296's exact-head API/Web/title CI passed before its verified squash merge. Its 39-file static audit, disposable 16-test structured sketch and reproduced cross-note FAIL are preserved in [split assessment](pr295-split-assessment.md); these do not prove production recovery. [Architecture C](coach-secure-output-design.md) and [migration](coach-security-migration-plan.md) retain schema, server rendering, bounded streaming, compatibility and rollback detail. The updated roadmap changes scheduling and removes unsafe legacy enablement exceptions, not the confirmed P1 verdict.
+
+Both `READY_FOR_PR_292_INTEGRATION` and `READY_FOR_V040_RELEASE` remain **NO** until implementation and independent acceptance. A/E implementation and B review may start once this plan is accepted. No claim that actual deployments or mobile have been validated.

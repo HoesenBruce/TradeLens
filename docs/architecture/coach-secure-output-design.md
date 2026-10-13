@@ -1,6 +1,6 @@
 # Coach secure output architecture C
 
-Status: proposed implementation contract, 2026-10-13. No production redesign implemented. Baseline/head and full inventory are in [split assessment](pr295-split-assessment.md).
+Status: proposed implementation contract, 2026-10-13; independent B approval and D2 acceptance remain required. AI Coach is retained as a planned, supported feature. No production redesign implemented. Baseline/head and full inventory are in [split assessment](pr295-split-assessment.md).
 
 ## Decision
 
@@ -23,7 +23,7 @@ Current flow: `tradeContextFromDetail` → `coachHistoryFor` → `FormatTradeCon
 
 Use a request-local immutable fact snapshot with server-side user/account/trade binding. The renderer receives this snapshot and a static template catalog, never `VisionConfig`, private prompt or a general settings accessor. The model-facing object is separately constructed from selected facts; transport fields cannot accidentally enter it via whole-struct marshaling. Ownership grants access to a fact; it does not certify its economic accuracy.
 
-`AnalyzeNews` uses the same Coach transport but has a separate fixed system prompt and free-form successful summary/reasoning/etc. It does not currently call trade `systemPrompt`. Error sanitization alone does not establish a safe successful-output contract for a malicious provider that knows its authentication headers. Keep News AI gated with shared Coach containment until its own safe contract is accepted; manual news editing/review remains available. This design's initial templates cover trade Coach only, not arbitrary news prose.
+`AnalyzeNews` uses the same Coach transport but has a separate fixed system prompt and free-form successful summary/reasoning/etc. It does not currently call trade `systemPrompt`. Error sanitization alone does not establish a safe successful-output contract for a malicious provider that knows its authentication headers. News analysis is a separately developable Core feature. Audit and isolate its shared credential/error/success-output paths independently; its availability requires its own accepted confidentiality boundary, not completion of Coach C. If its current shared path cannot be shown safe, temporarily contain that path while its independent remediation proceeds; manual news editing/review remains available. This design's initial templates cover trade Coach only, not arbitrary news prose.
 
 ## Versioned model selection schema (v1)
 
