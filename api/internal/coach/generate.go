@@ -201,6 +201,13 @@ func GenerateReview(ctx context.Context, cfg ocr.VisionConfig, trade TradeContex
 }
 
 func requestReview(ctx context.Context, cfg ocr.VisionConfig, messages []chatMessage, format *chatFmt) (Review, error) {
+	guard, err := newOutputGuard(cfg)
+	if err != nil {
+		return Review{}, err
+	}
+	if err := guard.check(cfg.Model); err != nil {
+		return Review{}, err
+	}
 	content, err := requestContent(ctx, cfg, messages, format)
 	if err != nil {
 		return Review{}, err
@@ -212,7 +219,7 @@ func requestReview(ctx context.Context, cfg ocr.VisionConfig, messages []chatMes
 	if err != nil {
 		return Review{}, err
 	}
-	if err := ValidateReviewOutput(cfg, review); err != nil {
+	if err := guard.review(review); err != nil {
 		return Review{}, err
 	}
 	return review, nil

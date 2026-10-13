@@ -80,6 +80,13 @@ func streamReview(
 	format *chatFmt,
 	onNote NoteFunc,
 ) (Review, error) {
+	guard, err := newOutputGuard(cfg)
+	if err != nil {
+		return Review{}, err
+	}
+	if err := guard.check(cfg.Model); err != nil {
+		return Review{}, err
+	}
 	payload, err := json.Marshal(chatRequest{
 		Model:          modelName(cfg),
 		Messages:       messages,
@@ -126,10 +133,6 @@ func streamReview(
 		return Review{}, fmt.Errorf("%w: %w", errStreamUnsupported, apiErr)
 	}
 
-	guard, err := newOutputGuard(cfg)
-	if err != nil {
-		return Review{}, err
-	}
 	var content strings.Builder
 	emitted := 0
 	reader := &io.LimitedReader{R: res.Body, N: maxStreamBytes + 1}

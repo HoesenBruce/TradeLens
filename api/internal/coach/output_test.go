@@ -16,7 +16,7 @@ import (
 func TestCoachOutputGuardRepresentationsAndBounds(t *testing.T) {
 	const key = "synthetic+owner-secret-key/295"
 	const prompt = "Owner private instructions contain this distinctive sentence.\nHidden private line 295"
-	cfg := ocr.VisionConfig{APIKey: key, CustomPrompt: prompt, BaseURL: "https://url-user:url-password-295@example.invalid/?token=url-token-295"}
+	cfg := ocr.VisionConfig{APIKey: key, CustomPrompt: prompt, BaseURL: "https://url-user:url-password-295@example.invalid/?TOKEN=url-token-295&api-key=query-private-key-295"}
 	g, err := newOutputGuard(cfg)
 	require.NoError(t, err)
 	var escaped strings.Builder
@@ -49,6 +49,7 @@ func TestCoachOutputGuardRepresentationsAndBounds(t *testing.T) {
 		"authorization":     "AUTHORI\nZATION = anything",
 		"url password":      "url-password-295",
 		"url token":         "url-token-295",
+		"url query key":     "query-private-key-295",
 	} {
 		t.Run(name, func(t *testing.T) { require.ErrorIs(t, g.check(text), errUnsafeOutput) })
 	}

@@ -167,7 +167,7 @@ func (s *Server) handleListTradeCoachReviews(c *echo.Context) error {
 			c.Logger().Warn("skipping unreadable coach review", "review_id", r.ID, "err", err)
 			continue
 		}
-		if err := coach.ValidateReviewOutput(cfg, coach.Review{Notes: notes, NextAction: r.NextAction}); err != nil {
+		if err := coach.ValidateReviewOutput(cfg, coach.Review{Notes: notes, NextAction: r.NextAction}, r.Model); err != nil {
 			c.Logger().Warn("skipping unsafe coach review", "review_id", r.ID)
 			continue
 		}

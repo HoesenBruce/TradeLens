@@ -91,6 +91,8 @@ func TestCoachOutputSecurityRouting(t *testing.T) {
 	var scenarios = []scenario{
 		{name: "secret then failure", text: key, fail: true},
 		{name: "secret then success", text: key},
+		{name: "punctuation key", text: "???!!!+++---"},
+		{name: "model metadata", text: key},
 		{name: "private prompt", text: prompt},
 		{name: "prompt line", text: "Distinctive hidden instruction 295."},
 		{name: "url encoded", text: url.QueryEscape(url.QueryEscape(key))},
@@ -124,6 +126,10 @@ func TestCoachOutputSecurityRouting(t *testing.T) {
 		for _, token := range []string{member.session, member.pat} {
 			for _, suffix := range []string{"/coach/stream", "/coach"} {
 				t.Run(tc.name+suffix, func(t *testing.T) {
+					key := key
+					if tc.name == "punctuation key" {
+						key = tc.text
+					}
 					var calls atomic.Int64
 					var logs strings.Builder
 					note := map[string]string{"tone": "tip", "headline": "Safe first", "detail": "Keep risk controlled."}
@@ -139,6 +145,9 @@ func TestCoachOutputSecurityRouting(t *testing.T) {
 							notes = []any{note, unsafe}
 						}
 						if tc.next {
+							notes = []any{note}
+						}
+						if tc.name == "model metadata" {
 							notes = []any{note}
 						}
 					}
@@ -204,13 +213,21 @@ func TestCoachOutputSecurityRouting(t *testing.T) {
 						}
 					}))
 					defer remote.Close()
-					isolationObject(t, f.s, "PUT", "/settings/coach", isolationJSON(t, map[string]any{"enabled": true, "base_url": remote.URL, "api_key": key, "custom_prompt": prompt}), owner.session, 200)
+					model := "synthetic"
+					if tc.name == "model metadata" {
+						model = key
+					}
+					isolationObject(t, f.s, "PUT", "/settings/coach", isolationJSON(t, map[string]any{"enabled": true, "base_url": remote.URL, "api_key": key, "custom_prompt": prompt, "model": model}), owner.session, 200)
 					s := api.New(api.Deps{JWT: auth.NewJWT("disposable-isolation-test-secret"), Store: q, Trades: trades.NewService(q), Logger: slog.New(slog.NewTextHandler(&logs, nil)), CoachDefaults: ocr.VisionConfig{HTTPClient: remote.Client()}})
 					require.Equal(t, 403, do(s, "GET", "/api/v1/settings/coach", "", token).Code)
 					before := f.databaseState(t)
 					rec := do(s, "POST", "/api/v1/trades/"+member.trade+suffix, `{}`, token)
 					require.Equal(t, 200, rec.Code)
-					require.EqualValues(t, 1, calls.Load())
+					if tc.name == "model metadata" {
+						require.Zero(t, calls.Load())
+					} else {
+						require.EqualValues(t, 1, calls.Load())
+					}
 					noProviderSecrets(t, rec.Body.String()+fmt.Sprint(rec.Header())+logs.String(), key, prompt, url.QueryEscape(key), base64.StdEncoding.EncodeToString([]byte(key)), "unrelated-secret-token-295")
 					ok := tc.safe && !tc.fail && !tc.malformed
 					if strings.HasSuffix(suffix, "stream") {
@@ -271,6 +288,8 @@ func TestCoachHistoryHidesLegacyConfigurationEcho(t *testing.T) {
 	isolationObject(t, f.s, "PUT", "/settings/coach", isolationJSON(t, map[string]any{"enabled": true, "base_url": "http://unused.invalid", "api_key": key}), owner.session, 200)
 	q := store.NewForDriver(f.conn, "sqlite")
 	_, err := q.CreateCoachReview(t.Context(), store.CreateCoachReviewParams{ID: "legacy-unsafe-295", UserID: member.id, TradeID: member.trade, Model: "synthetic", Notes: isolationJSON(t, []coach.Note{{Headline: "Legacy", Detail: key}})})
+	require.NoError(t, err)
+	_, err = q.CreateCoachReview(t.Context(), store.CreateCoachReviewParams{ID: "legacy-model-295", UserID: member.id, TradeID: member.trade, Model: key, Notes: isolationJSON(t, []coach.Note{{Headline: "Safe", Detail: "Keep risk controlled."}})})
 	require.NoError(t, err)
 	for _, token := range []string{member.session, member.pat} {
 		before := f.databaseState(t)

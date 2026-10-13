@@ -30,8 +30,11 @@ func transportCredentials(cfg ocr.VisionConfig) []string {
 			password, _ := u.User.Password()
 			values = append(values, u.User.Username(), password)
 		}
-		for _, name := range []string{"api_key", "key", "token", "access_token", "secret", "password"} {
-			values = append(values, u.Query()[name]...)
+		for name, queryValues := range u.Query() {
+			switch strings.ToLower(strings.NewReplacer("_", "", "-", "").Replace(name)) {
+			case "apikey", "key", "token", "accesstoken", "secret", "clientsecret", "password", "authorization", "signature", "sig":
+				values = append(values, queryValues...)
+			}
 		}
 	}
 	return values
@@ -61,6 +64,7 @@ func withoutTransportCredentials(text string, cfg ocr.VisionConfig) string {
 // shortcut: recognisable echoes only; arbitrary ciphers/paraphrases require a trusted structured provider.
 type outputGuard struct {
 	values    []string
+	literals  []string
 	fragments map[int]map[string]bool
 }
 
@@ -88,6 +92,9 @@ func newOutputGuard(cfg ocr.VisionConfig) (*outputGuard, error) {
 		}
 		if item.value == "" {
 			continue
+		}
+		if outputCanonical(item.value) == "" {
+			g.literals = append(g.literals, item.value)
 		}
 		for _, value := range []string{item.value, base64.StdEncoding.EncodeToString([]byte(item.value)), base64.RawURLEncoding.EncodeToString([]byte(item.value)), hex.EncodeToString([]byte(item.value))} {
 			value = outputCanonical(value)
@@ -150,6 +157,11 @@ func (g *outputGuard) check(text string) error {
 			return errUnsafeOutput
 		}
 		canonical := outputCanonical(v.text)
+		for _, literal := range g.literals {
+			if strings.Contains(v.text, literal) {
+				return errUnsafeOutput
+			}
+		}
 		if credentialText.MatchString(v.text) || strings.Contains(canonical, "authorization") {
 			return errUnsafeOutput
 		}
@@ -320,9 +332,12 @@ func (g *outputGuard) note(n Note) error {
 }
 
 // ValidateReviewOutput also protects stored history and blocking/fallback responses.
-func ValidateReviewOutput(cfg ocr.VisionConfig, review Review) error {
+func ValidateReviewOutput(cfg ocr.VisionConfig, review Review, model string) error {
 	g, err := newOutputGuard(cfg)
 	if err != nil {
+		return err
+	}
+	if err := g.check(model); err != nil {
 		return err
 	}
 	return g.review(review)
