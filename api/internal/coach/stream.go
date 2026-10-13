@@ -54,7 +54,7 @@ func GenerateReviewStream(
 		return Review{}, fmt.Errorf("%w: coach not configured", ErrUnavailable)
 	}
 
-	userMsg := FormatTradeContext(trade) + "\n\n" + responseFormatPrompt
+	userMsg := withoutTransportCredentials(FormatTradeContext(trade), cfg) + "\n\n" + responseFormatPrompt
 	messages := []chatMessage{
 		{Role: "system", Content: systemPrompt(cfg)},
 		{Role: "user", Content: userMsg},
@@ -126,9 +126,14 @@ func streamReview(
 		return Review{}, fmt.Errorf("%w: %w", errStreamUnsupported, apiErr)
 	}
 
+	guard, err := newOutputGuard(cfg)
+	if err != nil {
+		return Review{}, err
+	}
 	var content strings.Builder
 	emitted := 0
-	sc := bufio.NewScanner(res.Body)
+	reader := &io.LimitedReader{R: res.Body, N: maxStreamBytes + 1}
+	sc := bufio.NewScanner(reader)
 	sc.Buffer(make([]byte, 0, 64<<10), 1<<20)
 	for sc.Scan() {
 		line := strings.TrimSpace(sc.Text())
@@ -136,24 +141,32 @@ func streamReview(
 			continue
 		}
 		data := strings.TrimSpace(strings.TrimPrefix(line, sseDataPrefix))
+		if data == "" {
+			continue
+		}
 		if data == streamDone {
 			break
 		}
 		var chunk streamChunk
 		if err := json.Unmarshal([]byte(data), &chunk); err != nil {
-			// A frame we cannot read is skipped: the authoritative parse runs
-			// over the accumulated content at the end regardless.
-			continue
+			return Review{}, errUnsafeOutput
 		}
-		if chunk.Error != nil && chunk.Error.Message != "" {
-			return Review{}, fmt.Errorf("coach api: %s", chunk.Error.Message)
+		if chunk.Error != nil {
+			return Review{}, errUnsafeOutput
 		}
 		for _, ch := range chunk.Choices {
+			if len(ch.Delta.Content) > maxReviewBytes-content.Len() {
+				return Review{}, errUnsafeOutput
+			}
 			content.WriteString(ch.Delta.Content)
 		}
-		if onNote != nil {
-			emitted = emitNewNotes(content.String(), emitted, onNote)
+		emitted, err = emitNewNotes(content.String(), emitted, onNote, guard)
+		if err != nil {
+			return Review{}, err
 		}
+	}
+	if reader.N <= 0 {
+		return Review{}, errUnsafeOutput
 	}
 	if err := sc.Err(); err != nil {
 		if isTimeoutErr(err) {
@@ -162,29 +175,44 @@ func streamReview(
 		return Review{}, err
 	}
 
-	return parseReview(content.String())
+	if err := ctx.Err(); err != nil {
+		return Review{}, err
+	}
+	review, err := parseReview(content.String())
+	if err != nil {
+		return Review{}, err
+	}
+	if err := guard.review(review); err != nil {
+		return Review{}, err
+	}
+	return review, nil
 }
 
 // emitNewNotes emits any notes that have closed since the last call and
 // returns the new emitted count.
-func emitNewNotes(buf string, alreadyEmitted int, onNote NoteFunc) int {
+func emitNewNotes(buf string, alreadyEmitted int, onNote NoteFunc, guard *outputGuard) (int, error) {
 	objs := completeNoteObjects(buf)
-	for i := alreadyEmitted; i < len(objs); i++ {
+	for i := alreadyEmitted; i < min(len(objs), maxNotes); i++ {
 		var n struct {
 			Tone     string `json:"tone"`
 			Headline string `json:"headline"`
 			Detail   string `json:"detail"`
 		}
 		if err := json.Unmarshal([]byte(objs[i]), &n); err != nil {
-			continue
+			return alreadyEmitted, errUnsafeOutput
 		}
 		note, ok := toNote(n.Tone, n.Headline, n.Detail, i)
 		if !ok {
 			continue
 		}
-		onNote(note)
+		if err := guard.note(note); err != nil {
+			return alreadyEmitted, err
+		}
+		if onNote != nil {
+			onNote(note)
+		}
 	}
-	return len(objs)
+	return min(len(objs), maxNotes), nil
 }
 
 // completeNoteObjects returns the fully-closed JSON objects inside the "notes"

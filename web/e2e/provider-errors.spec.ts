@@ -31,23 +31,51 @@ test("provider error redaction through real API and Coach browser", async ({
   const prompt = "synthetic-private-prompt-295";
   let calls = 0;
   let fail = true;
+  let finishSuccess = () => {};
   const provider = createServer(async (req, res) => {
-    for await (const _chunk of req) {
-      /* consume synthetic input */
-    }
+    let body = "";
+    for await (const chunk of req) body += chunk.toString();
+    const payload = JSON.parse(body) as { stream?: boolean; messages: { content: string }[] };
     calls++;
     expect(req.headers.authorization).toBe(`Bearer ${key}`);
+    expect(payload.messages.some((message) => message.content.includes(prompt))).toBeTruthy();
+    expect(payload.messages.every((message) => !message.content.includes(key))).toBeTruthy();
     if (fail) {
-      res.writeHead(401, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({ error: { message: `${key}; Authorization: Bearer ${key}; ${prompt}` } }),
-      );
+      const content = JSON.stringify({
+        notes: [
+          {
+            tone: "warn",
+            headline: "Provider rejection",
+            detail: `${key}; Authorization: Bearer ${key}; ${prompt}`,
+          },
+        ],
+      });
+      if (payload.stream) {
+        res.writeHead(200, { "Content-Type": "text/event-stream" });
+        // Split the secret across actual provider chunks, then fail after a complete note.
+        for (let i = 0; i < content.length; i += 5)
+          res.write(
+            `data: ${JSON.stringify({ choices: [{ delta: { content: content.slice(i, i + 5) } }] })}\n\n`,
+          );
+        res.end(`data: ${JSON.stringify({ error: { message: key } })}\n\n`);
+      } else {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ choices: [{ message: { content } }] }));
+      }
     } else {
       res.writeHead(200, { "Content-Type": "text/event-stream" });
       const content = JSON.stringify({
         notes: [{ tone: "tip", headline: "Safe review", detail: "Synthetic successful review" }],
       });
-      res.end(`data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\ndata: [DONE]\n\n`);
+      res.write(
+        `data: ${JSON.stringify({ choices: [{ delta: { content: content.slice(0, -1) + "," } }] })}\n\n`,
+      );
+      await new Promise<void>((resolve) => {
+        finishSuccess = resolve;
+      });
+      res.end(
+        `data: ${JSON.stringify({ choices: [{ delta: { content: '"next_action":"Record the next plan."}' } }] })}\n\ndata: [DONE]\n\n`,
+      );
     }
   });
   await new Promise<void>((resolve) => provider.listen(0, "127.0.0.1", resolve));
@@ -151,11 +179,21 @@ test("provider error redaction through real API and Coach browser", async ({
     await expect(ask).toBeVisible();
     await ask.click();
     await expect(page.getByText("Could not reach the coach API", { exact: true })).toBeVisible();
+    for (const secret of [key, prompt, "Authorization: Bearer"])
+      expect(
+        (await page.locator("body").innerText()) + errors.join() + consoleErrors.join(),
+      ).not.toContain(secret);
     await page.screenshot({ path: info.outputPath("coach-error.png"), fullPage: true });
     fail = false;
     await page.getByRole("button", { name: "Regenerate AI coach" }).click();
     await expect(page.getByText("Tip · Safe review", { exact: true })).toBeVisible();
     await expect(page.getByText("Synthetic successful review", { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /^(Ask AI coach|Regenerate AI coach)$/ }),
+    ).toBeDisabled();
+    await page.screenshot({ path: info.outputPath("coach-incremental.png"), fullPage: true });
+    finishSuccess();
+    await expect(page.getByRole("button", { name: "Regenerate AI coach" })).toBeEnabled();
     await page.screenshot({ path: info.outputPath("coach-success.png"), fullPage: true });
     for (const secret of [key, prompt, "Authorization: Bearer"])
       expect(
@@ -169,6 +207,7 @@ test("provider error redaction through real API and Coach browser", async ({
     });
     expect(calls).toBeGreaterThanOrEqual(6);
   } finally {
+    finishSuccess();
     await new Promise<void>((resolve, reject) =>
       provider.close((err) => (err ? reject(err) : resolve())),
     );

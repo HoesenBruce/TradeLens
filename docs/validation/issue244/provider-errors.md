@@ -56,7 +56,51 @@ From root: `git diff --check`. Exact final head, outcomes and CI URLs are record
 ## Limits
 
 - SQLite/local storage and synthetic providers are exercised. PostgreSQL, alternative storage, real IBKR/AI/Expo/webhook services and deployed proxies are unverified.
-- Tests establish error-output boundaries, not immunity to all disclosure. Valid model completion content is intentionally preserved; a model putting a secret in a successful note is outside this error-remediation scope.
+- Tests establish the documented boundaries, not immunity to all disclosure. Coach provisional and successful output now has the bounded content checks below. Arbitrary successful OCR/News model content is outside this targeted Coach remediation.
 - Historical raw error rows are hidden on API read, not erased from operator-controlled databases/backups. Raw causes remain available internally for error identity; audited response/status/log consumers format only the safe error.
 - The existing Coach browser mutation can produce an unhandled rejected promise on SSE failure. The browser test inspects it and permits only the exact sanitized message, then exercises successful regeneration. No Web product code or error-handling redesign is included.
 - No #292/#293 branch modification, merge, Issue closure, release, publication or deployment is authorized here. #295 stays Draft pending independent security review.
+
+## Coach pre-error note remediation
+
+Vulnerable baseline: `b44857381d403b8885e4fdca0626f65598ea7ca4`. The [independent blocking review](https://github.com/HoesenBruce/TradeLens/pull/295#issuecomment-6137572036) reproduced owner API key/private prompt disclosure with member JWT/PAT. A complete provisional note was emitted before the later provider error. The exact `TestIndependentCoachPartialFailureMustNotDisclose` fixture was first run on this baseline and failed for both identities. After remediation it additionally requires **only one generic error event, with no unsafe note**; the provider/configuration/authentication and secret-absence assertions remain. An assertion requiring the vulnerable note event is not an acceptance requirement.
+
+### Data flow and changed boundaries
+
+1. `GenerateReview` / `GenerateReviewStream` construct messages from the authenticated owner's trade and instance Coach instructions. API key remains in the transport Authorization header. Known transport keys, URL credentials and credential-header lines accidentally embedded in instructions/journal context are omitted from model-visible messages; necessary private instructions otherwise remain.
+2. Provider frames are decoded and accumulated across chunk boundaries. A **complete note** is the smallest output unit. `outputGuard` checks decoded headline/detail and their combination **before** invoking the note callback; the API handler can flush only validated notes. It rejects the entire generation rather than emitting a partially redacted credential.
+3. The final review/next action passes the same guard before JSON, SSE `done` or persistence. Blocking format fallback is guarded too. Unsafe content is rejected on success as well as failure. Safe previews already sent retain their normal ordering; an unsafe later note produces a generic error and no saved review.
+4. Owned historical Coach reviews are checked on read against current known configuration. Unsafe rows are omitted without rewriting the database; the log contains only their review ID. Old unknown/rotated secrets cannot be identified reliably without an operator history audit.
+
+### Bounded recognition contract
+
+The guard rejects current known API keys, URL user/password and named credential query values, identifiable custom-prompt echoes (including the credential-minimized prompt), and recognizable Authorization/Bearer/Basic/credential diagnostic text. It compares normalized decoded fields and recognizes whitespace/punctuation splitting, URL encoding, HTML entities, JSON Unicode escapes, Base64/Base64URL and hex representations. Known long keys and prompt text also have conservative fragment checks (12 and 32 normalized bytes respectively); short keys require whole-token matches to avoid interpreting the letter `k` in ordinary words as a credential.
+
+This is a **bounded recognizable-echo guard**, not a proof that arbitrary free-form model text is confidential. Novel ciphers, semantic paraphrases, steganography or arbitrary fragments rearranged across unrelated notes are not generally identifiable. If that stronger guarantee is required, use a trusted structured provider returning validated template IDs and facts drawn from the owned trade, then render server-controlled text; do not claim an unrestricted free-form stream can satisfy it. That product design is proposed, not implemented by this security patch. Conservative matching can reject legitimate text that quotes private instructions; it fails closed and allows a retry, never stores the rejected review.
+
+Bounds: 64 KiB cumulative decoded review content, 4 MiB provider wire stream, at most five emitted notes; encoding inspection has three decoding levels, 128 inspected views/known values and a 256 KiB inspection budget per check. Oversized, invalid UTF-8, malformed SSE or over-budget output fails closed. Strings that are not valid supported encodings remain subject to plaintext checks; this does not promise detection of arbitrary encodings. Empty SSE heartbeat frames are accepted. Existing request cancellation, timeout status/error identity, event envelope and safe JSON/stream success behavior are preserved.
+
+### Added evidence and commands
+
+`coach_output_security_test.go` exercises real routes with stored synthetic owner settings and a mock that verifies Authorization/private instruction delivery, member config denial, complete response/event/header/log scans, and complete-table hashes. Cases include unsafe note followed by failure **and success**, safe success/failure, five-byte chunk splitting, structured/URL/Unicode/HTML/Base64/hex/multiline echoes, split fields, mixed notes, unsafe next action, empty/malformed frames, oversized content, foreign trade denial and historical readback. `TestIndependentCoachActualConnectionTermination` uses real HTTP client disconnect, provider disconnect and stalled-stream timeout under JWT/PAT. `output_stream_test.go` withholds completion until a safe note actually arrives, verifies final two-note success, wire/content bounds and unsafe blocking fallback. Existing tests remain; safe streaming API order is `note`, `note`, `done`.
+
+```sh
+# api/: baseline reproduction before production edits (expected FAIL), then fixed PASS
+go test ./internal/api -run TestIndependentCoachPartialFailureMustNotDisclose -count=1
+go test ./internal/api ./internal/coach ./internal/alerts ./internal/providererrors -run 'TestCrossUserIsolation|TestIndependentCoach|TestCoach|TestProviderExpo|TestProviderWebhook|TestSafe' -count=3
+go test ./... -count=1
+go vet ./...
+go test -race ./... -count=1
+
+# web/
+./node_modules/.bin/vp test run --maxWorkers=2
+./node_modules/.bin/tsc -b --noEmit
+./node_modules/.bin/vp check
+./node_modules/.bin/vp build
+E2E_API_URL=http://localhost:8102/api/v1 E2E_BASE_URL=http://localhost:5199 PLAYWRIGHT_BROWSERS_PATH=/private/tmp/tradelens-phase1-pw ./node_modules/.bin/playwright test e2e/provider-errors.spec.ts --timeout=120000 --reporter=json
+
+# root
+git diff --check origin/main...HEAD
+```
+
+The Chromium test uses the actual API and a real mock provider: a credential-bearing provisional note split across frames is rejected, then retry displays a safe note while the provider deliberately withholds final completion. It captures page/console errors and failure/incremental/success screenshots. The inherited sanitized rejected promise remains a separate UI limitation. Exact final head, command outcomes and **new-head** required CI URLs belong in #295's updated evidence; previous-head CI is not acceptance evidence. No merge, Issue closure, production database change, release or deployment is part of this task.

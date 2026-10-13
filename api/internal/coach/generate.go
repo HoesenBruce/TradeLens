@@ -125,7 +125,7 @@ type notesPayload struct {
 
 func systemPrompt(cfg ocr.VisionConfig) string {
 	if p := strings.TrimSpace(cfg.CustomPrompt); p != "" {
-		return p
+		return withoutTransportCredentials(p, cfg)
 	}
 	return DefaultCoachPrompt
 }
@@ -187,7 +187,7 @@ func GenerateReview(ctx context.Context, cfg ocr.VisionConfig, trade TradeContex
 		return Review{}, fmt.Errorf("%w: coach not configured", ErrUnavailable)
 	}
 
-	userMsg := FormatTradeContext(trade) + "\n\n" + responseFormatPrompt
+	userMsg := withoutTransportCredentials(FormatTradeContext(trade), cfg) + "\n\n" + responseFormatPrompt
 	messages := []chatMessage{
 		{Role: "system", Content: systemPrompt(cfg)},
 		{Role: "user", Content: userMsg},
@@ -205,7 +205,17 @@ func requestReview(ctx context.Context, cfg ocr.VisionConfig, messages []chatMes
 	if err != nil {
 		return Review{}, err
 	}
-	return parseReview(content)
+	if len(content) > maxReviewBytes {
+		return Review{}, errUnsafeOutput
+	}
+	review, err := parseReview(content)
+	if err != nil {
+		return Review{}, err
+	}
+	if err := ValidateReviewOutput(cfg, review); err != nil {
+		return Review{}, err
+	}
+	return review, nil
 }
 
 // requestContent shares the bounded OpenAI-compatible transport across structured tasks.
