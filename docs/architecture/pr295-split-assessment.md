@@ -1,6 +1,6 @@
 # PR #295 security split assessment
 
-Status: actionable planning only; architecture C; #295 remains blocked Draft. Reviewed 2026-10-13.
+Status: technical assessment preserved from #296; release scheduling is superseded by the two-track roadmap. Architecture C; #295 remains blocked Draft. Reviewed 2026-10-13.
 
 ## Verified baseline and evidence
 
@@ -87,3 +87,7 @@ The published independent unit was copied verbatim from the linked comment into 
 A disposable structured-boundary sketch at `/private/tmp/tradelens-295-poc/poc.py` passed 16 Python unit assertions (schema/version/unknown field/template/duplicate/partial/budget, owner/account/trade/reference checks, safe rendering, incremental success/failure). It is a design illustration, not a production parser, HTTP/SSE integration, persistence or Go race proof. No raw model payload or credential value is part of delivery.
 
 Release and acceptance decisions: [roadmap](phase1-security-roadmap.md). Contract: [architecture C](coach-secure-output-design.md). Storage and rollout: [migration](coach-security-migration-plan.md).
+
+## Product scheduling clarification
+
+AI Coach is retained; Category B remains blocked from extraction and requires its own B/C/D2 recovery. Category A plus independently verified E isolation enables Core D1 assessment without waiting for B, C or D2. No unsafe legacy enablement bypass is accepted. News analysis has an independent Core confidentiality acceptance path, not a dependency on Coach redesign. See [current roadmap](phase1-security-roadmap.md).
