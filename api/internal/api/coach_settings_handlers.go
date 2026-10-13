@@ -43,11 +43,13 @@ type coachModelsRequestDTO struct {
 }
 
 func (s *Server) handleGetCoachSettings(c *echo.Context) error {
+	c.Response().Header().Set("Cache-Control", "no-store")
 	cfg := s.effectiveCoachConfig(c.Request().Context())
 	return c.JSON(http.StatusOK, toCoachSettingsDTO(cfg))
 }
 
 func (s *Server) handlePutCoachSettings(c *echo.Context) error {
+	c.Response().Header().Set("Cache-Control", "no-store")
 	var in coachSettingsPutDTO
 	if err := c.Bind(&in); err != nil {
 		return Fail(http.StatusBadRequest, "bad_request", "invalid body", nil)
@@ -101,6 +103,10 @@ func (s *Server) handlePutCoachSettings(c *echo.Context) error {
 }
 
 func (s *Server) handleTestCoachSettings(c *echo.Context) error {
+	c.Response().Header().Set("Cache-Control", "no-store")
+	if !coach.LegacyAvailable() {
+		return Fail(http.StatusServiceUnavailable, "ai_unavailable", "AI Coach is unavailable in this build.", nil)
+	}
 	var in coachTestRequestDTO
 	_ = c.Bind(&in)
 	if trimmed := strings.TrimSpace(in.BaseURL); trimmed != "" {
@@ -126,6 +132,10 @@ func (s *Server) handleTestCoachSettings(c *echo.Context) error {
 }
 
 func (s *Server) handleListCoachModels(c *echo.Context) error {
+	c.Response().Header().Set("Cache-Control", "no-store")
+	if !coach.LegacyAvailable() {
+		return Fail(http.StatusServiceUnavailable, "ai_unavailable", "AI Coach is unavailable in this build.", nil)
+	}
 	var in coachModelsRequestDTO
 	if err := c.Bind(&in); err != nil {
 		return Fail(http.StatusBadRequest, "bad_request", "invalid body", nil)
@@ -192,15 +202,16 @@ func (s *Server) coachConfigWithOverrides(ctx context.Context, baseURL, model st
 func (s *Server) effectiveCoachConfig(ctx context.Context) ocr.VisionConfig {
 	cfg := s.deps.CoachDefaults
 	overlay, ok, err := LoadCoachOverlay(ctx, s.deps.Store)
-	if err != nil || !ok {
-		return cfg
+	if err == nil && ok {
+		cfg = ocr.MergeVisionConfig(cfg, overlay)
 	}
-	return ocr.MergeVisionConfig(cfg, overlay)
+	cfg.Enabled = coach.LegacyAvailable() && cfg.Enabled
+	return cfg
 }
 
 func toCoachSettingsDTO(cfg ocr.VisionConfig) coachSettingsDTO {
 	return coachSettingsDTO{
-		Enabled:       cfg.Enabled,
+		Enabled:       coach.LegacyAvailable() && cfg.Enabled,
 		BaseURL:       strings.TrimSpace(cfg.BaseURL),
 		Model:         strings.TrimSpace(cfg.Model),
 		CustomPrompt:  strings.TrimSpace(cfg.CustomPrompt),

@@ -48,6 +48,10 @@ func (s *Server) handleTradeCoachStream(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not load trade", nil)
 	}
+	if !coach.LegacyAvailable() {
+		c.Response().Header().Set("Cache-Control", "no-store")
+		return c.JSON(http.StatusOK, coachReviewDTO{Source: "off", Notes: []coach.Note{}, Error: "AI Coach is unavailable in this build."})
+	}
 	detail, err := s.buildTradeDetail(ctx, uid, t)
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not load trade detail", nil)

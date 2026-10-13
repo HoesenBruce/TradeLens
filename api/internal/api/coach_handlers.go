@@ -31,6 +31,8 @@ type coachReviewDTO struct {
 
 // storedCoachReviewDTO is one row of a trade's coach history.
 type storedCoachReviewDTO struct {
+	Status     string       `json:"status"`
+	Message    string       `json:"message"`
 	ID         string       `json:"id"`
 	Notes      []coach.Note `json:"notes"`
 	NextAction string       `json:"next_action,omitempty"`
@@ -51,6 +53,10 @@ func (s *Server) handleTradeCoach(c *echo.Context) error {
 		return Fail(http.StatusInternalServerError, "internal", "could not load trade", nil)
 	}
 
+	if !coach.LegacyAvailable() {
+		c.Response().Header().Set("Cache-Control", "no-store")
+		return c.JSON(http.StatusOK, coachReviewDTO{Source: "off", Notes: []coach.Note{}, Error: "AI Coach is unavailable in this build."})
+	}
 	detail, err := s.buildTradeDetail(ctx, uid, t)
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not load trade detail", nil)
@@ -120,6 +126,9 @@ func (s *Server) saveCoachReview(
 	cfg ocr.VisionConfig,
 	review coach.Review,
 ) (store.CoachReview, error) {
+	if !coach.LegacyAvailable() {
+		return store.CoachReview{}, coach.ErrUnavailable
+	}
 	notes, err := json.Marshal(review.Notes)
 	if err != nil {
 		return store.CoachReview{}, err
@@ -162,21 +171,17 @@ func (s *Server) handleListTradeCoachReviews(c *echo.Context) error {
 
 	out := make([]storedCoachReviewDTO, 0, len(rows))
 	for _, r := range rows {
-		notes := []coach.Note{}
-		// A row whose notes will not parse is skipped rather than failing the
-		// list — one bad record should not hide the rest of the history.
-		if err := json.Unmarshal([]byte(r.Notes), &notes); err != nil {
-			c.Logger().Warn("skipping unreadable coach review", "review_id", r.ID, "err", err)
+		// Legacy display fields are untrusted even after credentials rotate.
+		id, err := uuid.Parse(r.ID)
+		if err != nil || r.CreatedAt.Year() < 1970 || r.CreatedAt.Year() > 9999 {
 			continue
 		}
 		out = append(out, storedCoachReviewDTO{
-			ID:         r.ID,
-			Notes:      notes,
-			NextAction: r.NextAction,
-			Model:      r.Model,
-			CreatedAt:  r.CreatedAt,
+			ID: id.String(), CreatedAt: r.CreatedAt, Notes: []coach.Note{},
+			Status: "legacy_withheld", Message: "Legacy AI review is unavailable.",
 		})
 	}
+	c.Response().Header().Set("Cache-Control", "no-store")
 	return c.JSON(http.StatusOK, map[string]any{"reviews": out})
 }
 

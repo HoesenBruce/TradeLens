@@ -55,7 +55,7 @@ const newsSchema = `{
 // AnalyzeNews uses the existing Coach configuration, client and format fallback.
 // The entire call, including fallback, shares one deadline. No data is persisted.
 func AnalyzeNews(ctx context.Context, cfg ocr.VisionConfig, news string) (NewsAnalysis, error) {
-	if !cfg.Ready() {
+	if !LegacyAvailable() || !cfg.Ready() {
 		return NewsAnalysis{}, ErrUnavailable
 	}
 	if strings.TrimSpace(news) == "" {

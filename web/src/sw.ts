@@ -15,8 +15,8 @@ declare const self: ServiceWorkerGlobalScope;
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   precacheOptions: { cleanupOutdatedCaches: true },
-  // Stay waiting until the app sends SKIP_WAITING so users can confirm the reload.
-  skipWaiting: false,
+  // Security containment must replace an old API-caching worker without waiting for a tab to close.
+  skipWaiting: true,
   clientsClaim: true,
   navigationPreload: false,
   runtimeCaching: [
@@ -28,6 +28,11 @@ const serwist = new Serwist({
     // Exports must recheck ownership and current records, never download an offline snapshot.
     {
       matcher: ({ url }) => /\/news\/(?:[^/]+\/)?export$/.test(url.pathname),
+      handler: new NetworkOnly(),
+    },
+    // Coach responses must recheck server policy and never replay legacy bytes.
+    {
+      matcher: ({ url }) => /\/(?:capabilities\/coach|settings\/coach(?:\/|$)|trades\/[^/]+\/coach(?:\/|$)|news\/[^/]+\/analyze$)/.test(url.pathname),
       handler: new NetworkOnly(),
     },
     // Trade/report data: prefer fresh network, fall back to last-seen cache when offline.
@@ -50,6 +55,19 @@ self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     void self.skipWaiting();
   }
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    for (const name of await caches.keys()) {
+      const cache = await caches.open(name);
+      for (const request of await cache.keys()) {
+        if (/\/(?:capabilities\/coach|settings\/coach(?:\/|$)|trades\/[^/]+\/coach(?:\/|$)|news\/[^/]+\/analyze$)/.test(new URL(request.url).pathname)) {
+          await cache.delete(request);
+        }
+      }
+    }
+  })());
 });
 
 serwist.addEventListeners();
