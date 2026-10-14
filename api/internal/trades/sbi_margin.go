@@ -1,22 +1,14 @@
 package trades
 
 import (
-	"sort"
-
 	"github.com/tradermemos/api/internal/money"
 )
 
 // SBIMarginAccounting prefers the settlement result supplied by SBI. Without
 // it, only a single opening can be costed without inventing a lot match.
 func SBIMarginAccounting(fills []Execution) AccountingResult {
-	result := AccountingResult{Trades: group(append([]Execution(nil), fills...), false)}
-	ordered := append([]Execution(nil), fills...)
-	sort.SliceStable(ordered, func(i, j int) bool {
-		if ordered[i].ExecutedAt.Equal(ordered[j].ExecutedAt) {
-			return ordered[i].ID < ordered[j].ID
-		}
-		return ordered[i].ExecutedAt.Before(ordered[j].ExecutedAt)
-	})
+	result := AccountingResult{Trades: sbiReviewTrades(fills)}
+	ordered := sbiReviewOrder(fills)
 	var qty, entry, openFees float64
 	openings := 0
 	for _, fill := range ordered {
@@ -34,6 +26,10 @@ func SBIMarginAccounting(fills []Execution) AccountingResult {
 		}
 		if fill.Quantity > qty+1e-9 || qty == 0 {
 			result.UnavailableCloseIDs = append(result.UnavailableCloseIDs, fill.ID)
+			qty, openFees, openings = 0, 0, 0
+			if fill.BrokerReportedPnl != nil {
+				result.RealizedCloses = append(result.RealizedCloses, RealizedClose{ExecutionID: fill.ID, Date: fill.ExecutedAt, Pnl: *fill.BrokerReportedPnl, Fees: fill.Fees + fill.Commission, Source: "broker_reported"})
+			}
 			continue
 		}
 		remaining := qty - fill.Quantity
@@ -81,6 +77,7 @@ func SBIMarginAccounting(fills []Execution) AccountingResult {
 	}
 	reconcileReportedTrades(fills, &result)
 	reconcileConversionTrades(fills, &result)
+	protectIncompleteSBITrades(&result)
 	return result
 }
 

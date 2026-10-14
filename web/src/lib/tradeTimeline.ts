@@ -1,6 +1,6 @@
-import type { TradeDetail } from "./api/types";
+import type { Execution, TradeDetail } from "./api/types";
 import { getDisplayTimeOpts } from "./displayPrefs";
-import { fmtDateTime, fmtTime } from "./format";
+import { fmtDate, fmtDateTime, fmtTime } from "./format";
 import { intlLocale } from "./locale";
 
 function calendarDayKey(d: Date, timeZone: string): string {
@@ -18,11 +18,22 @@ function calendarDayKey(d: Date, timeZone: string): string {
  * rather than repeating it on both sides of the arrow.
  */
 export function fmtTradeTimeline(
-  trade: Pick<TradeDetail, "opened_at" | "closed_at" | "status">,
+  trade: Pick<TradeDetail, "opened_at" | "closed_at" | "status"> & {
+    fills?: Pick<Execution, "details">[];
+  },
   hold: string,
 ): string {
   const opened = new Date(trade.opened_at);
   if (Number.isNaN(opened.getTime())) return "—";
+
+  const dateFill = trade.fills?.find((f) => f.details?.source_time_precision === "date");
+  if (dateFill) {
+    const zone = dateFill.details?.lot?.startsWith("sbi:") ? "Asia/Tokyo" : undefined;
+    const day = fmtDate(trade.opened_at, intlLocale(), zone);
+    return trade.status === "open" || !trade.closed_at
+      ? `${day} · still open`
+      : `${day} → ${fmtDate(trade.closed_at, intlLocale(), zone)}`;
+  }
 
   const { timeZone } = getDisplayTimeOpts();
   const day = opened.toLocaleDateString(intlLocale(), {

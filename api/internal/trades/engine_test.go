@@ -195,9 +195,11 @@ func TestSBIReviewTradeFeesRemainUnchanged(t *testing.T) {
 				strategy = SBICashAccounting
 			}
 			out := Account([]Execution{a, b}, map[string]AccountingStrategy{lot: strategy}).Trades
-			require.Len(t, out, 2)
+			require.Len(t, out, 1)
 			require.Equal(t, 6.0, out[0].FeesTotal)
-			require.Zero(t, out[1].FeesTotal)
+			require.Zero(t, out[0].QtyRemaining)
+			require.Nil(t, out[0].NetPnl)
+			require.Contains(t, out[0].AccountingWarning, "Incomplete SBI opening evidence")
 		})
 	}
 }

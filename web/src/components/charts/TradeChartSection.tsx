@@ -55,7 +55,12 @@ export function TradeChartSection({ trade }: { trade: TradeDetail }) {
 
   const bars = barsQ.data?.bars;
   const replay = useReplayController(bars?.length ?? 0);
-  const canReplay = chartable && !showEmpty && (bars?.length ?? 0) > 1;
+  const canReplay =
+    chartable &&
+    !showEmpty &&
+    (bars?.length ?? 0) > 1 &&
+    !trade.fills.some((f) => f.details?.source_time_precision === "date") &&
+    !trade.accounting_warning?.includes("Incomplete SBI opening evidence");
   const cursorBar = replay.active ? bars?.[replay.cursor] : undefined;
   const replayUpTo = cursorBar && bars ? replayCutoff(bars, replay.cursor, interval) : null;
   const replayPnl = useMemo(
@@ -97,7 +102,7 @@ export function TradeChartSection({ trade }: { trade: TradeDetail }) {
           : undefined,
     targetPrice: trade.target_price,
     stopPrice: trade.stop_price,
-    entryPrice: trade.avg_entry_price,
+    entryPrice: trade.qty_opened > 0 ? trade.avg_entry_price : null,
     interval,
     visibleFrom: barsQ.data?.from,
     visibleTo: barsQ.data?.to,

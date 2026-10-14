@@ -12456,3 +12456,8 @@ msgstr "데이터베이스 스냅샷을 서버의 폴더에 저장합니다. 이
 #: src/app/screens/settings/backups-section.tsx:124
 msgid "This server runs on Postgres. Built-in backups cover SQLite only — back up Postgres with pg_dump or your provider's snapshots."
 msgstr "이 서버는 Postgres에서 실행 중입니다. 기본 제공 백업은 SQLite만 지원합니다 — Postgres는 pg_dump 또는 제공업체의 스냅샷으로 백업하세요."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:8
+msgid "trades.remainingQuantity"
+msgstr "잔여 {quantity}"

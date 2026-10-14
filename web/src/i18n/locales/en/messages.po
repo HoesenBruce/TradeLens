@@ -12459,3 +12459,8 @@ msgstr "Snapshots of the database, written to a folder on the server. Sync that 
 #: src/app/screens/settings/backups-section.tsx:124
 msgid "This server runs on Postgres. Built-in backups cover SQLite only — back up Postgres with pg_dump or your provider's snapshots."
 msgstr "This server runs on Postgres. Built-in backups cover SQLite only — back up Postgres with pg_dump or your provider's snapshots."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:8
+msgid "trades.remainingQuantity"
+msgstr "Remaining {quantity}"
