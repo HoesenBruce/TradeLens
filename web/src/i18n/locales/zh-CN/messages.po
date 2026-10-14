@@ -12472,3 +12472,81 @@ msgstr "AI 新闻分析暂时不可用，仍可手动复盘新闻。"
 #: src/lib/tradeLabels.ts:8
 msgid "trades.remainingQuantity"
 msgstr "剩余 {quantity}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:46
+msgid "trades.entryQty"
+msgstr "开仓量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:49
+msgid "trades.exitQty"
+msgstr "平仓量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:52
+msgid "trades.openQty"
+msgstr "剩余量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:55
+msgid "trades.remainingPct"
+msgstr "剩余比例"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:20
+msgid "trades.openEntryDescription"
+msgstr "剩余量 {open} / 开仓量 {entry}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:199
+#: src/components/tradeColumns.tsx:202
+#: src/components/tradeColumns.tsx:520
+#: src/components/tradeColumns.tsx:542
+msgid "trades.openEntryQty"
+msgstr "剩余量 / 开仓量"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:55
+msgid "trades.lifecyclePartial"
+msgstr "部分平仓"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:57
+msgid "trades.lifecycleClosed"
+msgstr "持仓已平"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:53
+msgid "trades.lifecycleOpen"
+msgstr "持仓未平"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:59
+msgid "trades.lifecycleUnknown"
+msgstr "持仓未知"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:41
+msgid "trades.quantityServerUnavailable"
+msgstr "当前服务器无法提供数量明细。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:25
+msgid "trades.quantityMissingOpening"
+msgstr "开仓历史不完整，数量未知。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:30
+msgid "trades.quantityShareUnits"
+msgstr "公司行动前后的股份单位未经验证，数量未知。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:36
+msgid "trades.quantityInconsistent"
+msgstr "已保存的交易库存不一致，数量未知。"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:203
+msgid "trades.quantitySortHint"
+msgstr "剩余未平数量 / 累计开仓数量；按剩余量排序"

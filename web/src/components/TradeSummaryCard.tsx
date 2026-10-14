@@ -1,4 +1,5 @@
-import { directionLabel, remainingQuantityLabel, tradeStatusLabel } from "@/lib/tradeLabels";
+import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
+import { TradeQuantityDetails } from "./TradeQuantities";
 import { useLingui } from "@lingui/react";
 import { t as tr } from "@lingui/core/macro";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
@@ -8,7 +9,7 @@ import { DIR_TONE_CLASS } from "./DirCell";
 import { Pill } from "./Pill";
 import { StatCell } from "./StatCell";
 import { pnlColor } from "./theme-tokens";
-import { marketLabel, tradeNotional, tradeStatus } from "./tradeColumns";
+import { marketLabel, tradeStatus } from "./tradeColumns";
 import type { TradeDetail } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
 import { useDisplayTimePrefs } from "@/lib/displayPrefs";
@@ -63,8 +64,6 @@ export function TradeSummaryCard({
     trade.instrument_type === "option" ? formatOptionContractLabel(optionContract) : "";
   // Options quote per share but settle per contract, so the ×100 has to be
   // visible somewhere for the P&L to reconcile against the entry price.
-  const multiplier = trade.fills[0]?.multiplier || (trade.instrument_type === "option" ? 100 : 1);
-  const notional = tradeNotional(trade.qty_opened, trade.avg_entry_price, trade.instrument_type);
   const hasDividends = trade.dividend_total !== 0;
 
   return (
@@ -199,21 +198,13 @@ export function TradeSummaryCard({
         {/* One row of tiles instead of the three stacked bento blocks: same
             numbers, a third of the height, and the same tile treatment the
             home page gives its metrics. */}
-        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
+        <TradeQuantityDetails trade={trade} />
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
           <StatCell label={tr({ id: "trades.entry", message: "Entry" })}>
             {trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price, currency, locale) : "—"}
           </StatCell>
           <StatCell label={tr({ id: "trades.exit", message: "Exit" })}>
             {trade.avg_exit_price != null ? fmtMoney(trade.avg_exit_price, currency, locale) : "—"}
-          </StatCell>
-          <StatCell
-            label={tr({ id: "trades.size", message: "Size" })}
-            hint={
-              remainingQuantityLabel(trade) ??
-              (multiplier !== 1 ? `×${multiplier}` : fmtMoney(notional, currency, locale))
-            }
-          >
-            {trade.qty_opened.toFixed(trade.qty_opened % 1 === 0 ? 0 : 2)}
           </StatCell>
           <StatCell label={tr({ id: "trades.hold", message: "Hold" })}>
             {insights.holdLabel === "-" ? "—" : insights.holdLabel}

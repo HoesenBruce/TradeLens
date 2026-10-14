@@ -665,6 +665,9 @@ paths:
                   - type: array
                     items:
                       type: object
+                      properties:
+                        quantities:
+                          $ref: "#/components/schemas/TradeQuantities"
                   - type: object
                     description: currency, target_currency, fx_policy latest, fx_rates and trades. Row P&L, fees, prices and initial_risk use output currency; source_pnl_currency retains provenance.
                     additionalProperties: true
@@ -683,6 +686,9 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  quantities:
+                    $ref: "#/components/schemas/TradeQuantities"
                 additionalProperties: true
         "404":
           $ref: "#/components/responses/Error"
@@ -1994,6 +2000,38 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    TradeQuantities:
+      type: object
+      description: >
+        Read-only inventory from the existing reconstructed trade, in normalized
+        share/contract units. Direction supplies the long/short sign. Entry is
+        cumulative opened quantity; exit is cumulative closed quantity; open is
+        the nonnegative remainder. This is not an account-level position or monetary
+        exposure. Incomplete opening history, inconsistent inventory or unverified
+        corporate-action share units return null quantities with an explanation.
+        No imported fills, accounting rules or stored trade values are changed.
+      required: [entry_qty, exit_qty, open_qty, remaining_pct, lifecycle]
+      properties:
+        entry_qty:
+          type: number
+          nullable: true
+        exit_qty:
+          type: number
+          nullable: true
+        open_qty:
+          type: number
+          nullable: true
+        remaining_pct:
+          type: number
+          nullable: true
+          description: Open quantity / entry quantity times 100, only for known positive entry quantity.
+        lifecycle:
+          type: string
+          enum: [open, partially_closed, closed, unknown]
+          description: Position lifecycle; separate from trade P&L or result status.
+        unknown_reason:
+          type: string
+          enum: [incomplete_opening, unverified_share_units, inconsistent_inventory]
     BackupStatus:
       type: object
       required: [enabled, manual_allowed, driver, status, keep, interval_min, running, file_count]

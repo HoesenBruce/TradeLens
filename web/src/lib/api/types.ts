@@ -216,7 +216,18 @@ export interface TradeAttachment {
 }
 
 // Trade matches tradeDTO from api/internal/api/dto.go
+export interface TradeQuantities {
+  entry_qty: number | null;
+  exit_qty: number | null;
+  open_qty: number | null;
+  remaining_pct: number | null;
+  lifecycle: "open" | "partially_closed" | "closed" | "unknown";
+  unknown_reason?: string;
+}
+
 export interface Trade {
+  /** Authoritative normalized inventory read model; absent on older servers. */
+  quantities?: TradeQuantities;
   accounting_warning?: string;
   id: string;
   account_id: string;
