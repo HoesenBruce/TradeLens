@@ -195,7 +195,8 @@ export function tradeColumns(
     },
     {
       id: "qty_opened",
-      accessorFn: (row) => tradeQuantities(row).open_qty,
+      accessorFn: (row) => tradeQuantities(row).open_qty ?? undefined,
+      sortUndefined: "last",
       header: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }),
       meta: {
         align: "right",
@@ -309,7 +310,8 @@ export function tradeColumns(
     },
     {
       id: "pos",
-      accessorFn: (row) => tradeQuantities(row).open_qty,
+      accessorFn: (row) => tradeQuantities(row).open_qty ?? undefined,
+      sortUndefined: "last",
       header: tr({ id: "trades.position", message: "Position" }),
       meta: {
         align: "right",

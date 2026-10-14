@@ -100,6 +100,10 @@ const TRADE: Trade = {
 describe("tradeStatus", () => {
   it("maps trades to status pills", () => {
     expect(tradeStatus(TRADE)).toEqual({ label: "WIN", tone: "pos" });
+    expect(tradeStatus({ ...TRADE, status: "open", net_pnl: 50 })).toEqual({
+      label: "WIN",
+      tone: "pos",
+    });
     expect(tradeStatus({ ...TRADE, net_pnl: -5 })).toEqual({
       label: "LOSS",
       tone: "neg",

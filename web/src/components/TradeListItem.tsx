@@ -5,7 +5,6 @@ import { ArrowDownRight, ArrowUpRight, NotebookPen } from "lucide-react";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
 import { TradeQuantityCell } from "./TradeQuantities";
-import { quantityText, tradeQuantities } from "@/lib/tradeQuantities";
 
 import { fmtDuration, fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
@@ -53,22 +52,6 @@ export function tradeListMeta(trade: Trade, showDate = false): TradeMetaPart[] {
   if (hold !== "-") parts.push({ key: "hold", text: hold, optional: true });
   if (r != null) parts.push({ key: "r", text: `${r.toFixed(2)}R`, optional: true });
   return parts;
-}
-
-/** Price line: size at entry, then the exit once there is one. */
-export function tradeListPrices(
-  fmtMoney: (v: number, currency: string, locale: string) => string,
-  trade: Trade,
-  currency: string,
-  fxRate = 1,
-): string {
-  const locale = intlLocale();
-  const q = tradeQuantities(trade);
-  const qty = `${quantityText(q.open_qty)} / ${quantityText(q.entry_qty)}`;
-  const entry =
-    trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, locale) : "—";
-  if (trade.avg_exit_price == null) return `${qty} @ ${entry}`;
-  return `${qty} @ ${entry} → ${fmtMoney(trade.avg_exit_price * fxRate, currency, locale)}`;
 }
 
 export interface TradeListItemProps {
