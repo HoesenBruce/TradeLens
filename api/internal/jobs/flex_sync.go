@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/tradermemos/api/internal/flexsync"
+	"github.com/tradermemos/api/internal/providererrors"
 	"github.com/tradermemos/api/internal/store"
 	"github.com/tradermemos/api/internal/trades"
 )
@@ -27,7 +28,7 @@ func NewFlexSync(q store.Querier, client *flexsync.Client, every time.Duration, 
 			res, err := flexsync.Sync(ctx, q, client, s, getters...)
 			flexsync.RecordOutcome(ctx, q, s, res, err)
 			if err != nil {
-				log.Warn("flex sync failed", "account", s.AccountID, "err", err)
+				log.Warn("flex sync failed", "account", s.AccountID, "err", providererrors.Safe(err))
 				continue
 			}
 			log.Info("flex sync done", "account", s.AccountID,

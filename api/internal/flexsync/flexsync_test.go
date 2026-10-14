@@ -1,11 +1,16 @@
 package flexsync_test
 
 import (
+	"bytes"
 	"context"
+	"errors"
 	"fmt"
+	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
+	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -81,7 +86,8 @@ func TestClientReportsFlexErrors(t *testing.T) {
 
 	c := &flexsync.Client{BaseURL: srv.URL + "/send", PollInterval: time.Millisecond}
 	_, err := c.FetchStatement(context.Background(), "tok", "q")
-	require.ErrorContains(t, err, "Token has expired")
+	require.EqualError(t, err, "external service request failed")
+	require.NotContains(t, err.Error(), "Token has expired")
 }
 
 func newSyncFixture(t *testing.T) (*store.Queries, store.FlexSyncSetting) {
@@ -194,5 +200,64 @@ func TestRecordOutcome(t *testing.T) {
 	row, err = q.GetFlexSyncSettings(ctx, store.GetFlexSyncSettingsParams{AccountID: settings.AccountID, UserID: settings.UserID})
 	require.NoError(t, err)
 	require.Equal(t, "error", row.LastStatus)
-	require.Equal(t, "token expired", row.LastError)
+	require.Equal(t, "external service request failed", row.LastError)
+	require.NotContains(t, row.LastError, "token expired")
+}
+
+func TestClientSafeErrorIdentity(t *testing.T) {
+	fs := newFlexServer(t, 100)
+	c := fs.client()
+	_, err := c.FetchStatement(context.Background(), "tok123", "q42")
+	require.ErrorIs(t, err, flexsync.ErrStatementPending)
+	for _, cause := range []error{context.Canceled, context.DeadlineExceeded} {
+		ctx, cancel := context.WithCancel(context.Background())
+		if cause == context.DeadlineExceeded {
+			ctx, cancel = context.WithDeadline(context.Background(), time.Now().Add(-time.Second))
+		}
+		cancel()
+		_, err = c.FetchStatement(ctx, "tok123", "q42")
+		require.ErrorIs(t, err, cause)
+		require.False(t, strings.Contains(err.Error(), "tok123"), "diagnostic marker exposed")
+	}
+}
+
+type diagnosticFlexTransport func(*http.Request) (*http.Response, error)
+
+func (f diagnosticFlexTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
+func TestClientDiagnosticFailureMatrix(t *testing.T) {
+	const marker = "synthetic-diagnostic-marker-298"
+	for _, mode := range []string{"status", "body", "malformed", "transport", "timeout", "cancel"} {
+		t.Run(mode, func(t *testing.T) {
+			client := &flexsync.Client{BaseURL: "http://synthetic.invalid/send", HTTP: &http.Client{Transport: diagnosticFlexTransport(func(r *http.Request) (*http.Response, error) {
+				switch mode {
+				case "transport":
+					return nil, fmt.Errorf("%s %s", r.URL, marker)
+				case "timeout":
+					return nil, fmt.Errorf("%w %s", context.DeadlineExceeded, marker)
+				case "cancel":
+					return nil, fmt.Errorf("%w %s", context.Canceled, marker)
+				}
+				status := 200
+				body := `<FlexStatementResponse><Status>Fail</Status><ErrorMessage>` + marker + `</ErrorMessage></FlexStatementResponse>`
+				if mode == "status" {
+					status = 401
+				}
+				if mode == "malformed" {
+					body = "<" + marker
+				}
+				return &http.Response{StatusCode: status, Status: marker, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(body))}, nil
+			})}}
+			_, err := client.FetchStatement(context.Background(), marker, "synthetic")
+			require.True(t, err != nil, "failure must reach provider")
+			var logs bytes.Buffer
+			slog.New(slog.NewJSONHandler(&logs, nil)).Warn("sync failed", "err", err)
+			require.False(t, strings.Contains(err.Error()+logs.String(), marker), "broker diagnostic marker exposed")
+			if mode == "timeout" {
+				require.True(t, errors.Is(err, context.DeadlineExceeded))
+			}
+			if mode == "cancel" {
+				require.True(t, errors.Is(err, context.Canceled))
+			}
+		})
+	}
 }
