@@ -14,6 +14,20 @@ const margin = {
   },
 };
 const cash = { ...margin, side: "buy", details: { ...margin.details, lot: "sbi:cash" } };
+it("keeps date-only SBI markers on daily bars and omits fabricated intraday placement", () => {
+  const date = {
+    ...cash,
+    executed_at: "2026-09-01T00:00:00.000002Z",
+    details: { lot: "sbi:cash", source_time_precision: "date" },
+  };
+  expect(fillMarkers([date], "Conversion", "en-US", "Asia/Tokyo", "1")).toEqual([]);
+  expect(fillMarkers([date], "Conversion", "en-US", "Asia/Tokyo", "D")[0]?.time).toBe(
+    Date.parse("2026-09-01T00:00:00Z") / 1000,
+  );
+  expect(
+    fillMarkers([{ ...date, details: null }], "Conversion", "en-US", "Asia/Tokyo", "1"),
+  ).toHaveLength(1);
+});
 it("groups explicit linked conversions, preserves ordinary fills and distinct IDs", () => {
   const ordinary = { ...cash, details: null };
   const other = { ...cash, details: { ...cash.details, conversion_id: "c2" } };

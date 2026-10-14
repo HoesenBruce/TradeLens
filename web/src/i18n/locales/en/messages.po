@@ -12467,3 +12467,8 @@ msgstr "AI Coach is temporarily unavailable. Rule-based review remains available
 #. js-lingui-explicit-id
 msgid "news.analysisUnavailable"
 msgstr "AI news analysis is temporarily unavailable. Manual news review remains available."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:8
+msgid "trades.remainingQuantity"
+msgstr "Remaining {quantity}"

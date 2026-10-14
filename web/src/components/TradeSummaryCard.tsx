@@ -1,4 +1,4 @@
-import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
+import { directionLabel, remainingQuantityLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { useLingui } from "@lingui/react";
 import { t as tr } from "@lingui/core/macro";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
@@ -201,14 +201,17 @@ export function TradeSummaryCard({
             home page gives its metrics. */}
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
           <StatCell label={tr({ id: "trades.entry", message: "Entry" })}>
-            {fmtMoney(trade.avg_entry_price, currency, locale)}
+            {trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price, currency, locale) : "—"}
           </StatCell>
           <StatCell label={tr({ id: "trades.exit", message: "Exit" })}>
             {trade.avg_exit_price != null ? fmtMoney(trade.avg_exit_price, currency, locale) : "—"}
           </StatCell>
           <StatCell
             label={tr({ id: "trades.size", message: "Size" })}
-            hint={multiplier !== 1 ? `×${multiplier}` : fmtMoney(notional, currency, locale)}
+            hint={
+              remainingQuantityLabel(trade) ??
+              (multiplier !== 1 ? `×${multiplier}` : fmtMoney(notional, currency, locale))
+            }
           >
             {trade.qty_opened.toFixed(trade.qty_opened % 1 === 0 ? 0 : 2)}
           </StatCell>

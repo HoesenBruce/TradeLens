@@ -12467,3 +12467,8 @@ msgstr "AI 教练暂时不可用，仍可使用规则复盘。"
 #. js-lingui-explicit-id
 msgid "news.analysisUnavailable"
 msgstr "AI 新闻分析暂时不可用，仍可手动复盘新闻。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:8
+msgid "trades.remainingQuantity"
+msgstr "剩余 {quantity}"

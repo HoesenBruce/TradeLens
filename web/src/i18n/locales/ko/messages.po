@@ -12464,3 +12464,8 @@ msgstr "AI 코치를 일시적으로 사용할 수 없습니다. 규칙 기반 �
 #. js-lingui-explicit-id
 msgid "news.analysisUnavailable"
 msgstr "AI 뉴스 분석을 일시적으로 사용할 수 없습니다. 수동 뉴스 검토는 계속 사용할 수 있습니다."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:8
+msgid "trades.remainingQuantity"
+msgstr "잔여 {quantity}"

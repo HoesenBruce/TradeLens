@@ -323,3 +323,22 @@ This change does not rewrite historical imports. Correcting an old import requir
 a backup and deliberate removal/reimport of the affected batch: choosing a different
 interpretation changes execution identity and may create duplicates if the old batch
 is retained. Review dates, linked trade annotations, and statistics before proceeding.
+
+### SBI review direction and date-level reconciliation (#307)
+
+Explicit SBI cash, margin-long and margin-short buckets determine review direction
+and opening/closing roles. Date-only days reconcile acquisitions/openings before
+closes without claiming intraday chronology; later-date purchases cannot repair
+missing earlier holdings. Cash disposals never open a short review. Missing or
+excess closing evidence is preserved with a warning and unavailable basis/P&L.
+Existing cash cost and margin reported-settlement policies remain in force.
+
+Exact holding duration and Web per-fill running positions/replay are unavailable
+for date-only reviews. The existing #267 precision marker and import identities
+are retained. Default and unknown broker accounting is unchanged.
+
+No historical account is automatically regrouped on deployment. Regroup can change
+trade IDs and prune obsolete trade rows; annotations on changed IDs are not moved
+automatically. Follow the backup, association audit, explicit account regroup and
+rollback procedure in [issue #307 validation](validation/issue307/README.md) before
+recalculating existing data.

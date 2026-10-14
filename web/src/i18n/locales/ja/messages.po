@@ -12468,3 +12468,8 @@ msgstr "AI コーチは現在利用できません。ルールに基づく振り
 #. js-lingui-explicit-id
 msgid "news.analysisUnavailable"
 msgstr "AI ニュース分析は現在利用できません。手動でのニュースレビューは引き続き利用できます。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:8
+msgid "trades.remainingQuantity"
+msgstr "残数量 {quantity}"

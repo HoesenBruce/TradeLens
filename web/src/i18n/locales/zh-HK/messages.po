@@ -12464,3 +12464,8 @@ msgstr "AI 教練暫時無法使用，仍可使用規則覆盤。"
 #. js-lingui-explicit-id
 msgid "news.analysisUnavailable"
 msgstr "AI 新聞分析暫時無法使用，仍可手動覆盤新聞。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeLabels.ts:8
+msgid "trades.remainingQuantity"
+msgstr "剩餘 {quantity}"

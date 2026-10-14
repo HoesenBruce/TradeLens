@@ -12,10 +12,9 @@ import (
 var tokyo = time.FixedZone("Asia/Tokyo", 9*60*60)
 
 // SBICashAccounting calculates broker/accounting P&L by trading date. Trades
-// remain chronological review trades; their existing NetPnl semantics do not
-// change when a same-day acquisition changes the broker cost basis.
+// use date-level reconciliation only when execution times are unavailable.
 func SBICashAccounting(fills []Execution) AccountingResult {
-	result := AccountingResult{Trades: group(append([]Execution(nil), fills...), false)}
+	result := AccountingResult{Trades: sbiReviewTrades(fills)}
 	ordered := append([]Execution(nil), fills...)
 	sort.SliceStable(ordered, func(i, j int) bool {
 		a, b := ordered[i].ExecutedAt.In(tokyo), ordered[j].ExecutedAt.In(tokyo)
@@ -44,6 +43,11 @@ func SBICashAccounting(fills []Execution) AccountingResult {
 			continue
 		}
 		if fill.Side != "sell" || fill.Quantity > qty+1e-9 {
+			result.UnavailableCloseIDs = append(result.UnavailableCloseIDs, fill.ID)
+			// Consume supported holdings; a later purchase cannot repair this sale.
+			if fill.Side == "sell" {
+				qty, cost = 0, 0
+			}
 			continue
 		}
 		average := math.Ceil(cost/qty - 1e-9)
@@ -81,5 +85,6 @@ func SBICashAccounting(fills []Execution) AccountingResult {
 			}
 		}
 	}
+	protectIncompleteSBITrades(&result)
 	return result
 }

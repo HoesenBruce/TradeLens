@@ -9,21 +9,22 @@ import (
 )
 
 type Execution struct {
-	ID                string
-	Symbol            string
-	InstrumentType    string
-	Side              string // buy|sell
-	Quantity          float64
-	Price             float64
-	Fees              float64
-	Commission        float64
-	ExecutedAt        time.Time
-	Multiplier        float64  // 1 stock, 100 option, tick-derived for futures
-	LotKey            string   // optional; isolates overlapping same-symbol round-trips
-	BrokerReportedPnl *float64 // broker-reported result on a closing execution
-	SettlementType    string
-	SettlementResult  *positions.Settlement
-	ConversionType    string
+	ID                  string
+	Symbol              string
+	InstrumentType      string
+	Side                string // buy|sell
+	Quantity            float64
+	Price               float64
+	Fees                float64
+	Commission          float64
+	ExecutedAt          time.Time
+	Multiplier          float64  // 1 stock, 100 option, tick-derived for futures
+	LotKey              string   // optional; isolates overlapping same-symbol round-trips
+	BrokerReportedPnl   *float64 // broker-reported result on a closing execution
+	SettlementType      string
+	SettlementResult    *positions.Settlement
+	ConversionType      string
+	SourceTimePrecision string // date means the timestamp is only a storage anchor
 }
 
 type Trade struct {
