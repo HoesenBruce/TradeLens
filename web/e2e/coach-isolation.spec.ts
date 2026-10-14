@@ -142,13 +142,24 @@ test("security worker automatically replaces old caching worker and purges legac
       await navigator.serviceWorker.ready;
     });
     await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true);
-    await page.evaluate(async () => {
+    const sensitivePaths = [
+      "/api/v1/trades/fixture/coach/reviews",
+      "/api/v1/settings/ocr",
+      "/api/v1/flex-sync",
+      "/api/v1/accounts/fixture/flex-sync",
+      "/api/v1/settings/alert-channels",
+    ];
+    await page.evaluate(async (paths) => {
       const cache = await caches.open("api-cache");
-      await cache.put(
-        "/api/v1/trades/fixture/coach/reviews",
-        new Response("PRIVATE-LEGACY-MARKER", { headers: { "Content-Type": "application/json" } }),
-      );
-    });
+      for (const path of paths) {
+        await cache.put(
+          path,
+          new Response("PRIVATE-LEGACY-MARKER", {
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+      }
+    }, sensitivePaths);
     // Reproduce the old worker replay before replacing it.
     expect(
       await page.evaluate(async () => (await fetch("/api/v1/trades/fixture/coach/reviews")).text()),
@@ -170,22 +181,34 @@ test("security worker automatically replaces old caching worker and purges legac
       .toBe(true);
     await expect
       .poll(() =>
-        page.evaluate(async () => {
+        page.evaluate(async (paths) => {
           let count = 0;
           for (const name of await caches.keys()) {
             const cache = await caches.open(name);
             for (const req of await cache.keys()) {
-              if (req.url.includes("/coach/reviews")) count++;
+              if (paths.includes(new URL(req.url).pathname)) count++;
             }
           }
           return count;
-        }),
+        }, sensitivePaths),
       )
       .toBe(0);
     expect(
       await page.evaluate(async () => (await fetch("/api/v1/trades/fixture/coach/reviews")).text()),
     ).toBe('{"reviews":[]}');
     await context.setOffline(true);
+    for (const path of sensitivePaths) {
+      expect(
+        await page.evaluate(async (path) => {
+          try {
+            await fetch(path);
+            return false;
+          } catch {
+            return true;
+          }
+        }, path),
+      ).toBe(true);
+    }
     expect(
       await page.evaluate(async () => {
         try {

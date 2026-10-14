@@ -12,6 +12,9 @@ declare global {
 
 declare const self: ServiceWorkerGlobalScope;
 
+// Owner configuration and old provider diagnostics must also disappear on upgrade.
+const confidentialApiPath = /\/(?:capabilities\/coach|settings\/(?:coach|ocr|alert-channels)(?:\/|$)|trades\/[^/]+\/coach(?:\/|$)|accounts\/[^/]+\/flex-sync(?:\/|$)|flex-sync(?:\/|$)|news\/[^/]+\/analyze$)/;
+
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   precacheOptions: { cleanupOutdatedCaches: true },
@@ -30,9 +33,9 @@ const serwist = new Serwist({
       matcher: ({ url }) => /\/news\/(?:[^/]+\/)?export$/.test(url.pathname),
       handler: new NetworkOnly(),
     },
-    // Coach responses must recheck server policy and never replay legacy bytes.
+    // Confidential responses must recheck server policy and never replay legacy bytes.
     {
-      matcher: ({ url }) => /\/(?:capabilities\/coach|settings\/coach(?:\/|$)|trades\/[^/]+\/coach(?:\/|$)|news\/[^/]+\/analyze$)/.test(url.pathname),
+      matcher: ({ url }) => confidentialApiPath.test(url.pathname),
       handler: new NetworkOnly(),
     },
     // Trade/report data: prefer fresh network, fall back to last-seen cache when offline.
@@ -62,7 +65,7 @@ self.addEventListener("activate", (event) => {
     for (const name of await caches.keys()) {
       const cache = await caches.open(name);
       for (const request of await cache.keys()) {
-        if (/\/(?:capabilities\/coach|settings\/coach(?:\/|$)|trades\/[^/]+\/coach(?:\/|$)|news\/[^/]+\/analyze$)/.test(new URL(request.url).pathname)) {
+        if (confidentialApiPath.test(new URL(request.url).pathname)) {
           await cache.delete(request);
         }
       }
