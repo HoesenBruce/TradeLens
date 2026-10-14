@@ -181,7 +181,7 @@ var errStreamUnsupported = errors.New("streaming unsupported")
 // in front of local models are uneven, and a coach that used to work must not
 // start erroring because of a format upgrade.
 func GenerateReview(ctx context.Context, cfg ocr.VisionConfig, trade TradeContext) (Review, error) {
-	if !cfg.Ready() {
+	if !LegacyAvailable() || !cfg.Ready() {
 		return Review{}, fmt.Errorf("%w: coach not configured", ErrUnavailable)
 	}
 
@@ -213,6 +213,9 @@ func requestContent(
 	messages []chatMessage,
 	format *chatFmt,
 ) (string, error) {
+	if !LegacyAvailable() {
+		return "", ErrUnavailable
+	}
 	payload, err := json.Marshal(chatRequest{
 		Model:          modelName(cfg),
 		Messages:       messages,

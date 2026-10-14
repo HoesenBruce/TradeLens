@@ -12458,6 +12458,14 @@ msgid "This server runs on Postgres. Built-in backups cover SQLite only — back
 msgstr "이 서버는 Postgres에서 실행 중입니다. 기본 제공 백업은 SQLite만 지원합니다 — Postgres는 pg_dump 또는 제공업체의 스냅샷으로 백업하세요."
 
 #. js-lingui-explicit-id
+msgid "coach.legacyUnavailable"
+msgstr "AI 코치를 일시적으로 사용할 수 없습니다. 규칙 기반 복기는 계속 사용할 수 있습니다."
+
+#. js-lingui-explicit-id
+msgid "news.analysisUnavailable"
+msgstr "AI 뉴스 분석을 일시적으로 사용할 수 없습니다. 수동 뉴스 검토는 계속 사용할 수 있습니다."
+
+#. js-lingui-explicit-id
 #: src/lib/tradeLabels.ts:8
 msgid "trades.remainingQuantity"
 msgstr "잔여 {quantity}"

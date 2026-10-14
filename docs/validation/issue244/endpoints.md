@@ -160,3 +160,5 @@ Scope codes: U = authenticated principal in user_id query; A = account lookup wi
 Total: 150 routes. COVERED: 135, INTENTIONALLY PUBLIC: 10, NOT APPLICABLE: 5.
 
 Absent APIs: no standalone positions/holdings, Home, review-inbox, import-preview retrieval, import job-status by ID, export artifact download, backup download/restore, or per-user SQLite backup. Positions/Home are composed from trades and analytics; uploads/exports use transient request memory. Guessed download paths and stored filenames are denied. Do not count absent APIs as covered endpoints.
+
+| GET | `/api/v1/capabilities/coach` | authenticated JWT/PAT | fixed non-sensitive capability; legacy unavailable |

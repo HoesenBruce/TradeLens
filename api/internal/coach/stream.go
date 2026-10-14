@@ -48,7 +48,7 @@ func GenerateReviewStream(
 	trade TradeContext,
 	onNote NoteFunc,
 ) (Review, error) {
-	if !cfg.Ready() {
+	if !LegacyAvailable() || !cfg.Ready() {
 		return Review{}, fmt.Errorf("%w: coach not configured", ErrUnavailable)
 	}
 
@@ -78,6 +78,9 @@ func streamReview(
 	format *chatFmt,
 	onNote NoteFunc,
 ) (Review, error) {
+	if !LegacyAvailable() {
+		return Review{}, ErrUnavailable
+	}
 	payload, err := json.Marshal(chatRequest{
 		Model:          modelName(cfg),
 		Messages:       messages,

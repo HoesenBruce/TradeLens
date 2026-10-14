@@ -2,7 +2,8 @@
 /// <reference lib="webworker" />
 import { defaultCache } from "@serwist/vite/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
-import { CacheableResponsePlugin, ExpirationPlugin, NetworkFirst, NetworkOnly, Serwist } from "serwist";
+import { NetworkOnly, Serwist } from "serwist";
+import { isNetworkOnlyRequest, isRetiredApiEntry, retiredApiCaches } from "./lib/workerCachePolicy";
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -15,8 +16,8 @@ declare const self: ServiceWorkerGlobalScope;
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   precacheOptions: { cleanupOutdatedCaches: true },
-  // Stay waiting until the app sends SKIP_WAITING so users can confirm the reload.
-  skipWaiting: false,
+  // Security containment must replace an old API-caching worker without waiting for a tab to close.
+  skipWaiting: true,
   clientsClaim: true,
   navigationPreload: false,
   runtimeCaching: [
@@ -25,22 +26,10 @@ const serwist = new Serwist({
       matcher: ({ url }) => url.origin === "https://api.github.com" && url.pathname.includes("/releases/"),
       handler: new NetworkOnly(),
     },
-    // Exports must recheck ownership and current records, never download an offline snapshot.
+    // Check authorization before any generic static/API fallback, for every API base.
     {
-      matcher: ({ url }) => /\/news\/(?:[^/]+\/)?export$/.test(url.pathname),
+      matcher: ({ request }) => isNetworkOnlyRequest(request),
       handler: new NetworkOnly(),
-    },
-    // Trade/report data: prefer fresh network, fall back to last-seen cache when offline.
-    {
-      matcher: ({ url }) => url.pathname.startsWith("/api/"),
-      handler: new NetworkFirst({
-        cacheName: "api-cache",
-        networkTimeoutSeconds: 4,
-        plugins: [
-          new CacheableResponsePlugin({ statuses: [0, 200] }),
-          new ExpirationPlugin({ maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 }),
-        ],
-      }),
     },
     ...defaultCache,
   ],
@@ -50,6 +39,23 @@ self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     void self.skipWaiting();
   }
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    for (const name of await caches.keys()) {
+      if (retiredApiCaches.has(name)) {
+        await caches.delete(name);
+        continue;
+      }
+      const cache = await caches.open(name);
+      for (const request of await cache.keys()) {
+        if (isRetiredApiEntry(request)) {
+          await cache.delete(request);
+        }
+      }
+    }
+  })());
 });
 
 serwist.addEventListeners();

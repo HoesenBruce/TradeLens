@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { getToken, setTokens } from "./api/client";
+import { useLlmModelCache } from "./llmModelCache";
+import { useUI } from "./ui";
 
 interface AuthState {
   authed: boolean;
@@ -8,7 +10,20 @@ interface AuthState {
   signOut: () => void;
 }
 
+function discardPrivateState() {
+  useLlmModelCache.setState({ modelsByBaseUrl: {} });
+  useUI.getState().closeModal();
+  useUI.setState({
+    commandOpen: false,
+    mobileNavOpen: false,
+    positionSizeOpen: false,
+    kellyOpen: false,
+    fxOpen: false,
+  });
+}
+
 function signOut() {
+  discardPrivateState();
   setTokens("", "");
   useAuth.setState((s) => ({ authed: false, session: s.session + 1 }));
 }
@@ -20,6 +35,7 @@ export const useAuth = create<AuthState>((set) => ({
   authed: !!getToken(),
   session: 0,
   signIn: (access, refresh) => {
+    discardPrivateState();
     setTokens(access, refresh);
     set((s) => ({ authed: true, session: s.session + 1 }));
   },

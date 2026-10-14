@@ -12458,6 +12458,14 @@ msgid "This server runs on Postgres. Built-in backups cover SQLite only — back
 msgstr "此伺服器使用 Postgres。內建備份只支援 SQLite — 請以 pg_dump 或服務供應商的快照備份 Postgres。"
 
 #. js-lingui-explicit-id
+msgid "coach.legacyUnavailable"
+msgstr "AI 教練暫時無法使用，仍可使用規則覆盤。"
+
+#. js-lingui-explicit-id
+msgid "news.analysisUnavailable"
+msgstr "AI 新聞分析暫時無法使用，仍可手動覆盤新聞。"
+
+#. js-lingui-explicit-id
 #: src/lib/tradeLabels.ts:8
 msgid "trades.remainingQuantity"
 msgstr "剩餘 {quantity}"

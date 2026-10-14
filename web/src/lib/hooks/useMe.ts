@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { authApi } from "@/lib/api/auth";
-import { setTokens } from "@/lib/api/client";
 
 /**
  * The signed-in account. Cheap and rarely changes — anything that needs the
@@ -9,9 +8,11 @@ import { setTokens } from "@/lib/api/client";
  */
 export function useMe() {
   const session = useAuth((s) => s.session);
+  const authed = useAuth((s) => s.authed);
   return useQuery({
     queryKey: ["me", session],
     queryFn: () => authApi.me(),
+    enabled: authed,
     staleTime: 5 * 60_000,
   });
 }
@@ -23,7 +24,7 @@ export function useChangePassword() {
     // Adopting the returned pair is not optional: the change invalidates every
     // token minted against the old password, this tab's included, so skipping
     // it would sign the user out of the browser they just used.
-    onSuccess: (tokens) => setTokens(tokens.access_token, tokens.refresh_token),
+    onSuccess: (tokens) => useAuth.getState().signIn(tokens.access_token, tokens.refresh_token),
   });
 }
 

@@ -12461,6 +12461,14 @@ msgid "This server runs on Postgres. Built-in backups cover SQLite only — back
 msgstr "This server runs on Postgres. Built-in backups cover SQLite only — back up Postgres with pg_dump or your provider's snapshots."
 
 #. js-lingui-explicit-id
+msgid "coach.legacyUnavailable"
+msgstr "AI Coach is temporarily unavailable. Rule-based review remains available."
+
+#. js-lingui-explicit-id
+msgid "news.analysisUnavailable"
+msgstr "AI news analysis is temporarily unavailable. Manual news review remains available."
+
+#. js-lingui-explicit-id
 #: src/lib/tradeLabels.ts:8
 msgid "trades.remainingQuantity"
 msgstr "Remaining {quantity}"

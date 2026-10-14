@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionQueryProvider } from "./components/SessionQueryProvider";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -21,15 +21,6 @@ function applyPriceColors() {
 applyPriceColors();
 useDisplayPrefs.subscribe(applyPriceColors);
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 30, // 30 seconds
-      retry: 1,
-    },
-  },
-});
-
 const router = createRouter({
   routeTree,
   defaultErrorComponent: ({ error }) => <RouteErrorPanel error={error} />,
@@ -48,7 +39,7 @@ declare module "@tanstack/react-router" {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <SessionQueryProvider>
       <ThemeProvider defaultTheme="dark" storageKey={THEME_STORAGE_KEY}>
         <I18nProvider>
           <TooltipProvider>
@@ -56,6 +47,6 @@ createRoot(document.getElementById("root")!).render(
           </TooltipProvider>
         </I18nProvider>
       </ThemeProvider>
-    </QueryClientProvider>
+    </SessionQueryProvider>
   </StrictMode>,
 );
