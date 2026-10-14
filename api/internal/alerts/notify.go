@@ -11,6 +11,8 @@ import (
 	"net/http"
 	"syscall"
 	"time"
+
+	"github.com/tradermemos/api/internal/providererrors"
 )
 
 // expoPushURL is Expo's push gateway; overridable in tests.
@@ -70,7 +72,8 @@ type webhookPayload struct {
 	Text    string `json:"text"`
 }
 
-func (s *Service) sendWebhook(ctx context.Context, url string, ev Event, at time.Time) error {
+func (s *Service) sendWebhook(ctx context.Context, url string, ev Event, at time.Time) (err error) {
+	defer func() { err = providererrors.Safe(err) }()
 	line := ev.Title + " — " + ev.Body
 	b, err := json.Marshal(webhookPayload{
 		Source:  "tradermemos",
@@ -97,7 +100,7 @@ func (s *Service) sendWebhook(ctx context.Context, url string, ev Event, at time
 	defer resp.Body.Close()
 	_, _ = io.Copy(io.Discard, io.LimitReader(resp.Body, 4096))
 	if resp.StatusCode >= 300 {
-		return fmt.Errorf("webhook returned %s", resp.Status)
+		return providererrors.HTTPStatus(resp.StatusCode)
 	}
 	return nil
 }
@@ -120,7 +123,13 @@ type expoTicket struct {
 // sendExpo pushes one event to a batch of Expo tokens in a single request.
 // The returned slice aligns with tokens; a non-nil entry is that token's
 // delivery error (errDeviceNotRegistered when the install is gone).
-func (s *Service) sendExpo(ctx context.Context, tokens []string, ev Event) ([]error, error) {
+func (s *Service) sendExpo(ctx context.Context, tokens []string, ev Event) (result []error, err error) {
+	defer func() {
+		err = providererrors.Safe(err)
+		for i, e := range result {
+			result[i] = providererrors.Safe(e)
+		}
+	}()
 	msgs := make([]expoMessage, len(tokens))
 	for i, to := range tokens {
 		msgs[i] = expoMessage{To: to, Title: ev.Title, Body: ev.Body, Sound: "default"}
@@ -142,7 +151,7 @@ func (s *Service) sendExpo(ctx context.Context, tokens []string, ev Event) ([]er
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
 	if resp.StatusCode >= 300 {
-		return nil, fmt.Errorf("expo push returned %s", resp.Status)
+		return nil, providererrors.HTTPStatus(resp.StatusCode)
 	}
 	var out struct {
 		Data []expoTicket `json:"data"`

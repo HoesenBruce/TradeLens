@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"sort"
 	"strings"
+
+	"github.com/tradermemos/api/internal/providererrors"
 )
 
 // AuthReady is true when base URL + API key are set (enabled flag not required).
@@ -25,7 +27,8 @@ type modelsAPIResponse struct {
 }
 
 // ListModels fetches model IDs from an OpenAI-compatible GET /models endpoint.
-func ListModels(ctx context.Context, cfg VisionConfig) ([]string, error) {
+func ListModels(ctx context.Context, cfg VisionConfig) (result []string, err error) {
+	defer func() { err = providererrors.Safe(err) }()
 	if !cfg.AuthReady() {
 		return nil, fmt.Errorf("%w: vision base URL and API key required", ErrUnavailable)
 	}
@@ -49,7 +52,7 @@ func ListModels(ctx context.Context, cfg VisionConfig) ([]string, error) {
 		return nil, err
 	}
 	if res.StatusCode >= 300 {
-		return nil, fmt.Errorf("models api %s: %s", res.Status, truncateRunes(string(raw), 300))
+		return nil, providererrors.HTTPStatus(res.StatusCode)
 	}
 
 	var api modelsAPIResponse
