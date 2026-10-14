@@ -1,3 +1,4 @@
+import { useAuth } from "@/lib/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { adminApi, type CreateAdminUserBody } from "@/lib/api/admin";
 
@@ -9,10 +10,12 @@ const USERS_KEY = ["admin", "users"];
  * section that can only fail.
  */
 export function useAdminUsers(enabled: boolean) {
+  const session = useAuth((s) => s.session);
+  const authed = useAuth((s) => s.authed);
   return useQuery({
-    queryKey: USERS_KEY,
+    queryKey: [...USERS_KEY, session],
     queryFn: () => adminApi.listUsers(),
-    enabled,
+    enabled: authed && enabled,
   });
 }
 

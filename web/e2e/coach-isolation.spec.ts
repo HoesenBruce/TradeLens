@@ -148,6 +148,8 @@ test("security worker automatically replaces old caching worker and purges legac
       "/api/v1/flex-sync",
       "/api/v1/accounts/fixture/flex-sync",
       "/api/v1/settings/alert-channels",
+      "/api/v1/me",
+      "/api/v1/admin/users",
     ];
     await page.evaluate(async (paths) => {
       const cache = await caches.open("api-cache");

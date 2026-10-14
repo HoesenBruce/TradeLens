@@ -2370,6 +2370,7 @@ function VisionScanSection() {
   const { t: localize } = useSecondaryLingui();
 
   const { locale } = useLocale();
+  const session = useAuth((s) => s.session);
   const { data, isPending, isError } = useOcrSettings();
   const save = useSaveOcrSettings();
   const test = useTestOcrSettings();
@@ -2395,6 +2396,7 @@ function VisionScanSection() {
         </SettingsPanelBody>
       ) : (
         <LlmApiSettingsForm
+          key={session}
           settings={data}
           labels={llmApiLabels(locale, "vision")}
           saveErrorMessage={localize({

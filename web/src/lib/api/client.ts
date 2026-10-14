@@ -8,6 +8,11 @@ let token = "";
 let refreshToken = "";
 let refreshInFlight: Promise<boolean> | null = null;
 let onUnauthorized: (() => void) | null = null;
+let credentialRevision = 0;
+
+function assertCurrentSession(revision: number) {
+  if (revision !== credentialRevision) throw new DOMException("Session changed", "AbortError");
+}
 
 export function setUnauthorizedHandler(handler: (() => void) | null) {
   onUnauthorized = handler;
@@ -99,11 +104,14 @@ export function getCustomApiBaseUrl(): string {
  */
 export function setBaseUrl(url: string) {
   const next = normalizeApiBaseUrl(url);
+  if (next !== baseUrl) credentialRevision++;
   baseUrl = next;
   persist(API_BASE_STORAGE_KEY, next);
 }
 
 export function setToken(t: string) {
+  credentialRevision++;
+  refreshInFlight = null;
   token = t;
   persist("tm_token", t);
 }
@@ -153,7 +161,8 @@ export class ApiError extends Error {
 // failing refresh can never recurse.
 function tryRefresh(): Promise<boolean> {
   if (!refreshInFlight) {
-    refreshInFlight = (async () => {
+    const revision = credentialRevision;
+    const pending = (async () => {
       const rt = getRefreshToken();
       if (!rt) return false;
       try {
@@ -164,15 +173,21 @@ function tryRefresh(): Promise<boolean> {
         });
         if (!res.ok) return false;
         const body = await res.json().catch(() => ({}));
+        assertCurrentSession(revision);
         if (!body?.access_token) return false;
-        setTokens(body.access_token, body.refresh_token ?? rt);
+        // Refresh belongs to this session; explicit token replacement retires it.
+        token = body.access_token;
+        refreshToken = body.refresh_token ?? rt;
+        persist("tm_token", token);
+        persist("tm_refresh", refreshToken);
         return true;
       } catch {
         return false;
       }
     })().finally(() => {
-      refreshInFlight = null;
+      if (refreshInFlight === pending) refreshInFlight = null;
     });
+    refreshInFlight = pending;
   }
   return refreshInFlight;
 }
@@ -182,6 +197,7 @@ export async function apiFetch<T = unknown>(
   opts: RequestInit = {},
   retried = false,
 ): Promise<T> {
+  const revision = credentialRevision;
   const auth = getToken(); // lazily hydrates the token from storage on first use
   const res = await fetch(getBaseUrl() + path, {
     ...opts,
@@ -193,13 +209,17 @@ export async function apiFetch<T = unknown>(
       ...opts.headers,
     },
   });
+  assertCurrentSession(revision);
   if (res.status === 204) return undefined as T;
   const body = await res.json().catch(() => ({}));
+  assertCurrentSession(revision);
   if (!res.ok) {
     if (res.status === 401 && !path.startsWith("/auth/")) {
       if (!retried && (await tryRefresh())) {
+        assertCurrentSession(revision);
         return apiFetch<T>(path, opts, true);
       }
+      assertCurrentSession(revision);
       onUnauthorized?.();
     }
     const e = body?.error ?? {};
@@ -226,14 +246,18 @@ export async function publicFetch<T = unknown>(path: string): Promise<T> {
 
 /** Authenticated GET that returns the raw Response (for file downloads). */
 export async function apiRawGet(path: string, retried = false): Promise<Response> {
+  const revision = credentialRevision;
   const auth = getToken();
   const res = await fetch(getBaseUrl() + path, {
     headers: auth ? { Authorization: `Bearer ${auth}` } : {},
   });
+  assertCurrentSession(revision);
   if (res.status === 401 && !path.startsWith("/auth/")) {
     if (!retried && (await tryRefresh())) {
+      assertCurrentSession(revision);
       return apiRawGet(path, true);
     }
+    assertCurrentSession(revision);
     onUnauthorized?.();
   }
   return res;

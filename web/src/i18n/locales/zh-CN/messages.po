@@ -12460,8 +12460,10 @@ msgstr "数据库快照保存在服务器文件夹中。请将该文件夹同步
 msgid "This server runs on Postgres. Built-in backups cover SQLite only — back up Postgres with pg_dump or your provider's snapshots."
 msgstr "此服务器使用 Postgres。内置备份仅支持 SQLite，请使用 pg_dump 或服务商快照备份 Postgres。"
 
+#. js-lingui-explicit-id
 msgid "coach.legacyUnavailable"
 msgstr "AI 教练暂时不可用，仍可使用规则复盘。"
 
+#. js-lingui-explicit-id
 msgid "news.analysisUnavailable"
 msgstr "AI 新闻分析暂时不可用，仍可手动复盘新闻。"

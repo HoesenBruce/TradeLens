@@ -40,11 +40,26 @@ const serwist = new Serwist({
     },
     // Trade/report data: prefer fresh network, fall back to last-seen cache when offline.
     {
+      matcher: ({ url, request }) => url.pathname.startsWith("/api/") && !request.headers.has("Authorization"),
+      handler: new NetworkOnly(),
+    },
+    {
       matcher: ({ url }) => url.pathname.startsWith("/api/"),
       handler: new NetworkFirst({
         cacheName: "api-cache",
         networkTimeoutSeconds: 4,
         plugins: [
+          {
+            // Cache API matching ignores Authorization unless the server sets Vary.
+            async cacheKeyWillBeUsed({ request }: { request: Request }) {
+              const bytes = new TextEncoder().encode(request.headers.get("Authorization") ?? "");
+              const digest = await crypto.subtle.digest("SHA-256", bytes);
+              const scope = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+              const url = new URL(request.url);
+              url.searchParams.set("__tm_auth_scope", scope);
+              return new Request(url, { method: request.method });
+            },
+          },
           new CacheableResponsePlugin({ statuses: [0, 200] }),
           new ExpirationPlugin({ maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 }),
         ],
@@ -65,7 +80,8 @@ self.addEventListener("activate", (event) => {
     for (const name of await caches.keys()) {
       const cache = await caches.open(name);
       for (const request of await cache.keys()) {
-        if (confidentialApiPath.test(new URL(request.url).pathname)) {
+        const url = new URL(request.url);
+        if (confidentialApiPath.test(url.pathname) || (url.pathname.startsWith("/api/") && !url.searchParams.has("__tm_auth_scope"))) {
           await cache.delete(request);
         }
       }

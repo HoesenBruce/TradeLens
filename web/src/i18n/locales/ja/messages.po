@@ -12461,8 +12461,10 @@ msgstr "データベースのスナップショットをサーバー上のフォ
 msgid "This server runs on Postgres. Built-in backups cover SQLite only — back up Postgres with pg_dump or your provider's snapshots."
 msgstr "このサーバーは Postgres で動作しています。組み込みバックアップは SQLite のみ対応です — Postgres は pg_dump またはプロバイダーのスナップショットでバックアップしてください。"
 
+#. js-lingui-explicit-id
 msgid "coach.legacyUnavailable"
 msgstr "AI コーチは現在利用できません。ルールに基づく振り返りは引き続き利用できます。"
 
+#. js-lingui-explicit-id
 msgid "news.analysisUnavailable"
 msgstr "AI ニュース分析は現在利用できません。手動でのニュースレビューは引き続き利用できます。"
