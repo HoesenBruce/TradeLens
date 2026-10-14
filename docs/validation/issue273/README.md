@@ -1,5 +1,7 @@
 # Issue #273: Review inbox
 
+Latest follow-up: [2026-10-14 main/security/SBI integration acceptance](integration-2026-10-14.md). This records the current #306 network-only authenticated API policy; earlier offline-fallback statements below are historical evidence.
+
 Selective adaptation of TraderMemos #342/#344; no upstream branch merge or schema migration.
 
 - `/review` is available from navigation. Recent defaults to a rolling 14-day close-time window (configurable 1–90 days); older closed trades appear in Backlog. Queues use the global account selection, including multiple accounts, but deliberately ignore global date/symbol/status/tag filters. Oldest closes are reviewed first.
