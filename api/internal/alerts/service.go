@@ -11,6 +11,7 @@ import (
 	"uuid"
 
 	"github.com/tradermemos/api/internal/prop"
+	"github.com/tradermemos/api/internal/providererrors"
 	"github.com/tradermemos/api/internal/store"
 )
 
@@ -331,7 +332,7 @@ func (s *Service) SendTest(ctx context.Context, ch store.AlertChannel) error {
 func (s *Service) recordOutcome(ctx context.Context, ch store.AlertChannel, at time.Time, sendErr error) {
 	status, errMsg := "ok", ""
 	if sendErr != nil {
-		status, errMsg = "error", sendErr.Error()
+		status, errMsg = "error", providererrors.Safe(sendErr).Error()
 	}
 	if uerr := s.q.UpdateAlertChannelStatus(ctx, store.UpdateAlertChannelStatusParams{
 		LastSentAt: sql.NullTime{Time: at, Valid: true},
@@ -342,6 +343,6 @@ func (s *Service) recordOutcome(ctx context.Context, ch store.AlertChannel, at t
 		s.log.Warn("could not record channel outcome", "channel", ch.ID, "err", uerr)
 	}
 	if sendErr != nil {
-		s.log.Warn("alert delivery failed", "channel", ch.ID, "kind", ch.Kind, "err", sendErr)
+		s.log.Warn("alert delivery failed", "channel", ch.ID, "kind", ch.Kind, "err", providererrors.Safe(sendErr))
 	}
 }

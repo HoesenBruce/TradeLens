@@ -68,7 +68,12 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
   const totalFees = fills.reduce((sum, f) => sum + f.fees + f.commission, 0);
   // Running position only tells a story on a scaled trade — on a plain in-and-out
   // it prints the size then zero, which nobody needs a column for.
-  const scaled = fills.length > 2;
+  const dateOnly = fills.some((f) => f.details?.source_time_precision === "date");
+  const dateZone = fills.some((f) => f.details?.lot?.startsWith("sbi:")) ? "Asia/Tokyo" : undefined;
+  const scaled =
+    fills.length > 2 &&
+    !dateOnly &&
+    !trade.accounting_warning?.includes("Incomplete SBI opening evidence");
 
   const columns = useMemo<ColumnDef<FillRow>[]>(() => {
     const defs: ColumnDef<FillRow>[] = [
@@ -166,18 +171,21 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
 
     defs.push({
       id: "time",
-      header: singleDay
-        ? tr({ id: "trades.time", message: "Time" })
-        : tr({ id: "trades.executed", message: "Executed" }),
+      header:
+        singleDay && !dateOnly
+          ? tr({ id: "trades.time", message: "Time" })
+          : tr({ id: "trades.executed", message: "Executed" }),
       cell: ({ row }) =>
-        singleDay
-          ? fmtTime(row.original.fill.executed_at)
-          : `${fmtDate(row.original.fill.executed_at, locale)} ${fmtTime(row.original.fill.executed_at)}`,
+        row.original.fill.details?.source_time_precision === "date"
+          ? fmtDate(row.original.fill.executed_at, locale, dateZone)
+          : singleDay
+            ? fmtTime(row.original.fill.executed_at)
+            : `${fmtDate(row.original.fill.executed_at, locale)} ${fmtTime(row.original.fill.executed_at)}`,
       meta: { align: "right", minWidth: singleDay ? 88 : 152 },
     });
 
     return defs;
-  }, [currency, fmtMoney, locale, scaled, singleDay, tr]);
+  }, [currency, dateOnly, dateZone, fmtMoney, locale, scaled, singleDay, tr]);
 
   return (
     <Card
@@ -192,7 +200,9 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
                 })
               : null}
             {totalFees > 0 && singleDay && fills[0] ? " · " : null}
-            {singleDay && fills[0] ? fmtDate(fills[0].executed_at, locale) : null}
+            {singleDay && fills[0]
+              ? fmtDate(fills[0].executed_at, locale, dateOnly ? dateZone : undefined)
+              : null}
           </p>
         ) : undefined
       }
@@ -232,9 +242,11 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
                       </span>
                     </span>
                     <span className="shrink-0 text-[13px] tabular-nums whitespace-nowrap text-muted-foreground">
-                      {singleDay
-                        ? fmtTime(fill.executed_at)
-                        : `${fmtDate(fill.executed_at, locale)} ${fmtTime(fill.executed_at)}`}
+                      {fill.details?.source_time_precision === "date"
+                        ? fmtDate(fill.executed_at, locale, dateZone)
+                        : singleDay
+                          ? fmtTime(fill.executed_at)
+                          : `${fmtDate(fill.executed_at, locale)} ${fmtTime(fill.executed_at)}`}
                     </span>
                   </div>
                   <p className="m-0 text-[12px] tabular-nums text-muted-foreground">

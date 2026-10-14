@@ -173,6 +173,12 @@ Point the SPA at the API:
 | Build-time `VITE_API=https://api.example.com/api/v1` | Fixed public/demo API baked into the build |
 
 Origin-only values (e.g. `https://api.example.com`) get `/api/v1` appended automatically.
+Full API bases may include a proxy prefix, such as `/gateway/api/v1`; the SPA's
+current root base and worker scope do not determine the API base. Authenticated
+requests and recognized API paths are network-only. Private API reads, login and
+refresh therefore require connectivity; app-shell/public assets can still load
+offline. Worker upgrades purge retired API caches rather than retaining bearer
+snapshots. No subpath SPA hosting is introduced by this API-prefix support.
 
 Sample platform configs:
 

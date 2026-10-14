@@ -825,13 +825,13 @@ func TestCrossUserIsolationConfiguredServices(t *testing.T) {
 		}
 		rec := do(s, "POST", "/api/v1/trades/"+u.trade+"/coach", `{}`, u.session)
 		require.Equal(t, 200, rec.Code)
-		isolationContains(t, rec.Body.String(), `"source":"llm"`, true)
+		isolationContains(t, rec.Body.String(), `"source":"off"`, true)
 		rec = do(s, "POST", "/api/v1/trades/"+u.trade+"/coach/stream", `{}`, u.session)
 		require.Equal(t, 200, rec.Code)
-		isolationContains(t, rec.Body.String(), "event: done", true)
+		isolationContains(t, rec.Body.String(), "event: done", false)
 		rec = do(s, "GET", "/api/v1/trades/"+u.trade+"/coach/reviews", "", u.session)
 		require.Equal(t, 200, rec.Code)
-		isolationContains(t, rec.Body.String(), "private fixture review", true)
+		isolationContains(t, rec.Body.String(), "private fixture review", false)
 		require.Equal(t, 200, do(s, "POST", "/api/v1/accounts/"+u.accounts[0]+"/flex-sync/run", `{}`, u.session).Code)
 	}
 	// The legacy batch commit must still use the authenticated batch's parent,

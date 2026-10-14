@@ -112,10 +112,11 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 			ID: r.ID, Symbol: r.Symbol, InstrumentType: r.InstrumentType, Side: r.Side,
 			Quantity: r.Quantity, Price: r.Price, Fees: r.Fees, Commission: r.Commission,
 			ExecutedAt: r.ExecutedAt, Multiplier: r.Multiplier, LotKey: lot,
-			BrokerReportedPnl: reportedPnlFromDetails(r.Details),
-			SettlementType:    settlementType,
-			SettlementResult:  settlementResult(settlements, r.ID),
-			ConversionType:    conversionTypeFromDetails(r.Details),
+			BrokerReportedPnl:   reportedPnlFromDetails(r.Details),
+			SettlementType:      settlementType,
+			SettlementResult:    settlementResult(settlements, r.ID),
+			ConversionType:      conversionTypeFromDetails(r.Details),
+			SourceTimePrecision: sourceTimePrecisionFromDetails(r.Details),
 		})
 	}
 
@@ -173,6 +174,14 @@ func settlementResult(results map[string]positions.Settlement, id string) *posit
 		return &result
 	}
 	return nil
+}
+
+func sourceTimePrecisionFromDetails(details sql.NullString) string {
+	var fields struct {
+		Precision string `json:"source_time_precision"`
+	}
+	_ = json.Unmarshal([]byte(details.String), &fields)
+	return fields.Precision
 }
 
 func settlementTypeFromDetails(details sql.NullString) string {

@@ -133,6 +133,9 @@ type alertChannelDTO struct {
 }
 
 func toAlertChannelDTO(ch store.AlertChannel) alertChannelDTO {
+	if ch.LastError != "" {
+		ch.LastError = "external service request failed"
+	}
 	var sent *time.Time
 	if ch.LastSentAt.Valid {
 		t := ch.LastSentAt.Time

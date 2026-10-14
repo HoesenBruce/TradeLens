@@ -36,9 +36,21 @@ export function fillMarkers(
   conversionLabel: string,
   locale: string,
   timezone?: string,
+  interval?: BarInterval,
 ): SeriesMarker<Time>[] {
-  return conversionEvents(fills).map(({ fill: f, conversion }) => ({
-    time: utcSecToChartTime(Math.floor(new Date(f.executed_at).getTime() / 1000), timezone),
+  const known = fills.filter(
+    (f) => !interval || interval === "D" || f.details?.source_time_precision !== "date",
+  );
+  return conversionEvents(known).map(({ fill: f, conversion }) => ({
+    time:
+      f.details?.source_time_precision === "date" && interval === "D"
+        ? ((Math.floor(
+            utcSecToChartTime(
+              Math.floor(new Date(f.executed_at).getTime() / 1000),
+              f.details?.lot?.startsWith("sbi:") ? "Asia/Tokyo" : timezone,
+            ) / 86400,
+          ) * 86400) as Time)
+        : utcSecToChartTime(Math.floor(new Date(f.executed_at).getTime() / 1000), timezone),
     position: conversion ? "aboveBar" : f.side === "buy" ? "belowBar" : "aboveBar",
     shape: conversion ? "circle" : f.side === "buy" ? "arrowUp" : "arrowDown",
     color: conversion
@@ -305,6 +317,7 @@ export function TradeChart({
         tr({ id: "market.marginToCash", message: "Margin → Cash" }),
         locale,
         timezone,
+        interval,
       );
       if (markersRef.current) {
         markersRef.current.setMarkers(markers);

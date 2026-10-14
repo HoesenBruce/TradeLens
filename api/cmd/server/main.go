@@ -14,6 +14,7 @@ import (
 	"github.com/tradermemos/api/internal/api"
 	"github.com/tradermemos/api/internal/auth"
 	"github.com/tradermemos/api/internal/backup"
+	"github.com/tradermemos/api/internal/coach"
 	"github.com/tradermemos/api/internal/config"
 	"github.com/tradermemos/api/internal/db"
 	"github.com/tradermemos/api/internal/econdata"
@@ -193,7 +194,7 @@ func main() {
 			"market_data":     cfg.MarketDataEnabled,
 			"econ_calendar":   cfg.EconCalendarEnabled,
 			"ocr":             cfg.OCREnabled,
-			"coach":           cfg.CoachEnabled,
+			"coach":           coach.LegacyAvailable() && cfg.CoachEnabled,
 			"background_jobs": cfg.JobsEnabled,
 			"share_links":     cfg.ShareLinksEnabled,
 		},

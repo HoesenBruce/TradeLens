@@ -1,4 +1,4 @@
-import { tradeStatusLabel } from "@/lib/tradeLabels";
+import { remainingQuantityLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { t as tr } from "@lingui/core/macro";
 import type { ColumnDef, ColumnPinningState } from "@/lib/table";
 import type { Trade } from "@/lib/api/types";
@@ -203,6 +203,11 @@ export function tradeColumns(
       cell: (i) => (
         <span className="tabular-nums" title={String(i.getValue<number>())}>
           {i.getValue<number>().toFixed(2)}
+          {remainingQuantityLabel(i.row.original) && (
+            <span className="block text-[10px] text-muted-foreground">
+              {remainingQuantityLabel(i.row.original)}
+            </span>
+          )}
         </span>
       ),
     },
@@ -215,7 +220,13 @@ export function tradeColumns(
         headerTitle: tr({ id: "trades.avgEntry", message: "Average entry price" }),
         minWidth: 80,
       },
-      cell: (i) => <MoneyCell value={i.getValue<number>()} currency={currency} fxRate={fxRate} />,
+      cell: (i) => (
+        <MoneyCell
+          value={i.row.original.qty_opened > 0 ? i.getValue<number>() : null}
+          currency={currency}
+          fxRate={fxRate}
+        />
+      ),
     },
     {
       accessorKey: "avg_exit_price",

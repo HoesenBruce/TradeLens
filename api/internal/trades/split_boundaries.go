@@ -41,12 +41,12 @@ func reconcileReportedTrades(fills []Execution, result *AccountingResult) {
 			unavailable = unavailable || missing[id]
 			net += closes[id].Pnl
 		}
-		if !hasReported {
-			continue
-		}
 		if unavailable {
 			tr.NetPnl, tr.GrossPnl, tr.ReturnPct = nil, nil, nil
-			tr.AccountingWarning = "P&L unavailable: incomplete SBI settlement evidence."
+			tr.AccountingWarning += " P&L unavailable: incomplete SBI settlement evidence."
+			continue
+		}
+		if !hasReported {
 			continue
 		}
 		net = money.Round2(net)

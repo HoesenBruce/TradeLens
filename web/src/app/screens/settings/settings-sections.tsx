@@ -56,12 +56,7 @@ import { computeAnnualGoalProgress, ytdFiltersForYear } from "@/lib/annualGoal";
 import { cn } from "@/lib/cn";
 import { useSummary } from "@/lib/hooks/useAnalytics";
 import type { AnnualGoal, RiskRules } from "@/lib/api/settings";
-import {
-  useCoachSettings,
-  useListCoachModels,
-  useSaveCoachSettings,
-  useTestCoachSettings,
-} from "@/lib/hooks/useCoachSettings";
+import { useCoachAvailability } from "@/lib/hooks/useCoachAvailability";
 import type { Account, CashTransaction, Tag as TagType } from "@/lib/api/types";
 import { missingMistakePresets } from "@/lib/tagPresets";
 import {
@@ -2375,6 +2370,7 @@ function VisionScanSection() {
   const { t: localize } = useSecondaryLingui();
 
   const { locale } = useLocale();
+  const session = useAuth((s) => s.session);
   const { data, isPending, isError } = useOcrSettings();
   const save = useSaveOcrSettings();
   const test = useTestOcrSettings();
@@ -2400,6 +2396,7 @@ function VisionScanSection() {
         </SettingsPanelBody>
       ) : (
         <LlmApiSettingsForm
+          key={session}
           settings={data}
           labels={llmApiLabels(locale, "vision")}
           saveErrorMessage={localize({
@@ -2417,44 +2414,21 @@ function VisionScanSection() {
 
 function CoachSection() {
   const { t: localize } = useSecondaryLingui();
-
   const { locale } = useLocale();
-  const { data, isPending, isError } = useCoachSettings();
-  const save = useSaveCoachSettings();
-  const test = useTestCoachSettings();
-  const listModels = useListCoachModels();
-
+  const capability = useCoachAvailability();
   return (
-    <SettingsSection
-      title={settingsLabel(locale, "coachTitle")}
-      footer={settingsLabel(locale, "coachFooter")}
-    >
-      {isPending && !data ? (
-        <SettingsPanelBody>
-          <FormSkeleton fields={3} />
-        </SettingsPanelBody>
-      ) : isError || !data ? (
-        <SettingsPanelBody>
-          <p className="text-[12px] text-destructive">
-            {localize({
-              id: "settings.failedToLoadCoachSettings",
-              message: "Failed to load coach settings.",
-            })}
-          </p>
-        </SettingsPanelBody>
-      ) : (
-        <LlmApiSettingsForm
-          settings={data}
-          labels={llmApiLabels(locale, "coach")}
-          saveErrorMessage={localize({
-            id: "settings.couldNotSaveCoachSettings",
-            message: "Could not save coach settings.",
-          })}
-          onSave={(body) => save.mutateAsync(body)}
-          onTest={(body) => test.mutateAsync(body)}
-          onListModels={(body) => listModels.mutateAsync(body)}
-        />
-      )}
+    <SettingsSection title={settingsLabel(locale, "coachTitle")}>
+      <SettingsPanelBody>
+        <p role="status" className="text-xs text-muted-foreground">
+          {capability.isPending
+            ? localize({ id: "common.loading", message: "Loading…" })
+            : localize({
+                id: "coach.legacyUnavailable",
+                message:
+                  "AI Coach is temporarily unavailable. Rule-based review remains available.",
+              })}
+        </p>
+      </SettingsPanelBody>
     </SettingsSection>
   );
 }

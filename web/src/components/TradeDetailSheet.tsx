@@ -1,4 +1,4 @@
-import { tradeStatusLabel } from "@/lib/tradeLabels";
+import { remainingQuantityLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { useLingui } from "@lingui/react";
 import { t as tr } from "@lingui/core/macro";
 import { useNavigate } from "@tanstack/react-router";
@@ -27,7 +27,7 @@ import { formatOptionMarketChip, optionContractFromFills } from "@/lib/optionCon
 import { Button } from "./ui/button";
 import { cn } from "@/lib/cn";
 import type { TradeDetail } from "@/lib/api/types";
-import { fmtDateTime } from "@/lib/format";
+import { fmtDate, fmtDateTime } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { useDeleteTrade, useTradeDetail } from "@/lib/hooks/useTradeDetail";
 import { computeRiskReward } from "@/lib/riskReward";
@@ -251,10 +251,12 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
 function BentoStat({
   label,
   value,
+  hint,
   className,
 }: {
   label: string;
   value: string;
+  hint?: string;
   className?: string;
 }) {
   return (
@@ -268,6 +270,7 @@ function BentoStat({
       >
         {value}
       </span>
+      {hint && <span className="text-[10px] text-muted-foreground">{hint}</span>}
     </div>
   );
 }
@@ -286,8 +289,13 @@ function TradeDetailSheetBody({
   const pnl = trade.net_pnl;
   const status = tradeStatus(trade);
   const hold = computeRiskReward(trade).holdLabel;
-  const qty =
-    trade.status === "open" && trade.qty_remaining > 0 ? trade.qty_remaining : trade.qty_opened;
+  const dateOnly = trade.fills.some((f) => f.details?.source_time_precision === "date");
+  const dateZone = trade.fills.some((f) => f.details?.lot?.startsWith("sbi:"))
+    ? "Asia/Tokyo"
+    : undefined;
+  const displayDate = (value: string) =>
+    dateOnly ? fmtDate(value, intlLocale(), dateZone) : fmtDateTime(value);
+  const qty = trade.qty_opened;
 
   return (
     <div className="flex flex-col gap-5 px-4 py-4">
@@ -315,10 +323,10 @@ function TradeDetailSheetBody({
             {trade.status === "open"
               ? tr({
                   id: "trades.stillOpen",
-                  message: `${fmtDateTime(trade.opened_at)} · still open`,
+                  message: `${displayDate(trade.opened_at)} · still open`,
                 })
-              : `${fmtDateTime(trade.opened_at)} → ${
-                  trade.closed_at ? fmtDateTime(trade.closed_at) : "—"
+              : `${displayDate(trade.opened_at)} → ${
+                  trade.closed_at ? displayDate(trade.closed_at) : "—"
                 }${hold === "-" ? "" : ` · ${hold}`}`}
           </span>
         </div>
@@ -365,7 +373,9 @@ function TradeDetailSheetBody({
           <div className="grid grid-cols-2 gap-px">
             <BentoStat
               label={tr({ id: "trades.entry", message: "Entry" })}
-              value={fmtMoney(trade.avg_entry_price, currency, intlLocale())}
+              value={
+                trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price, currency, intlLocale()) : "—"
+              }
             />
             <BentoStat
               label={tr({ id: "trades.exit", message: "Exit" })}
@@ -383,7 +393,11 @@ function TradeDetailSheetBody({
               its own value needs and the slack is shared; `truncate` on the
               value stays as the last resort when all three run long. */}
           <div className="grid grid-cols-[auto_auto_auto] gap-px">
-            <BentoStat label={tr({ id: "trades.qty", message: "Qty" })} value={qty.toFixed(2)} />
+            <BentoStat
+              label={tr({ id: "trades.qty", message: "Qty" })}
+              value={qty.toFixed(2)}
+              hint={remainingQuantityLabel(trade)}
+            />
             <BentoStat
               label={tr({ id: "trades.hold", message: "Hold" })}
               value={hold === "-" ? "—" : hold}
@@ -459,7 +473,11 @@ function TradeDetailSheetBody({
                     </span>
                   )}
                 </span>
-                <span className="text-muted-foreground">{fmtDateTime(f.executed_at)}</span>
+                <span className="text-muted-foreground">
+                  {f.details?.source_time_precision === "date"
+                    ? fmtDate(f.executed_at, intlLocale(), dateZone)
+                    : fmtDateTime(f.executed_at)}
+                </span>
               </li>
             ))}
           </ul>

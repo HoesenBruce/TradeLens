@@ -1,3 +1,5 @@
+import { useCoachAvailability } from "@/lib/hooks/useCoachAvailability";
+import { useAuth } from "@/lib/auth";
 import { ApiError } from "@/lib/api/client";
 import { useLingui } from "@lingui/react/macro";
 import { useState, type FormEvent } from "react";
@@ -25,6 +27,25 @@ import {
 type DraftAsset = NewsAnalysisReview["assets"][number] & { accepted: boolean };
 
 export function NewsAnalysisReview({ news }: { news: News }) {
+  const { t } = useLingui();
+  const capability = useCoachAvailability();
+  if (capability.data?.news_analysis_available !== true) {
+    return (
+      <p role="status" className="text-xs text-muted-foreground">
+        {t({
+          id: "news.analysisUnavailable",
+          message:
+            "AI news analysis is temporarily unavailable. Manual news review remains available.",
+        })}
+      </p>
+    );
+  }
+  return (
+    <AvailableNewsAnalysisReview key={`${news.id}-${useAuth.getState().session}`} news={news} />
+  );
+}
+
+function AvailableNewsAnalysisReview({ news }: { news: News }) {
   const { t } = useLingui();
   const labels = {
     symbol: t({ id: "news.symbol", message: "Symbol" }),

@@ -118,7 +118,11 @@ export function fmtTradeDay(iso: string | null | undefined): string {
 }
 
 /** Calendar date for timestamps (honors display timezone + app locale). */
-export function fmtDate(iso: string | null | undefined, locale?: string): string {
+export function fmtDate(
+  iso: string | null | undefined,
+  locale?: string,
+  sourceZone?: string,
+): string {
   if (!iso) return "—";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
@@ -128,7 +132,7 @@ export function fmtDate(iso: string | null | undefined, locale?: string): string
     month: "short",
     day: "numeric",
     year: "numeric",
-    timeZone,
+    timeZone: sourceZone ?? timeZone,
   });
 }
 

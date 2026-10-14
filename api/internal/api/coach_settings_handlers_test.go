@@ -29,7 +29,7 @@ func TestCoachSettings_roundTripAndMask(t *testing.T) {
 	rec = do(s, http.MethodPut, "/api/v1/settings/coach", body, tok)
 	require.Equal(t, http.StatusOK, rec.Code, rec.Body.String())
 	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &got))
-	require.Equal(t, true, got["enabled"])
+	require.Equal(t, false, got["enabled"])
 	require.Equal(t, true, got["api_key_set"])
 	require.Equal(t, "…9999", got["api_key_hint"])
 	require.NotContains(t, rec.Body.String(), "sk-coach-key-9999")
@@ -51,8 +51,5 @@ func TestCoachSettings_testConnection(t *testing.T) {
 
 	body := `{"base_url":"` + srv.URL + `","model":"gpt-4o-mini","api_key":"k"}`
 	rec := do(s, http.MethodPost, "/api/v1/settings/coach/test", body, tok)
-	require.Equal(t, http.StatusOK, rec.Code, rec.Body.String())
-	var got map[string]any
-	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &got))
-	require.Equal(t, true, got["ok"])
+	require.Equal(t, http.StatusServiceUnavailable, rec.Code)
 }

@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react";
 import { t } from "@lingui/core/macro";
-import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
+import { directionLabel, remainingQuantityLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { ArrowDownRight, ArrowUpRight, NotebookPen } from "lucide-react";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
@@ -62,8 +62,10 @@ export function tradeListPrices(
 ): string {
   const locale = intlLocale();
   const qty = trade.qty_opened.toFixed(trade.qty_opened % 1 === 0 ? 0 : 2);
-  const entry = fmtMoney(trade.avg_entry_price * fxRate, currency, locale);
-  if (trade.avg_exit_price == null) return `${qty} @ ${entry}`;
+  const entry =
+    trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, locale) : "—";
+  if (trade.avg_exit_price == null)
+    return `${qty} @ ${entry}${remainingQuantityLabel(trade) ? ` · ${remainingQuantityLabel(trade)}` : ""}`;
   return `${qty} @ ${entry} → ${fmtMoney(trade.avg_exit_price * fxRate, currency, locale)}`;
 }
 

@@ -14,6 +14,7 @@ import (
 func (s *Server) tradeRoutes(g *echo.Group) {
 	g.GET("/trades", s.handleListTrades)
 	g.GET("/trades/:id", s.handleGetTrade)
+	g.GET("/capabilities/coach", s.handleCoachAvailability)
 	g.POST("/trades/:id/coach", s.handleTradeCoach)
 	g.POST("/trades/:id/coach/stream", s.handleTradeCoachStream)
 	g.GET("/trades/:id/coach/reviews", s.handleListTradeCoachReviews)
