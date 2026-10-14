@@ -110,8 +110,13 @@ func TestCrossUserIsolationProviderConfigurationDiagnostics(t *testing.T) {
 					count := calls.Load()
 					before := f.databaseState(t)
 					response := do(s, "POST", path, `{}`, ownerToken)
-					require.Equal(t, 200, response.Code)
-					require.Greater(t, calls.Load(), count)
+					if name == "coach" {
+						require.Equal(t, 503, response.Code)
+						require.Equal(t, count, calls.Load(), "isolated Coach must not contact provider")
+					} else {
+						require.Equal(t, 200, response.Code)
+						require.Greater(t, calls.Load(), count)
+					}
 					noProviderSecrets(t, response.Body.String()+fmt.Sprint(response.Header())+logs.String(), secret, "Authorization", "private-provider.invalid")
 					require.Equal(t, before, f.databaseState(t))
 				}

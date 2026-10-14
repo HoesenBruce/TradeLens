@@ -192,7 +192,7 @@ function TradeCoachPanel({ trade, insights }: { trade: TradeDetail; insights: Tr
 
   // Excursion moved to the plan card — this panel is advice, not measurement,
   // so with no notes there is nothing left to show.
-  if (coachNotes.length === 0 && !coach.isPending) return null;
+  if (coachNotes.length === 0 && !coach.isPending && !coach.unavailable) return null;
 
   const collapsedSummary = coachNotes[0]?.headline;
   const errorMsg =
@@ -233,6 +233,15 @@ function TradeCoachPanel({ trade, insights }: { trade: TradeDetail; insights: Tr
         </CollapsibleTrigger>
         <CollapsibleContent animation="height">
           <div className="flex flex-col gap-4 px-4 pb-4">
+            {coach.unavailable && (
+              <p role="status" className="text-xs text-muted-foreground">
+                {tr({
+                  id: "coach.legacyUnavailable",
+                  message:
+                    "AI Coach is temporarily unavailable. Rule-based review remains available.",
+                })}
+              </p>
+            )}
             {showAskAi ? (
               <div className="flex items-center justify-between gap-2">
                 <p className="m-0 min-w-0 flex-1 text-[11px] text-muted-foreground">

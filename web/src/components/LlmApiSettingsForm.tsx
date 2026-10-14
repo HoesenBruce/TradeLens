@@ -29,6 +29,7 @@ import {
   SettingsToggle,
 } from "@/app/screens/settings/settings-ui";
 import { useLlmModelCache } from "@/lib/llmModelCache";
+import { useAuth } from "@/lib/auth";
 
 export function LlmApiSettingsForm({
   settings,
@@ -48,6 +49,8 @@ export function LlmApiSettingsForm({
   const { t: localize } = useSecondaryLingui();
 
   const toast = useToastManager();
+  const session = useAuth((s) => s.session);
+  const isCurrent = () => useAuth.getState().session === session;
   const [formError, setFormError] = useState<string | null>(null);
   const modelsByBaseUrl = useLlmModelCache((s) => s.modelsByBaseUrl);
   const setCachedModels = useLlmModelCache((s) => s.setModels);
@@ -64,6 +67,7 @@ export function LlmApiSettingsForm({
       try {
         const body = llmApiSettingsPutBody(value);
         const next = await onSave(body);
+        if (!isCurrent()) return;
         form.setFieldValue("enabled", next.enabled);
         form.setFieldValue("base_url", next.base_url);
         form.setFieldValue("model", next.model);
@@ -74,6 +78,7 @@ export function LlmApiSettingsForm({
           description: localize({ id: "calculator.settingsUpdated", message: "Settings updated." }),
         });
       } catch (err) {
+        if (!isCurrent()) return;
         setFormError(err instanceof Error ? err.message : saveErrorMessage);
       } finally {
         setSaving(false);
@@ -95,6 +100,7 @@ export function LlmApiSettingsForm({
     try {
       setFormError(null);
       const result = await onTest(llmApiSettingsTestBody(draft));
+      if (!isCurrent()) return;
       restoreDraft(draft);
 
       if (result.ok) {
@@ -109,6 +115,7 @@ export function LlmApiSettingsForm({
         });
       }
     } catch (err) {
+      if (!isCurrent()) return;
       restoreDraft(draft);
       toast.add({
         title: localize({ id: "calculator.connectionFailed", message: "Connection failed" }),
@@ -127,6 +134,7 @@ export function LlmApiSettingsForm({
     try {
       const value = form.state.values;
       const result = await onListModels(llmApiModelsBody(value));
+      if (!isCurrent()) return;
       if (result.error) {
         toast.add({
           title: labels.fetchModels,
@@ -143,6 +151,7 @@ export function LlmApiSettingsForm({
         }),
       });
     } catch (err) {
+      if (!isCurrent()) return;
       toast.add({
         title: labels.fetchModels,
         description:

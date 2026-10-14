@@ -12456,3 +12456,11 @@ msgstr "資料庫快照會寫入伺服器上的資料夾。請將該資料夾同
 #: src/app/screens/settings/backups-section.tsx:124
 msgid "This server runs on Postgres. Built-in backups cover SQLite only — back up Postgres with pg_dump or your provider's snapshots."
 msgstr "此伺服器使用 Postgres。內建備份只支援 SQLite — 請以 pg_dump 或服務供應商的快照備份 Postgres。"
+
+#. js-lingui-explicit-id
+msgid "coach.legacyUnavailable"
+msgstr "AI 教練暫時無法使用，仍可使用規則覆盤。"
+
+#. js-lingui-explicit-id
+msgid "news.analysisUnavailable"
+msgstr "AI 新聞分析暫時無法使用，仍可手動覆盤新聞。"

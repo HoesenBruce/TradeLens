@@ -24,6 +24,10 @@ func (s *Server) handleAnalyzeNews(c *echo.Context) error {
 	if err != nil {
 		return Fail(500, "internal", "could not load news", nil).Wrap(err)
 	}
+	if !coach.LegacyAvailable() {
+		c.Response().Header().Set("Cache-Control", "no-store")
+		return Fail(503, "ai_unavailable", "AI news analysis is unavailable. Manual news review remains available.", nil)
+	}
 	input, _ := json.Marshal(map[string]any{"title": n.Title, "source": n.Source, "published_at": n.PublishedAt, "original_text": n.OriginalText, "notes": n.Notes})
 	result, err := coach.AnalyzeNews(ctx, s.effectiveCoachConfig(ctx), string(input))
 	if errors.Is(err, coach.ErrUnavailable) {

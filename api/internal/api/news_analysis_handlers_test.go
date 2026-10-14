@@ -3,8 +3,6 @@ package api_test
 import (
 	"encoding/json"
 	"github.com/stretchr/testify/require"
-	"net/http"
-	"net/http/httptest"
 	"testing"
 )
 
@@ -18,18 +16,8 @@ func TestNewsAnalysisReview(t *testing.T) {
 	path := "/api/v1/news/" + news.ID
 	before := do(s, "GET", path, "", token).Body.String()
 	require.Equal(t, 503, do(s, "POST", path+"/analyze", "", token).Code)
-	content := `{"summary":"AI summary","category":"Industry","assets":[{"asset_type":"stock","symbol":"285A","market":"JP","exchange":"TSE","display_name":"Test","direction":"bullish","confidence":70,"reasoning":"AI reason","catalysts":"","risks":"","horizons":[1,5]}]}`
-	provider := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		require.NoError(t, json.NewEncoder(w).Encode(map[string]any{"choices": []any{map[string]any{"message": map[string]string{"content": content}}}}))
-	}))
-	defer provider.Close()
-	settings := `{"enabled":true,"base_url":"` + provider.URL + `","model":"test","api_key":"fixture"}`
-	require.Equal(t, 200, do(s, "PUT", "/api/v1/settings/coach", settings, token).Code)
-	analyzed := do(s, "POST", path+"/analyze", "", token)
-	require.Equal(t, 200, analyzed.Code, analyzed.Body.String())
-	require.JSONEq(t, before, do(s, "GET", path, "", token).Body.String())
-	content = `{"summary":"partial"}`
-	require.Equal(t, 502, do(s, "POST", path+"/analyze", "", token).Code)
+	require.Equal(t, 200, do(s, "PUT", "/api/v1/settings/coach", `{"enabled":true,"base_url":"http://127.0.0.1:1","api_key":"fixture","model":"test"}`, token).Code)
+	require.Equal(t, 503, do(s, "POST", path+"/analyze", "", token).Code)
 	require.JSONEq(t, before, do(s, "GET", path, "", token).Body.String())
 	other := registerAndLogin(t, s, "news-ai-other@example.com")
 	require.Equal(t, 404, do(s, "POST", path+"/analyze", "", other).Code)

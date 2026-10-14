@@ -7,6 +7,7 @@ import {
   apiHealthUrl,
   DEFAULT_API_BASE,
   getBaseUrl,
+  getToken,
   getCustomApiBaseUrl,
   getRefreshToken,
   normalizeApiBaseUrl,
@@ -55,7 +56,7 @@ describe("api base url", () => {
     expect(normalizeApiBaseUrl("")).toBe("");
   });
 
-  it("editableApiBaseUrl strips trailing /api/v1 for the input", () => {
+  it("editableApiBaseUrl simplifies origin-only API bases for the input", () => {
     expect(editableApiBaseUrl("https://journal.example.com/api/v1")).toBe(
       "https://journal.example.com",
     );
@@ -68,6 +69,14 @@ describe("api base url", () => {
       "https://journal.example.com/custom",
     );
   });
+
+  it.each(["/gateway/api/v1", "https://synthetic.invalid/gateway/api/v1"])(
+    "preserves the prefixed API base %s through input readback and submission",
+    (base) => {
+      expect(editableApiBaseUrl(base)).toBe(base);
+      expect(normalizeApiBaseUrl(editableApiBaseUrl(base))).toBe(base);
+    },
+  );
 
   it("apiHealthUrl maps api base to /healthz", () => {
     expect(apiHealthUrl("/api/v1")).toBe("/healthz");
@@ -203,4 +212,29 @@ describe("token refresh", () => {
     await expect(apiFetch("/trades")).rejects.toBeInstanceOf(ApiError);
     expect(onUnauthorized).toHaveBeenCalledOnce();
   });
+});
+
+it("does not adopt an old refresh response or sign out a replacement session", async () => {
+  setTokens("old-owner", "old-refresh");
+  let release!: () => void;
+  const unauthorized = vi.fn<() => void>();
+  setUnauthorizedHandler(unauthorized);
+  vi.spyOn(globalThis, "fetch").mockImplementation(async (url) => {
+    if ((url instanceof Request ? url.url : url.toString()).endsWith("/auth/refresh")) {
+      await new Promise<void>((r) => {
+        release = r;
+      });
+      return Response.json({ access_token: "old-refreshed", refresh_token: "old-refresh-2" });
+    }
+    return new Response("{}", { status: 401 });
+  });
+  const pending = apiFetch("/settings/ocr");
+  const rejected = pending.catch((error: unknown) => error);
+  await vi.waitFor(() => expect(release).toBeTypeOf("function"));
+  setTokens("new-member", "new-refresh");
+  release();
+  await expect(rejected).resolves.toMatchObject({ name: "AbortError" });
+  expect(getToken()).toBe("new-member");
+  expect(getRefreshToken()).toBe("new-refresh");
+  expect(unauthorized).not.toHaveBeenCalled();
 });
