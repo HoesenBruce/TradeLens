@@ -1,9 +1,11 @@
 import { useLingui } from "@lingui/react";
 import { t } from "@lingui/core/macro";
-import { directionLabel, remainingQuantityLabel, tradeStatusLabel } from "@/lib/tradeLabels";
+import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { ArrowDownRight, ArrowUpRight, NotebookPen } from "lucide-react";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
+import { TradeQuantityCell } from "./TradeQuantities";
+import { quantityText, tradeQuantities } from "@/lib/tradeQuantities";
 
 import { fmtDuration, fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
@@ -61,11 +63,11 @@ export function tradeListPrices(
   fxRate = 1,
 ): string {
   const locale = intlLocale();
-  const qty = trade.qty_opened.toFixed(trade.qty_opened % 1 === 0 ? 0 : 2);
+  const q = tradeQuantities(trade);
+  const qty = `${quantityText(q.open_qty)} / ${quantityText(q.entry_qty)}`;
   const entry =
     trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, locale) : "—";
-  if (trade.avg_exit_price == null)
-    return `${qty} @ ${entry}${remainingQuantityLabel(trade) ? ` · ${remainingQuantityLabel(trade)}` : ""}`;
+  if (trade.avg_exit_price == null) return `${qty} @ ${entry}`;
   return `${qty} @ ${entry} → ${fmtMoney(trade.avg_exit_price * fxRate, currency, locale)}`;
 }
 
@@ -206,7 +208,8 @@ export function TradeListItem({
 
         <div className="flex items-baseline justify-between gap-3 text-[14px] tabular-nums">
           <span className="min-w-0 truncate text-foreground">
-            {tradeListPrices(fmtMoney, trade, currency, fxRate)}
+            <TradeQuantityCell trade={trade} />
+            {` @ ${trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, intlLocale()) : "—"}${trade.avg_exit_price != null ? ` → ${fmtMoney(trade.avg_exit_price * fxRate, currency, intlLocale())}` : ""}`}
             {/* Position size, so an option's P&L reconciles: 1 contract moving
                 $0.18 is $18, not $0.18, and the ×100 is invisible otherwise. */}
             <span className="text-muted-foreground @max-[19rem]/trade-row:hidden">

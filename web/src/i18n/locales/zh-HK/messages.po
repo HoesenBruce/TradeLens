@@ -12469,3 +12469,81 @@ msgstr "AI 新聞分析暫時無法使用，仍可手動覆盤新聞。"
 #: src/lib/tradeLabels.ts:8
 msgid "trades.remainingQuantity"
 msgstr "剩餘 {quantity}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:46
+msgid "trades.entryQty"
+msgstr "開倉量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:49
+msgid "trades.exitQty"
+msgstr "平倉量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:52
+msgid "trades.openQty"
+msgstr "剩餘量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:55
+msgid "trades.remainingPct"
+msgstr "剩餘比例"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:20
+msgid "trades.openEntryDescription"
+msgstr "剩餘量 {open} / 開倉量 {entry}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:199
+#: src/components/tradeColumns.tsx:202
+#: src/components/tradeColumns.tsx:520
+#: src/components/tradeColumns.tsx:542
+msgid "trades.openEntryQty"
+msgstr "剩餘量 / 開倉量"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:55
+msgid "trades.lifecyclePartial"
+msgstr "部分平倉"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:57
+msgid "trades.lifecycleClosed"
+msgstr "持倉已平"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:53
+msgid "trades.lifecycleOpen"
+msgstr "持倉未平"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:59
+msgid "trades.lifecycleUnknown"
+msgstr "持倉未知"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:41
+msgid "trades.quantityServerUnavailable"
+msgstr "目前伺服器無法提供數量明細。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:25
+msgid "trades.quantityMissingOpening"
+msgstr "開倉歷史不完整，數量未知。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:30
+msgid "trades.quantityShareUnits"
+msgstr "公司行動前後的股份單位未經驗證，數量未知。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:36
+msgid "trades.quantityInconsistent"
+msgstr "已儲存的交易庫存不一致，數量未知。"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:203
+msgid "trades.quantitySortHint"
+msgstr "剩餘未平數量 / 累計開倉數量；按剩餘量排序"

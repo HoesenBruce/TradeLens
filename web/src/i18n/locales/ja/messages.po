@@ -12473,3 +12473,81 @@ msgstr "AI ニュース分析は現在利用できません。手動でのニュ
 #: src/lib/tradeLabels.ts:8
 msgid "trades.remainingQuantity"
 msgstr "残数量 {quantity}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:46
+msgid "trades.entryQty"
+msgstr "新規数量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:49
+msgid "trades.exitQty"
+msgstr "決済数量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:52
+msgid "trades.openQty"
+msgstr "残数量"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:55
+msgid "trades.remainingPct"
+msgstr "残割合"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:20
+msgid "trades.openEntryDescription"
+msgstr "残数量 {open} / 新規数量 {entry}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:199
+#: src/components/tradeColumns.tsx:202
+#: src/components/tradeColumns.tsx:520
+#: src/components/tradeColumns.tsx:542
+msgid "trades.openEntryQty"
+msgstr "残数量 / 新規数量"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:55
+msgid "trades.lifecyclePartial"
+msgstr "一部決済"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:57
+msgid "trades.lifecycleClosed"
+msgstr "決済済み"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:53
+msgid "trades.lifecycleOpen"
+msgstr "未決済"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:59
+msgid "trades.lifecycleUnknown"
+msgstr "ポジション不明"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:41
+msgid "trades.quantityServerUnavailable"
+msgstr "このサーバーでは数量の詳細を取得できません。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:25
+msgid "trades.quantityMissingOpening"
+msgstr "新規取引の履歴が不完全なため、数量は不明です。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:30
+msgid "trades.quantityShareUnits"
+msgstr "企業行動前後の株数単位が未検証のため、数量は不明です。"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:36
+msgid "trades.quantityInconsistent"
+msgstr "保存された取引在庫に不整合があるため、数量は不明です。"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:203
+msgid "trades.quantitySortHint"
+msgstr "未決済数量 / 累計新規数量；残数量で並べ替え"

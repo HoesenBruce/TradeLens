@@ -1,4 +1,6 @@
-import { remainingQuantityLabel, tradeStatusLabel } from "@/lib/tradeLabels";
+import { tradeStatusLabel } from "@/lib/tradeLabels";
+import { tradeQuantities, quantityText } from "@/lib/tradeQuantities";
+import { TradeQuantityCell } from "./TradeQuantities";
 import { t as tr } from "@lingui/core/macro";
 import type { ColumnDef, ColumnPinningState } from "@/lib/table";
 import type { Trade } from "@/lib/api/types";
@@ -49,7 +51,7 @@ export function tradeStatus(t: Trade): {
   label: "WIN" | "LOSS" | "OPEN" | "BE" | "N/A";
   tone: PillTone;
 } {
-  if (t.status === "open") return { label: "OPEN", tone: "accent" };
+  if (t.status === "open" && t.net_pnl == null) return { label: "OPEN", tone: "accent" };
   if (t.net_pnl == null && t.accounting_warning) return { label: "N/A", tone: "muted" };
   if (t.net_pnl != null && t.net_pnl > 0) return { label: "WIN", tone: "pos" };
   if (t.net_pnl != null && t.net_pnl < 0) return { label: "LOSS", tone: "neg" };
@@ -192,24 +194,27 @@ export function tradeColumns(
       ),
     },
     {
-      accessorKey: "qty_opened",
-      header: tr({ id: "trades.quantity", message: "Quantity" }),
+      id: "qty_opened",
+      accessorFn: (row) => tradeQuantities(row).open_qty,
+      header: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }),
       meta: {
         align: "right",
-        label: tr({ id: "trades.quantity", message: "Quantity" }),
-        headerTitle: tr({ id: "trades.quantityOpened", message: "Quantity opened" }),
+        label: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }),
+        headerTitle: tr({
+          id: "trades.quantitySortHint",
+          message: "Remaining open quantity / cumulative entry quantity; sorted by open quantity",
+        }),
         minWidth: 80,
       },
-      cell: (i) => (
-        <span className="tabular-nums" title={String(i.getValue<number>())}>
-          {i.getValue<number>().toFixed(2)}
-          {remainingQuantityLabel(i.row.original) && (
-            <span className="block text-[10px] text-muted-foreground">
-              {remainingQuantityLabel(i.row.original)}
-            </span>
-          )}
-        </span>
-      ),
+      cell: (i) => <TradeQuantityCell trade={i.row.original} />,
+      sortFn: (a, b, id) => {
+        const av = a.getValue<number | null>(id),
+          bv = b.getValue<number | null>(id);
+        if (av == null && bv == null) return 0;
+        if (av == null) return 1;
+        if (bv == null) return -1;
+        return av - bv;
+      },
     },
     {
       accessorKey: "avg_entry_price",
@@ -304,10 +309,7 @@ export function tradeColumns(
     },
     {
       id: "pos",
-      accessorFn: (row) => {
-        if (row.status !== "open") return null;
-        return row.qty_remaining > 0 ? row.qty_remaining : row.qty_opened;
-      },
+      accessorFn: (row) => tradeQuantities(row).open_qty,
       header: tr({ id: "trades.position", message: "Position" }),
       meta: {
         align: "right",
@@ -324,14 +326,8 @@ export function tradeColumns(
         return av === bv ? 0 : av < bv ? -1 : 1;
       },
       cell: (i) => {
-        const t = i.row.original;
-        if (t.status !== "open") return muted("-");
-        const qty = t.qty_remaining > 0 ? t.qty_remaining : t.qty_opened;
-        return (
-          <span className="tabular-nums" title={String(qty)}>
-            {qty.toFixed(2)}
-          </span>
-        );
+        const qty = tradeQuantities(i.row.original).open_qty;
+        return <span className="tabular-nums">{quantityText(qty)}</span>;
       },
     },
     {
@@ -521,7 +517,7 @@ export function tradeSortColumns(): { id: string; label: string }[] {
     { id: "status", label: tr({ id: "trades.status", message: "Status" }) },
     { id: "direction", label: tr({ id: "trades.direction", message: "Direction" }) },
     { id: "instrument_type", label: tr({ id: "trades.market", message: "Market" }) },
-    { id: "qty_opened", label: tr({ id: "trades.qty", message: "Qty" }) },
+    { id: "qty_opened", label: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }) },
     { id: "avg_entry_price", label: tr({ id: "trades.entry", message: "Entry" }) },
     { id: "avg_exit_price", label: tr({ id: "trades.exit", message: "Exit" }) },
     { id: "ent_tot", label: tr({ id: "trades.entryTotal", message: "Entry total" }) },
@@ -543,7 +539,7 @@ export function tradeViewColumns(): { id: string; label: string }[] {
     { id: "status", label: tr({ id: "trades.status", message: "Status" }) },
     { id: "direction", label: tr({ id: "trades.direction", message: "Direction" }) },
     { id: "instrument_type", label: tr({ id: "trades.market", message: "Market" }) },
-    { id: "qty_opened", label: tr({ id: "trades.qty", message: "Qty" }) },
+    { id: "qty_opened", label: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }) },
     { id: "avg_entry_price", label: tr({ id: "trades.entry", message: "Entry" }) },
     { id: "avg_exit_price", label: tr({ id: "trades.exit", message: "Exit" }) },
     { id: "ent_tot", label: tr({ id: "trades.entryTotal", message: "Entry total" }) },

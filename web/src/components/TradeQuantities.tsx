@@ -12,7 +12,7 @@ import { intlLocale } from "@/lib/locale";
 import { Pill } from "./Pill";
 import { StatCell } from "./StatCell";
 
-export function TradeQuantityCell({ trade }: { trade: Trade }) {
+export function TradeQuantityCell({ trade }: { trade: Pick<Trade, "quantities"> }) {
   useLingui();
   const q = tradeQuantities(trade);
   const open = quantityText(q.open_qty),
@@ -33,7 +33,7 @@ export function TradeQuantityCell({ trade }: { trade: Trade }) {
   );
 }
 
-export function TradeQuantityDetails({ trade }: { trade: Trade }) {
+export function TradeQuantityDetails({ trade }: { trade: Pick<Trade, "quantities"> }) {
   useLingui();
   const q = tradeQuantities(trade);
   const reason = quantityExplanation(q.unknown_reason);
