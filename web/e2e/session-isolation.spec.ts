@@ -57,6 +57,11 @@ async function noPrivateValues(page: Page) {
   expect(await page.evaluate(() => localStorage.getItem("tm-llm-model-cache"))).toBeNull();
 }
 
+test.beforeEach(async ({ page }, info) => {
+  const base = info.project.metadata.apiBase as string | undefined;
+  if (base) await page.addInitScript((base) => localStorage.setItem("tm_api_base", base), base);
+});
+
 test.beforeAll(async ({ request }) => {
   const status = await (await request.get(`${api}/setup/status`)).json();
   if (status.needs_setup) {
@@ -123,9 +128,23 @@ for (let repeat = 1; repeat <= 3; repeat++) {
     page,
     context,
     request,
-  }) => {
+  }, info) => {
     await setSettings(request);
     await page.goto("/settings#ai");
+    const base = info.project.metadata.apiBase as string | undefined;
+    if (base) {
+      await page.getByRole("button", { name: /Advanced/ }).click();
+      await expect(page.getByRole("textbox", { name: "API server", exact: true })).toHaveValue(
+        base,
+      );
+      await page.screenshot({ path: info.outputPath("prefixed-api-server.png") });
+      await page.getByRole("dialog").getByRole("button", { name: "Save", exact: true }).click();
+      await page.getByRole("button", { name: /Advanced/ }).click();
+      await expect(page.getByRole("textbox", { name: "API server", exact: true })).toHaveValue(
+        base,
+      );
+      await page.keyboard.press("Escape");
+    }
     await login(page, owner);
     await page.getByRole("link", { name: "Settings", exact: true }).click();
     await section(page, "ai");
@@ -301,7 +320,7 @@ for (const [locale, coach, news] of translations) {
   });
 }
 
-test("worker keeps the same identity offline cache and refuses another bearer session", async ({
+test("worker refuses authenticated API replay for both the same and another bearer session", async ({
   page,
   context,
   request,
@@ -326,17 +345,8 @@ test("worker keeps the same identity offline cache and refuses another bearer se
       }
     }, token);
   expect(await fetchMe(ownerAccess)).toBe(true);
-  await expect
-    .poll(() =>
-      page.evaluate(async () =>
-        (await (await caches.open("api-cache")).keys()).some(
-          (key) => key.url.includes("/me?") && key.url.includes("__tm_auth_scope="),
-        ),
-      ),
-    )
-    .toBe(true);
   await context.setOffline(true);
-  expect(await fetchMe(ownerAccess)).toBe(true);
+  expect(await fetchMe(ownerAccess)).toBeNull();
   expect(await fetchMe(memberAccess)).toBeNull();
   expect(
     await page.evaluate(async () =>

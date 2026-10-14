@@ -56,7 +56,7 @@ describe("api base url", () => {
     expect(normalizeApiBaseUrl("")).toBe("");
   });
 
-  it("editableApiBaseUrl strips trailing /api/v1 for the input", () => {
+  it("editableApiBaseUrl simplifies origin-only API bases for the input", () => {
     expect(editableApiBaseUrl("https://journal.example.com/api/v1")).toBe(
       "https://journal.example.com",
     );
@@ -69,6 +69,14 @@ describe("api base url", () => {
       "https://journal.example.com/custom",
     );
   });
+
+  it.each(["/gateway/api/v1", "https://synthetic.invalid/gateway/api/v1"])(
+    "preserves the prefixed API base %s through input readback and submission",
+    (base) => {
+      expect(editableApiBaseUrl(base)).toBe(base);
+      expect(normalizeApiBaseUrl(editableApiBaseUrl(base))).toBe(base);
+    },
+  );
 
   it("apiHealthUrl maps api base to /healthz", () => {
     expect(apiHealthUrl("/api/v1")).toBe("/healthz");

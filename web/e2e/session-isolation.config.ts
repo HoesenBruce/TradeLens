@@ -1,4 +1,5 @@
 import { resolve } from "node:path";
+import { existsSync } from "node:fs";
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
@@ -11,7 +12,11 @@ export default defineConfig({
   use: {
     ...devices["Desktop Chrome"],
     baseURL: "http://127.0.0.1:5189",
-    launchOptions: { executablePath: process.env.E2E_CHROMIUM_PATH ?? "/usr/bin/chromium" },
+    launchOptions: {
+      executablePath:
+        process.env.E2E_CHROMIUM_PATH ??
+        (existsSync("/usr/bin/chromium") ? "/usr/bin/chromium" : undefined),
+    },
   },
   webServer: {
     command: "node scripts/serve-security-build.mjs",

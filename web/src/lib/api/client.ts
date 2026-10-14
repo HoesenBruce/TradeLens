@@ -62,14 +62,17 @@ export function normalizeApiBaseUrl(raw: string): string {
 }
 
 /**
- * Value for the API-server input: strip a trailing `/api/v1` so users only edit
- * the origin. {@link setBaseUrl} / {@link normalizeApiBaseUrl} re-append it.
+ * Simplify origin-only API bases for the input; keep prefixed paths intact so
+ * {@link setBaseUrl} / {@link normalizeApiBaseUrl} round-trip the actual base.
  */
 export function editableApiBaseUrl(stored: string): string {
   const trimmed = stored.trim().replace(/\/+$/, "");
   if (!trimmed) return "";
   if (trimmed === "/api/v1") return "";
-  if (trimmed.endsWith("/api/v1")) {
+  if (
+    trimmed.endsWith("/api/v1") &&
+    /^https?:\/\/[^/]+$/i.test(trimmed.slice(0, -"/api/v1".length))
+  ) {
     return trimmed.slice(0, -"/api/v1".length);
   }
   return trimmed;

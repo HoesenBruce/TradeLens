@@ -5,7 +5,8 @@ import { extname, resolve } from "node:path";
 const dist = resolve(process.env.E2E_WORKER_DIST ?? "dist");
 const api = process.env.E2E_API_URL ?? "http://localhost:8099/api/v1";
 createServer(async (req, res) => {
-  const path = new URL(req.url, "http://localhost").pathname;
+  const incoming = new URL(req.url, "http://localhost");
+  const path = incoming.pathname.replace(/^\/gateway(?=\/api\/)/, "");
   // The closed FX calculator mounts eagerly; keep this unrelated vendor synthetic.
   if (path === "/api/v1/market/fx") {
     const query = new URL(req.url, "http://localhost").searchParams;
@@ -25,7 +26,7 @@ createServer(async (req, res) => {
     try {
       const chunks = [];
       for await (const chunk of req) chunks.push(chunk);
-      const response = await fetch(api.replace(/\/api\/v1$/, "") + req.url, {
+      const response = await fetch(api.replace(/\/api\/v1$/, "") + path + incoming.search, {
         method: req.method,
         headers: {
           "Content-Type": "application/json",
