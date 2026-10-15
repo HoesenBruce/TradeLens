@@ -5,6 +5,7 @@ import (
 	"errors"
 	"math"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v5"
 	"github.com/tradermemos/api/internal/auth"
@@ -81,11 +82,17 @@ func (s *Server) handleListTrades(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not load option contracts", nil)
 	}
+	holdingFills := make(map[string][]store.ListOptionExecutionDetailsForUserRow)
+	for _, f := range optionRows {
+		holdingFills[f.TradeID] = append(holdingFills[f.TradeID], f)
+	}
+	now := time.Now()
 	rightByTrade := optionRightsByTrade(optionRows)
 	stockNameByTrade := stockNamesByTrade(optionRows)
 	out := make([]tradeDTO, 0, len(rows))
 	for _, t := range rows {
 		dto := toTradeDTO(t, tagsByTrade[t.ID])
+		dto.Holding = tradeHolding(t, holdingFills[t.ID], now)
 		if right, ok := rightByTrade[t.ID]; ok {
 			dto.OptionRight = &right
 		}

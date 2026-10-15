@@ -226,6 +226,13 @@ export interface TradeQuantities {
 }
 
 export interface Trade {
+  holding?: {
+    kind: "elapsed" | "calendar" | "unknown";
+    seconds: number | null;
+    calendar_days: number | null;
+    time_zone: string;
+    ongoing: boolean;
+  };
   /** Authoritative normalized inventory read model; absent on older servers. */
   quantities?: TradeQuantities;
   accounting_warning?: string;

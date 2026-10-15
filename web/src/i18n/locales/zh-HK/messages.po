@@ -12685,3 +12685,24 @@ msgstr "剩餘未平數量 / 累計開倉數量；按剩餘量排序"
 #: src/app/screens/ReviewInboxView.tsx
 msgid "review.ambiguousNotes"
 msgstr "無法明確定位復盤筆記章節。請在完整交易日誌中處理；本次草稿已保留。"
+
+
+#. js-lingui-explicit-id
+msgid "trades.holdingUnknown"
+msgstr "持有時長未知。"
+
+#. js-lingui-explicit-id
+msgid "trades.calendarHoldingHint"
+msgstr "按 {zone} 當地日期計算的日曆天數；無法確定精確耗時。"
+
+#. js-lingui-explicit-id
+msgid "trades.elapsedHoldingHint"
+msgstr "根據精確時間戳計算的實際耗時。"
+
+#. js-lingui-explicit-id
+msgid "trades.holdingOngoing"
+msgstr "{value} · 持有中"
+
+#. js-lingui-explicit-id
+msgid "trades.ongoingPosition"
+msgstr "尚未平倉"

@@ -1,3 +1,4 @@
+import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { tradeStatusLabel } from "@/lib/tradeLabels";
 import { tradeQuantities, quantityText } from "@/lib/tradeQuantities";
 import { TradeQuantityCell } from "./TradeQuantities";
@@ -5,7 +6,7 @@ import { t as tr } from "@lingui/core/macro";
 import type { ColumnDef, ColumnPinningState } from "@/lib/table";
 import type { Trade } from "@/lib/api/types";
 
-import { fmtDateTime, fmtDuration, fmtTradeDay } from "@/lib/format";
+import { fmtDateTime, fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { resolveTradeDirection } from "@/lib/tradeDirection";
 import { DirCell } from "./DirCell";
@@ -341,16 +342,7 @@ export function tradeColumns(
         headerTitle: tr({ id: "trades.holdHint", message: "Time in trade" }),
         minWidth: 56,
       },
-      cell: (i) => {
-        const v = i.getValue<number | null>();
-        return v == null || v <= 0 ? (
-          muted("-")
-        ) : (
-          <span className="tabular-nums text-muted-foreground" title={fmtDuration(v)}>
-            {fmtDuration(v)}
-          </span>
-        );
-      },
+      cell: (i) => <TradeHoldingDuration trade={i.row.original} />,
     },
     {
       accessorKey: "fees_total",

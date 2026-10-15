@@ -12688,3 +12688,24 @@ msgstr "Remaining open quantity / cumulative entry quantity; sorted by open quan
 #: src/app/screens/ReviewInboxView.tsx
 msgid "review.ambiguousNotes"
 msgstr "The Review notes section is ambiguous. Edit the full journal to resolve it; your draft is retained."
+
+
+#. js-lingui-explicit-id
+msgid "trades.holdingUnknown"
+msgstr "Holding duration is unknown."
+
+#. js-lingui-explicit-id
+msgid "trades.calendarHoldingHint"
+msgstr "Calendar days in {zone}; exact elapsed time is unavailable."
+
+#. js-lingui-explicit-id
+msgid "trades.elapsedHoldingHint"
+msgstr "Elapsed time from precise timestamps."
+
+#. js-lingui-explicit-id
+msgid "trades.holdingOngoing"
+msgstr "{value} · ongoing"
+
+#. js-lingui-explicit-id
+msgid "trades.ongoingPosition"
+msgstr "still open"

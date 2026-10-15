@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type { Execution, TradeDetail } from "./api/types";
 import { getDisplayTimeOpts } from "./displayPrefs";
 import { fmtDate, fmtDateTime, fmtTime } from "./format";
@@ -18,7 +19,7 @@ function calendarDayKey(d: Date, timeZone: string): string {
  * rather than repeating it on both sides of the arrow.
  */
 export function fmtTradeTimeline(
-  trade: Pick<TradeDetail, "opened_at" | "closed_at" | "status"> & {
+  trade: Pick<TradeDetail, "opened_at" | "closed_at" | "status" | "holding"> & {
     fills?: Pick<Execution, "details">[];
   },
   hold: string,
@@ -27,12 +28,14 @@ export function fmtTradeTimeline(
   if (Number.isNaN(opened.getTime())) return "—";
 
   const dateFill = trade.fills?.find((f) => f.details?.source_time_precision === "date");
-  if (dateFill) {
-    const zone = dateFill.details?.lot?.startsWith("sbi:") ? "Asia/Tokyo" : undefined;
+  if (dateFill || trade.holding?.kind === "calendar") {
+    const zone =
+      trade.holding?.time_zone ??
+      (dateFill?.details?.lot?.startsWith("sbi:") ? "Asia/Tokyo" : undefined);
     const day = fmtDate(trade.opened_at, intlLocale(), zone);
     return trade.status === "open" || !trade.closed_at
-      ? `${day} · still open`
-      : `${day} → ${fmtDate(trade.closed_at, intlLocale(), zone)}`;
+      ? `${day} · ${t({ id: "trades.ongoingPosition", message: "still open" })}${trade.holding && hold !== "-" ? ` · ${hold}` : ""}`
+      : `${day} → ${fmtDate(trade.closed_at, intlLocale(), zone)}${trade.holding && hold !== "-" ? ` · ${hold}` : ""}`;
   }
 
   const { timeZone } = getDisplayTimeOpts();
@@ -45,7 +48,7 @@ export function fmtTradeTimeline(
   const holdPart = hold && hold !== "-" ? ` · ${hold}` : "";
 
   if (trade.status === "open" || !trade.closed_at) {
-    return `${fmtDateTime(trade.opened_at)} · still open`;
+    return `${fmtDateTime(trade.opened_at)} · ${t({ id: "trades.ongoingPosition", message: "still open" })}${trade.holding && hold !== "-" ? ` · ${hold}` : ""}`;
   }
 
   const closed = new Date(trade.closed_at);

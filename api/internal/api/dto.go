@@ -43,6 +43,7 @@ func sptr(n sql.NullString) *string {
 // tradeDTO flattens sqlc's sql.Null* fields into JSON-friendly nullable values
 // (a number or null), so clients see net_pnl: 200 rather than {Float64,Valid}.
 type tradeDTO struct {
+	Holding           tradeHoldingDTO    `json:"holding"`
 	SourcePnlCurrency string             `json:"source_pnl_currency,omitempty"`
 	AccountingWarning string             `json:"accounting_warning,omitempty"`
 	ID                string             `json:"id"`
@@ -85,7 +86,7 @@ func toTradeDTO(t store.Trade, tags []store.Tag) tradeDTO {
 		tags = []store.Tag{}
 	}
 	return tradeDTO{
-		AccountingWarning: t.AccountingWarning,
+		AccountingWarning: strings.ReplaceAll(t.AccountingWarning, "intraday order, fill pairing and holding duration are unknown.", "intraday order, fill pairing and exact elapsed holding time are unknown; calendar holding days use market-local dates."),
 		Quantities:        tradeQuantities(t),
 		ID:                t.ID, AccountID: t.AccountID, Symbol: t.Symbol,
 		InstrumentType: t.InstrumentType, Direction: t.Direction, Status: t.Status,
