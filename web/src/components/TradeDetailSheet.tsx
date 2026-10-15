@@ -1,3 +1,5 @@
+import { TradeHoldingDuration } from "./TradeHoldingDuration";
+import { fmtTradeTimeline } from "@/lib/tradeTimeline";
 import { tradeStatusLabel } from "@/lib/tradeLabels";
 import { TradeQuantityDetails } from "./TradeQuantities";
 import { useLingui } from "@lingui/react";
@@ -256,7 +258,7 @@ function BentoStat({
   className,
 }: {
   label: string;
-  value: string;
+  value: React.ReactNode;
   hint?: string;
   className?: string;
 }) {
@@ -266,8 +268,8 @@ function BentoStat({
         {label}
       </span>
       <span
-        className="truncate text-sm tabular-nums whitespace-nowrap text-foreground"
-        title={value}
+        className="text-sm tabular-nums whitespace-normal wrap-anywhere text-foreground"
+        title={typeof value === "string" ? value : undefined}
       >
         {value}
       </span>
@@ -290,12 +292,9 @@ function TradeDetailSheetBody({
   const pnl = trade.net_pnl;
   const status = tradeStatus(trade);
   const hold = computeRiskReward(trade).holdLabel;
-  const dateOnly = trade.fills.some((f) => f.details?.source_time_precision === "date");
   const dateZone = trade.fills.some((f) => f.details?.lot?.startsWith("sbi:"))
     ? "Asia/Tokyo"
     : undefined;
-  const displayDate = (value: string) =>
-    dateOnly ? fmtDate(value, intlLocale(), dateZone) : fmtDateTime(value);
 
   return (
     <div className="flex flex-col gap-5 px-4 py-4">
@@ -320,14 +319,7 @@ function TradeDetailSheetBody({
             {tradeStatusLabel(status.label)}
           </Pill>
           <span className="text-xs tabular-nums text-muted-foreground">
-            {trade.status === "open"
-              ? tr({
-                  id: "trades.stillOpen",
-                  message: `${displayDate(trade.opened_at)} · still open`,
-                })
-              : `${displayDate(trade.opened_at)} → ${
-                  trade.closed_at ? displayDate(trade.closed_at) : "—"
-                }${hold === "-" ? "" : ` · ${hold}`}`}
+            {fmtTradeTimeline(trade, hold)}
           </span>
         </div>
         {/* The stat column carries three figures per row and the hero carries
@@ -396,7 +388,7 @@ function TradeDetailSheetBody({
           <div className="grid grid-cols-2 gap-px">
             <BentoStat
               label={tr({ id: "trades.hold", message: "Hold" })}
-              value={hold === "-" ? "—" : hold}
+              value={<TradeHoldingDuration trade={trade} />}
             />
             <BentoStat
               label={tr({ id: "trades.fees", message: "Fees" })}

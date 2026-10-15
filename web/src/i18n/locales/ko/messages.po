@@ -12685,3 +12685,24 @@ msgstr "미청산 수량 / 누적 진입 수량; 잔여 수량순 정렬"
 #: src/app/screens/ReviewInboxView.tsx
 msgid "review.ambiguousNotes"
 msgstr "리뷰 메모 섹션을 명확히 식별할 수 없습니다. 전체 일지에서 정리해 주세요. 초안은 유지됩니다."
+
+
+#. js-lingui-explicit-id
+msgid "trades.holdingUnknown"
+msgstr "보유 기간을 알 수 없습니다."
+
+#. js-lingui-explicit-id
+msgid "trades.calendarHoldingHint"
+msgstr "{zone} 현지 날짜 기준 일수이며 정확한 경과 시간은 알 수 없습니다."
+
+#. js-lingui-explicit-id
+msgid "trades.elapsedHoldingHint"
+msgstr "정확한 타임스탬프 기준 경과 시간입니다."
+
+#. js-lingui-explicit-id
+msgid "trades.holdingOngoing"
+msgstr "{value} · 보유 중"
+
+#. js-lingui-explicit-id
+msgid "trades.ongoingPosition"
+msgstr "미청산"

@@ -1,3 +1,4 @@
+import { fmtTradeHolding } from "./tradeHolding";
 import type { TradeDetail } from "./api/types";
 
 export interface RiskRewardMetrics {
@@ -11,15 +12,6 @@ export interface RiskRewardMetrics {
   maxLoss: number | null;
   plannedRR: number | null;
   holdLabel: string;
-}
-
-function fmtHold(secs: number | null): string {
-  if (secs == null) return "-";
-  if (secs < 60) return "<1m";
-  if (secs < 3600) return `${Math.round(secs / 60)}m`;
-  const h = Math.floor(secs / 3600);
-  const m = Math.round((secs % 3600) / 60);
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
 }
 
 export function computeRiskReward(trade: TradeDetail): RiskRewardMetrics {
@@ -65,6 +57,6 @@ export function computeRiskReward(trade: TradeDetail): RiskRewardMetrics {
     maxProfit,
     maxLoss,
     plannedRR,
-    holdLabel: fmtHold(trade.time_in_trade_secs),
+    holdLabel: fmtTradeHolding(trade).value.replace("—", "-"),
   };
 }

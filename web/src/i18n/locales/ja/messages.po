@@ -12689,3 +12689,24 @@ msgstr "未決済数量 / 累計新規数量；残数量で並べ替え"
 #: src/app/screens/ReviewInboxView.tsx
 msgid "review.ambiguousNotes"
 msgstr "レビューメモのセクションを特定できません。ジャーナル全体で整理してください。下書きは保持されています。"
+
+
+#. js-lingui-explicit-id
+msgid "trades.holdingUnknown"
+msgstr "保有期間は不明です。"
+
+#. js-lingui-explicit-id
+msgid "trades.calendarHoldingHint"
+msgstr "{zone} の現地日付による暦日数です。正確な経過時間は不明です。"
+
+#. js-lingui-explicit-id
+msgid "trades.elapsedHoldingHint"
+msgstr "正確なタイムスタンプによる経過時間です。"
+
+#. js-lingui-explicit-id
+msgid "trades.holdingOngoing"
+msgstr "{value} · 保有中"
+
+#. js-lingui-explicit-id
+msgid "trades.ongoingPosition"
+msgstr "未決済"

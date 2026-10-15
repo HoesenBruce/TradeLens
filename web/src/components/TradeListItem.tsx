@@ -1,3 +1,4 @@
+import { fmtTradeHolding } from "@/lib/tradeHolding";
 import { useLingui } from "@lingui/react";
 import { t } from "@lingui/core/macro";
 import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
@@ -6,7 +7,7 @@ import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
 import { TradeQuantityCell } from "./TradeQuantities";
 
-import { fmtDuration, fmtTradeDay } from "@/lib/format";
+import { fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { resolveTradeDirection } from "@/lib/tradeDirection";
 import { DIR_TONE_CLASS } from "./DirCell";
@@ -23,6 +24,7 @@ const MAX_TAGS = 2;
 export interface TradeMetaPart {
   key: string;
   text: string;
+  description?: string;
   /** Dropped when the row itself gets narrow (~<19rem), not the viewport. */
   optional?: boolean;
 }
@@ -45,11 +47,12 @@ function listDate(iso: string | null): string {
 
 /** Footer line: market, date, hold, R multiple. */
 export function tradeListMeta(trade: Trade, showDate = false): TradeMetaPart[] {
-  const hold = fmtDuration(trade.time_in_trade_secs);
+  const hold = fmtTradeHolding(trade);
   const r = tradeRMultiple(trade);
   const parts: TradeMetaPart[] = [{ key: "market", text: marketLabel(trade.instrument_type) }];
   if (showDate) parts.push({ key: "date", text: listDate(trade.opened_at) });
-  if (hold !== "-") parts.push({ key: "hold", text: hold, optional: true });
+  if (hold.value !== "—")
+    parts.push({ key: "hold", text: hold.value, description: hold.description });
   if (r != null) parts.push({ key: "r", text: `${r.toFixed(2)}R`, optional: true });
   return parts;
 }
@@ -220,6 +223,8 @@ export function TradeListItem({
             {tradeListMeta(trade, showDate).map((part, i) => (
               <span
                 key={part.key}
+                title={part.description}
+                aria-label={part.description ? `${part.text}. ${part.description}` : undefined}
                 className={part.optional ? "@max-[19rem]/trade-row:hidden" : undefined}
               >
                 {i > 0 ? <span aria-hidden> · </span> : null}
