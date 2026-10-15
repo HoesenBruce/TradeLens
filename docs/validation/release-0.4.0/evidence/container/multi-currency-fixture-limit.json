@@ -1,0 +1,20 @@
+{
+  "/trades": {
+    "status": 400,
+    "error": {
+      "error": {
+        "code": "mixed_currencies",
+        "message": "selected accounts mix base currencies"
+      }
+    }
+  },
+  "/trades?target_currency=USD": {
+    "status": 502,
+    "error": {
+      "error": {
+        "code": "fx_unavailable",
+        "message": "analytics FX is unavailable"
+      }
+    }
+  }
+}

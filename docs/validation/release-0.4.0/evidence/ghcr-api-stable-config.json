@@ -1,0 +1,18 @@
+{
+  "platform": {
+    "architecture": "arm64",
+    "os": "linux"
+  },
+  "labels": {
+    "org.opencontainers.image.created": "2026-10-09T14:30:16.572Z",
+    "org.opencontainers.image.description": "Self-hosted trading journal with broker imports, trade analytics, and portfolio analysis.",
+    "org.opencontainers.image.licenses": "AGPL-3.0",
+    "org.opencontainers.image.revision": "58f6a3c1a80cc195c3650fd48ef71680684ccb50",
+    "org.opencontainers.image.source": "https://github.com/HoesenBruce/TradeLens",
+    "org.opencontainers.image.title": "TradeLens api",
+    "org.opencontainers.image.url": "https://github.com/HoesenBruce/TradeLens",
+    "org.opencontainers.image.version": "0.3.1"
+  },
+  "user": "root",
+  "root_digest": "sha256:f841b33b8de2b0b03163ce72585f47e4d04b329a94f87c97927cb5de79eb0234"
+}

@@ -1,0 +1,530 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.09kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24-alpine
+#2 ...
+
+#3 [auth] library/nginx:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/nginx:alpine
+#4 ...
+
+#5 [auth] library/node:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/nginx:alpine
+#4 DONE 4.2s
+
+#2 [internal] load metadata for docker.io/library/node:24-alpine
+#2 DONE 5.9s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 761B done
+#6 DONE 0.0s
+
+#7 [build 1/8] FROM docker.io/library/node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+#7 resolve docker.io/library/node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f 0.0s done
+#7 ...
+
+#8 [internal] load build context
+#8 transferring context: 6.99MB 0.2s done
+#8 DONE 0.2s
+
+#7 [build 1/8] FROM docker.io/library/node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+#7 sha256:633ba0417cc75a37c8c074ff0c47e75b281c63deebdb2f70f3ffa435a87ccc89 0B / 445B 0.2s
+#7 sha256:9980a296d082ba2e6df2fe57e4e752c11c16f4f6369b8ae36c42be09a3237527 0B / 1.26MB 0.2s
+#7 sha256:96c9e20187652156868199b37841dc9a00b9a0dfe8cd51ea8425764a44a04047 0B / 56.78MB 0.2s
+#7 sha256:633ba0417cc75a37c8c074ff0c47e75b281c63deebdb2f70f3ffa435a87ccc89 445B / 445B 0.3s done
+#7 sha256:9980a296d082ba2e6df2fe57e4e752c11c16f4f6369b8ae36c42be09a3237527 1.26MB / 1.26MB 1.4s done
+#7 sha256:96c9e20187652156868199b37841dc9a00b9a0dfe8cd51ea8425764a44a04047 3.15MB / 56.78MB 3.2s
+#7 sha256:96c9e20187652156868199b37841dc9a00b9a0dfe8cd51ea8425764a44a04047 6.29MB / 56.78MB 5.0s
+#7 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 resolve docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870 0.0s done
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 1.05MB / 20.11MB 7.7s
+#9 sha256:ee29503805b0e55163e7bc6e41a49bf423e4b6c64550180f16fb27a81a71df79 1.40kB / 1.40kB 3.3s done
+#9 sha256:797b5b160c63f3a8f269479fe68a285952c6c7cbccc5c34650cd978c1f650bdd 1.21kB / 1.21kB 1.7s done
+#9 sha256:b7e361d793e4539dc44c2f085c6309965e5c507195ee50e4745b055e1b44b1c6 404B / 404B 0.6s done
+#9 sha256:23f02fcd8bd95846e60a6b160c821c4323abf08c41c6d4af06f32034c7434af9 966B / 966B 0.7s done
+#9 sha256:85f32b96e514def6ee9ee9a026d2a52a4b1156452b561ea4a3948f664e3d8e33 627B / 627B 0.4s done
+#9 sha256:f5bdf65b706951c0d65a0e0ab8045021b55e9930dc294c7712b9008122fb8c02 2.10MB / 4.73MB 3.6s
+#9 sha256:f5bdf65b706951c0d65a0e0ab8045021b55e9930dc294c7712b9008122fb8c02 3.15MB / 4.73MB 3.9s
+#9 sha256:f5bdf65b706951c0d65a0e0ab8045021b55e9930dc294c7712b9008122fb8c02 4.19MB / 4.73MB 4.5s
+#9 sha256:f5bdf65b706951c0d65a0e0ab8045021b55e9930dc294c7712b9008122fb8c02 4.73MB / 4.73MB 4.8s done
+#9 extracting sha256:f5bdf65b706951c0d65a0e0ab8045021b55e9930dc294c7712b9008122fb8c02 0.1s done
+#9 extracting sha256:85f32b96e514def6ee9ee9a026d2a52a4b1156452b561ea4a3948f664e3d8e33 0.0s done
+#9 extracting sha256:23f02fcd8bd95846e60a6b160c821c4323abf08c41c6d4af06f32034c7434af9 0.0s done
+#9 extracting sha256:b7e361d793e4539dc44c2f085c6309965e5c507195ee50e4745b055e1b44b1c6 0.0s done
+#9 extracting sha256:797b5b160c63f3a8f269479fe68a285952c6c7cbccc5c34650cd978c1f650bdd done
+#9 extracting sha256:ee29503805b0e55163e7bc6e41a49bf423e4b6c64550180f16fb27a81a71df79 done
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 2.10MB / 20.11MB 11.6s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 2.10MB / 20.11MB 16.7s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 3.15MB / 20.11MB 16.8s
+#9 ...
+
+#7 [build 1/8] FROM docker.io/library/node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+#7 sha256:96c9e20187652156868199b37841dc9a00b9a0dfe8cd51ea8425764a44a04047 17.83MB / 56.78MB 17.7s
+#7 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 3.15MB / 20.11MB 21.9s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 4.19MB / 20.11MB 23.0s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 4.19MB / 20.11MB 28.1s
+#9 ...
+
+#7 [build 1/8] FROM docker.io/library/node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+#7 sha256:96c9e20187652156868199b37841dc9a00b9a0dfe8cd51ea8425764a44a04047 28.31MB / 56.78MB 28.1s
+#7 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 5.24MB / 20.11MB 33.2s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 5.24MB / 20.11MB 38.3s
+#9 ...
+
+#7 [build 1/8] FROM docker.io/library/node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+#7 sha256:96c9e20187652156868199b37841dc9a00b9a0dfe8cd51ea8425764a44a04047 38.80MB / 56.78MB 38.3s
+#7 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 5.24MB / 20.11MB 43.4s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 5.24MB / 20.11MB 48.5s
+#9 ...
+
+#7 [build 1/8] FROM docker.io/library/node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+#7 sha256:96c9e20187652156868199b37841dc9a00b9a0dfe8cd51ea8425764a44a04047 47.19MB / 56.78MB 48.6s
+#7 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 6.29MB / 20.11MB 53.1s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 6.29MB / 20.11MB 58.2s
+#9 ...
+
+#7 [build 1/8] FROM docker.io/library/node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+#7 sha256:96c9e20187652156868199b37841dc9a00b9a0dfe8cd51ea8425764a44a04047 54.53MB / 56.78MB 58.8s
+#7 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 6.29MB / 20.11MB 63.3s
+#9 ...
+
+#7 [build 1/8] FROM docker.io/library/node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+#7 sha256:96c9e20187652156868199b37841dc9a00b9a0dfe8cd51ea8425764a44a04047 56.78MB / 56.78MB 62.9s done
+#7 extracting sha256:96c9e20187652156868199b37841dc9a00b9a0dfe8cd51ea8425764a44a04047 1.5s done
+#7 DONE 64.5s
+
+#7 [build 1/8] FROM docker.io/library/node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+#7 extracting sha256:9980a296d082ba2e6df2fe57e4e752c11c16f4f6369b8ae36c42be09a3237527 0.0s done
+#7 extracting sha256:633ba0417cc75a37c8c074ff0c47e75b281c63deebdb2f70f3ffa435a87ccc89 0.0s done
+#7 DONE 64.5s
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 ...
+
+#10 [build 2/8] WORKDIR /web
+#10 DONE 0.4s
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 6.29MB / 20.11MB 68.4s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 6.29MB / 20.11MB 73.5s
+#9 ...
+
+#11 [build 3/8] RUN corepack enable && corepack prepare pnpm@11.16.0 --activate
+#11 1.038 Preparing pnpm@11.16.0 for immediate activation...
+#11 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 6.29MB / 20.11MB 78.7s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 7.34MB / 20.11MB 83.7s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 7.34MB / 20.11MB 88.8s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 7.34MB / 20.11MB 93.9s
+#9 ...
+
+#11 [build 3/8] RUN corepack enable && corepack prepare pnpm@11.16.0 --activate
+#11 DONE 33.2s
+
+#12 [build 4/8] COPY web/package.json web/pnpm-lock.yaml web/pnpm-workspace.yaml ./
+#12 DONE 0.0s
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 1.006 ? Verifying lockfile against supply-chain policies (1013 entries)...
+#13 1.015 Lockfile is up to date, resolution step is skipped
+#13 1.164 Progress: resolved 1, reused 0, downloaded 0, added 0
+#13 1.465 Packages: +823
+#13 1.465 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#13 2.170 Progress: resolved 823, reused 0, downloaded 0, added 0
+#13 3.181 Progress: resolved 823, reused 0, downloaded 1, added 0
+#13 4.202 Progress: resolved 823, reused 0, downloaded 10, added 10
+#13 5.201 Progress: resolved 823, reused 0, downloaded 47, added 50
+#13 5.882 [WARN] Tarball download average speed 14 KiB/s (size 17 KiB) is below 50 KiB/s: https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.5.tgz (GET)
+#13 5.888 [WARN] Tarball download average speed 24 KiB/s (size 30 KiB) is below 50 KiB/s: https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz (GET)
+#13 6.208 Progress: resolved 823, reused 0, downloaded 57, added 60
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 7.34MB / 20.11MB 104.6s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 7.34MB / 20.11MB 109.7s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 7.34MB / 20.11MB 114.8s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 6.733 [WARN] Tarball download average speed 1 KiB/s (size 2 KiB) is below 50 KiB/s: https://registry.npmjs.org/has-flag/-/has-flag-4.0.0.tgz (GET)
+#13 7.064 [WARN] Tarball download average speed 3 KiB/s (size 9 KiB) is below 50 KiB/s: https://registry.npmjs.org/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz (GET)
+#13 7.114 [WARN] Tarball download average speed 26 KiB/s (size 28 KiB) is below 50 KiB/s: https://registry.npmjs.org/semver/-/semver-7.8.5.tgz (GET)
+#13 7.123 [WARN] Tarball download average speed 5 KiB/s (size 11 KiB) is below 50 KiB/s: https://registry.npmjs.org/@babel/helper-compilation-targets/-/helper-compilation-targets-8.0.0.tgz (GET)
+#13 7.137 [WARN] Tarball download average speed 34 KiB/s (size 83 KiB) is below 50 KiB/s: https://registry.npmjs.org/@babel/generator/-/generator-8.0.0.tgz (GET)
+#13 7.220 Progress: resolved 823, reused 0, downloaded 82, added 85
+#13 7.994 [WARN] Tarball download average speed 47 KiB/s (size 49 KiB) is below 50 KiB/s: https://registry.npmjs.org/json5/-/json5-2.2.3.tgz (GET)
+#13 8.215 Progress: resolved 823, reused 0, downloaded 101, added 104
+#13 8.332 [WARN] Tarball download average speed 14 KiB/s (size 19 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/devtools-event-client/-/devtools-event-client-0.4.4.tgz (GET)
+#13 8.851 [WARN] Tarball download average speed 28 KiB/s (size 29 KiB) is below 50 KiB/s: https://registry.npmjs.org/prosemirror-commands/-/prosemirror-commands-1.7.2.tgz (GET)
+#13 9.217 Progress: resolved 823, reused 0, downloaded 118, added 120
+#13 9.807 [WARN] Tarball download average speed 41 KiB/s (size 162 KiB) is below 50 KiB/s: https://registry.npmjs.org/@babel/traverse/-/traverse-8.0.4.tgz (GET)
+#13 10.22 Progress: resolved 823, reused 0, downloaded 153, added 156
+#13 11.22 Progress: resolved 823, reused 0, downloaded 179, added 182
+#13 11.38 [WARN] Tarball download average speed 30 KiB/s (size 71 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tiptap/extensions/-/extensions-3.30.2.tgz (GET)
+#13 11.51 [WARN] Tarball download average speed 32 KiB/s (size 222 KiB) is below 50 KiB/s: https://registry.npmjs.org/@babel/types/-/types-8.0.4.tgz (GET)
+#13 12.22 Progress: resolved 823, reused 0, downloaded 200, added 203
+#13 13.32 Progress: resolved 823, reused 0, downloaded 213, added 215
+#13 13.35 [WARN] Tarball download average speed 1 KiB/s (size 10 KiB) is below 50 KiB/s: https://registry.npmjs.org/moo/-/moo-0.5.3.tgz (GET)
+#13 13.78 [WARN] Tarball download average speed 48 KiB/s (size 305 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.101.4.tgz (GET)
+#13 14.30 Progress: resolved 823, reused 0, downloaded 242, added 245
+#13 15.15 [WARN] Tarball download average speed 34 KiB/s (size 37 KiB) is below 50 KiB/s: https://registry.npmjs.org/d3-array/-/d3-array-3.2.4.tgz (GET)
+#13 15.30 Progress: resolved 823, reused 0, downloaded 253, added 256
+#13 15.39 [WARN] Request took 11817ms: https://registry.npmjs.org/@esbuild%2Fnetbsd-arm64
+#13 16.35 Progress: resolved 823, reused 0, downloaded 265, added 267
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 7.34MB / 20.11MB 119.8s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 7.34MB / 20.11MB 124.9s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 17.33 Progress: resolved 823, reused 0, downloaded 284, added 287
+#13 18.33 Progress: resolved 823, reused 0, downloaded 311, added 314
+#13 18.59 [WARN] Tarball download average speed 11 KiB/s (size 14 KiB) is below 50 KiB/s: https://registry.npmjs.org/ajv-formats/-/ajv-formats-2.1.1.tgz (GET)
+#13 19.34 Progress: resolved 823, reused 0, downloaded 332, added 335
+#13 20.34 Progress: resolved 823, reused 0, downloaded 352, added 355
+#13 21.16 [WARN] Tarball download average speed 47 KiB/s (size 620 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tiptap/core/-/core-3.30.2.tgz (GET)
+#13 21.35 Progress: resolved 823, reused 0, downloaded 390, added 393
+#13 21.60 [WARN] Request took 10714ms: https://registry.npmjs.org/@tailwindcss%2Foxide-darwin-x64
+#13 21.91 [WARN] Request took 10152ms: https://registry.npmjs.org/@tailwindcss%2Foxide-win32-x64-msvc
+#13 22.34 Progress: resolved 823, reused 0, downloaded 425, added 428
+#13 22.38 [WARN] Request took 12517ms: https://registry.npmjs.org/@rolldown%2Fbinding-darwin-x64
+#13 23.34 Progress: resolved 823, reused 0, downloaded 453, added 456
+#13 24.34 Progress: resolved 823, reused 0, downloaded 486, added 489
+#13 24.97 [WARN] Tarball download average speed 46 KiB/s (size 185 KiB) is below 50 KiB/s: https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.7.3.tgz (GET)
+#13 25.34 [WARN] Tarball download average speed 30 KiB/s (size 212 KiB) is below 50 KiB/s: https://registry.npmjs.org/ajv/-/ajv-8.20.0.tgz (GET)
+#13 25.34 Progress: resolved 823, reused 0, downloaded 511, added 514
+#13 25.53 [WARN] Tarball download average speed 39 KiB/s (size 224 KiB) is below 50 KiB/s: https://registry.npmjs.org/hono/-/hono-4.13.1.tgz (GET)
+#13 25.78 [WARN] Request took 16660ms: https://registry.npmjs.org/@playwright%2Ftest
+#13 25.80 [WARN] Tarball download average speed 14 KiB/s (size 45 KiB) is below 50 KiB/s: https://registry.npmjs.org/enquirer/-/enquirer-2.4.1.tgz (GET)
+#13 26.34 Progress: resolved 823, reused 0, downloaded 531, added 534
+#13 27.34 Progress: resolved 823, reused 0, downloaded 553, added 556
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 7.34MB / 20.11MB 130.0s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 131.5s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 27.96 [WARN] Tarball download average speed 21 KiB/s (size 41 KiB) is below 50 KiB/s: https://registry.npmjs.org/tsconfig-paths/-/tsconfig-paths-4.2.0.tgz (GET)
+#13 28.13 [WARN] Tarball download average speed 29 KiB/s (size 36 KiB) is below 50 KiB/s: https://registry.npmjs.org/prosemirror-markdown/-/prosemirror-markdown-1.13.5.tgz (GET)
+#13 28.34 Progress: resolved 823, reused 0, downloaded 569, added 572
+#13 28.57 [WARN] Tarball download average speed 46 KiB/s (size 114 KiB) is below 50 KiB/s: https://registry.npmjs.org/minimatch/-/minimatch-10.2.6.tgz (GET)
+#13 29.21 [WARN] Tarball download average speed 27 KiB/s (size 99 KiB) is below 50 KiB/s: https://registry.npmjs.org/ast-types/-/ast-types-0.16.1.tgz (GET)
+#13 29.36 Progress: resolved 823, reused 0, downloaded 585, added 587
+#13 29.62 [WARN] Tarball download average speed 35 KiB/s (size 50 KiB) is below 50 KiB/s: https://registry.npmjs.org/source-map/-/source-map-0.7.6.tgz (GET)
+#13 30.35 Progress: resolved 823, reused 0, downloaded 596, added 599
+#13 30.80 [WARN] Tarball download average speed 33 KiB/s (size 50 KiB) is below 50 KiB/s: https://registry.npmjs.org/source-map/-/source-map-0.8.0.tgz (GET)
+#13 31.35 Progress: resolved 823, reused 0, downloaded 607, added 610
+#13 32.11 [WARN] Tarball download average speed 44 KiB/s (size 84 KiB) is below 50 KiB/s: https://registry.npmjs.org/lightningcss/-/lightningcss-1.32.0.tgz (GET)
+#13 32.35 Progress: resolved 823, reused 0, downloaded 615, added 618
+#13 33.11 [WARN] Tarball download average speed 20 KiB/s (size 85 KiB) is below 50 KiB/s: https://registry.npmjs.org/lightningcss/-/lightningcss-1.33.0.tgz (GET)
+#13 33.36 Progress: resolved 823, reused 0, downloaded 626, added 629
+#13 33.43 [WARN] Tarball download average speed 36 KiB/s (size 144 KiB) is below 50 KiB/s: https://registry.npmjs.org/type-fest/-/type-fest-5.8.0.tgz (GET)
+#13 34.25 [WARN] Tarball download average speed 22 KiB/s (size 81 KiB) is below 50 KiB/s: https://registry.npmjs.org/minipass/-/minipass-7.1.3.tgz (GET)
+#13 34.35 Progress: resolved 823, reused 0, downloaded 639, added 642
+#13 35.02 [WARN] Tarball download average speed 45 KiB/s (size 144 KiB) is below 50 KiB/s: https://registry.npmjs.org/dayjs/-/dayjs-1.11.21.tgz (GET)
+#13 35.27 [WARN] Tarball download average speed 46 KiB/s (size 61 KiB) is below 50 KiB/s: https://registry.npmjs.org/@testing-library/jest-dom/-/jest-dom-7.0.1.tgz (GET)
+#13 35.35 Progress: resolved 823, reused 0, downloaded 664, added 667
+#13 36.48 [WARN] Tarball download average speed 49 KiB/s (size 356 KiB) is below 50 KiB/s: https://registry.npmjs.org/glob/-/glob-13.0.6.tgz (GET)
+#13 36.52 Progress: resolved 823, reused 0, downloaded 674, added 677
+#13 36.55 [WARN] Tarball download average speed 20 KiB/s (size 428 KiB) is below 50 KiB/s: https://registry.npmjs.org/@babel/parser/-/parser-7.29.8.tgz (GET)
+#13 37.55 Progress: resolved 823, reused 0, downloaded 692, added 694
+#13 37.93 [WARN] Tarball download average speed 39 KiB/s (size 54 KiB) is below 50 KiB/s: https://registry.npmjs.org/@vitest/mocker/-/mocker-4.1.10.tgz (GET)
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 136.6s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 141.7s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 38.71 Progress: resolved 823, reused 0, downloaded 721, added 724
+#13 39.82 Progress: resolved 823, reused 0, downloaded 737, added 740
+#13 40.81 Progress: resolved 823, reused 0, downloaded 748, added 751
+#13 40.82 [WARN] Request took 13316ms: https://registry.npmjs.org/esbuild
+#13 41.41 [WARN] Tarball download average speed 42 KiB/s (size 157 KiB) is below 50 KiB/s: https://registry.npmjs.org/pngjs/-/pngjs-7.0.0.tgz (GET)
+#13 41.81 Progress: resolved 823, reused 0, downloaded 755, added 758
+#13 42.30 [WARN] Tarball download average speed 46 KiB/s (size 47 KiB) is below 50 KiB/s: https://registry.npmjs.org/@vitest/runner/-/runner-4.1.10.tgz (GET)
+#13 42.81 Progress: resolved 823, reused 0, downloaded 762, added 765
+#13 43.81 Progress: resolved 823, reused 0, downloaded 768, added 771
+#13 44.81 Progress: resolved 823, reused 0, downloaded 776, added 779
+#13 45.18 [WARN] Tarball download average speed 37 KiB/s (size 44 KiB) is below 50 KiB/s: https://registry.npmjs.org/@speed-highlight/core/-/core-1.2.24.tgz (GET)
+#13 45.81 Progress: resolved 823, reused 0, downloaded 783, added 786
+#13 46.47 [WARN] Tarball download average speed 43 KiB/s (size 50 KiB) is below 50 KiB/s: https://registry.npmjs.org/d3-shape/-/d3-shape-3.2.0.tgz (GET)
+#13 46.82 Progress: resolved 823, reused 0, downloaded 788, added 791
+#13 47.82 Progress: resolved 823, reused 0, downloaded 789, added 792
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 146.9s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 152.0s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 157.1s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 49.54 [WARN] Tarball download average speed 33 KiB/s (size 464 KiB) is below 50 KiB/s: https://registry.npmjs.org/vitest/-/vitest-4.1.11.tgz (GET)
+#13 49.57 Progress: resolved 823, reused 0, downloaded 790, added 792
+#13 50.57 Progress: resolved 823, reused 0, downloaded 790, added 793
+#13 50.97 [WARN] Request took 10321ms: https://registry.npmjs.org/recharts
+#13 51.50 [WARN] Request took 11130ms: https://registry.npmjs.org/react
+#13 51.60 [WARN] Tarball download average speed 48 KiB/s (size 1012 KiB) is below 50 KiB/s: https://registry.npmjs.org/@yuku-parser/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.5.48.tgz (GET)
+#13 51.63 Progress: resolved 823, reused 0, downloaded 791, added 793
+#13 52.18 [WARN] Tarball download average speed 28 KiB/s (size 378 KiB) is below 50 KiB/s: https://registry.npmjs.org/@asamuzakjp/css-color/-/css-color-3.2.0.tgz (GET)
+#13 52.23 [WARN] Tarball download average speed 34 KiB/s (size 428 KiB) is below 50 KiB/s: https://registry.npmjs.org/@babel/parser/-/parser-7.29.7.tgz (GET)
+#13 52.63 Progress: resolved 823, reused 0, downloaded 794, added 797
+#13 58.13 [WARN] Request took 11024ms: https://registry.npmjs.org/tldts-core
+#13 59.10 [WARN] Request took 10862ms: https://registry.npmjs.org/use-sync-external-store
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 162.1s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 167.3s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 60.48 Progress: resolved 823, reused 0, downloaded 795, added 797
+#13 61.48 Progress: resolved 823, reused 0, downloaded 795, added 798
+#13 61.56 [WARN] GET https://registry.npmjs.org/@base-ui/react/-/react-1.7.0.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 61.91 [WARN] Request took 14704ms: https://registry.npmjs.org/tldts
+#13 62.02 [WARN] Tarball download average speed 29 KiB/s (size 1012 KiB) is below 50 KiB/s: https://registry.npmjs.org/@voidzero-dev/vite-plus-core/-/vite-plus-core-0.2.9.tgz (GET)
+#13 62.48 Progress: resolved 823, reused 0, downloaded 796, added 799
+#13 63.97 [WARN] Tarball download average speed 36 KiB/s (size 1277 KiB) is below 50 KiB/s: https://registry.npmjs.org/@yuku-codegen/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.5.48.tgz (GET)
+#13 64.00 Progress: resolved 823, reused 0, downloaded 797, added 799
+#13 64.04 [WARN] Request took 23776ms: https://registry.npmjs.org/react-is
+#13 65.00 Progress: resolved 823, reused 0, downloaded 797, added 800
+#13 68.47 [WARN] Request took 22072ms: https://registry.npmjs.org/tailwindcss
+#13 68.57 [WARN] Tarball download average speed 18 KiB/s (size 741 KiB) is below 50 KiB/s: https://registry.npmjs.org/zod/-/zod-4.4.3.tgz (GET)
+#13 68.63 Progress: resolved 823, reused 0, downloaded 798, added 800
+#13 69.63 Progress: resolved 823, reused 0, downloaded 798, added 801
+#13 70.36 [WARN] GET https://registry.npmjs.org/recharts/-/recharts-3.10.1.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 172.3s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 177.5s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 72.84 [WARN] Request took 25033ms: https://registry.npmjs.org/typescript
+#13 73.05 Progress: resolved 823, reused 0, downloaded 799, added 801
+#13 74.05 Progress: resolved 823, reused 0, downloaded 801, added 804
+#13 75.05 Progress: resolved 823, reused 0, downloaded 802, added 805
+#13 76.05 Progress: resolved 823, reused 0, downloaded 803, added 806
+#13 77.14 [WARN] Request took 28015ms: https://registry.npmjs.org/wrangler
+#13 77.42 [WARN] Request took 18126ms: https://registry.npmjs.org/use-sync-external-store
+#13 77.67 Progress: resolved 823, reused 0, downloaded 804, added 806
+#13 78.68 Progress: resolved 823, reused 0, downloaded 804, added 807
+#13 79.68 Progress: resolved 823, reused 0, downloaded 805, added 808
+#13 80.68 Progress: resolved 823, reused 0, downloaded 806, added 809
+#13 81.16 [WARN] Request took 40895ms: https://registry.npmjs.org/react-dom
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 182.6s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 187.7s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 192.8s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 84.81 Progress: resolved 823, reused 0, downloaded 807, added 809
+#13 85.30 [WARN] GET https://registry.npmjs.org/@esbuild/linux-arm64/-/linux-arm64-0.28.1.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 85.58 [WARN] GET https://registry.npmjs.org/@rolldown/binding-linux-arm64-musl/-/binding-linux-arm64-musl-1.2.0.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 85.82 Progress: resolved 823, reused 0, downloaded 807, added 810
+#13 86.25 [WARN] GET https://registry.npmjs.org/playwright/-/playwright-1.62.1.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 86.80 [WARN] GET https://registry.npmjs.org/electron-to-chromium error (23). Will retry in 10 seconds. 2 retries left.
+#13 87.42 [WARN] GET https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.32.0.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 88.00 [WARN] GET https://registry.npmjs.org/@voidzero-dev/vite-plus-linux-arm64-musl/-/vite-plus-linux-arm64-musl-0.2.9.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 88.90 [WARN] Request took 24646ms: https://registry.npmjs.org/react-is
+#13 89.74 [WARN] Tarball download average speed 13 KiB/s (size 659 KiB) is below 50 KiB/s: https://registry.npmjs.org/babel-plugin-react-compiler/-/babel-plugin-react-compiler-1.0.0.tgz (GET)
+#13 89.76 Progress: resolved 823, reused 0, downloaded 808, added 810
+#13 90.76 Progress: resolved 823, reused 0, downloaded 808, added 811
+#13 92.21 [WARN] Tarball download average speed 24 KiB/s (size 1240 KiB) is below 50 KiB/s: https://registry.npmjs.org/workerd/-/workerd-1.20260815.1.tgz (GET)
+#13 92.27 Progress: resolved 823, reused 0, downloaded 809, added 811
+#13 93.27 Progress: resolved 823, reused 0, downloaded 810, added 813
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 8.39MB / 20.11MB 197.9s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 9.44MB / 20.11MB 202.4s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 97.96 [WARN] GET https://unofficial-builds.nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-arm64-musl.tar.gz error (23). Will retry in 10 seconds. 2 retries left.
+#13 98.29 [WARN] GET https://registry.npmjs.org/@oxfmt/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.62.0.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 98.33 [WARN] GET https://registry.npmjs.org/@oxlint-tsgolint/linux-arm64/-/linux-arm64-7.0.2001.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 98.42 [WARN] GET https://registry.npmjs.org/playwright-core error (23). Will retry in 10 seconds. 2 retries left.
+#13 98.55 [WARN] GET https://registry.npmjs.org/@cloudflare/workerd-linux-arm64/-/workerd-linux-arm64-1.20260815.1.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 98.61 [WARN] GET https://registry.npmjs.org/playwright error (23). Will retry in 10 seconds. 2 retries left.
+#13 98.79 [WARN] Request took 45526ms: https://registry.npmjs.org/scheduler
+#13 99.27 [WARN] GET https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.3.1.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 105.5 Progress: resolved 823, reused 0, downloaded 811, added 813
+#13 106.5 Progress: resolved 823, reused 0, downloaded 811, added 814
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 9.44MB / 20.11MB 207.5s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 9.44MB / 20.11MB 212.6s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 118.1 Progress: resolved 823, reused 0, downloaded 812, added 814
+#13 119.1 Progress: resolved 823, reused 0, downloaded 813, added 816
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 9.44MB / 20.11MB 221.4s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 123.7 Progress: resolved 823, reused 0, downloaded 814, added 816
+#13 124.7 Progress: resolved 823, reused 0, downloaded 814, added 817
+#13 125.3 [WARN] Request took 16662ms: https://registry.npmjs.org/playwright
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 9.44MB / 20.11MB 227.1s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 9.44MB / 20.11MB 232.2s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 9.44MB / 20.11MB 237.3s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 140.6 Progress: resolved 823, reused 0, downloaded 815, added 817
+#13 141.6 Progress: resolved 823, reused 0, downloaded 815, added 818
+#13 144.1 Progress: resolved 823, reused 0, downloaded 816, added 818
+#13 145.1 Progress: resolved 823, reused 0, downloaded 816, added 819
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 9.44MB / 20.11MB 244.1s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 9.44MB / 20.11MB 249.2s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 9.44MB / 20.11MB 254.3s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 156.8 [WARN] GET https://registry.npmjs.org/electron-to-chromium error (23). Will retry in 1 minute. 1 retries left.
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 10.49MB / 20.11MB 260.1s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 10.49MB / 20.11MB 265.2s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 168.0 [WARN] GET https://unofficial-builds.nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-arm64-musl.tar.gz error (23). Will retry in 1 minute. 1 retries left.
+#13 168.3 [WARN] GET https://registry.npmjs.org/@oxlint-tsgolint/linux-arm64/-/linux-arm64-7.0.2001.tgz error (23). Will retry in 1 minute. 1 retries left.
+#13 168.5 [WARN] GET https://registry.npmjs.org/@cloudflare/workerd-linux-arm64/-/workerd-linux-arm64-1.20260815.1.tgz error (23). Will retry in 1 minute. 1 retries left.
+#13 169.3 [WARN] GET https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.3.1.tgz error (23). Will retry in 1 minute. 1 retries left.
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 10.49MB / 20.11MB 271.5s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 10.49MB / 20.11MB 276.6s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 10.49MB / 20.11MB 281.7s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 10.49MB / 20.11MB 286.8s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 10.49MB / 20.11MB 291.9s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 10.49MB / 20.11MB 297.0s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 302.0s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 307.1s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 312.2s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 317.3s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 221.3 ✓ Lockfile passes supply-chain policies (1013 entries in 3m 40.2s)
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 324.5s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 329.6s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 334.7s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 239.3 Progress: resolved 823, reused 0, downloaded 817, added 819
+#13 240.3 Progress: resolved 823, reused 0, downloaded 817, added 820
+#13 243.1 Progress: resolved 823, reused 0, downloaded 818, added 820
+#13 244.1 Progress: resolved 823, reused 0, downloaded 818, added 821
+#13 ...
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 342.9s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 348.0s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 353.1s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 358.2s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 363.3s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 11.53MB / 20.11MB 368.4s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 12.58MB / 20.11MB 369.5s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 12.58MB / 20.11MB 374.6s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 12.58MB / 20.11MB 379.7s
+#9 sha256:e6d3b58473ab2d8ca085c36f4271fcd07a2ef1dbab86e36cc46b3b5e6896dc91 12.58MB / 20.11MB 384.8s
+#9 ...
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 288.0 [23] The operation was aborted due to timeout
+#13 288.0
+#13 288.0 TimeoutError: The operation was aborted due to timeout
+#13 288.0     at new DOMException (node:internal/per_context/domexception:76:18)
+#13 288.0     at Timeout._onTimeout (node:internal/abort_controller:210:9)
+#13 288.0     at listOnTimeout (node:internal/timers:685:17)
+#13 288.0     at process.processTimers (node:internal/timers:618:7)
+#13 ERROR: process "/bin/sh -c pnpm install --frozen-lockfile" did not complete successfully: exit code: 1
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#9 DONE 386.5s
+
+#14 [stage-1 2/3] COPY web/nginx.conf /etc/nginx/conf.d/default.conf
+#14 CANCELED
+------
+ > [build 5/8] RUN pnpm install --frozen-lockfile:
+240.3 Progress: resolved 823, reused 0, downloaded 817, added 820
+243.1 Progress: resolved 823, reused 0, downloaded 818, added 820
+244.1 Progress: resolved 823, reused 0, downloaded 818, added 821
+288.0 [23] The operation was aborted due to timeout
+288.0
+288.0 TimeoutError: The operation was aborted due to timeout
+288.0     at new DOMException (node:internal/per_context/domexception:76:18)
+288.0     at Timeout._onTimeout (node:internal/abort_controller:210:9)
+288.0     at listOnTimeout (node:internal/timers:685:17)
+288.0     at process.processTimers (node:internal/timers:618:7)
+------
+Dockerfile:16
+--------------------
+  14 |     RUN corepack enable && corepack prepare pnpm@11.16.0 --activate
+  15 |     COPY web/package.json web/pnpm-lock.yaml web/pnpm-workspace.yaml ./
+  16 | >>> RUN pnpm install --frozen-lockfile
+  17 |     COPY web/ ./
+  18 |     COPY VERSION /VERSION
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c pnpm install --frozen-lockfile" did not complete successfully: exit code: 1

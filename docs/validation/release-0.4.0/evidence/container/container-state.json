@@ -1,0 +1,17 @@
+{
+  "project": "tradelens-phase-a-040-qa",
+  "compose_file": "/private/tmp/phase-a-040-container-evidence/runtime/compose.json",
+  "web": "http://127.0.0.1:18340",
+  "api": "http://127.0.0.1:18340/api/v1",
+  "source_sha": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+  "network": "API/fixture internal private; Web adds frontend with loopback18340",
+  "fresh_database": true,
+  "health_and_spa_routes": "PASS",
+  "data_volume": "tradelens-phase-a-040-qa_qa_data",
+  "sqlite_operations": "within Docker VM only",
+  "accepted_data_mount": {
+    "type": "volume",
+    "name": "tradelens-phase-a-040-qa_qa_data",
+    "target": "/data"
+  }
+}

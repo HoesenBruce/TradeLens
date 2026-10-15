@@ -1,0 +1,52 @@
+[WebServer] (node:61302) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 35 tests using 1 worker
+
+(node:61303) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [production-session] › e2e/session-isolation.spec.ts:127:3 › owner → member → owner online and offline 1 (3.9s)
+  ✓   2 [production-session] › e2e/session-isolation.spec.ts:198:3 › delayed owner request cannot populate member form 1 (1.8s)
+  ✓   3 [production-session] › e2e/session-isolation.spec.ts:127:3 › owner → member → owner online and offline 2 (3.4s)
+  ✓   4 [production-session] › e2e/session-isolation.spec.ts:198:3 › delayed owner request cannot populate member form 2 (1.6s)
+  ✓   5 [production-session] › e2e/session-isolation.spec.ts:127:3 › owner → member → owner online and offline 3 (3.4s)
+  ✓   6 [production-session] › e2e/session-isolation.spec.ts:198:3 › delayed owner request cannot populate member form 3 (1.7s)
+  ✓   7 [production-session] › e2e/session-isolation.spec.ts:232:1 › owner replacement and persisted model cache cannot restore previous form drafts (1.6s)
+  ✓   8 [production-session] › e2e/session-isolation.spec.ts:290:3 › production unavailable states at narrow viewport: en (720ms)
+  ✓   9 [production-session] › e2e/session-isolation.spec.ts:290:3 › production unavailable states at narrow viewport: zh-CN (714ms)
+  ✓  10 [production-session] › e2e/session-isolation.spec.ts:290:3 › production unavailable states at narrow viewport: zh-HK (719ms)
+  ✓  11 [production-session] › e2e/session-isolation.spec.ts:290:3 › production unavailable states at narrow viewport: ja (704ms)
+  ✓  12 [production-session] › e2e/session-isolation.spec.ts:290:3 › production unavailable states at narrow viewport: ko (755ms)
+  ✓  13 [production-session] › e2e/session-isolation.spec.ts:323:1 › worker refuses authenticated API replay for both the same and another bearer session (804ms)
+  ✓  14 [production-session] › e2e/session-isolation.spec.ts:360:1 › manual News cancel, re-entry, save and readback remain available (780ms)
+(node:61508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 [prefixed-owner-member] › e2e/session-isolation.spec.ts:127:3 › owner → member → owner online and offline 1 (4.0s)
+  ✓  16 [prefixed-owner-member] › e2e/session-isolation.spec.ts:127:3 › owner → member → owner online and offline 2 (4.4s)
+  ✓  17 [prefixed-owner-member] › e2e/session-isolation.spec.ts:127:3 › owner → member → owner online and offline 3 (4.6s)
+(node:61663) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  18 [worker-security] › e2e/coach-isolation.spec.ts:90:1 › security worker automatically replaces old caching worker and purges legacy bytes (1.5s)
+  ✓  19 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /api/v1 scope / (287ms)
+  ✓  20 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /gateway/api/v1 scope / (240ms)
+  ✓  21 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /tenant/backend scope / (382ms)
+  ✓  22 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /gateway/api/v1 scope /app/ (259ms)
+  ✓  23 [worker-security] › e2e/worker-api-isolation.spec.ts:157:1 › PREFIX_CACHE_MIGRATION (2.0s)
+(node:61731) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  24 [worker-security] › e2e/coach-isolation.spec.ts:90:1 › security worker automatically replaces old caching worker and purges legacy bytes (1.4s)
+  ✓  25 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /api/v1 scope / (342ms)
+  ✓  26 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /gateway/api/v1 scope / (280ms)
+  ✓  27 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /tenant/backend scope / (371ms)
+  ✓  28 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /gateway/api/v1 scope /app/ (338ms)
+  ✓  29 [worker-security] › e2e/worker-api-isolation.spec.ts:157:1 › PREFIX_CACHE_MIGRATION (2.1s)
+(node:61771) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  30 [worker-security] › e2e/coach-isolation.spec.ts:90:1 › security worker automatically replaces old caching worker and purges legacy bytes (1.4s)
+  ✓  31 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /api/v1 scope / (340ms)
+  ✓  32 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /gateway/api/v1 scope / (293ms)
+  ✓  33 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /tenant/backend scope / (481ms)
+  ✓  34 [worker-security] › e2e/worker-api-isolation.spec.ts:119:3 › PREFIX_BEARER_X3 /gateway/api/v1 scope /app/ (260ms)
+  ✓  35 [worker-security] › e2e/worker-api-isolation.spec.ts:157:1 › PREFIX_CACHE_MIGRATION (2.0s)
+
+  35 passed (56.0s)

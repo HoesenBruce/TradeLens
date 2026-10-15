@@ -1,0 +1,604 @@
+{
+  "checked_at": "2026-10-15T08:23:56.585857+00:00",
+  "repository": "HoesenBruce/TradeLens",
+  "refs": {
+    "main": "3d383d892698fd746b112eb7c64d9431d29f1f9a",
+    "pr314": "6d65405836d7961ddc60064f527b9a213c96eba0",
+    "pr311": "d1492f662c6c99bf1e337275d22fc71154e50c91",
+    "pr293": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa"
+  },
+  "source_checks": {
+    "refs": {
+      "main": "3d383d892698fd746b112eb7c64d9431d29f1f9a",
+      "pr314": "6d65405836d7961ddc60064f527b9a213c96eba0",
+      "pr311": "d1492f662c6c99bf1e337275d22fc71154e50c91",
+      "pr293": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa"
+    },
+    "changes": {
+      "pr314": [
+        "web/Dockerfile"
+      ],
+      "pr311": [
+        "CONTRIBUTING.md",
+        "docs/release.md",
+        "docs/validation/release-0.4.0/container-acceptance.md",
+        "docs/validation/release-0.4.0/evidence/README.md",
+        "docs/validation/release-0.4.0/evidence/container/amd64-smoke.json",
+        "docs/validation/release-0.4.0/evidence/container/amd64-smoke.log",
+        "docs/validation/release-0.4.0/evidence/container/api-amd64-build.log",
+        "docs/validation/release-0.4.0/evidence/container/api-arm64-build.log",
+        "docs/validation/release-0.4.0/evidence/container/api-config-negative.json",
+        "docs/validation/release-0.4.0/evidence/container/api-insecure-secret.log",
+        "docs/validation/release-0.4.0/evidence/container/arm64-backup-restart-restore.json",
+        "docs/validation/release-0.4.0/evidence/container/arm64-backup-restart-restore.log",
+        "docs/validation/release-0.4.0/evidence/container/arm64-container-e2e.log",
+        "docs/validation/release-0.4.0/evidence/container/arm64-preflight.json",
+        "docs/validation/release-0.4.0/evidence/container/container-e2e.config.ts",
+        "docs/validation/release-0.4.0/evidence/container/container-gates.json",
+        "docs/validation/release-0.4.0/evidence/container/container-preflight.log",
+        "docs/validation/release-0.4.0/evidence/container/container-state.json",
+        "docs/validation/release-0.4.0/evidence/container/image-identities.json",
+        "docs/validation/release-0.4.0/evidence/container/multi-currency-fixture-limit.json",
+        "docs/validation/release-0.4.0/evidence/container/owner-setting-restart.json",
+        "docs/validation/release-0.4.0/evidence/container/owner-setting-restart.log",
+        "docs/validation/release-0.4.0/evidence/container/pr-314-ci.json",
+        "docs/validation/release-0.4.0/evidence/container/quantities-partial.png",
+        "docs/validation/release-0.4.0/evidence/container/raw-log-hashes.json",
+        "docs/validation/release-0.4.0/evidence/container/review-zh.png",
+        "docs/validation/release-0.4.0/evidence/container/snapshot-permissions.json",
+        "docs/validation/release-0.4.0/evidence/container/source-identity.json",
+        "docs/validation/release-0.4.0/evidence/container/web-amd64-build.log",
+        "docs/validation/release-0.4.0/evidence/container/web-arm64-build.log",
+        "docs/validation/release-0.4.0/evidence/container/web-cross-architecture-assets.json",
+        "docs/validation/release-0.4.0/evidence/demo-live-system-info.json",
+        "docs/validation/release-0.4.0/evidence/demo-runtime-tests.log",
+        "docs/validation/release-0.4.0/evidence/deploy-tests.log",
+        "docs/validation/release-0.4.0/evidence/docker-api-build.log",
+        "docs/validation/release-0.4.0/evidence/docker-metadata-tests.log",
+        "docs/validation/release-0.4.0/evidence/docker-web-build-retry.log",
+        "docs/validation/release-0.4.0/evidence/docker-web-build.log",
+        "docs/validation/release-0.4.0/evidence/environments.json",
+        "docs/validation/release-0.4.0/evidence/ghcr-anonymous.json",
+        "docs/validation/release-0.4.0/evidence/ghcr-api-stable-config.json",
+        "docs/validation/release-0.4.0/evidence/ghcr-web-stable-config.json",
+        "docs/validation/release-0.4.0/evidence/go-summary.json",
+        "docs/validation/release-0.4.0/evidence/independent-security-tests.log",
+        "docs/validation/release-0.4.0/evidence/integration-e2e.log",
+        "docs/validation/release-0.4.0/evidence/local-evidence-hashes.json",
+        "docs/validation/release-0.4.0/evidence/open-issues.json",
+        "docs/validation/release-0.4.0/evidence/open-prs.json",
+        "docs/validation/release-0.4.0/evidence/postgres-race.stderr",
+        "docs/validation/release-0.4.0/evidence/postgres-reused-db-failure.log",
+        "docs/validation/release-0.4.0/evidence/pr-293.json",
+        "docs/validation/release-0.4.0/evidence/quantities-partial.png",
+        "docs/validation/release-0.4.0/evidence/release-tests.log",
+        "docs/validation/release-0.4.0/evidence/render-previous-deploy-record.json",
+        "docs/validation/release-0.4.0/evidence/review-zh.png",
+        "docs/validation/release-0.4.0/evidence/ruleset.json",
+        "docs/validation/release-0.4.0/evidence/sbi-review.png",
+        "docs/validation/release-0.4.0/evidence/security-35.log",
+        "docs/validation/release-0.4.0/evidence/sqlite-upgrade.log",
+        "docs/validation/release-0.4.0/evidence/variables.json",
+        "docs/validation/release-0.4.0/evidence/workflows.json",
+        "docs/validation/release-0.4.0/independent-security-review.md",
+        "docs/validation/release-0.4.0/nas-operator-checklist.md",
+        "docs/validation/release-0.4.0/node-runtime-and-container-review.md",
+        "docs/validation/release-0.4.0/phase-a-acceptance.md"
+      ],
+      "pr293": [
+        ".release-please-manifest.json",
+        "CHANGELOG.md",
+        "VERSION",
+        "mobile/app.json",
+        "mobile/package.json",
+        "web/package.json"
+      ]
+    },
+    "versions": {
+      "VERSION": "0.4.0",
+      "manifest": "0.4.0",
+      "web": "0.4.0",
+      "mobile": "0.4.0",
+      "expo": "0.4.0"
+    },
+    "314_311_paths_disjoint": true,
+    "pin_sha256": "4ad85c4a67d2e6fdb12568265d1b70c04f43d2a98fd8c03342b9ec2e6720d680"
+  },
+  "provenance": {
+    "raw_hashes_checked": 38,
+    "missing": [],
+    "mismatches": [],
+    "four_build_logs_whitespace_equivalent": true,
+    "reproduction_scope": "archived commands and original versioned E2E; ad-hoc full runtime fixture not a portable checked-in harness"
+  },
+  "security_recheck": {
+    "source_sha": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+    "status": "PASS_REVIEWED_SCOPE",
+    "top_level_pass_count": 14,
+    "tests": [
+      "TestSafePreservesIdentityWithoutDiagnostics",
+      "TestClientSafeErrorIdentity",
+      "TestClientDiagnosticFailureMatrix",
+      "TestProviderNotificationFailureMatrix",
+      "TestLegacyEntryPointsFailClosed",
+      "TestLegacyPersistenceCannotBypassAvailability",
+      "TestCoachIsolationAcrossConfigurationAndRestart",
+      "TestCoachNewInstallationAndEnvironmentCannotEnableLegacy",
+      "TestCrossUserIsolationProviderConfigurationDiagnostics",
+      "TestCrossUserIsolationAsyncProviderErrors",
+      "TestCrossUserIsolationStoredProviderErrors",
+      "TestCrossUserIsolationProviderFailureMatrix",
+      "TestReviewAcceptanceNarrowPatchPreservesRows",
+      "TestReviewAcceptanceIsolationAndAlertPersistence"
+    ],
+    "raw_log_sha256": "b4284245a110488bc64cc816bdf8219700946b525a42918b6f0425a155186410",
+    "full_log_local_only": "/private/tmp/tradelens-rc-finalization-20261015/security-recheck.log",
+    "full_suite_rerun": false
+  },
+  "images_reinspected_by_id": [
+    {
+      "id": "sha256:b3e2bb12ffc650c067b09822759b5b65d374a46b30b69689cc2d1f5cfd7690e5",
+      "tags": [
+        "tradelens-phase-a-api:e23ccbc-arm64"
+      ],
+      "os": "linux",
+      "architecture": "arm64"
+    },
+    {
+      "id": "sha256:3276c49e4274d9d971f3e1a6e797ec054ff50d912f3b9c6bef4f316a148e3583",
+      "tags": [
+        "tradelens-phase-a-web:e23ccbc-node2418"
+      ],
+      "os": "linux",
+      "architecture": "arm64"
+    },
+    {
+      "id": "sha256:13061bd99b222f6b29274f13adae47682b220a5e5998986e9833bd951eef9446",
+      "tags": [
+        "tradelens-phase-a-api:e23ccbc-amd64"
+      ],
+      "os": "linux",
+      "architecture": "amd64"
+    },
+    {
+      "id": "sha256:5d4a57441e854f9b1710e7fd414357cd6bb5b555545c51a78abb5087988b6d96",
+      "tags": [
+        "tradelens-phase-a-web:e23ccbc-node2418-amd64"
+      ],
+      "os": "linux",
+      "architecture": "amd64"
+    }
+  ],
+  "unverified": {
+    "refreshed_release_candidate": "NOT_VERIFIED",
+    "v040_official_ghcr_digest": "NOT_VERIFIED",
+    "v040_anonymous_full_pull": "NOT_VERIFIED",
+    "native_amd64_smoke": "NOT_VERIFIED",
+    "nas_real_database_copy_upgrade": "NOT_VERIFIED",
+    "nas_live_upgrade": "NOT_VERIFIED",
+    "render_v040_candidate": "NOT_VERIFIED",
+    "real_vendor_end_to_end": "NOT_VERIFIED",
+    "container_real_fx_mixed_currency": "NOT_VERIFIED",
+    "mobile_e2e": "NOT_VERIFIED",
+    "portable_full_container_reproduction": "NOT_VERIFIED"
+  },
+  "approvals": {
+    "merge_314": false,
+    "merge_311": false,
+    "merge_293": false,
+    "release_tag": false,
+    "ghcr_publish": false,
+    "nas_deploy": false,
+    "render_deploy": false
+  },
+  "review_note": "Stored independent review reports PASS; GitHub reviews arrays empty at baseline; no formal approval claimed",
+  "pr314": {
+    "headRefOid": "6d65405836d7961ddc60064f527b9a213c96eba0",
+    "baseRefOid": "3d383d892698fd746b112eb7c64d9431d29f1f9a",
+    "state": "OPEN",
+    "isDraft": true,
+    "mergeable": "MERGEABLE",
+    "mergeStateStatus": "CLEAN",
+    "reviewDecision": "",
+    "reviews": [],
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T07:55:51Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38701555142/job/116310705273",
+        "name": "Test API",
+        "startedAt": "2026-10-15T07:51:15Z",
+        "status": "COMPLETED",
+        "workflowName": "API CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T07:54:25Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38701555090/job/116310705326",
+        "name": "Chromium security E2E",
+        "startedAt": "2026-10-15T07:51:16Z",
+        "status": "COMPLETED",
+        "workflowName": "Browser security CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T07:51:21Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38701554991/job/116310704776",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T07:51:15Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T08:08:56Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38703593359/job/116317422188",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T08:08:52Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T07:51:22Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38701555275/job/116310707486",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T07:51:16Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T08:08:56Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38703593920/job/116317425071",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T08:08:52Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T07:53:58Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38701555191/job/116310705260",
+        "name": "Test web",
+        "startedAt": "2026-10-15T07:51:16Z",
+        "status": "COMPLETED",
+        "workflowName": "Web CI"
+      }
+    ]
+  },
+  "pr311": {
+    "headRefOid": "d1492f662c6c99bf1e337275d22fc71154e50c91",
+    "baseRefOid": "3d383d892698fd746b112eb7c64d9431d29f1f9a",
+    "state": "OPEN",
+    "isDraft": true,
+    "mergeable": "MERGEABLE",
+    "mergeStateStatus": "CLEAN",
+    "reviewDecision": "",
+    "reviews": [],
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T08:14:43Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38703762074/job/116317973387",
+        "name": "Test API",
+        "startedAt": "2026-10-15T08:10:18Z",
+        "status": "COMPLETED",
+        "workflowName": "API CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T08:14:03Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38703762424/job/116317974088",
+        "name": "Chromium security E2E",
+        "startedAt": "2026-10-15T08:10:18Z",
+        "status": "COMPLETED",
+        "workflowName": "Browser security CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T08:10:21Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38703762341/job/116317973471",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T08:10:18Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T08:13:23Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38704113089/job/116319140113",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T08:13:20Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T08:10:20Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38703758607/job/116317963680",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T08:10:16Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T08:13:23Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38704114276/job/116319146271",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T08:13:20Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T08:13:24Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38703762357/job/116317974180",
+        "name": "Test web",
+        "startedAt": "2026-10-15T08:10:18Z",
+        "status": "COMPLETED",
+        "workflowName": "Web CI"
+      }
+    ],
+    "snapshot_note": "Baseline d1492f66 before this documentation-only finalization supplement; latest PR head must be checked separately."
+  },
+  "pr293": {
+    "headRefOid": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+    "baseRefOid": "3d383d892698fd746b112eb7c64d9431d29f1f9a",
+    "state": "OPEN",
+    "isDraft": false,
+    "mergeable": "MERGEABLE",
+    "mergeStateStatus": "CLEAN",
+    "reviewDecision": "",
+    "reviews": [],
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T06:25:02Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38691833451/job/116279269996",
+        "name": "Test API",
+        "startedAt": "2026-10-15T06:20:37Z",
+        "status": "COMPLETED",
+        "workflowName": "API CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T06:24:42Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38691833493/job/116279269983",
+        "name": "Chromium security E2E",
+        "startedAt": "2026-10-15T06:20:37Z",
+        "status": "COMPLETED",
+        "workflowName": "Browser security CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T06:21:39Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38691833510/job/116279270659",
+        "name": "Test mobile",
+        "startedAt": "2026-10-15T06:20:36Z",
+        "status": "COMPLETED",
+        "workflowName": "Mobile CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T06:20:41Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38691832734/job/116279267055",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T06:20:36Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T06:20:42Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38691833450/job/116279270369",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T06:20:37Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T06:20:39Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38691832948/job/116279269424",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T06:20:36Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T06:20:42Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38691833023/job/116279270075",
+        "name": "Conventional PR title",
+        "startedAt": "2026-10-15T06:20:37Z",
+        "status": "COMPLETED",
+        "workflowName": "PR title"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-10-15T06:24:04Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/HoesenBruce/TradeLens/actions/runs/38691833494/job/116279270520",
+        "name": "Test web",
+        "startedAt": "2026-10-15T06:20:36Z",
+        "status": "COMPLETED",
+        "workflowName": "Web CI"
+      }
+    ]
+  },
+  "release_please": "active; latest main run 38691793415 success; v0.4.0 Release absent",
+  "ruleset": {
+    "id": 24700869,
+    "name": "Protect main",
+    "target": "branch",
+    "source_type": "Repository",
+    "source": "HoesenBruce/TradeLens",
+    "enforcement": "active",
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "~DEFAULT_BRANCH"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "deletion"
+      },
+      {
+        "type": "non_fast_forward"
+      },
+      {
+        "type": "pull_request",
+        "parameters": {
+          "required_approving_review_count": 0,
+          "dismiss_stale_reviews_on_push": false,
+          "required_reviewers": [],
+          "require_code_owner_review": false,
+          "require_last_push_approval": false,
+          "required_review_thread_resolution": false,
+          "require_extra_approval_for_unattributed_changes": true,
+          "allowed_merge_methods": [
+            "merge",
+            "squash",
+            "rebase"
+          ]
+        }
+      },
+      {
+        "type": "required_status_checks",
+        "parameters": {
+          "strict_required_status_checks_policy": true,
+          "do_not_enforce_on_create": false,
+          "required_status_checks": [
+            {
+              "context": "Test API",
+              "integration_id": 15368
+            },
+            {
+              "context": "Test web",
+              "integration_id": 15368
+            },
+            {
+              "context": "Conventional PR title",
+              "integration_id": 15368
+            }
+          ]
+        }
+      },
+      {
+        "type": "required_linear_history"
+      }
+    ],
+    "node_id": "RRS_lACqUmVwb3NpdG9yec5RZys3zgF458U",
+    "created_at": "2026-10-08T14:29:41.702+08:00",
+    "updated_at": "2026-10-08T14:29:41.834+08:00",
+    "bypass_actors": [],
+    "current_user_can_bypass": "never",
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/HoesenBruce/TradeLens/rulesets/24700869"
+      },
+      "html": {
+        "href": "https://github.com/HoesenBruce/TradeLens/rules/24700869"
+      }
+    }
+  },
+  "publication_environments": {
+    "ghcr": {
+      "can_admins_bypass": false,
+      "required_reviewers": [
+        "HoesenBruce"
+      ],
+      "branch_policies": [
+        {
+          "id": 62336444,
+          "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2MjMzNjQ0NA==",
+          "name": "main",
+          "type": "branch"
+        },
+        {
+          "id": 62158312,
+          "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2MjE1ODMxMg==",
+          "name": "v*",
+          "type": "tag"
+        }
+      ]
+    },
+    "render-demo": {
+      "can_admins_bypass": false,
+      "required_reviewers": [
+        "HoesenBruce"
+      ],
+      "branch_policies": [
+        {
+          "id": 62465064,
+          "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2MjQ2NTA2NA==",
+          "name": "main",
+          "type": "branch"
+        }
+      ]
+    }
+  },
+  "offline_workflow_tests": {
+    "source_sha": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+    "docker_release_metadata": {
+      "passed": 3
+    },
+    "demo_deploy_mocked": {
+      "passed": 10
+    },
+    "actual_render_deployment": false
+  },
+  "registry_anonymous_readback": [
+    {
+      "image": "api",
+      "tag": "0.4.0",
+      "status": 404
+    },
+    {
+      "image": "api",
+      "tag": "sha-e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+      "status": 404
+    },
+    {
+      "image": "web",
+      "tag": "0.4.0",
+      "status": 404
+    },
+    {
+      "image": "web",
+      "tag": "sha-e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+      "status": 404
+    }
+  ],
+  "separate_open_gate": {
+    "issue": 212,
+    "scope": "Git history/privacy; repository public-visibility gate",
+    "status": "OPEN_NOT_REMEDIATED_BY_THIS_REVIEW"
+  }
+}

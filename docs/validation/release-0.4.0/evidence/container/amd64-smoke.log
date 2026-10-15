@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "environment": "Docker Desktop ARM64 host / linux-amd64 emulation",
+  "api_arch": "amd64",
+  "web_arch": "amd64",
+  "health_through_nginx": "PASS",
+  "system_info": {
+    "version": "0.4.0",
+    "commit": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+    "go": "go1.27.2",
+    "started_at": "2026-10-15T08:04:20.140932296Z",
+    "uptime_sec": 0,
+    "db_driver": "sqlite",
+    "features": {
+      "background_jobs": false,
+      "coach": false,
+      "econ_calendar": false,
+      "market_data": false,
+      "ocr": false,
+      "share_links": false
+    }
+  },
+  "fresh_tmpfs_sqlite": true,
+  "spa_routes": "PASS",
+  "setup_login_and_trade_roundtrip": "PASS",
+  "closed_trade_net_pnl": 20,
+  "legacy_generation": "off",
+  "manual_backup": "PASS",
+  "api_container": "tradelens-phase-a-040-amd64-api",
+  "web_container": "tradelens-phase-a-040-amd64-web",
+  "network": "tradelens-phase-a-040-amd64"
+}
