@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "env_coach_enabled": true,
+  "persisted_owner_setting_enabled": true,
+  "restart": true,
+  "legacy_json_sse_and_output_version2": "off",
+  "review_rows_before_after": 2,
+  "provider_posts": 0
+}

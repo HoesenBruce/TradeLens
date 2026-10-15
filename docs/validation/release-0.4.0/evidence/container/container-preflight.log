@@ -1,0 +1,35 @@
+ Container tradelens-phase-a-040-qa-api-1  Stopping
+ Container tradelens-phase-a-040-qa-api-1  Stopped
+ Container tradelens-phase-a-040-qa-api-1  Starting
+ Container tradelens-phase-a-040-qa-api-1  Started
+ Container tradelens-phase-a-040-qa-api-1  Stopping
+ Container tradelens-phase-a-040-qa-api-1  Stopped
+ Container tradelens-phase-a-040-qa-api-1  Starting
+ Container tradelens-phase-a-040-qa-api-1  Started
+{
+  "status": "PASS",
+  "system_info": {
+    "version": "0.4.0",
+    "commit": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+    "go": "go1.27.2",
+    "started_at": "2026-10-15T07:50:09.520874638Z",
+    "uptime_sec": 0,
+    "db_driver": "sqlite",
+    "features": {
+      "background_jobs": false,
+      "coach": false,
+      "econ_calendar": false,
+      "market_data": true,
+      "ocr": false,
+      "share_links": false
+    }
+  },
+  "owner_member_jwt_pat_boundaries": "PASS",
+  "legacy_json_sse_fallback_history": "PASS",
+  "legacy_row_count": 2,
+  "legacy_rows_unchanged": true,
+  "provider_posts": 0,
+  "attachment_upload_readback": "PASS",
+  "backup_member_denied": "PASS",
+  "through_original_nginx_proxy": true
+}

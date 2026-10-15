@@ -1,0 +1,5 @@
+{
+  "status": "PASS",
+  "insecure_secret_exit": 1,
+  "no_persistent_volume": true
+}

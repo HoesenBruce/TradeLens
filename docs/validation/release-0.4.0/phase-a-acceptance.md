@@ -4,9 +4,11 @@
 
 ## 1. 执行结论
 
-**Core 源码与应用层安全验收通过；Phase A 尚未完成，暂不建议发布。** 精确候选的全量 Go / race、Web、生产 Chromium 安全 35 例、Review Inbox / SBI / 数量 E2E、独立安全审查、SQLite 合成升级恢复及 PostgreSQL 条件覆盖均通过。尚未完成候选 Docker 构建/运行验收、v0.4.0 GHCR 发布、NAS 实机验收及 Render 候选部署。main/发布候选中的操作文档还有与当前自动化状态不一致的文字；本报告分支已提供文档纠正，尚未合入候选。
+**Core 源码与应用层安全验收通过；Phase A 尚未完成，暂不建议发布。** 精确候选的全量 Go / race、Web、生产 Chromium 安全 35 例、Review Inbox / SBI / 数量 E2E、独立安全审查、SQLite 合成升级恢复及 PostgreSQL 条件覆盖均通过。本地 ARM64/AMD64 API/Web 构建、ARM64 容器联调及恢复已在续验通过；Web 依赖临时 Node 单行固定，对应正式修复 #314 尚未合入候选。v0.4.0 GHCR 发布、NAS 实机验收及 Render 候选部署仍未完成。main/发布候选中的操作文档还有与当前自动化状态不一致的文字；本报告分支已提供文档纠正，尚未合入候选。
 
 没有合并 #293、发布 tag/Release/镜像、批准 Environment、触发 Render 部署、更新 NAS、迁移真实用户数据库或修改线上认证/注册设置。#298、#302、#236、#235 均保持打开；#295 保持 Draft。
+
+本轮新增容器完整证据见 [容器续验报告](container-acceptance.md)，下文早期下载失败作为历史记录保留，不再代表本地构建当前结果。
 
 状态定义：`PASS` 有本轮证据；`NOT_RUN` 未执行；`BLOCKED` 前置条件缺失；`FAILED` 实际命令/断言失败；`AWAITING_APPROVAL` 必须由 owner 明确批准。测试通过不授予发布权限。
 
@@ -109,7 +111,7 @@ WEB_TESTS = PASS
 PLAYWRIGHT_E2E = PASS (6项集成)
 SECURITY_E2E_35 = PASS (本地35/35；精确head CI 35/35)
 EXACT_SHA_CI = PASS
-CORE_D1_READY = BLOCKED (候选容器/目标环境验证仍未完成；#302不关闭)
+CORE_D1_READY = BLOCKED (Node修复未进入正式候选；NAS/Demo目标验收未完；#302不关闭)
 ```
 
 ## 5. A3 — #293 / Release Please
@@ -138,7 +140,7 @@ RELEASE_HEAD = e23ccbcf702c3e99989cb755b4b3bb88179d32aa
 RELEASE_DIFF_VALID = PASS
 CHANGELOG_VALID = PASS
 VERSION_CONSISTENCY = PASS
-RELEASE_READY = NO (容器/发布操作文档/目标环境门禁未完)
+RELEASE_READY = NO (#314未合入并刷新候选；发布操作文档/目标环境门禁未完)
 ```
 
 将来 squash merge 的提交 SHA 通常不同于当前 PR head。发布审批必须重新记录实际 tag SHA、绑定 API/Web image revision 和 Render Live；不能把 `e23ccbc…` 自动当最终发布 SHA。main 或 release head 再变化时，本轮证据不能直接外推。
@@ -161,19 +163,19 @@ docker build -f api/Dockerfile --build-arg VERSION=0.4.0 --build-arg COMMIT=e23c
 docker build -f web/Dockerfile --build-arg APP_VERSION=0.4.0 --build-arg APP_BUILD=e23ccbcf702c3e99989cb755b4b3bb88179d32aa -t tradelens-phase-a-web:e23ccbc .
 ```
 
-本机初始 daemon 未启动，启动已有 Docker Desktop 后执行。Web 首轮在 `pnpm install --frozen-lockfile` 下载依赖时报 error 23 / TimeoutError，exit 1；相同 Dockerfile 重试再次在依赖下载阶段 TimeoutError，exit 1。API 构建在 `go mod download` 长时间无输出后主动终止（exit 130）；尚无候选运行 smoke。构建日志保存在 evidence。未改变网络/证书/认证设置，也未清理共享镜像或缓存。不得把原生 API/生产 Web 通过替代容器通过。
+早期原 Dockerfile 的两次 Web 下载超时与 API 中止日志保留在 evidence；其后续验已完成原 API Dockerfile 的 ARM64/AMD64 构建，并用 Web 单行 Node 24.18.0 覆盖完成两架构构建。没有采用 runtimeOnFail=warn，也没有改 lockfile。ARM64 真容器的7项浏览器回归、API/权限/Legacy零调用、40表快照、重启、第二新卷恢复及附件读回通过；详见 [续验](container-acceptance.md)。本地镜像source为e23加Web构建覆盖，正式修复 [#314](https://github.com/HoesenBruce/TradeLens/pull/314) 尚未合入。没有改变宿主代理/证书设置或清理共享缓存；下载成功不证明网络根因已修复。
 
-配置静态审查：API `/data` 存 SQLite/attachments/默认 backups；Compose env 优先于镜像 ENV，shell/.env 是变量替换源，不会自动把任意 TM_* 注入服务。`TM_DATABASE_URL` 优先 `TM_DB_PATH`；mount 路径若移到 `/data` 之外需另持久卷。默认 compose 允许 change-me insecure JWT，仅开发用；实际部署必须显式安全 secret、`TM_ALLOW_INSECURE_JWT=false`、注册策略另行确认，未修改 live。API/Web runtime 默认 root，Render demo 固定 UID 10001；没有伪称非 root 全面支持。healthcheck、unless-stopped、same-origin nginx `/api`、启动 migration 都有配置；候选容器运行证据待补。
+配置静态审查：API `/data` 存 SQLite/attachments/默认 backups；Compose env 优先于镜像 ENV，shell/.env 是变量替换源，不会自动把任意 TM_* 注入服务。`TM_DATABASE_URL` 优先 `TM_DB_PATH`；mount 路径若移到 `/data` 之外需另持久卷。默认 compose 允许 change-me insecure JWT，仅开发用；实际部署必须显式安全 secret、`TM_ALLOW_INSECURE_JWT=false`、注册策略另行确认，未修改 live。API/Web runtime 默认 root，Render demo 固定 UID 10001；没有伪称非 root 全面支持。healthcheck、unless-stopped、same-origin nginx `/api`、启动 migration 都有配置；本地容器运行与默认 root 权限范围见续验；NAS 实际权限和持久卷仍须验证。
 
 ```text
 API_IMAGE = ghcr.io/hoesenbruce/tradelens-api (0.4.0未发布)
 WEB_IMAGE = ghcr.io/hoesenbruce/tradelens-web (0.4.0未发布)
 API_DIGEST = NOT_AVAILABLE_FOR_0.4.0
 WEB_DIGEST = NOT_AVAILABLE_FOR_0.4.0
-MULTIARCH = PASS_0.3.1_MANIFEST_ONLY / NOT_RUN_0.4.0
-IMAGE_SOURCE_SHA = e23ccbcf702c3e99989cb755b4b3bb88179d32aa (本地构建输入；尚无候选成品)
+MULTIARCH = PASS_LOCAL_ARM64_AMD64_BUILDS; NOT_PUBLISHED_0.4.0_INDEX
+IMAGE_SOURCE_SHA = e23ccbcf702c3e99989cb755b4b3bb88179d32aa (Web另加Node单行覆盖；非正式发布commit)
 PUBLIC_PULL = PASS_0.3.1_MANIFEST_CONFIG / NOT_RUN_0.4.0_FULL_PULL
-DOCKER_SMOKE = BLOCKED (候选构建)
+DOCKER_SMOKE = PASS_LOCAL_ARM64; AMD64_BUILD_AND_RUNTIME_SMOKE_PASS (仿真环境)
 GHCR_READY = NO
 ```
 
@@ -185,7 +187,7 @@ GHCR_READY = NO
 NAS_ACCESS = NOT_AVAILABLE
 NAS_CURRENT_VERSION = UNKNOWN
 NAS_BACKUP_VERIFIED = NOT_RUN
-NAS_UPGRADE_DRY_RUN = NOT_RUN_ON_NAS_COPY (本地合成演练PASS)
+NAS_UPGRADE_DRY_RUN = NOT_RUN_ON_NAS_COPY (本地原生及容器合成演练PASS)
 NAS_SMOKE = NOT_RUN
 NAS_DEPLOY_APPROVED = NO
 NAS_DEPLOYED = NO
@@ -214,7 +216,7 @@ DEMO_DEPLOY_APPROVED = NO
 
 ## 9. 未解决事项与回滚
 
-1. 候选 Docker build/runtime、双架构、完整匿名 digest pull、启动/重启/migration/mount/权限/health 尚需通过；本地下载失败不能当产品缺陷，也不能当 PASS。
+1. 本地 ARM64/AMD64 构建及 ARM64容器验收已通过；#314未合入正式Release候选，0.4.0多架构index/完整匿名pull/正式provenance仍未建立。不可用本地镜像替代正式发布身份。
 2. NAS 真实备份、离线副本、附件关联、现有账户/历史完整性与实际升级尚无证据。
 3. Render 当前是旧版；候选 Demo 镜像、Review Inbox Demo 限制及新版本 Live 尚未验收。
 4. 修正发布操作文档的过时当前状态，必要时在 owner 接受文档修复后刷新 #293，再验证新 head。报告和文档 PR 一旦合入 main，也会使当前 release baseline 过时。
@@ -226,9 +228,9 @@ DEMO_DEPLOY_APPROVED = NO
 
 ## 10. Owner 批准与下一步
 
-当前先解决构建/验证阻塞；**不建议现在批准 #293**。具备完整新证据后，owner 需要分别批准：#293 精确最终 head 的合并（触发 Release）、实际 tag/SHA 对应 GHCR 两个发布 job、Render `render-demo` Environment、明确 NAS project/卷/完整备份对应的更新和持久数据迁移、若需要的 live auth/registration 修改。每个关口重新核对 SHA/digests，不能从一次测试或本报告推导授权。
+当前先审阅 #314 的单行固定和 #311 证据、刷新正式候选并完成目标环境验证；**不建议现在批准 #293**。具备完整新证据后，owner 需要分别批准：#293 精确最终 head 的合并（触发 Release）、实际 tag/SHA 对应 GHCR 两个发布 job、Render `render-demo` Environment、明确 NAS project/卷/完整备份对应的更新和持久数据迁移、若需要的 live auth/registration 修改。每个关口重新核对 SHA/digests，不能从一次测试或本报告推导授权。
 
-建议下一开发任务：发布操作文档小修；稳定 Docker 网络环境完成原 Dockerfile 构建及候选 runtime；按 NAS 清单回传脱敏 inventory/副本结果；候选 Demo 本地验收；Core 全部门禁补齐后更新 #302，再请求 #293 owner 批准。Coach #300/#301/#303 继续单独推进，不重新开放旧 generation。
+建议下一开发任务：审阅已提供的发布操作文档与 #314；明确固定修复接受后的新Release候选并重验；按 NAS 清单回传脱敏 inventory/副本结果；候选 Demo 本地验收；Core 全部门禁补齐后更新 #302，再请求 #293 owner 批准。Coach #300/#301/#303 继续单独推进，不重新开放旧 generation。
 
 ## 11. 必填最终状态
 
@@ -239,8 +241,8 @@ CORE_CANDIDATE_SHA = e23ccbcf702c3e99989cb755b4b3bb88179d32aa
 
 ISSUE_298 = INDEPENDENT_REVIEW_PASS; OPEN
 LEGACY_COACH_ISOLATION = PASS_CURRENT_BUILD
-ISSUE_302 = OPEN; APPLICATION_GATES_PASS; TARGET_CONTAINER_GATES_BLOCKED
-CORE_SECURITY_GATE = INCOMPLETE; APPLICATION_SECURITY_PASS; CONTAINER_TARGET_GATES_BLOCKED
+ISSUE_302 = OPEN; APPLICATION_AND_LOCAL_CONTAINER_GATES_PASS; FIXED_CANDIDATE_AND_TARGET_GATES_PENDING
+CORE_SECURITY_GATE = INCOMPLETE; APPLICATION_AND_LOCAL_ISOLATION_PASS; FIXED_RELEASE_CANDIDATE_AND_TARGET_GATES_PENDING
 
 GO_TESTS = PASS; POSTGRES_SKIPS_COMPLETED_SEPARATELY
 GO_RACE = PASS; POSTGRES_RACE_COMPLETED_ON_CLEAN_DB
@@ -256,6 +258,13 @@ GHCR_API_DIGEST = NOT_AVAILABLE_FOR_0.4.0
 GHCR_WEB_DIGEST = NOT_AVAILABLE_FOR_0.4.0
 GHCR_READY = NO
 
+API_BUILD = PASS_ARM64_AND_AMD64_ORIGINAL_DOCKERFILE
+WEB_BUILD = PASS_ARM64_AND_AMD64_WITH_NODE_24_18_OVERRIDE
+ARM64_SMOKE = PASS
+AMD64_BUILD = PASS_LOCAL_EMULATION_AND_RUNTIME_SMOKE
+CONTAINER_INTEGRATION = PASS_7_E2E_AND_API_BACKUP_RESTART_RESTORE
+NAS_READY = NO
+
 NAS_UPGRADE_READY = BLOCKED_NO_ACCESS_OR_REAL_COPY_EVIDENCE
 NAS_DEPLOYED = NO
 
@@ -265,8 +274,8 @@ DEMO_DEPLOY_READY = NO_FOR_0.4.0
 DEMO_DEPLOYED = NO_FOR_0.4.0
 
 OWNER_APPROVAL_REQUIRED = MERGE_293; RELEASE_TAG_IMAGE_PUBLICATION; ENVIRONMENT_APPROVALS; RENDER_PRODUCTION; NAS_UPDATE_AND_PERSISTENT_MIGRATION; ANY_LIVE_AUTH_CHANGE
-REMAINING_BLOCKERS = CANDIDATE_DOCKER_BUILD_RUNTIME; RELEASE_OPERATION_DOCS; NAS_REAL_COPY_AND_TARGET_SMOKE; CANDIDATE_DEMO_VALIDATION; UNGRANTED_PUBLICATION_DEPLOYMENT_APPROVALS
-NEXT_ACTION = COMPLETE_CANDIDATE_CONTAINER_VALIDATION; REVIEW_DOCS_PR; REFRESH_293_AND_REVALIDATE_BEFORE_RELEASE_APPROVAL
+REMAINING_BLOCKERS = NODE_FIX_NOT_IN_RELEASE_CANDIDATE; RELEASE_OPERATION_DOCS; NAS_REAL_COPY_AND_TARGET_SMOKE; CANDIDATE_DEMO_VALIDATION; FORMAL_GHCR_ARTIFACTS_AND_UNGRANTED_APPROVALS
+NEXT_ACTION = REVIEW_314_AND_311; REFRESH_FIXED_293_AND_REVALIDATE; COMPLETE_TARGET_ACCEPTANCE_BEFORE_RELEASE_APPROVAL
 ```
 
 未验证 mobile、真实 provider、生产用户数据迁移和 NAS；本地、CI、旧 Live 的 PASS 各自限定，不能外推为 v0.4.0 已发布或已部署。

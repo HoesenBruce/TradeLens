@@ -13,8 +13,11 @@ Render builds the pinned Git source using the separate Demo Dockerfile; it does
 not directly consume the two GHCR images.
 
 The v0.4.0 candidate in [#293](https://github.com/HoesenBruce/TradeLens/pull/293)
-is **not released or deployment-ready**. Its application/security checks passed,
-but candidate container and target-environment acceptance remain incomplete.
+is **not released or deployment-ready**. Its application/security checks passed.
+Local ARM64/AMD64 containers now build and pass their recorded acceptance with the
+one-line Node pin in [#314](https://github.com/HoesenBruce/TradeLens/pull/314);
+that fix is not yet in the release candidate. The refreshed exact release SHA,
+formal registry artifacts and target-environment acceptance remain pending.
 The existing v0.3.1 images do not contain the new Core security/isolation fixes;
 they are a recorded rollback baseline, not proof that old binaries are safe to
 expose. See the [Phase A report](validation/release-0.4.0/phase-a-acceptance.md)

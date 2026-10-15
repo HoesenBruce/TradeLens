@@ -1,0 +1,39 @@
+ Container tradelens-phase-a-040-qa-api-1  Restarting
+ Container tradelens-phase-a-040-qa-web-1  Restarting
+ Container tradelens-phase-a-040-qa-api-1  Started
+ Container tradelens-phase-a-040-qa-web-1  Started
+{
+  "status": "PASS",
+  "source_sha": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+  "tables": 40,
+  "business_row_counts": {
+    "users": 2,
+    "accounts": 12,
+    "trades": 30,
+    "executions": 61,
+    "coach_reviews": 2,
+    "trade_attachments": 1
+  },
+  "snapshot_matches_all_tables": true,
+  "integrity": "ok",
+  "owner_manual_backup": "PASS",
+  "scheduled_jobs_disabled": true,
+  "backup_id_preserved_on_restart": true,
+  "api_web_restart_all_table_hashes_preserved": true,
+  "authenticated_readback": "PASS",
+  "attachments_persisted_and_restored": true,
+  "restore_new_volume_second_api": {
+    "status": "PASS",
+    "version": "0.4.0",
+    "commit": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+    "accounts": 12,
+    "trades": 1,
+    "attachment": "PASS",
+    "legacy": "off/history_withheld"
+  },
+  "disabled_provider_posts": 0,
+  "synthetic_bar_requests": 68,
+  "original_data_volume": "tradelens-phase-a-040-qa_qa_data",
+  "restore_volume": "tradelens-phase-a-040-restore-data",
+  "restore_container": "tradelens-phase-a-040-restore-api"
+}
