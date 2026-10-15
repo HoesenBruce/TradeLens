@@ -22,10 +22,10 @@ export class AmbiguousReviewNotesError extends Error {}
 
 // Keep source offsets: parsing/rebuilding other sections loses freeform plan text.
 function reviewSections(raw: string) {
+  if (/\r(?!\n)/.test(raw)) return undefined;
   const sections: { start: number; end: number; newline: boolean }[] = [];
   let offset = 0;
   let fence: { marker: string; length: number } | undefined;
-  let unsupportedMarkup = false;
   for (const line of raw.match(/[^\n]*\n|[^\n]+$/g) ?? []) {
     const text = line.replace(/\r?\n$/, "");
     const delimiter = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(text);
@@ -34,15 +34,24 @@ function reviewSections(raw: string) {
         delimiter &&
         delimiter[1][0] === fence.marker &&
         delimiter[1].length >= fence.length &&
-        !delimiter[2].trim()
+        /^[ \t]*$/.test(delimiter[2])
       )
         fence = undefined;
     } else if (delimiter) {
+      // Backticks in a backtick info string invalidate the opener. Never use
+      // an invalid fence to hide HTML or apparent headings from these checks.
+      if (delimiter[1][0] === "`" && delimiter[2].includes("`")) return undefined;
       fence = { marker: delimiter[1][0], length: delimiter[1].length };
     } else {
-      // No HTML parser: even a literal '<' makes non-fenced boundaries uncertain.
-      // Reject the whole notes edit, including well-formed or closed HTML blocks.
-      if (text.includes("<")) unsupportedMarkup = true;
+      // Only flat ATX sections and closed fences have supported boundaries.
+      // Do not infer HTML, Setext, container, indented-code or reference contexts.
+      if (
+        text.includes("<") ||
+        /^ {0,3}(?:=+|-+)[ \t]*$/.test(text) ||
+        /^ {0,3}(?:>|[-+*](?:[ \t]|$)|\d{1,9}[.)](?:[ \t]|$)|\[.*\]:)/.test(text) ||
+        (/^(?: {4}| {0,3}\t)/.test(text) && /[^ \t]/.test(text))
+      )
+        return undefined;
       const heading = /^ {0,3}(#{1,2})[ \t]+(.*)$/.exec(text);
       const target =
         heading?.[1] === "##" &&
@@ -67,19 +76,17 @@ function reviewSections(raw: string) {
     }
     offset += line.length;
   }
-  return { sections, unclosedFence: !!fence, unsupportedMarkup };
+  return fence || sections.length > 1 ? undefined : sections;
 }
 
 export function reviewNotesValue(raw: string) {
-  const { sections, unsupportedMarkup } = reviewSections(raw);
-  const section = unsupportedMarkup ? undefined : sections[0];
+  const section = reviewSections(raw)?.[0];
   return section ? raw.slice(section.start, section.end).trim() : "";
 }
 
 export function replaceReviewNotes(raw: string, value: string) {
-  const { sections, unclosedFence, unsupportedMarkup } = reviewSections(raw);
-  if (sections.length > 1 || unclosedFence || unsupportedMarkup)
-    throw new AmbiguousReviewNotesError();
+  const sections = reviewSections(raw);
+  if (!sections) throw new AmbiguousReviewNotesError();
   const eol = raw.match(/\r\n|\n/)?.[0] ?? "\n";
   const section = sections[0];
   if (!section) {

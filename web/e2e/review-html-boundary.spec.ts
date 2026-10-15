@@ -96,6 +96,17 @@ test("HTML journals reject ambiguous notes before PATCH and preserve bytes throu
     "<pre>\n## Review notes\nexample\n</pre>\n\n## Review notes\nreal\n\n## Planned direction\nSHORT",
     "<pre>\nexample only\n</pre>\n\n## Planned direction\nSHORT\nexplanation",
     "<!--\n## Review notes\nexample\n-->\n\n## Unknown\nkeep",
+    '```bad`\n<PRE class="sample">\n## Review notes\nexample text\n</PRE>\n```\n## Review notes\nunrelated code sample\n## Unknown\nkeep',
+    "```bad`\n<pre>\n```\n## Review notes\nexample text\n```bad`\n</pre>\n```\n## Unknown\nkeep",
+    "## Review notes\nold\n\nUnknown section\n==============\nkeep exact original",
+    "## Review notes\nold\n\nUnknown section\n--------------\nkeep exact original",
+    "- example\n  ## Review notes\n  unrelated example",
+    '[example]: /url "title\n## Review notes\nexample"',
+    "~~~\n<pre>\n~~~\u00a0\n## Review notes\nunrelated code sample\n## Unknown\nkeep",
+    "## Review notes\nold\r## Unknown\rkeep",
+    "```\n<pre>\n```\u00a0\n## Review notes\nunrelated code sample\n## Unknown\nkeep",
+    "```\n<pre>\n```\u000b\n## Review notes\nunrelated code sample\n## Unknown\nkeep",
+    "```\n<pre>\n```\u000c\n## Review notes\nunrelated code sample\n## Unknown\nkeep",
   ];
   try {
     for (const eol of ["\n", "\r\n"]) {

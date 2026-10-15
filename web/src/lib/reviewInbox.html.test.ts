@@ -8,7 +8,7 @@ import {
   reviewPatch,
 } from "./reviewInbox";
 
-const htmlDocuments = [
+const ambiguousDocuments = [
   ["independent reproduction", "<pre>\n## Review notes\nexample text\n</pre>\n\n## Unknown\nkeep"],
   ["uppercase", "<PRE>\n## Review notes\nexample\n</PRE>"],
   ["mixed case", "<PrE>\n## Review notes\nexample\n</pRe>"],
@@ -27,11 +27,48 @@ const htmlDocuments = [
   ["comment", "<!--\n## Review notes\nexample\n-->\n\n## Unknown\nkeep"],
   ["other HTML", "<textarea>\n## Review notes\nexample\n</textarea>"],
   ["literal less-than", "Risk < budget\n\n## Review notes\nold"],
+  [
+    "invalid backtick info bypass",
+    '```bad`\n<PRE class="sample">\n## Review notes\nexample text\n</PRE>\n```\n## Review notes\nunrelated code sample\n## Unknown\nkeep',
+  ],
+  [
+    "invalid backtick info closing-tag loss",
+    "```bad`\n<pre>\n```\n## Review notes\nexample text\n```bad`\n</pre>\n```\n## Unknown\nkeep",
+  ],
+  [
+    "Setext H1 after notes",
+    "## Review notes\nold\n\nUnknown section\n==============\nkeep exact original",
+  ],
+  [
+    "Setext H2 after notes",
+    "## Review notes\nold\n\nUnknown section\n--------------\nkeep exact original",
+  ],
+  ["list container", "- sample\n  ## Review notes\n  unrelated example"],
+  ["blockquote container", "> sample\n## Review notes\nold"],
+  ["indented code", "    example\n## Review notes\nold"],
+  ["reference definition", '[example]: /url "title\n## Review notes\nexample"'],
+  [
+    "NBSP fence tail",
+    "```\n<pre>\n```\u00a0\n## Review notes\nunrelated code sample\n## Unknown\nkeep",
+  ],
+  [
+    "vertical tab fence tail",
+    "```\n<pre>\n```\u000b\n## Review notes\nunrelated code sample\n## Unknown\nkeep",
+  ],
+  [
+    "form feed fence tail",
+    "```\n<pre>\n```\u000c\n## Review notes\nunrelated code sample\n## Unknown\nkeep",
+  ],
+  [
+    "tilde NBSP fence tail",
+    "~~~\n<pre>\n~~~\u00a0\n## Review notes\nunrelated code sample\n## Unknown\nkeep",
+  ],
+  ["bare carriage return", "## Review notes\nold\r## Unknown\rkeep"],
 ] as const;
 
-describe("HTML journal boundaries fail closed", () => {
+describe("unsupported journal boundaries fail closed", () => {
   for (const eol of ["\n", "\r\n"]) {
-    for (const [name, document] of htmlDocuments) {
+    for (const [name, document] of ambiguousDocuments) {
       it(`${name}, ${JSON.stringify(eol)}`, () => {
         const raw = ("  Legacy  \n\n" + document + "\n\n## Unknown tail\n  keep  \n").replaceAll(
           "\n",
@@ -59,6 +96,21 @@ describe("HTML journal boundaries fail closed", () => {
   }
 
   for (const eol of ["\n", "\r\n"]) {
+    for (const [open, close] of [
+      ["```html", "```` \t"],
+      ["~~~~info`", "~~~~ \t"],
+    ]) {
+      it(`accepts valid info/closing fences ${JSON.stringify(open)}, ${JSON.stringify(eol)}`, () => {
+        const prefix =
+          `${open}\n<pre>\n## Review notes\nexample\n</pre>\n${close}\n\n    \t\n`.replaceAll(
+            "\n",
+            eol,
+          );
+        expect(replaceReviewNotes(prefix + "## Review notes" + eol + "old", "new")).toBe(
+          prefix + "## Review notes" + eol + "new",
+        );
+      });
+    }
     for (const fence of ["```", "~~~~"]) {
       it(`preserves HTML inside a closed ${fence} fence, ${JSON.stringify(eol)}`, () => {
         const prefix =
