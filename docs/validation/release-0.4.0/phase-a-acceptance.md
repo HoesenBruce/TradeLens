@@ -8,7 +8,7 @@
 
 没有合并 #293、发布 tag/Release/镜像、批准 Environment、触发 Render 部署、更新 NAS、迁移真实用户数据库或修改线上认证/注册设置。#298、#302、#236、#235 均保持打开；#295 保持 Draft。
 
-本轮新增容器完整证据见 [容器续验报告](container-acceptance.md)，下文早期下载失败作为历史记录保留，不再代表本地构建当前结果。
+本轮新增容器完整证据见 [容器续验报告](container-acceptance.md)，下文早期下载失败作为历史记录保留，不再代表本地构建当前结果。 最新定版判断、NOT_VERIFIED矩阵与后续精确操作计划见 [RC定版审查](release-candidate-finalization.md)；历史PASS不自动覆盖刷新后的RC。
 
 状态定义：`PASS` 有本轮证据；`NOT_RUN` 未执行；`BLOCKED` 前置条件缺失；`FAILED` 实际命令/断言失败；`AWAITING_APPROVAL` 必须由 owner 明确批准。测试通过不授予发布权限。
 
