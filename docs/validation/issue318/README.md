@@ -40,6 +40,12 @@ Base: `c7c9f73549a1091627bf5c255c29359d61227f18` (v0.4.0).
 - Inspected the rendered desktop and narrow screenshots below. Attribution wraps
   on narrow Web and the remaining resources follow the self-hosting section
   directly. No new cancel/reset/toggle behavior exists for this read-only change.
+- Re-ran the checked-in PR acceptance tests with Web :5318 and a real API built
+  from the same unchanged API sources on :8319, using a fresh QA database/user/account.
+  Inspected additional Simplified Chinese viewport screenshots at 1440px and
+  390px in both dark and light themes. Attribution wraps and legal links remain
+  reachable; the author link retains a visible keyboard focus outline.
+- Full Web unit suite (`vp test run --maxWorkers=2`): 198 files / 1245 tests passed.
 - `vp check`: passed, 0 errors / 347 warnings.
 - `tsc -b --noEmit` and `vp build`: passed.
 - `git diff --check` and unchanged legal-file comparison: passed.
@@ -52,3 +58,8 @@ intro/attribution still fall back to English, as before this change.
 
 ![Desktop About attribution with keyboard focus](desktop-dark.png)
 ![Narrow Web About and remaining sections](narrow-dark.png)
+
+![Desktop dark viewport](zh-CN-1440-dark.png)
+![Desktop light viewport](zh-CN-1440-light.png)
+![Narrow dark viewport](zh-CN-390-dark.png)
+![Narrow light viewport](zh-CN-390-light.png)
