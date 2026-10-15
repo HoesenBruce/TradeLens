@@ -12679,3 +12679,9 @@ msgstr "저장된 거래 재고가 일치하지 않아 수량을 알 수 없습�
 #: src/components/tradeColumns.tsx:203
 msgid "trades.quantitySortHint"
 msgstr "미청산 수량 / 누적 진입 수량; 잔여 수량순 정렬"
+
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx
+msgid "review.ambiguousNotes"
+msgstr "리뷰 메모 섹션을 명확히 식별할 수 없습니다. 전체 일지에서 정리해 주세요. 초안은 유지됩니다."

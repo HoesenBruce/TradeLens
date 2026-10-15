@@ -12682,3 +12682,9 @@ msgstr "Quantity is unknown because the stored trade inventory is inconsistent."
 #: src/components/tradeColumns.tsx:203
 msgid "trades.quantitySortHint"
 msgstr "Remaining open quantity / cumulative entry quantity; sorted by open quantity"
+
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx
+msgid "review.ambiguousNotes"
+msgstr "The Review notes section is ambiguous. Edit the full journal to resolve it; your draft is retained."

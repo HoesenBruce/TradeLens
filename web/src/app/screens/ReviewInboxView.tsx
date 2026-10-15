@@ -13,9 +13,16 @@ import type { TradeDetail } from "@/lib/api/types";
 import { useFilters } from "@/lib/filters";
 import { useMe } from "@/lib/hooks/useMe";
 import { useTrades } from "@/lib/hooks/useTrades";
-import { parseJournalNotes } from "@/lib/journalNotes";
-import { backlogScope, reviewPatch, reviewQueue, reviewCutoffKey } from "@/lib/reviewInbox";
-import { TRADE_GRADES, gradeFromInt, intFromGrade } from "@/lib/tradeGrades";
+import {
+  AmbiguousReviewNotesError,
+  backlogScope,
+  reviewChanges,
+  reviewDraft,
+  reviewPatch,
+  reviewQueue,
+  reviewCutoffKey,
+} from "@/lib/reviewInbox";
+import { TRADE_GRADES } from "@/lib/tradeGrades";
 
 export function ReviewInboxView() {
   const { t } = useLingui();
@@ -245,18 +252,16 @@ function ReviewEditor({
 }) {
   const { t } = useLingui();
   const qc = useQueryClient();
-  const journal = parseJournalNotes(trade.notes);
-  const [grade, setGrade] = useState(gradeFromInt(trade.trade_quality));
-  const [notes, setNotes] = useState(journal.reviewNotes);
-  const [mistakes, setMistakes] = useState(
-    trade.tags.filter((tag) => tag.kind === "mistake").map((tag) => tag.id),
-  );
+  const [baseline, setBaseline] = useState(() => reviewDraft(trade));
+  const [draft, setDraft] = useState(baseline);
+  const { grade, notes, mistakeIds: mistakes } = draft;
+  const changes = reviewChanges(baseline, draft);
   const tags = useQuery({ queryKey: ["tags", "mistake"], queryFn: () => tagsApi.list("mistake") });
   const save = useMutation({
     mutationFn: async () => {
-      // Refresh before merging so edits in another surface are preserved.
+      // Merge only dirty fields; GET/PATCH is not an atomic conflict check.
       const latest = await tradesApi.get(trade.id);
-      return tradesApi.patch(trade.id, reviewPatch(latest, intFromGrade(grade)!, notes, mistakes));
+      return tradesApi.patch(trade.id, reviewPatch(latest, changes));
     },
     onMutate: () => onBusy(true),
     onSettled: () => onBusy(false),
@@ -270,9 +275,9 @@ function ReviewEditor({
     },
   });
   function reset() {
-    setGrade(gradeFromInt(trade.trade_quality));
-    setNotes(journal.reviewNotes);
-    setMistakes(trade.tags.filter((tag) => tag.kind === "mistake").map((tag) => tag.id));
+    const saved = reviewDraft(trade);
+    setBaseline(saved);
+    setDraft(saved);
     save.reset();
   }
   return (
@@ -290,7 +295,7 @@ function ReviewEditor({
               disabled={save.isPending}
               aria-pressed={grade === g}
               variant={grade === g ? "default" : "outline"}
-              onClick={() => setGrade(g)}
+              onClick={() => setDraft((value) => ({ ...value, grade: g }))}
             >
               {g}
             </Button>
@@ -302,7 +307,7 @@ function ReviewEditor({
         <Textarea
           disabled={save.isPending}
           value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={(e) => setDraft((value) => ({ ...value, notes: e.target.value }))}
         />
       </label>
       <fieldset disabled={save.isPending}>
@@ -318,9 +323,12 @@ function ReviewEditor({
               type="checkbox"
               checked={mistakes.includes(tag.id)}
               onChange={(e) =>
-                setMistakes((ids) =>
-                  e.target.checked ? [...ids, tag.id] : ids.filter((id) => id !== tag.id),
-                )
+                setDraft((value) => ({
+                  ...value,
+                  mistakeIds: e.target.checked
+                    ? [...value.mistakeIds, tag.id]
+                    : value.mistakeIds.filter((id) => id !== tag.id),
+                }))
               }
             />
             {tag.name}
@@ -337,14 +345,23 @@ function ReviewEditor({
       )}
       {save.isError && (
         <p role="alert">
-          {t({
-            id: "review.saveError",
-            message: "Save failed. Your draft is retained; retry or cancel.",
-          })}
+          {save.error instanceof AmbiguousReviewNotesError
+            ? t({
+                id: "review.ambiguousNotes",
+                message:
+                  "The Review notes section is ambiguous. Edit the full journal to resolve it; your draft is retained.",
+              })
+            : t({
+                id: "review.saveError",
+                message: "Save failed. Your draft is retained; retry or cancel.",
+              })}
         </p>
       )}
       <div className="flex gap-2">
-        <Button disabled={!grade || save.isPending} onClick={() => save.mutate()}>
+        <Button
+          disabled={!grade || !Object.keys(changes).length || save.isPending}
+          onClick={() => save.mutate()}
+        >
           {t({ id: "review.save", message: "Save and next" })}
         </Button>
         <Button variant="outline" disabled={save.isPending} onClick={reset}>

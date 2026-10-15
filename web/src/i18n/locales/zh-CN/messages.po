@@ -12682,3 +12682,9 @@ msgstr "已保存的交易库存不一致，数量未知。"
 #: src/components/tradeColumns.tsx:203
 msgid "trades.quantitySortHint"
 msgstr "剩余未平数量 / 累计开仓数量；按剩余量排序"
+
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx
+msgid "review.ambiguousNotes"
+msgstr "无法明确定位复盘笔记章节。请在完整交易日志中处理；本次草稿已保留。"

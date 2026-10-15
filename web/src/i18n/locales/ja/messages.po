@@ -12683,3 +12683,9 @@ msgstr "保存された取引在庫に不整合があるため、数量は不明
 #: src/components/tradeColumns.tsx:203
 msgid "trades.quantitySortHint"
 msgstr "未決済数量 / 累計新規数量；残数量で並べ替え"
+
+
+#. js-lingui-explicit-id
+#: src/app/screens/ReviewInboxView.tsx
+msgid "review.ambiguousNotes"
+msgstr "レビューメモのセクションを特定できません。ジャーナル全体で整理してください。下書きは保持されています。"
