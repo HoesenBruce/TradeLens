@@ -1,0 +1,81 @@
+diff --git a/.release-please-manifest.json b/.release-please-manifest.json
+index 816df2d5..2537c1f1 100644
+--- a/.release-please-manifest.json
++++ b/.release-please-manifest.json
+@@ -1,3 +1,3 @@
+ {
+-  ".": "0.3.1"
++  ".": "0.4.0"
+ }
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index cfcb2376..97176d47 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -5,6 +5,22 @@ All notable changes to TraderMemos are documented in this file.
+ Release versioning is managed by [release-please](https://github.com/googleapis/release-please).
+ See [docs/release.md](docs/release.md) for the release workflow.
+ 
++## [0.4.0](https://github.com/HoesenBruce/TradeLens/compare/v0.3.1...v0.4.0) (2026-10-15)
++
++
++### Features
++
++* **backup:** add isolated owner-only SQLite snapshots ([#285](https://github.com/HoesenBruce/TradeLens/issues/285)) ([005dd36](https://github.com/HoesenBruce/TradeLens/commit/005dd367879b1564e2add665a73dee3e0c26a333))
++* **review:** add account-scoped review inbox ([#292](https://github.com/HoesenBruce/TradeLens/issues/292)) ([3d383d8](https://github.com/HoesenBruce/TradeLens/commit/3d383d892698fd746b112eb7c64d9431d29f1f9a))
++* **trades:** show remaining and cumulative quantities in list and detail ([#310](https://github.com/HoesenBruce/TradeLens/issues/310)) ([b63aead](https://github.com/HoesenBruce/TradeLens/commit/b63aead3074e08435979a93c6aa84acbe021d189))
++
++
++### Bug Fixes
++
++* **sbi:** derive cash and margin review direction from position semantics ([#309](https://github.com/HoesenBruce/TradeLens/issues/309)) ([6016623](https://github.com/HoesenBruce/TradeLens/commit/6016623aa3f1e088f450eafef8d8265c1dbec257))
++* **security:** isolate legacy AI Coach ([#299](https://github.com/HoesenBruce/TradeLens/issues/299)) ([#306](https://github.com/HoesenBruce/TradeLens/issues/306)) ([66e0616](https://github.com/HoesenBruce/TradeLens/commit/66e0616a4673e8602dc5830d66abd3da180431bd))
++* **security:** protect provider diagnostics across OCR sync and alerts ([#305](https://github.com/HoesenBruce/TradeLens/issues/305)) ([021ffa0](https://github.com/HoesenBruce/TradeLens/commit/021ffa091ca9a0e4c29a3d5acdffeb12d54a2f01))
++
+ ## [0.3.1](https://github.com/HoesenBruce/TradeLens/compare/v0.3.0...v0.3.1) (2026-10-09)
+ 
+ 
+diff --git a/VERSION b/VERSION
+index 9e11b32f..1d0ba9ea 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.3.1
++0.4.0
+diff --git a/mobile/app.json b/mobile/app.json
+index b2d6d94b..47ad9a76 100644
+--- a/mobile/app.json
++++ b/mobile/app.json
+@@ -2,7 +2,7 @@
+   "expo": {
+     "name": "TraderMemos",
+     "slug": "tradermemos",
+-    "version": "0.3.1",
++    "version": "0.4.0",
+     "orientation": "default",
+     "icon": "./assets/images/icon.png",
+     "scheme": "tradermemos",
+diff --git a/mobile/package.json b/mobile/package.json
+index 45fa455e..9f0b020c 100644
+--- a/mobile/package.json
++++ b/mobile/package.json
+@@ -1,7 +1,7 @@
+ {
+   "name": "tradermemos-mobile",
+   "main": "index.ts",
+-  "version": "0.3.1",
++  "version": "0.4.0",
+   "packageManager": "pnpm@11.16.0",
+   "dependencies": {
+     "@expo/material-symbols": "^0.1.1",
+diff --git a/web/package.json b/web/package.json
+index 9c206290..35c91cac 100644
+--- a/web/package.json
++++ b/web/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "tradelens-web",
+-  "version": "0.3.1",
++  "version": "0.4.0",
+   "private": true,
+   "type": "module",
+   "scripts": {

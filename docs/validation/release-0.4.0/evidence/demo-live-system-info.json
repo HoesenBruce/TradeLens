@@ -1,0 +1,33 @@
+{
+  "/api/v1/system/info": {
+    "status": 200,
+    "data": {
+      "version": "0.3.1",
+      "commit": "58f6a3c1a80cc195c3650fd48ef71680684ccb50",
+      "go": "go1.27.2",
+      "started_at": "2026-10-15T06:33:33.748773008Z",
+      "uptime_sec": 564,
+      "db_driver": "sqlite",
+      "features": {
+        "background_jobs": false,
+        "coach": false,
+        "econ_calendar": false,
+        "market_data": true,
+        "ocr": false,
+        "share_links": false
+      }
+    }
+  },
+  "/api/v1/review": {
+    "status": 403,
+    "data": null
+  },
+  "/api/v1/review-inbox": {
+    "status": 403,
+    "data": null
+  },
+  "/api/v1/coach/settings": {
+    "status": 403,
+    "data": null
+  }
+}

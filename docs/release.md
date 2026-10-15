@@ -2,27 +2,33 @@
 
 ## Current publication state
 
-Official TradeLens GHCR images are published: **v0.2.1**, source
-`b78c5925778831e7d2d039a4d0139ff1ddfc6e31`. Registry/runtime evidence is in
-[the validation record](validation/issue234/v0.2.1/README.md).
-Read-only GitHub audit on 2026-10-09 found Docker publisher (`docker-publish.yml`)
-and Release Please (`release-please.yml`) **active**. Release Please run
-[37901765805](https://github.com/HoesenBruce/TradeLens/actions/runs/37901765805)
-succeeded after the Demo merge; its publisher was skipped because no release was
-created. The last successful standalone publisher is
-[37590176429](https://github.com/HoesenBruce/TradeLens/actions/runs/37590176429)
-for v0.2.1. This verifies current configuration, not a new automatic release
-publication. The `ghcr` environment has a required owner reviewer and no admin
-bypass. Recheck these mutable settings before release.
+Read-only acceptance on **2026-10-15** found the latest published stable release
+and GHCR API/Web images at **v0.3.1**, source
+`58f6a3c1a80cc195c3650fd48ef71680684ccb50`. Release Please, Docker publication and
+Demo deployment workflows are active; `DEMO_AUTO_DEPLOY_ENABLED=true`. The
+[v0.3.1 release chain](https://github.com/HoesenBruce/TradeLens/actions/runs/37943690036)
+published both images and recorded a successful Render deployment. Current public
+Demo `/system/info` reports the same source/version, and its read-only smoke passed.
+Render builds the pinned Git source using the separate Demo Dockerfile; it does
+not directly consume the two GHCR images.
 
-Demo release deployment is implemented but **not activated or live-accepted**.
-It is opt-in through repository variable `DEMO_AUTO_DEPLOY_ENABLED=true`, only
-after controlled acceptance. See [Render release deployment](demo-render.md#release-gated-deployment-286).
-No workflow enablement, release, GHCR approval or Render deployment is authorized
-by the implementation PR.
+The v0.4.0 candidate in [#293](https://github.com/HoesenBruce/TradeLens/pull/293)
+is **not released or deployment-ready**. Its application/security checks passed,
+but candidate container and target-environment acceptance remain incomplete.
+The existing v0.3.1 images do not contain the new Core security/isolation fixes;
+they are a recorded rollback baseline, not proof that old binaries are safe to
+expose. See the [Phase A report](validation/release-0.4.0/phase-a-acceptance.md)
+for exact SHAs, digests, evidence and rollback limits. Earlier v0.2.1 evidence
+remains in [its historical record](validation/issue234/v0.2.1/README.md).
+
+The `ghcr` and `render-demo` environments both require the owner reviewer and
+disable administrator bypass. Recheck these mutable settings before release.
+This documentation authorizes no merge, publication, approval or deployment.
+See [Render release deployment](demo-render.md#release-gated-deployment-286).
 
 `make up` / `make up-postgres` use official GHCR images; source fallback remains
-`make up-build` / `make up-postgres-build`. Pin stable `TM_IMAGE_TAG=0.2.1` in
+`make up-build` / `make up-postgres-build`. Pin an explicitly approved version or
+digest after its security and runtime acceptance; do not use moving `latest` in
 production. Never alternate upstream and TradeLens on the same database:
 the migration histories have diverged. See [deployment](deploy.md).
 
@@ -336,17 +342,20 @@ builds fine and traps on launch.
 
 ## CI gates
 
-`Test API`, `Test web`, and `Conventional PR title` must be configured as required
-status checks on `main` before activation. On 2026-10-08, the repository rulesets
-API returned an empty list and branch protection returned "Branch not protected";
-these gates are desired policy, not verified active settings. The same test jobs are reused by `docker-publish.yml`, so a release
+The 2026-10-15 readback of the active [Protect main ruleset](https://github.com/HoesenBruce/TradeLens/rules/24700869)
+requires `Test API`, `Test web`, and `Conventional PR title` with strict checks,
+PRs and linear history, blocks deletion/force pushes, and has no bypass actors.
+The separate traditional branch-protection endpoint returns 404; that does not
+negate the active ruleset. `Chromium security E2E` currently runs successfully but
+is not a required ruleset check. Recheck all gates on the final release head.
+The same API/Web test jobs are reused by `docker-publish.yml`, so a release
 can never publish images that skipped tests.
 
 `Test mobile` runs only on PRs touching `mobile/**`, so it is not a required
 check (a required check that never runs blocks every other PR). `mobile-eas.yml`
 reuses it, so a release build still cannot skip it.
 
-Owner must configure main protection: PRs required, the three checks above,
+Owner must retain main protection: PRs required, the three checks above,
 linear history, no force-push/deletion and no bypass actors. Use squash merging
 so Conventional Commit PR titles become commit subjects. A single-maintainer
 repository may use zero required approving reviews while still requiring PRs
@@ -363,7 +372,9 @@ toggle them again. No production release is authorized by this documentation.
 
 ### Baseline and version calculation
 
-The manifest and `VERSION` remain `0.2.1`. Release Please discovers its release
+At the original #235 repair baseline, the manifest and `VERSION` were `0.2.1`.
+The examples in this subsection describe that historical fixture, not the current
+release version. Release Please discovers its release
 boundary from the matching GitHub Release/tag, not the first heading in the
 changelog. Removed `bootstrap-sha` referred to an existing commit outside current
 main ancestry; bootstrap is only a fallback before a release boundary exists.

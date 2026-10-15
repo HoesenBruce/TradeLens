@@ -1,0 +1,74 @@
+[
+  {
+    "headRefOid": "21886b11d8fd6bf430f31487c3a27454118d1df8",
+    "isDraft": true,
+    "number": 304,
+    "state": "OPEN",
+    "title": "docs(security): specify structured Coach output contract (#300)",
+    "url": "https://github.com/HoesenBruce/TradeLens/pull/304"
+  },
+  {
+    "headRefOid": "44c8761f4d236438d69a6c421ab4931e11aed893",
+    "isDraft": true,
+    "number": 295,
+    "state": "OPEN",
+    "title": "fix(security): redact external provider error disclosures",
+    "url": "https://github.com/HoesenBruce/TradeLens/pull/295"
+  },
+  {
+    "headRefOid": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+    "isDraft": false,
+    "number": 293,
+    "state": "OPEN",
+    "title": "chore: release 0.4.0",
+    "url": "https://github.com/HoesenBruce/TradeLens/pull/293"
+  },
+  {
+    "headRefOid": "b4e0a0d8524f71b5108ca97f80dd3d8ce862d86d",
+    "isDraft": false,
+    "number": 287,
+    "state": "OPEN",
+    "title": "chore(deps): bump the web-deps-minor group across 1 directory with 42 updates",
+    "url": "https://github.com/HoesenBruce/TradeLens/pull/287"
+  },
+  {
+    "headRefOid": "3c46314d6fea8d593ee3c0116198e01a2a7c751b",
+    "isDraft": false,
+    "number": 224,
+    "state": "OPEN",
+    "title": "chore(deps-dev): bump @types/node from 25.9.5 to 26.6.4 in /web",
+    "url": "https://github.com/HoesenBruce/TradeLens/pull/224"
+  },
+  {
+    "headRefOid": "a4c19e05610cc0f7a71c5796f019cc5206afbae6",
+    "isDraft": false,
+    "number": 223,
+    "state": "OPEN",
+    "title": "chore(deps-dev): bump jsdom from 25.0.1 to 30.1.2 in /web",
+    "url": "https://github.com/HoesenBruce/TradeLens/pull/223"
+  },
+  {
+    "headRefOid": "14d3b842f9f8a5c1dd4fea19300b145715884e59",
+    "isDraft": false,
+    "number": 222,
+    "state": "OPEN",
+    "title": "chore(deps): bump vitest from 4.1.11 to 5.0.3 in /web",
+    "url": "https://github.com/HoesenBruce/TradeLens/pull/222"
+  },
+  {
+    "headRefOid": "0ca0ea5cb1e020bc7ca32ba04f1a38a5e6148c2f",
+    "isDraft": false,
+    "number": 221,
+    "state": "OPEN",
+    "title": "chore(deps): bump vite-plus from 0.2.9 to 1.0.0 in /web",
+    "url": "https://github.com/HoesenBruce/TradeLens/pull/221"
+  },
+  {
+    "headRefOid": "6257aea9526cf1634668e50b98ba6b84e3985c02",
+    "isDraft": false,
+    "number": 219,
+    "state": "OPEN",
+    "title": "chore(deps): bump the go-deps group across 1 directory with 10 updates",
+    "url": "https://github.com/HoesenBruce/TradeLens/pull/219"
+  }
+]

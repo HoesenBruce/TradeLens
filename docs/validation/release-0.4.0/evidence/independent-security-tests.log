@@ -1,0 +1,164 @@
+=== RUN   TestSafePreservesIdentityWithoutDiagnostics
+--- PASS: TestSafePreservesIdentityWithoutDiagnostics (0.00s)
+PASS
+ok  	github.com/tradermemos/api/internal/providererrors	1.133s
+testing: warning: no tests to run
+PASS
+ok  	github.com/tradermemos/api/internal/ocr	1.020s [no tests to run]
+=== RUN   TestClientSafeErrorIdentity
+--- PASS: TestClientSafeErrorIdentity (0.03s)
+=== RUN   TestClientDiagnosticFailureMatrix
+=== RUN   TestClientDiagnosticFailureMatrix/status
+=== RUN   TestClientDiagnosticFailureMatrix/body
+=== RUN   TestClientDiagnosticFailureMatrix/malformed
+=== RUN   TestClientDiagnosticFailureMatrix/transport
+=== RUN   TestClientDiagnosticFailureMatrix/timeout
+=== RUN   TestClientDiagnosticFailureMatrix/cancel
+--- PASS: TestClientDiagnosticFailureMatrix (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/status (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/body (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/malformed (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/transport (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/timeout (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/cancel (0.00s)
+PASS
+ok  	github.com/tradermemos/api/internal/flexsync	0.710s
+=== RUN   TestProviderNotificationFailureMatrix
+=== RUN   TestProviderNotificationFailureMatrix/status
+=== RUN   TestProviderNotificationFailureMatrix/malformed
+=== RUN   TestProviderNotificationFailureMatrix/transport
+=== RUN   TestProviderNotificationFailureMatrix/timeout
+=== RUN   TestProviderNotificationFailureMatrix/cancel
+--- PASS: TestProviderNotificationFailureMatrix (0.00s)
+    --- PASS: TestProviderNotificationFailureMatrix/status (0.00s)
+    --- PASS: TestProviderNotificationFailureMatrix/malformed (0.00s)
+    --- PASS: TestProviderNotificationFailureMatrix/transport (0.00s)
+    --- PASS: TestProviderNotificationFailureMatrix/timeout (0.00s)
+    --- PASS: TestProviderNotificationFailureMatrix/cancel (0.00s)
+PASS
+ok  	github.com/tradermemos/api/internal/alerts	0.743s
+=== RUN   TestLegacyEntryPointsFailClosed
+--- PASS: TestLegacyEntryPointsFailClosed (0.00s)
+PASS
+ok  	github.com/tradermemos/api/internal/coach	0.538s
+=== RUN   TestLegacyPersistenceCannotBypassAvailability
+--- PASS: TestLegacyPersistenceCannotBypassAvailability (0.00s)
+=== RUN   TestCoachIsolationAcrossConfigurationAndRestart
+--- PASS: TestCoachIsolationAcrossConfigurationAndRestart (0.78s)
+=== RUN   TestCoachNewInstallationAndEnvironmentCannotEnableLegacy
+=== RUN   TestCoachNewInstallationAndEnvironmentCannotEnableLegacy/false
+=== RUN   TestCoachNewInstallationAndEnvironmentCannotEnableLegacy/true
+--- PASS: TestCoachNewInstallationAndEnvironmentCannotEnableLegacy (0.48s)
+    --- PASS: TestCoachNewInstallationAndEnvironmentCannotEnableLegacy/false (0.31s)
+    --- PASS: TestCoachNewInstallationAndEnvironmentCannotEnableLegacy/true (0.17s)
+=== RUN   TestReviewAcceptanceNarrowPatchPreservesRows
+--- PASS: TestReviewAcceptanceNarrowPatchPreservesRows (0.37s)
+=== RUN   TestReviewAcceptanceIsolationAndAlertPersistence
+2026/10/15 14:32:58 INFO request method=POST route=/api/v1/setup status=201 latency_ms=78.709 id=dxOcFeVFbArgKngQAXlOkJXbNPwkhvAK
+2026/10/15 14:32:58 WARN request method=POST route=/api/v1/setup status=409 latency_ms=0.03 id=rtsrMocZwsuDNNfWknOaJGhZgPKfEVXy err_code=conflict err="setup already complete"
+2026/10/15 14:32:58 INFO request method=POST route=/api/v1/auth/register status=201 latency_ms=77.505 id=YwfjzDLROfNLMqrNLMqgmWYAFLHbPCNX
+2026/10/15 14:32:58 INFO request method=POST route=/api/v1/auth/login status=200 latency_ms=72.455 id=nwHXkWVXKVKFuvzQIelehshIUPPBVXDW
+2026/10/15 14:32:58 INFO request method=POST route=/api/v1/accounts status=201 latency_ms=1.329 id=SUMMOHbkowCkieIMLSMAmWyxAOUzvEWJ
+2026/10/15 14:32:58 INFO request method=POST route=/api/v1/accounts status=201 latency_ms=1.241 id=WrqpIkQgcIVhYTzVwfGYEQdCUqZBhGIV
+2026/10/15 14:32:58 INFO request method=POST route=/api/v1/executions status=201 latency_ms=1.909 id=BSZUhhBWAEIEwqOzTGykyFzaNejhggMP
+2026/10/15 14:32:58 INFO request method=POST route=/api/v1/executions status=201 latency_ms=1.828 id=mbRVXwLiWhYToOtZZXGaQdWqDEJwimlg
+2026/10/15 14:32:58 INFO request method=GET route=/api/v1/trades status=200 latency_ms=0.355 id=ukZEFseIdSNULsaZnxasgxiPYDCdOiud query="account_id=1e5669bd-1416-4a57-ad44-e0f42e4ea9cf"
+2026/10/15 14:32:58 INFO request method=POST route=/api/v1/executions status=201 latency_ms=2.367 id=FmWCuHDhSeBTdrTTtPZmSDpGUkfQgKki
+2026/10/15 14:32:58 INFO request method=POST route=/api/v1/executions status=201 latency_ms=1.885 id=ixfGxKhxsvMNSUahNwoLglljihTAUZfr
+2026/10/15 14:32:58 INFO request method=GET route=/api/v1/trades status=200 latency_ms=0.285 id=kYWQJubhpQGLdlSxwfTkNWCIVOHesYHf query="account_id=aecc8479-c59d-438f-85b1-6dd57155f580"
+2026/10/15 14:32:58 INFO request method=GET route=/api/v1/trades/:id status=200 latency_ms=0.31 id=cXaCFVgLVfJpiQaxQBdimxgsCbqVXurJ params=map[id:e8fb6512-de53-4ff3-b9e5-ad3832d971ec]
+2026/10/15 14:32:58 WARN request method=GET route=/api/v1/trades/:id status=404 latency_ms=0.069 id=PKVIiiOXHMFswlEqajMHBumGSpUiQqrL params=map[id:e8fb6512-de53-4ff3-b9e5-ad3832d971ec] err_code=not_found err="trade not found"
+2026/10/15 14:32:58 WARN request method=GET route=/api/v1/trades/:id status=401 latency_ms=0.002 id=bGSQdSIYiHxSfwoTjAsiYmpzSZLFvRhj params=map[id:e8fb6512-de53-4ff3-b9e5-ad3832d971ec] err="missing token"
+2026/10/15 14:32:58 WARN request method=PATCH route=/api/v1/trades/:id status=404 latency_ms=0.062 id=ZGCXIQZDZiLODFdonqioYUXZLTgzyNUy params=map[id:e8fb6512-de53-4ff3-b9e5-ad3832d971ec] err_code=not_found err="trade not found"
+2026/10/15 14:32:58 WARN request method=PATCH route=/api/v1/trades/:id status=401 latency_ms=0.001 id=XsGGLIpRdpgkDlEJlziCUsluZGxiUwTH params=map[id:e8fb6512-de53-4ff3-b9e5-ad3832d971ec] err="missing token"
+2026/10/15 14:32:58 WARN request method=GET route=/api/v1/trades status=400 latency_ms=0.055 id=XmZMaGkNJfbrIXqDqmrZsqPKBCTEpaJq query="status=closed&account_id=aecc8479-c59d-438f-85b1-6dd57155f580" err_code=unknown_currency err="account scope currency could not be resolved"
+2026/10/15 14:32:58 WARN request method=GET route=/api/v1/trades status=400 latency_ms=0.047 id=vDJaLLZsGrRfpAAFcmRpmHAYxRhyNStW query="status=closed&account_id=1e5669bd-1416-4a57-ad44-e0f42e4ea9cf,aecc8479-c59d-438f-85b1-6dd57155f580" err_code=unknown_currency err="account scope currency could not be resolved"
+2026/10/15 14:32:58 WARN request method=GET route=/api/v1/admin/backup status=403 latency_ms=0.034 id=iQSOMVJXYfSRqFSTDNscUQXfyxqJEXXZ err_code=forbidden err="owner access required"
+2026/10/15 14:32:58 WARN request method=PATCH route=/api/v1/me/preferences status=401 latency_ms=0.001 id=oEubRgrdRZVIyFnqqhkHtVnUsepnNzVS err="missing token"
+2026/10/15 14:32:58 INFO request method=GET route=/api/v1/trades/:id status=200 latency_ms=0.284 id=KiwErTUGOyrlUgsGHMsdhsoWhWXIGoYx params=map[id:e8fb6512-de53-4ff3-b9e5-ad3832d971ec]
+2026/10/15 14:32:58 INFO request method=PATCH route=/api/v1/trades/:id status=200 latency_ms=0.624 id=TwasjrswTIMbmetweUIaDafFiMWiMglT params=map[id:1749ca28-7cf6-4945-82db-9e64ef051d3e]
+2026/10/15 14:32:58 INFO request method=PATCH route=/api/v1/me/preferences status=200 latency_ms=0.216 id=grWkNXCYIBWXrnBdApzwaLHNIqvJloUd
+2026/10/15 14:32:58 INFO request method=GET route=/api/v1/me/preferences status=200 latency_ms=0.048 id=xWstjMLJWSIAUFYpXNHeGAvnsMyntMcK
+2026/10/15 14:32:58 INFO request method=PATCH route=/api/v1/me/preferences status=200 latency_ms=0.206 id=cYmDwIqMepLZfVBGKlnMhjHYoQpiEWTj
+2026/10/15 14:32:58 INFO request method=GET route=/api/v1/trades/:id status=200 latency_ms=0.228 id=xXoBwqdSbLTBfLZhbcwIMwNIelJmRrzr params=map[id:e8fb6512-de53-4ff3-b9e5-ad3832d971ec]
+--- PASS: TestReviewAcceptanceIsolationAndAlertPersistence (0.31s)
+PASS
+ok  	github.com/tradermemos/api/internal/api	2.519s
+=== RUN   TestExtractTradeFromImage_timeout
+--- PASS: TestExtractTradeFromImage_timeout (0.21s)
+=== RUN   TestExtractTradeFromImage_busyAfterRetries
+--- PASS: TestExtractTradeFromImage_busyAfterRetries (0.01s)
+=== RUN   TestExtractTradeFromImage_noRetryOnClientError
+--- PASS: TestExtractTradeFromImage_noRetryOnClientError (0.00s)
+PASS
+ok  	github.com/tradermemos/api/internal/ocr	0.396s
+=== RUN   TestCrossUserIsolationProviderConfigurationDiagnostics
+    provider_failure_matrix_test.go:101: case=config/status/ocr/test
+    provider_failure_matrix_test.go:101: case=config/status/ocr/models
+    provider_failure_matrix_test.go:101: case=config/status/coach/test
+    provider_failure_matrix_test.go:101: case=config/status/coach/models
+    provider_failure_matrix_test.go:101: case=config/embedded/ocr/test
+    provider_failure_matrix_test.go:101: case=config/embedded/ocr/models
+    provider_failure_matrix_test.go:101: case=config/embedded/coach/test
+    provider_failure_matrix_test.go:101: case=config/embedded/coach/models
+    provider_failure_matrix_test.go:101: case=config/malformed/ocr/test
+    provider_failure_matrix_test.go:101: case=config/malformed/ocr/models
+    provider_failure_matrix_test.go:101: case=config/malformed/coach/test
+    provider_failure_matrix_test.go:101: case=config/malformed/coach/models
+    provider_failure_matrix_test.go:101: case=config/transport/ocr/test
+    provider_failure_matrix_test.go:101: case=config/transport/ocr/models
+    provider_failure_matrix_test.go:101: case=config/transport/coach/test
+    provider_failure_matrix_test.go:101: case=config/transport/coach/models
+    provider_failure_matrix_test.go:101: case=config/timeout/ocr/test
+    provider_failure_matrix_test.go:101: case=config/timeout/ocr/models
+    provider_failure_matrix_test.go:101: case=config/timeout/coach/test
+    provider_failure_matrix_test.go:101: case=config/timeout/coach/models
+    provider_failure_matrix_test.go:101: case=config/cancel/ocr/test
+    provider_failure_matrix_test.go:101: case=config/cancel/ocr/models
+    provider_failure_matrix_test.go:101: case=config/cancel/coach/test
+    provider_failure_matrix_test.go:101: case=config/cancel/coach/models
+--- PASS: TestCrossUserIsolationProviderConfigurationDiagnostics (0.64s)
+=== RUN   TestCrossUserIsolationAsyncProviderErrors
+--- PASS: TestCrossUserIsolationAsyncProviderErrors (0.63s)
+=== RUN   TestCrossUserIsolationStoredProviderErrors
+--- PASS: TestCrossUserIsolationStoredProviderErrors (0.72s)
+=== RUN   TestCrossUserIsolationProviderFailureMatrix
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/status/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/status/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/status/pat
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/embedded/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/embedded/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/embedded/pat
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/malformed/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/malformed/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/malformed/pat
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/transport/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/transport/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/transport/pat
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/timeout/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/timeout/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/timeout/pat
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/cancel/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/cancel/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/cancel/pat
+--- PASS: TestCrossUserIsolationProviderFailureMatrix (0.50s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/status/owner (0.01s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/status/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/status/pat (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/embedded/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/embedded/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/embedded/pat (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/malformed/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/malformed/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/malformed/pat (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/transport/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/transport/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/transport/pat (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/timeout/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/timeout/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/timeout/pat (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/cancel/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/cancel/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/cancel/pat (0.00s)
+PASS
+ok  	github.com/tradermemos/api/internal/api	2.911s

@@ -1,0 +1,15 @@
+[WebServer] (node:62190) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:62191) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/review-html-boundary.spec.ts:7:1 › HTML journals reject ambiguous notes before PATCH and preserve bytes through independent readback (41.2s)
+  ✓  2 e2e/review-inbox.spec.ts:5:1 › review queue preserves fields, navigation, account scope, errors and dismissal (8.6s)
+  ✓  3 e2e/review-remediation.spec.ts:8:1 › review edits preserve raw journals and untouched fields across independent editors (5.0s)
+  ✓  4 e2e/review-sbi-integration.spec.ts:11:1 › SBI review grade and journal stay linked across same-minute reverse reimport (1.2s)
+  ✓  5 e2e/sbi-review-direction.spec.ts:17:1 › SBI closing-first import reconciles review roles, re-entry and duplicates (7.5s)
+  ✓  6 e2e/trade-quantities.spec.ts:14:1 › quantities agree across broker paths, sorting, details, locales and compact Web (8.3s)
+
+  6 passed (1.2m)
