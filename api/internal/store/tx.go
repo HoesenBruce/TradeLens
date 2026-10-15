@@ -53,3 +53,27 @@ func (s *pgStore) InTx(ctx context.Context, fn func(Querier) error) error {
 	}
 	return tx.Commit()
 }
+
+// SerializableTxRunner also detects concurrent writes while previewing/applying a replay.
+type SerializableTxRunner interface {
+	InSerializableTx(context.Context, func(Querier) error) error
+}
+
+func serializableTx(ctx context.Context, conn *sql.DB, bind func(*sql.Tx) Querier, fn func(Querier) error) error {
+	tx, err := conn.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if err := fn(bind(tx)); err != nil {
+		return err
+	}
+	return tx.Commit()
+}
+
+func (s *sqliteStore) InSerializableTx(ctx context.Context, fn func(Querier) error) error {
+	return serializableTx(ctx, s.conn, func(tx *sql.Tx) Querier { return s.Queries.WithTx(tx) }, fn)
+}
+func (s *pgStore) InSerializableTx(ctx context.Context, fn func(Querier) error) error {
+	return serializableTx(ctx, s.conn, func(tx *sql.Tx) Querier { return NewPGFromDBTX(tx) }, fn)
+}

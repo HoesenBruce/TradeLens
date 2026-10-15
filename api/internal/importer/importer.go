@@ -12,6 +12,7 @@ const (
 
 // ParsedExecution is a broker-agnostic fill produced by an Importer.
 type ParsedExecution struct {
+	SourceRow           int // one-based CSV row; zero for formats without row provenance
 	ExternalID          string
 	DedupKey            string // optional broker-stable identity when fill fields are not unique
 	Symbol              string

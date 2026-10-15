@@ -458,6 +458,16 @@ export interface JournalNote {
   updated_at: string;
 }
 
+export interface ReprocessResult {
+  trades_changed: number;
+  retained_rows: number;
+  executions: number;
+  changed: number;
+  trades: number;
+  fingerprint: string;
+  applied: boolean;
+}
+
 export interface ImportBatch {
   id: string;
   user_id: string;
@@ -465,6 +475,8 @@ export interface ImportBatch {
   source: string;
   filename: string | null;
   column_mapping: string | null;
+  retained_rows?: number;
+  reprocessable?: boolean;
   row_count: number;
   status: string;
   created_at: string;

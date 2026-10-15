@@ -187,6 +187,31 @@ type ImportBatch struct {
 	CreatedAt     time.Time      `json:"created_at"`
 }
 
+type ImportSourceContext struct {
+	ID        string `json:"id"`
+	UserID    string `json:"user_id"`
+	AccountID string `json:"account_id"`
+	Payload   string `json:"payload"`
+}
+
+type ImportSourceFill struct {
+	SourceID    string `json:"source_id"`
+	ExecutionID string `json:"execution_id"`
+	Leg         int64  `json:"leg"`
+	Snapshot    string `json:"snapshot"`
+}
+
+type ImportSourceRow struct {
+	ID        string `json:"id"`
+	UserID    string `json:"user_id"`
+	AccountID string `json:"account_id"`
+	BatchID   string `json:"batch_id"`
+	ContextID string `json:"context_id"`
+	RowNumber int64  `json:"row_number"`
+	Payload   string `json:"payload"`
+	Active    int64  `json:"active"`
+}
+
 type InstrumentSpec struct {
 	ID             string  `json:"id"`
 	SymbolRoot     string  `json:"symbol_root"`

@@ -29,6 +29,7 @@ func (s *Server) importRoutes(g *echo.Group) {
 	g.POST("/imports/commit", s.handleImportCommitFresh)
 	g.POST("/imports/:id/commit", s.handleImportCommit)
 	g.GET("/imports", s.handleListImports)
+	g.POST("/imports/:id/reprocess", s.handleReprocessImport)
 	g.DELETE("/imports/:id", s.handleDeleteImport)
 }
 
@@ -538,6 +539,10 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 			committed.Skipped = skipped
 		}
 
+		if err := s.retainCSVSource(ctx, q, c, batch, loaded, parsed, committed.ExecutionHashes); err != nil {
+			return fmt.Errorf("retain import source: %w", err)
+		}
+
 		if err := q.SetImportBatchStatus(ctx, store.SetImportBatchStatusParams{Status: "committed", ID: batch.ID, UserID: uid}); err != nil {
 			return fmt.Errorf("finalize batch: %w", err)
 		}
@@ -718,6 +723,8 @@ type importBatchDTO struct {
 	RowCount      int64   `json:"row_count"`
 	Status        string  `json:"status"`
 	CreatedAt     string  `json:"created_at"`
+	RetainedRows  int64   `json:"retained_rows"`
+	Reprocessable bool    `json:"reprocessable"`
 }
 
 func toImportBatchDTO(r store.ImportBatch) importBatchDTO {
@@ -740,9 +747,20 @@ func (s *Server) handleListImports(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not list imports", nil)
 	}
+	counts, err := s.deps.Store.ListImportSourceCounts(c.Request().Context(), auth.UserID(c))
+	if err != nil {
+		return Fail(http.StatusInternalServerError, "internal", "could not load retained source counts", nil)
+	}
+	byBatch := map[string]store.ListImportSourceCountsRow{}
+	for _, count := range counts {
+		byBatch[count.BatchID] = count
+	}
 	out := make([]importBatchDTO, 0, len(rows))
 	for _, r := range rows {
-		out = append(out, toImportBatchDTO(r))
+		dto := toImportBatchDTO(r)
+		dto.RetainedRows = byBatch[r.ID].RetainedRows
+		dto.Reprocessable = r.Status == "committed" && dto.RetainedRows > 0 && byBatch[r.ID].ActiveRows > 0
+		out = append(out, dto)
 	}
 	return c.JSON(http.StatusOK, out)
 }

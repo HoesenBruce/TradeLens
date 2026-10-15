@@ -953,6 +953,50 @@ paths:
               schema:
                 $ref: "#/components/schemas/ImportResult"
 
+  /api/v1/imports/{id}/reprocess:
+    post:
+      tags: [Import]
+      summary: Preview or apply reparsing of retained CSV source rows
+      description: |
+        Uses saved mapping/date/timezone choices and current parser/accounting rules.
+        Preview rolls back all writes. Apply requires the preview fingerprint and
+        updates existing execution IDs atomically. Manual edits, missing legs,
+        changed trade membership and stale previews abort without changing data.
+        Superseded source rows are processed from their newer import batch.
+      operationId: reprocessImport
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                apply:
+                  type: boolean
+                  default: false
+                fingerprint:
+                  type: string
+                  description: Required when apply is true; returned by a fresh preview.
+      responses:
+        "200":
+          description: Preview or committed result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportReprocessResult"
+        "400":
+          description: Invalid request or missing preview fingerprint
+        "404":
+          description: Import batch does not belong to the authenticated user
+        "409":
+          description: Source unavailable, manual edit, grouping conflict or stale preview
+        "500":
+          description: Processing failed; all changes rolled back
+        "503":
+          description: Transactional store unavailable
+
   /api/v1/imports/{id}:
     delete:
       tags: [Import]
@@ -2379,12 +2423,40 @@ components:
           $ref: "#/components/schemas/NullString"
         row_count:
           type: integer
+        retained_rows:
+          type: integer
+          description: Distinct source rows first retained by this batch, including superseded revisions.
+        reprocessable:
+          type: boolean
+          description: Committed batch with at least one current retained execution CSV row.
         status:
           type: string
           enum: [pending, committed, failed, reversed]
         created_at:
           type: string
           format: date-time
+
+    ImportReprocessResult:
+      type: object
+      required: [retained_rows, executions, changed, trades, trades_changed, fingerprint, applied]
+      properties:
+        retained_rows:
+          type: integer
+        executions:
+          type: integer
+        changed:
+          type: integer
+          description: Existing executions whose parsed fields change.
+        trades:
+          type: integer
+          description: Account trade count after recalculation.
+        trades_changed:
+          type: integer
+          description: Trades whose calculated fields change, excluding update timestamps.
+        fingerprint:
+          type: string
+        applied:
+          type: boolean
 
     ImportPreview:
       type: object

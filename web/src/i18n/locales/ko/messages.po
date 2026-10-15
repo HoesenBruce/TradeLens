@@ -12685,3 +12685,57 @@ msgstr "미청산 수량 / 누적 진입 수량; 잔여 수량순 정렬"
 #: src/app/screens/ReviewInboxView.tsx
 msgid "review.ambiguousNotes"
 msgstr "리뷰 메모 섹션을 명확히 식별할 수 없습니다. 전체 일지에서 정리해 주세요. 초안은 유지됩니다."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.retained_rows
+#. placeholder {1}: preview.executions
+#. placeholder {2}: preview.changed
+#: src/app/screens/settings/import-history.tsx:79
+msgid "imports.reprocessSummary"
+msgstr "원본 {0}행 · 체결 {1}건 · 변경 {2}건 · 거래 변경 {3}건"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:71
+msgid "imports.applyReprocess"
+msgstr "재처리 적용"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:46
+#: src/app/screens/settings/import-history.tsx:80
+msgid "imports.associationsKept"
+msgstr "기존 일지 및 복기 연결을 유지했습니다."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:45
+msgid "imports.reprocessed"
+msgstr "가져오기를 재처리했습니다"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:244
+msgid "imports.newerSource"
+msgstr "더 최신 원본 데이터가 있습니다. 해당 가져오기 내역을 사용하세요."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:245
+msgid "imports.noRetainedSource"
+msgstr "저장된 원본 행이 없습니다. 이전 가져오기, 중복 데이터만 있는 가져오기 또는 미지원 형식은 여기서 재처리할 수 없습니다."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:72
+msgid "imports.previewReprocess"
+msgstr "변경 미리 보기"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:77
+msgid "imports.reprocessDescription"
+msgstr "저장된 원본 행을 현재 규칙으로 다시 분석하고 이 계좌를 재계산합니다. 과거 손익이 바뀔 수 있습니다. 편집 또는 그룹 충돌이 발생하면 처리를 중단하고 기존 데이터를 유지합니다."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:58
+msgid "imports.reprocess"
+msgstr "재처리"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:61
+msgid "imports.reprocessTitle"
+msgstr "현재 규칙으로 재처리"
