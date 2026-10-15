@@ -16,8 +16,12 @@ The v0.4.0 candidate in [#293](https://github.com/HoesenBruce/TradeLens/pull/293
 is **not released or deployment-ready**. Its application/security checks passed.
 Local ARM64/AMD64 containers now build and pass their recorded acceptance with the
 one-line Node pin in [#314](https://github.com/HoesenBruce/TradeLens/pull/314);
-that fix is not yet in the release candidate. The refreshed exact release SHA,
-formal registry artifacts and target-environment acceptance remain pending.
+that fix was merged as `8b8f44b40a2382623100169286e3d54c65a543ba` and is now
+in the refreshed #293 candidate `c3ae0d32df35e23b210102e8365dd808ab30ba66`.
+Those local container results retain their original e23-plus-override identity;
+this documentation integration and the final release candidate still need their
+own source checks and acceptance. Formal registry artifacts and target-environment
+acceptance remain pending.
 The existing v0.3.1 images do not contain the new Core security/isolation fixes;
 they are a recorded rollback baseline, not proof that old binaries are safe to
 expose. See the [Phase A report](validation/release-0.4.0/phase-a-acceptance.md)
