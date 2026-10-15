@@ -26,6 +26,10 @@ const ambiguousDocuments = [
   ["HTML without apparent heading", "<pre>\nexample only\n</pre>\n\n## Planned direction\nSHORT"],
   ["comment", "<!--\n## Review notes\nexample\n-->\n\n## Unknown\nkeep"],
   ["other HTML", "<textarea>\n## Review notes\nexample\n</textarea>"],
+  [
+    "nonstandard legacy heading",
+    "Legacy paragraph\n##Review notes\nnot an actual Markdown heading\n## Unknown\nkeep",
+  ],
   ["literal less-than", "Risk < budget\n\n## Review notes\nold"],
   [
     "invalid backtick info bypass",
@@ -96,6 +100,15 @@ describe("unsupported journal boundaries fail closed", () => {
   }
 
   for (const eol of ["\n", "\r\n"]) {
+    for (const marker of ["#", "##"]) {
+      for (const indent of ["", "   "]) {
+        it(`preserves empty ${marker} section, ${JSON.stringify(indent)}, ${JSON.stringify(eol)}`, () => {
+          const prefix = "## Review notes" + eol;
+          const suffix = eol + eol + indent + marker + eol + "keep unrelated  " + eol;
+          expect(replaceReviewNotes(prefix + "old" + suffix, "new")).toBe(prefix + "new" + suffix);
+        });
+      }
+    }
     for (const [open, close] of [
       ["```html", "```` \t"],
       ["~~~~info`", "~~~~ \t"],

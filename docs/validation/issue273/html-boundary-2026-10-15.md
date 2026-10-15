@@ -32,7 +32,8 @@ Fence closing tails accept ASCII space/tab only, so NBSP, vertical tab and form
 feed cannot turn an unclosed example into editable sections. Whitespace-only
 indented blank lines remain verbatim. Bare CR line endings reject editing; LF and CRLF remain supported. These rules
 are deliberately conservative, including horizontal rules and incidental matching
-text. Repeated Review headings and unclosed fences likewise reject. Grade-only
+text. Repeated Review headings, unclosed fences and the nonstandard legacy
+`##Review notes` candidate (missing ATX whitespace) likewise reject. Grade-only
 PATCH remains available in every rejected case.
 
 HTML inside known closed, valid Markdown fences stays literal code. Lossless
@@ -48,7 +49,7 @@ in `remediation-2026-10-15.md`; this change does not claim strict conflict safet
 
 ## Permanent regression evidence
 
-- `web/src/lib/reviewInbox.html.test.ts`: 64 cases covering the exact independent
+- `web/src/lib/reviewInbox.html.test.ts`: 74 cases covering the exact independent
   reproduction, PRE case variants, attributes/multiline tags, nested/malformed/
   unclosed blocks, orphan closing tags, repeated apparent headings, real headings
   following HTML, no real target, comments/other HTML and literal `<`; LF/CRLF,
@@ -56,10 +57,11 @@ in `remediation-2026-10-15.md`; this change does not claim strict conflict safet
   Includes the independent reviewer's invalid-backtick-info HTML bypass and
   exact closing-tag loss, Setext H1/H2, containers, references and bare CR.
 - `web/e2e/review-html-boundary.spec.ts`: independent authenticated clients plus
-  the actual production Inbox. For 23 raw documents in LF and CRLF, notes edits
+  the actual production Inbox. For 24 raw documents in LF and CRLF, notes edits
   issue zero PATCHes, preserve the draft and persisted full detail, then Cancel
   plus grade-only PATCH preserves all original bytes and unrelated API fields.
-  Eight closed-fence edit/append scenarios retain HTML examples verbatim and
+  Four valid empty-ATX-boundary edits preserve the following section and full
+  unrelated detail. Eight closed-fence edit/append scenarios retain HTML examples verbatim and
   verify persisted GET from the independent client. A separate stale-editor case
   adds HTML via the other client after opening: dirty notes reject, while a
   subsequent grade-only save preserves that newest document.
@@ -74,7 +76,10 @@ in `remediation-2026-10-15.md`; this change does not claim strict conflict safet
   passed) before the second correction. A further independent adversarial probe
   found non-ASCII fence-tail acceptance; six new failing cases were captured
   before correcting closure validation to ASCII space/tab only. These findings were fixed before any
-  remediation push; final independent acceptance is required on the new Head.
+  remediation push. A subsequent independent review found empty ATX H1/H2
+  boundaries were not recognized: eight permanent unit cases failed before
+  their correction, and now preserve those sections verbatim. Final independent
+  acceptance is required on the new Head.
 
 Final-source validation results, commands, exact commit identity, original
 security-matrix provenance, separate independent review and evidence hashes

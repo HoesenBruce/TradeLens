@@ -86,6 +86,7 @@ test("HTML journals reject ambiguous notes before PATCH and preserve bytes throu
   const documents = [
     "<pre>\n## Review notes\nexample text\n</pre>\n\n## Unknown\nkeep",
     "<PRE>\n## Review notes\nexample\n</PRE>",
+    "Legacy paragraph\n##Review notes\nnot an actual Markdown heading\n## Unknown\nkeep",
     '<PrE class="code" data-example=">">\n## Review notes\n  example  \n</pRe>',
     '<pre\n class="code"\n>\n## Review notes\nexample\n</pre>',
     "<pre>\n<pre>\n## Review notes\nexample\n</pre>\n</pre>",
@@ -154,6 +155,23 @@ test("HTML journals reject ambiguous notes before PATCH and preserve bytes throu
         const { trade_quality: _beforeGrade, ...beforeOther } = before;
         const { trade_quality: _afterGrade, ...afterOther } = after;
         expect(afterOther).toEqual(beforeOther);
+      }
+
+      // Empty ATX headings are real section boundaries too.
+      for (const marker of ["#", "   ##"]) {
+        const prefix = "## Review notes" + eol;
+        const suffix = eol + eol + marker + eol + "keep unrelated  " + eol;
+        const before = await open(prefix + "old" + suffix);
+        writes.length = 0;
+        await notes.fill("new");
+        const response = page.waitForResponse(
+          (r) => r.url() === url && r.request().method() === "PATCH",
+        );
+        await save.click();
+        expect((await response).ok()).toBeTruthy();
+        expect(writes).toEqual([{ notes: prefix + "new" + suffix }]);
+        const after = await readB();
+        expect(after).toEqual({ ...before, notes: prefix + "new" + suffix });
       }
 
       // HTML is literal inside known closed Markdown fences; retain existing editing/append behavior.

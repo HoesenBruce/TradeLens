@@ -52,21 +52,21 @@ function reviewSections(raw: string) {
         (/^(?: {4}| {0,3}\t)/.test(text) && /[^ \t]/.test(text))
       )
         return undefined;
-      const heading = /^ {0,3}(#{1,2})[ \t]+(.*)$/.exec(text);
+      const heading = /^ {0,3}(#{1,2})(?:[ \t]+(.*)|$)/.exec(text);
       const target =
         heading?.[1] === "##" &&
-        heading[2]
+        (heading[2] ?? "")
           .replace(/[ \t]+#+[ \t]*$/, "")
           .trim()
           .toLowerCase() === "review notes";
-      const legacyTarget = /^##[ \t]*Review notes[ \t]*$/i.test(text);
-      if (!heading && !legacyTarget) {
+      if (!heading && /^##Review notes[ \t]*$/i.test(text)) return undefined;
+      if (!heading) {
         offset += line.length;
         continue;
       }
       const previous = sections.at(-1);
       if (previous?.end === raw.length) previous.end = offset;
-      if (target || legacyTarget) {
+      if (target) {
         sections.push({
           start: offset + line.length,
           end: raw.length,
