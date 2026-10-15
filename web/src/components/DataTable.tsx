@@ -171,6 +171,7 @@ export function DataTable<T extends RowData>({
     count: rows.length,
     getScrollElement: () => tableContainerRef.current,
     estimateSize: () => metrics.rowHeight,
+    getItemKey: (index) => rows[index].id,
     overscan: 10,
   });
 
@@ -283,6 +284,8 @@ export function DataTable<T extends RowData>({
             return (
               <tr
                 key={row.id}
+                data-index={virtualRow.index}
+                ref={rowVirtualizer.measureElement}
                 className={cn(
                   "group transition-colors duration-150",
                   onRowClick && "cursor-pointer hover:bg-accent",

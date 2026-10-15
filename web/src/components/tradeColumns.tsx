@@ -1,3 +1,4 @@
+import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { tradeStatusLabel } from "@/lib/tradeLabels";
 import { tradeQuantities, quantityText } from "@/lib/tradeQuantities";
 import { TradeQuantityCell } from "./TradeQuantities";
@@ -5,7 +6,7 @@ import { t as tr } from "@lingui/core/macro";
 import type { ColumnDef, ColumnPinningState } from "@/lib/table";
 import type { Trade } from "@/lib/api/types";
 
-import { fmtDateTime, fmtDuration, fmtTradeDay } from "@/lib/format";
+import { fmtDateTime, fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { resolveTradeDirection } from "@/lib/tradeDirection";
 import { DirCell } from "./DirCell";
@@ -197,15 +198,15 @@ export function tradeColumns(
       id: "qty_opened",
       accessorFn: (row) => tradeQuantities(row).open_qty ?? undefined,
       sortUndefined: "last",
-      header: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }),
+      header: tr({ id: "trades.closeProgress", message: "Close progress" }),
       meta: {
         align: "right",
-        label: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }),
+        label: tr({ id: "trades.closeProgress", message: "Close progress" }),
         headerTitle: tr({
-          id: "trades.quantitySortHint",
-          message: "Remaining open quantity / cumulative entry quantity; sorted by open quantity",
+          id: "trades.closeProgressSortHint",
+          message: "Closed versus remaining quantity; sorted by remaining quantity",
         }),
-        minWidth: 80,
+        minWidth: 180,
       },
       cell: (i) => <TradeQuantityCell trade={i.row.original} />,
       sortFn: (a, b, id) => {
@@ -341,16 +342,7 @@ export function tradeColumns(
         headerTitle: tr({ id: "trades.holdHint", message: "Time in trade" }),
         minWidth: 56,
       },
-      cell: (i) => {
-        const v = i.getValue<number | null>();
-        return v == null || v <= 0 ? (
-          muted("-")
-        ) : (
-          <span className="tabular-nums text-muted-foreground" title={fmtDuration(v)}>
-            {fmtDuration(v)}
-          </span>
-        );
-      },
+      cell: (i) => <TradeHoldingDuration trade={i.row.original} />,
     },
     {
       accessorKey: "fees_total",
@@ -519,7 +511,7 @@ export function tradeSortColumns(): { id: string; label: string }[] {
     { id: "status", label: tr({ id: "trades.status", message: "Status" }) },
     { id: "direction", label: tr({ id: "trades.direction", message: "Direction" }) },
     { id: "instrument_type", label: tr({ id: "trades.market", message: "Market" }) },
-    { id: "qty_opened", label: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }) },
+    { id: "qty_opened", label: tr({ id: "trades.closeProgress", message: "Close progress" }) },
     { id: "avg_entry_price", label: tr({ id: "trades.entry", message: "Entry" }) },
     { id: "avg_exit_price", label: tr({ id: "trades.exit", message: "Exit" }) },
     { id: "ent_tot", label: tr({ id: "trades.entryTotal", message: "Entry total" }) },
@@ -541,7 +533,7 @@ export function tradeViewColumns(): { id: string; label: string }[] {
     { id: "status", label: tr({ id: "trades.status", message: "Status" }) },
     { id: "direction", label: tr({ id: "trades.direction", message: "Direction" }) },
     { id: "instrument_type", label: tr({ id: "trades.market", message: "Market" }) },
-    { id: "qty_opened", label: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }) },
+    { id: "qty_opened", label: tr({ id: "trades.closeProgress", message: "Close progress" }) },
     { id: "avg_entry_price", label: tr({ id: "trades.entry", message: "Entry" }) },
     { id: "avg_exit_price", label: tr({ id: "trades.exit", message: "Exit" }) },
     { id: "ent_tot", label: tr({ id: "trades.entryTotal", message: "Entry total" }) },

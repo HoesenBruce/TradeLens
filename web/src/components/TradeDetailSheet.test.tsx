@@ -153,8 +153,8 @@ describe("TradeDetailSheet", () => {
     // Identity is the drawer title: symbol on top, contract meta beneath it.
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(/CL8698\s*STK\s*·\s*LONG/);
     expect(screen.getByText("+$2.50")).toBeInTheDocument();
-    // Status line shows opened → closed dates (Jul 13 or 14 depending on TZ)
-    expect(screen.getByText(/Jul 1[34].*→.*Jul 1[34]/)).toBeInTheDocument();
+    // Same-day timeline shows the date once, then the precise opening/closing times.
+    expect(screen.getByText(/Jul 1[34].*→.*<1m/)).toBeInTheDocument();
     expect(screen.getByText("Entry")).toBeInTheDocument();
     expect(screen.getByText("Exit")).toBeInTheDocument();
     expect(screen.queryByText("Target")).not.toBeInTheDocument();

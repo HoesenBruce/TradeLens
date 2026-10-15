@@ -115,3 +115,17 @@ func TestGenericImporterSourceTimezone(t *testing.T) {
 	require.Empty(t, res.Errors)
 	require.Equal(t, time.Date(2026, 7, 10, 16, 30, 0, 0, time.UTC), res.Executions[0].ExecutedAt)
 }
+
+func TestGenericPreservesDateOnlyPrecisionWithoutAnOffset(t *testing.T) {
+	mapping := map[string]string{"symbol": "symbol", "side": "side", "quantity": "quantity", "price": "price", "executed_at": "date"}
+	for _, stamp := range []string{"2026-10-13", "2026-10-13T09:30:00Z"} {
+		res := NewGeneric(mapping).ParseRows([]map[string]string{{"symbol": "AAPL", "side": "buy", "quantity": "100", "price": "100", "date": stamp}})
+		require.Empty(t, res.Errors)
+		require.Len(t, res.Executions, 1)
+		if stamp == "2026-10-13" {
+			require.Equal(t, "date", res.Executions[0].SourceTimePrecision)
+		} else {
+			require.Empty(t, res.Executions[0].SourceTimePrecision)
+		}
+	}
+}

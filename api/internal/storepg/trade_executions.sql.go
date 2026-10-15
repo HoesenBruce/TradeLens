@@ -8,6 +8,7 @@ package storepg
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const getTradeIDForExecution = `-- name: GetTradeIDForExecution :one
@@ -22,7 +23,7 @@ func (q *Queries) GetTradeIDForExecution(ctx context.Context, executionID string
 }
 
 const listOptionExecutionDetailsForUser = `-- name: ListOptionExecutionDetailsForUser :many
-SELECT te.trade_id, e.symbol, e.details
+SELECT te.trade_id, e.symbol, e.details, e.executed_at
 FROM trade_executions te
 JOIN executions e ON e.id = te.execution_id
 JOIN trades t ON t.id = te.trade_id
@@ -31,9 +32,10 @@ ORDER BY e.executed_at
 `
 
 type ListOptionExecutionDetailsForUserRow struct {
-	TradeID string         `json:"trade_id"`
-	Symbol  string         `json:"symbol"`
-	Details sql.NullString `json:"details"`
+	TradeID    string         `json:"trade_id"`
+	Symbol     string         `json:"symbol"`
+	Details    sql.NullString `json:"details"`
+	ExecutedAt time.Time      `json:"executed_at"`
 }
 
 func (q *Queries) ListOptionExecutionDetailsForUser(ctx context.Context, userID string) ([]ListOptionExecutionDetailsForUserRow, error) {
@@ -45,7 +47,7 @@ func (q *Queries) ListOptionExecutionDetailsForUser(ctx context.Context, userID 
 	var items []ListOptionExecutionDetailsForUserRow
 	for rows.Next() {
 		var i ListOptionExecutionDetailsForUserRow
-		if err := rows.Scan(&i.TradeID, &i.Symbol, &i.Details); err != nil {
+		if err := rows.Scan(&i.TradeID, &i.Symbol, &i.Details, &i.ExecutedAt); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

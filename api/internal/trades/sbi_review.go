@@ -8,7 +8,7 @@ import (
 	"github.com/tradermemos/api/internal/money"
 )
 
-const sbiDateWarning = "SBI date-level reconciliation: intraday order, fill pairing and holding duration are unknown."
+const sbiDateWarning = "SBI date-level reconciliation: intraday order, fill pairing and exact elapsed holding time are unknown; calendar holding days use market-local dates."
 const sbiMissingWarning = "Incomplete SBI opening evidence: disposal/close exceeds supported holdings; acquisition basis and P&L are unavailable."
 
 func sbiOpening(f Execution) bool {

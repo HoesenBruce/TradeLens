@@ -1,3 +1,4 @@
+import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { TradeQuantityDetails } from "./TradeQuantities";
 import { useLingui } from "@lingui/react";
@@ -206,8 +207,11 @@ export function TradeSummaryCard({
           <StatCell label={tr({ id: "trades.exit", message: "Exit" })}>
             {trade.avg_exit_price != null ? fmtMoney(trade.avg_exit_price, currency, locale) : "—"}
           </StatCell>
-          <StatCell label={tr({ id: "trades.hold", message: "Hold" })}>
-            {insights.holdLabel === "-" ? "—" : insights.holdLabel}
+          <StatCell
+            label={tr({ id: "trades.hold", message: "Hold" })}
+            valueClassName="whitespace-normal wrap-anywhere overflow-visible"
+          >
+            <TradeHoldingDuration trade={trade} />
           </StatCell>
           <StatCell
             label={tr({ id: "trades.gross", message: "Gross" })}
