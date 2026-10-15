@@ -12604,3 +12604,81 @@ msgstr "AI news analysis is temporarily unavailable. Manual news review remains 
 #: src/lib/tradeLabels.ts:8
 msgid "trades.remainingQuantity"
 msgstr "Remaining {quantity}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:46
+msgid "trades.entryQty"
+msgstr "Entry Qty"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:49
+msgid "trades.exitQty"
+msgstr "Exit Qty"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:52
+msgid "trades.openQty"
+msgstr "Open Qty"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:55
+msgid "trades.remainingPct"
+msgstr "Remaining %"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:20
+msgid "trades.openEntryDescription"
+msgstr "Open Qty {open} / Entry Qty {entry}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:199
+#: src/components/tradeColumns.tsx:202
+#: src/components/tradeColumns.tsx:520
+#: src/components/tradeColumns.tsx:542
+msgid "trades.openEntryQty"
+msgstr "Open Qty / Entry Qty"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:55
+msgid "trades.lifecyclePartial"
+msgstr "Partially closed"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:57
+msgid "trades.lifecycleClosed"
+msgstr "Position closed"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:53
+msgid "trades.lifecycleOpen"
+msgstr "Position open"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:59
+msgid "trades.lifecycleUnknown"
+msgstr "Position unknown"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:41
+msgid "trades.quantityServerUnavailable"
+msgstr "Quantity details are unavailable from this server."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:25
+msgid "trades.quantityMissingOpening"
+msgstr "Quantity is unknown because opening history is incomplete."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:30
+msgid "trades.quantityShareUnits"
+msgstr "Quantity is unknown because share units across a corporate action are unverified."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:36
+msgid "trades.quantityInconsistent"
+msgstr "Quantity is unknown because the stored trade inventory is inconsistent."
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:203
+msgid "trades.quantitySortHint"
+msgstr "Remaining open quantity / cumulative entry quantity; sorted by open quantity"

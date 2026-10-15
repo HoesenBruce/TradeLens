@@ -1,9 +1,10 @@
 import { useLingui } from "@lingui/react";
 import { t } from "@lingui/core/macro";
-import { directionLabel, remainingQuantityLabel, tradeStatusLabel } from "@/lib/tradeLabels";
+import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { ArrowDownRight, ArrowUpRight, NotebookPen } from "lucide-react";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
+import { TradeQuantityCell } from "./TradeQuantities";
 
 import { fmtDuration, fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
@@ -51,22 +52,6 @@ export function tradeListMeta(trade: Trade, showDate = false): TradeMetaPart[] {
   if (hold !== "-") parts.push({ key: "hold", text: hold, optional: true });
   if (r != null) parts.push({ key: "r", text: `${r.toFixed(2)}R`, optional: true });
   return parts;
-}
-
-/** Price line: size at entry, then the exit once there is one. */
-export function tradeListPrices(
-  fmtMoney: (v: number, currency: string, locale: string) => string,
-  trade: Trade,
-  currency: string,
-  fxRate = 1,
-): string {
-  const locale = intlLocale();
-  const qty = trade.qty_opened.toFixed(trade.qty_opened % 1 === 0 ? 0 : 2);
-  const entry =
-    trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, locale) : "—";
-  if (trade.avg_exit_price == null)
-    return `${qty} @ ${entry}${remainingQuantityLabel(trade) ? ` · ${remainingQuantityLabel(trade)}` : ""}`;
-  return `${qty} @ ${entry} → ${fmtMoney(trade.avg_exit_price * fxRate, currency, locale)}`;
 }
 
 export interface TradeListItemProps {
@@ -206,7 +191,8 @@ export function TradeListItem({
 
         <div className="flex items-baseline justify-between gap-3 text-[14px] tabular-nums">
           <span className="min-w-0 truncate text-foreground">
-            {tradeListPrices(fmtMoney, trade, currency, fxRate)}
+            <TradeQuantityCell trade={trade} />
+            {` @ ${trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, intlLocale()) : "—"}${trade.avg_exit_price != null ? ` → ${fmtMoney(trade.avg_exit_price * fxRate, currency, intlLocale())}` : ""}`}
             {/* Position size, so an option's P&L reconciles: 1 contract moving
                 $0.18 is $18, not $0.18, and the ×100 is invisible otherwise. */}
             <span className="text-muted-foreground @max-[19rem]/trade-row:hidden">

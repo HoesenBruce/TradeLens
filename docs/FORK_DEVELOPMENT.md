@@ -342,3 +342,14 @@ trade IDs and prune obsolete trade rows; annotations on changed IDs are not move
 automatically. Follow the backup, association audit, explicit account regroup and
 rollback procedure in [issue #307 validation](validation/issue307/README.md) before
 recalculating existing data.
+
+### Trade quantity read model (#308)
+
+List/detail responses add `quantities` from the persisted reconstructed trade:
+entry, exit, open quantity, remaining percentage and a separate position lifecycle.
+Web uses the same contract for its open/entry quantity pair, four detail metrics
+and sorting. Unknown opening evidence, inconsistent inventory and unverified split
+units produce nullable quantities with an explanation, rather than fabricated zeros.
+Existing legacy quantity fields, execution records, accounting and monetary values
+remain unchanged; no migration or forced historical regroup is performed. See
+[issue #308 validation](validation/issue308/README.md) for semantics and evidence.

@@ -2,6 +2,7 @@ import { useLingui } from "@lingui/react";
 import { t as tr } from "@lingui/core/macro";
 import type { SortingState, VisibilityState } from "@/lib/table";
 import { List, Plus, Search, Upload } from "lucide-react";
+import { tradeQuantities } from "@/lib/tradeQuantities";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/Card";
@@ -59,6 +60,15 @@ export function sortTrades(trades: Trade[], sorting: SortingState): Trade[] {
   if (sorting.length === 0) return trades;
   return [...trades].sort((rowA, rowB) => {
     for (const { id, desc } of sorting) {
+      if (id === "qty_opened" || id === "pos") {
+        const a = tradeQuantities(rowA).open_qty,
+          b = tradeQuantities(rowB).open_qty;
+        if (a == null && b == null) continue;
+        if (a == null) return 1;
+        if (b == null) return -1;
+        if (a !== b) return desc ? b - a : a - b;
+        continue;
+      }
       const cmp = compareSortValues(rowA[id as keyof Trade], rowB[id as keyof Trade]);
       if (cmp !== 0) return desc ? -cmp : cmp;
     }
@@ -242,6 +252,11 @@ export function TradesView({
           </span>
         ) : null}
       </div>
+      {compact && hasRows ? (
+        <p className="m-0 text-[11px] text-muted-foreground">
+          {tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" })}
+        </p>
+      ) : null}
     </div>
   );
 

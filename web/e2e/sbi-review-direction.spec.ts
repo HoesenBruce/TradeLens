@@ -120,7 +120,7 @@ test("SBI closing-first import reconciles review roles, re-entry and duplicates"
   expect(missing.accounting_warning).toContain("Incomplete SBI opening evidence");
   await page.goto(`${web}/trades`);
   await expect(page.locator("tbody tr")).toHaveCount(4);
-  await expect(page.getByText("Remaining 10", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Open Qty 10 / Entry Qty 70", { exact: true })).toBeVisible();
   await page.screenshot({ path: info.outputPath("list.png") });
   await page.locator("tbody tr").first().click();
   await expect(page.getByRole("dialog")).toContainText("SBI date-level reconciliation");
@@ -143,7 +143,7 @@ test("SBI closing-first import reconciles review roles, re-entry and duplicates"
     await expect(page.getByRole("columnheader", { name: "Pos", exact: true })).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Replay trade" })).toHaveCount(0);
     if (name === "short")
-      await expect(page.getByText("Remaining 10", { exact: true })).toBeVisible();
+      await expect(page.getByText("Open Qty", { exact: true }).locator("..")).toBeVisible();
     if (name === "margin") {
       await expect(page.getByText("Sep 1, 2026 → Sep 1, 2026", { exact: true })).toBeVisible();
       await page.getByRole("button", { name: "1D", exact: true }).click();

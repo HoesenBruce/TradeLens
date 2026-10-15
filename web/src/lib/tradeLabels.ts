@@ -1,14 +1,5 @@
 import type { TradeDirectionView } from "./tradeDirection";
-import type { Trade } from "./api/types";
 import { t } from "@lingui/core/macro";
-
-export function remainingQuantityLabel(
-  trade: Pick<Trade, "status" | "qty_opened" | "qty_remaining">,
-): string | undefined {
-  if (trade.status !== "open" || trade.qty_remaining === trade.qty_opened) return undefined;
-  const quantity = trade.qty_remaining.toFixed(trade.qty_remaining % 1 === 0 ? 0 : 2);
-  return t({ id: "trades.remainingQuantity", message: `Remaining ${quantity}` });
-}
 
 export function emotionLabel(value: string): string {
   const labels: Record<string, string> = {

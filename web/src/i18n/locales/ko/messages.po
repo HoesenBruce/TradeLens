@@ -12601,3 +12601,81 @@ msgstr "AI 뉴스 분석을 일시적으로 사용할 수 없습니다. 수동 �
 #: src/lib/tradeLabels.ts:8
 msgid "trades.remainingQuantity"
 msgstr "잔여 {quantity}"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:46
+msgid "trades.entryQty"
+msgstr "진입 수량"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:49
+msgid "trades.exitQty"
+msgstr "청산 수량"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:52
+msgid "trades.openQty"
+msgstr "잔여 수량"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:55
+msgid "trades.remainingPct"
+msgstr "잔여 비율"
+
+#. js-lingui-explicit-id
+#: src/components/TradeQuantities.tsx:20
+msgid "trades.openEntryDescription"
+msgstr "잔여 수량 {open} / 진입 수량 {entry}"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:199
+#: src/components/tradeColumns.tsx:202
+#: src/components/tradeColumns.tsx:520
+#: src/components/tradeColumns.tsx:542
+msgid "trades.openEntryQty"
+msgstr "잔여 수량 / 진입 수량"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:55
+msgid "trades.lifecyclePartial"
+msgstr "부분 청산"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:57
+msgid "trades.lifecycleClosed"
+msgstr "청산 완료"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:53
+msgid "trades.lifecycleOpen"
+msgstr "미청산"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:59
+msgid "trades.lifecycleUnknown"
+msgstr "포지션 불명"
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:41
+msgid "trades.quantityServerUnavailable"
+msgstr "이 서버에서 수량 상세를 제공하지 않습니다."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:25
+msgid "trades.quantityMissingOpening"
+msgstr "진입 이력이 불완전하여 수량을 알 수 없습니다."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:30
+msgid "trades.quantityShareUnits"
+msgstr "기업 활동 전후의 주식 단위가 검증되지 않아 수량을 알 수 없습니다."
+
+#. js-lingui-explicit-id
+#: src/lib/tradeQuantities.ts:36
+msgid "trades.quantityInconsistent"
+msgstr "저장된 거래 재고가 일치하지 않아 수량을 알 수 없습니다."
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx:203
+msgid "trades.quantitySortHint"
+msgstr "미청산 수량 / 누적 진입 수량; 잔여 수량순 정렬"

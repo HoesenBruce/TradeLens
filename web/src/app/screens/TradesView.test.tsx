@@ -365,6 +365,38 @@ describe("TradesView", () => {
 });
 
 describe("sortTrades", () => {
+  it("sorts by authoritative open quantity, keeping unknown inventory last in both directions", () => {
+    const make = (id: string, entry: number, open: number) =>
+      trade({
+        id,
+        qty_opened: entry,
+        quantities: {
+          entry_qty: entry,
+          exit_qty: entry - open,
+          open_qty: open,
+          remaining_pct: (open / entry) * 100,
+          lifecycle: "partially_closed",
+        },
+      });
+    const rows = [
+      make("a", 500, 100),
+      make("b", 70, 10),
+      trade({ id: "unknown" }),
+      make("c", 700, 300),
+    ];
+    expect(sortTrades(rows, [{ id: "qty_opened", desc: false }]).map((t) => t.id)).toEqual([
+      "b",
+      "a",
+      "c",
+      "unknown",
+    ]);
+    expect(sortTrades(rows, [{ id: "qty_opened", desc: true }]).map((t) => t.id)).toEqual([
+      "c",
+      "a",
+      "b",
+      "unknown",
+    ]);
+  });
   it("sorts by symbol ascending then descending", () => {
     const rows = [
       trade({ id: "a", symbol: "MSFT", net_pnl: 1 }),

@@ -1,4 +1,5 @@
-import { remainingQuantityLabel, tradeStatusLabel } from "@/lib/tradeLabels";
+import { tradeStatusLabel } from "@/lib/tradeLabels";
+import { TradeQuantityDetails } from "./TradeQuantities";
 import { useLingui } from "@lingui/react";
 import { t as tr } from "@lingui/core/macro";
 import { useNavigate } from "@tanstack/react-router";
@@ -295,7 +296,6 @@ function TradeDetailSheetBody({
     : undefined;
   const displayDate = (value: string) =>
     dateOnly ? fmtDate(value, intlLocale(), dateZone) : fmtDateTime(value);
-  const qty = trade.qty_opened;
 
   return (
     <div className="flex flex-col gap-5 px-4 py-4">
@@ -392,12 +392,8 @@ function TradeDetailSheetBody({
               while Fees truncated "$6.88" in 35px. Each track now takes what
               its own value needs and the slack is shared; `truncate` on the
               value stays as the last resort when all three run long. */}
-          <div className="grid grid-cols-[auto_auto_auto] gap-px">
-            <BentoStat
-              label={tr({ id: "trades.qty", message: "Qty" })}
-              value={qty.toFixed(2)}
-              hint={remainingQuantityLabel(trade)}
-            />
+          <TradeQuantityDetails trade={trade} />
+          <div className="grid grid-cols-2 gap-px">
             <BentoStat
               label={tr({ id: "trades.hold", message: "Hold" })}
               value={hold === "-" ? "—" : hold}
