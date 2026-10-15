@@ -1,9 +1,8 @@
 import type { AppLocale } from "./locale";
 import { BRAND } from "./brand";
 export const REPO_URL = BRAND.repositoryUrl;
-export const DEVELOPER_NAME = "sinhong2011 and contributors";
-export const DEVELOPER_GITHUB = "https://github.com/sinhong2011";
-export const DEVELOPER_AVATAR = "https://github.com/sinhong2011.png";
+export const UPSTREAM_AUTHOR = "sinhong2011";
+export const UPSTREAM_AUTHOR_URL = "https://github.com/sinhong2011";
 
 export type AboutFeature = {
   title: string;
@@ -29,9 +28,6 @@ export type AboutContent = {
   philosophy: string;
   licenseNote: string;
   attribution: string;
-  developerTitle: string;
-  developerRole: string;
-  developerGithubLabel: string;
   apiTitle: string;
   apiDescription: string;
   apiBaseUrlLabel: string;
@@ -144,9 +140,6 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     licenseNote: "Open source. Deploy on Docker, Railway, or your own VPS.",
     attribution:
       "TradeLens is based on TraderMemos, originally developed by sinhong2011 and contributors.",
-    developerTitle: "Original upstream author",
-    developerRole: "Original creator of TraderMemos",
-    developerGithubLabel: "View on GitHub",
     apiTitle: "Backend API",
     apiDescription: `Live connection to the ${BRAND.name} API this app is using.`,
     apiBaseUrlLabel: "API base URL",
@@ -258,9 +251,6 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     philosophy: `雲端日誌如 TradeZella、TraderSync 很完善——但你的優勢藏在資料裡。${BRAND.name} 與 Ghost、Umami、Plane 等專案同一理念：自己部署、擁有資料庫、無需許可即可擴展。`,
     licenseNote: "開源。可部署於 Docker、Railway 或自有 VPS。",
     attribution: "TradeLens 基於 TraderMemos，由 sinhong2011 及貢獻者最初開發。",
-    developerTitle: "原始上游作者",
-    developerRole: "TraderMemos 原始創作者",
-    developerGithubLabel: "在 GitHub 查看",
     apiTitle: "後端 API",
     apiDescription: `此應用程式目前連線的 ${BRAND.name} API。`,
     apiBaseUrlLabel: "API 位址",
@@ -378,9 +368,6 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
     licenseNote: "オープンソース。Docker、Railway、または自前 VPS にデプロイ可能。",
     attribution:
       "TradeLens は、sinhong2011 とコントリビューターが開発した TraderMemos を基にしています。",
-    developerTitle: "上流プロジェクトの原作者",
-    developerRole: "TraderMemos の原作者",
-    developerGithubLabel: "GitHub で見る",
     apiTitle: "バックエンド API",
     apiDescription: `このアプリが使用中の ${BRAND.name} API への接続情報。`,
     apiBaseUrlLabel: "API ベース URL",
@@ -493,9 +480,6 @@ const ABOUT: Partial<Record<AppLocale, AboutContent>> & { en: AboutContent } = {
       "TradeZella, TraderSync 같은 클라우드 저널은 잘 만들어졌지만 — 엣지는 데이터 안에 있습니다. Ghost, Umami, Plane과 같은 철학: 직접 운영하고, DB를 소유하고, 허가 없이 확장.",
     licenseNote: "오픈소스. Docker, Railway 또는 자체 VPS에 배포.",
     attribution: "TradeLens는 sinhong2011 및 기여자가 개발한 TraderMemos를 기반으로 합니다.",
-    developerTitle: "업스트림 원저자",
-    developerRole: "TraderMemos 원저자",
-    developerGithubLabel: "GitHub에서 보기",
     apiTitle: "백엔드 API",
     apiDescription: `이 앱이 사용 중인 ${BRAND.name} API 연결 정보.`,
     apiBaseUrlLabel: "API 기본 URL",
@@ -554,9 +538,6 @@ ABOUT["zh-CN"] = {
   updateUnavailable: "暂时无法确认",
   intro: "自托管交易日志、投资组合分析和市场复盘平台。",
   attribution: "TradeLens 基于 TraderMemos，由 sinhong2011 和贡献者最初开发。",
-  developerTitle: "原始上游作者",
-  developerRole: "TraderMemos 原始创作者",
-  developerGithubLabel: "在 GitHub 查看",
 };
 
 export function aboutContent(locale: string): AboutContent {
