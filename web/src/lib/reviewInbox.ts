@@ -25,6 +25,7 @@ function reviewSections(raw: string) {
   const sections: { start: number; end: number; newline: boolean }[] = [];
   let offset = 0;
   let fence: { marker: string; length: number } | undefined;
+  let unsupportedMarkup = false;
   for (const line of raw.match(/[^\n]*\n|[^\n]+$/g) ?? []) {
     const text = line.replace(/\r?\n$/, "");
     const delimiter = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(text);
@@ -39,6 +40,9 @@ function reviewSections(raw: string) {
     } else if (delimiter) {
       fence = { marker: delimiter[1][0], length: delimiter[1].length };
     } else {
+      // No HTML parser: even a literal '<' makes non-fenced boundaries uncertain.
+      // Reject the whole notes edit, including well-formed or closed HTML blocks.
+      if (text.includes("<")) unsupportedMarkup = true;
       const heading = /^ {0,3}(#{1,2})[ \t]+(.*)$/.exec(text);
       const target =
         heading?.[1] === "##" &&
@@ -63,17 +67,19 @@ function reviewSections(raw: string) {
     }
     offset += line.length;
   }
-  return { sections, unclosedFence: !!fence };
+  return { sections, unclosedFence: !!fence, unsupportedMarkup };
 }
 
 export function reviewNotesValue(raw: string) {
-  const section = reviewSections(raw).sections[0];
+  const { sections, unsupportedMarkup } = reviewSections(raw);
+  const section = unsupportedMarkup ? undefined : sections[0];
   return section ? raw.slice(section.start, section.end).trim() : "";
 }
 
 export function replaceReviewNotes(raw: string, value: string) {
-  const { sections, unclosedFence } = reviewSections(raw);
-  if (sections.length > 1 || unclosedFence) throw new AmbiguousReviewNotesError();
+  const { sections, unclosedFence, unsupportedMarkup } = reviewSections(raw);
+  if (sections.length > 1 || unclosedFence || unsupportedMarkup)
+    throw new AmbiguousReviewNotesError();
   const eol = raw.match(/\r\n|\n/)?.[0] ?? "\n";
   const section = sections[0];
   if (!section) {
