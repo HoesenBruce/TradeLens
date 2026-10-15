@@ -1,10 +1,10 @@
 === RUN   TestSafePreservesIdentityWithoutDiagnostics
 --- PASS: TestSafePreservesIdentityWithoutDiagnostics (0.00s)
 PASS
-ok  	github.com/tradermemos/api/internal/providererrors	1.133s
+ok      github.com/tradermemos/api/internal/providererrors  1.133s
 testing: warning: no tests to run
 PASS
-ok  	github.com/tradermemos/api/internal/ocr	1.020s [no tests to run]
+ok      github.com/tradermemos/api/internal/ocr 1.020s [no tests to run]
 === RUN   TestClientSafeErrorIdentity
 --- PASS: TestClientSafeErrorIdentity (0.03s)
 === RUN   TestClientDiagnosticFailureMatrix
@@ -22,7 +22,7 @@ ok  	github.com/tradermemos/api/internal/ocr	1.020s [no tests to run]
     --- PASS: TestClientDiagnosticFailureMatrix/timeout (0.00s)
     --- PASS: TestClientDiagnosticFailureMatrix/cancel (0.00s)
 PASS
-ok  	github.com/tradermemos/api/internal/flexsync	0.710s
+ok      github.com/tradermemos/api/internal/flexsync    0.710s
 === RUN   TestProviderNotificationFailureMatrix
 === RUN   TestProviderNotificationFailureMatrix/status
 === RUN   TestProviderNotificationFailureMatrix/malformed
@@ -36,11 +36,11 @@ ok  	github.com/tradermemos/api/internal/flexsync	0.710s
     --- PASS: TestProviderNotificationFailureMatrix/timeout (0.00s)
     --- PASS: TestProviderNotificationFailureMatrix/cancel (0.00s)
 PASS
-ok  	github.com/tradermemos/api/internal/alerts	0.743s
+ok      github.com/tradermemos/api/internal/alerts  0.743s
 === RUN   TestLegacyEntryPointsFailClosed
 --- PASS: TestLegacyEntryPointsFailClosed (0.00s)
 PASS
-ok  	github.com/tradermemos/api/internal/coach	0.538s
+ok      github.com/tradermemos/api/internal/coach   0.538s
 === RUN   TestLegacyPersistenceCannotBypassAvailability
 --- PASS: TestLegacyPersistenceCannotBypassAvailability (0.00s)
 === RUN   TestCoachIsolationAcrossConfigurationAndRestart
@@ -83,7 +83,7 @@ ok  	github.com/tradermemos/api/internal/coach	0.538s
 2026/10/15 14:32:58 INFO request method=GET route=/api/v1/trades/:id status=200 latency_ms=0.228 id=xXoBwqdSbLTBfLZhbcwIMwNIelJmRrzr params=map[id:e8fb6512-de53-4ff3-b9e5-ad3832d971ec]
 --- PASS: TestReviewAcceptanceIsolationAndAlertPersistence (0.31s)
 PASS
-ok  	github.com/tradermemos/api/internal/api	2.519s
+ok      github.com/tradermemos/api/internal/api 2.519s
 === RUN   TestExtractTradeFromImage_timeout
 --- PASS: TestExtractTradeFromImage_timeout (0.21s)
 === RUN   TestExtractTradeFromImage_busyAfterRetries
@@ -91,7 +91,7 @@ ok  	github.com/tradermemos/api/internal/api	2.519s
 === RUN   TestExtractTradeFromImage_noRetryOnClientError
 --- PASS: TestExtractTradeFromImage_noRetryOnClientError (0.00s)
 PASS
-ok  	github.com/tradermemos/api/internal/ocr	0.396s
+ok      github.com/tradermemos/api/internal/ocr 0.396s
 === RUN   TestCrossUserIsolationProviderConfigurationDiagnostics
     provider_failure_matrix_test.go:101: case=config/status/ocr/test
     provider_failure_matrix_test.go:101: case=config/status/ocr/models
@@ -161,4 +161,4 @@ ok  	github.com/tradermemos/api/internal/ocr	0.396s
     --- PASS: TestCrossUserIsolationProviderFailureMatrix/cancel/jwt (0.00s)
     --- PASS: TestCrossUserIsolationProviderFailureMatrix/cancel/pat (0.00s)
 PASS
-ok  	github.com/tradermemos/api/internal/api	2.911s
+ok      github.com/tradermemos/api/internal/api 2.911s

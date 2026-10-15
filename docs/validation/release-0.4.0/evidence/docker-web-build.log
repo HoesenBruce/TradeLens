@@ -493,7 +493,7 @@
 
 #13 [build 5/8] RUN pnpm install --frozen-lockfile
 #13 288.0 [23] The operation was aborted due to timeout
-#13 288.0 
+#13 288.0
 #13 288.0 TimeoutError: The operation was aborted due to timeout
 #13 288.0     at new DOMException (node:internal/per_context/domexception:76:18)
 #13 288.0     at Timeout._onTimeout (node:internal/abort_controller:210:9)
@@ -512,7 +512,7 @@
 243.1 Progress: resolved 823, reused 0, downloaded 818, added 820
 244.1 Progress: resolved 823, reused 0, downloaded 818, added 821
 288.0 [23] The operation was aborted due to timeout
-288.0 
+288.0
 288.0 TimeoutError: The operation was aborted due to timeout
 288.0     at new DOMException (node:internal/per_context/domexception:76:18)
 288.0     at Timeout._onTimeout (node:internal/abort_controller:210:9)

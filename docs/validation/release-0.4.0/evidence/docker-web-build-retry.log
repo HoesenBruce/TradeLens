@@ -254,7 +254,7 @@
 #13 256.4 Progress: resolved 823, reused 0, downloaded 818, added 820
 #13 257.4 Progress: resolved 823, reused 0, downloaded 818, added 821
 #13 284.6 [23] The operation was aborted due to timeout
-#13 284.6 
+#13 284.6
 #13 284.6 TimeoutError: The operation was aborted due to timeout
 #13 284.6     at new DOMException (node:internal/per_context/domexception:76:18)
 #13 284.6     at Timeout._onTimeout (node:internal/abort_controller:210:9)
@@ -267,7 +267,7 @@
 256.4 Progress: resolved 823, reused 0, downloaded 818, added 820
 257.4 Progress: resolved 823, reused 0, downloaded 818, added 821
 284.6 [23] The operation was aborted due to timeout
-284.6 
+284.6
 284.6 TimeoutError: The operation was aborted due to timeout
 284.6     at new DOMException (node:internal/per_context/domexception:76:18)
 284.6     at Timeout._onTimeout (node:internal/abort_controller:210:9)
