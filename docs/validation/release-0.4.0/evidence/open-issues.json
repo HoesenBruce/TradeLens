@@ -1,0 +1,116 @@
+[
+  {
+    "number": 303,
+    "state": "OPEN",
+    "title": "test(security): validate structured AI Coach before re-enablement",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/303"
+  },
+  {
+    "number": 302,
+    "state": "OPEN",
+    "title": "test(release): validate TradeLens Core with legacy Coach isolated",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/302"
+  },
+  {
+    "number": 301,
+    "state": "OPEN",
+    "title": "feat(coach): implement secure structured output and trusted rendering",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/301"
+  },
+  {
+    "number": 300,
+    "state": "OPEN",
+    "title": "design(security): approve structured AI Coach output contract",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/300"
+  },
+  {
+    "number": 298,
+    "state": "OPEN",
+    "title": "fix(security): extract independent provider-error confidentiality fixes",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/298"
+  },
+  {
+    "number": 277,
+    "state": "OPEN",
+    "title": "chore(deps): upgrade Web test toolchain in isolated stages",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/277"
+  },
+  {
+    "number": 276,
+    "state": "OPEN",
+    "title": "fix(web): improve charts, reduced motion and controls without changing TradeLens branding",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/276"
+  },
+  {
+    "number": 275,
+    "state": "OPEN",
+    "title": "feat(workflow): add market-day routines and missed trades before Today integration",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/275"
+  },
+  {
+    "number": 274,
+    "state": "OPEN",
+    "title": "feat(analytics): add currency-safe setup scorecards and consistent mistake tax",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/274"
+  },
+  {
+    "number": 273,
+    "state": "OPEN",
+    "title": "feat(review): add review inbox preserving TradeLens journal and planned direction",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/273"
+  },
+  {
+    "number": 246,
+    "state": "OPEN",
+    "title": "feat: add secure admin password reset API",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/246"
+  },
+  {
+    "number": 245,
+    "state": "OPEN",
+    "title": "feat: add registration control and admin user provisioning API",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/245"
+  },
+  {
+    "number": 244,
+    "state": "OPEN",
+    "title": "test: add cross-user data isolation coverage before private beta",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/244"
+  },
+  {
+    "number": 236,
+    "state": "OPEN",
+    "title": "epic: production-ready Docker and self-hosting distribution",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/236"
+  },
+  {
+    "number": 235,
+    "state": "OPEN",
+    "title": "release: repair and re-enable Release Please automation",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/235"
+  },
+  {
+    "number": 212,
+    "state": "OPEN",
+    "title": "security: purge sensitive financial data from Git history before public release",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/212"
+  },
+  {
+    "number": 10,
+    "state": "OPEN",
+    "title": "feat: custom statistics dashboard",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/10"
+  },
+  {
+    "number": 9,
+    "state": "OPEN",
+    "title": "feat: multi-account review",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/9"
+  },
+  {
+    "number": 8,
+    "state": "OPEN",
+    "title": "feat: actual and virtual account comparison",
+    "url": "https://github.com/HoesenBruce/TradeLens/issues/8"
+  }
+]

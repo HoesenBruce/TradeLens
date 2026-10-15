@@ -1,0 +1,17 @@
+Render state: build_in_progress
+Render state: live
+.Demo deployment FAILED: Unexpected validation/API/smoke error; inspect provider run and Dashboard without printing credentials
+.Render state: build_failed
+Render state: update_failed
+Render state: canceled
+Render state: deactivated
+Render state: live
+.Render state: live
+.Render state: live
+....Render state: queued
+Render state: live
+..
+----------------------------------------------------------------------
+Ran 10 tests in 0.018s
+
+OK

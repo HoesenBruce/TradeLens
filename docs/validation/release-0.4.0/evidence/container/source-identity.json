@@ -1,0 +1,20 @@
+{
+  "source_sha": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+  "source_dirty_tracked": false,
+  "web_override": "only node:24-alpine -> node:24.18.0-alpine",
+  "api_dockerfile_sha256": "474b9451dcef44137a8f07b0b825a0bfa068c4181db3963c0e958a182ebb78a2",
+  "web_override_sha256": "4ad85c4a67d2e6fdb12568265d1b70c04f43d2a98fd8c03342b9ec2e6720d680",
+  "web_arm64_image": {
+    "Id": "sha256:3276c49e4274d9d971f3e1a6e797ec054ff50d912f3b9c6bef4f316a148e3583",
+    "RepoTags": [
+      "tradelens-phase-a-web:e23ccbc-node2418"
+    ],
+    "RepoDigests": [
+      "tradelens-phase-a-web@sha256:3276c49e4274d9d971f3e1a6e797ec054ff50d912f3b9c6bef4f316a148e3583"
+    ],
+    "Architecture": "arm64",
+    "Os": "linux",
+    "Created": "2026-10-15T07:34:39.536498305Z",
+    "embedded_build_sha_verified": true
+  }
+}

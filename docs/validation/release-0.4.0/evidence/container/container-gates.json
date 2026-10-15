@@ -1,0 +1,19 @@
+{
+  "API_BUILD": "PASS_ARM64_AMD64_ORIGINAL_DOCKERFILE",
+  "WEB_BUILD": "PASS_ARM64_AMD64_NODE_24_18_OVERRIDE",
+  "ARM64_SMOKE": "PASS_API_WEB_BACKUP_RESTART_RESTORE",
+  "AMD64_BUILD": "PASS_LOCAL_EMULATED_BUILD_AND_RUNTIME_SMOKE",
+  "CONTAINER_INTEGRATION": "PASS_7_OF_7_AND_API_PERSISTENCE_ISOLATION",
+  "GHCR_READY": "NO_FIXED_RELEASE_CANDIDATE_AND_FORMAL_ARTIFACTS_PENDING",
+  "NAS_READY": "NO_TARGET_ACCESS_OR_REAL_COPY_EVIDENCE",
+  "RELEASE_READY": "NO",
+  "source_sha": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+  "web_override_pr": "https://github.com/HoesenBruce/TradeLens/pull/314",
+  "fix_head": "6d65405836d7961ddc60064f527b9a213c96eba0",
+  "fix_exact_head_ci": "PASS",
+  "release_pr_293_merged": false,
+  "ghcr_push": false,
+  "render_deploy": false,
+  "nas_data_touched": false,
+  "issues_closed": false
+}

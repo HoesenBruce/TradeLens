@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "arm64_uname": "aarch64",
+  "amd64_uname": "x86_64",
+  "identical_static_files": 164
+}

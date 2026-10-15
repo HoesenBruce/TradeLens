@@ -1,0 +1,70 @@
+[
+  {
+    "Id": "sha256:b3e2bb12ffc650c067b09822759b5b65d374a46b30b69689cc2d1f5cfd7690e5",
+    "RepoTags": [
+      "tradelens-phase-a-api:e23ccbc-arm64"
+    ],
+    "RepoDigests": [
+      "tradelens-phase-a-api@sha256:b3e2bb12ffc650c067b09822759b5b65d374a46b30b69689cc2d1f5cfd7690e5"
+    ],
+    "Architecture": "arm64",
+    "Os": "linux",
+    "Created": "2026-10-15T07:40:40.29409275Z",
+    "labels": {
+      "org.opencontainers.image.revision": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+      "org.opencontainers.image.title": "TradeLens API",
+      "org.opencontainers.image.version": "0.4.0"
+    }
+  },
+  {
+    "Id": "sha256:3276c49e4274d9d971f3e1a6e797ec054ff50d912f3b9c6bef4f316a148e3583",
+    "RepoTags": [
+      "tradelens-phase-a-web:e23ccbc-node2418"
+    ],
+    "RepoDigests": [
+      "tradelens-phase-a-web@sha256:3276c49e4274d9d971f3e1a6e797ec054ff50d912f3b9c6bef4f316a148e3583"
+    ],
+    "Architecture": "arm64",
+    "Os": "linux",
+    "Created": "2026-10-15T07:34:39.536498305Z",
+    "labels": {
+      "maintainer": "NGINX Docker Maintainers <docker-maint@nginx.com>",
+      "org.opencontainers.image.title": "TradeLens Web"
+    }
+  },
+  {
+    "Id": "sha256:13061bd99b222f6b29274f13adae47682b220a5e5998986e9833bd951eef9446",
+    "RepoTags": [
+      "tradelens-phase-a-api:e23ccbc-amd64"
+    ],
+    "RepoDigests": [
+      "tradelens-phase-a-api@sha256:13061bd99b222f6b29274f13adae47682b220a5e5998986e9833bd951eef9446"
+    ],
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Created": "2026-10-15T08:02:41.555451458Z",
+    "labels": {
+      "org.opencontainers.image.revision": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+      "org.opencontainers.image.title": "TradeLens API",
+      "org.opencontainers.image.version": "0.4.0"
+    }
+  },
+  {
+    "Id": "sha256:5d4a57441e854f9b1710e7fd414357cd6bb5b555545c51a78abb5087988b6d96",
+    "RepoTags": [
+      "tradelens-phase-a-web:e23ccbc-node2418-amd64"
+    ],
+    "RepoDigests": [
+      "tradelens-phase-a-web@sha256:5d4a57441e854f9b1710e7fd414357cd6bb5b555545c51a78abb5087988b6d96"
+    ],
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Created": "2026-10-15T07:42:11.586485Z",
+    "labels": {
+      "maintainer": "NGINX Docker Maintainers <docker-maint@nginx.com>",
+      "org.opencontainers.image.revision": "e23ccbcf702c3e99989cb755b4b3bb88179d32aa",
+      "org.opencontainers.image.title": "TradeLens Web",
+      "org.opencontainers.image.version": "0.4.0"
+    }
+  }
+]

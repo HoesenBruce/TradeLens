@@ -1,0 +1,8 @@
+=== RUN   TestNewsAndAssetsRoundTripPostgres
+    news_test.go:40:
+            Error Trace:    /private/tmp/tradelens-phase-a-040/api/internal/store/news_test.go:40
+                                        /private/tmp/tradelens-phase-a-040/api/internal/store/news_test.go:31
+            Error:          Received unexpected error:
+                            ERROR: duplicate key value violates unique constraint "users_email_key" (SQLSTATE 23505)
+            Test:           TestNewsAndAssetsRoundTripPostgres
+--- FAIL: TestNewsAndAssetsRoundTripPostgres (0.05s)

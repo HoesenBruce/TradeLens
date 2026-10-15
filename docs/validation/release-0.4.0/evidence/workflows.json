@@ -1,0 +1,161 @@
+{
+  "total_count": 13,
+  "workflows": [
+    {
+      "id": 355656480,
+      "node_id": "W_kwDOUWcrN84VMuMg",
+      "name": "API CI",
+      "path": ".github/workflows/api-ci.yml",
+      "state": "active",
+      "created_at": "2026-09-11T17:32:03.000+08:00",
+      "updated_at": "2026-09-11T17:32:03.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355656480",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/api-ci.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/API%20CI/badge.svg"
+    },
+    {
+      "id": 384139368,
+      "node_id": "W_kwDOUWcrN84W5YBo",
+      "name": "Browser security CI",
+      "path": ".github/workflows/browser-security-ci.yml",
+      "state": "active",
+      "created_at": "2026-10-14T17:12:25.000+08:00",
+      "updated_at": "2026-10-14T17:59:24.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/384139368",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/browser-security-ci.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/Browser%20security%20CI/badge.svg"
+    },
+    {
+      "id": 379434887,
+      "node_id": "W_kwDOUWcrN84WnbeH",
+      "name": "Deploy Render demo",
+      "path": ".github/workflows/demo-deploy.yml",
+      "state": "active",
+      "created_at": "2026-10-09T16:53:46.000+08:00",
+      "updated_at": "2026-10-09T16:53:46.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/379434887",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/demo-deploy.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/Deploy%20Render%20demo/badge.svg"
+    },
+    {
+      "id": 355656481,
+      "node_id": "W_kwDOUWcrN84VMuMh",
+      "name": "Publish TradeLens Docker images",
+      "path": ".github/workflows/docker-publish.yml",
+      "state": "active",
+      "created_at": "2026-09-11T17:32:03.000+08:00",
+      "updated_at": "2026-10-08T15:33:40.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355656481",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/docker-publish.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/Publish%20TradeLens%20Docker%20images/badge.svg"
+    },
+    {
+      "id": 355656483,
+      "node_id": "W_kwDOUWcrN84VMuMj",
+      "name": "Marketing CI",
+      "path": ".github/workflows/marketing-ci.yml",
+      "state": "active",
+      "created_at": "2026-09-11T17:32:03.000+08:00",
+      "updated_at": "2026-09-11T17:32:03.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355656483",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/marketing-ci.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/Marketing%20CI/badge.svg"
+    },
+    {
+      "id": 355656485,
+      "node_id": "W_kwDOUWcrN84VMuMl",
+      "name": "Mobile CI",
+      "path": ".github/workflows/mobile-ci.yml",
+      "state": "active",
+      "created_at": "2026-09-11T17:32:03.000+08:00",
+      "updated_at": "2026-09-11T17:32:03.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355656485",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/mobile-ci.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/Mobile%20CI/badge.svg"
+    },
+    {
+      "id": 355656486,
+      "node_id": "W_kwDOUWcrN84VMuMm",
+      "name": "EAS Build",
+      "path": ".github/workflows/mobile-eas.yml",
+      "state": "disabled_manually",
+      "created_at": "2026-09-11T17:32:03.000+08:00",
+      "updated_at": "2026-09-30T18:07:13.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355656486",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/mobile-eas.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/EAS%20Build/badge.svg"
+    },
+    {
+      "id": 355656488,
+      "node_id": "W_kwDOUWcrN84VMuMo",
+      "name": "PR title",
+      "path": ".github/workflows/pr-title.yml",
+      "state": "active",
+      "created_at": "2026-09-11T17:32:04.000+08:00",
+      "updated_at": "2026-09-11T17:32:04.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355656488",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/pr-title.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/PR%20title/badge.svg"
+    },
+    {
+      "id": 355656489,
+      "node_id": "W_kwDOUWcrN84VMuMp",
+      "name": "Release Please",
+      "path": ".github/workflows/release-please.yml",
+      "state": "active",
+      "created_at": "2026-09-11T17:32:04.000+08:00",
+      "updated_at": "2026-10-08T14:55:25.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355656489",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/release-please.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/Release%20Please/badge.svg"
+    },
+    {
+      "id": 355656490,
+      "node_id": "W_kwDOUWcrN84VMuMq",
+      "name": "Release tm-sync binaries",
+      "path": ".github/workflows/tm-sync-release.yml",
+      "state": "disabled_manually",
+      "created_at": "2026-09-11T17:32:04.000+08:00",
+      "updated_at": "2026-09-30T18:07:14.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355656490",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/tm-sync-release.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/Release%20tm-sync%20binaries/badge.svg"
+    },
+    {
+      "id": 355656491,
+      "node_id": "W_kwDOUWcrN84VMuMr",
+      "name": "Web CI",
+      "path": ".github/workflows/web-ci.yml",
+      "state": "active",
+      "created_at": "2026-09-11T17:32:04.000+08:00",
+      "updated_at": "2026-09-11T17:32:04.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355656491",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/web-ci.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/Web%20CI/badge.svg"
+    },
+    {
+      "id": 355656493,
+      "node_id": "W_kwDOUWcrN84VMuMt",
+      "name": "Deploy web (Vercel)",
+      "path": ".github/workflows/web-deploy-vercel.yml",
+      "state": "disabled_manually",
+      "created_at": "2026-09-11T17:32:04.000+08:00",
+      "updated_at": "2026-09-30T18:07:15.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355656493",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/blob/main/.github/workflows/web-deploy-vercel.yml",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/workflows/Deploy%20web%20(Vercel)/badge.svg"
+    },
+    {
+      "id": 355657099,
+      "node_id": "W_kwDOUWcrN84VMuWL",
+      "name": "Dependabot Updates",
+      "path": "dynamic/dependabot/dependabot-updates",
+      "state": "active",
+      "created_at": "2026-09-11T17:32:59.000+08:00",
+      "updated_at": "2026-09-11T17:32:59.000+08:00",
+      "url": "https://api.github.com/repos/HoesenBruce/TradeLens/actions/workflows/355657099",
+      "html_url": "https://github.com/HoesenBruce/TradeLens/actions/workflows/dependabot/dependabot-updates",
+      "badge_url": "https://github.com/HoesenBruce/TradeLens/actions/workflows/dependabot/dependabot-updates/badge.svg"
+    }
+  ]
+}

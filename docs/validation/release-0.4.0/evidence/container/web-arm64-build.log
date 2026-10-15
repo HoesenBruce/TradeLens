@@ -1,0 +1,503 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from web-node-24.18.0.Dockerfile
+#1 transferring dockerfile: 1.11kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.18.0-alpine
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/nginx:alpine
+#3 ...
+
+#4 [auth] library/nginx:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/nginx:alpine
+#3 DONE 2.7s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 761B done
+#5 DONE 0.0s
+
+#6 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870
+#6 resolve docker.io/library/nginx:alpine@sha256:72aeb3308ef6cb3118242fb16389518923916dfa206e32d1a8377acc328b9870 0.0s done
+#6 DONE 0.0s
+
+#7 [build 1/8] FROM docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd
+#7 resolve docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd 0.0s done
+#7 DONE 0.1s
+
+#8 [internal] load build context
+#8 transferring context: 41.97kB 0.1s done
+#8 DONE 0.1s
+
+#9 [stage-1 2/3] COPY web/nginx.conf /etc/nginx/conf.d/default.conf
+#9 CACHED
+
+#10 [build 2/8] WORKDIR /web
+#10 DONE 0.0s
+
+#11 [build 3/8] RUN corepack enable && corepack prepare pnpm@11.16.0 --activate
+#11 0.298 Preparing pnpm@11.16.0 for immediate activation...
+#11 DONE 18.8s
+
+#12 [build 4/8] COPY web/package.json web/pnpm-lock.yaml web/pnpm-workspace.yaml ./
+#12 DONE 0.1s
+
+#13 [build 5/8] RUN pnpm install --frozen-lockfile
+#13 1.564 ? Verifying lockfile against supply-chain policies (1013 entries)...
+#13 1.588 Lockfile is up to date, resolution step is skipped
+#13 2.420 Progress: resolved 1, reused 0, downloaded 0, added 0
+#13 2.707 Packages: +823
+#13 2.707 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#13 3.422 Progress: resolved 823, reused 0, downloaded 0, added 0
+#13 4.496 Progress: resolved 823, reused 0, downloaded 1, added 0
+#13 5.511 Progress: resolved 823, reused 0, downloaded 44, added 45
+#13 6.515 Progress: resolved 823, reused 0, downloaded 67, added 68
+#13 6.688 [WARN] Tarball download average speed 10 KiB/s (size 15 KiB) is below 50 KiB/s: https://registry.npmjs.org/@lingui/babel-plugin-lingui-macro/-/babel-plugin-lingui-macro-6.6.0.tgz (GET)
+#13 7.438 [WARN] Tarball download average speed 4 KiB/s (size 9 KiB) is below 50 KiB/s: https://registry.npmjs.org/jsesc/-/jsesc-3.1.0.tgz (GET)
+#13 7.515 Progress: resolved 823, reused 0, downloaded 93, added 96
+#13 8.206 [WARN] Tarball download average speed 39 KiB/s (size 44 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/react-form/-/react-form-1.33.5.tgz (GET)
+#13 8.232 [WARN] Tarball download average speed 9 KiB/s (size 11 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/react-store/-/react-store-0.11.1.tgz (GET)
+#13 8.516 Progress: resolved 823, reused 0, downloaded 113, added 116
+#13 8.999 [WARN] Tarball download average speed 41 KiB/s (size 73 KiB) is below 50 KiB/s: https://registry.npmjs.org/prosemirror-transform/-/prosemirror-transform-1.12.0.tgz (GET)
+#13 9.232 [WARN] Tarball download average speed 13 KiB/s (size 17 KiB) is below 50 KiB/s: https://registry.npmjs.org/prosemirror-history/-/prosemirror-history-1.5.0.tgz (GET)
+#13 9.517 Progress: resolved 823, reused 0, downloaded 141, added 144
+#13 10.28 [WARN] Tarball download average speed 5 KiB/s (size 11 KiB) is below 50 KiB/s: https://registry.npmjs.org/prosemirror-schema-list/-/prosemirror-schema-list-1.5.1.tgz (GET)
+#13 10.52 Progress: resolved 823, reused 0, downloaded 179, added 182
+#13 11.33 [WARN] Tarball download average speed 9 KiB/s (size 42 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/pacer-lite/-/pacer-lite-0.1.1.tgz (GET)
+#13 11.52 Progress: resolved 823, reused 0, downloaded 207, added 210
+#13 12.52 Progress: resolved 823, reused 0, downloaded 218, added 221
+#13 12.93 [WARN] Tarball download average speed 25 KiB/s (size 49 KiB) is below 50 KiB/s: https://registry.npmjs.org/qrcode/-/qrcode-1.5.4.tgz (GET)
+#13 13.23 [WARN] Request took 11215ms: https://registry.npmjs.org/@babel%2Fhelper-globals
+#13 13.52 Progress: resolved 823, reused 0, downloaded 239, added 242
+#13 14.34 [WARN] Tarball download average speed 42 KiB/s (size 305 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.101.4.tgz (GET)
+#13 14.53 Progress: resolved 823, reused 0, downloaded 259, added 262
+#13 15.36 [WARN] Tarball download average speed 9 KiB/s (size 20 KiB) is below 50 KiB/s: https://registry.npmjs.org/d3-time-format/-/d3-time-format-4.1.0.tgz (GET)
+#13 15.52 Progress: resolved 823, reused 0, downloaded 274, added 276
+#13 16.21 [WARN] Request took 13928ms: https://registry.npmjs.org/@csstools%2Fcss-color-parser
+#13 16.27 [WARN] Tarball download average speed 28 KiB/s (size 268 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/form-core/-/form-core-1.33.5.tgz (GET)
+#13 16.53 Progress: resolved 823, reused 0, downloaded 310, added 311
+#13 17.53 Progress: resolved 823, reused 0, downloaded 332, added 335
+#13 18.53 Progress: resolved 823, reused 0, downloaded 350, added 353
+#13 19.42 [WARN] Tarball download average speed 8 KiB/s (size 27 KiB) is below 50 KiB/s: https://registry.npmjs.org/dotenv/-/dotenv-17.4.2.tgz (GET)
+#13 19.55 Progress: resolved 823, reused 0, downloaded 369, added 372
+#13 19.62 [WARN] Request took 11505ms: https://registry.npmjs.org/@oxlint-tsgolint%2Fdarwin-arm64
+#13 20.55 Progress: resolved 823, reused 0, downloaded 396, added 399
+#13 21.56 Progress: resolved 823, reused 0, downloaded 420, added 422
+#13 22.38 [WARN] Tarball download average speed 44 KiB/s (size 606 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/router-core/-/router-core-1.171.26.tgz (GET)
+#13 22.56 Progress: resolved 823, reused 0, downloaded 439, added 442
+#13 23.56 Progress: resolved 823, reused 0, downloaded 479, added 482
+#13 23.90 [WARN] Tarball download average speed 20 KiB/s (size 242 KiB) is below 50 KiB/s: https://registry.npmjs.org/immer/-/immer-11.1.15.tgz (GET)
+#13 24.56 Progress: resolved 823, reused 0, downloaded 514, added 517
+#13 25.56 Progress: resolved 823, reused 0, downloaded 542, added 545
+#13 26.56 Progress: resolved 823, reused 0, downloaded 559, added 562
+#13 27.55 [WARN] Tarball download average speed 13 KiB/s (size 31 KiB) is below 50 KiB/s: https://registry.npmjs.org/prompts/-/prompts-2.4.2.tgz (GET)
+#13 27.56 Progress: resolved 823, reused 0, downloaded 566, added 569
+#13 27.66 [WARN] Tarball download average speed 29 KiB/s (size 37 KiB) is below 50 KiB/s: https://registry.npmjs.org/@lingui/cli/-/cli-6.6.0.tgz (GET)
+#13 28.18 [WARN] Tarball download average speed 46 KiB/s (size 816 KiB) is below 50 KiB/s: https://registry.npmjs.org/motion-dom/-/motion-dom-13.0.0.tgz (GET)
+#13 28.56 Progress: resolved 823, reused 0, downloaded 570, added 573
+#13 29.49 [WARN] Tarball download average speed 12 KiB/s (size 34 KiB) is below 50 KiB/s: https://registry.npmjs.org/@oxc-project/runtime/-/runtime-0.143.0.tgz (GET)
+#13 29.57 Progress: resolved 823, reused 0, downloaded 577, added 580
+#13 30.25 [WARN] Request took 19395ms: https://registry.npmjs.org/@tailwindcss%2Foxide-linux-arm64-gnu
+#13 30.57 Progress: resolved 823, reused 0, downloaded 586, added 589
+#13 31.32 [WARN] Tarball download average speed 31 KiB/s (size 194 KiB) is below 50 KiB/s: https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz (GET)
+#13 31.57 Progress: resolved 823, reused 0, downloaded 588, added 591
+#13 32.56 [WARN] Tarball download average speed 14 KiB/s (size 85 KiB) is below 50 KiB/s: https://registry.npmjs.org/lightningcss/-/lightningcss-1.33.0.tgz (GET)
+#13 32.57 Progress: resolved 823, reused 0, downloaded 596, added 599
+#13 32.98 [WARN] Tarball download average speed 8 KiB/s (size 27 KiB) is below 50 KiB/s: https://registry.npmjs.org/@serwist/vite/-/vite-9.5.12.tgz (GET)
+#13 33.13 [WARN] Tarball download average speed 25 KiB/s (size 387 KiB) is below 50 KiB/s: https://registry.npmjs.org/undici/-/undici-7.29.0.tgz (GET)
+#13 33.13 [WARN] Tarball download average speed 15 KiB/s (size 50 KiB) is below 50 KiB/s: https://registry.npmjs.org/source-map/-/source-map-0.8.0.tgz (GET)
+#13 33.57 Progress: resolved 823, reused 0, downloaded 607, added 610
+#13 33.91 [WARN] Tarball download average speed 35 KiB/s (size 144 KiB) is below 50 KiB/s: https://registry.npmjs.org/type-fest/-/type-fest-5.8.0.tgz (GET)
+#13 34.57 Progress: resolved 823, reused 0, downloaded 620, added 623
+#13 34.89 [WARN] Tarball download average speed 9 KiB/s (size 50 KiB) is below 50 KiB/s: https://registry.npmjs.org/source-map/-/source-map-0.7.6.tgz (GET)
+#13 35.57 Progress: resolved 823, reused 0, downloaded 639, added 642
+#13 36.57 Progress: resolved 823, reused 0, downloaded 654, added 657
+#13 36.73 [WARN] Request took 10180ms: https://registry.npmjs.org/es-toolkit
+#13 37.57 Progress: resolved 823, reused 0, downloaded 677, added 680
+#13 38.14 [WARN] Tarball download average speed 22 KiB/s (size 41 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/router-utils/-/router-utils-1.162.2.tgz (GET)
+#13 38.57 Progress: resolved 823, reused 0, downloaded 697, added 700
+#13 38.68 [WARN] Tarball download average speed 40 KiB/s (size 204 KiB) is below 50 KiB/s: https://registry.npmjs.org/seroval/-/seroval-1.5.6.tgz (GET)
+#13 39.58 Progress: resolved 823, reused 0, downloaded 724, added 727
+#13 40.58 Progress: resolved 823, reused 0, downloaded 740, added 743
+#13 41.58 Progress: resolved 823, reused 0, downloaded 751, added 754
+#13 42.49 [WARN] Tarball download average speed 33 KiB/s (size 84 KiB) is below 50 KiB/s: https://registry.npmjs.org/parse5/-/parse5-7.3.0.tgz (GET)
+#13 42.58 Progress: resolved 823, reused 0, downloaded 758, added 761
+#13 43.14 [WARN] Tarball download average speed 33 KiB/s (size 257 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/router-devtools-core/-/router-devtools-core-1.168.1.tgz (GET)
+#13 43.29 [WARN] Tarball download average speed 19 KiB/s (size 34 KiB) is below 50 KiB/s: https://registry.npmjs.org/saxes/-/saxes-6.0.0.tgz (GET)
+#13 43.58 Progress: resolved 823, reused 0, downloaded 764, added 767
+#13 44.25 [WARN] Request took 18355ms: https://registry.npmjs.org/electron-to-chromium
+#13 44.58 Progress: resolved 823, reused 0, downloaded 768, added 771
+#13 44.99 [WARN] Tarball download average speed 6 KiB/s (size 20 KiB) is below 50 KiB/s: https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.9.tgz (GET)
+#13 45.59 Progress: resolved 823, reused 0, downloaded 772, added 775
+#13 46.59 Progress: resolved 823, reused 0, downloaded 778, added 781
+#13 47.59 Progress: resolved 823, reused 0, downloaded 790, added 793
+#13 48.59 Progress: resolved 823, reused 0, downloaded 793, added 796
+#13 49.56 [WARN] Tarball download average speed 29 KiB/s (size 58 KiB) is below 50 KiB/s: https://registry.npmjs.org/es-module-lexer/-/es-module-lexer-2.3.2.tgz (GET)
+#13 49.67 Progress: resolved 823, reused 0, downloaded 795, added 797
+#13 49.98 [WARN] Request took 20314ms: https://registry.npmjs.org/framer-motion
+#13 50.87 Progress: resolved 823, reused 0, downloaded 796, added 799
+#13 51.82 Progress: resolved 823, reused 0, downloaded 797, added 800
+#13 52.82 Progress: resolved 823, reused 0, downloaded 798, added 801
+#13 53.19 [WARN] Request took 12916ms: https://registry.npmjs.org/playwright
+#13 53.95 Progress: resolved 823, reused 0, downloaded 799, added 801
+#13 54.95 Progress: resolved 823, reused 0, downloaded 800, added 803
+#13 55.96 [WARN] Tarball download average speed 23 KiB/s (size 483 KiB) is below 50 KiB/s: https://registry.npmjs.org/@tanstack/query-devtools/-/query-devtools-5.101.4.tgz (GET)
+#13 55.99 Progress: resolved 823, reused 0, downloaded 801, added 803
+#13 56.34 [WARN] Tarball download average speed 42 KiB/s (size 428 KiB) is below 50 KiB/s: https://registry.npmjs.org/@babel/parser/-/parser-7.29.7.tgz (GET)
+#13 56.98 [WARN] Tarball download average speed 41 KiB/s (size 711 KiB) is below 50 KiB/s: https://registry.npmjs.org/tldts/-/tldts-6.1.86.tgz (GET)
+#13 56.99 Progress: resolved 823, reused 0, downloaded 802, added 805
+#13 57.34 [WARN] Request took 40289ms: https://registry.npmjs.org/@types%2Fd3-ease
+#13 57.99 Progress: resolved 823, reused 0, downloaded 803, added 806
+#13 62.31 [WARN] Request took 10403ms: https://registry.npmjs.org/wrangler
+#13 62.41 Progress: resolved 823, reused 0, downloaded 804, added 806
+#13 62.82 [WARN] Request took 11714ms: https://registry.npmjs.org/use-sync-external-store
+#13 62.90 [WARN] Request took 22680ms: https://registry.npmjs.org/playwright-core
+#13 63.41 Progress: resolved 823, reused 0, downloaded 804, added 807
+#13 63.79 [WARN] Tarball download average speed 34 KiB/s (size 1277 KiB) is below 50 KiB/s: https://registry.npmjs.org/@yuku-codegen/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.5.48.tgz (GET)
+#13 64.00 [WARN] Request took 13749ms: https://registry.npmjs.org/typescript
+#13 64.41 Progress: resolved 823, reused 0, downloaded 805, added 808
+#13 65.15 [WARN] Request took 15965ms: https://registry.npmjs.org/tailwindcss
+#13 65.63 [WARN] Request took 23242ms: https://registry.npmjs.org/react-is
+#13 66.83 Progress: resolved 823, reused 0, downloaded 806, added 808
+#13 67.83 Progress: resolved 823, reused 0, downloaded 807, added 810
+#13 70.15 [WARN] Request took 23658ms: https://registry.npmjs.org/scheduler
+#13 70.84 Progress: resolved 823, reused 0, downloaded 808, added 810
+#13 71.88 Progress: resolved 823, reused 0, downloaded 809, added 812
+#13 74.67 Progress: resolved 823, reused 0, downloaded 810, added 812
+#13 75.02 [WARN] Request took 30338ms: https://registry.npmjs.org/react
+#13 75.67 Progress: resolved 823, reused 0, downloaded 810, added 813
+#13 78.31 Progress: resolved 823, reused 0, downloaded 811, added 813
+#13 79.31 Progress: resolved 823, reused 0, downloaded 811, added 814
+#13 79.79 [WARN] GET https://registry.npmjs.org/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 82.67 [WARN] Request took 16809ms: https://registry.npmjs.org/react-is
+#13 83.08 [WARN] Request took 18845ms: https://registry.npmjs.org/typescript
+#13 86.29 [WARN] GET https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.32.0.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 93.78 [WARN] Tarball download average speed 19 KiB/s (size 1031 KiB) is below 50 KiB/s: https://registry.npmjs.org/vite-plus/-/vite-plus-0.2.9.tgz (GET)
+#13 93.89 Progress: resolved 823, reused 0, downloaded 812, added 814
+#13 94.90 Progress: resolved 823, reused 0, downloaded 812, added 815
+#13 97.86 [WARN] Request took 47919ms: https://registry.npmjs.org/tldts-core
+#13 98.87 [WARN] GET https://unofficial-builds.nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-arm64-musl.tar.gz error (23). Will retry in 10 seconds. 2 retries left.
+#13 99.32 [WARN] GET https://registry.npmjs.org/@oxfmt/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.62.0.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 99.45 [WARN] GET https://registry.npmjs.org/@oxlint/binding-linux-arm64-musl/-/binding-linux-arm64-musl-1.77.0.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 99.49 [WARN] GET https://registry.npmjs.org/@cloudflare/workerd-linux-arm64/-/workerd-linux-arm64-1.20260815.1.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 99.75 [WARN] Request took 57503ms: https://registry.npmjs.org/react-dom
+#13 99.87 [WARN] GET https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.3.1.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 99.94 [WARN] GET https://registry.npmjs.org/ws/-/ws-8.21.0.tgz error (23). Will retry in 10 seconds. 2 retries left.
+#13 100.6 ✓ Lockfile passes supply-chain policies (1013 entries in 1m 38.9s)
+#13 106.5 Progress: resolved 823, reused 0, downloaded 813, added 815
+#13 107.5 Progress: resolved 823, reused 0, downloaded 813, added 816
+#13 111.6 Progress: resolved 823, reused 0, downloaded 814, added 816
+#13 112.6 Progress: resolved 823, reused 0, downloaded 814, added 817
+#13 113.7 Progress: resolved 823, reused 0, downloaded 815, added 817
+#13 114.8 Progress: resolved 823, reused 0, downloaded 815, added 818
+#13 118.1 Progress: resolved 823, reused 0, downloaded 816, added 818
+#13 119.1 Progress: resolved 823, reused 0, downloaded 816, added 819
+#13 120.1 Progress: resolved 823, reused 0, downloaded 817, added 820
+#13 142.0 Progress: resolved 823, reused 0, downloaded 818, added 820
+#13 143.0 Progress: resolved 823, reused 0, downloaded 818, added 821
+#13 163.9 Progress: resolved 823, reused 0, downloaded 819, added 821
+#13 164.9 Progress: resolved 823, reused 0, downloaded 819, added 822
+#13 168.9 [WARN] GET https://unofficial-builds.nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-arm64-musl.tar.gz error (23). Will retry in 1 minute. 1 retries left.
+#13 284.1 Progress: resolved 823, reused 0, downloaded 820, added 822
+#13 284.3 Progress: resolved 823, reused 0, downloaded 820, added 823, done
+#13 284.9 .../esbuild@0.28.1/node_modules/esbuild postinstall$ node install.js
+#13 284.9 .../node_modules/workerd postinstall$ node install.js
+#13 284.9 .../node_modules/workerd postinstall: [workerd] Failed to validate workerd binary
+#13 284.9 .../node_modules/workerd postinstall: Local development will not work. This usually means you're on an unsupported
+#13 284.9 .../node_modules/workerd postinstall: operating system, or missing some shared libraries. On Debian-based systems,
+#13 284.9 .../node_modules/workerd postinstall: make sure you've installed the `libc++1` package.
+#13 284.9 .../node_modules/workerd postinstall: Done
+#13 284.9 .../esbuild@0.28.1/node_modules/esbuild postinstall: Done
+#13 285.7
+#13 285.7 dependencies:
+#13 285.7 + @base-ui/react 1.7.0
+#13 285.7 + @date-fns/tz 1.5.0
+#13 285.7 + @lingui/core 6.6.0
+#13 285.7 + @lingui/react 6.6.0
+#13 285.7 + @tanstack/react-form 1.33.5
+#13 285.7 + @tanstack/react-query 5.101.4
+#13 285.7 + @tanstack/react-router 1.170.31
+#13 285.7 + @tanstack/react-table 9.1.2
+#13 285.7 + @tanstack/react-virtual 3.14.10
+#13 285.7 + @tiptap/extension-image 3.30.2
+#13 285.7 + @tiptap/extension-link 3.30.2
+#13 285.7 + @tiptap/extension-placeholder 3.30.2
+#13 285.7 + @tiptap/extension-task-item 3.30.2
+#13 285.7 + @tiptap/extension-task-list 3.30.2
+#13 285.7 + @tiptap/extension-underline 3.30.2
+#13 285.7 + @tiptap/pm 3.30.2
+#13 285.7 + @tiptap/react 3.30.2
+#13 285.7 + @tiptap/starter-kit 3.30.2
+#13 285.7 + bignumber.js 11.1.5
+#13 285.7 + class-variance-authority 0.7.1
+#13 285.7 + clsx 2.1.1
+#13 285.7 + cmdk 1.1.1
+#13 285.7 + date-fns 4.4.0
+#13 285.7 + lightweight-charts 5.2.1
+#13 285.7 + lucide-react 1.33.0
+#13 285.7 + motion 13.1.0
+#13 285.7 + qrcode 1.5.4
+#13 285.7 + react 19.2.8
+#13 285.7 + react-day-picker 10.0.1
+#13 285.7 + react-dom 19.2.8
+#13 285.7 + react-hotkeys-hook 5.3.3
+#13 285.7 + recharts 3.10.1
+#13 285.7 + shadcn 4.18.0
+#13 285.7 + tailwind-merge 3.6.0
+#13 285.7 + tiptap-markdown 0.9.0
+#13 285.7 + tw-animate-css 1.4.0
+#13 285.7 + yet-another-react-lightbox 3.32.2
+#13 285.7 + zod 4.4.3
+#13 285.7 + zustand 5.0.15
+#13 285.7
+#13 285.7 devDependencies:
+#13 285.7 + @babel/core 8.0.1
+#13 285.7 + @lingui/babel-plugin-lingui-macro 6.6.0
+#13 285.7 + @lingui/cli 6.6.0
+#13 285.7 + @lingui/vite-plugin 6.6.0
+#13 285.7 + @playwright/test 1.62.1
+#13 285.7 + @rolldown/plugin-babel 0.2.3
+#13 285.7 + @serwist/vite 9.5.12
+#13 285.7 + @serwist/window 9.5.12
+#13 285.7 + @tailwindcss/vite 4.3.3
+#13 285.7 + @tanstack/react-devtools 0.10.10
+#13 285.7 + @tanstack/react-form-devtools 0.2.34
+#13 285.7 + @tanstack/react-query-devtools 5.101.4
+#13 285.7 + @tanstack/react-router-devtools 1.167.1
+#13 285.7 + @tanstack/router-plugin 1.168.34
+#13 285.7 + @testing-library/jest-dom 7.0.1
+#13 285.7 + @testing-library/react 16.3.2
+#13 285.7 + @testing-library/user-event 14.6.5
+#13 285.7 + @types/babel__core 7.20.5
+#13 285.7 + @types/node 25.9.5
+#13 285.7 + @types/qrcode 1.5.6
+#13 285.7 + @types/react 19.2.18
+#13 285.7 + @types/react-dom 19.2.4
+#13 285.7 + @vitejs/plugin-react 6.0.5
+#13 285.7 + babel-plugin-react-compiler 1.0.0
+#13 285.7 + jsdom 25.0.1
+#13 285.7 + node 24.18.0
+#13 285.7 + serwist 9.5.12
+#13 285.7 + tailwindcss 4.3.3
+#13 285.7 + typescript 7.0.2
+#13 285.7 + vite <- @voidzero-dev/vite-plus-core 0.2.9
+#13 285.7 + vite-plus 0.2.9
+#13 285.7 + vitest 4.1.11
+#13 285.7 + wrangler 4.124.0
+#13 285.7
+#13 285.7 Done in 4m 45.5s using pnpm v11.16.0
+#13 DONE 286.2s
+
+#14 [build 6/8] COPY web/ ./
+#14 DONE 0.8s
+
+#15 [build 7/8] COPY VERSION /VERSION
+#15 DONE 0.0s
+
+#16 [build 8/8] RUN pnpm run build
+#16 1.068 $ tsc -b --noEmit && vp build
+#16 20.53 [2K
+transforming...✓ 5553 modules transformed.
+#16 45.60 rendering chunks...
+#16 46.07 computing gzip size...
+#16 46.11 dist/assets/app-icon-small-K5-Z4Naf.png                        8.29 kB
+#16 46.11 dist/index.html                                                9.43 kB │ gzip:   2.36 kB
+#16 46.11 dist/assets/app-icon-Bc3nUG-4.png                             16.30 kB
+#16 46.11 dist/assets/Inter-latin-BwkfbSeq-BwkfbSeq.woff2               72.92 kB
+#16 46.11 dist/assets/BricolageGrotesque-Bold-BIJrwikb-BIJrwikb.ttf     82.20 kB
+#16 46.11 dist/assets/index-BJh1Mxqw.css                               287.51 kB │ gzip:  41.32 kB
+#16 46.11 dist/assets/login-DJ7LAi8J.js                                  0.03 kB │ gzip:   0.05 kB
+#16 46.11 dist/assets/setup-DJ7LAi8J.js                                  0.03 kB │ gzip:   0.05 kB
+#16 46.11 dist/assets/isElementDisabled-KSuuBj8D.js                      0.11 kB │ gzip:   0.11 kB
+#16 46.11 dist/assets/check-B48rNLdG.js                                  0.11 kB │ gzip:   0.13 kB
+#16 46.11 dist/assets/chevron-down-CVYBXPz6.js                           0.12 kB │ gzip:   0.13 kB
+#16 46.11 dist/assets/chevron-up-fHddVErU.js                             0.12 kB │ gzip:   0.13 kB
+#16 46.11 dist/assets/chevron-left-DcxX2QFb.js                           0.12 kB │ gzip:   0.14 kB
+#16 46.11 dist/assets/market-D5aqUxPL.js                                 0.13 kB │ gzip:   0.12 kB
+#16 46.11 dist/assets/x-DRbkkdhY.js                                      0.14 kB │ gzip:   0.14 kB
+#16 46.11 dist/assets/useRouter-CmsaP3gO.js                              0.15 kB │ gzip:   0.14 kB
+#16 46.11 dist/assets/arrow-left-DnGdDR4n.js                             0.15 kB │ gzip:   0.15 kB
+#16 46.11 dist/assets/arrow-right-BbUs1UFc.js                            0.15 kB │ gzip:   0.15 kB
+#16 46.11 dist/assets/matchContext-BlmR6fIu.js                           0.16 kB │ gzip:   0.14 kB
+#16 46.11 dist/assets/chevrons-up-down-_KLMkRnA.js                       0.16 kB │ gzip:   0.15 kB
+#16 46.11 dist/assets/ellipsis-vertical-D8f5_b78.js                      0.22 kB │ gzip:   0.16 kB
+#16 46.11 dist/assets/useValueChanged-B8aMAAmG.js                        0.22 kB │ gzip:   0.19 kB
+#16 46.11 dist/assets/copy-DRR36Og6.js                                   0.23 kB │ gzip:   0.20 kB
+#16 46.11 dist/assets/useNavigate-iqAK3_rx.js                            0.23 kB │ gzip:   0.19 kB
+#16 46.11 dist/assets/ToolbarRootContext-DrpSBTlu.js                     0.23 kB │ gzip:   0.19 kB
+#16 46.11 dist/assets/circle-alert-BRx_cPRJ.js                           0.24 kB │ gzip:   0.18 kB
+#16 46.11 dist/assets/external-link-N3q4lLJ1.js                          0.24 kB │ gzip:   0.19 kB
+#16 46.11 dist/assets/news-CSSL1xbR.js                                   0.24 kB │ gzip:   0.21 kB
+#16 46.11 dist/assets/trades-CSSL1xbR.js                                 0.24 kB │ gzip:   0.21 kB
+#16 46.11 dist/assets/useControlled-DmFq8TbW.js                          0.24 kB │ gzip:   0.21 kB
+#16 46.11 dist/assets/eye-DqX3kwDR.js                                    0.25 kB │ gzip:   0.19 kB
+#16 46.11 dist/assets/image-BNppgNzo.js                                  0.26 kB │ gzip:   0.21 kB
+#16 46.11 dist/assets/formatNumber-CLv0_Cla.js                           0.26 kB │ gzip:   0.21 kB
+#16 46.11 dist/assets/pencil-Bc_UhNQi.js                                 0.27 kB │ gzip:   0.22 kB
+#16 46.11 dist/assets/arrow-up-right-CB1Zw8md.js                         0.27 kB │ gzip:   0.20 kB
+#16 46.11 dist/assets/Skeleton-GIpTBqJI.js                               0.28 kB │ gzip:   0.21 kB
+#16 46.11 dist/assets/trash-2-B4qkJSyd.js                                0.32 kB │ gzip:   0.21 kB
+#16 46.11 dist/assets/clamp-CyUv1K3d.js                                  0.34 kB │ gzip:   0.26 kB
+#16 46.11 dist/assets/share-2-D7fcm1_y.js                                0.35 kB │ gzip:   0.23 kB
+#16 46.11 dist/assets/CSPContext-_gT4zqsH.js                             0.36 kB │ gzip:   0.25 kB
+#16 46.11 dist/assets/useCoachAvailability-HD9_PyUu.js                   0.38 kB │ gzip:   0.28 kB
+#16 46.11 dist/assets/eye-off-DLZv3LN6.js                                0.42 kB │ gzip:   0.26 kB
+#16 46.11 dist/assets/scrollEdges-B8bTZgkv.js                            0.46 kB │ gzip:   0.33 kB
+#16 46.11 dist/assets/calendar-days-BjUKWNC6.js                          0.48 kB │ gzip:   0.26 kB
+#16 46.11 dist/assets/sparkles-C_U0Mn10.js                               0.48 kB │ gzip:   0.27 kB
+#16 46.11 dist/assets/ControlledPopover-BXfwDlby.js                      0.51 kB │ gzip:   0.32 kB
+#16 46.11 dist/assets/Pill-BjcXwwKH.js                                   0.53 kB │ gzip:   0.35 kB
+#16 46.11 dist/assets/useStore-CBjkHRTI.js                               0.54 kB │ gzip:   0.32 kB
+#16 46.11 dist/assets/WinLossRecord-DouChH5W.js                          0.55 kB │ gzip:   0.29 kB
+#16 46.11 dist/assets/use-mobile-DuK0ge22.js                             0.57 kB │ gzip:   0.36 kB
+#16 46.11 dist/assets/theme-tokens-CjNJMGRH.js                           0.58 kB │ gzip:   0.33 kB
+#16 46.11 dist/assets/label-CPh8U5Bv.js                                  0.59 kB │ gzip:   0.41 kB
+#16 46.11 dist/assets/useNotes-Cc3Sckm2.js                               0.68 kB │ gzip:   0.43 kB
+#16 46.11 dist/assets/skeleton-BG6iLs4x.js                               0.68 kB │ gzip:   0.43 kB
+#16 46.11 dist/assets/auth-DkJWWAy9.js                                   0.71 kB │ gzip:   0.42 kB
+#16 46.11 dist/assets/CompositeItem-IqVbmVIW.js                          0.87 kB │ gzip:   0.52 kB
+#16 46.11 dist/assets/exports-CqhkTbTL.js                                0.93 kB │ gzip:   0.60 kB
+#16 46.11 dist/assets/useMoneyFormatters-DaH6OhIB.js                     1.02 kB │ gzip:   0.61 kB
+#16 46.11 dist/assets/field-styles-U_jxuJeE.js                           1.14 kB │ gzip:   0.56 kB
+#16 46.11 dist/assets/preload-helper-Czpn1I53.js                         1.19 kB │ gzip:   0.67 kB
+#16 46.11 dist/assets/overlay-styles-iaorHM3k.js                         1.21 kB │ gzip:   0.50 kB
+#16 46.11 dist/assets/settings-9ZYJLQqW.js                               1.24 kB │ gzip:   0.42 kB
+#16 46.11 dist/assets/useShareLinks-DuNcjR3m.js                          1.26 kB │ gzip:   0.64 kB
+#16 46.11 dist/assets/news.index-DHxL4F73.js                             1.33 kB │ gzip:   0.72 kB
+#16 46.11 dist/assets/tradeFilters-FK5CDOad.js                           1.36 kB │ gzip:   0.55 kB
+#16 46.11 dist/assets/useProp-C3kuTVan.js                                1.37 kB │ gzip:   0.74 kB
+#16 46.11 dist/assets/useAnnualGoal-BDKCWSUW.js                          1.41 kB │ gzip:   0.72 kB
+#16 46.11 dist/assets/ToneToggle-DgpG7gKg.js                             1.46 kB │ gzip:   0.76 kB
+#16 46.11 dist/assets/BrokerSteps-BKvIBKLj.js                            1.49 kB │ gzip:   0.72 kB
+#16 46.11 dist/assets/FieldControl-DZa2HETj.js                           1.55 kB │ gzip:   0.88 kB
+#16 46.11 dist/assets/trades-qwY04hrT.js                                 1.87 kB │ gzip:   0.96 kB
+#16 46.11 dist/assets/useImports-CMSePP8r.js                             1.93 kB │ gzip:   0.76 kB
+#16 46.11 dist/assets/dateRangePresets-daYvaUhB.js                       1.95 kB │ gzip:   0.81 kB
+#16 46.11 dist/assets/ui-TgwrKizr.js                                     2.04 kB │ gzip:   0.59 kB
+#16 46.11 dist/assets/Item-BUVbrMmf.js                                   2.06 kB │ gzip:   0.70 kB
+#16 46.11 dist/assets/composite-BKKbKgZ0.js                              2.12 kB │ gzip:   0.76 kB
+#16 46.11 dist/assets/Modal-BVrKmOHn.js                                  2.19 kB │ gzip:   1.13 kB
+#16 46.11 dist/assets/FormInput-CKarMR7I.js                              2.21 kB │ gzip:   0.94 kB
+#16 46.11 dist/assets/useLabelableId-DOAVIdLY.js                         2.26 kB │ gzip:   1.08 kB
+#16 46.11 dist/assets/useButton-FW0Io4iX.js                              2.45 kB │ gzip:   1.12 kB
+#16 46.11 dist/assets/resolveValueLabel-D1UAz4mB.js                      2.57 kB │ gzip:   1.08 kB
+#16 46.11 dist/assets/native-select-Ce1l35lN.js                          2.59 kB │ gzip:   1.10 kB
+#16 46.11 dist/assets/events-CUfYsscU.js                                 2.60 kB │ gzip:   1.43 kB
+#16 46.11 dist/assets/dist-D373Dh2X.js                                   2.71 kB │ gzip:   1.35 kB
+#16 46.11 dist/assets/useAnchoredPopupScrollLock-DcHEZo-j.js             2.90 kB │ gzip:   1.36 kB
+#16 46.11 dist/assets/useCompositeListItem-Bi60Wudz.js                   3.02 kB │ gzip:   1.38 kB
+#16 46.11 dist/assets/textarea-BU82InqM.js                               3.84 kB │ gzip:   1.22 kB
+#16 46.11 dist/assets/chart-B7YCxLEk.js                                  3.89 kB │ gzip:   2.09 kB
+#16 46.11 dist/assets/EmptyState-5-U4p_v6.js                             3.98 kB │ gzip:   1.34 kB
+#16 46.11 dist/assets/useSelector-CmlErAA1.js                            4.02 kB │ gzip:   1.64 kB
+#16 46.11 dist/assets/useAccounts-DP0HqAjO.js                            4.07 kB │ gzip:   1.56 kB
+#16 46.11 dist/assets/Pagination-E05rMWIZ.js                             4.20 kB │ gzip:   1.78 kB
+#16 46.11 dist/assets/dist-CHkbai7d.js                                   4.36 kB │ gzip:   1.43 kB
+#16 46.11 dist/assets/Match-DUtv0wpq.js                                  4.53 kB │ gzip:   1.78 kB
+#16 46.11 dist/assets/switch-DT1g9WPg.js                                 4.56 kB │ gzip:   2.24 kB
+#16 46.11 dist/assets/DirCell-CMyu0Q3C.js                                4.70 kB │ gzip:   2.01 kB
+#16 46.11 dist/assets/lazyRouteComponent-B6JbasqM.js                     4.71 kB │ gzip:   1.66 kB
+#16 46.11 dist/assets/tz-CkWudTPM.js                                     4.78 kB │ gzip:   1.71 kB
+#16 46.11 dist/assets/useSystemInfo-CO7fQJm2.js                          4.92 kB │ gzip:   1.91 kB
+#16 46.11 dist/assets/ReplayHeartbeat-igrz90tI.js                        5.21 kB │ gzip:   2.54 kB
+#16 46.11 dist/assets/format-BoQphrFP.js                                 5.36 kB │ gzip:   2.01 kB
+#16 46.11 dist/assets/useMutation-9Sv2JmgD.js                            5.57 kB │ gzip:   1.79 kB
+#16 46.11 dist/assets/input-group-1JLzh86s.js                            5.71 kB │ gzip:   1.70 kB
+#16 46.11 dist/assets/displayPrefs-CvaEKSw0.js                           6.67 kB │ gzip:   2.37 kB
+#16 46.11 dist/assets/brokers-BS6ob9Cn.js                                8.13 kB │ gzip:   2.58 kB
+#16 46.11 dist/assets/getPseudoElementBounds-BE10gaVS.js                 8.27 kB │ gzip:   3.41 kB
+#16 46.11 dist/assets/ShareCard-DKa8mQBh.js                              8.34 kB │ gzip:   3.31 kB
+#16 46.11 dist/assets/news.performance-BEFqwBhr.js                       9.85 kB │ gzip:   3.94 kB
+#16 46.11 dist/assets/reports-BBMfrIN-.js                                9.91 kB │ gzip:   4.13 kB
+#16 46.11 dist/assets/day._date-D17dOBrC.js                             10.06 kB │ gzip:   4.14 kB
+#16 46.11 dist/assets/with-selector-Ca1wZmtN.js                         10.28 kB │ gzip:   3.82 kB
+#16 46.11 dist/assets/Dialog-BzTppKBq.js                                11.11 kB │ gzip:   3.82 kB
+#16 46.11 dist/assets/news._id-kCHS7Uxz.js                              11.18 kB │ gzip:   3.70 kB
+#16 46.11 dist/assets/useAnalytics-y0Xd-6F1.js                          11.51 kB │ gzip:   4.27 kB
+#16 46.11 dist/assets/popover-CxyvoZQM.js                               12.00 kB │ gzip:   4.57 kB
+#16 46.11 dist/assets/useScrollLock-BTjp_X2S.js                         13.22 kB │ gzip:   5.14 kB
+#16 46.11 dist/assets/CalendarDayHoverCard-DR_JGrYJ.js                  13.39 kB │ gzip:   5.20 kB
+#16 46.11 dist/assets/notes-ClD6Ve2d.js                                 14.73 kB │ gzip:   5.93 kB
+#16 46.11 dist/assets/connect-C-Jw32B0.js                               15.51 kB │ gzip:   4.84 kB
+#16 46.11 dist/assets/review-CTXRF6bF.js                                15.69 kB │ gzip:   6.55 kB
+#16 46.11 dist/assets/s._token-IffWyP0t.js                              16.96 kB │ gzip:   6.27 kB
+#16 46.11 dist/assets/TradeDetailSheet-DxZwPP3h.js                      17.35 kB │ gzip:   6.50 kB
+#16 46.11 dist/assets/wrapped-BYNuIRUq.js                               18.58 kB │ gzip:   7.31 kB
+#16 46.11 dist/assets/link-C0ns1BFQ.js                                  19.37 kB │ gzip:   7.49 kB
+#16 46.11 dist/assets/Toast-CtdZt-QJ.js                                 20.80 kB │ gzip:   8.12 kB
+#16 46.11 dist/assets/replay-DlTTU4dq.js                                21.21 kB │ gzip:   8.34 kB
+#16 46.11 dist/assets/tradeColumns-BPxt01ZU.js                          21.73 kB │ gzip:   6.86 kB
+#16 46.11 dist/assets/playbook-c8Hsltja.js                              23.42 kB │ gzip:   8.85 kB
+#16 46.11 dist/assets/riskReward-C5f1deDC.js                            25.21 kB │ gzip:  10.34 kB
+#16 46.11 dist/assets/accounts._accountId-B3H39Fxj.js                   25.54 kB │ gzip:   8.62 kB
+#16 46.11 dist/assets/menu-aoAcr3TU.js                                  34.65 kB │ gzip:  10.90 kB
+#16 46.11 dist/assets/TradeListItem-CKhDtPaO.js                         35.10 kB │ gzip:  11.73 kB
+#16 46.11 dist/assets/useNews-m0E0U4qa.js                               35.38 kB │ gzip:  10.58 kB
+#16 46.11 dist/assets/import-B61d7_AW.js                                42.18 kB │ gzip:  12.95 kB
+#16 46.11 dist/assets/trades.index-CZ2aGt5x.js                          45.63 kB │ gzip:  14.51 kB
+#16 46.11 dist/assets/home-BeL2h07Z.js                                  47.49 kB │ gzip:  14.62 kB
+#16 46.11 dist/assets/calendar-DRxErB1I.js                              47.99 kB │ gzip:  15.88 kB
+#16 46.11 dist/assets/ChartFrame-eGKoZmUh.js                            48.58 kB │ gzip:  13.01 kB
+#16 46.11 dist/assets/trades._id-DtYZFdab.js                            73.09 kB │ gzip:  24.32 kB
+#16 46.11 dist/assets/calculator-CevcX2Ll.js                            80.10 kB │ gzip:  27.64 kB
+#16 46.11 dist/assets/AppCalendar-mxPpV3V5.js                           90.04 kB │ gzip:  24.38 kB
+#16 46.11 dist/assets/settings-sections-D6YvXn9q.js                     97.03 kB │ gzip:  27.50 kB
+#16 46.11 dist/assets/middleware-CF0sG81W.js                           105.09 kB │ gzip:  36.12 kB
+#16 46.11 dist/assets/Page-CMWG5Yqm.js                                 111.38 kB │ gzip:  38.04 kB
+#16 46.11 dist/assets/settings-mOsFC2o9.js                             125.42 kB │ gzip:  40.94 kB
+#16 46.11 dist/assets/messages-C01Enksx.js                             127.54 kB │ gzip:  42.47 kB
+#16 46.11 dist/assets/messages-B1xBk1w3.js                             128.17 kB │ gzip:  40.81 kB
+#16 46.11 dist/assets/messages-DbX9D6No.js                             129.38 kB │ gzip:  40.91 kB
+#16 46.11 dist/assets/messages-CMZDgKGN.js                             152.47 kB │ gzip:  44.17 kB
+#16 46.11 dist/assets/TradeChart-TLw-AaUY.js                           179.08 kB │ gzip:  58.73 kB
+#16 46.11 dist/assets/AreaChart-C8iT0HHX.js                            314.43 kB │ gzip:  94.29 kB
+#16 46.11 dist/assets/index-BotTCdtz.js                              2,203.72 kB │ gzip: 689.56 kB
+#16 46.11
+#16 46.11 [32m✓ built in 25.64s[39m
+#16 46.11 [33m[plugin builtin:vite-reporter]
+#16 46.11 (!) Some chunks are larger than 500 kB after minification. Consider:
+#16 46.11 - Using dynamic import() to code-split the application
+#16 46.11 - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+#16 46.11 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+#16 46.21 [2K
+transforming...✓ 10 modules transformed.
+#16 46.23 rendering chunks...
+#16 46.23 computing gzip size...
+#16 46.23 dist/sw.js  45.24 kB │ gzip: 14.00 kB
+#16 46.23
+#16 46.23 [32m✓ built in 41ms[39m
+#16 46.23
+#16 46.23 @serwist/vite v9.5.12 files generated.
+#16 46.23 ✓ 147 precache entries (2829.77 KiB)
+#16 46.23 ⚠ warnings
+#16 46.23   assets/index-BotTCdtz.js is 2.2 MB, and won't be precached. Configure maximumFileSizeToCacheInBytes to change this limit.
+#16 46.23
+#16 46.23 [33m[33m[PLUGIN_TIMINGS] [0mYour build spent 97% of 25.6s inside plugin hooks (24.8s).
+#16 46.23 Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+#16 46.23   - @rolldown/plugin-babel transform (79%, 20.3s, 475 calls)
+#16 46.23   - @tailwindcss/vite:generate:build transform (15%, 3.8s, 5 calls)
+#16 46.23   - tanstack-router:code-splitter:compile-reference-file transform (4%, 1.1s, 31 calls)
+#16 46.23 Those rows are 98% of the build; the rest of the 97% is below.
+#16 46.23 Not measurable — 2 hooks whose calls overlap, so elapsed time covers work other calls were doing. Profile with `node --cpu-prof`:
+#16 46.23   - vite:asset load (3 calls)
+#16 46.23   - vite:asset-import-meta-url transform (2 calls)
+#16 46.23 See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+#16 46.23 [39m
+#16 DONE 46.6s
+
+#17 [stage-1 3/3] COPY --from=build /web/dist /usr/share/nginx/html
+#17 DONE 0.1s
+
+#18 exporting to image
+#18 exporting layers
+#18 exporting layers 0.3s done
+#18 exporting manifest sha256:0926ba140d0c652e87d42bbeecb9d5e9bc3a504587afb00feaaa6d405a411084 done
+#18 exporting config sha256:82b700f645712e407a944d620381c461b83907568dfba64cbf861ec838a2807c done
+#18 exporting attestation manifest sha256:ef224c19ccf88853c30de27a8d585d11fcf1df86dc93e53f1bc7aaea5e383eb0 0.0s done
+#18 exporting manifest list sha256:3276c49e4274d9d971f3e1a6e797ec054ff50d912f3b9c6bef4f316a148e3583 done
+#18 naming to docker.io/library/tradelens-phase-a-web:e23ccbc-node2418 done
+#18 unpacking to docker.io/library/tradelens-phase-a-web:e23ccbc-node2418 0.1s done
+#18 DONE 0.4s
