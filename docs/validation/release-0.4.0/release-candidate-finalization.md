@@ -1,5 +1,6 @@
 # v0.4.0 Release Candidate Finalization — 2026-10-15
 
+本文件保留原验收时点的历史事实；#314合并后的最新文档集成状态见 [集成状态](integration-status.md)。新main/RC必须单独验收。
 本轮是候选定版审查与下一阶段验收计划，不是 merge/release/tag/push-image/deploy 授权。仓库为 HoesenBruce/TradeLens；所有 GitHub 操作显式选择该仓库，不使用 upstream 的同号 PR。保留全部既有分支和未提交工作。
 
 ## 精确基线与当前判断

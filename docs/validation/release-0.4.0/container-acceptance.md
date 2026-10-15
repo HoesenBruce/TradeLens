@@ -1,5 +1,6 @@
 # Phase A 容器续验 — 2026-10-15
 
+本文件保留原验收时点的历史事实；#314合并后的最新文档集成状态见 [集成状态](integration-status.md)。新main/RC必须单独验收。
 本记录补充 [Phase A 主报告](phase-a-acceptance.md) 的 A4 本地容器门禁。所有镜像仅在本机 Docker Desktop 使用，没有推送 GHCR、修改 NAS、部署 Render、合并 Release PR 或关闭 Issue。
 
 ## 来源与修复边界

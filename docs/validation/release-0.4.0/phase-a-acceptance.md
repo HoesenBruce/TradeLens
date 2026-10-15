@@ -1,5 +1,6 @@
 # TradeLens Core v0.4.0 — Phase A 验收
 
+本文件保留原验收时点的历史事实；#314合并后的最新文档集成状态见 [集成状态](integration-status.md)。新main/RC必须单独验收。
 验收日期：2026-10-15（Asia/Shanghai）。本报告区分候选本地测试、GitHub CI、既有已发布镜像、真实 Render Live 和尚未执行的 NAS 验收。
 
 ## 1. 执行结论
