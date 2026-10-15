@@ -29,7 +29,7 @@ createServer(async (req, res) => {
       const response = await fetch(api.replace(/\/api\/v1$/, "") + path + incoming.search, {
         method: req.method,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": req.headers["content-type"] ?? "application/json",
           ...(req.headers.authorization ? { Authorization: req.headers.authorization } : {}),
         },
         ...(req.method !== "GET" && req.method !== "HEAD" ? { body: Buffer.concat(chunks) } : {}),

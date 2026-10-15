@@ -1,0 +1,30 @@
+{
+  "acceptance": "BLOCKED",
+  "source_api_tree": "f14ceb7690d17a8741765954e7f9f624ce5ebf54",
+  "original_timeouts_unchanged": true,
+  "runs": [
+    {
+      "browser": "Chromium 151.0.7922.34",
+      "passed": 31,
+      "failed": 4
+    },
+    {
+      "browser": "Chromium 151.0.7922.34",
+      "passed": 32,
+      "failed": 3
+    },
+    {
+      "browser": "Chromium 151.0.7922.173",
+      "passed": 29,
+      "failed": 6
+    },
+    {
+      "scope": "isolated online/offline owner cycle #2, default and prefix",
+      "passed": 1,
+      "failed": 1
+    }
+  ],
+  "unresolved": "default-API owner/member/owner cycle #2 exceeds 30 seconds; complete suite has additional 30-second transition and 5-second cache-migration timing failures",
+  "data_disclosure_demonstrated": false,
+  "next_action": "diagnose and pass these cases under unchanged deadlines; rerun complete production security acceptance"
+}

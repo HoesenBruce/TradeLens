@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  ListChecks,
   CalendarDays,
   Calculator,
   House,
@@ -53,6 +54,7 @@ export const PRIMARY_NAV: NavItem[] = [
 
 /** Shown in the desktop/tablet rail bottom group and the mobile nav drawer. */
 export const SECONDARY_NAV: NavItem[] = [
+  { to: "/review", labelKey: "review", icon: ListChecks },
   { to: "/events", labelKey: "events", icon: Newspaper },
   { to: "/news", labelKey: "news", icon: Megaphone },
   { to: "/notes", labelKey: "notes", icon: StickyNote },

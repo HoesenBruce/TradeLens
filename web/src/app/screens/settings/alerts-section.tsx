@@ -375,7 +375,8 @@ export function AlertsSection() {
               label={localize({ id: "settings.unreviewedTrades", message: "Unreviewed trades" })}
               detail={localize({
                 id: "settings.aWeeklyNudgeWhenClosedTradesOlderThanThisHaveNoJournal",
-                message: "A weekly nudge when closed trades older than this have no journal notes.",
+                message:
+                  "A weekly nudge when closed trades older than this have no execution grade. Dismissed backlog is excluded.",
               })}
             >
               <span className="flex items-center gap-3">
