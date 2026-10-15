@@ -12710,3 +12710,24 @@ msgstr "{value} · 保有中"
 #. js-lingui-explicit-id
 msgid "trades.ongoingPosition"
 msgstr "未決済"
+
+
+#. js-lingui-explicit-id
+msgid "trades.closedQuantitySummary"
+msgstr "決済済 {closed} / {entry}"
+
+#. js-lingui-explicit-id
+msgid "trades.remainingQuantitySummary"
+msgstr "残数量 {remaining}（{remainingPct}）"
+
+#. js-lingui-explicit-id
+msgid "trades.closedPercent"
+msgstr "{pct} 決済済"
+
+#. js-lingui-explicit-id
+msgid "trades.closeProgress"
+msgstr "決済進捗"
+
+#. js-lingui-explicit-id
+msgid "trades.closeProgressSortHint"
+msgstr "決済済と残数量。残数量で並べ替え"

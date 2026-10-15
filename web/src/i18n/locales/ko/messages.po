@@ -12706,3 +12706,24 @@ msgstr "{value} · 보유 중"
 #. js-lingui-explicit-id
 msgid "trades.ongoingPosition"
 msgstr "미청산"
+
+
+#. js-lingui-explicit-id
+msgid "trades.closedQuantitySummary"
+msgstr "청산 {closed} / {entry}"
+
+#. js-lingui-explicit-id
+msgid "trades.remainingQuantitySummary"
+msgstr "잔여 {remaining} ({remainingPct})"
+
+#. js-lingui-explicit-id
+msgid "trades.closedPercent"
+msgstr "{pct} 청산"
+
+#. js-lingui-explicit-id
+msgid "trades.closeProgress"
+msgstr "청산 진행률"
+
+#. js-lingui-explicit-id
+msgid "trades.closeProgressSortHint"
+msgstr "청산 수량과 잔여 수량. 잔여 수량으로 정렬"

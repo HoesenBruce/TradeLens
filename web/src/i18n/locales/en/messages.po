@@ -12709,3 +12709,24 @@ msgstr "{value} · ongoing"
 #. js-lingui-explicit-id
 msgid "trades.ongoingPosition"
 msgstr "still open"
+
+
+#. js-lingui-explicit-id
+msgid "trades.closedQuantitySummary"
+msgstr "Closed {closed} / {entry}"
+
+#. js-lingui-explicit-id
+msgid "trades.remainingQuantitySummary"
+msgstr "Remaining {remaining} ({remainingPct})"
+
+#. js-lingui-explicit-id
+msgid "trades.closedPercent"
+msgstr "{pct} closed"
+
+#. js-lingui-explicit-id
+msgid "trades.closeProgress"
+msgstr "Close progress"
+
+#. js-lingui-explicit-id
+msgid "trades.closeProgressSortHint"
+msgstr "Closed versus remaining quantity; sorted by remaining quantity"

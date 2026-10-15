@@ -378,13 +378,6 @@ function TradeDetailSheetBody({
               }
             />
           </div>
-          {/* `auto` rather than a fixed ratio: these three hold a count, a
-              duration and a money amount, and which one needs the most room
-              changes per trade. A fixed split gave Hold 80px to render "7m"
-              while Fees truncated "$6.88" in 35px. Each track now takes what
-              its own value needs and the slack is shared; `truncate` on the
-              value stays as the last resort when all three run long. */}
-          <TradeQuantityDetails trade={trade} />
           <div className="grid grid-cols-2 gap-px">
             <BentoStat
               label={tr({ id: "trades.hold", message: "Hold" })}
@@ -395,6 +388,9 @@ function TradeDetailSheetBody({
               value={fmtMoney(trade.fees_total, currency, intlLocale())}
             />
           </div>
+        </div>
+        <div className="mt-3">
+          <TradeQuantityDetails trade={trade} />
         </div>
         {(trade.tags.length > 0 || trade.setup) && (
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">

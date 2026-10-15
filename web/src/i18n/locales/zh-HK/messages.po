@@ -12706,3 +12706,24 @@ msgstr "{value} · 持有中"
 #. js-lingui-explicit-id
 msgid "trades.ongoingPosition"
 msgstr "尚未平倉"
+
+
+#. js-lingui-explicit-id
+msgid "trades.closedQuantitySummary"
+msgstr "已平倉 {closed} / {entry}"
+
+#. js-lingui-explicit-id
+msgid "trades.remainingQuantitySummary"
+msgstr "剩餘 {remaining}（{remainingPct}）"
+
+#. js-lingui-explicit-id
+msgid "trades.closedPercent"
+msgstr "已平倉 {pct}"
+
+#. js-lingui-explicit-id
+msgid "trades.closeProgress"
+msgstr "平倉進度"
+
+#. js-lingui-explicit-id
+msgid "trades.closeProgressSortHint"
+msgstr "已平倉與剩餘數量；按剩餘數量排序"

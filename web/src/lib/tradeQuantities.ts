@@ -1,6 +1,6 @@
 import type { Trade, TradeQuantities } from "./api/types";
 import { t } from "@lingui/core/macro";
-import { fmtNumber } from "./format";
+import { intlLocale } from "./locale";
 
 const unavailable: TradeQuantities = {
   entry_qty: null,
@@ -16,7 +16,9 @@ export function tradeQuantities(trade: Pick<Trade, "quantities">): TradeQuantiti
 }
 
 export function quantityText(value: number | null): string {
-  return value == null ? "—" : fmtNumber(value);
+  if (value == null || !Number.isFinite(value)) return "—";
+  // Inventory reconciles at 1e-9; retain fractional units without binary subtraction noise.
+  return new Intl.NumberFormat(intlLocale(), { maximumFractionDigits: 12 }).format(value);
 }
 
 export function quantityExplanation(reason?: string): string | undefined {
@@ -58,4 +60,17 @@ export function quantityLifecycleLabel(lifecycle: TradeQuantities["lifecycle"]):
     case "unknown":
       return t({ id: "trades.lifecycleUnknown", message: "Position unknown" });
   }
+}
+
+export function quantityClosedPct(q: TradeQuantities): number | null {
+  if (
+    q.lifecycle === "unknown" ||
+    q.entry_qty == null ||
+    q.entry_qty <= 0 ||
+    q.exit_qty == null ||
+    !Number.isFinite(q.entry_qty) ||
+    !Number.isFinite(q.exit_qty)
+  )
+    return null;
+  return Math.min(100, Math.max(0, (q.exit_qty / q.entry_qty) * 100));
 }

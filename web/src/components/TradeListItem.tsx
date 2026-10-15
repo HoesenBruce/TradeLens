@@ -192,10 +192,10 @@ export function TradeListItem({
           </span>
         </div>
 
+        <TradeQuantityCell trade={trade} />
         <div className="flex items-baseline justify-between gap-3 text-[14px] tabular-nums">
           <span className="min-w-0 truncate text-foreground">
-            <TradeQuantityCell trade={trade} />
-            {` @ ${trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, intlLocale()) : "—"}${trade.avg_exit_price != null ? ` → ${fmtMoney(trade.avg_exit_price * fxRate, currency, intlLocale())}` : ""}`}
+            {`@ ${trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, intlLocale()) : "—"}${trade.avg_exit_price != null ? ` → ${fmtMoney(trade.avg_exit_price * fxRate, currency, intlLocale())}` : ""}`}
             {/* Position size, so an option's P&L reconciles: 1 contract moving
                 $0.18 is $18, not $0.18, and the ×100 is invisible otherwise. */}
             <span className="text-muted-foreground @max-[19rem]/trade-row:hidden">
