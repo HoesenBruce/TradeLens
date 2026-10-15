@@ -5,6 +5,23 @@ All notable changes to TraderMemos are documented in this file.
 Release versioning is managed by [release-please](https://github.com/googleapis/release-please).
 See [docs/release.md](docs/release.md) for the release workflow.
 
+## [0.4.0](https://github.com/HoesenBruce/TradeLens/compare/v0.3.1...v0.4.0) (2026-10-15)
+
+
+### Features
+
+* **backup:** add isolated owner-only SQLite snapshots ([#285](https://github.com/HoesenBruce/TradeLens/issues/285)) ([005dd36](https://github.com/HoesenBruce/TradeLens/commit/005dd367879b1564e2add665a73dee3e0c26a333))
+* **review:** add account-scoped review inbox ([#292](https://github.com/HoesenBruce/TradeLens/issues/292)) ([3d383d8](https://github.com/HoesenBruce/TradeLens/commit/3d383d892698fd746b112eb7c64d9431d29f1f9a))
+* **trades:** show remaining and cumulative quantities in list and detail ([#310](https://github.com/HoesenBruce/TradeLens/issues/310)) ([b63aead](https://github.com/HoesenBruce/TradeLens/commit/b63aead3074e08435979a93c6aa84acbe021d189))
+
+
+### Bug Fixes
+
+* **build:** align Web Docker Node with locked runtime ([#236](https://github.com/HoesenBruce/TradeLens/issues/236)) ([#314](https://github.com/HoesenBruce/TradeLens/issues/314)) ([8b8f44b](https://github.com/HoesenBruce/TradeLens/commit/8b8f44b40a2382623100169286e3d54c65a543ba))
+* **sbi:** derive cash and margin review direction from position semantics ([#309](https://github.com/HoesenBruce/TradeLens/issues/309)) ([6016623](https://github.com/HoesenBruce/TradeLens/commit/6016623aa3f1e088f450eafef8d8265c1dbec257))
+* **security:** isolate legacy AI Coach ([#299](https://github.com/HoesenBruce/TradeLens/issues/299)) ([#306](https://github.com/HoesenBruce/TradeLens/issues/306)) ([66e0616](https://github.com/HoesenBruce/TradeLens/commit/66e0616a4673e8602dc5830d66abd3da180431bd))
+* **security:** protect provider diagnostics across OCR sync and alerts ([#305](https://github.com/HoesenBruce/TradeLens/issues/305)) ([021ffa0](https://github.com/HoesenBruce/TradeLens/commit/021ffa091ca9a0e4c29a3d5acdffeb12d54a2f01))
+
 ## [0.3.1](https://github.com/HoesenBruce/TradeLens/compare/v0.3.0...v0.3.1) (2026-10-09)
 
 
