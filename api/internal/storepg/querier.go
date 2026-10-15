@@ -74,6 +74,7 @@ type Querier interface {
 	GetExecutionByDedup(ctx context.Context, arg GetExecutionByDedupParams) (Execution, error)
 	GetFlexSyncSettings(ctx context.Context, arg GetFlexSyncSettingsParams) (FlexSyncSetting, error)
 	GetImportBatch(ctx context.Context, arg GetImportBatchParams) (ImportBatch, error)
+	GetImportSourceRow(ctx context.Context, arg GetImportSourceRowParams) (ImportSourceRow, error)
 	GetInstrumentSpec(ctx context.Context, arg GetInstrumentSpecParams) (InstrumentSpec, error)
 	GetJournalNote(ctx context.Context, arg GetJournalNoteParams) (JournalNote, error)
 	GetMarketBarsCache(ctx context.Context, cacheKey string) (MarketBarsCache, error)
@@ -121,6 +122,9 @@ type Querier interface {
 	ListExecutionsForTrade(ctx context.Context, tradeID string) ([]Execution, error)
 	ListFlexSyncSettingsForUser(ctx context.Context, userID string) ([]ListFlexSyncSettingsForUserRow, error)
 	ListImportBatches(ctx context.Context, userID string) ([]ImportBatch, error)
+	ListImportSourceCounts(ctx context.Context, userID string) ([]ListImportSourceCountsRow, error)
+	ListImportSourceFills(ctx context.Context, arg ListImportSourceFillsParams) ([]ImportSourceFill, error)
+	ListImportSourceRows(ctx context.Context, arg ListImportSourceRowsParams) ([]ListImportSourceRowsRow, error)
 	ListJournalNotes(ctx context.Context, arg ListJournalNotesParams) ([]JournalNote, error)
 	ListJournalRisks(ctx context.Context, userID string) ([]ListJournalRisksRow, error)
 	ListMediaFilesForUser(ctx context.Context, userID string) ([]MediaFile, error)
@@ -150,7 +154,11 @@ type Querier interface {
 	ListTradesMissingExcursion(ctx context.Context, arg ListTradesMissingExcursionParams) ([]Trade, error)
 	ListUsers(ctx context.Context) ([]User, error)
 	PruneAccessTokenUses(ctx context.Context, arg PruneAccessTokenUsesParams) error
+	PutImportSourceContext(ctx context.Context, arg PutImportSourceContextParams) error
+	PutImportSourceFill(ctx context.Context, arg PutImportSourceFillParams) error
+	PutImportSourceRow(ctx context.Context, arg PutImportSourceRowParams) error
 	RecordAccessTokenUse(ctx context.Context, arg RecordAccessTokenUseParams) error
+	ReplaceImportedExecution(ctx context.Context, arg ReplaceImportedExecutionParams) (int64, error)
 	RevokeAccessToken(ctx context.Context, arg RevokeAccessTokenParams) (int64, error)
 	RevokeShareLink(ctx context.Context, arg RevokeShareLinkParams) (int64, error)
 	SavePredictionEvaluation(ctx context.Context, arg SavePredictionEvaluationParams) (PredictionEvaluation, error)
@@ -159,6 +167,7 @@ type Querier interface {
 	SetTradeSetup(ctx context.Context, arg SetTradeSetupParams) error
 	SetTradeTags(ctx context.Context, arg SetTradeTagsParams) error
 	SetUserAdmin(ctx context.Context, arg SetUserAdminParams) (User, error)
+	SupersedeImportSources(ctx context.Context, executionID string) error
 	TouchAccessTokenLastUsed(ctx context.Context, id string) error
 	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error)
 	UpdateAlertChannelStatus(ctx context.Context, arg UpdateAlertChannelStatusParams) error
@@ -166,6 +175,7 @@ type Querier interface {
 	UpdateExecution(ctx context.Context, arg UpdateExecutionParams) (int64, error)
 	UpdateExecutionContract(ctx context.Context, arg UpdateExecutionContractParams) error
 	UpdateFlexSyncStatus(ctx context.Context, arg UpdateFlexSyncStatusParams) error
+	UpdateImportSourceSnapshot(ctx context.Context, arg UpdateImportSourceSnapshotParams) error
 	UpdateJournalNote(ctx context.Context, arg UpdateJournalNoteParams) (JournalNote, error)
 	UpdateNews(ctx context.Context, arg UpdateNewsParams) (News, error)
 	UpdateNewsAsset(ctx context.Context, arg UpdateNewsAssetParams) (NewsAsset, error)

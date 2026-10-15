@@ -372,6 +372,14 @@ func (p *PG) GetImportBatch(ctx context.Context, arg GetImportBatchParams) (Impo
 	return ImportBatch(v), nil
 }
 
+func (p *PG) GetImportSourceRow(ctx context.Context, arg GetImportSourceRowParams) (ImportSourceRow, error) {
+	v, err := p.q.GetImportSourceRow(ctx, storepg.GetImportSourceRowParams(arg))
+	if err != nil {
+		return ImportSourceRow{}, err
+	}
+	return ImportSourceRow(v), nil
+}
+
 func (p *PG) GetInstrumentSpec(ctx context.Context, arg GetInstrumentSpecParams) (InstrumentSpec, error) {
 	v, err := p.q.GetInstrumentSpec(ctx, storepg.GetInstrumentSpecParams(arg))
 	if err != nil {
@@ -747,6 +755,30 @@ func (p *PG) ListImportBatches(ctx context.Context, userID string) ([]ImportBatc
 	return func() []ImportBatch { in := v; out := make([]ImportBatch, len(in)); for i := range in { out[i] = ImportBatch(in[i]) }; return out }(), nil
 }
 
+func (p *PG) ListImportSourceCounts(ctx context.Context, userID string) ([]ListImportSourceCountsRow, error) {
+	v, err := p.q.ListImportSourceCounts(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	return func() []ListImportSourceCountsRow { in := v; out := make([]ListImportSourceCountsRow, len(in)); for i := range in { out[i] = ListImportSourceCountsRow(in[i]) }; return out }(), nil
+}
+
+func (p *PG) ListImportSourceFills(ctx context.Context, arg ListImportSourceFillsParams) ([]ImportSourceFill, error) {
+	v, err := p.q.ListImportSourceFills(ctx, storepg.ListImportSourceFillsParams(arg))
+	if err != nil {
+		return nil, err
+	}
+	return func() []ImportSourceFill { in := v; out := make([]ImportSourceFill, len(in)); for i := range in { out[i] = ImportSourceFill(in[i]) }; return out }(), nil
+}
+
+func (p *PG) ListImportSourceRows(ctx context.Context, arg ListImportSourceRowsParams) ([]ListImportSourceRowsRow, error) {
+	v, err := p.q.ListImportSourceRows(ctx, storepg.ListImportSourceRowsParams(arg))
+	if err != nil {
+		return nil, err
+	}
+	return func() []ListImportSourceRowsRow { in := v; out := make([]ListImportSourceRowsRow, len(in)); for i := range in { out[i] = ListImportSourceRowsRow(in[i]) }; return out }(), nil
+}
+
 func (p *PG) ListJournalNotes(ctx context.Context, arg ListJournalNotesParams) ([]JournalNote, error) {
 	v, err := p.q.ListJournalNotes(ctx, storepg.ListJournalNotesParams{
 		UserID: arg.UserID,
@@ -935,8 +967,24 @@ func (p *PG) PruneAccessTokenUses(ctx context.Context, arg PruneAccessTokenUsesP
 	})
 }
 
+func (p *PG) PutImportSourceContext(ctx context.Context, arg PutImportSourceContextParams) error {
+	return p.q.PutImportSourceContext(ctx, storepg.PutImportSourceContextParams(arg))
+}
+
+func (p *PG) PutImportSourceFill(ctx context.Context, arg PutImportSourceFillParams) error {
+	return p.q.PutImportSourceFill(ctx, storepg.PutImportSourceFillParams(arg))
+}
+
+func (p *PG) PutImportSourceRow(ctx context.Context, arg PutImportSourceRowParams) error {
+	return p.q.PutImportSourceRow(ctx, storepg.PutImportSourceRowParams(arg))
+}
+
 func (p *PG) RecordAccessTokenUse(ctx context.Context, arg RecordAccessTokenUseParams) error {
 	return p.q.RecordAccessTokenUse(ctx, storepg.RecordAccessTokenUseParams(arg))
+}
+
+func (p *PG) ReplaceImportedExecution(ctx context.Context, arg ReplaceImportedExecutionParams) (int64, error) {
+	return p.q.ReplaceImportedExecution(ctx, storepg.ReplaceImportedExecutionParams(arg))
 }
 
 func (p *PG) RevokeAccessToken(ctx context.Context, arg RevokeAccessTokenParams) (int64, error) {
@@ -983,6 +1031,10 @@ func (p *PG) SetUserAdmin(ctx context.Context, arg SetUserAdminParams) (User, er
 	return User(v), nil
 }
 
+func (p *PG) SupersedeImportSources(ctx context.Context, executionID string) error {
+	return p.q.SupersedeImportSources(ctx, executionID)
+}
+
 func (p *PG) TouchAccessTokenLastUsed(ctx context.Context, id string) error {
 	return p.q.TouchAccessTokenLastUsed(ctx, id)
 }
@@ -1017,6 +1069,10 @@ func (p *PG) UpdateExecutionContract(ctx context.Context, arg UpdateExecutionCon
 
 func (p *PG) UpdateFlexSyncStatus(ctx context.Context, arg UpdateFlexSyncStatusParams) error {
 	return p.q.UpdateFlexSyncStatus(ctx, storepg.UpdateFlexSyncStatusParams(arg))
+}
+
+func (p *PG) UpdateImportSourceSnapshot(ctx context.Context, arg UpdateImportSourceSnapshotParams) error {
+	return p.q.UpdateImportSourceSnapshot(ctx, storepg.UpdateImportSourceSnapshotParams(arg))
 }
 
 func (p *PG) UpdateJournalNote(ctx context.Context, arg UpdateJournalNoteParams) (JournalNote, error) {

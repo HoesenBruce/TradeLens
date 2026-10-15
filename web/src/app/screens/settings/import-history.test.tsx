@@ -11,6 +11,12 @@ const state = vi.hoisted(() => ({ imports: [] as ImportBatch[] }));
 
 vi.mock("../../../lib/hooks/useImports", () => ({
   useImports: () => ({ data: state.imports, isLoading: false, isError: false }),
+  useReprocessImport: () => ({
+    mutate: () => {},
+    reset: () => {},
+    isPending: false,
+    isError: false,
+  }),
   useDeleteImport: () => ({ mutate: () => {}, isPending: false }),
 }));
 
