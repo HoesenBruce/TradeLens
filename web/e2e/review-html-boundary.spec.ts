@@ -84,6 +84,10 @@ test("HTML journals reject ambiguous notes before PATCH and preserve bytes throu
   const notes = page.getByRole("textbox", { name: "Review notes" });
   const grade = page.getByRole("button", { name: "A+", exact: true });
   const documents = [
+    "## Review notes\u2028not the target\nkeep original",
+    "## Review notes\u2029not the target\nkeep original",
+    "```html\u2028more\n## Review notes\ncode sample\n```\nplain keep\n```",
+    "```html\u2029more\n## Review notes\ncode sample\n```\nplain keep\n```",
     "<pre>\n## Review notes\nexample text\n</pre>\n\n## Unknown\nkeep",
     "<PRE>\n## Review notes\nexample\n</PRE>",
     "Legacy paragraph\n##Review notes\nnot an actual Markdown heading\n## Unknown\nkeep",
@@ -133,7 +137,7 @@ test("HTML journals reject ambiguous notes before PATCH and preserve bytes throu
         expect(await readB()).toEqual(before);
         await expect(notes).toHaveValue("new");
         await expect(grade).toHaveAttribute("aria-pressed", "true");
-        if (document === documents[0] && eol === "\n") {
+        if (document.startsWith("<pre>\n## Review notes\nexample text") && eol === "\n") {
           await page.screenshot({
             path: info.outputPath("html-journal-rejected-draft-retained.png"),
             fullPage: true,
@@ -157,21 +161,37 @@ test("HTML journals reject ambiguous notes before PATCH and preserve bytes throu
         expect(afterOther).toEqual(beforeOther);
       }
 
+      // Unicode suffix text is part of an unknown title, not an exact Review heading.
+      const unknownTitle = "## Review notes\u00a0" + eol + "keep original";
+      const unknownBefore = await open(unknownTitle);
+      writes.length = 0;
+      await grade.click();
+      await notes.fill("new");
+      const appended = unknownTitle + eol + eol + "## Review notes" + eol + "new";
+      const appendResponse = page.waitForResponse(
+        (r) => r.url() === url && r.request().method() === "PATCH",
+      );
+      await save.click();
+      expect((await appendResponse).ok()).toBeTruthy();
+      expect(writes).toEqual([{ trade_quality: 5, notes: appended }]);
+      expect(await readB()).toEqual({ ...unknownBefore, trade_quality: 5, notes: appended });
+
       // Empty ATX headings are real section boundaries too.
       for (const marker of ["#", "   ##"]) {
         const prefix = "## Review notes" + eol;
         const suffix = eol + eol + marker + eol + "keep unrelated  " + eol;
         const before = await open(prefix + "old" + suffix);
         writes.length = 0;
+        await grade.click();
         await notes.fill("new");
         const response = page.waitForResponse(
           (r) => r.url() === url && r.request().method() === "PATCH",
         );
         await save.click();
         expect((await response).ok()).toBeTruthy();
-        expect(writes).toEqual([{ notes: prefix + "new" + suffix }]);
+        expect(writes).toEqual([{ trade_quality: 5, notes: prefix + "new" + suffix }]);
         const after = await readB();
-        expect(after).toEqual({ ...before, notes: prefix + "new" + suffix });
+        expect(after).toEqual({ ...before, trade_quality: 5, notes: prefix + "new" + suffix });
       }
 
       // HTML is literal inside known closed Markdown fences; retain existing editing/append behavior.
@@ -205,7 +225,7 @@ test("HTML journals reject ambiguous notes before PATCH and preserve bytes throu
     writes.length = 0;
     await grade.click();
     await notes.fill("local edit retained");
-    const remoteHTML = documents[0];
+    const remoteHTML = "<pre>\n## Review notes\nexample text\n</pre>\n\n## Unknown\nkeep";
     const remoteWrite = await b.patch(url, { data: { notes: remoteHTML } });
     expect(remoteWrite.ok()).toBeTruthy();
     await save.click();

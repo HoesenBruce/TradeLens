@@ -9,6 +9,16 @@ import {
 } from "./reviewInbox";
 
 const ambiguousDocuments = [
+  ["Unicode line separator heading", "## Review notes\u2028not the target\nkeep original"],
+  ["Unicode paragraph separator heading", "## Review notes\u2029not the target\nkeep original"],
+  [
+    "Unicode line separator fence",
+    "```html\u2028more\n## Review notes\ncode sample\n```\nplain keep\n```",
+  ],
+  [
+    "Unicode paragraph separator fence",
+    "```html\u2029more\n## Review notes\ncode sample\n```\nplain keep\n```",
+  ],
   ["independent reproduction", "<pre>\n## Review notes\nexample text\n</pre>\n\n## Unknown\nkeep"],
   ["uppercase", "<PRE>\n## Review notes\nexample\n</PRE>"],
   ["mixed case", "<PrE>\n## Review notes\nexample\n</pRe>"],
@@ -100,6 +110,14 @@ describe("unsupported journal boundaries fail closed", () => {
   }
 
   for (const eol of ["\n", "\r\n"]) {
+    for (const space of ["\u00a0", "\u000b", "\u000c", "\ufeff"]) {
+      it(`preserves a non-target Unicode title ${JSON.stringify(space)}, ${JSON.stringify(eol)}`, () => {
+        const raw = "## Review notes" + space + eol + "keep original";
+        expect(replaceReviewNotes(raw, "new")).toBe(
+          raw + eol + eol + "## Review notes" + eol + "new",
+        );
+      });
+    }
     for (const marker of ["#", "##"]) {
       for (const indent of ["", "   "]) {
         it(`preserves empty ${marker} section, ${JSON.stringify(indent)}, ${JSON.stringify(eol)}`, () => {

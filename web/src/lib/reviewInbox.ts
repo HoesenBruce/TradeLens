@@ -22,7 +22,7 @@ export class AmbiguousReviewNotesError extends Error {}
 
 // Keep source offsets: parsing/rebuilding other sections loses freeform plan text.
 function reviewSections(raw: string) {
-  if (/\r(?!\n)/.test(raw)) return undefined;
+  if (/\r(?!\n)|[\u2028\u2029]/.test(raw)) return undefined;
   const sections: { start: number; end: number; newline: boolean }[] = [];
   let offset = 0;
   let fence: { marker: string; length: number } | undefined;
@@ -52,12 +52,12 @@ function reviewSections(raw: string) {
         (/^(?: {4}| {0,3}\t)/.test(text) && /[^ \t]/.test(text))
       )
         return undefined;
-      const heading = /^ {0,3}(#{1,2})(?:[ \t]+(.*)|$)/.exec(text);
+      const heading = /^ {0,3}(#{1,2})(?:[ \t]+(.*))?$/.exec(text);
       const target =
         heading?.[1] === "##" &&
         (heading[2] ?? "")
           .replace(/[ \t]+#+[ \t]*$/, "")
-          .trim()
+          .replace(/^[ \t]+|[ \t]+$/g, "")
           .toLowerCase() === "review notes";
       if (!heading && /^##Review notes[ \t]*$/i.test(text)) return undefined;
       if (!heading) {
