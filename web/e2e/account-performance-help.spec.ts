@@ -80,6 +80,13 @@ test("separates amount and percentage help across locales and funding transition
     "accountRealizedPnl",
     "accountDetailReturn",
   ];
+  const computationLabels: Record<string, string> = {
+    en: "Computation",
+    "zh-CN": "计算方式",
+    "zh-HK": "計算方式",
+    ja: "計算方法",
+    ko: "계산 방법",
+  };
   for (const [locale, names] of Object.entries(titles)) {
     await page.evaluate((locale) => localStorage.setItem("tm-locale", locale), locale);
     await page.reload();
@@ -89,6 +96,7 @@ test("separates amount and percentage help across locales and funding transition
       await expect(trigger).toBeVisible();
       await trigger.press("Enter");
       await expect(popup).toHaveAccessibleName(names[i]);
+      await expect(popup.locator("dt").first()).toHaveText(computationLabels[locale]);
       const unit = popup.locator("dl > div").nth(1).locator("dd");
       if (metric.endsWith("Return"))
         await expect(unit).toHaveText(locale === "en" || locale === "ko" ? "%." : "%。");

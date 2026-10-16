@@ -39,9 +39,7 @@ export function MetricHelp({ metric, breakdown }: { metric: MetricId; breakdown?
         <PopoverDescription className="mt-3">{i18n._(entry.definition)}</PopoverDescription>
         <dl className="mt-3 space-y-3 break-words">
           <div>
-            <dt className="font-medium">
-              {t({ id: "metric.formula", message: "Computation / denominator" })}
-            </dt>
+            <dt className="font-medium">{t({ id: "metric.formula", message: "Computation" })}</dt>
             <dd>{i18n._(entry.formula)}</dd>
           </div>
           <div>

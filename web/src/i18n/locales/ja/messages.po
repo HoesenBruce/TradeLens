@@ -12740,7 +12740,7 @@ msgstr "説明を閉じる"
 #. js-lingui-explicit-id
 #: src/components/MetricHelp.tsx:27
 msgid "metric.formula"
-msgstr "計算方法 / 分母"
+msgstr "計算方法"
 
 #. js-lingui-explicit-id
 #: src/lib/metrics/definitions.ts:20
