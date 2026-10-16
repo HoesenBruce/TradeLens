@@ -1,3 +1,5 @@
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Pencil, RefreshCw } from "lucide-react";
@@ -39,11 +41,22 @@ import {
 } from "@/app/screens/settings/settings-sections";
 import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
-function Stat({ label, value, className }: { label: string; value: string; className?: string }) {
+function Stat({
+  label,
+  metric,
+  value,
+  className,
+}: {
+  label: string;
+  metric?: MetricId;
+  value: string;
+  className?: string;
+}) {
   return (
     <div className="min-w-0">
       <p className="m-0 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
         {label}
+        {metric && <MetricHelp metric={metric} />}
       </p>
       <p
         className={cn(
@@ -469,6 +482,7 @@ export function AccountDetailView({
             value={fmtMoney(equity, account.base_currency, locale)}
           />
           <Stat
+            metric="accountReturn"
             label={tr({ id: "accounts.realized", message: "Realized P&L" })}
             value={`${fmtSignedMoney(netPnl, account.base_currency, locale)}${pnlPct ? ` (${pnlPct})` : ""}`}
             className={

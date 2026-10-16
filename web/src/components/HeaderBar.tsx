@@ -1,3 +1,5 @@
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { useRouterState } from "@tanstack/react-router";
 import { Eye, EyeOff, Search, X } from "lucide-react";
@@ -37,10 +39,13 @@ import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 const AUTO_VALUE = "__auto__";
 
-function HeaderStat({ label, value }: { label: string; value: string }) {
+function HeaderStat({ label, metric, value }: { label: string; metric?: MetricId; value: string }) {
   return (
     <span className="inline-flex items-baseline gap-1 text-[13px] font-medium whitespace-nowrap">
-      <span className="uppercase tracking-widest text-muted-foreground">{label}</span>
+      <span className="uppercase tracking-widest text-muted-foreground">
+        {label}
+        {metric && <MetricHelp metric={metric} />}
+      </span>
       <RollingNumber value={value} className="font-semibold text-foreground" />
     </span>
   );
@@ -385,6 +390,7 @@ export function HeaderBar() {
                 : fmtSignedMoney(toDisplay(stats.netPnl), currency, intlLocale())
             }
           />
+          <MetricHelp metric="accountReturn" />
           {fundingReady && stats.netPnlPct != null ? (
             <RollingNumber
               value={fmtSignedPct(stats.netPnlPct, intlLocale())}
@@ -395,11 +401,13 @@ export function HeaderBar() {
         <div aria-hidden className="hidden h-7 w-px shrink-0 bg-border md:block" />
         <div className="hidden min-w-0 items-center gap-2 md:flex">
           <HeaderStat
+            metric="winRate"
             label={tr({ id: "market.wr", message: "WR" })}
             value={summary ? fmtPct(summary.win_rate, intlLocale()) : "—"}
           />
           <StatDivider />
           <HeaderStat
+            metric="profitFactor"
             label={tr({ id: "market.pf", message: "PF" })}
             value={summary?.profit_factor != null ? summary.profit_factor.toFixed(2) : "—"}
           />

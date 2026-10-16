@@ -90,6 +90,7 @@ export function ReportsRiskDrawdown({
           <StatCard
             variant="bento"
             align="center"
+            metric="drawdownPct"
             label={localize({ id: "reports.maxDrawdown", message: "Max Drawdown" })}
             value={fmtDrawdownPct(maxDd)}
             accent="neg"
@@ -98,6 +99,7 @@ export function ReportsRiskDrawdown({
           <StatCard
             variant="bento"
             align="center"
+            metric="drawdownPct"
             label={localize({ id: "reports.currentDrawdown", message: "Current Drawdown" })}
             value={fmtDrawdownPct(currentDd)}
             accent={currentDd < 0 ? "neg" : "none"}

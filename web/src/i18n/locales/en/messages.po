@@ -12780,3 +12780,343 @@ msgstr "Time from the recorded opening to the close, or to now for an open trade
 #: src/components/MetricHelp.tsx:28
 msgid "metric.unit"
 msgstr "Unit"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.title"
+msgstr "Opened, closed and remaining quantity"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.definition"
+msgstr "Cumulative opened quantity and the current remaining exposure in instrument units, supplied by trade.quantities."
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.formula"
+msgstr "Closed = opened − remaining. Close progress = closed ÷ opened × 100, bounded to 0–100%; remaining % = 100 − close progress."
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.unit"
+msgstr "Shares, contracts or instrument units; %."
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.caveat"
+msgstr "Long and short use positive magnitudes. Reversals belong to separate trade lifecycles. Approved corporate actions use normalized units. Missing opening history, unverified units or inconsistent inventory show —, never zero. These are quantities, not current market value."
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.title"
+msgstr "Gross and net realized P&L"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.definition"
+msgstr "Recorded trading results before and after fees; excludes unrealized mark-to-market and separately linked dividends."
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.formula"
+msgstr "Default closed trade: signed (weighted exit − weighted entry) × closed quantity × multiplier; net = gross − fees. Summaries sum eligible closed-trade amounts."
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.unit"
+msgstr "Trade P&L currency; monetary results usually rounded to 2 decimals before display."
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.caveat"
+msgstr "SBI uses its existing settlement/average-cost path and may report realized amounts on partial closes. Default open trades keep P&L unavailable until fully closed; summaries exclude open trades. Missing basis or settlement evidence stays —. Total including dividends is a separate metric."
+
+#. js-lingui-explicit-id
+msgid "metric.fees.title"
+msgstr "Fees and commissions"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.definition"
+msgstr "Recorded fees allocated to the trade or eligible closed-trade sample."
+
+#. js-lingui-explicit-id
+msgid "metric.fees.formula"
+msgstr "Trade: allocated execution fees + commissions. Detail fee drag = fees ÷ absolute gross P&L; absent at zero/unknown gross. Reports fee % = total fees ÷ (winning net amounts + absolute losing net amounts) × 100; zero denominator gives 0%."
+
+#. js-lingui-explicit-id
+msgid "metric.fees.unit"
+msgstr "P&L currency; fee drag in %."
+
+#. js-lingui-explicit-id
+msgid "metric.fees.caveat"
+msgstr "Reversal fees follow existing allocation; SBI uses recorded settlement fees where applicable. Missing source charges are not estimates. Reports use absolute net movement as their fee-% base, not turnover or invested capital."
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.title"
+msgstr "Trade P&L percent"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.definition"
+msgstr "The API-provided realized return relative to the trade entry basis, not account capital."
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.formula"
+msgstr "Default closed trade: net P&L ÷ (unrounded weighted entry × closed quantity × multiplier) × 100. SBI settlement overrides use recorded average entry × opened quantity. Results round to 2 decimals."
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.unit"
+msgstr "%."
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.caveat"
+msgstr "The denominator follows the existing broker path, not remaining exposure. Default zero basis returns 0; unavailable P&L stays —. Displayed rounded prices may not reproduce the exact percent. Dividends are excluded."
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.title"
+msgstr "Planned reward / risk"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.definition"
+msgstr "The price-distance ratio of the recorded target and stop, before fees."
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.formula"
+msgstr "Long: (target − entry) ÷ (entry − stop). Short: (entry − target) ÷ (stop − entry). Entry is the recorded average entry price."
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.unit"
+msgstr "Ratio, displayed as reward:1."
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.caveat"
+msgstr "Requires both target and stop and a positive risk distance; otherwise —. Quantity, multiplier, fees and journal initial risk do not enter this ratio. A target on the adverse side can give a negative reward."
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.title"
+msgstr "Realized R"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.definition"
+msgstr "Recorded net trading P&L relative to journal initial risk."
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.formula"
+msgstr "Net P&L ÷ initial risk."
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.unit"
+msgstr "R (risk multiples), displayed to 2 decimals."
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.caveat"
+msgstr "Missing/zero risk or unavailable P&L gives —. The list requires positive risk; the detail API accepts nonzero risk. Dividends are excluded. This is distinct from the target/stop planned ratio."
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.title"
+msgstr "Win rate"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.definition"
+msgstr "Share of eligible closed trades with positive net P&L after fees."
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.formula"
+msgstr "Wins ÷ (wins + losses + breakeven) × 100. A trade counts once, not once per fill."
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.unit"
+msgstr "%; API stores a ratio from 0 to 1."
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.caveat"
+msgstr "Breakeven is included in the denominator. Open/partially closed trades and unknown P&L are excluded from summary counts even when partial realized P&L is available. No eligible trades gives 0%. Account/date filters define the sample."
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.title"
+msgstr "Average win / loss ratio"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.definition"
+msgstr "Relative size of winning and losing net outcomes in the closed-trade sample."
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.formula"
+msgstr "Mean mode: average positive net P&L ÷ average absolute negative net P&L. Median mode uses the corresponding medians."
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.unit"
+msgstr "Multiple, displayed with ×."
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.caveat"
+msgstr "The API rounds averages/medians to 2 decimals before this ratio. No losses but a positive win displays ∞; neither or a zero ratio displays —. Breakeven is in neither group. Net/gross display mode does not reclassify this ratio."
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.title"
+msgstr "Profit factor"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.definition"
+msgstr "Winning net amounts relative to absolute losing net amounts for eligible closed trades."
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.formula"
+msgstr "Sum of positive net P&L ÷ absolute sum of negative net P&L, rounded to 2 decimals."
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.unit"
+msgstr "Ratio; no currency."
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.caveat"
+msgstr "Despite the API names gross_profit/gross_loss, these are after-fee net buckets. With no losses the API returns 0, not infinity; the header shows 0.00 and some cards show —. Breakeven adds to neither sum. Net/gross display mode does not change summary profit factor."
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.title"
+msgstr "Maximum drawdown amount"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.definition"
+msgstr "Largest recorded peak-to-trough decline of the API equity curve."
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.formula"
+msgstr "Equity starts at 0 and adds signed cash-ledger flows and eligible closed-trade net P&L chronologically. Max drawdown = maximum (running peak − equity), rounded to 2 decimals."
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.unit"
+msgstr "Curve currency; cards display the decline as a negative amount."
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.caveat"
+msgstr "This is cash-ledger equity, not cumulative P&L alone or marked-to-market account value. Withdrawals can create drawdown. Opening balance is already a ledger deposit, never added twice. No positive drawdown displays — on these cards; report % mode scales the amount by its funding denominator."
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.title"
+msgstr "Equity drawdown percent"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.definition"
+msgstr "Decline relative to the running equity peak within the selected chart window."
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.formula"
+msgstr "For each visible point: (equity − running visible peak) ÷ peak × 100 when peak > 0, otherwise 0. Max is the most negative value; current is the last value."
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.unit"
+msgstr "%, zero or negative; displayed to 2 decimals."
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.caveat"
+msgstr "The peak resets to the first visible point when the range changes. Cash flows affect this API equity curve; it excludes unrealized market value. Empty series gives 0 internally but the panel shows no data. This is not the summary amount divided by deposited capital."
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.title"
+msgstr "Account performance / return"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.definition"
+msgstr "Recorded trading P&L relative to the selected accounts’ signed cash-ledger total."
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.formula"
+msgstr "Header: filtered closed-trade net P&L ÷ scoped ledger total × 100. Account detail: sum of available trade net P&L ÷ that account’s ledger total × 100. Opening balance is already a deposit."
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.unit"
+msgstr "Account/normalized display currency; %."
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.caveat"
+msgstr "Not time-weighted or money-weighted return: cash-flow dates are not weighted. Header hides % when funding ≤ 0 or normalization is unavailable; account detail hides it only at zero and can include available partial-close P&L. Current FX/display normalization is not historical FX attribution. Missing trade P&L adds zero in account detail."
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.title"
+msgstr "Reports P&L display"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.definition"
+msgstr "The report hero follows the net/gross and currency/% controls; underlying summary classifications remain net-based."
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.formula"
+msgstr "Net = summary net P&L. Gross hero = stored gross P&L, or net + fees for older APIs. % display = selected amount ÷ positive signed cash-ledger total × 100."
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.unit"
+msgstr "Normalized display currency or %."
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.caveat"
+msgstr "The auxiliary Gross row is currently winning net amounts + absolute losing net amounts, not the before-fee hero. Fees % uses that same absolute-net base. Nonpositive funding disables % mode. No time/cash-flow weighting or unrealized P&L is added; filters and FX availability limit the sample."
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.title"
+msgstr "Period returns"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.definition"
+msgstr "Average recorded P&L per traded period, plus a linear annualized run rate."
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.formula"
+msgstr "Total selected net/gross P&L ÷ number of traded days, weeks or months. Annualized = total × 365 ÷ inclusive calendar-day span (minimum 1). % = result ÷ positive signed cash-ledger total × 100."
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.unit"
+msgstr "Display currency or %; weeks start Monday."
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.caveat"
+msgstr "Uses closed trades with known net P&L, close dates on the configured display clock, and only traded periods in averages. No closed trades hides the strip. This is not compounded return, TWR or MWR; a short sample can produce an extreme annualized value."
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.title"
+msgstr "Rolling win rate"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.definition"
+msgstr "Win rate over the trailing selected number of chronological closed trades."
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.formula"
+msgstr "Positive net outcomes in the last N eligible trades ÷ N × 100; one point per trade after the window fills."
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.unit"
+msgstr "%; N is the selected trade count."
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.caveat"
+msgstr "Breakeven occupies a denominator slot; open and unknown-net trades are excluded. Fewer than N trades gives no points. Net/gross display does not change this net-based series. The visible chart range can further restrict the input."
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.title"
+msgstr "Metric evolution"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.definition"
+msgstr "Cumulative-to-date trading metrics at each day/week/month bucket in the selected range."
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.formula"
+msgstr "Win rate = positive selected outcomes ÷ cumulative trade count. Profit factor = positive selected sum ÷ absolute negative selected sum (no losses: 0). P&L is the cumulative selected net/gross sum."
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.unit"
+msgstr "%; ratio; display currency or funding-based %."
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.caveat"
+msgstr "Unlike summary win rate/profit factor, this chart classifies using the selected net/gross P&L. Breakeven stays in the win-rate denominator; unknown-net and open trades are excluded. Buckets use UTC dates, weeks start Monday. Cash flows and unrealized values are not added to cumulative P&L."
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.title"
+msgstr "Simulated maximum drawdown"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.definition"
+msgstr "Median of the largest cumulative net-P&L decline in each bootstrap simulation path."
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.formula"
+msgstr "Start each path at 0, resample historical closed-trade net P&L, track maximum (running peak − cumulative P&L), then take the 50th percentile across paths. The worse-case hint uses the 95th percentile."
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.unit"
+msgstr "Display currency, or amount divided by the report funding denominator in % mode."
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.caveat"
+msgstr "This is simulated cumulative P&L, not account equity: cash flows and unrealized values are excluded. It always uses net outcomes, even in gross display mode. Simulation settings and sample size affect results; insufficient history shows no simulation."

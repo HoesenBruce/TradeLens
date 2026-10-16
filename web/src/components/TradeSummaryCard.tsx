@@ -1,3 +1,4 @@
+import { MetricHelp } from "@/components/MetricHelp";
 import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { TradeQuantityDetails } from "./TradeQuantities";
@@ -169,6 +170,7 @@ export function TradeSummaryCard({
                 title={tr({ id: "trades.netAfterFees", message: "Net P&L after fees" })}
               >
                 {net != null ? fmtSignedMoney(net, currency, locale) : "—"}
+                <MetricHelp metric="pnl" />
               </span>
               <div className="flex flex-wrap items-baseline gap-x-3 sm:justify-end">
                 {trade.return_pct != null && (
@@ -176,7 +178,7 @@ export function TradeSummaryCard({
                     className={cn("text-sm font-semibold tabular-nums", pnlColor(trade.return_pct))}
                   >
                     {trade.return_pct >= 0 ? "+" : ""}
-                    {trade.return_pct.toFixed(2)}%
+                    {trade.return_pct.toFixed(2)}%<MetricHelp metric="tradeReturn" />
                   </span>
                 )}
                 {trade.r_multiple != null && (
@@ -188,7 +190,7 @@ export function TradeSummaryCard({
                     })}
                   >
                     {trade.r_multiple >= 0 ? "+" : ""}
-                    {trade.r_multiple.toFixed(2)}R
+                    {trade.r_multiple.toFixed(2)}R<MetricHelp metric="realizedR" />
                   </span>
                 )}
               </div>
@@ -208,18 +210,21 @@ export function TradeSummaryCard({
             {trade.avg_exit_price != null ? fmtMoney(trade.avg_exit_price, currency, locale) : "—"}
           </StatCell>
           <StatCell
+            metric="holding"
             label={tr({ id: "trades.hold", message: "Hold" })}
             valueClassName="whitespace-normal wrap-anywhere overflow-visible"
           >
             <TradeHoldingDuration trade={trade} />
           </StatCell>
           <StatCell
+            metric="pnl"
             label={tr({ id: "trades.gross", message: "Gross" })}
             valueClassName={insights.grossPnl != null ? pnlColor(insights.grossPnl) : undefined}
           >
             {insights.grossPnl != null ? fmtSignedMoney(insights.grossPnl, currency, locale) : "—"}
           </StatCell>
           <StatCell
+            metric="fees"
             label={tr({ id: "trades.fees", message: "Fees" })}
             // Fee drag is the number that explains a scratch trade turning red,
             // so it rides next to the amount instead of floating unlabeled.
