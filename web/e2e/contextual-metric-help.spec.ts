@@ -11,6 +11,7 @@ async function explain(page: Page, metric: string, content: string, index = 0) {
   const popup = page.locator('[data-slot="popover-popup"]');
   await expect(popup).toBeVisible();
   await expect(popup).toContainText(content);
+  await expect(popup.locator("dt").first()).toHaveText("Computation");
   await popup.getByRole("button", { name: "Close explanation", exact: true }).click();
   await expect(popup).not.toBeVisible();
   await expect(trigger).toBeFocused();
@@ -185,6 +186,12 @@ test("definitions match real API trade states, lists, detail, reports and all fi
   await explain(page, "payoff", "Median mode");
   await explain(page, "reportPnl", "auxiliary Gross row");
   await explain(page, "drawdown", "Withdrawals can create drawdown");
+  const unit = page.getByRole("main").getByRole("group", { name: "Unit", exact: true });
+  await unit.getByRole("button", { name: "%", exact: true }).click();
+  await explain(page, "reportPnl", "positive signed cash-ledger total");
+  await explain(page, "drawdown", "funding denominator");
+  await unit.getByRole("button", { name: "$", exact: true }).click();
+  await explain(page, "reportPnl", "Net = summary net P&L");
   await page.screenshot({ path: info.outputPath("reports-desktop.png"), animations: "disabled" });
   await explain(page, "periodReturns", "Annualized = total × 365");
   await page.getByRole("tab", { name: "Win / Loss", exact: true }).click();
@@ -193,10 +200,10 @@ test("definitions match real API trade states, lists, detail, reports and all fi
   await page.getByRole("tab", { name: "Risk", exact: true }).click();
   await explain(page, "drawdownPct", "running visible peak");
   // Amount and percentage have independent explanations for each surface.
-  await explain(page, "accountPerformance", "eligible closed-trade net P&L");
-  await explain(page, "accountReturn", "Opening balance is already a deposit");
+  await explain(page, "accountPerformance", "Other brokers: existing completed-group net P&L");
+  await explain(page, "accountReturn", "existing funding denominator is unchanged");
   await page.goto(`/accounts/${accountId}`);
-  await explain(page, "accountRealizedPnl", "missing P&L adds zero");
+  await explain(page, "accountRealizedPnl", "full history is independent of header filters");
   await explain(page, "accountDetailReturn", "Hidden only when the denominator is zero");
   await expect(page.getByRole("main").getByText(/11\.48%/)).toBeVisible();
   for (const [locale, close] of [

@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, expect, it, vi } from "vite-plus/test";
 import { i18n, loadLocale } from "@/i18n";
 import { MetricHelp } from "./MetricHelp";
+import { metricDefinitions } from "@/lib/metrics/definitions";
 
 afterEach(cleanup);
 it("opens by keyboard, reads the definition and restores focus on Escape", async () => {
@@ -26,7 +27,7 @@ it("opens by keyboard, reads the definition and restores focus on Escape", async
   await waitFor(() => expect(trigger).toHaveFocus());
   await user.keyboard("{Enter}");
   expect(await screen.findByRole("dialog")).toHaveAccessibleName("Holding duration");
-  expect(screen.getByText("Computation / denominator")).toBeVisible();
+  expect(screen.getByText("Computation")).toBeVisible();
   trigger.focus();
   await user.keyboard("{Escape}");
   await waitFor(() => expect(trigger).toHaveFocus());
@@ -35,3 +36,29 @@ it("opens by keyboard, reads the definition and restores focus on Escape", async
   await waitFor(() => expect(trigger).toHaveFocus());
   expect(activateRow).not.toHaveBeenCalled();
 });
+
+it.each([
+  "accountPerformance",
+  "accountRealizedPnl",
+  "pnl",
+  "winRate",
+  "fees",
+  "drawdown",
+] as const)(
+  "uses a neutral computation heading and preserves the %s explanation",
+  async (metric) => {
+    await loadLocale("en");
+    const user = userEvent.setup();
+    const entry = metricDefinitions[metric];
+    render(
+      <I18nProvider i18n={i18n}>
+        <MetricHelp metric={metric} />
+      </I18nProvider>,
+    );
+    await user.click(screen.getByRole("button", { name: `Explain ${i18n._(entry.title)}` }));
+    expect(screen.getByText("Computation", { exact: true })).toBeVisible();
+    expect(screen.queryByText("Computation / denominator")).not.toBeInTheDocument();
+    expect(screen.getByText(i18n._(entry.formula), { exact: true })).toBeVisible();
+    expect(screen.getByText(i18n._(entry.caveat), { exact: true })).toBeVisible();
+  },
+);

@@ -12736,7 +12736,7 @@ msgstr "설명 닫기"
 #. js-lingui-explicit-id
 #: src/components/MetricHelp.tsx:27
 msgid "metric.formula"
-msgstr "계산 방법 / 분모"
+msgstr "계산 방법"
 
 #. js-lingui-explicit-id
 #: src/lib/metrics/definitions.ts:20

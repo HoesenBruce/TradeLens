@@ -12739,7 +12739,7 @@ msgstr "Close explanation"
 #. js-lingui-explicit-id
 #: src/components/MetricHelp.tsx:27
 msgid "metric.formula"
-msgstr "Computation / denominator"
+msgstr "Computation"
 
 #. js-lingui-explicit-id
 #: src/lib/metrics/definitions.ts:20
