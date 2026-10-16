@@ -1,7 +1,10 @@
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
 import { cn } from "@/lib/cn";
 
 interface StatCardProps {
   label: string;
+  metric?: MetricId;
   value: string;
   accent?: "pos" | "neg" | "none";
   hint?: string;
@@ -48,6 +51,7 @@ function valueSizeClass(size: "lg" | "md" | "sm", centered: boolean): string {
 
 export function StatCard({
   label,
+  metric,
   value,
   accent,
   hint,
@@ -86,6 +90,7 @@ export function StatCard({
         style={{ color: "var(--muted-foreground)" }}
       >
         {label}
+        {metric && <MetricHelp metric={metric} />}
       </span>
 
       <span

@@ -1,3 +1,5 @@
+import type { MetricId } from "@/lib/metrics/definitions";
+import { MetricHelp } from "./MetricHelp";
 import type { TradeDetail } from "@/lib/api/types";
 
 import { intlLocale } from "@/lib/locale";
@@ -11,10 +13,12 @@ const sectionLabelClass = cn(cardSectionLabelClass, "mb-3");
 
 function StatCell({
   label,
+  metric,
   value,
   valueClassName,
 }: {
   label: string;
+  metric?: MetricId;
   value: string;
   valueClassName?: string;
 }) {
@@ -22,6 +26,7 @@ function StatCell({
     <div className="flex flex-col gap-0.5">
       <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
+        {metric && <MetricHelp metric={metric} />}
       </span>
       <span className={cn("text-sm tabular-nums text-foreground", valueClassName)}>{value}</span>
     </div>
@@ -62,7 +67,7 @@ export function RiskRewardPanel({
         ? "∞"
         : null;
 
-  const cells: { label: string; value: string; valueClassName?: string }[] = [];
+  const cells: { label: string; value: string; valueClassName?: string; metric?: MetricId }[] = [];
 
   if (m.target != null) {
     cells.push({ label: "Target", value: fmtMoney(m.target, currency, intlLocale()) });
@@ -91,10 +96,11 @@ export function RiskRewardPanel({
     });
   }
   if (m.plannedRR != null) {
-    cells.push({ label: "Planned R:R", value: `${m.plannedRR.toFixed(2)}:1` });
+    cells.push({ metric: "plannedRR", label: "Planned R:R", value: `${m.plannedRR.toFixed(2)}:1` });
   }
   if (trade.r_multiple != null) {
     cells.push({
+      metric: "realizedR",
       label: "R-multiple",
       value: `${trade.r_multiple >= 0 ? "+" : ""}${trade.r_multiple.toFixed(2)}R`,
       valueClassName: pnlColor(trade.r_multiple),
@@ -120,6 +126,7 @@ export function RiskRewardPanel({
         {cells.map((cell) => (
           <StatCell
             key={cell.label}
+            metric={cell.metric}
             label={cell.label}
             value={cell.value}
             valueClassName={cell.valueClassName}

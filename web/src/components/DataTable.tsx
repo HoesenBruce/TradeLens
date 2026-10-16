@@ -1,3 +1,5 @@
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
 import {
   type Column,
   type ColumnDef,
@@ -19,6 +21,7 @@ import { ColumnHeader } from "./ColumnHeader";
 type ColumnMeta = {
   align?: string;
   headerTitle?: string;
+  metric?: MetricId;
   /** Minimum column width in px (keeps money columns from clipping). */
   minWidth?: number;
 };
@@ -260,13 +263,16 @@ export function DataTable<T extends RowData>({
                       pinningCellClass(header.column, "header", pinActive, headerSurface),
                     )}
                   >
-                    <ColumnHeader
-                      column={header.column}
-                      title={label}
-                      titleAttr={meta?.headerTitle}
-                      alignRight={alignRight}
-                      comfortable={comfortable}
-                    />
+                    <div className="flex items-center gap-1">
+                      <ColumnHeader
+                        column={header.column}
+                        title={label}
+                        titleAttr={meta?.headerTitle}
+                        alignRight={alignRight}
+                        comfortable={comfortable}
+                      />
+                      {meta?.metric && <MetricHelp metric={meta.metric} />}
+                    </div>
                   </th>
                 );
               })}

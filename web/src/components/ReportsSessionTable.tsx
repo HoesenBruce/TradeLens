@@ -55,6 +55,7 @@ function buildSessionColumns(
     },
     {
       id: "win_rate",
+      meta: { metric: "winRate" },
       accessorFn: (row) => row.summary.win_rate,
       header: localize({ id: "reports.win", message: "Win %" }),
       cell: (info) => (
@@ -65,6 +66,7 @@ function buildSessionColumns(
     },
     {
       id: "net_pnl",
+      meta: { metric: "reportPnl" },
       accessorFn: (row) => row.summary.net_pnl,
       header: localize({ id: "accounts.netPnl", message: "Net P&L" }),
       cell: (info) => <SessionPnlCell summary={info.row.original.summary} />,
@@ -84,6 +86,7 @@ function buildSessionColumns(
     },
     {
       id: "profit_factor",
+      meta: { metric: "profitFactor" },
       accessorFn: (row) => row.summary.profit_factor,
       header: localize({ id: "accounts.pf", message: "PF" }),
       cell: (info) => {

@@ -1,3 +1,4 @@
+import { MetricHelp } from "./MetricHelp";
 import { fmtTradeHolding } from "@/lib/tradeHolding";
 import { useLingui } from "@lingui/react";
 import { t } from "@lingui/core/macro";
@@ -189,10 +190,14 @@ export function TradeListItem({
             {trade.net_pnl != null
               ? fmtSignedMoney(trade.net_pnl * fxRate, currency, intlLocale())
               : "—"}
+            <MetricHelp metric="pnl" />
           </span>
         </div>
 
-        <TradeQuantityCell trade={trade} />
+        <div className="flex min-w-0 items-start">
+          <TradeQuantityCell trade={trade} />
+          <MetricHelp metric="quantities" />
+        </div>
         <div className="flex items-baseline justify-between gap-3 text-[14px] tabular-nums">
           <span className="min-w-0 truncate text-foreground">
             {`@ ${trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, intlLocale()) : "—"}${trade.avg_exit_price != null ? ` → ${fmtMoney(trade.avg_exit_price * fxRate, currency, intlLocale())}` : ""}`}
@@ -213,7 +218,7 @@ export function TradeListItem({
             // the P&L the thing the eye lands on.
             <span className="shrink-0 whitespace-nowrap text-muted-foreground">
               {trade.return_pct >= 0 ? "+" : ""}
-              {trade.return_pct.toFixed(2)}%
+              {trade.return_pct.toFixed(2)}%<MetricHelp metric="tradeReturn" />
             </span>
           )}
         </div>
@@ -229,6 +234,11 @@ export function TradeListItem({
               >
                 {i > 0 ? <span aria-hidden> · </span> : null}
                 {part.text}
+                {part.key === "hold" ? (
+                  <MetricHelp metric="holding" />
+                ) : part.key === "r" ? (
+                  <MetricHelp metric="realizedR" />
+                ) : null}
               </span>
             ))}
           </p>

@@ -1,3 +1,4 @@
+import { MetricHelp } from "./MetricHelp";
 import { t as localize } from "@lingui/core/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
@@ -240,7 +241,13 @@ export function ReportsMetricEvolution({ trades, loading, error }: ReportsMetric
 
   return (
     <ChartCard
-      title={localize({ id: "reports.metricEvolution", message: "Metric Evolution" })}
+      title={
+        <span>
+          {localize({ id: "reports.metricEvolution", message: "Metric Evolution" })}
+          <MetricHelp metric="evolution" />
+        </span>
+      }
+      expandTitle={localize({ id: "reports.metricEvolution", message: "Metric Evolution" })}
       controls={controls}
       range={range}
       onRangeChange={setRange}

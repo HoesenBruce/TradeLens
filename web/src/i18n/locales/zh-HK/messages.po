@@ -12727,3 +12727,393 @@ msgstr "平倉進度"
 #. js-lingui-explicit-id
 msgid "trades.closeProgressSortHint"
 msgstr "已平倉與剩餘數量；按剩餘數量排序"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:33
+msgid "metric.close"
+msgstr "關閉說明"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:27
+msgid "metric.formula"
+msgstr "計算方式 / 分母"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:20
+msgid "metric.holding.caveat"
+msgstr "SBI或CSV成交只有日期時，無法確定日內持倉時間。缺少開倉歷史、精度未知或邊界無效時顯示 —。市場時區及精度由API提供；查看者時區不會改變日曆天數。"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:19
+msgid "metric.holding.unit"
+msgstr "天、小時及分鐘；僅日期記錄使用日曆天數。"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:15
+msgid "metric.help"
+msgstr "解釋{title}"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:16
+msgid "metric.holding.title"
+msgstr "持倉時長"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:29
+msgid "metric.caveat"
+msgstr "限制"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:18
+msgid "metric.holding.formula"
+msgstr "起止時間精確時：顯示實際經過時間並四捨五入至分鐘（不足一分鐘顯示 <1m）。任一端只有日期時：按交易所當地日曆日期相減；同日為0天，翌日為1天。"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:17
+msgid "metric.holding.definition"
+msgstr "從記錄的開倉到平倉的時間；未平倉交易計算至現在。"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:28
+msgid "metric.unit"
+msgstr "單位"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.title"
+msgstr "開倉、平倉與剩餘數量"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.definition"
+msgstr "trade.quantities 提供累計開倉數量及當前以標的單位計的剩餘敞口。"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.formula"
+msgstr "平倉量 = 開倉量 − 剩餘量。平倉進度 = 平倉量 ÷ 開倉量 × 100，限制在0–100%；剩餘比例 = 100 − 平倉進度。"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.unit"
+msgstr "股、合約或標的單位；%。"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.caveat"
+msgstr "多空均用正數量。反轉屬於獨立交易週期；已確認公司行動使用歸一化單位。缺少開倉歷史、單位未確認或庫存不一致時顯示 —，不是零。這不是當前市值。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.title"
+msgstr "已實現毛盈虧與淨盈虧"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.definition"
+msgstr "記錄的扣費前後交易結果；不含未實現盯市盈虧和獨立關聯的股息。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.formula"
+msgstr "預設已平倉交易：帶方向符號的（加權平倉價 − 加權開倉價）× 平倉量 × 乘數；淨盈虧 = 毛盈虧 − 費用。統計彙總符合條件的已平倉金額。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.unit"
+msgstr "交易盈虧幣種；金額通常先四捨五入至兩位小數再顯示。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.caveat"
+msgstr "SBI沿用結算／平均成本路徑，部分平倉可能有已實現盈虧。預設未平倉交易在全部平倉前盈虧不可用；統計排除未平倉交易。成本或結算證據缺失保持 —。含股息總盈虧為獨立指標。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.title"
+msgstr "費用與佣金"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.definition"
+msgstr "分配至交易或符合條件的已平倉樣本的已記錄費用。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.formula"
+msgstr "交易費用 = 分配的成交費用 + 佣金。詳情費用佔比 = 費用 ÷ 毛盈虧絕對值；毛盈虧為零或未知時不顯示。報表費用比例 = 總費用 ÷（盈利淨額 + 虧損淨額絕對值）× 100；分母為零時為0%。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.unit"
+msgstr "盈虧幣種；費用佔比為%。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.caveat"
+msgstr "反轉費用沿用現有分配方式；SBI按適用規則使用已記錄的結算費用。不估算來源缺失的收費。報表比例基於淨盈虧絕對變動，不是成交額或投入資本。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.title"
+msgstr "交易盈虧比例"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.definition"
+msgstr "API提供的已實現盈虧相對開倉基數的比例，不是相對賬戶資本。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.formula"
+msgstr "預設已平倉交易：淨盈虧 ÷（未捨入加權開倉價 × 平倉量 × 乘數）× 100。SBI結算覆蓋路徑使用已記錄平均開倉價 × 開倉量。結果四捨五入至兩位小數。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.unit"
+msgstr "%。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.caveat"
+msgstr "分母沿用券商路徑，不是剩餘敞口。預設基數為零返回0；盈虧不可用保持 —。顯示價格已捨入，未必可精確複算比例。不含股息。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.title"
+msgstr "計劃收益／風險"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.definition"
+msgstr "記錄的目標價與止損價的價格距離比，未扣費。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.formula"
+msgstr "多頭：（目標 − 開倉價）÷（開倉價 − 止損）。空頭：（開倉價 − 目標）÷（止損 − 開倉價）。開倉價為記錄的平均開倉價。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.unit"
+msgstr "比率，顯示為收益:1。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.caveat"
+msgstr "必須同時有目標和止損，且風險距離為正，否則為 —。數量、乘數、費用和日誌初始風險不參與計算。目標在不利方向時收益可為負。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.title"
+msgstr "已實現R"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.definition"
+msgstr "已記錄淨交易盈虧相對日誌初始風險的倍數。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.formula"
+msgstr "淨盈虧 ÷ 初始風險。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.unit"
+msgstr "R（風險倍數），顯示兩位小數。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.caveat"
+msgstr "風險缺失、為零或盈虧不可用時為 —。列表要求正風險，詳情API接受非零風險。不含股息。它與目標／止損的計劃收益風險比不同。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.title"
+msgstr "勝率"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.definition"
+msgstr "符合條件的已平倉交易中，扣費後淨盈虧為正的比例。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.formula"
+msgstr "盈利筆數 ÷（盈利 + 虧損 + 持平筆數）× 100。每筆交易計一次，不按成交次數。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.unit"
+msgstr "%；API儲存0到1的比例。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.caveat"
+msgstr "持平計入分母。未平倉／部分平倉和盈虧未知的交易不進入統計，即使部分已實現盈虧可用。沒有符合條件的交易時為0%。樣本受賬戶／日期篩選影響。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.title"
+msgstr "平均盈利／虧損比"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.definition"
+msgstr "已平倉樣本中盈利與虧損淨額的相對大小。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.formula"
+msgstr "均值模式：正淨盈虧均值 ÷ 負淨盈虧絕對值均值。中位數模式使用對應中位數。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.unit"
+msgstr "倍數，顯示×。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.caveat"
+msgstr "API先將均值／中位數捨入至兩位小數再求比。無虧損但盈利為正顯示∞；兩者都無或比率為零顯示 —。持平不屬於任一組。淨／毛顯示切換不改變此比率分組。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.title"
+msgstr "盈利因子"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.definition"
+msgstr "符合條件的已平倉交易中，盈利淨額相對虧損淨額絕對值的比率。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.formula"
+msgstr "正淨盈虧之和 ÷ 負淨盈虧之和的絕對值，四捨五入至兩位小數。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.unit"
+msgstr "無幣種比率。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.caveat"
+msgstr "API欄位雖叫gross_profit／gross_loss，實際是扣費後淨額分組。無虧損時API返回0而非無窮大；頂部顯示0.00，部分卡片顯示 —。持平不增加任何一組。淨／毛顯示模式不改變彙總盈利因子。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.title"
+msgstr "最大回撤金額"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.definition"
+msgstr "API權益曲線上記錄的最大峰谷跌幅。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.formula"
+msgstr "權益從0開始，按時間加入帶符號的現金賬本流水和符合條件的已平倉淨盈虧。最大回撤 = 歷史峰值 − 當前權益的最大值，捨入至兩位小數。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.unit"
+msgstr "曲線幣種；卡片用負金額顯示跌幅。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.caveat"
+msgstr "這是現金賬本權益，不是單純累計盈虧，也不是盯市賬戶價值。出金可能產生回撤。初始餘額已作為賬本入金，不重複加入。無正回撤時卡片顯示 —；報表百分比模式將金額除以資金分母。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.title"
+msgstr "權益回撤比例"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.definition"
+msgstr "相對所選圖表窗口內權益歷史峰值的跌幅。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.formula"
+msgstr "每個可見點：（權益 − 可見範圍歷史峰值）÷ 峰值 × 100；峰值不大於0時為0。最大回撤取最負值，當前回撤取末值。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.unit"
+msgstr "%，為零或負，顯示兩位小數。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.caveat"
+msgstr "切換範圍後，峰值從首個可見點重新計算。現金流影響此API權益曲線，不含未實現市值。空序列內部為0，面板顯示無數據。這不是彙總回撤金額除以入金資本。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.title"
+msgstr "賬戶績效／收益比例"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.definition"
+msgstr "記錄的交易盈虧相對所選賬戶帶符號現金賬本總額的比例。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.formula"
+msgstr "頂部：篩選後的已平倉淨盈虧 ÷ 所選賬本總額 × 100。賬戶詳情：可用交易淨盈虧之和 ÷ 該賬戶賬本總額 × 100。初始餘額已作為入金。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.unit"
+msgstr "賬戶／歸一化顯示幣種；%。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.caveat"
+msgstr "不是時間加權或資金加權收益，不按現金流日期加權。頂部在資金≤0或無法歸一化時隱藏百分比；賬戶詳情只在分母為零時隱藏，可能含可用的部分平倉盈虧。當前匯率歸一化不是歷史匯率歸因。賬戶詳情中缺失盈虧按0累加。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.title"
+msgstr "報表盈虧顯示"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.definition"
+msgstr "報表主值隨淨／毛及幣種／百分比切換；底層統計仍按淨盈虧分組。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.formula"
+msgstr "淨值 = 彙總淨盈虧。毛主值 = 已存毛盈虧，舊API回退至淨額 + 費用。百分比 = 所選金額 ÷ 正的帶符號現金賬本總額 × 100。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.unit"
+msgstr "歸一化顯示幣種或%。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.caveat"
+msgstr "輔助Gross行當前為盈利淨額 + 虧損淨額絕對值，不是扣費前主值；費用比例也用該絕對淨額基數。資金不為正時禁用百分比。不增加時間／現金流加權或未實現盈虧；樣本受篩選和匯率可用性限制。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.title"
+msgstr "期間收益"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.definition"
+msgstr "每個有交易期間的平均記錄盈虧，以及線性年化速率。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.formula"
+msgstr "所選淨／毛盈虧總額 ÷ 有交易的日、週或月數。年化 = 總額 × 365 ÷ 首尾均含的日曆天跨度（至少1天）。百分比 = 結果 ÷ 正的現金賬本總額 × 100。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.unit"
+msgstr "顯示幣種或%；週從星期一開始。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.caveat"
+msgstr "只用淨盈虧已知的已平倉交易，平倉日期遵循顯示時鐘；均值只含有交易的期間。無已平倉交易時隱藏。不是複利、時間加權或資金加權收益；短樣本年化可能極大。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.title"
+msgstr "滾動勝率"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.definition"
+msgstr "按平倉時間排序，最近所選交易筆數的勝率。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.formula"
+msgstr "最近N筆符合條件的交易中正淨盈虧筆數 ÷ N × 100；窗口填滿後每筆生成一個點。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.unit"
+msgstr "%；N為所選交易筆數。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.caveat"
+msgstr "持平佔一個分母位置；排除未平倉和淨盈虧未知交易。少於N筆時無點。淨／毛顯示切換不改變該淨額序列。圖表範圍還可能限制輸入。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.title"
+msgstr "指標演變"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.definition"
+msgstr "所選範圍內每個日／週／月分組截至當時的累計交易指標。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.formula"
+msgstr "勝率 = 所選盈虧中正值筆數 ÷ 累計交易數。盈利因子 = 正值總額 ÷ 負值總額絕對值（無虧損為0）。盈虧為所選淨／毛盈虧累計和。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.unit"
+msgstr "%；比率；顯示幣種或資金分母百分比。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.caveat"
+msgstr "不同於彙總勝率／盈利因子，此圖按所選淨／毛盈虧分類。持平保留在勝率分母；排除淨額未知及未平倉交易。分組用UTC日期，週從星期一開始。累計盈虧不加入現金流和未實現價值。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.title"
+msgstr "模擬最大回撤"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.definition"
+msgstr "每條自助抽樣路徑中累計淨盈虧最大跌幅的中位數。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.formula"
+msgstr "每條路徑從0開始，重採樣歷史已平倉淨盈虧，記錄（歷史峰值 − 累計盈虧）的最大值，再取所有路徑的第50百分位。較差情況提示用第95百分位。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.unit"
+msgstr "顯示幣種；百分比模式將金額除以報表資金分母。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.caveat"
+msgstr "這是模擬累計盈虧，不是賬戶權益；不含現金流和未實現價值。即使毛顯示模式也使用淨結果。模擬設定和樣本量影響結果；歷史不足時不顯示模擬。"

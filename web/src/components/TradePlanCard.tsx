@@ -185,7 +185,10 @@ export function TradePlanCard({
               >
                 {insights.breakeven != null ? fmtMoney(insights.breakeven, currency, locale) : "—"}
               </StatCell>
-              <StatCell label={tr({ id: "trades.plannedRR", message: "Planned R:R" })}>
+              <StatCell
+                metric="plannedRR"
+                label={tr({ id: "trades.plannedRR", message: "Planned R:R" })}
+              >
                 {insights.plannedRR != null ? `${insights.plannedRR.toFixed(2)}:1` : "—"}
               </StatCell>
             </div>

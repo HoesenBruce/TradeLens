@@ -12731,3 +12731,393 @@ msgstr "決済進捗"
 #. js-lingui-explicit-id
 msgid "trades.closeProgressSortHint"
 msgstr "決済済と残数量。残数量で並べ替え"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:33
+msgid "metric.close"
+msgstr "説明を閉じる"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:27
+msgid "metric.formula"
+msgstr "計算方法 / 分母"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:20
+msgid "metric.holding.caveat"
+msgstr "SBIやCSVの日付のみの約定では日中の保有時間は分かりません。新規履歴の欠落、精度不明、無効な境界は —。市場のタイムゾーンと精度はAPIが提供し、閲覧者のタイムゾーンで暦日数は変わりません。"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:19
+msgid "metric.holding.unit"
+msgstr "日・時間・分。日付のみの記録は暦日数。"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:15
+msgid "metric.help"
+msgstr "{title}の説明"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:16
+msgid "metric.holding.title"
+msgstr "保有期間"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:29
+msgid "metric.caveat"
+msgstr "制約"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:18
+msgid "metric.holding.formula"
+msgstr "両端の時刻が正確なら経過時間を分単位に四捨五入して表示（1分未満は <1m）。一方でも日付のみなら取引所現地の暦日差。同日は0日、翌日は1日。"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:17
+msgid "metric.holding.definition"
+msgstr "記録された新規建てから決済までの時間。未決済取引は現在まで。"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:28
+msgid "metric.unit"
+msgstr "単位"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.title"
+msgstr "新規・決済・残数量"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.definition"
+msgstr "trade.quantities が提供する累積新規数量と現在の残数量です。"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.formula"
+msgstr "決済量 = 新規量 − 残量。決済進捗 = 決済量 ÷ 新規量 × 100（0–100%）。残率 = 100 − 決済進捗。"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.unit"
+msgstr "株、枚などの銘柄単位、%。"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.caveat"
+msgstr "買建・売建とも正の数量です。ドテンは別の取引期間。確認済み企業行動は正規化単位を使います。新規履歴の欠落、単位未確認、在庫不整合は0ではなく —。現在の時価ではありません。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.title"
+msgstr "実現損益（費用前・費用後）"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.definition"
+msgstr "記録された費用控除前後の取引損益。含み損益と別途紐付けた配当は含みません。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.formula"
+msgstr "標準の決済済み取引：方向付き（加重決済価格 − 加重新規価格）× 決済数量 × 乗数。純損益 = 総損益 − 費用。集計は対象の決済済み金額の合計。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.unit"
+msgstr "取引損益通貨。通常、表示前に小数2桁へ丸めます。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.caveat"
+msgstr "SBIは既存の決済・平均取得単価方式で、一部決済の実現額を示す場合があります。標準の未決済取引は全決済まで損益不明。集計は未決済を除外。原価・決済根拠の欠落は —。配当込み合計は別指標です。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.title"
+msgstr "手数料・コミッション"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.definition"
+msgstr "取引または対象の決済済み標本へ配分された記録済み費用。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.formula"
+msgstr "取引費用 = 配分された約定手数料 + コミッション。詳細の費用率 = 費用 ÷ 総損益の絶対値（0・不明は非表示）。レポート費用率 = 総費用 ÷（利益純額 + 損失純額の絶対値）× 100。分母0は0%。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.unit"
+msgstr "損益通貨。費用率は%。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.caveat"
+msgstr "ドテンの費用は既存配分。SBIは該当する記録済み決済費用を使用。未記録の費用は推定しません。レポートの分母は純損益の絶対変動で、売買代金や元本ではありません。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.title"
+msgstr "取引損益率"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.definition"
+msgstr "APIの実現損益を新規建て基準額で割った比率。口座元本比ではありません。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.formula"
+msgstr "標準決済：純損益 ÷（丸め前の加重新規価格 × 決済数量 × 乗数）× 100。SBI決済の上書き経路は記録平均新規価格 × 新規数量。小数2桁に丸めます。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.unit"
+msgstr "%。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.caveat"
+msgstr "分母は既存の証券会社経路に従い、残高数量ではありません。標準の基準額0は0、不明損益は —。表示価格の丸めで再計算が一致しない場合があります。配当は除外。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.title"
+msgstr "計画リワード／リスク"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.definition"
+msgstr "記録した目標・損切り価格までの距離の比率。費用控除前です。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.formula"
+msgstr "買建：(目標 − 新規価格) ÷ (新規価格 − 損切り)。売建：(新規価格 − 目標) ÷ (損切り − 新規価格)。新規価格は記録平均です。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.unit"
+msgstr "比率（リワード:1）。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.caveat"
+msgstr "目標・損切り両方と正のリスク幅が必要。その他は —。数量、乗数、費用、日誌の初期リスクは使いません。逆方向の目標は負のリワードになります。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.title"
+msgstr "実現R"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.definition"
+msgstr "記録した純取引損益の日誌初期リスクに対する倍率。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.formula"
+msgstr "純損益 ÷ 初期リスク。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.unit"
+msgstr "R（リスク倍率）、小数2桁表示。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.caveat"
+msgstr "リスク欠落・0、損益不明は —。一覧は正のリスクが必要で、詳細APIは0以外を許容。配当は除外。目標・損切りの計画比率とは別です。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.title"
+msgstr "勝率"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.definition"
+msgstr "対象の決済済み取引のうち費用控除後の純損益が正の割合。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.formula"
+msgstr "勝ち数 ÷（勝ち + 負け + 損益ゼロの取引数）× 100。約定単位ではなく取引ごとに1件。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.unit"
+msgstr "%。APIは0〜1の比率。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.caveat"
+msgstr "損益ゼロは分母に含みます。未決済・一部決済・損益不明は、一部実現額があっても集計から除外。対象0件は0%。口座・日付フィルターが標本を決めます。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.title"
+msgstr "平均利益／損失比"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.definition"
+msgstr "決済済み標本の純利益と純損失の相対的な大きさ。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.formula"
+msgstr "平均モード：正の純損益の平均 ÷ 負の純損益絶対値の平均。中央値モードは対応する中央値。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.unit"
+msgstr "倍率、×で表示。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.caveat"
+msgstr "APIが平均・中央値を小数2桁に丸めてから計算。損失なしで利益が正なら∞。両方なし・比率0は —。損益ゼロは両群から除外。純・総表示の切替で群は変わりません。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.title"
+msgstr "プロフィットファクター"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.definition"
+msgstr "対象の決済済み取引の純利益合計と純損失合計の絶対値の比。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.formula"
+msgstr "正の純損益合計 ÷ 負の純損益合計の絶対値。小数2桁に丸めます。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.unit"
+msgstr "通貨なしの比率。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.caveat"
+msgstr "APIのgross_profit/gross_lossは費用後の純損益群です。損失なしは∞ではなくAPI値0。ヘッダーは0.00、一部カードは —。損益ゼロは両群に加算しません。純・総表示で集計値は変わりません。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.title"
+msgstr "最大ドローダウン金額"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.definition"
+msgstr "API資産曲線の記録上の最大ピークからの下落額。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.formula"
+msgstr "資産は0から始め、符号付き現金台帳と対象決済純損益を時系列に加算。最大値（過去ピーク − 資産）を小数2桁に丸めます。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.unit"
+msgstr "曲線通貨。カードは負の金額表示。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.caveat"
+msgstr "現金台帳ベースの資産で、累積損益のみ・時価評価資産ではありません。出金でも下落します。初期残高は台帳入金済みで二重加算しません。正の下落額なしは —。レポート%表示は資金分母で金額を割ります。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.title"
+msgstr "資産ドローダウン率"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.definition"
+msgstr "選択したチャート期間内の資産ピークに対する下落率。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.formula"
+msgstr "各表示点：(資産 − 表示期間の過去ピーク) ÷ ピーク × 100。ピークが正でなければ0。最大は最も負の値、現在は最終値。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.unit"
+msgstr "%、0または負。小数2桁表示。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.caveat"
+msgstr "期間変更時に最初の表示点からピークを再計算。現金移動の影響を含み、含み資産価値は除外。空系列の内部値は0ですがパネルはデータなし。集計下落額を入金元本で割った値ではありません。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.title"
+msgstr "口座の実績・リターン"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.definition"
+msgstr "選択口座の符号付き現金台帳合計に対する記録取引損益。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.formula"
+msgstr "ヘッダー：絞込済み決済純損益 ÷ 対象台帳合計 × 100。口座詳細：利用可能な取引純損益合計 ÷ その口座の台帳合計 × 100。初期残高は入金済みです。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.unit"
+msgstr "口座・正規化表示通貨、%。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.caveat"
+msgstr "時間加重・金額加重ではなく、現金移動日を加重しません。ヘッダーは資金≤0・正規化不明で%非表示。口座詳細は分母0のみ非表示で一部決済損益を含む場合があります。現在FXによる表示は歴史FX帰属ではありません。詳細の欠落損益は0加算。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.title"
+msgstr "レポート損益表示"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.definition"
+msgstr "主値は純・総、通貨・%の切替に従います。集計分類は純損益のままです。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.formula"
+msgstr "純 = 集計純損益。総の主値 = 保存総損益（旧APIは純 + 費用）。% = 選択金額 ÷ 正の符号付き現金台帳合計 × 100。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.unit"
+msgstr "正規化表示通貨または%。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.caveat"
+msgstr "補助Gross行は現在、利益純額 + 損失純額の絶対値で、費用前の主値とは別です。費用%もこの絶対純額基準。資金が正でなければ%無効。時間・資金移動加重や含み損益は追加せず、絞込・FX可用性に従います。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.title"
+msgstr "期間リターン"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.definition"
+msgstr "取引のある期間ごとの平均記録損益と線形年率換算。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.formula"
+msgstr "選択純・総損益合計 ÷ 取引のある日・週・月数。年率 = 合計 × 365 ÷ 両端を含む暦日幅（最低1日）。% = 結果 ÷ 正の現金台帳合計 × 100。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.unit"
+msgstr "表示通貨または%。週は月曜開始。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.caveat"
+msgstr "純損益既知の決済済み取引を使い、決済日は設定表示時計。平均は取引期間のみ。決済取引なしは非表示。複利、時間加重、金額加重ではなく短期標本の年率は極端になり得ます。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.title"
+msgstr "ローリング勝率"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.definition"
+msgstr "決済順の直近の選択取引件数における勝率。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.formula"
+msgstr "直近N対象取引の正の純損益件数 ÷ N × 100。窓が満たされた後、取引ごとに1点。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.unit"
+msgstr "%。Nは選択取引件数。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.caveat"
+msgstr "損益ゼロも分母1件。未決済・純損益不明は除外。N未満は点なし。純・総表示でこの純損益系列は変わりません。表示期間が入力をさらに制限する場合があります。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.title"
+msgstr "指標の推移"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.definition"
+msgstr "選択期間内の各日・週・月バケットまでの累積取引指標。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.formula"
+msgstr "勝率 = 選択損益の正の件数 ÷ 累積取引数。PF = 正の合計 ÷ 負の合計絶対値（損失なしは0）。損益は選択純・総損益の累積和。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.unit"
+msgstr "%、比率、表示通貨または資金分母の%。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.caveat"
+msgstr "集計勝率・PFと異なり、この図は選択した純・総損益で分類。損益ゼロは勝率分母に残り、純損益不明・未決済は除外。UTC日付、月曜週開始。累積損益に現金移動・含み価値は加えません。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.title"
+msgstr "シミュレーション最大下落"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.definition"
+msgstr "各ブートストラップ経路の累積純損益の最大下落額の中央値。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.formula"
+msgstr "各経路を0から始め、過去の決済純損益を再標本化。最大（過去ピーク − 累積損益）を記録し経路間の50パーセンタイルを取得。悪化ヒントは95パーセンタイル。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.unit"
+msgstr "表示通貨。%モードはレポート資金分母で金額を割ります。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.caveat"
+msgstr "口座資産ではなく模擬累積損益。現金移動・含み価値は除外。総表示でも純損益を使用。設定・標本数が結果に影響し、履歴不足なら模擬結果なし。"
