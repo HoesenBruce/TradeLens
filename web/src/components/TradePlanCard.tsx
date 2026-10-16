@@ -1,3 +1,4 @@
+import { Money } from "@/components/ResponsiveValue";
 import { useLingui } from "@lingui/react";
 import { t as tr } from "@lingui/core/macro";
 import { Card } from "./Card";
@@ -10,7 +11,6 @@ import { cn } from "@/lib/cn";
 
 import { intlLocale } from "@/lib/locale";
 import type { TradeInsights } from "@/lib/tradeInsights";
-import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 /** Bar row: planned risk, planned reward, and what actually landed. */
 function PlanBar({
@@ -28,7 +28,6 @@ function PlanBar({
   tone: "risk" | "reward" | "result";
   note?: string;
 }) {
-  const { fmtSignedMoney } = useMoneyFormatters();
   const width = scale > 0 ? Math.min(100, (Math.abs(amount) / scale) * 100) : 0;
   const fill =
     tone === "risk"
@@ -59,7 +58,7 @@ function PlanBar({
             tone === "result" ? pnlColor(amount) : "text-foreground",
           )}
         >
-          {fmtSignedMoney(amount, currency, intlLocale())}
+          <Money value={amount} currency={currency} locale={intlLocale()} signed />
         </span>
         {note ? (
           <span className="w-[4.5rem] text-[11px] tabular-nums text-muted-foreground">{note}</span>
@@ -99,7 +98,6 @@ export function TradePlanCard({
   autoExcursionPending = false,
 }: TradePlanCardProps) {
   useLingui();
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   const locale = intlLocale();
   const currency = trade.pnl_currency;
 
@@ -174,16 +172,28 @@ export function TradePlanCard({
           <>
             <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
               <StatCell label={tr({ id: "trades.stop", message: "Stop" })}>
-                {insights.stop != null ? fmtMoney(insights.stop, currency, locale) : "—"}
+                {insights.stop != null ? (
+                  <Money value={insights.stop} currency={currency} locale={locale} />
+                ) : (
+                  "—"
+                )}
               </StatCell>
               <StatCell label={tr({ id: "trades.target", message: "Target" })}>
-                {insights.target != null ? fmtMoney(insights.target, currency, locale) : "—"}
+                {insights.target != null ? (
+                  <Money value={insights.target} currency={currency} locale={locale} />
+                ) : (
+                  "—"
+                )}
               </StatCell>
               <StatCell
                 label={tr({ id: "trades.breakeven", message: "Breakeven" })}
                 hint={tr({ id: "trades.afterFees", message: "after fees" })}
               >
-                {insights.breakeven != null ? fmtMoney(insights.breakeven, currency, locale) : "—"}
+                {insights.breakeven != null ? (
+                  <Money value={insights.breakeven} currency={currency} locale={locale} />
+                ) : (
+                  "—"
+                )}
               </StatCell>
               <StatCell
                 metric="plannedRR"
@@ -268,13 +278,21 @@ export function TradePlanCard({
                   insights.mae != null ? pnlColor(-Math.abs(insights.mae)) : undefined
                 }
               >
-                {insights.mae != null ? fmtSignedMoney(insights.mae, currency, locale) : "—"}
+                {insights.mae != null ? (
+                  <Money value={insights.mae} currency={currency} locale={locale} signed />
+                ) : (
+                  "—"
+                )}
               </StatCell>
               <StatCell
                 label="MFE"
                 valueClassName={insights.mfe != null ? pnlColor(Math.abs(insights.mfe)) : undefined}
               >
-                {insights.mfe != null ? fmtSignedMoney(insights.mfe, currency, locale) : "—"}
+                {insights.mfe != null ? (
+                  <Money value={insights.mfe} currency={currency} locale={locale} signed />
+                ) : (
+                  "—"
+                )}
               </StatCell>
               <StatCell
                 label={tr({ id: "trades.capture", message: "Capture" })}
@@ -288,9 +306,11 @@ export function TradePlanCard({
                   : "—"}
               </StatCell>
               <StatCell label={tr({ id: "trades.leftOnTable", message: "Left on table" })}>
-                {insights.leftOnTable != null
-                  ? fmtSignedMoney(insights.leftOnTable, currency, locale)
-                  : "—"}
+                {insights.leftOnTable != null ? (
+                  <Money value={insights.leftOnTable} currency={currency} locale={locale} signed />
+                ) : (
+                  "—"
+                )}
               </StatCell>
               {insights.postExitMfe != null && (
                 <StatCell
@@ -298,7 +318,7 @@ export function TradePlanCard({
                   hint={tr({ id: "trades.runAfter", message: "run after exit" })}
                   valueClassName={pnlColor(Math.abs(insights.postExitMfe))}
                 >
-                  {fmtSignedMoney(insights.postExitMfe, currency, locale)}
+                  <Money value={insights.postExitMfe} currency={currency} locale={locale} signed />
                 </StatCell>
               )}
               {insights.postExitMae != null && (
@@ -307,7 +327,7 @@ export function TradePlanCard({
                   hint={tr({ id: "trades.dipAfter", message: "dip after exit" })}
                   valueClassName={pnlColor(-Math.abs(insights.postExitMae))}
                 >
-                  {fmtSignedMoney(insights.postExitMae, currency, locale)}
+                  <Money value={insights.postExitMae} currency={currency} locale={locale} signed />
                 </StatCell>
               )}
             </div>

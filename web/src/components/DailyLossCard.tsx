@@ -1,3 +1,4 @@
+import { Money, ResponsiveValue } from "@/components/ResponsiveValue";
 import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { useRiskRules } from "@/lib/hooks/useRiskRules";
@@ -21,7 +22,7 @@ export interface DailyLossCardProps {
 export function DailyLossCard({ todayNetPnl, currency, fxRate = 1 }: DailyLossCardProps) {
   const { t: tr } = useLinguiMacro();
 
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
+  const { fmtMoney, fmtMoneyCompact } = useMoneyFormatters();
   const locale = intlLocale();
   const { data: rules } = useRiskRules();
   const limit = rules?.max_daily_loss ?? null;
@@ -37,20 +38,26 @@ export function DailyLossCard({ todayNetPnl, currency, fxRate = 1 }: DailyLossCa
   return (
     <Card title={tr({ id: "accounts.limit", message: "Daily loss limit" })}>
       <div className="flex flex-col gap-2.5">
-        <div className="flex items-baseline justify-between gap-3">
+        <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-3">
           <span
             className={cn(
-              "text-xl font-semibold tabular-nums",
+              "min-w-0 max-w-full flex-[1_1_140px] text-xl font-semibold tabular-nums",
               net > 0 ? "text-profit" : net < 0 ? "text-loss" : "text-flat",
             )}
           >
-            {fmtSignedMoney(net, currency, locale)}
+            <Money value={net} currency={currency} locale={locale} signed />
           </span>
-          <span className="text-[11px] tabular-nums text-muted-foreground">
-            {tr({
-              id: "accounts.limitAmount",
-              message: `limit ${fmtMoney(cap, currency, locale)}`,
-            })}
+          <span className="min-w-0 max-w-full wrap-anywhere min-w-0 max-w-full wrap-anywhere text-[11px] tabular-nums text-muted-foreground">
+            <ResponsiveValue
+              value={tr({
+                id: "accounts.limitAmount",
+                message: `limit ${fmtMoney(cap, currency, locale)}`,
+              })}
+              compactValue={tr({
+                id: "accounts.limitAmount",
+                message: `limit ${fmtMoneyCompact(cap, currency, locale)}`,
+              })}
+            />
           </span>
         </div>
         <span className="h-2 overflow-hidden rounded-full bg-muted/60">
@@ -62,19 +69,26 @@ export function DailyLossCard({ todayNetPnl, currency, fxRate = 1 }: DailyLossCa
             style={{ width: `${usedPct}%` }}
           />
         </span>
-        <p className="m-0 text-[11px] leading-relaxed text-muted-foreground">
-          {breached
-            ? tr({
-                id: "accounts.limitHit",
-                message:
-                  "Daily loss limit hit — flat is a position. Step away and journal the day.",
-              })
-            : net < 0
-              ? tr({
-                  id: "accounts.lossLeft",
-                  message: `${fmtMoney(cap - spent, currency, locale)} of loss budget left today.`,
-                })
-              : tr({ id: "accounts.limitUntouched", message: "Loss budget untouched today." })}
+        <p className="m-0 min-w-0 wrap-anywhere text-[11px] leading-relaxed text-muted-foreground">
+          {breached ? (
+            tr({
+              id: "accounts.limitHit",
+              message: "Daily loss limit hit — flat is a position. Step away and journal the day.",
+            })
+          ) : net < 0 ? (
+            <ResponsiveValue
+              value={tr({
+                id: "accounts.lossLeft",
+                message: `${fmtMoney(cap - spent, currency, locale)} of loss budget left today.`,
+              })}
+              compactValue={tr({
+                id: "accounts.lossLeft",
+                message: `${fmtMoneyCompact(cap - spent, currency, locale)} of loss budget left today.`,
+              })}
+            />
+          ) : (
+            tr({ id: "accounts.limitUntouched", message: "Loss budget untouched today." })
+          )}
         </p>
       </div>
     </Card>

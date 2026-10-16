@@ -2,11 +2,11 @@ import { useLingui as useLinguiRuntime } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Flame } from "lucide-react";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
 import { Card } from "./Card";
 import { CHART_TIME_ZONE } from "./charts/chartTime";
 import { EmptyState } from "./EmptyState";
-import { useReportsMoney } from "./ReportsDisplayContext";
+import { ReportsMoney, useReportsMoney } from "./ReportsDisplayContext";
 import { Skeleton } from "./Skeleton";
 import { Popover, PopoverContent } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
@@ -238,6 +238,7 @@ function CellDetails({
   useLinguiRuntime();
 
   const money = useReportsMoney();
+  const popupRef = useRef<HTMLDivElement>(null);
   const wins = cell.items.filter((t) => money.tradePnl(t) > 0).length;
   const losses = cell.items.filter((t) => money.tradePnl(t) < 0).length;
   const recentFirst = [...cell.items].sort((a, b) => b.opened_at.localeCompare(a.opened_at));
@@ -245,17 +246,29 @@ function CellDetails({
   const hidden = recentFirst.length - shown.length;
 
   return (
-    <PopoverContent anchor={anchor} side="bottom" className="w-72">
+    <PopoverContent
+      anchor={anchor}
+      side="bottom"
+      className="w-72"
+      ref={popupRef}
+      // Preserve the initial trade action focus when adding value disclosures.
+      initialFocus={() => popupRef.current?.querySelector("button") ?? false}
+    >
       <div className="flex flex-col gap-2">
-        <header className="flex items-baseline justify-between gap-2">
+        <header className="flex min-w-0 flex-wrap items-baseline justify-between gap-2">
           <h3 className="text-sm font-semibold text-foreground">
             {dayLabel(day)} · {hour}:00–{(hour + 1) % 24}:00
           </h3>
           <span className="text-[11px] text-muted-foreground">ET</span>
         </header>
-        <div className="flex items-baseline justify-between gap-2">
-          <span className={cn("text-lg font-semibold tabular-nums", pnlClass(cell.pnl))}>
-            {money.format(cell.pnl)}
+        <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-2">
+          <span
+            className={cn(
+              "min-w-0 max-w-full flex-[1_1_120px] text-lg font-semibold tabular-nums",
+              pnlClass(cell.pnl),
+            )}
+          >
+            <ReportsMoney value={cell.pnl} />
           </span>
           <span className="text-[11px] tabular-nums text-muted-foreground">
             {wins}
@@ -265,15 +278,16 @@ function CellDetails({
             {localize({ id: "reports.win2", message: "win" })}
           </span>
         </div>
-        <ul className="-mx-2 flex flex-col">
+        <ul className="flex flex-col">
           {shown.map((t) => {
             const pnl = money.tradePnl(t);
             return (
               <li key={t.id}>
                 <button
                   type="button"
-                  className="flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-left transition-colors duration-150 hover:bg-accent"
+                  className="flex w-full min-w-0 flex-wrap items-center gap-3 rounded-md px-2 py-1.5 text-left transition-colors duration-150 hover:bg-accent"
                   onClick={() => onSelectTradeId?.(t.id)}
+                  aria-label={`${t.symbol} · ${fmtDayShort(t.opened_at, locale)} · ${money.format(pnl)}`}
                 >
                   <span className="min-w-0 flex-1 truncate text-xs font-medium text-foreground">
                     {t.symbol}
@@ -281,8 +295,13 @@ function CellDetails({
                   <span className="shrink-0 text-[11px] text-muted-foreground">
                     {fmtDayShort(t.opened_at, locale)}
                   </span>
-                  <span className={cn("shrink-0 text-xs tabular-nums", pnlClass(pnl))}>
-                    {money.format(pnl)}
+                  <span
+                    className={cn(
+                      "min-w-0 max-w-full flex-[0_1_110px] text-xs tabular-nums",
+                      pnlClass(pnl),
+                    )}
+                  >
+                    <ReportsMoney value={pnl} disclosure={false} />
                   </span>
                 </button>
               </li>

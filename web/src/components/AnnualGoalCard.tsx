@@ -1,3 +1,4 @@
+import { Money } from "@/components/ResponsiveValue";
 import { useLingui } from "@lingui/react";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { t as tr } from "@lingui/core/macro";
@@ -78,7 +79,7 @@ export function AnnualGoalCard({
   useLingui();
   const { t: tr } = useLinguiMacro();
 
-  const { fmtMoney, fmtMoneyCompact, fmtSignedMoney } = useMoneyFormatters();
+  const { fmtMoneyCompact } = useMoneyFormatters();
   const locale = intlLocale();
   const [editOpen, setEditOpen] = useState(false);
   const [draft, setDraft] = useState("");
@@ -336,7 +337,7 @@ export function AnnualGoalCard({
             </p>
             <p
               className={cn(
-                "m-0 text-[13px] font-medium tabular-nums",
+                "m-0 min-w-0 max-w-full wrap-anywhere text-[13px] font-medium tabular-nums",
                 paceTone(progress.paceStatus),
               )}
             >
@@ -349,7 +350,12 @@ export function AnnualGoalCard({
                 </>
               ) : (
                 <>
-                  {fmtSignedMoney(money(progress.paceDelta), currency, locale)}
+                  <Money
+                    value={money(progress.paceDelta)}
+                    currency={currency}
+                    locale={locale}
+                    signed
+                  />
                   <span className="ml-1 font-normal text-muted-foreground">
                     {tr({ id: "accounts.versusPace", message: "vs linear pace" })}
                   </span>
@@ -366,18 +372,18 @@ export function AnnualGoalCard({
             />
 
             <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-[13px] tabular-nums">
-              <p className="m-0">
+              <p className="m-0 min-w-0 max-w-full">
                 <span className="font-medium text-muted-foreground">
                   {tr({ id: "accounts.ytd", message: "YTD" })}{" "}
                 </span>
                 <span className={cn("font-semibold", pnlColor(progress.ytdNetPnl))}>
-                  {fmtMoney(money(progress.ytdNetPnl), currency, locale)}
+                  <Money value={money(progress.ytdNetPnl)} currency={currency} locale={locale} />
                 </span>
               </p>
-              <p className="m-0 text-muted-foreground">
+              <p className="m-0 min-w-0 max-w-full wrap-anywhere text-muted-foreground">
                 {tr({ id: "accounts.goal", message: "Goal" })}{" "}
                 <span className="font-semibold text-foreground">
-                  {fmtMoney(money(progress.goal), currency, locale)}
+                  <Money value={money(progress.goal)} currency={currency} locale={locale} />
                 </span>
                 <span className="mx-1.5 text-muted-foreground/50" aria-hidden>
                   ·
@@ -386,14 +392,18 @@ export function AnnualGoalCard({
                   <>
                     {tr({ id: "accounts.over", message: "Over" })}{" "}
                     <span className="font-semibold text-profit">
-                      {fmtMoney(money(progress.overBy), currency, locale)}
+                      <Money value={money(progress.overBy)} currency={currency} locale={locale} />
                     </span>
                   </>
                 ) : (
                   <>
                     {tr({ id: "accounts.left", message: "Left" })}{" "}
                     <span className="font-semibold text-foreground">
-                      {fmtMoney(money(progress.remaining), currency, locale)}
+                      <Money
+                        value={money(progress.remaining)}
+                        currency={currency}
+                        locale={locale}
+                      />
                     </span>
                   </>
                 )}

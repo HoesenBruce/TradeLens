@@ -1,3 +1,4 @@
+import { Money } from "@/components/ResponsiveValue";
 import { MetricHelp } from "@/components/MetricHelp";
 import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
@@ -21,7 +22,6 @@ import { formatOptionContractLabel, optionContractFromFills } from "@/lib/option
 import { resolveTradeDirection } from "@/lib/tradeDirection";
 import type { TradeInsights } from "@/lib/tradeInsights";
 import { fmtTradeTimeline } from "@/lib/tradeTimeline";
-import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 /**
  * The "what happened" block: identity, outcome, and the six numbers that
@@ -39,7 +39,7 @@ export function TradeSummaryCard({
   insights: TradeInsights;
 }) {
   useLingui();
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
+
   useDisplayTimePrefs();
   const locale = intlLocale();
   const currency = trade.pnl_currency;
@@ -80,9 +80,9 @@ export function TradeSummaryCard({
           </p>
         )}
         <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
-          <div className="flex min-w-0 flex-col gap-1.5">
+          <div className="flex min-w-0 max-w-full flex-col gap-1.5">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="m-0 text-[26px] leading-none font-semibold tracking-[-0.03em] text-foreground sm:text-[30px]">
+              <h1 className="m-0 max-w-full wrap-anywhere text-[26px] leading-none font-semibold tracking-[-0.03em] text-foreground sm:text-[30px]">
                 {trade.symbol}
               </h1>
               {/* Side and option right spelled out ("LONG CALL"), matching the
@@ -137,7 +137,7 @@ export function TradeSummaryCard({
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex min-w-0 items-center gap-4">
             {/* Execution score, not P&L — the ring grades process (entry heat,
                 MFE capture) so it stays primary-tinted rather than riding the
                 green/red outcome scale. */}
@@ -161,15 +161,19 @@ export function TradeSummaryCard({
                 </span>
               </DonutRing>
             )}
-            <div className="flex flex-col gap-1.5 sm:items-end">
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5 sm:items-end">
               <span
                 className={cn(
-                  "text-[32px] leading-none font-semibold tracking-[-0.03em] tabular-nums sm:text-[38px]",
+                  "block w-full min-w-0 max-w-full text-[32px] leading-none font-semibold tracking-[-0.03em] tabular-nums sm:text-[38px]",
                   net != null ? pnlColor(net) : "text-flat",
                 )}
                 title={tr({ id: "trades.netAfterFees", message: "Net P&L after fees" })}
               >
-                {net != null ? fmtSignedMoney(net, currency, locale) : "—"}
+                {net != null ? (
+                  <Money value={net} currency={currency} locale={locale} signed />
+                ) : (
+                  "—"
+                )}
                 <MetricHelp metric="pnl" />
               </span>
               <div className="flex flex-wrap items-baseline gap-x-3 sm:justify-end">
@@ -204,10 +208,18 @@ export function TradeSummaryCard({
         <TradeQuantityDetails trade={trade} />
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
           <StatCell label={tr({ id: "trades.entry", message: "Entry" })}>
-            {trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price, currency, locale) : "—"}
+            {trade.qty_opened > 0 ? (
+              <Money value={trade.avg_entry_price} currency={currency} locale={locale} />
+            ) : (
+              "—"
+            )}
           </StatCell>
           <StatCell label={tr({ id: "trades.exit", message: "Exit" })}>
-            {trade.avg_exit_price != null ? fmtMoney(trade.avg_exit_price, currency, locale) : "—"}
+            {trade.avg_exit_price != null ? (
+              <Money value={trade.avg_exit_price} currency={currency} locale={locale} />
+            ) : (
+              "—"
+            )}
           </StatCell>
           <StatCell
             metric="holding"
@@ -221,7 +233,11 @@ export function TradeSummaryCard({
             label={tr({ id: "trades.gross", message: "Gross" })}
             valueClassName={insights.grossPnl != null ? pnlColor(insights.grossPnl) : undefined}
           >
-            {insights.grossPnl != null ? fmtSignedMoney(insights.grossPnl, currency, locale) : "—"}
+            {insights.grossPnl != null ? (
+              <Money value={insights.grossPnl} currency={currency} locale={locale} signed />
+            ) : (
+              "—"
+            )}
           </StatCell>
           <StatCell
             metric="fees"
@@ -237,14 +253,14 @@ export function TradeSummaryCard({
                 : undefined
             }
           >
-            {fmtMoney(insights.feesTotal, currency, locale)}
+            <Money value={insights.feesTotal} currency={currency} locale={locale} />
           </StatCell>
           {hasDividends && (
             <StatCell
               label={tr({ id: "trades.dividends", message: "Dividends" })}
               valueClassName={pnlColor(trade.dividend_total)}
             >
-              {fmtSignedMoney(trade.dividend_total, currency, locale)}
+              <Money value={trade.dividend_total} currency={currency} locale={locale} signed />
             </StatCell>
           )}
           {hasDividends && trade.total_pnl != null && (
@@ -253,7 +269,7 @@ export function TradeSummaryCard({
               hint={tr({ id: "trades.inclDividends", message: "incl. dividends" })}
               valueClassName={pnlColor(trade.total_pnl)}
             >
-              {fmtSignedMoney(trade.total_pnl, currency, locale)}
+              <Money value={trade.total_pnl} currency={currency} locale={locale} signed />
             </StatCell>
           )}
         </div>

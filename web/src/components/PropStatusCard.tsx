@@ -1,4 +1,5 @@
 import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
+import { ResponsiveValue } from "./ResponsiveValue";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import type { Account } from "@/lib/api/types";
 import { usePropStatus } from "@/lib/hooks/useProp";
@@ -22,21 +23,25 @@ function RuleBar({
   max,
   danger,
   note,
+  compactNote,
 }: {
   label: string;
   value: number; // 0..1 progress
   max?: boolean; // true = filling up is good (target); false = filling up is bad
   danger?: boolean;
   note: string;
+  compactNote: string;
 }) {
   const pct = Math.max(0, Math.min(100, value * 100));
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-3">
         <span className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
           {label}
         </span>
-        <span className="text-[11px] tabular-nums text-muted-foreground">{note}</span>
+        <span className="min-w-0 max-w-full flex-[1_1_160px] text-[11px] tabular-nums text-muted-foreground">
+          <ResponsiveValue value={note} compactValue={compactNote} />
+        </span>
       </div>
       <span className="h-2 overflow-hidden rounded-full bg-muted/60">
         <span
@@ -59,7 +64,7 @@ function RuleBar({
 export function PropStatusCard({ accounts, selectedAccountId }: PropStatusCardProps) {
   const { t: tr } = useLinguiMacro();
 
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
+  const { fmtMoney, fmtSignedMoney, fmtMoneyCompact, fmtSignedMoneyCompact } = useMoneyFormatters();
   const locale = intlLocale();
   const account = accounts.find((a) => a.id === selectedAccountId);
   const isProp = account?.account_type === "prop";
@@ -76,10 +81,12 @@ export function PropStatusCard({ accounts, selectedAccountId }: PropStatusCardPr
           <StatCard
             label={tr({ id: "accounts.equity", message: "Equity" })}
             value={fmtMoney(st.equity, currency, locale)}
+            compactValue={fmtMoneyCompact(st.equity, currency, locale)}
           />
           <StatCard
             label={tr({ id: "accounts.realized", message: "Realized P&L" })}
             value={fmtSignedMoney(st.realized_pnl, currency, locale)}
+            compactValue={fmtSignedMoneyCompact(st.realized_pnl, currency, locale)}
             accent={st.realized_pnl >= 0 ? "pos" : "neg"}
           />
           <StatCard
@@ -89,6 +96,7 @@ export function PropStatusCard({ accounts, selectedAccountId }: PropStatusCardPr
           <StatCard
             label={tr({ id: "accounts.bestDay", message: "Best day" })}
             value={fmtSignedMoney(st.best_day_pnl, currency, locale)}
+            compactValue={fmtSignedMoneyCompact(st.best_day_pnl, currency, locale)}
             hint={
               st.best_day_share != null
                 ? tr({
@@ -110,6 +118,10 @@ export function PropStatusCard({ accounts, selectedAccountId }: PropStatusCardPr
                 id: "accounts.targetProgress",
                 message: `${fmtSignedMoney(st.realized_pnl, currency, locale)} of ${fmtMoney(st.profit_target, currency, locale)}`,
               })}
+              compactNote={tr({
+                id: "accounts.targetProgress",
+                message: `${fmtSignedMoneyCompact(st.realized_pnl, currency, locale)} of ${fmtMoneyCompact(st.profit_target, currency, locale)}`,
+              })}
             />
           )}
           {st.max_drawdown != null && st.max_drawdown > 0 && st.floor_distance != null && (
@@ -123,6 +135,10 @@ export function PropStatusCard({ accounts, selectedAccountId }: PropStatusCardPr
               note={tr({
                 id: "accounts.floorDistance",
                 message: `${fmtMoney(st.floor_distance, currency, locale)} above the floor`,
+              })}
+              compactNote={tr({
+                id: "accounts.floorDistance",
+                message: `${fmtMoneyCompact(st.floor_distance, currency, locale)} above the floor`,
               })}
             />
           )}

@@ -1,4 +1,6 @@
-import { renderHook } from "@testing-library/react";
+import { I18nProvider } from "@lingui/react";
+import { i18n, loadLocale } from "@/i18n";
+import { act, renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it } from "vite-plus/test";
 import type { Summary, Trade } from "@/lib/api/types";
@@ -32,7 +34,9 @@ function summary(over: Partial<Summary>): Summary {
 
 function wrapper(value: ReportsDisplay) {
   return ({ children }: { children: ReactNode }) => (
-    <ReportsDisplayProvider value={value}>{children}</ReportsDisplayProvider>
+    <I18nProvider i18n={i18n}>
+      <ReportsDisplayProvider value={value}>{children}</ReportsDisplayProvider>
+    </I18nProvider>
   );
 }
 
@@ -195,4 +199,24 @@ it("keeps return ratios unchanged by display FX, since samples and deposits shar
     });
     expect(result.current.display(200)).toBeCloseTo(0.02);
   }
+});
+
+it("updates currency units immediately when the active language changes", async () => {
+  const { result } = renderHook(() => useReportsMoney(), {
+    wrapper: wrapper({
+      pnlMode: "net",
+      unitMode: "abs",
+      denominator: 10000,
+      currency: "USD",
+      fxRate: 1,
+    }),
+  });
+  expect(result.current.formatCompact(1000000)).toBe("+$1M");
+  try {
+    await act(async () => loadLocale("zh-CN"));
+    expect(result.current.formatCompact(1000000)).toBe("+US$100万");
+  } finally {
+    await act(async () => loadLocale("en"));
+  }
+  expect(result.current.formatCompact(1000000)).toBe("+$1M");
 });

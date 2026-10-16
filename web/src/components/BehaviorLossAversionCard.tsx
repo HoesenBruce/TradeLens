@@ -1,3 +1,4 @@
+import { ReportsMoney } from "./ReportsDisplayContext";
 import { Trans } from "@lingui/react/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { BehaviorReport } from "@/lib/api/types";
@@ -109,6 +110,7 @@ export function BehaviorLossAversionCard({
           <StatCard
             label={localize({ id: "reports.profitGivenBack", message: "Profit given back" })}
             value={money.format(sec.missed_profit)}
+            compactValue={money.formatCompact(sec.missed_profit)}
             hint={localize({
               id: "reports.profitablePeakCount",
               message: `Trades profitable at peak: ${{ count: sec.give_back_count }}`,
@@ -137,19 +139,21 @@ export function BehaviorLossAversionCard({
                   <button
                     type="button"
                     onClick={() => onSelectTradeId?.(gb.trade_id)}
-                    className="flex w-full items-center justify-between gap-3 rounded-md px-2 py-1.5 text-left text-[13px] hover:bg-accent"
+                    aria-label={`${gb.date} ${gb.symbol} ${money.format(gb.net_pnl)} · ${money.format(gb.mfe)}`}
+                    className="flex w-full min-w-0 flex-wrap items-center justify-between gap-3 rounded-md px-2 py-1.5 text-left text-[13px] hover:bg-accent"
                   >
-                    <span className="flex items-center gap-2">
+                    <span className="flex min-w-0 max-w-full flex-wrap items-center gap-2 wrap-anywhere">
                       <span className="tabular-nums text-foreground">
                         {fmtDayShort(`${gb.date}T12:00:00Z`, locale)}
                       </span>
                       <span className="font-medium text-foreground">{gb.symbol}</span>
                       <Pill tone="amber">
-                        {localize({ id: "reports.peak", message: "peak" })} {money.format(gb.mfe)}
+                        {localize({ id: "reports.peak", message: "peak" })}{" "}
+                        <ReportsMoney disclosure={false} value={gb.mfe} />
                       </Pill>
                     </span>
-                    <span className="tabular-nums font-medium text-destructive">
-                      {money.format(gb.net_pnl)}
+                    <span className="min-w-0 max-w-full flex-[0_1_130px] tabular-nums font-medium text-destructive">
+                      <ReportsMoney disclosure={false} value={gb.net_pnl} />
                     </span>
                   </button>
                 </li>

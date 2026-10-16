@@ -1,3 +1,4 @@
+import { ResponsiveValue } from "@/components/ResponsiveValue";
 import { Trans } from "@lingui/react/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
@@ -46,11 +47,13 @@ function Eyebrow({ children }: { children: ReactNode }) {
 function StatCell({
   label,
   value,
+  compactValue,
   hint,
   tone,
 }: {
   label: string;
   value: string;
+  compactValue?: string;
   hint?: string;
   tone?: "pos" | "neg" | "muted";
 }) {
@@ -59,16 +62,24 @@ function StatCell({
       <p className="text-[11px] text-muted-foreground">{label}</p>
       <p
         className={cn(
-          "mt-1 truncate text-[20px] font-semibold leading-none tracking-[-0.02em] tabular-nums",
+          "mt-1 min-w-0 max-w-full wrap-anywhere text-[20px] font-semibold leading-none tracking-[-0.02em] tabular-nums",
           tone === "pos" && "text-profit",
           tone === "neg" && "text-loss",
           tone === "muted" && "text-muted-foreground",
           !tone && "text-foreground",
         )}
       >
-        {value}
+        {compactValue != null && typeof value === "string" ? (
+          <ResponsiveValue value={value} compactValue={compactValue} />
+        ) : (
+          value
+        )}
       </p>
-      {hint ? <p className="mt-1 truncate text-[11px] text-muted-foreground">{hint}</p> : null}
+      {hint ? (
+        <p className="mt-1 min-w-0 max-w-full wrap-anywhere text-[11px] text-muted-foreground">
+          {hint}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -86,9 +97,10 @@ export function YearWrappedView({
 }: YearWrappedViewProps) {
   const { t: localize } = useSecondaryLingui();
 
-  const { fmtSignedMoney } = useMoneyFormatters();
+  const { fmtSignedMoney, fmtSignedMoneyCompact } = useMoneyFormatters();
   const locale = intlLocale();
   const money = (v: number) => fmtSignedMoney(v * fxRate, currency, locale);
+  const moneyCompact = (v: number) => fmtSignedMoneyCompact(v * fxRate, currency, locale);
   const [shareOpen, setShareOpen] = useState(false);
 
   const header = (
@@ -193,13 +205,16 @@ export function YearWrappedView({
           </Eyebrow>
           <p
             className={cn(
-              "mt-4 text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[52px]",
+              "mt-4 w-full min-w-0 max-w-full wrap-anywhere text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[52px]",
               pnlColor(wrapped.netPnl),
               wrapped.netPnl > 0 && "drop-shadow-[0_0_32px_var(--profit)]",
               wrapped.netPnl < 0 && "drop-shadow-[0_0_32px_var(--loss)]",
             )}
           >
-            {money(wrapped.netPnl)}
+            <ResponsiveValue
+              value={money(wrapped.netPnl)}
+              compactValue={moneyCompact(wrapped.netPnl)}
+            />
           </p>
           <p className="mt-4 text-[13px] text-muted-foreground">
             <Trans id="wrapped.tradesWinRateDaysInTheMarketSentence">
@@ -216,12 +231,16 @@ export function YearWrappedView({
             <StatCell
               label={localize({ id: "accounts.bestDay", message: "Best day" })}
               value={wrapped.bestDay ? money(wrapped.bestDay.pnl) : money(0)}
+              compactValue={wrapped.bestDay ? moneyCompact(wrapped.bestDay.pnl) : moneyCompact(0)}
               hint={wrapped.bestDay?.date}
               tone={wrapped.bestDay && wrapped.bestDay.pnl > 0 ? "pos" : "muted"}
             />
             <StatCell
               label={localize({ id: "wrapped.biggestWin", message: "Biggest win" })}
               value={wrapped.biggestWin ? money(wrapped.biggestWin.pnl) : money(0)}
+              compactValue={
+                wrapped.biggestWin ? moneyCompact(wrapped.biggestWin.pnl) : moneyCompact(0)
+              }
               hint={
                 wrapped.biggestWin
                   ? `${wrapped.biggestWin.symbol} · ${wrapped.biggestWin.date}`
@@ -258,12 +277,16 @@ export function YearWrappedView({
             <StatCell
               label={localize({ id: "accounts.worstDay", message: "Worst day" })}
               value={wrapped.worstDay ? money(wrapped.worstDay.pnl) : money(0)}
+              compactValue={wrapped.worstDay ? moneyCompact(wrapped.worstDay.pnl) : moneyCompact(0)}
               hint={wrapped.worstDay?.date}
               tone={wrapped.worstDay && wrapped.worstDay.pnl < 0 ? "neg" : "muted"}
             />
             <StatCell
               label={localize({ id: "wrapped.biggestLoss", message: "Biggest loss" })}
               value={wrapped.biggestLoss ? money(wrapped.biggestLoss.pnl) : money(0)}
+              compactValue={
+                wrapped.biggestLoss ? moneyCompact(wrapped.biggestLoss.pnl) : moneyCompact(0)
+              }
               hint={
                 wrapped.biggestLoss
                   ? `${wrapped.biggestLoss.symbol} · ${wrapped.biggestLoss.date}`
@@ -346,9 +369,16 @@ export function YearWrappedView({
                   )}
                 </span>{" "}
                 with {wrapped.busiestMonth.trades} trades (
-                <span className={pnlColor(wrapped.busiestMonth.pnl)}>
+                <ResponsiveValue
+                  className={cn(
+                    "inline-grid w-auto max-w-full align-bottom",
+                    pnlColor(wrapped.busiestMonth.pnl),
+                  )}
+                  value={money(wrapped.busiestMonth.pnl)}
+                  compactValue={moneyCompact(wrapped.busiestMonth.pnl)}
+                >
                   {money(wrapped.busiestMonth.pnl)}
-                </span>
+                </ResponsiveValue>
                 ).
               </Trans>
             ) : (
@@ -364,16 +394,25 @@ export function YearWrappedView({
             {wrapped.topSymbols.map((s, i) => (
               <p
                 key={s.symbol}
-                className="flex items-baseline justify-between gap-3 text-[13px] tabular-nums"
+                className="flex min-w-0 flex-wrap items-baseline justify-between gap-3 text-[13px] tabular-nums"
               >
-                <span className="min-w-0 truncate text-muted-foreground">
+                <span className="min-w-0 max-w-full wrap-anywhere text-muted-foreground">
                   <span className="mr-2 font-semibold text-foreground">#{i + 1}</span>
                   {s.symbol}
                 </span>
-                <span className="shrink-0">
+                <span className="min-w-0 max-w-full wrap-anywhere">
                   <Trans id="wrapped.tradesSentence">
                     {s.trades} trades ·{" "}
-                    <span className={cn("font-semibold", pnlColor(s.pnl))}>{money(s.pnl)}</span>
+                    <ResponsiveValue
+                      className={cn(
+                        "inline-grid w-auto max-w-full align-bottom font-semibold",
+                        pnlColor(s.pnl),
+                      )}
+                      value={money(s.pnl)}
+                      compactValue={moneyCompact(s.pnl)}
+                    >
+                      {money(s.pnl)}
+                    </ResponsiveValue>
                   </Trans>
                 </span>
               </p>
@@ -403,12 +442,14 @@ export function YearWrappedView({
             <StatCell
               label={localize({ id: "reports.expectancy", message: "Expectancy" })}
               value={money(wrapped.expectancy)}
+              compactValue={moneyCompact(wrapped.expectancy)}
               hint={localize({ id: "accounts.perTrade", message: "per trade" })}
               tone={wrapped.expectancy >= 0 ? "pos" : "neg"}
             />
             <StatCell
               label={localize({ id: "wrapped.feesPaid", message: "Fees paid" })}
               value={money(-wrapped.totalFees)}
+              compactValue={moneyCompact(-wrapped.totalFees)}
               tone="neg"
             />
           </div>

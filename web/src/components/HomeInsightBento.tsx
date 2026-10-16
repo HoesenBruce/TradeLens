@@ -1,3 +1,4 @@
+import { ResponsiveValue } from "./ResponsiveValue";
 import { MetricHelp } from "./MetricHelp";
 import { useLingui } from "@lingui/react";
 import type { ReactNode } from "react";
@@ -57,36 +58,42 @@ function Title({
 function WinLossHint({ hint }: { hint: string }) {
   const m = /^(\d+)W\s*\/\s*(\d+)L$/.exec(hint.trim());
   if (!m) {
-    return <span className="text-[17px] text-muted-foreground">{hint}</span>;
+    return (
+      <span className="max-w-full wrap-anywhere text-[17px] text-muted-foreground">{hint}</span>
+    );
   }
   return (
     <WinLossRecord
       wins={Number(m[1])}
       losses={Number(m[2])}
       separator=" / "
-      className="text-[17px]"
+      className="max-w-full wrap-anywhere text-[17px]"
     />
   );
 }
 
 function HeroValue({ row, center = false }: { row: InsightRow; center?: boolean }) {
   return (
-    <div className={cn(center && "text-center")}>
+    <div className={cn("w-full min-w-0", center && "text-center")}>
       <div
         className={cn(
-          "flex flex-wrap items-baseline gap-x-2.5 gap-y-1",
+          "flex w-full min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-1",
           center && "justify-center",
         )}
       >
         <p
           className={cn(
-            "text-[43px] font-semibold leading-none tracking-[-0.04em] tabular-nums",
+            "min-w-0 max-w-full flex-[1_1_140px] wrap-anywhere text-[43px] font-semibold leading-none tracking-[-0.04em] tabular-nums",
             toneClass(row.tone),
             row.tone === "pos" && "drop-shadow-[0_0_32px_var(--profit)]",
             row.tone === "neg" && "drop-shadow-[0_0_32px_var(--loss)]",
           )}
         >
-          {row.value}
+          {row.compactValue != null ? (
+            <ResponsiveValue value={row.value} compactValue={row.compactValue} />
+          ) : (
+            row.value
+          )}
         </p>
         {row.hint ? <WinLossHint hint={row.hint} /> : null}
       </div>
@@ -101,13 +108,21 @@ function StatTile({ row, className }: { row: InsightRow; className?: string }) {
       <div className="flex min-h-0 flex-1 flex-col items-center justify-center text-center">
         <p
           className={cn(
-            "text-[38px] font-semibold leading-none tracking-[-0.03em] tabular-nums",
+            "w-full min-w-0 max-w-full wrap-anywhere text-[38px] font-semibold leading-none tracking-[-0.03em] tabular-nums",
             toneClass(row.tone),
           )}
         >
-          {row.value}
+          {row.compactValue != null ? (
+            <ResponsiveValue value={row.value} compactValue={row.compactValue} />
+          ) : (
+            row.value
+          )}
         </p>
-        {row.hint ? <p className="mt-1.5 text-[10px] text-muted-foreground">{row.hint}</p> : null}
+        {row.hint ? (
+          <p className="mt-1.5 max-w-full wrap-anywhere text-[10px] text-muted-foreground">
+            {row.hint}
+          </p>
+        ) : null}
       </div>
     </BentoCell>
   );
@@ -122,12 +137,13 @@ export function HomeInsightBento({
 }: HomeInsightBentoProps) {
   "use no memo";
   useLingui();
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
+  const { fmtMoney, fmtSignedMoney, fmtSignedMoneyCompact } = useMoneyFormatters();
   const locale = intlLocale();
   const insights = computeHomeInsights(trades);
   const panels = buildInsightPanels(summary, insights, currency, locale, maxDrawdown, {
     money: (v) => fmtMoney(v * fxRate, currency, locale),
     signed: (v) => fmtSignedMoney(v * fxRate, currency, locale),
+    signedCompact: (v) => fmtSignedMoneyCompact(v * fxRate, currency, locale),
     pct: (r) => fmtPct(r, locale),
     duration: (secs) => (secs == null ? "—" : fmtDuration(Math.round(secs))),
   });
@@ -141,7 +157,10 @@ export function HomeInsightBento({
   const [winHold, lossHold, topSymbol] = time.cells;
 
   return (
-    <div className="grid auto-rows-[minmax(125px,auto)] grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-12 lg:auto-rows-[minmax(140px,1fr)]">
+    <div
+      data-testid="home-insights"
+      className="grid auto-rows-[minmax(125px,auto)] grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-12 lg:auto-rows-[minmax(140px,1fr)]"
+    >
       {/* Feature cell — expectancy + edge metrics */}
       <BentoCell className="col-span-2 justify-between sm:col-span-4 lg:col-span-4 lg:row-span-2">
         <div>
@@ -149,13 +168,13 @@ export function HomeInsightBento({
           <Title tone="muted" className="mt-3">
             {quality.hero.label}
           </Title>
-          <div className="mt-3 flex justify-center">
+          <div className="mt-3 flex min-w-0 justify-center">
             <HeroValue row={quality.hero} center />
           </div>
         </div>
         <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4">
           {[bestTrade, worstTrade, maxDd, profitFactor].map((row) => (
-            <div key={row.label}>
+            <div key={row.label} className="min-w-0">
               <Title tone="muted">
                 {row.label}
                 {row === maxDd ? (
@@ -166,11 +185,15 @@ export function HomeInsightBento({
               </Title>
               <p
                 className={cn(
-                  "mt-1 text-[17px] font-semibold tabular-nums tracking-[-0.02em]",
+                  "mt-1 min-w-0 max-w-full wrap-anywhere text-[17px] font-semibold tabular-nums tracking-[-0.02em]",
                   toneClass(row.tone),
                 )}
               >
-                {row.value}
+                {row.compactValue != null ? (
+                  <ResponsiveValue value={row.value} compactValue={row.compactValue} />
+                ) : (
+                  row.value
+                )}
               </p>
               {row.hint ? (
                 <p className="mt-0.5 text-[10px] text-muted-foreground">{row.hint}</p>

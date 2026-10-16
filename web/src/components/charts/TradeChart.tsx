@@ -368,14 +368,19 @@ export function TradeChart({
           <span className={sectionLabelClass}>{tr({ id: "market.chart", message: "Chart" })}</span>
         )}
         <div
-          className={cn("flex items-center gap-1.5", hideHeaderLabel && "w-full justify-between")}
+          className={cn(
+            "flex min-w-0 max-w-full flex-wrap items-center gap-1.5",
+            hideHeaderLabel && "w-full justify-between",
+          )}
         >
           {showInterval && (
-            <SegmentedControl
-              value={interval}
-              onChange={(v) => onIntervalChange?.(v as BarInterval)}
-              options={BAR_INTERVALS}
-            />
+            <div className="min-w-0 max-w-full overflow-x-auto">
+              <SegmentedControl
+                value={interval}
+                onChange={(v) => onIntervalChange?.(v as BarInterval)}
+                options={BAR_INTERVALS}
+              />
+            </div>
           )}
           {onToggleReplay && (
             <Button

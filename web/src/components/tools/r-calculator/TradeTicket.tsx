@@ -20,7 +20,7 @@ export function TradeTicket({
 }) {
   return (
     <Card title={heroLabel}>
-      <p className="m-0 text-[32px] font-semibold leading-none tracking-tight tabular-nums text-foreground">
+      <p className="m-0 min-w-0 max-w-full wrap-anywhere text-[32px] font-semibold leading-none tracking-tight tabular-nums text-foreground">
         {heroValue}
         {heroUnit ? (
           <span className="ml-1.5 text-base font-medium text-muted-foreground">{heroUnit}</span>
@@ -28,11 +28,14 @@ export function TradeTicket({
       </p>
       <dl className="mt-5 grid gap-2.5">
         {rows.map((row) => (
-          <div key={row.label} className="flex items-baseline justify-between gap-3">
+          <div
+            key={row.label}
+            className="flex min-w-0 flex-wrap items-baseline justify-between gap-3"
+          >
             <dt className="text-[13px] text-muted-foreground">{row.label}</dt>
             <dd
               className={cn(
-                "m-0 text-[13px] font-medium tabular-nums",
+                "m-0 min-w-0 max-w-full wrap-anywhere text-[13px] font-medium tabular-nums",
                 row.tone === "profit" && "text-profit",
                 row.tone === "loss" && "text-destructive",
                 !row.tone && "text-foreground",

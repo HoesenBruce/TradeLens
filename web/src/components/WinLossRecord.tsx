@@ -18,7 +18,12 @@ export function WinLossRecord({
   }
 
   return (
-    <span className={cn("tabular-nums", className)}>
+    <span
+      className={cn(
+        "inline-flex min-w-0 max-w-full flex-wrap gap-x-1 wrap-anywhere tabular-nums",
+        className,
+      )}
+    >
       {wins > 0 && <span className="text-profit">{wins}W</span>}
       {wins > 0 && losses > 0 && <span className="text-muted-foreground">{separator}</span>}
       {losses > 0 && <span className="text-destructive">{losses}L</span>}

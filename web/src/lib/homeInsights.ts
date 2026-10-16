@@ -171,6 +171,7 @@ export function computeHomeInsights(trades: Trade[]): HomeInsights {
 }
 
 export interface InsightRow {
+  compactValue?: string;
   label: string;
   value: string;
   tone?: "pos" | "neg" | "muted";
@@ -192,6 +193,7 @@ export function buildInsightPanels(
   formatters: {
     money: (v: number) => string;
     signed: (v: number) => string;
+    signedCompact?: (v: number) => string;
     pct: (r: number) => string;
     duration: (secs: number | null) => string;
   },
@@ -207,6 +209,7 @@ export function buildInsightPanels(
       hero: {
         label: tr({ id: "accounts.expectancy", message: "Expectancy" }),
         value: signed(summary.expectancy),
+        compactValue: formatters.signedCompact?.(summary.expectancy),
         tone: summary.expectancy >= 0 ? "pos" : "neg",
         hint: tr({ id: "accounts.perTrade", message: "per trade" }),
       },
@@ -214,16 +217,26 @@ export function buildInsightPanels(
         {
           label: tr({ id: "accounts.bestTrade", message: "Best trade" }),
           value: summary.largest_win > 0 ? signed(summary.largest_win) : "—",
+          compactValue:
+            summary.largest_win > 0 ? formatters.signedCompact?.(summary.largest_win) : undefined,
           tone: "pos",
         },
         {
           label: tr({ id: "accounts.worstTrade", message: "Worst trade" }),
           value: summary.largest_loss > 0 ? signed(-summary.largest_loss) : "—",
+          compactValue:
+            summary.largest_loss > 0
+              ? formatters.signedCompact?.(-summary.largest_loss)
+              : undefined,
           tone: "neg",
         },
         {
           label: tr({ id: "accounts.maxDrawdown", message: "Max drawdown" }),
           value: maxDrawdown != null && maxDrawdown > 0 ? signed(-maxDrawdown) : "—",
+          compactValue:
+            maxDrawdown != null && maxDrawdown > 0
+              ? formatters.signedCompact?.(-maxDrawdown)
+              : undefined,
           tone: "neg",
           hint: tr({ id: "accounts.pullback", message: "pullback" }),
         },
@@ -253,12 +266,18 @@ export function buildInsightPanels(
         {
           label: tr({ id: "accounts.bestDay", message: "Best day" }),
           value: insights.bestDay ? signed(insights.bestDay.pnl) : "—",
+          compactValue: insights.bestDay
+            ? formatters.signedCompact?.(insights.bestDay.pnl)
+            : undefined,
           tone: insights.bestDay && insights.bestDay.pnl > 0 ? "pos" : undefined,
           hint: insights.bestDay?.date,
         },
         {
           label: tr({ id: "accounts.worstDay", message: "Worst day" }),
           value: insights.worstDay ? signed(insights.worstDay.pnl) : "—",
+          compactValue: insights.worstDay
+            ? formatters.signedCompact?.(insights.worstDay.pnl)
+            : undefined,
           tone: insights.worstDay && insights.worstDay.pnl < 0 ? "neg" : undefined,
           hint: insights.worstDay?.date,
         },

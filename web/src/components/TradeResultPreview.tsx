@@ -1,4 +1,4 @@
-import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
+import { Money } from "@/components/ResponsiveValue";
 import { useLingui } from "@lingui/react";
 import { t as tr } from "@lingui/core/macro";
 import type { ReactNode } from "react";
@@ -38,7 +38,7 @@ function BentoCell({
       <p className="m-0 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
         {label}
       </p>
-      <div className="text-[15px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-foreground">
+      <div className="min-w-0 max-w-full wrap-anywhere text-[15px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-foreground">
         {children}
       </div>
     </section>
@@ -54,12 +54,12 @@ export function TradeResultPreview({
   actual = false,
   className,
 }: TradeResultPreviewProps) {
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   useLingui();
   const hasEntry = preview.avgEntry != null;
   if (!hasEntry && preview.net == null) return null;
 
-  const money = (v: number | null) => (v == null ? "—" : fmtMoney(v, currency, locale));
+  const money = (v: number | null) =>
+    v == null ? "—" : <Money value={v} currency={currency} locale={locale} />;
 
   return (
     // Container-driven: this sits inside a symbol card *and* at drawer level, so
@@ -76,7 +76,8 @@ export function TradeResultPreview({
         </p>
         {initialRisk != null && initialRisk > 0 ? (
           <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
-            {tr({ id: "trades.risk", message: "Risk" })} {fmtMoney(initialRisk, currency, locale)}
+            {tr({ id: "trades.risk", message: "Risk" })}{" "}
+            <Money value={initialRisk} currency={currency} locale={locale} />
           </p>
         ) : null}
       </div>
@@ -113,7 +114,7 @@ export function TradeResultPreview({
                 preview.net < 0 && "drop-shadow-[0_0_18px_var(--loss)]",
               )}
             >
-              {fmtSignedMoney(preview.net, currency, locale)}
+              <Money value={preview.net} currency={currency} locale={locale} signed />
               {preview.rMultiple != null ? (
                 <span className="ml-1.5 align-baseline text-[11px] font-medium text-muted-foreground">
                   {preview.rMultiple.toFixed(2)}R
@@ -175,7 +176,6 @@ export function AfterSaveResultPreview({
   initialRisk,
   className,
 }: AfterSaveResultPreviewProps) {
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   useLingui();
   if (preview.avgEntry == null && preview.net == null) return null;
 
@@ -200,7 +200,8 @@ export function AfterSaveResultPreview({
         </p>
         {initialRisk != null && initialRisk > 0 ? (
           <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
-            {tr({ id: "trades.risk", message: "Risk" })} {fmtMoney(initialRisk, currency, locale)}
+            {tr({ id: "trades.risk", message: "Risk" })}{" "}
+            <Money value={initialRisk} currency={currency} locale={locale} />
           </p>
         ) : null}
       </div>
@@ -217,7 +218,7 @@ export function AfterSaveResultPreview({
                 preview.net < 0 && "drop-shadow-[0_0_18px_var(--loss)]",
               )}
             >
-              {fmtSignedMoney(preview.net, currency, locale)}
+              <Money value={preview.net} currency={currency} locale={locale} signed />
               {returnPct != null ? (
                 <span className="ml-1.5 align-baseline text-[11px] font-medium text-muted-foreground">
                   {fmtSignedPct(returnPct, locale)}
@@ -235,7 +236,9 @@ export function AfterSaveResultPreview({
           {balanceAfter == null ? (
             <span className="text-muted-foreground">—</span>
           ) : (
-            <span>{fmtMoney(balanceAfter, currency, locale)}</span>
+            <span>
+              <Money value={balanceAfter} currency={currency} locale={locale} />
+            </span>
           )}
         </BentoCell>
         <BentoCell label={tr({ id: "trades.accountPnl", message: "Account P&L" })}>
@@ -243,7 +246,7 @@ export function AfterSaveResultPreview({
             <span className="text-muted-foreground">—</span>
           ) : (
             <span className={cn(pnlColor(pnlAfter))}>
-              {fmtSignedMoney(pnlAfter, currency, locale)}
+              <Money value={pnlAfter} currency={currency} locale={locale} signed />
               {pnlPctAfter != null ? (
                 <span className="ml-1.5 align-baseline text-[11px] font-medium text-muted-foreground">
                   {fmtSignedPct(pnlPctAfter, locale)}
@@ -276,7 +279,7 @@ function BatchMeta({ label, children }: { label: string; children: ReactNode }) 
       <p className="m-0 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
         {label}
       </p>
-      <div className="mt-1 text-[13px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-foreground">
+      <div className="mt-1 min-w-0 max-w-full wrap-anywhere text-[13px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-foreground">
         {children}
       </div>
     </div>
@@ -293,7 +296,6 @@ export function BatchTradeResultPreview({
   depositedCapital,
   className,
 }: BatchTradeResultPreviewProps) {
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   useLingui();
   if (batch.withFills === 0 && batch.net == null) return null;
 
@@ -319,7 +321,7 @@ export function BatchTradeResultPreview({
         {batch.riskTotal != null && batch.riskTotal > 0 ? (
           <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
             {tr({ id: "trades.risk", message: "Risk" })}{" "}
-            {fmtMoney(batch.riskTotal, currency, locale)}
+            <Money value={batch.riskTotal} currency={currency} locale={locale} />
           </p>
         ) : null}
       </div>
@@ -330,19 +332,19 @@ export function BatchTradeResultPreview({
             {tr({ id: "trades.estimatedPnl", message: "Est. P&L" })}
           </p>
           {batch.net == null ? (
-            <p className="mt-1.5 m-0 text-[26px] font-semibold leading-none tracking-[-0.04em] text-muted-foreground">
+            <p className="mt-1.5 m-0 w-full min-w-0 max-w-full text-[26px] font-semibold leading-none tracking-[-0.04em] text-muted-foreground">
               —
             </p>
           ) : (
             <p
               className={cn(
-                "mt-1.5 m-0 text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums",
+                "mt-1.5 m-0 w-full min-w-0 max-w-full text-[26px] font-semibold leading-none tracking-[-0.04em] tabular-nums",
                 pnlColor(batch.net),
                 batch.net > 0 && "drop-shadow-[0_0_28px_var(--profit)]",
                 batch.net < 0 && "drop-shadow-[0_0_28px_var(--loss)]",
               )}
             >
-              {fmtSignedMoney(batch.net, currency, locale)}
+              <Money value={batch.net} currency={currency} locale={locale} signed />
               {batch.rMultiple != null ? (
                 <span className="ml-2 align-baseline text-[12px] font-medium tracking-normal text-muted-foreground">
                   {batch.rMultiple.toFixed(2)}R
@@ -364,7 +366,7 @@ export function BatchTradeResultPreview({
             </span>
           </BatchMeta>
           <BatchMeta label={tr({ id: "trades.fees", message: "Fees" })}>
-            {fmtMoney(batch.feesTotal, currency, locale)}
+            <Money value={batch.feesTotal} currency={currency} locale={locale} />
           </BatchMeta>
           <BatchMeta label={tr({ id: "trades.closed", message: "Closed" })}>
             {allClosed ? (
@@ -407,17 +409,19 @@ export function BatchTradeResultPreview({
                 {tr({ id: "trades.accountPnl", message: "Account P&L" })}
               </span>
               {extTotal == null ? (
-                <span className="text-[15px] font-semibold text-muted-foreground">—</span>
+                <span className="min-w-0 max-w-full wrap-anywhere text-[15px] font-semibold text-muted-foreground">
+                  —
+                </span>
               ) : (
                 <span
                   className={cn(
-                    "text-[15px] font-semibold leading-none tracking-[-0.03em] tabular-nums",
+                    "min-w-0 max-w-full wrap-anywhere text-[15px] font-semibold leading-none tracking-[-0.03em] tabular-nums",
                     pnlColor(extTotal),
                     extTotal > 0 && "drop-shadow-[0_0_16px_var(--profit)]",
                     extTotal < 0 && "drop-shadow-[0_0_16px_var(--loss)]",
                   )}
                 >
-                  {fmtSignedMoney(extTotal, currency, locale)}
+                  <Money value={extTotal} currency={currency} locale={locale} signed />
                 </span>
               )}
               {extPct != null ? (
@@ -432,7 +436,11 @@ export function BatchTradeResultPreview({
               {tr({ id: "trades.balance", message: "Balance" })}
             </span>
             <span className="text-[13px] font-semibold tabular-nums tracking-tight text-foreground">
-              {cashAfter == null ? "—" : fmtMoney(cashAfter, currency, locale)}
+              {cashAfter == null ? (
+                "—"
+              ) : (
+                <Money value={cashAfter} currency={currency} locale={locale} />
+              )}
             </span>
           </div>
         </div>
