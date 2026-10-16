@@ -55,7 +55,7 @@ jobs:
         run: python3 scripts/demo-deploy.py
       - name: Preserve sanitized deployment evidence
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: render-demo-${{ github.run_id }}-${{ github.run_attempt }}
           path: demo-deploy-record.json
