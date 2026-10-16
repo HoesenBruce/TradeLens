@@ -13000,23 +13000,23 @@ msgstr "切換範圍後，峰值從首個可見點重新計算。現金流影響
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.title"
-msgstr "賬戶績效／收益比例"
+msgstr "回報比例"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.definition"
-msgstr "記錄的交易盈虧相對所選賬戶帶符號現金賬本總額的比例。"
+msgstr "頂部已實現交易淨損益相對所選帳戶帶正負號現金帳本總額的比例。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.formula"
-msgstr "頂部：篩選後的已平倉淨盈虧 ÷ 所選賬本總額 × 100。賬戶詳情：可用交易淨盈虧之和 ÷ 該賬戶賬本總額 × 100。初始餘額已作為入金。"
+msgstr "篩選後的已平倉淨損益 ÷ 所選帳戶帶正負號現金帳本總額 × 100。初始結餘已作為入金，不重複加入。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.unit"
-msgstr "賬戶／歸一化顯示幣種；%。"
+msgstr "%。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.caveat"
-msgstr "不是時間加權或資金加權收益，不按現金流日期加權。頂部在資金≤0或無法歸一化時隱藏百分比；賬戶詳情只在分母為零時隱藏，可能含可用的部分平倉盈虧。當前匯率歸一化不是歷史匯率歸因。賬戶詳情中缺失盈虧按0累加。"
+msgstr "資金≤0或所需資料／幣種標準化無法使用時隱藏。並非時間加權或資金加權回報，不按現金流日期加權。不含未平倉交易及未實現損益。目前匯率標準化並非歷史匯率歸因。"
 
 #. js-lingui-explicit-id
 msgid "metric.reportPnl.title"
@@ -13117,3 +13117,63 @@ msgstr "顯示幣種；百分比模式將金額除以報表資金分母。"
 #. js-lingui-explicit-id
 msgid "metric.simulationDrawdown.caveat"
 msgstr "這是模擬累計盈虧，不是賬戶權益；不含現金流和未實現價值。即使毛顯示模式也使用淨結果。模擬設定和樣本量影響結果；歷史不足時不顯示模擬。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.title"
+msgstr "帳戶績效"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.definition"
+msgstr "目前頂部篩選範圍內的已實現交易淨損益。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.formula"
+msgstr "彙總統計中符合條件的已平倉交易淨損益之和，已扣除費用；套用目前帳戶及交易篩選。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.unit"
+msgstr "帳戶／標準化顯示幣種。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.caveat"
+msgstr "不含未平倉交易（包括其部分平倉損益）及未實現市值。現金帳本流水並非交易損益。目前匯率標準化並非歷史匯率歸因。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.title"
+msgstr "帳戶已實現損益"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.definition"
+msgstr "此帳戶已載入交易歷史中可用淨損益的總和。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.formula"
+msgstr "累加每筆已載入交易扣費後的淨損益，缺失損益按0累加。使用此帳戶歷史，不受頂部交易篩選影響。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.unit"
+msgstr "帳戶基礎幣種。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.caveat"
+msgstr "可能包含未平倉交易中可用的部分平倉已實現損益。缺失損益並非估算值。不含未實現市值及現金帳本流水。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.title"
+msgstr "帳戶回報比例"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.definition"
+msgstr "帳戶詳情中的已實現損益相對此帳戶帶正負號現金帳本總額的比例。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.formula"
+msgstr "可用交易淨損益之和 ÷ 此帳戶帶正負號現金帳本總額 × 100。初始結餘已作為入金，不重複加入。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.unit"
+msgstr "%。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.caveat"
+msgstr "僅在分母為零時隱藏；帳本總額為負可能令百分比正負號反轉。可能包含可用的部分平倉損益，缺失損益按0累加。並非時間加權或資金加權回報，不含未實現損益。"

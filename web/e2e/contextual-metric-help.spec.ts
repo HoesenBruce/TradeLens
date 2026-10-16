@@ -192,10 +192,12 @@ test("definitions match real API trade states, lists, detail, reports and all fi
   await explain(page, "evolution", "Buckets use UTC dates");
   await page.getByRole("tab", { name: "Risk", exact: true }).click();
   await explain(page, "drawdownPct", "running visible peak");
-  // Account return uses funded capital once; account details and the header share its explanation.
+  // Amount and percentage have independent explanations for each surface.
+  await explain(page, "accountPerformance", "eligible closed-trade net P&L");
   await explain(page, "accountReturn", "Opening balance is already a deposit");
   await page.goto(`/accounts/${accountId}`);
-  await explain(page, "accountReturn", "account detail hides it only at zero", 1);
+  await explain(page, "accountRealizedPnl", "missing P&L adds zero");
+  await explain(page, "accountDetailReturn", "Hidden only when the denominator is zero");
   await expect(page.getByRole("main").getByText(/11\.48%/)).toBeVisible();
   for (const [locale, close] of [
     ["en", "Close explanation"],

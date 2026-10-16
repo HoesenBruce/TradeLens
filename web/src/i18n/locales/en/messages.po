@@ -13003,23 +13003,23 @@ msgstr "The peak resets to the first visible point when the range changes. Cash 
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.title"
-msgstr "Account performance / return"
+msgstr "Return percentage"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.definition"
-msgstr "Recorded trading P&L relative to the selected accounts’ signed cash-ledger total."
+msgstr "Header net realized trading P&L relative to the selected accounts’ signed cash-ledger total."
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.formula"
-msgstr "Header: filtered closed-trade net P&L ÷ scoped ledger total × 100. Account detail: sum of available trade net P&L ÷ that account’s ledger total × 100. Opening balance is already a deposit."
+msgstr "Filtered closed-trade net P&L ÷ selected accounts’ signed cash-ledger total × 100. Opening balance is already a deposit and is not added twice."
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.unit"
-msgstr "Account/normalized display currency; %."
+msgstr "%."
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.caveat"
-msgstr "Not time-weighted or money-weighted return: cash-flow dates are not weighted. Header hides % when funding ≤ 0 or normalization is unavailable; account detail hides it only at zero and can include available partial-close P&L. Current FX/display normalization is not historical FX attribution. Missing trade P&L adds zero in account detail."
+msgstr "Hidden when funding ≤ 0 or required data/currency normalization is unavailable. Not time-weighted or money-weighted return: cash-flow dates are not weighted. Excludes open-trade and unrealized P&L. Current FX normalization is not historical FX attribution."
 
 #. js-lingui-explicit-id
 msgid "metric.reportPnl.title"
@@ -13120,3 +13120,63 @@ msgstr "Display currency, or amount divided by the report funding denominator in
 #. js-lingui-explicit-id
 msgid "metric.simulationDrawdown.caveat"
 msgstr "This is simulated cumulative P&L, not account equity: cash flows and unrealized values are excluded. It always uses net outcomes, even in gross display mode. Simulation settings and sample size affect results; insufficient history shows no simulation."
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.title"
+msgstr "Account performance"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.definition"
+msgstr "Net realized trading P&L for the current header filter scope."
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.formula"
+msgstr "Sum of eligible closed-trade net P&L from the analytics summary, after fees. The active account and trade filters apply."
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.unit"
+msgstr "Account/normalized display currency."
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.caveat"
+msgstr "Excludes open trades, including their partial-close P&L, and unrealized market value. Cash-ledger flows are not trading P&L. Current FX/display normalization is not historical FX attribution."
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.title"
+msgstr "Account realized P&L"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.definition"
+msgstr "Sum of available trade net P&L in this account’s loaded trade history."
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.formula"
+msgstr "Add each loaded trade’s net P&L after fees; missing P&L adds zero. This account’s history is used, independently of the header’s trade filters."
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.unit"
+msgstr "Account base currency."
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.caveat"
+msgstr "Can include available partial-close realized P&L from open trades. Missing P&L is not an estimate. Excludes unrealized market value and cash-ledger flows."
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.title"
+msgstr "Account return percentage"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.definition"
+msgstr "Account-detail realized P&L relative to this account’s signed cash-ledger total."
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.formula"
+msgstr "Sum of available trade net P&L ÷ this account’s signed cash-ledger total × 100. Opening balance is already a deposit and is not added twice."
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.unit"
+msgstr "%."
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.caveat"
+msgstr "Hidden only when the denominator is zero; a negative ledger total can reverse the percentage’s sign. Can include available partial-close P&L; missing P&L adds zero. Not time-weighted or money-weighted return, and excludes unrealized P&L."
