@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react/macro";
 import { CircleHelp } from "lucide-react";
-import type { ReactNode } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
 import { metricDefinitions, type MetricDefinition, type MetricId } from "@/lib/metrics/definitions";
 import {
   Popover,
@@ -10,6 +10,10 @@ import {
   PopoverDescription,
   PopoverClose,
 } from "@/components/ui/popover";
+
+function stopRowActivation(event: KeyboardEvent) {
+  if (event.key === "Enter" || event.key === " ") event.stopPropagation();
+}
 
 export function MetricHelp({ metric, breakdown }: { metric: MetricId; breakdown?: ReactNode }) {
   const { i18n, t } = useLingui();
@@ -22,12 +26,13 @@ export function MetricHelp({ metric, breakdown }: { metric: MetricId; breakdown?
         data-metric-help={metric}
         className="inline-flex size-7 shrink-0 touch-manipulation items-center justify-center rounded-md align-middle text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         onClick={(event) => event.stopPropagation()}
-        onKeyDown={(event) => event.stopPropagation()}
+        onKeyDown={stopRowActivation}
       >
         <CircleHelp className="size-3.5" aria-hidden="true" />
       </PopoverTrigger>
       <PopoverPopup
-        className="w-88 max-w-[calc(100vw-2rem)] text-sm normal-case tracking-normal"
+        className="w-88 max-w-[calc(100vw-2rem)] text-left text-sm font-normal normal-case tracking-normal"
+        onKeyDown={stopRowActivation}
         onClick={(event) => event.stopPropagation()}
       >
         <PopoverTitle className="pr-6 text-base">{title}</PopoverTitle>
