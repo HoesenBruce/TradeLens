@@ -802,7 +802,7 @@ function Step2Map({
               {tr({
                 id: "imports.sbiEnrichmentHint",
                 message:
-                  "SBI margin realized P&L updates matching closing executions only. Review each row before confirming; no new fills are created.",
+                  "SBI cash and margin pretax realized P&L updates matching closing executions only. Review each row before confirming; resolve conflicts and ambiguity first. No new fills are created.",
               })}
             </p>
           ) : isCash ? (

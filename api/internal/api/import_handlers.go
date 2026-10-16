@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/csv"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"maps"
@@ -193,7 +194,7 @@ func (s *Server) handleImportPreview(c *echo.Context) error {
 	switch {
 	case loaded.Format == "sbi_margin_pnl":
 		suggested = map[string]string{}
-		detectedBroker = "SBI Securities (Margin Realized P&L)"
+		detectedBroker = "SBI Securities (Realized P&L)"
 	case loaded.Format == "cash_transactions":
 		suggested = map[string]string{}
 		detectedBroker = "SBI Securities (Cash Transactions)"
@@ -546,6 +547,9 @@ func (s *Server) finishImportCommit(c *echo.Context, uid string, batch store.Imp
 	if err != nil {
 		// The transaction rolled back; leave a marker so the batch is not retried as pending.
 		_ = s.deps.Store.SetImportBatchStatus(ctx, store.SetImportBatchStatusParams{Status: "failed", ID: batch.ID, UserID: uid})
+		if errors.Is(err, importer.ErrSBIEnrichmentUnresolved) {
+			return Fail(http.StatusConflict, "conflict", err.Error(), nil)
+		}
 		return Fail(http.StatusInternalServerError, "internal", "could not import", err.Error())
 	}
 	return c.JSON(http.StatusOK, importResult{

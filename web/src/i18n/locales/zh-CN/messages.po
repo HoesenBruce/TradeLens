@@ -6813,7 +6813,7 @@ msgstr "收益 / 亏损"
 #. js-lingui-explicit-id
 #: src/app/screens/ImportView.tsx:746
 msgid "imports.sbiEnrichmentHint"
-msgstr "SBI 信用实现损益仅补充匹配到的平仓成交。确认前请核对每一行；不会新增成交。"
+msgstr "SBI 现货及信用税前已实现损益仅补充匹配的平仓成交。确认前请逐行检查并解决冲突及歧义；不会新增成交。"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ImportView.tsx:890
@@ -6868,7 +6868,7 @@ msgstr "此补充批次无法单独回滚"
 #. js-lingui-explicit-id
 #: src/app/screens/settings/import-history.tsx:159
 msgid "accounts.sbiMarginPnLSource"
-msgstr "SBI 信用实现损益"
+msgstr "SBI 已实现损益（税前）"
 
 #. js-lingui-explicit-id
 #: src/components/charts/TradeChart.tsx:305
