@@ -129,3 +129,19 @@ it("combines normalized mixed cash, P&L and open samples only in the declared cu
     expect(netDeposits({ ...opts, currency: "EUR" })).toBe(0);
   }
 });
+
+it("uses SBI close-event money for amount and return while preserving the denominator", () => {
+  const s = computeHeaderStats({
+    accounts: [acct("a1", 9999)],
+    accountIds: "a1",
+    cashTx: [
+      { account_id: "a1", amount: 1000 },
+      { account_id: "a1", amount: -100 },
+    ] as never,
+    summary: { ...summary(0), realized_pnl: -200, realized_event_count: 1 },
+    trades: [openTrade(50, 100)],
+  });
+  expect(s.netPnl).toBe(-200);
+  expect(s.netPnlPct).toBeCloseTo(-200 / 900);
+  expect(s.cash).toBe(700);
+});

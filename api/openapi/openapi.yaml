@@ -1037,13 +1037,25 @@ paths:
             pattern: '^[A-Za-z]{3}$'
       responses:
         "200":
-          description: Recomputed summary in the actual output currency.
+          description: |
+            Review metrics retain their completed-group population. realized_pnl separately
+            reports trading money: explicit SBI close events (including partial closes)
+            plus existing non-SBI completed-group contributions, without double-counting.
+            SBI periods use close dates regardless of date_basis=open. Date-only SBI closes
+            use their Tokyo market date, compared with the requested calendar dates in tz.
+            The return denominator is unchanged; cash flows and unrealized value are separate.
           content:
             application/json:
               schema:
                 type: object
-                required: [currency, target_currency, fx_policy, fx_rates]
+                required: [currency, target_currency, fx_policy, fx_rates, realized_pnl, realized_event_count]
                 properties:
+                  realized_pnl:
+                    type: number
+                    description: Trading money in the normalized currency; review net_pnl is unchanged.
+                  realized_event_count:
+                    type: integer
+                    description: Money contributions, separate from total_trades. Conversion-zero events excluded.
                   currency:
                     type: string
                     description: Actual output currency; empty only for an empty account scope without a requested target.
@@ -1123,6 +1135,11 @@ paths:
     get:
       tags: [Analytics]
       summary: Equity curve
+      description: |
+        Trading money uses SBI individual close events and existing non-SBI completed
+        groups, with the same scope as summary.realized_pnl. Existing signed cash-ledger
+        contributions remain separate. Date-only SBI event points represent the market
+        date at the start of that calendar date in tz, never an inferred intraday time.
       operationId: analyticsEquityCurve
       parameters:
         - $ref: "#/components/parameters/AccountIdQuery"

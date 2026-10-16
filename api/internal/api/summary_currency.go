@@ -8,6 +8,7 @@ import (
 
 	"github.com/tradermemos/api/internal/analytics"
 	"github.com/tradermemos/api/internal/marketdata"
+	"github.com/tradermemos/api/internal/money"
 	"github.com/tradermemos/api/internal/store"
 )
 
@@ -19,6 +20,8 @@ type currencyMetadata struct {
 }
 
 type summaryResponse struct {
+	RealizedPnL        float64 `json:"realized_pnl"`
+	RealizedEventCount int     `json:"realized_event_count"`
 	analytics.Summary
 	currencyMetadata
 }
@@ -102,11 +105,19 @@ func (s *Server) normalizedTrades(ctx context.Context, uid string, f Filters, re
 }
 
 func (s *Server) summary(ctx context.Context, uid string, f Filters, requested string) (summaryResponse, error) {
-	meta, trades, err := s.normalizedTrades(ctx, uid, f, requested)
+	meta, rows, err := s.normalizedClosedRows(ctx, uid, f, requested)
 	if err != nil {
 		return summaryResponse{}, err
 	}
-	return summaryResponse{Summary: analytics.Summarize(trades), currencyMetadata: meta}, nil
+	events, err := s.realizedTrades(ctx, uid, f, &meta, rows)
+	if err != nil {
+		return summaryResponse{}, err
+	}
+	net := 0.0
+	for _, event := range events {
+		net += event.NetPnl
+	}
+	return summaryResponse{Summary: analytics.Summarize(toClosedTrades(rows)), currencyMetadata: meta, RealizedPnL: money.Round2(net), RealizedEventCount: len(events)}, nil
 }
 
 func (s *Server) analyticsRate(ctx context.Context, meta *currencyMetadata, rates map[string]float64, source string) (float64, error) {

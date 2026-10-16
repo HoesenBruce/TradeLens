@@ -69,8 +69,10 @@ These are two different datasets and must not be presented as synonyms.
 
 ### Realized equity curve
 
-`GET /api/v1/analytics/equity-curve` merges cash transactions and closed-trade
-net P&L in timestamp order. The curve begins at zero because an account's
+`GET /api/v1/analytics/equity-curve` merges cash transactions and trading realized
+P&L in time order. Explicit SBI activity uses individual close events, including
+partial closes in groups that remain open. Other brokers retain completed-group
+contributions. SBI completed-group amounts are replaced, never added again. The curve begins at zero because an account's
 starting balance is already represented by its opening-deposit cash transaction.
 
 `equity = cumulative cash flows + cumulative realized net P&L`
@@ -274,3 +276,39 @@ When adding or changing an analytics metric:
 2. Define the sample, formula, unit, sign, timezone, rounding, and empty behavior.
 3. Update this document and the OpenAPI schema when the API contract changes.
 4. Keep realized equity and mark-to-market account value explicitly separate.
+
+
+## SBI realized trading money (#340)
+
+`/analytics/summary` adds `realized_pnl` and `realized_event_count` for monetary
+consumers. Existing `net_pnl`, gross/fee fields, win rate, PF, expectancy, counts
+and other review metrics retain the completed-group population. `realized_pnl`
+combines explicit SBI individual close events with the existing non-SBI completed
+groups. Account broker names, cash/margin labels and capabilities do not opt in.
+
+SBI close-event dates determine monetary period inclusion, even when a caller
+asks for review `date_basis=open`. Date-only SBI closes use their Tokyo market
+date. Bounds are calendar dates in the requested `tz`; curve points represent
+that day at its start in `tz`, without an intraday chronology claim. Actual-time
+closes retain their timestamps. Review date semantics are unchanged.
+
+The header amount and return numerator, Home money hero, account details/cards,
+annual goal money and realized equity curve use this monetary population. Their
+existing funding denominators remain unchanged. Home gross/fees are explicitly
+labelled as completed-group figures. Reports, daily/monthly review calendars,
+Day Review, setup analysis, trade outcome ratios and review statistics retain
+completed groups. Individual trade P&L retains its existing lifecycle contract,
+including null P&L for ordinary partial-close open groups. Reconstructed
+mark-to-market account value remains a separate dataset.
+
+Dividends, tax cash records, deposits/withdrawals and unrealized value are not
+trading realized money. The curve retains its existing separate signed ledger
+flows. Conversion-zero events are excluded from money-event counts. Broker
+reported results are already net and pretax; no second fee/tax subtraction occurs.
+Missing evidence remains unavailable, and labelled supported fallback estimates
+use the same SBI strategy as regroup. Unverified split-boundary estimates are
+excluded; market checks retain their existing provider availability limitations.
+
+Existing raw history can change displayed monetary results after upgrade without
+rewriting executions or trade rows. No automatic historical repair is performed.
+Historical group corrections still use the #339 backup/preview/apply workflow.
