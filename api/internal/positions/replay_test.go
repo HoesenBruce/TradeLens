@@ -371,3 +371,24 @@ func TestReplayGenbikiBeforeSameDayCashSale(t *testing.T) {
 	require.Equal(t, 19500.0, snapshot.Accounts[0].RealizedPnL)
 	require.Equal(t, 500.0, snapshot.Accounts[0].Fees)
 }
+
+func TestConversionBasisUsesReportedSBIClosesOnly(t *testing.T) {
+	fills := []store.Execution{
+		execution("a", "a", "AAA", "sbi:margin-long", "buy", "2026-09-01T01:00:00Z", 100, 6000),
+		execution("b", "a", "AAA", "sbi:margin-long", "buy", "2026-09-02T01:00:00Z", 100, 5000),
+		execution("c", "a", "AAA", "sbi:margin-long", "sell", "2026-09-03T01:00:00Z", 100, 6200),
+		execution("d", "a", "AAA", "sbi:margin-long", "sell", "2026-09-04T01:00:00Z", 100, 5500),
+		execution("e", "a", "AAA", "sbi:cash", "buy", "2026-09-04T01:00:00Z", 100, 5500),
+	}
+	fills[2].Details.String = `{"lot":"sbi:margin-long","broker_reported_close_basis":6000,"broker_reported_realized_pnl":20000}`
+	fills[3].Details.String = `{"lot":"sbi:margin-long","conversion_type":"genbiki","conversion_id":"x"}`
+	fills[4].Details.String = `{"lot":"sbi:cash","conversion_type":"genbiki","conversion_id":"x"}`
+	original := append([]store.Execution(nil), fills...)
+	require.Equal(t, 500000.0, ConversionBasis(fills)["e"])
+	// Historical mark-to-market replay intentionally keeps its existing economic semantics.
+	snapshot := Replay(fills, []time.Time{day("2026-09-04")})[0]
+	require.Equal(t, 5500.0, snapshot.Accounts[0].Positions[0].AverageCost)
+	require.Equal(t, original, fills)
+	fills[2].Details.String = `{"lot":"sbi:margin-long"}`
+	require.Equal(t, 550000.0, ConversionBasis(fills)["e"])
+}

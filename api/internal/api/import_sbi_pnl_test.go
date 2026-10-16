@@ -49,7 +49,12 @@ func TestSBICashPnLPreviewCommitAndConflict(t *testing.T) {
 		require.Equal(t, b[i]["id"], a[i]["id"])
 		require.Equal(t, b[i]["price"], a[i]["price"])
 	}
-	require.Equal(t, tradesBefore, do(s, http.MethodGet, "/api/v1/trades?account_id="+acc, "", tok).Body.String())
+	var originalTrades, enrichedTrades []map[string]any
+	require.NoError(t, json.Unmarshal([]byte(tradesBefore), &originalTrades))
+	require.NoError(t, json.Unmarshal(do(s, http.MethodGet, "/api/v1/trades?account_id="+acc, "", tok).Body.Bytes(), &enrichedTrades))
+	require.Len(t, enrichedTrades, len(originalTrades))
+	require.Equal(t, originalTrades[0]["id"], enrichedTrades[0]["id"])
+	require.Equal(t, 29780.0, enrichedTrades[0]["net_pnl"])
 	repeat := upload("/api/v1/imports/commit", report)
 	require.Equal(t, 200, repeat.Code)
 	require.Contains(t, repeat.Body.String(), "already_enriched")
@@ -58,6 +63,21 @@ func TestSBICashPnLPreviewCommitAndConflict(t *testing.T) {
 	require.Contains(t, upload("/api/v1/imports", mixed).Body.String(), "conflict")
 	require.Equal(t, 409, upload("/api/v1/imports/commit", mixed).Code)
 	require.Equal(t, after, do(s, http.MethodGet, "/api/v1/executions?account_id="+acc, "", tok).Body.String())
+	require.Equal(t, http.StatusConflict, do(s, http.MethodPost, "/api/v1/trades/regroup", `{"account_id":"`+acc+`"}`, tok).Code)
+	reviewResponse := do(s, http.MethodPost, "/api/v1/trades/regroup", `{"account_id":"`+acc+`","preview":true}`, tok)
+	require.Equal(t, http.StatusOK, reviewResponse.Code, reviewResponse.Body.String())
+	var review struct {
+		Token   string   `json:"preview_token"`
+		Removed []string `json:"removed_trade_ids"`
+	}
+	require.NoError(t, json.Unmarshal(reviewResponse.Body.Bytes(), &review))
+	require.NotEmpty(t, review.Token)
+	require.Empty(t, review.Removed)
+	for range 2 {
+		apply := do(s, http.MethodPost, "/api/v1/trades/regroup", `{"account_id":"`+acc+`","preview_token":"`+review.Token+`"}`, tok)
+		require.Equal(t, http.StatusOK, apply.Code, apply.Body.String())
+		require.Contains(t, apply.Body.String(), `"applied":true`)
+	}
 	unmatched := strings.Replace(report, "1515", "1516", 1)
 	require.Contains(t, upload("/api/v1/imports", unmatched).Body.String(), "no_matching_execution")
 }

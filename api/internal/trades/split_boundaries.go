@@ -14,7 +14,7 @@ import (
 type BarsGetter func(context.Context, marketdata.Request) (marketdata.Response, error)
 
 // Open partial closes keep nil trade P&L and separate realized results.
-func reconcileReportedTrades(fills []Execution, result *AccountingResult) {
+func reconcileReportedTrades(fills []Execution, result *AccountingResult, allCloses bool) {
 	reported := map[string]bool{}
 	closes := map[string]RealizedClose{}
 	missing := map[string]bool{}
@@ -34,7 +34,7 @@ func reconcileReportedTrades(fills []Execution, result *AccountingResult) {
 		if tr.Status != "closed" {
 			continue
 		}
-		hasReported, unavailable := false, false
+		hasReported, unavailable := allCloses, false
 		net := 0.0
 		for _, id := range tr.ExecutionIDs {
 			hasReported = hasReported || reported[id]
@@ -156,7 +156,7 @@ func (s *Service) checkSplitBoundaries(ctx context.Context, fills []Execution, r
 	for i := range result.Trades {
 		tr := &result.Trades[i]
 		last := tr.OpenedAt
-		reliable := tr.Status == "closed" && strings.HasPrefix(fills[0].LotKey, "sbi:margin-")
+		reliable := tr.Status == "closed" && (fills[0].LotKey == "sbi:cash" || strings.HasPrefix(fills[0].LotKey, "sbi:margin-"))
 		closeCount := 0
 		for _, id := range tr.ExecutionIDs {
 			f := byID[id]
@@ -235,5 +235,9 @@ func adjustPriorFills(fills []Execution, day string, ratio float64, zone *time.L
 	for i := start; i < end; i++ {
 		fills[i].Quantity *= ratio
 		fills[i].Price /= ratio
+		if fills[i].BrokerReportedCloseBasis != nil {
+			basis := *fills[i].BrokerReportedCloseBasis / ratio
+			fills[i].BrokerReportedCloseBasis = &basis
+		}
 	}
 }

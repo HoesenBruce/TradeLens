@@ -112,11 +112,12 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 			ID: r.ID, Symbol: r.Symbol, InstrumentType: r.InstrumentType, Side: r.Side,
 			Quantity: r.Quantity, Price: r.Price, Fees: r.Fees, Commission: r.Commission,
 			ExecutedAt: r.ExecutedAt, Multiplier: r.Multiplier, LotKey: lot,
-			BrokerReportedPnl:   reportedPnlFromDetails(r.Details),
-			SettlementType:      settlementType,
-			SettlementResult:    settlementResult(settlements, r.ID),
-			ConversionType:      conversionTypeFromDetails(r.Details),
-			SourceTimePrecision: sourceTimePrecisionFromDetails(r.Details),
+			BrokerReportedPnl:        reportedPnlFromDetails(r.Details),
+			BrokerReportedCloseBasis: reportedBasisFromDetails(r.Details),
+			SettlementType:           settlementType,
+			SettlementResult:         settlementResult(settlements, r.ID),
+			ConversionType:           conversionTypeFromDetails(r.Details),
+			SourceTimePrecision:      sourceTimePrecisionFromDetails(r.Details),
 		})
 	}
 
@@ -390,4 +391,14 @@ func ni(p *int64) sql.NullInt64 {
 		return sql.NullInt64{}
 	}
 	return sql.NullInt64{Int64: *p, Valid: true}
+}
+
+func reportedBasisFromDetails(details sql.NullString) *float64 {
+	var d struct {
+		Basis *float64 `json:"broker_reported_close_basis"`
+	}
+	if !details.Valid || json.Unmarshal([]byte(details.String), &d) != nil {
+		return nil
+	}
+	return d.Basis
 }

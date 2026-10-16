@@ -282,6 +282,17 @@ func (s *state) apply(ex store.Execution) {
 	} else {
 		account.CashDelta += cashSettlement
 	}
+	if s.transferredBasis != nil && lot == "sbi:margin-long" && conversionType == "" && position.Quantity > ex.Quantity+epsilon {
+		if basis := reportedCloseBasisFromDetails(ex); basis != nil {
+			remainingCost := position.AverageCost*position.Quantity - *basis*ex.Quantity
+			if remainingCost < -epsilon {
+				s.warn(ex, "invalid_conversion_basis", "reported close basis exceeds supported margin acquisition cost")
+				delete(s.positions, key)
+				return
+			}
+			position.AverageCost = math.Max(0, remainingCost) / (position.Quantity - ex.Quantity)
+		}
+	}
 	position.Quantity -= ex.Quantity
 	if position.Quantity < epsilon {
 		delete(s.positions, key)
