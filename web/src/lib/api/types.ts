@@ -286,6 +286,9 @@ export interface TradeDetail extends Trade {
 
 // Summary matches analytics.Summary from api/internal/analytics/analytics.go
 export interface Summary {
+  /** Trading money: SBI close events (including partials) plus other closed groups. */
+  realized_pnl?: number;
+  realized_event_count?: number;
   /** Output currency from the aggregate API; absent on legacy/R responses. */
   currency?: string;
   target_currency?: string;

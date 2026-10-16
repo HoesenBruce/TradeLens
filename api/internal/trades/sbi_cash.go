@@ -61,16 +61,19 @@ func SBICashAccounting(fills []Execution) AccountingResult {
 		})
 	}
 	reconcileReportedTrades(fills, &result, true)
+	estimates := map[string]bool{}
+	for _, close := range result.RealizedCloses {
+		if close.Source == "calculated_average_cost" {
+			estimates[close.ExecutionID] = true
+		}
+	}
 	for i := range result.Trades {
 		tr := &result.Trades[i]
-		estimated := false
-		for _, close := range result.RealizedCloses {
-			if slices.Contains(tr.ExecutionIDs, close.ExecutionID) && close.Source == "calculated_average_cost" {
-				estimated = true
+		for _, id := range tr.ExecutionIDs {
+			if estimates[id] {
+				tr.AccountingWarning = strings.TrimSpace(tr.AccountingWarning + " SBI cash P&L uses an average-cost estimate where broker-reported pretax results are missing.")
+				break
 			}
-		}
-		if estimated {
-			tr.AccountingWarning = strings.TrimSpace(tr.AccountingWarning + " SBI cash P&L uses an average-cost estimate where broker-reported pretax results are missing.")
 		}
 	}
 	reconcileConversionTrades(fills, &result)

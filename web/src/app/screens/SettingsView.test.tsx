@@ -43,6 +43,12 @@ vi.mock("../../lib/api/analytics", () => ({
       (request: { account_id: string; target_currency: string }) => Promise<unknown>
     >(async (request) => ({
       currency: request.target_currency,
+      points: [
+        {
+          at: "2026-10-01T00:00:00Z",
+          equity: 10000 + (request.target_currency === "JPY" ? 200 : 20),
+        },
+      ],
       cash_transactions: [
         { account_id: request.account_id, amount: 10000, currency: request.target_currency },
       ],

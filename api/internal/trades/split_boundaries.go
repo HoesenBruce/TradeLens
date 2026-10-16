@@ -195,6 +195,12 @@ func (s *Service) checkSplitBoundaries(ctx context.Context, fills []Execution, r
 				tr.AccountingWarning += " Net P&L uses SBI settlement values."
 			} else {
 				tr.NetPnl, tr.GrossPnl = nil, nil
+				for _, id := range tr.ExecutionIDs {
+					f := byID[id]
+					if f.BrokerReportedPnl == nil && f.ExecutedAt.In(loc).Format(time.DateOnly) >= day {
+						result.UnavailableCloseIDs = append(result.UnavailableCloseIDs, id)
+					}
+				}
 				tr.AccountingWarning += " P&L unavailable: reliable settlement evidence is missing."
 			}
 			break

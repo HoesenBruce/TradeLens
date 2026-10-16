@@ -258,14 +258,7 @@ export function AccountsTab({
     }
     return counts;
   }, [trades]);
-  const netPnlByAccount = useMemo(() => {
-    const totals = new Map<string, number>();
-    for (const trade of trades ?? []) {
-      if (typeof trade.net_pnl !== "number") continue;
-      totals.set(trade.account_id, (totals.get(trade.account_id) ?? 0) + trade.net_pnl);
-    }
-    return totals;
-  }, [trades]);
+
   async function handleDeleteCash(id: string) {
     try {
       await onDeleteCash(id);
@@ -774,7 +767,7 @@ export function AccountsTab({
                   const balance = ledgerBalance(acc, funding?.data?.cash_transactions ?? []);
                   const isPrimary = acc.id === primaryId;
                   const tradeCount = tradeCountByAccount.get(acc.id) ?? 0;
-                  const netPnl = netPnlByAccount.get(acc.id) ?? 0;
+                  const netPnl = (funding?.data?.points?.at(-1)?.equity ?? balance) - balance;
                   const locale = intlLocale();
                   const equity = balance + netPnl;
                   const conn = connByAccount.get(acc.id);
@@ -1284,7 +1277,11 @@ export function RulesTab({
     !ytdSummaryQ.isError &&
     ytdSummaryQ.data != null &&
     annualGoal.currency === ytdSummaryQ.data.currency
-      ? computeAnnualGoalProgress(annualGoal.amount, ytdSummaryQ.data.net_pnl, goalYear)
+      ? computeAnnualGoalProgress(
+          annualGoal.amount,
+          ytdSummaryQ.data.realized_pnl ?? ytdSummaryQ.data.net_pnl,
+          goalYear,
+        )
       : null;
 
   function closeRuleModal() {
