@@ -123,7 +123,7 @@ func TestSBIDateOnlyRowsCashAccountingKeepsMarginSeparate(t *testing.T) {
 		cash = append(cash, trades.Execution{
 			ID: strconv.Itoa(i + 1), Symbol: fill.Symbol, InstrumentType: fill.InstrumentType,
 			Side: fill.Side, Quantity: fill.Quantity, Price: fill.Price, ExecutedAt: fill.ExecutedAt,
-			LotKey: fill.LotKey,
+			LotKey: fill.LotKey, SourceTimePrecision: fill.SourceTimePrecision,
 		})
 	}
 	result := trades.Account(cash, map[string]trades.AccountingStrategy{"sbi:cash": trades.SBICashAccounting})

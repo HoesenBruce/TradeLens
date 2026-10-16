@@ -75,7 +75,7 @@ func SBIMarginAccounting(fills []Execution) AccountingResult {
 			qty, openFees, openings = 0, 0, 0
 		}
 	}
-	reconcileReportedTrades(fills, &result)
+	reconcileReportedTrades(fills, &result, false)
 	reconcileConversionTrades(fills, &result)
 	protectIncompleteSBITrades(&result)
 	return result

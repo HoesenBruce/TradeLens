@@ -16,6 +16,25 @@ export type {
   TradeCoachSource,
 } from "./trades.coach.types";
 
+export interface RegroupTrade {
+  id: string;
+  status: string;
+  entry_basis: number;
+  quantity: number;
+  remaining: number;
+  net_pnl: number | null;
+  accounting_warning: string;
+  execution_ids: string[];
+}
+
+export interface RegroupReview {
+  preview_token: string;
+  applied: boolean;
+  changed_groups: { before: RegroupTrade | null; after: RegroupTrade | null }[];
+  removed_trade_ids: string[];
+  preserved_trade_ids: string[];
+}
+
 export interface TradeExcursion {
   mae: number;
   mfe: number;
@@ -100,10 +119,10 @@ export const tradesApi = {
     apiFetch<TradeExcursion>(`/trades/${id}/excursion`, {
       method: "POST",
     }),
-  regroup: (account_id: string) =>
-    apiFetch<void>("/trades/regroup", {
+  regroup: (account_id: string, review?: { preview?: boolean; preview_token?: string }) =>
+    apiFetch<RegroupReview | void>("/trades/regroup", {
       method: "POST",
-      body: JSON.stringify({ account_id }),
+      body: JSON.stringify({ account_id, ...review }),
     }),
   delete: (id: string) =>
     apiFetch<void>(`/trades/${id}`, {
