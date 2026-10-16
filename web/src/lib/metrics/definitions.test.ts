@@ -32,6 +32,13 @@ it("localizes every definition field and interpolation in all five catalogs", as
     ja: "保有期間",
     ko: "보유 기간",
   };
+  const computationLabels: Record<string, string> = {
+    en: "Computation",
+    "zh-CN": "计算方式",
+    "zh-HK": "計算方式",
+    ja: "計算方法",
+    ko: "계산 방법",
+  };
   await loadLocale("en");
   const english = Object.fromEntries(
     Object.entries(metricDefinitions).map(([id, entry]) => [id, i18n._(entry.caveat)]),
@@ -39,6 +46,7 @@ it("localizes every definition field and interpolation in all five catalogs", as
   for (const [locale, title] of Object.entries(titles)) {
     await loadLocale(locale);
     expect(i18n._(metricDefinitions.holding.title)).toBe(title);
+    expect(i18n._("metric.formula")).toBe(computationLabels[locale]);
     for (const [id, entry] of Object.entries(metricDefinitions)) {
       expect(i18n._(entry.caveat) === english[id], `${locale}.${id}`).toBe(locale === "en");
       for (const field of Object.values(entry)) {
