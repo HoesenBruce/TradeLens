@@ -1,3 +1,4 @@
+import { MetricHelp } from "./MetricHelp";
 import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import type { Account, Trade } from "@/lib/api/types";
@@ -48,12 +49,14 @@ export function HomeAccountContribution({
               </th>
               <th className="px-2 py-1.5 font-medium tabular-nums">
                 {tr({ id: "accounts.winRate", message: "Win rate" })}
+                <MetricHelp metric="winRate" />
               </th>
               <th className="px-2 py-1.5 font-medium tabular-nums">
                 {tr({ id: "accounts.record", message: "Record" })}
               </th>
               <th className="px-2 py-1.5 text-right font-medium tabular-nums">
                 {tr({ id: "accounts.pnl", message: "P&L" })}
+                <MetricHelp metric="pnl" />
               </th>
             </tr>
           </thead>

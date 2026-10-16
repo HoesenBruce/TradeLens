@@ -1,3 +1,5 @@
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
 import { t as localize } from "@lingui/core/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { ReactNode } from "react";
@@ -55,16 +57,21 @@ function Eyebrow({
 
 function MetaRow({
   label,
+  metric,
   value,
   className,
 }: {
   label: string;
+  metric?: MetricId;
   value: string;
   className?: string;
 }) {
   return (
     <p className="flex items-baseline justify-between gap-3 text-[13px] tabular-nums">
-      <span className="text-muted-foreground">{label}</span>
+      <span className="text-muted-foreground">
+        {label}
+        {metric && <MetricHelp metric={metric} />}
+      </span>
       <span className={cn("font-semibold", className)}>{value}</span>
     </p>
   );
@@ -151,6 +158,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
             <Eyebrow>{localize({ id: "accounts.performance", message: "Performance" })}</Eyebrow>
             <p className="mt-2 text-[12px] text-muted-foreground">
               {localize({ id: "accounts.netPnl", message: "Net P&L" })}
+              <MetricHelp metric="reportPnl" />
             </p>
             <p
               className={cn(
@@ -165,11 +173,13 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
           </div>
           <div className="mt-6 space-y-2.5">
             <MetaRow
+              metric="reportPnl"
               label={localize({ id: "accounts.gross", message: "Gross" })}
               value={money.format(grossVolume)}
               className={pnlColor(grossVolume)}
             />
             <MetaRow
+              metric="fees"
               label={localize({ id: "imports.fieldFees", message: "Fees" })}
               value={`${money.format(summary.total_fees)} (${feePct.toFixed(1)}%)`}
               className="text-destructive"
@@ -192,6 +202,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
             <div className="flex flex-col items-center justify-center">
               <p className="mb-2 self-start text-[11px] text-muted-foreground">
                 {localize({ id: "accounts.profitFactor", message: "Profit factor" })}
+                <MetricHelp metric="profitFactor" />
               </p>
               <GaugeArc
                 value={pfFraction}
@@ -215,6 +226,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
             <div className="flex flex-col items-center justify-center">
               <p className="mb-2 self-start text-[11px] text-muted-foreground">
                 {localize({ id: "accounts.winRate", message: "Win rate" })}
+                <MetricHelp metric="winRate" />
               </p>
               <DonutRing
                 className="w-full max-w-[120px]"
@@ -239,6 +251,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
             <div className="flex flex-col justify-center">
               <p className="text-[11px] text-muted-foreground">
                 {localize({ id: "reports.payoffRatio", message: "Payoff ratio" })}
+                <MetricHelp metric="payoff" />
               </p>
               <p
                 className={cn(
@@ -383,6 +396,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
         <BentoCell>
           <Eyebrow tone="muted">
             {localize({ id: "accounts.maxDrawdown", message: "Max drawdown" })}
+            <MetricHelp metric="drawdown" />
           </Eyebrow>
           <p className="mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-loss sm:text-[26px]">
             {maxDrawdown != null && maxDrawdown > 0 ? money.format(-maxDrawdown) : "—"}
@@ -395,6 +409,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
         <BentoCell>
           <Eyebrow tone="muted">
             {localize({ id: "reports.totalFees", message: "Total fees" })}
+            <MetricHelp metric="fees" />
           </Eyebrow>
           <p className="mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-destructive sm:text-[26px]">
             {money.format(summary.total_fees)}

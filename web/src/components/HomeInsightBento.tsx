@@ -1,3 +1,4 @@
+import { MetricHelp } from "./MetricHelp";
 import { useLingui } from "@lingui/react";
 import type { ReactNode } from "react";
 import type { Summary, Trade } from "@/lib/api/types";
@@ -155,7 +156,14 @@ export function HomeInsightBento({
         <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4">
           {[bestTrade, worstTrade, maxDd, profitFactor].map((row) => (
             <div key={row.label}>
-              <Title tone="muted">{row.label}</Title>
+              <Title tone="muted">
+                {row.label}
+                {row === maxDd ? (
+                  <MetricHelp metric="drawdown" />
+                ) : row === profitFactor ? (
+                  <MetricHelp metric="profitFactor" />
+                ) : null}
+              </Title>
               <p
                 className={cn(
                   "mt-1 text-[17px] font-semibold tabular-nums tracking-[-0.02em]",
@@ -176,6 +184,7 @@ export function HomeInsightBento({
         <Title>{stability.title}</Title>
         <Title tone="muted" className="mt-3">
           {stability.hero.label}
+          <MetricHelp metric="winRate" />
         </Title>
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
           <HeroValue row={stability.hero} center />

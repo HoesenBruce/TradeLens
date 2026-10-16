@@ -201,6 +201,7 @@ export function tradeColumns(
       header: tr({ id: "trades.closeProgress", message: "Close progress" }),
       meta: {
         align: "right",
+        metric: "quantities",
         label: tr({ id: "trades.closeProgress", message: "Close progress" }),
         headerTitle: tr({
           id: "trades.closeProgressSortHint",
@@ -316,6 +317,7 @@ export function tradeColumns(
       header: tr({ id: "trades.position", message: "Position" }),
       meta: {
         align: "right",
+        metric: "quantities",
         label: tr({ id: "trades.position", message: "Position" }),
         headerTitle: tr({ id: "trades.openPosition", message: "Position still open" }),
         minWidth: 80,
@@ -338,6 +340,7 @@ export function tradeColumns(
       header: tr({ id: "trades.hold", message: "Hold" }),
       meta: {
         align: "right",
+        metric: "holding",
         label: tr({ id: "trades.hold", message: "Hold" }),
         headerTitle: tr({ id: "trades.holdHint", message: "Time in trade" }),
         minWidth: 56,
@@ -349,6 +352,7 @@ export function tradeColumns(
       header: tr({ id: "trades.fees", message: "Fees" }),
       meta: {
         align: "right",
+        metric: "fees",
         label: tr({ id: "trades.fees", message: "Fees" }),
         headerTitle: tr({ id: "trades.feesHint", message: "Total fees and commissions" }),
         minWidth: 72,
@@ -360,6 +364,7 @@ export function tradeColumns(
       header: tr({ id: "trades.pnl", message: "P&L" }),
       meta: {
         align: "right",
+        metric: "pnl",
         label: tr({ id: "trades.pnl", message: "P&L" }),
         headerTitle: tr({ id: "trades.netPnl", message: "Net P&L" }),
         minWidth: 112,
@@ -375,6 +380,7 @@ export function tradeColumns(
       header: tr({ id: "trades.pnlPercent", message: "P&L %" }),
       meta: {
         align: "right",
+        metric: "tradeReturn",
         label: tr({ id: "trades.pnlPercent", message: "P&L %" }),
         headerTitle: tr({
           id: "trades.pnlPercentHint",
@@ -424,6 +430,7 @@ export function tradeColumns(
       header: "R",
       meta: {
         align: "right",
+        metric: "realizedR",
         label: "R",
         headerTitle: tr({
           id: "trades.riskHint",

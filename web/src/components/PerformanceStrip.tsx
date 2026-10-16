@@ -1,3 +1,5 @@
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { StatBar } from "./StatBar";
 import { pnlColor } from "./theme-tokens";
@@ -19,10 +21,23 @@ export interface PerformanceStripProps {
   onToggleTradeStatus?: (filter: TradeStatusFilter) => void;
 }
 
-function Meta({ label, value, className }: { label: string; value: string; className?: string }) {
+function Meta({
+  label,
+  metric,
+  value,
+  className,
+}: {
+  label: string;
+  metric?: MetricId;
+  value: string;
+  className?: string;
+}) {
   return (
     <p className="m-0 flex items-baseline gap-1.5 text-[13px] tabular-nums">
-      <span className="font-medium tracking-wide text-muted-foreground">{label}</span>
+      <span className="font-medium tracking-wide text-muted-foreground">
+        {label}
+        {metric && <MetricHelp metric={metric} />}
+      </span>
       <span className={cn("font-medium", className)}>{value}</span>
     </p>
   );
@@ -58,6 +73,7 @@ export function PerformanceStrip({
         </p>
         <p className="mt-3 self-start text-[12px] font-medium tracking-wide text-muted-foreground">
           {tr({ id: "accounts.net", message: "Net" })}
+          <MetricHelp metric="pnl" />
         </p>
         <div className="mt-3 flex flex-1 flex-col items-center justify-center text-center">
           <p
@@ -72,15 +88,18 @@ export function PerformanceStrip({
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1.5">
             <Meta
+              metric="pnl"
               label={tr({ id: "accounts.gross", message: "Gross" })}
               value={fmtSignedMoney(money(gross), currency, locale)}
               className={pnlColor(gross)}
             />
             <Meta
+              metric="fees"
               label={tr({ id: "accounts.fees", message: "Fees" })}
               value={fmtMoney(money(summary.total_fees), currency, locale)}
             />
             <Meta
+              metric="profitFactor"
               label={tr({ id: "accounts.pf", message: "PF" })}
               value={summary.profit_factor != null ? summary.profit_factor.toFixed(2) : "—"}
             />

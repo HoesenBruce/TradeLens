@@ -1,3 +1,5 @@
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
 import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { fmtTradeTimeline } from "@/lib/tradeTimeline";
 import { tradeStatusLabel } from "@/lib/tradeLabels";
@@ -253,11 +255,13 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
 
 function BentoStat({
   label,
+  metric,
   value,
   hint,
   className,
 }: {
   label: string;
+  metric?: MetricId;
   value: React.ReactNode;
   hint?: string;
   className?: string;
@@ -266,6 +270,7 @@ function BentoStat({
     <div className={cn("flex min-w-0 flex-col gap-1 bg-sidebar p-2 sm:p-2.5", className)}>
       <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
+        {metric && <MetricHelp metric={metric} />}
       </span>
       <span
         className="text-sm tabular-nums whitespace-normal wrap-anywhere text-foreground"
@@ -333,18 +338,19 @@ function TradeDetailSheetBody({
                 <>
                   <p className={cn("m-0 tabular-nums", heroPnlClass(pnl))}>
                     {fmtSignedMoney(pnl, currency, intlLocale())}
+                    <MetricHelp metric="pnl" />
                   </p>
                   <p className="mt-1.5 mb-0 text-sm font-semibold tabular-nums">
                     {trade.return_pct != null && (
                       <span className={pnlColor(trade.return_pct)}>
                         {trade.return_pct >= 0 ? "+" : ""}
-                        {trade.return_pct.toFixed(2)}%
+                        {trade.return_pct.toFixed(2)}%<MetricHelp metric="tradeReturn" />
                       </span>
                     )}
                     {trade.r_multiple != null && (
                       <span className={cn("ml-2", pnlColor(trade.r_multiple))}>
                         {trade.r_multiple >= 0 ? "+" : ""}
-                        {trade.r_multiple.toFixed(2)}R
+                        {trade.r_multiple.toFixed(2)}R<MetricHelp metric="realizedR" />
                       </span>
                     )}
                   </p>
@@ -356,8 +362,12 @@ function TradeDetailSheetBody({
             {trade.gross_pnl != null && (
               <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
                 {fmtSignedMoney(trade.gross_pnl, currency, intlLocale())}{" "}
-                {tr({ id: "trades.gross", message: "Gross" })} −{" "}
-                {fmtMoney(trade.fees_total, currency, intlLocale())}{" "}
+                {tr({ id: "trades.gross", message: "Gross" })}
+                <MetricHelp metric="pnl" /> − {fmtMoney(
+                  trade.fees_total,
+                  currency,
+                  intlLocale(),
+                )}{" "}
                 {tr({ id: "trades.fees", message: "Fees" })}
               </p>
             )}
@@ -380,10 +390,12 @@ function TradeDetailSheetBody({
           </div>
           <div className="grid grid-cols-2 gap-px">
             <BentoStat
+              metric="holding"
               label={tr({ id: "trades.hold", message: "Hold" })}
               value={<TradeHoldingDuration trade={trade} />}
             />
             <BentoStat
+              metric="fees"
               label={tr({ id: "trades.fees", message: "Fees" })}
               value={fmtMoney(trade.fees_total, currency, intlLocale())}
             />

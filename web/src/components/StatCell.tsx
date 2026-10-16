@@ -1,3 +1,5 @@
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
@@ -10,12 +12,14 @@ import { cn } from "@/lib/cn";
  */
 export function StatCell({
   label,
+  metric,
   children,
   hint,
   className,
   valueClassName,
 }: {
   label: string;
+  metric?: MetricId;
   children: ReactNode;
   /** Quiet trailing qualifier, e.g. the fee share or a contract multiplier. */
   hint?: ReactNode;
@@ -31,6 +35,7 @@ export function StatCell({
     >
       <span className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
         {label}
+        {metric && <MetricHelp metric={metric} />}
       </span>
       <span className="flex min-w-0 items-baseline gap-1.5">
         <span

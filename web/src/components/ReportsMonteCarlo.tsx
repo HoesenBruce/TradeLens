@@ -115,6 +115,7 @@ export function ReportsMonteCarlo({
                 id: "reports.typicalMaxDrawdown",
                 message: "Typical Max Drawdown",
               })}
+              metric="simulationDrawdown"
               value={money.format(-simulation.max_drawdown.p50)}
               accent="neg"
               hint={localize({

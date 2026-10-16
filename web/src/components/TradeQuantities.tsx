@@ -1,3 +1,4 @@
+import { MetricHelp } from "./MetricHelp";
 import { useLingui } from "@lingui/react";
 import { t } from "@lingui/core/macro";
 import type { Trade, TradeQuantities } from "@/lib/api/types";
@@ -123,6 +124,7 @@ export function TradeQuantityDetails({ trade }: { trade: Pick<Trade, "quantities
         >
           {view.lifecycle}
         </Pill>
+        <MetricHelp metric="quantities" />
         {view.percent != null && (
           <span className="text-xs font-medium tabular-nums">{view.summary}</span>
         )}

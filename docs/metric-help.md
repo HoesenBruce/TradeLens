@@ -45,3 +45,16 @@ browser also exercised click, keyboard and narrow-screen rendering.
 
 No backend, accounting, persistence or mobile changes. Mobile apps are outside current
 fork acceptance scope. No release/deployment is part of these issues.
+
+## Business integration (#325)
+
+The registry now covers holding, quantity/progress, realized P&L/fees, return %, planned
+and realized R, summary ratios, equity and simulated drawdown, account return and report
+series. See `docs/validation/issue325/README.md` for the source map and retained conventions.
+
+`StatCell`/`StatCard` accept `metric?: MetricId`; table columns can opt in with
+`meta: { metric: "winRate" }`. Help is rendered beside the sorting trigger, not inside it.
+Quantity details share one group control; compact cards keep controls near their values.
+Never select a definition from translated display text or infer a formula from a label.
+Use Lingui's explicit-ID catalog convention (`#. js-lingui-explicit-id` in PO files),
+extract/compile, and verify substantive translated content rather than nonempty fallback.
