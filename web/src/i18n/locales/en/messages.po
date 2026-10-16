@@ -12730,3 +12730,53 @@ msgstr "Close progress"
 #. js-lingui-explicit-id
 msgid "trades.closeProgressSortHint"
 msgstr "Closed versus remaining quantity; sorted by remaining quantity"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:33
+msgid "metric.close"
+msgstr "Close explanation"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:27
+msgid "metric.formula"
+msgstr "Computation / denominator"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:20
+msgid "metric.holding.caveat"
+msgstr "Date-only SBI or CSV fills do not establish intraday holding time. Missing opening history, unknown precision or invalid boundaries show —. The API supplies the market timezone and precision; the viewer timezone does not change calendar days."
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:19
+msgid "metric.holding.unit"
+msgstr "Days, hours and minutes; calendar days for date-only records."
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:15
+msgid "metric.help"
+msgstr "Explain {title}"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:16
+msgid "metric.holding.title"
+msgstr "Holding duration"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:29
+msgid "metric.caveat"
+msgstr "Limitations"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:18
+msgid "metric.holding.formula"
+msgstr "Precise endpoints: elapsed time, rounded to minutes for display (under one minute: <1m). Any date-only endpoint: difference between exchange-local calendar dates; same date = 0 days, next date = 1 day."
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:17
+msgid "metric.holding.definition"
+msgstr "Time from the recorded opening to the close, or to now for an open trade."
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:28
+msgid "metric.unit"
+msgstr "Unit"

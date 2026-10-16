@@ -12731,3 +12731,53 @@ msgstr "決済進捗"
 #. js-lingui-explicit-id
 msgid "trades.closeProgressSortHint"
 msgstr "決済済と残数量。残数量で並べ替え"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:33
+msgid "metric.close"
+msgstr "説明を閉じる"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:27
+msgid "metric.formula"
+msgstr "計算方法 / 分母"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:20
+msgid "metric.holding.caveat"
+msgstr "SBIやCSVの日付のみの約定では日中の保有時間は分かりません。新規履歴の欠落、精度不明、無効な境界は —。市場のタイムゾーンと精度はAPIが提供し、閲覧者のタイムゾーンで暦日数は変わりません。"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:19
+msgid "metric.holding.unit"
+msgstr "日・時間・分。日付のみの記録は暦日数。"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:15
+msgid "metric.help"
+msgstr "{title}の説明"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:16
+msgid "metric.holding.title"
+msgstr "保有期間"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:29
+msgid "metric.caveat"
+msgstr "制約"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:18
+msgid "metric.holding.formula"
+msgstr "両端の時刻が正確なら経過時間を分単位に四捨五入して表示（1分未満は <1m）。一方でも日付のみなら取引所現地の暦日差。同日は0日、翌日は1日。"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:17
+msgid "metric.holding.definition"
+msgstr "記録された新規建てから決済までの時間。未決済取引は現在まで。"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:28
+msgid "metric.unit"
+msgstr "単位"

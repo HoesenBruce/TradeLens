@@ -12727,3 +12727,53 @@ msgstr "청산 진행률"
 #. js-lingui-explicit-id
 msgid "trades.closeProgressSortHint"
 msgstr "청산 수량과 잔여 수량. 잔여 수량으로 정렬"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:33
+msgid "metric.close"
+msgstr "설명 닫기"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:27
+msgid "metric.formula"
+msgstr "계산 방법 / 분모"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:20
+msgid "metric.holding.caveat"
+msgstr "날짜만 있는 SBI 또는 CSV 체결로는 장중 보유 시간을 알 수 없습니다. 진입 이력 누락, 정밀도 불명 또는 잘못된 경계는 —로 표시합니다. 시장 시간대와 정밀도는 API가 제공하며 열람자 시간대는 달력 일수를 바꾸지 않습니다."
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:19
+msgid "metric.holding.unit"
+msgstr "일, 시간, 분. 날짜만 있는 기록은 달력 일수입니다."
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:15
+msgid "metric.help"
+msgstr "{title} 설명"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:16
+msgid "metric.holding.title"
+msgstr "보유 기간"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:29
+msgid "metric.caveat"
+msgstr "제약"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:18
+msgid "metric.holding.formula"
+msgstr "양 끝의 시각이 정확하면 경과 시간을 분으로 반올림합니다(1분 미만: <1m). 한쪽이라도 날짜만 있으면 거래소 현지 달력 날짜의 차이입니다. 같은 날은 0일, 다음 날은 1일입니다."
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:17
+msgid "metric.holding.definition"
+msgstr "기록된 진입부터 청산까지의 시간입니다. 미청산 거래는 현재까지 계산합니다."
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:28
+msgid "metric.unit"
+msgstr "단위"

@@ -12730,3 +12730,53 @@ msgstr "平仓进度"
 #. js-lingui-explicit-id
 msgid "trades.closeProgressSortHint"
 msgstr "已平仓与剩余数量；按剩余数量排序"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:33
+msgid "metric.close"
+msgstr "关闭说明"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:27
+msgid "metric.formula"
+msgstr "计算方式 / 分母"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:20
+msgid "metric.holding.caveat"
+msgstr "SBI或CSV成交只有日期时，无法确定日内持仓时间。缺少开仓历史、精度未知或边界无效时显示 —。市场时区和精度由API提供；查看者时区不会改变日历天数。"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:19
+msgid "metric.holding.unit"
+msgstr "天、小时和分钟；仅日期记录使用日历天数。"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:15
+msgid "metric.help"
+msgstr "解释{title}"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:16
+msgid "metric.holding.title"
+msgstr "持仓时长"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:29
+msgid "metric.caveat"
+msgstr "限制"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:18
+msgid "metric.holding.formula"
+msgstr "起止时间精确时：显示实际经过时间并四舍五入到分钟（不足一分钟显示 <1m）。任一端只有日期时：按交易所当地日历日期相减；同日为0天，次日为1天。"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:17
+msgid "metric.holding.definition"
+msgstr "从记录的开仓到平仓的时间；未平仓交易计算到现在。"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:28
+msgid "metric.unit"
+msgstr "单位"
