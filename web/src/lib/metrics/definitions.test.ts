@@ -10,6 +10,19 @@ import { messages as ko } from "@/i18n/locales/ko/messages";
 afterEach(async () => {
   await loadLocale("en");
 });
+it("separates monetary explanations from percentages without mixing surfaces", async () => {
+  await loadLocale("en");
+  expect(i18n._(metricDefinitions.accountPerformance.title)).toBe("Account performance");
+  expect(i18n._(metricDefinitions.accountReturn.title)).toBe("Return percentage");
+  expect(i18n._(metricDefinitions.accountRealizedPnl.title)).toBe("Account realized P&L");
+  expect(i18n._(metricDefinitions.accountDetailReturn.title)).toBe("Account return percentage");
+  expect(i18n._(metricDefinitions.accountPerformance.unit)).not.toContain("%");
+  expect(i18n._(metricDefinitions.accountRealizedPnl.unit)).not.toContain("%");
+  expect(i18n._(metricDefinitions.accountReturn.unit)).toBe("%.");
+  expect(i18n._(metricDefinitions.accountDetailReturn.unit)).toBe("%.");
+  expect(i18n._(metricDefinitions.accountReturn.caveat)).toContain("funding ≤ 0");
+  expect(i18n._(metricDefinitions.accountDetailReturn.caveat)).toContain("denominator is zero");
+});
 it("localizes every definition field and interpolation in all five catalogs", async () => {
   const catalogs: Record<string, typeof en> = { en, "zh-CN": zhCN, "zh-HK": zhHK, ja, ko };
   const titles: Record<string, string> = {

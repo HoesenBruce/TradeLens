@@ -13003,23 +13003,23 @@ msgstr "切换范围后，峰值从首个可见点重新计算。现金流影响
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.title"
-msgstr "账户绩效／收益比例"
+msgstr "收益比例"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.definition"
-msgstr "记录的交易盈亏相对所选账户带符号现金账本总额的比例。"
+msgstr "顶部已实现交易净盈亏相对所选账户带符号现金账本总额的比例。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.formula"
-msgstr "顶部：筛选后的已平仓净盈亏 ÷ 所选账本总额 × 100。账户详情：可用交易净盈亏之和 ÷ 该账户账本总额 × 100。初始余额已作为入金。"
+msgstr "筛选后的已平仓净盈亏 ÷ 所选账户带符号现金账本总额 × 100。初始余额已作为入金，不重复加入。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.unit"
-msgstr "账户／归一化显示币种；%。"
+msgstr "%。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.caveat"
-msgstr "不是时间加权或资金加权收益，不按现金流日期加权。顶部在资金≤0或无法归一化时隐藏百分比；账户详情只在分母为零时隐藏，可能含可用的部分平仓盈亏。当前汇率归一化不是历史汇率归因。账户详情中缺失盈亏按0累加。"
+msgstr "资金≤0或所需数据／币种归一化不可用时隐藏。不是时间加权或资金加权收益，不按现金流日期加权。不含未平仓交易及未实现盈亏。当前汇率归一化不是历史汇率归因。"
 
 #. js-lingui-explicit-id
 msgid "metric.reportPnl.title"
@@ -13120,3 +13120,63 @@ msgstr "显示币种；百分比模式将金额除以报表资金分母。"
 #. js-lingui-explicit-id
 msgid "metric.simulationDrawdown.caveat"
 msgstr "这是模拟累计盈亏，不是账户权益；不含现金流和未实现价值。即使毛显示模式也使用净结果。模拟设置和样本量影响结果；历史不足时不显示模拟。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.title"
+msgstr "账户绩效"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.definition"
+msgstr "当前顶部筛选范围内的已实现交易净盈亏。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.formula"
+msgstr "汇总统计中符合条件的已平仓交易净盈亏之和，已扣除费用；应用当前账户和交易筛选。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.unit"
+msgstr "账户／归一化显示币种。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.caveat"
+msgstr "不含未平仓交易（包括其部分平仓盈亏）及未实现市值。现金账本流水不是交易盈亏。当前汇率归一化不是历史汇率归因。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.title"
+msgstr "账户已实现盈亏"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.definition"
+msgstr "该账户已加载交易历史中可用净盈亏的总和。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.formula"
+msgstr "累加每笔已加载交易扣费后的净盈亏，缺失盈亏按0累加。使用该账户历史，不受顶部交易筛选影响。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.unit"
+msgstr "账户基础币种。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.caveat"
+msgstr "可能包含未平仓交易中可用的部分平仓已实现盈亏。缺失盈亏不代表估算值。不含未实现市值及现金账本流水。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.title"
+msgstr "账户收益比例"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.definition"
+msgstr "账户详情中的已实现盈亏相对该账户带符号现金账本总额的比例。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.formula"
+msgstr "可用交易净盈亏之和 ÷ 该账户带符号现金账本总额 × 100。初始余额已作为入金，不重复加入。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.unit"
+msgstr "%。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.caveat"
+msgstr "仅在分母为零时隐藏；账本总额为负可能使百分比符号反转。可能包含可用的部分平仓盈亏，缺失盈亏按0累加。不是时间加权或资金加权收益，不含未实现盈亏。"

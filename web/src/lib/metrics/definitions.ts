@@ -244,25 +244,83 @@ export const metricDefinitions = {
         "The peak resets to the first visible point when the range changes. Cash flows affect this API equity curve; it excludes unrealized market value. Empty series gives 0 internally but the panel shows no data. This is not the summary amount divided by deposited capital.",
     }),
   },
+  accountPerformance: {
+    title: msg({ id: "metric.accountPerformance.title", message: "Account performance" }),
+    definition: msg({
+      id: "metric.accountPerformance.definition",
+      message: "Net realized trading P&L for the current header filter scope.",
+    }),
+    formula: msg({
+      id: "metric.accountPerformance.formula",
+      message:
+        "Sum of eligible closed-trade net P&L from the analytics summary, after fees. The active account and trade filters apply.",
+    }),
+    unit: msg({
+      id: "metric.accountPerformance.unit",
+      message: "Account/normalized display currency.",
+    }),
+    caveat: msg({
+      id: "metric.accountPerformance.caveat",
+      message:
+        "Excludes open trades, including their partial-close P&L, and unrealized market value. Cash-ledger flows are not trading P&L. Current FX/display normalization is not historical FX attribution.",
+    }),
+  },
   accountReturn: {
-    title: msg({ id: "metric.accountReturn.title", message: "Account performance / return" }),
+    title: msg({ id: "metric.accountReturn.title", message: "Return percentage" }),
     definition: msg({
       id: "metric.accountReturn.definition",
-      message: "Recorded trading P&L relative to the selected accounts’ signed cash-ledger total.",
+      message:
+        "Header net realized trading P&L relative to the selected accounts’ signed cash-ledger total.",
     }),
     formula: msg({
       id: "metric.accountReturn.formula",
       message:
-        "Header: filtered closed-trade net P&L ÷ scoped ledger total × 100. Account detail: sum of available trade net P&L ÷ that account’s ledger total × 100. Opening balance is already a deposit.",
+        "Filtered closed-trade net P&L ÷ selected accounts’ signed cash-ledger total × 100. Opening balance is already a deposit and is not added twice.",
     }),
     unit: msg({
       id: "metric.accountReturn.unit",
-      message: "Account/normalized display currency; %.",
+      message: "%.",
     }),
     caveat: msg({
       id: "metric.accountReturn.caveat",
       message:
-        "Not time-weighted or money-weighted return: cash-flow dates are not weighted. Header hides % when funding ≤ 0 or normalization is unavailable; account detail hides it only at zero and can include available partial-close P&L. Current FX/display normalization is not historical FX attribution. Missing trade P&L adds zero in account detail.",
+        "Hidden when funding ≤ 0 or required data/currency normalization is unavailable. Not time-weighted or money-weighted return: cash-flow dates are not weighted. Excludes open-trade and unrealized P&L. Current FX normalization is not historical FX attribution.",
+    }),
+  },
+  accountRealizedPnl: {
+    title: msg({ id: "metric.accountRealizedPnl.title", message: "Account realized P&L" }),
+    definition: msg({
+      id: "metric.accountRealizedPnl.definition",
+      message: "Sum of available trade net P&L in this account’s loaded trade history.",
+    }),
+    formula: msg({
+      id: "metric.accountRealizedPnl.formula",
+      message:
+        "Add each loaded trade’s net P&L after fees; missing P&L adds zero. This account’s history is used, independently of the header’s trade filters.",
+    }),
+    unit: msg({ id: "metric.accountRealizedPnl.unit", message: "Account base currency." }),
+    caveat: msg({
+      id: "metric.accountRealizedPnl.caveat",
+      message:
+        "Can include available partial-close realized P&L from open trades. Missing P&L is not an estimate. Excludes unrealized market value and cash-ledger flows.",
+    }),
+  },
+  accountDetailReturn: {
+    title: msg({ id: "metric.accountDetailReturn.title", message: "Account return percentage" }),
+    definition: msg({
+      id: "metric.accountDetailReturn.definition",
+      message: "Account-detail realized P&L relative to this account’s signed cash-ledger total.",
+    }),
+    formula: msg({
+      id: "metric.accountDetailReturn.formula",
+      message:
+        "Sum of available trade net P&L ÷ this account’s signed cash-ledger total × 100. Opening balance is already a deposit and is not added twice.",
+    }),
+    unit: msg({ id: "metric.accountDetailReturn.unit", message: "%." }),
+    caveat: msg({
+      id: "metric.accountDetailReturn.caveat",
+      message:
+        "Hidden only when the denominator is zero; a negative ledger total can reverse the percentage’s sign. Can include available partial-close P&L; missing P&L adds zero. Not time-weighted or money-weighted return, and excludes unrealized P&L.",
     }),
   },
   reportPnl: {

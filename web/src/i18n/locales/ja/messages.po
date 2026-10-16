@@ -13004,23 +13004,23 @@ msgstr "期間変更時に最初の表示点からピークを再計算。現金
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.title"
-msgstr "口座の実績・リターン"
+msgstr "リターン比率"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.definition"
-msgstr "選択口座の符号付き現金台帳合計に対する記録取引損益。"
+msgstr "選択口座の符号付き現金台帳合計に対するヘッダーの実現純損益の比率。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.formula"
-msgstr "ヘッダー：絞込済み決済純損益 ÷ 対象台帳合計 × 100。口座詳細：利用可能な取引純損益合計 ÷ その口座の台帳合計 × 100。初期残高は入金済みです。"
+msgstr "絞り込み後の決済済み純損益 ÷ 選択口座の符号付き現金台帳合計 × 100。初期残高は入金済みとして記録され、二重加算しません。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.unit"
-msgstr "口座・正規化表示通貨、%。"
+msgstr "%。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.caveat"
-msgstr "時間加重・金額加重ではなく、現金移動日を加重しません。ヘッダーは資金≤0・正規化不明で%非表示。口座詳細は分母0のみ非表示で一部決済損益を含む場合があります。現在FXによる表示は歴史FX帰属ではありません。詳細の欠落損益は0加算。"
+msgstr "資金が0以下、または必要なデータ・通貨換算が利用できない場合は非表示。時間加重・金額加重リターンではなく、入出金日による重み付けはありません。未決済取引と含み損益を除外。現在の為替換算は過去の為替要因の分析ではありません。"
 
 #. js-lingui-explicit-id
 msgid "metric.reportPnl.title"
@@ -13121,3 +13121,63 @@ msgstr "表示通貨。%モードはレポート資金分母で金額を割り�
 #. js-lingui-explicit-id
 msgid "metric.simulationDrawdown.caveat"
 msgstr "口座資産ではなく模擬累積損益。現金移動・含み価値は除外。総表示でも純損益を使用。設定・標本数が結果に影響し、履歴不足なら模擬結果なし。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.title"
+msgstr "口座パフォーマンス"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.definition"
+msgstr "ヘッダーの現在の絞り込み範囲における実現純損益。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.formula"
+msgstr "集計対象の決済済み取引の手数料控除後純損益を合計。現在の口座と取引の絞り込みを適用。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.unit"
+msgstr "口座通貨／換算後の表示通貨。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.caveat"
+msgstr "未決済取引（一部決済の損益を含む）と含み損益を除外。現金台帳の入出金は取引損益ではありません。現在の為替換算は過去の為替要因の分析ではありません。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.title"
+msgstr "口座の実現損益"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.definition"
+msgstr "この口座の読み込み済み取引履歴にある利用可能な純損益の合計。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.formula"
+msgstr "読み込み済み各取引の手数料控除後純損益を合計し、欠損値は0として加算。この口座の履歴を使い、ヘッダーの取引フィルターには依存しません。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.unit"
+msgstr "口座の基準通貨。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.caveat"
+msgstr "未決済取引の利用可能な一部決済済み実現損益を含む場合があります。欠損した損益は推定しません。含み損益と現金台帳の入出金を除外。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.title"
+msgstr "口座リターン比率"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.definition"
+msgstr "この口座の符号付き現金台帳合計に対する口座詳細の実現損益の比率。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.formula"
+msgstr "利用可能な取引純損益の合計 ÷ この口座の符号付き現金台帳合計 × 100。初期残高は入金済みとして記録され、二重加算しません。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.unit"
+msgstr "%。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.caveat"
+msgstr "分母が0の場合のみ非表示。台帳合計が負の場合、比率の符号が反転することがあります。利用可能な一部決済損益を含む場合があり、欠損値は0として加算。時間加重・金額加重リターンではなく、含み損益を除外。"

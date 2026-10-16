@@ -13000,23 +13000,23 @@ msgstr "기간 변경 시 첫 표시점부터 최고점을 다시 계산합니�
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.title"
-msgstr "계좌 성과 / 수익률"
+msgstr "수익 비율"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.definition"
-msgstr "선택 계좌의 부호 있는 현금 원장 합계 대비 기록 거래 손익입니다."
+msgstr "선택한 계좌의 부호 있는 현금 원장 합계 대비 헤더의 실현 거래 순손익 비율입니다."
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.formula"
-msgstr "상단: 필터링된 청산 순손익 ÷ 대상 원장 합계 × 100. 계좌 상세: 사용 가능한 거래 순손익 합계 ÷ 해당 원장 합계 × 100. 초기 잔액은 이미 입금입니다."
+msgstr "필터링된 청산 거래 순손익 ÷ 선택 계좌의 부호 있는 현금 원장 합계 × 100. 초기 잔액은 이미 입금으로 기록되어 중복 합산하지 않습니다."
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.unit"
-msgstr "계좌·정규화 표시 통화 및 %."
+msgstr "%."
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.caveat"
-msgstr "시간·금액 가중 수익률이 아니며 현금 흐름 날짜를 가중하지 않습니다. 상단은 자금≤0·정규화 불가 시 %를 숨기고 상세는 분모 0만 숨기며 부분 청산 손익이 포함될 수 있습니다. 현재 FX 표시는 과거 FX 귀속이 아닙니다. 상세의 누락 손익은 0으로 더합니다."
+msgstr "자금이 0 이하이거나 필요한 데이터／통화 환산을 사용할 수 없으면 숨깁니다. 시간가중 또는 금액가중 수익률이 아니며 현금 흐름 날짜에 가중치를 적용하지 않습니다. 미청산 거래 및 미실현 손익은 제외합니다. 현재 환율 환산은 과거 환율 기여도 분석이 아닙니다."
 
 #. js-lingui-explicit-id
 msgid "metric.reportPnl.title"
@@ -13117,3 +13117,63 @@ msgstr "표시 통화. % 모드는 금액을 보고서 자금 분모로 나눕�
 #. js-lingui-explicit-id
 msgid "metric.simulationDrawdown.caveat"
 msgstr "계좌 자산이 아닌 모의 누적 손익이며 현금 흐름·미실현 가치는 제외합니다. 총 표시에서도 순결과를 씁니다. 설정·표본 수에 따라 결과가 달라지고 이력이 부족하면 모의 결과가 없습니다."
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.title"
+msgstr "계좌 성과"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.definition"
+msgstr "현재 헤더 필터 범위의 실현 거래 순손익입니다."
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.formula"
+msgstr "분석 요약에 포함된 청산 거래의 수수료 차감 후 순손익을 합산합니다. 현재 계좌 및 거래 필터가 적용됩니다."
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.unit"
+msgstr "계좌 통화／환산된 표시 통화."
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.caveat"
+msgstr "미청산 거래(부분 청산 손익 포함)와 미실현 평가손익은 제외합니다. 현금 원장 흐름은 거래 손익이 아닙니다. 현재 환율 환산은 과거 환율 기여도 분석이 아닙니다."
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.title"
+msgstr "계좌 실현 손익"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.definition"
+msgstr "이 계좌의 불러온 거래 내역에서 사용 가능한 순손익 합계입니다."
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.formula"
+msgstr "불러온 각 거래의 수수료 차감 후 순손익을 합산하며 누락된 손익은 0으로 더합니다. 헤더의 거래 필터와 별개로 이 계좌의 내역을 사용합니다."
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.unit"
+msgstr "계좌 기준 통화."
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.caveat"
+msgstr "미청산 거래의 사용 가능한 부분 청산 실현 손익이 포함될 수 있습니다. 누락된 손익은 추정값이 아닙니다. 미실현 평가손익과 현금 원장 흐름은 제외합니다."
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.title"
+msgstr "계좌 수익 비율"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.definition"
+msgstr "이 계좌의 부호 있는 현금 원장 합계 대비 계좌 상세의 실현 손익 비율입니다."
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.formula"
+msgstr "사용 가능한 거래 순손익 합계 ÷ 이 계좌의 부호 있는 현금 원장 합계 × 100. 초기 잔액은 이미 입금으로 기록되어 중복 합산하지 않습니다."
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.unit"
+msgstr "%."
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.caveat"
+msgstr "분모가 0일 때만 숨깁니다. 원장 합계가 음수이면 비율의 부호가 반전될 수 있습니다. 사용 가능한 부분 청산 손익이 포함될 수 있으며 누락된 손익은 0으로 더합니다. 시간가중 또는 금액가중 수익률이 아니며 미실현 손익은 제외합니다."
