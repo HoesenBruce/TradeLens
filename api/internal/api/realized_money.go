@@ -43,11 +43,20 @@ func (s *Server) realizedTrades(ctx context.Context, uid string, f Filters, meta
 			if d.Lot == "sbi:cash" || d.Lot == "sbi:margin-long" || d.Lot == "sbi:margin-short" {
 				sbiIDs[row.ID] = true
 				dateOnly[row.ID] = d.Precision == "date"
-				hasSBI = true
+				hasSBI = hasSBI || f.matchSymbol(row.Symbol)
 			}
 		}
 		if !hasSBI {
 			continue
+		}
+		if f.Symbol != "" {
+			selected := rows[:0]
+			for _, row := range rows {
+				if f.matchSymbol(row.Symbol) {
+					selected = append(selected, row)
+				}
+			}
+			rows = selected
 		}
 		results, err := s.deps.Trades.SBIAccounting(ctx, rows)
 		if err != nil {
