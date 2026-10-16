@@ -2,6 +2,7 @@ import { MetricHelp } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { StatBar } from "./StatBar";
+import { ResponsiveMoney } from "./ResponsiveMoney";
 import { pnlColor } from "./theme-tokens";
 import type { Summary, Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
@@ -25,20 +26,30 @@ function Meta({
   label,
   metric,
   value,
+  compactValue,
   className,
 }: {
   label: string;
   metric?: MetricId;
   value: string;
+  compactValue?: string;
   className?: string;
 }) {
   return (
-    <p className="m-0 flex items-baseline gap-1.5 text-[13px] tabular-nums">
-      <span className="font-medium tracking-wide text-muted-foreground">
+    <p className="m-0 flex min-w-0 max-w-full items-baseline gap-1.5 text-[13px] tabular-nums">
+      <span className="shrink-0 font-medium tracking-wide text-muted-foreground">
         {label}
         {metric && <MetricHelp metric={metric} />}
       </span>
-      <span className={cn("font-medium", className)}>{value}</span>
+      {compactValue ? (
+        <ResponsiveMoney
+          value={value}
+          compactValue={compactValue}
+          className={cn("font-medium", className)}
+        />
+      ) : (
+        <span className={cn("font-medium", className)}>{value}</span>
+      )}
     </p>
   );
 }
@@ -53,7 +64,7 @@ export function PerformanceStrip({
 }: PerformanceStripProps) {
   const { t: tr } = useLinguiMacro();
 
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
+  const { fmtMoney, fmtSignedMoney, fmtMoneyCompact, fmtSignedMoneyCompact } = useMoneyFormatters();
   const locale = intlLocale();
   const total = Math.max(summary.total_trades, 1);
   const allTotal = Math.max(trades.length, 1);
@@ -65,9 +76,9 @@ export function PerformanceStrip({
   const money = (v: number) => v * fxRate;
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-3">
+    <div data-testid="performance-strip" className="flex h-full min-w-0 flex-col gap-3">
       {/* Net hero */}
-      <section className="flex min-h-[133px] flex-1 flex-col rounded-lg bg-card p-5">
+      <section className="flex min-w-0 flex-1 flex-col rounded-lg bg-card p-5">
         <p className="self-start text-[12px] font-semibold tracking-wide text-chart-3">
           {tr({ id: "accounts.performance", message: "Performance" })}
         </p>
@@ -76,27 +87,29 @@ export function PerformanceStrip({
           <MetricHelp metric="pnl" />
         </p>
         <div className="mt-3 flex flex-1 flex-col items-center justify-center text-center">
-          <p
+          <ResponsiveMoney
+            value={fmtSignedMoney(money(summary.net_pnl), currency, locale)}
+            compactValue={fmtSignedMoneyCompact(money(summary.net_pnl), currency, locale)}
             className={cn(
               "text-[32px] font-semibold leading-none tracking-[-0.04em] tabular-nums",
               pnlColor(summary.net_pnl),
               summary.net_pnl > 0 && "drop-shadow-[0_0_28px_var(--profit)]",
               summary.net_pnl < 0 && "drop-shadow-[0_0_28px_var(--loss)]",
             )}
-          >
-            {fmtSignedMoney(money(summary.net_pnl), currency, locale)}
-          </p>
-          <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1.5">
+          />
+          <div className="mt-4 grid w-full min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,140px),1fr))] gap-x-4 gap-y-1.5">
             <Meta
               metric="pnl"
               label={tr({ id: "accounts.gross", message: "Gross" })}
               value={fmtSignedMoney(money(gross), currency, locale)}
+              compactValue={fmtSignedMoneyCompact(money(gross), currency, locale)}
               className={pnlColor(gross)}
             />
             <Meta
               metric="fees"
               label={tr({ id: "accounts.fees", message: "Fees" })}
               value={fmtMoney(money(summary.total_fees), currency, locale)}
+              compactValue={fmtMoneyCompact(money(summary.total_fees), currency, locale)}
             />
             <Meta
               metric="profitFactor"
@@ -106,6 +119,7 @@ export function PerformanceStrip({
             <Meta
               label={tr({ id: "accounts.expect", message: "Expect" })}
               value={fmtSignedMoney(money(summary.expectancy), currency, locale)}
+              compactValue={fmtSignedMoneyCompact(money(summary.expectancy), currency, locale)}
               className={pnlColor(summary.expectancy)}
             />
           </div>
@@ -113,7 +127,7 @@ export function PerformanceStrip({
       </section>
 
       {/* Outcome filters */}
-      <div className="grid min-h-[91px] flex-[0.85] grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+      <div className="grid shrink-0 auto-rows-[minmax(91px,auto)] grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
         <StatBar
           label={tr({ id: "accounts.wins", message: "Wins" })}
           value={String(summary.wins)}
@@ -149,15 +163,17 @@ export function PerformanceStrip({
       </div>
 
       {/* Avg edge */}
-      <div className="grid min-h-[91px] flex-[0.85] grid-cols-2 gap-3">
+      <div className="grid min-h-[91px] shrink-0 grid-cols-2 gap-3">
         <StatBar
           label={tr({ id: "accounts.avgWin", message: "Avg win" })}
           value={fmtMoney(money(summary.avg_win), currency, locale)}
+          compactValue={fmtMoneyCompact(money(summary.avg_win), currency, locale)}
           tone="pos"
         />
         <StatBar
           label={tr({ id: "accounts.avgLoss", message: "Avg loss" })}
           value={fmtMoney(money(summary.avg_loss), currency, locale)}
+          compactValue={fmtMoneyCompact(money(summary.avg_loss), currency, locale)}
           tone="neg"
         />
       </div>
