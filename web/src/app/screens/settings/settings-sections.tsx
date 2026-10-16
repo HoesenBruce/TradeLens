@@ -240,6 +240,15 @@ export function AccountsTab({
       return { queryKey: ["trades", request], queryFn: () => tradesApi.list(request) };
     }),
   });
+  const accountMoney = useQueries({
+    queries: accounts.map((account) => {
+      const request = { account_id: account.id, target_currency: account.base_currency };
+      return {
+        queryKey: ["analytics", "summary", request],
+        queryFn: () => analyticsApi.summary(request),
+      };
+    }),
+  });
   const accountFunding = useQueries({
     queries: accounts.map((account) => {
       const request = { account_id: account.id, target_currency: account.base_currency };
@@ -763,11 +772,13 @@ export function AccountsTab({
               <div className="flex flex-col gap-2">
                 {accounts.map((acc, index) => {
                   const funding = accountFunding[index];
-                  const ready = accountTrades[index]?.isSuccess && funding?.isSuccess;
+                  const money = accountMoney[index];
+                  const ready =
+                    accountTrades[index]?.isSuccess && funding?.isSuccess && money?.isSuccess;
                   const balance = ledgerBalance(acc, funding?.data?.cash_transactions ?? []);
                   const isPrimary = acc.id === primaryId;
                   const tradeCount = tradeCountByAccount.get(acc.id) ?? 0;
-                  const netPnl = (funding?.data?.points?.at(-1)?.equity ?? balance) - balance;
+                  const netPnl = money?.data?.realized_pnl ?? money?.data?.net_pnl ?? 0;
                   const locale = intlLocale();
                   const equity = balance + netPnl;
                   const conn = connByAccount.get(acc.id);

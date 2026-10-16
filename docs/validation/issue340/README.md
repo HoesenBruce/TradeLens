@@ -13,7 +13,7 @@ rather than reimplemented. Event-to-review association uses execution ID lookups
 | Header amount / existing return numerator | `summary.realized_pnl` |
 | Home performance net / annual goal | Same monetary field |
 | Account detail amount / return | Account-only full-history monetary field; existing ledger denominator |
-| Settings account cards | Same realized equity curve less its separate cash ledger |
+| Settings account cards | Same account-only `summary.realized_pnl`, without inferring P&L from cash/curve differences |
 | Realized equity and drawdown | SBI close events + existing non-SBI closed groups + unchanged separate cash flows |
 | Home gross / fees | Explicitly labelled completed-group amounts |
 | Reports, calendar/Day Review, setups and outcome ratios | Existing completed-group review population |
@@ -75,3 +75,7 @@ passed separately. Web check: zero errors (existing warnings); full Web unit
 suite: 203 files / 1,260 tests passed. A failing local synthetic market provider
 also exercised the account-detail unavailable state (equity and money show —,
 return hidden), followed by recovery to the normal offline QA configuration.
+
+Account-card regression also uses a curve with a cash rounding difference and
+a different review net amount: cards read realized money directly, so neither
+ledger rounding nor the review population can leak into trading P&L.
