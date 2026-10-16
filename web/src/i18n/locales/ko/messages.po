@@ -10983,12 +10983,12 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/app/screens/settings/import-history.tsx:159
 msgid "accounts.sbiMarginPnLSource"
-msgstr ""
+msgstr "SBI realized P&L (pretax)"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ImportView.tsx:746
 msgid "imports.sbiEnrichmentHint"
-msgstr ""
+msgstr "SBI cash and margin pretax realized P&L updates matching closing executions only. Review each row before confirming; resolve conflicts and ambiguity first. No new fills are created."
 
 #. js-lingui-explicit-id
 #: src/components/ReportsControlBar.tsx:54

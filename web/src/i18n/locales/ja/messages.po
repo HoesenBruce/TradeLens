@@ -10983,12 +10983,12 @@ msgstr "表示中のカード、順序、現在の期間とフィルターを保
 #. js-lingui-explicit-id
 #: src/app/screens/settings/import-history.tsx:159
 msgid "accounts.sbiMarginPnLSource"
-msgstr ""
+msgstr "SBI 実現損益（税引前）"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ImportView.tsx:746
 msgid "imports.sbiEnrichmentHint"
-msgstr ""
+msgstr "SBI の現物・信用の税引前実現損益を一致する決済約定に補完します。各行を確認し、競合と曖昧な一致を解消してください。約定は追加されません。"
 
 #. js-lingui-explicit-id
 #: src/components/ReportsControlBar.tsx:54

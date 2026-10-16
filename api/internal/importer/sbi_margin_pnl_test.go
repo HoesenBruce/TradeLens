@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"github.com/tradermemos/api/internal/marketdata"
 	"os"
 	"path/filepath"
 	"testing"
@@ -52,6 +54,17 @@ func TestSBIMarginPnLEnrichment(t *testing.T) {
 	disagree[1].Basis = 5999
 	require.Equal(t, "conflict", MatchSBIMarginPnL(disagree, fills)[0].Status)
 	require.Equal(t, "conflict", MatchSBIMarginPnL(disagree, fills)[1].Status)
+	// Fail after metadata writes during regroup: the caller's transaction must roll back.
+	tx, err := conn.BeginTx(ctx, nil)
+	require.NoError(t, err)
+	_, err = CommitSBIMarginPnL(ctx, q.WithTx(tx), "u", "a", matched, func(context.Context, marketdata.Request) (marketdata.Response, error) {
+		return marketdata.Response{}, fmt.Errorf("synthetic market failure")
+	})
+	require.Error(t, err)
+	require.NoError(t, tx.Rollback())
+	unchanged, err := q.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: "u", AccountID: "a"})
+	require.NoError(t, err)
+	require.Equal(t, fills, unchanged)
 	n, err := CommitSBIMarginPnL(ctx, q, "u", "a", matched)
 	require.NoError(t, err)
 	require.Equal(t, 1, n)
