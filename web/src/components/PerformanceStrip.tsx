@@ -73,6 +73,7 @@ export function PerformanceStrip({
   // gross_profit/gross_loss are net-based win/loss buckets, so their difference is
   // just net_pnl. Real gross P&L is net plus the fees that were deducted from it.
   const gross = summary.net_pnl + summary.total_fees;
+  const net = summary.realized_pnl ?? summary.net_pnl;
   const money = (v: number) => v * fxRate;
 
   return (
@@ -84,30 +85,30 @@ export function PerformanceStrip({
         </p>
         <p className="mt-3 self-start text-[12px] font-medium tracking-wide text-muted-foreground">
           {tr({ id: "accounts.net", message: "Net" })}
-          <MetricHelp metric="pnl" />
+          <MetricHelp metric="accountPerformance" />
         </p>
         <div className="mt-3 flex flex-1 flex-col items-center justify-center text-center">
           <ResponsiveValue
-            value={fmtSignedMoney(money(summary.net_pnl), currency, locale)}
-            compactValue={fmtSignedMoneyCompact(money(summary.net_pnl), currency, locale)}
+            value={fmtSignedMoney(money(net), currency, locale)}
+            compactValue={fmtSignedMoneyCompact(money(net), currency, locale)}
             className={cn(
               "text-[32px] font-semibold leading-none tracking-[-0.04em] tabular-nums",
-              pnlColor(summary.net_pnl),
-              summary.net_pnl > 0 && "drop-shadow-[0_0_28px_var(--profit)]",
-              summary.net_pnl < 0 && "drop-shadow-[0_0_28px_var(--loss)]",
+              pnlColor(net),
+              net > 0 && "drop-shadow-[0_0_28px_var(--profit)]",
+              net < 0 && "drop-shadow-[0_0_28px_var(--loss)]",
             )}
           />
           <div className="mt-4 grid w-full min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,140px),1fr))] gap-x-4 gap-y-1.5">
             <Meta
               metric="pnl"
-              label={tr({ id: "accounts.gross", message: "Gross" })}
+              label={tr({ id: "accounts.closedGross", message: "Closed-group gross" })}
               value={fmtSignedMoney(money(gross), currency, locale)}
               compactValue={fmtSignedMoneyCompact(money(gross), currency, locale)}
               className={pnlColor(gross)}
             />
             <Meta
               metric="fees"
-              label={tr({ id: "accounts.fees", message: "Fees" })}
+              label={tr({ id: "accounts.closedFees", message: "Closed-group fees" })}
               value={fmtMoney(money(summary.total_fees), currency, locale)}
               compactValue={fmtMoneyCompact(money(summary.total_fees), currency, locale)}
             />
@@ -126,6 +127,13 @@ export function PerformanceStrip({
         </div>
       </section>
 
+      <p className="m-0 text-[11px] text-muted-foreground">
+        {tr({
+          id: "accounts.moneyPopulation",
+          message:
+            "Trading money includes SBI partial closes. Statistics use completed trade groups.",
+        })}
+      </p>
       {/* Outcome filters */}
       <div className="grid shrink-0 auto-rows-[minmax(91px,auto)] grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
         <StatBar

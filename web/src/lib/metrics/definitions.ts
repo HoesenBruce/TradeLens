@@ -211,7 +211,7 @@ export const metricDefinitions = {
     formula: msg({
       id: "metric.drawdown.formula",
       message:
-        "Equity starts at 0 and adds signed cash-ledger flows and eligible closed-trade net P&L chronologically. Max drawdown = maximum (running peak − equity), rounded to 2 decimals.",
+        "Equity starts at 0, adding signed cash flows and trading realized P&L in time order. SBI uses close events including partial closes; others retain completed groups. Max drawdown = maximum (running peak − equity).",
     }),
     unit: msg({
       id: "metric.drawdown.unit",
@@ -253,7 +253,7 @@ export const metricDefinitions = {
     formula: msg({
       id: "metric.accountPerformance.formula",
       message:
-        "Sum of eligible closed-trade net P&L from the analytics summary, after fees. The active account and trade filters apply.",
+        "SBI: sum individual realized closes, including partial closes, by close date. Other brokers: existing completed-group net P&L. Account and trade filters apply.",
     }),
     unit: msg({
       id: "metric.accountPerformance.unit",
@@ -262,7 +262,7 @@ export const metricDefinitions = {
     caveat: msg({
       id: "metric.accountPerformance.caveat",
       message:
-        "Excludes open trades, including their partial-close P&L, and unrealized market value. Cash-ledger flows are not trading P&L. Current FX/display normalization is not historical FX attribution.",
+        "SBI broker-reported results are pretax; missing reports may use labelled estimates. Unrealized P&L and cash flows are excluded. Counts, win rate and profit factor still use completed groups.",
     }),
   },
   accountReturn: {
@@ -275,7 +275,7 @@ export const metricDefinitions = {
     formula: msg({
       id: "metric.accountReturn.formula",
       message:
-        "Filtered closed-trade net P&L ÷ selected accounts’ signed cash-ledger total × 100. Opening balance is already a deposit and is not added twice.",
+        "Filtered trading realized P&L ÷ selected accounts’ signed cash-ledger total × 100. The existing funding denominator is unchanged.",
     }),
     unit: msg({
       id: "metric.accountReturn.unit",
@@ -284,25 +284,25 @@ export const metricDefinitions = {
     caveat: msg({
       id: "metric.accountReturn.caveat",
       message:
-        "Hidden when funding ≤ 0 or required data/currency normalization is unavailable. Not time-weighted or money-weighted return: cash-flow dates are not weighted. Excludes open-trade and unrealized P&L. Current FX normalization is not historical FX attribution.",
+        "Hidden when funding ≤ 0 or required data is unavailable. Includes eligible SBI partial closes; other brokers retain completed-group semantics. No time weighting or unrealized P&L.",
     }),
   },
   accountRealizedPnl: {
     title: msg({ id: "metric.accountRealizedPnl.title", message: "Account realized P&L" }),
     definition: msg({
       id: "metric.accountRealizedPnl.definition",
-      message: "Sum of available trade net P&L in this account’s loaded trade history.",
+      message: "Trading realized P&L for this account, including eligible SBI partial closes.",
     }),
     formula: msg({
       id: "metric.accountRealizedPnl.formula",
       message:
-        "Add each loaded trade’s net P&L after fees; missing P&L adds zero. This account’s history is used, independently of the header’s trade filters.",
+        "SBI uses individual close results once; other brokers retain completed-group amounts. This account’s full history is independent of header filters.",
     }),
     unit: msg({ id: "metric.accountRealizedPnl.unit", message: "Account base currency." }),
     caveat: msg({
       id: "metric.accountRealizedPnl.caveat",
       message:
-        "Can include available partial-close realized P&L from open trades. Missing P&L is not an estimate. Excludes unrealized market value and cash-ledger flows.",
+        "SBI reported results are pretax; fallback estimates are labelled. Missing evidence never creates a result. Dividends, tax cash entries and funding remain separate; unrealized value is excluded.",
     }),
   },
   accountDetailReturn: {
@@ -314,13 +314,13 @@ export const metricDefinitions = {
     formula: msg({
       id: "metric.accountDetailReturn.formula",
       message:
-        "Sum of available trade net P&L ÷ this account’s signed cash-ledger total × 100. Opening balance is already a deposit and is not added twice.",
+        "Account trading realized P&L ÷ this account’s signed cash-ledger total × 100. The existing denominator is unchanged.",
     }),
     unit: msg({ id: "metric.accountDetailReturn.unit", message: "%." }),
     caveat: msg({
       id: "metric.accountDetailReturn.caveat",
       message:
-        "Hidden only when the denominator is zero; a negative ledger total can reverse the percentage’s sign. Can include available partial-close P&L; missing P&L adds zero. Not time-weighted or money-weighted return, and excludes unrealized P&L.",
+        "Hidden only when the denominator is zero; a negative total can reverse the sign. Includes eligible SBI partial closes. No time weighting or unrealized P&L.",
     }),
   },
   reportPnl: {

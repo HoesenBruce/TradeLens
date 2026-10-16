@@ -10982,12 +10982,12 @@ msgstr "Saves the visible cards, their order, and the current date range and fil
 #. js-lingui-explicit-id
 #: src/app/screens/settings/import-history.tsx:159
 msgid "accounts.sbiMarginPnLSource"
-msgstr "SBI margin realized P&L"
+msgstr "SBI realized P&L (pretax)"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ImportView.tsx:746
 msgid "imports.sbiEnrichmentHint"
-msgstr "SBI margin realized P&L updates matching closing executions only. Review each row before confirming; no new fills are created."
+msgstr "SBI cash and margin pretax realized P&L updates matching closing executions only. Review each row before confirming; resolve conflicts and ambiguity first. No new fills are created."
 
 #. js-lingui-explicit-id
 #: src/components/ReportsControlBar.tsx:54
@@ -12971,7 +12971,7 @@ msgstr "Largest recorded peak-to-trough decline of the API equity curve."
 
 #. js-lingui-explicit-id
 msgid "metric.drawdown.formula"
-msgstr "Equity starts at 0 and adds signed cash-ledger flows and eligible closed-trade net P&L chronologically. Max drawdown = maximum (running peak − equity), rounded to 2 decimals."
+msgstr "Equity starts at 0, adding signed cash flows and trading realized P&L in time order. SBI uses close events including partial closes; others retain completed groups. Max drawdown = maximum (running peak − equity)."
 
 #. js-lingui-explicit-id
 msgid "metric.drawdown.unit"
@@ -13011,7 +13011,7 @@ msgstr "Header net realized trading P&L relative to the selected accounts’ sig
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.formula"
-msgstr "Filtered closed-trade net P&L ÷ selected accounts’ signed cash-ledger total × 100. Opening balance is already a deposit and is not added twice."
+msgstr "Filtered trading realized P&L ÷ selected accounts’ signed cash-ledger total × 100. The existing funding denominator is unchanged."
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.unit"
@@ -13019,7 +13019,7 @@ msgstr "%."
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.caveat"
-msgstr "Hidden when funding ≤ 0 or required data/currency normalization is unavailable. Not time-weighted or money-weighted return: cash-flow dates are not weighted. Excludes open-trade and unrealized P&L. Current FX normalization is not historical FX attribution."
+msgstr "Hidden when funding ≤ 0 or required data is unavailable. Includes eligible SBI partial closes; other brokers retain completed-group semantics. No time weighting or unrealized P&L."
 
 #. js-lingui-explicit-id
 msgid "metric.reportPnl.title"
@@ -13131,7 +13131,7 @@ msgstr "Net realized trading P&L for the current header filter scope."
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.formula"
-msgstr "Sum of eligible closed-trade net P&L from the analytics summary, after fees. The active account and trade filters apply."
+msgstr "SBI: sum individual realized closes, including partial closes, by close date. Other brokers: existing completed-group net P&L. Account and trade filters apply."
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.unit"
@@ -13139,7 +13139,7 @@ msgstr "Account/normalized display currency."
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.caveat"
-msgstr "Excludes open trades, including their partial-close P&L, and unrealized market value. Cash-ledger flows are not trading P&L. Current FX/display normalization is not historical FX attribution."
+msgstr "SBI broker-reported results are pretax; missing reports may use labelled estimates. Unrealized P&L and cash flows are excluded. Counts, win rate and profit factor still use completed groups."
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.title"
@@ -13147,11 +13147,11 @@ msgstr "Account realized P&L"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.definition"
-msgstr "Sum of available trade net P&L in this account’s loaded trade history."
+msgstr "Trading realized P&L for this account, including eligible SBI partial closes."
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.formula"
-msgstr "Add each loaded trade’s net P&L after fees; missing P&L adds zero. This account’s history is used, independently of the header’s trade filters."
+msgstr "SBI uses individual close results once; other brokers retain completed-group amounts. This account’s full history is independent of header filters."
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.unit"
@@ -13159,7 +13159,7 @@ msgstr "Account base currency."
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.caveat"
-msgstr "Can include available partial-close realized P&L from open trades. Missing P&L is not an estimate. Excludes unrealized market value and cash-ledger flows."
+msgstr "SBI reported results are pretax; fallback estimates are labelled. Missing evidence never creates a result. Dividends, tax cash entries and funding remain separate; unrealized value is excluded."
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.title"
@@ -13171,7 +13171,7 @@ msgstr "Account-detail realized P&L relative to this account’s signed cash-led
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.formula"
-msgstr "Sum of available trade net P&L ÷ this account’s signed cash-ledger total × 100. Opening balance is already a deposit and is not added twice."
+msgstr "Account trading realized P&L ÷ this account’s signed cash-ledger total × 100. The existing denominator is unchanged."
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.unit"
@@ -13179,4 +13179,16 @@ msgstr "%."
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.caveat"
-msgstr "Hidden only when the denominator is zero; a negative ledger total can reverse the percentage’s sign. Can include available partial-close P&L; missing P&L adds zero. Not time-weighted or money-weighted return, and excludes unrealized P&L."
+msgstr "Hidden only when the denominator is zero; a negative total can reverse the sign. Includes eligible SBI partial closes. No time weighting or unrealized P&L."
+
+#. js-lingui-explicit-id
+msgid "accounts.closedGross"
+msgstr "Closed-group gross"
+
+#. js-lingui-explicit-id
+msgid "accounts.closedFees"
+msgstr "Closed-group fees"
+
+#. js-lingui-explicit-id
+msgid "accounts.moneyPopulation"
+msgstr "Trading money includes SBI partial closes. Statistics use completed trade groups."

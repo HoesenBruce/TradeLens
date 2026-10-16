@@ -348,7 +348,11 @@ func (s *Server) handleEquityCurve(c *echo.Context) error {
 		return Fail(http.StatusBadRequest, "bad_request", err.Error(), nil)
 	}
 
-	meta, trades, err := s.normalizedTrades(ctx, uid, f, c.QueryParam("target_currency"))
+	meta, rows, err := s.normalizedClosedRows(ctx, uid, f, c.QueryParam("target_currency"))
+	if err != nil {
+		return err
+	}
+	trades, err := s.realizedTrades(ctx, uid, f, &meta, rows)
 	if err != nil {
 		return err
 	}

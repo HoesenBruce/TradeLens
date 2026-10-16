@@ -10983,12 +10983,12 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/app/screens/settings/import-history.tsx:159
 msgid "accounts.sbiMarginPnLSource"
-msgstr ""
+msgstr "SBI realized P&L (pretax)"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ImportView.tsx:746
 msgid "imports.sbiEnrichmentHint"
-msgstr ""
+msgstr "SBI cash and margin pretax realized P&L updates matching closing executions only. Review each row before confirming; resolve conflicts and ambiguity first. No new fills are created."
 
 #. js-lingui-explicit-id
 #: src/components/ReportsControlBar.tsx:54
@@ -12968,7 +12968,7 @@ msgstr "API權益曲線上記錄的最大峰谷跌幅。"
 
 #. js-lingui-explicit-id
 msgid "metric.drawdown.formula"
-msgstr "權益從0開始，按時間加入帶符號的現金賬本流水和符合條件的已平倉淨盈虧。最大回撤 = 歷史峰值 − 當前權益的最大值，捨入至兩位小數。"
+msgstr "權益從零開始，按時間累加資金流水和交易已實現損益。SBI 使用逐筆平倉事件（含部分平倉），其他券商保留已完成組口徑。最大回撤為運行峰值減權益的最大值。"
 
 #. js-lingui-explicit-id
 msgid "metric.drawdown.unit"
@@ -13008,7 +13008,7 @@ msgstr "頂部已實現交易淨損益相對所選帳戶帶正負號現金帳本
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.formula"
-msgstr "篩選後的已平倉淨損益 ÷ 所選帳戶帶正負號現金帳本總額 × 100。初始結餘已作為入金，不重複加入。"
+msgstr "篩選範圍內的交易已實現損益 ÷ 所選賬戶帶符號資金賬本合計 × 100；原有資金分母保持不變。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.unit"
@@ -13016,7 +13016,7 @@ msgstr "%。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.caveat"
-msgstr "資金≤0或所需資料／幣種標準化無法使用時隱藏。並非時間加權或資金加權回報，不按現金流日期加權。不含未平倉交易及未實現損益。目前匯率標準化並非歷史匯率歸因。"
+msgstr "資金 ≤ 0 或所需數據不可用時隱藏。包含符合條件的 SBI 部分平倉；其他券商保留已完成組口徑。不做時間加權，不含未實現損益。"
 
 #. js-lingui-explicit-id
 msgid "metric.reportPnl.title"
@@ -13128,7 +13128,7 @@ msgstr "目前頂部篩選範圍內的已實現交易淨損益。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.formula"
-msgstr "彙總統計中符合條件的已平倉交易淨損益之和，已扣除費用；套用目前帳戶及交易篩選。"
+msgstr "SBI 按平倉日期匯總逐筆已實現損益，包括部分平倉；其他券商保留已完成交易組口徑。賬戶和交易篩選生效。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.unit"
@@ -13136,7 +13136,7 @@ msgstr "帳戶／標準化顯示幣種。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.caveat"
-msgstr "不含未平倉交易（包括其部分平倉損益）及未實現市值。現金帳本流水並非交易損益。目前匯率標準化並非歷史匯率歸因。"
+msgstr "SBI 券商報告值為稅前損益；缺少報告時可能採用已標註的估算。排除未實現損益和資金流水；交易數、勝率和盈利因子仍基於已完成交易組。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.title"
@@ -13144,11 +13144,11 @@ msgstr "帳戶已實現損益"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.definition"
-msgstr "此帳戶已載入交易歷史中可用淨損益的總和。"
+msgstr "本賬戶交易已實現損益，包括符合條件的 SBI 部分平倉。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.formula"
-msgstr "累加每筆已載入交易扣費後的淨損益，缺失損益按0累加。使用此帳戶歷史，不受頂部交易篩選影響。"
+msgstr "SBI 逐筆平倉結果僅計一次；其他券商保留已完成組金額。使用本賬戶完整歷史，不受頂部篩選影響。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.unit"
@@ -13156,7 +13156,7 @@ msgstr "帳戶基礎幣種。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.caveat"
-msgstr "可能包含未平倉交易中可用的部分平倉已實現損益。缺失損益並非估算值。不含未實現市值及現金帳本流水。"
+msgstr "SBI 報告損益為稅前，回退估算會標註；不憑空補造缺失結果。分紅、稅款流水和出入金單獨處理，不含未實現市值變動。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.title"
@@ -13168,7 +13168,7 @@ msgstr "帳戶詳情中的已實現損益相對此帳戶帶正負號現金帳本
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.formula"
-msgstr "可用交易淨損益之和 ÷ 此帳戶帶正負號現金帳本總額 × 100。初始結餘已作為入金，不重複加入。"
+msgstr "本賬戶交易已實現損益 ÷ 本賬戶帶符號資金賬本合計 × 100；原有分母不變。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.unit"
@@ -13176,4 +13176,16 @@ msgstr "%。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.caveat"
-msgstr "僅在分母為零時隱藏；帳本總額為負可能令百分比正負號反轉。可能包含可用的部分平倉損益，缺失損益按0累加。並非時間加權或資金加權回報，不含未實現損益。"
+msgstr "僅在分母為零時隱藏；負資金合計可能反轉百分比符號。包含符合條件的 SBI 部分平倉，不做時間加權，不含未實現損益。"
+
+#. js-lingui-explicit-id
+msgid "accounts.closedGross"
+msgstr "已完成組毛盈虧"
+
+#. js-lingui-explicit-id
+msgid "accounts.closedFees"
+msgstr "已完成組費用"
+
+#. js-lingui-explicit-id
+msgid "accounts.moneyPopulation"
+msgstr "交易金額包含 SBI 部分平倉；統計指標使用已完成交易組。"

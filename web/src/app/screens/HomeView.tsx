@@ -600,6 +600,7 @@ export function HomeView({
     !summaryError &&
     !tradesError &&
     summary?.total_trades === 0 &&
+    (summary?.realized_event_count ?? 0) === 0 &&
     baselineTrades.length === 0;
 
   if (noData) {

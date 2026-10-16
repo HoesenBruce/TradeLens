@@ -29,6 +29,7 @@ import {
 } from "@/lib/hooks/useAccounts";
 import { useCash } from "@/lib/hooks/useCash";
 import { useFlexSync, useRunFlexSync } from "@/lib/hooks/useFlexSync";
+import { useSummary } from "@/lib/hooks/useAnalytics";
 import { useTrades } from "@/lib/hooks/useTrades";
 import { intlLocale } from "@/lib/locale";
 import { ClearTradesButton, DeleteAccountButton } from "@/app/screens/settings/settings-ui";
@@ -386,6 +387,7 @@ export function AccountDetailView({
   const account = accounts.find((a) => a.id === accountId);
   const tradesQ = useTrades({ account_id: accountId });
   const cashQ = useCash({ account_id: accountId });
+  const summaryQ = useSummary({ account_id: accountId });
   const deleteAccount = useDeleteAccount();
   const clearTrades = useClearAccountTrades();
 
@@ -408,7 +410,8 @@ export function AccountDetailView({
   }
 
   const trades = tradesQ.data ?? [];
-  const netPnl = trades.reduce((sum, t) => sum + (t.net_pnl ?? 0), 0);
+  const monetaryReady = !summaryQ.isError && summaryQ.data != null;
+  const netPnl = summaryQ.data?.realized_pnl ?? summaryQ.data?.net_pnl ?? 0;
   const tradeCount = trades.length;
   const balance = ledgerBalance(account, cashQ.data ?? []);
   const equity = balance + netPnl;
@@ -416,7 +419,7 @@ export function AccountDetailView({
   const isPrimary = account.id === primaryAccountId(accounts);
   const isOnlyAccount = accounts.length === 1;
   const pnlPct =
-    balance !== 0
+    monetaryReady && balance !== 0
       ? (netPnl / balance).toLocaleString(locale, {
           style: "percent",
           maximumFractionDigits: 2,
@@ -474,14 +477,24 @@ export function AccountDetailView({
           />
           <Stat
             label={tr({ id: "accounts.equity", message: "Equity" })}
-            value={<Money value={equity} currency={account.base_currency} locale={locale} />}
+            value={
+              monetaryReady ? (
+                <Money value={equity} currency={account.base_currency} locale={locale} />
+              ) : (
+                "—"
+              )
+            }
           />
           <Stat
             label={tr({ id: "accounts.realized", message: "Realized P&L" })}
             value={
               <span className="flex min-w-0 max-w-full flex-wrap items-baseline gap-x-1">
                 <span className="flex w-full min-w-0 items-baseline">
-                  <Money value={netPnl} currency={account.base_currency} locale={locale} signed />
+                  {monetaryReady ? (
+                    <Money value={netPnl} currency={account.base_currency} locale={locale} signed />
+                  ) : (
+                    "—"
+                  )}
                   <MetricHelp metric="accountRealizedPnl" />
                 </span>
                 {pnlPct && (

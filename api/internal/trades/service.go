@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -41,83 +42,9 @@ func (s *Service) Regroup(ctx context.Context, userID, accountID string) error {
 	if err != nil {
 		return err
 	}
-	basis := positions.ConversionBasis(rows)
-	settlements := positions.SettlementResults(rows)
-	for _, r := range rows {
-		if lotKeyFromDetails(r.Details) == "sbi:cash" && conversionTypeFromDetails(r.Details) == "genbiki" {
-			if _, ok := basis[r.ID]; !ok {
-				return fmt.Errorf("SBI genbiki %s: insufficient margin history for acquisition basis", r.ID)
-			}
-		}
-	}
-	// partition by symbol+instrument[+lot|+option contract]
-	groups := map[string][]Execution{}
-	for _, r := range rows {
-		lot := lotKeyFromDetails(r.Details)
-		settlementType := settlementTypeFromDetails(r.Details)
-		if settlementType == "genwatashi" && (lot == "sbi:cash" || lot == "sbi:margin-short") {
-			result, ok := settlements[r.ID]
-			if !ok {
-				return fmt.Errorf("SBI genwatashi %s: missing or ambiguous settlement history", r.ID)
-			}
-			details := map[string]any{}
-			if err := json.Unmarshal([]byte(r.Details.String), &details); err != nil {
-				return err
-			}
-			for field, value := range map[string]float64{
-				"cash_qty_disposed": result.CashQtyDisposed, "cash_cost_basis_used": result.CashCostBasisUsed,
-				"margin_short_qty_closed": result.MarginShortQtyClosed, "disposal_price": result.DisposalPrice,
-				"applicable_costs": result.ApplicableCosts, "realized_pnl": result.RealizedPnL,
-			} {
-				details[field] = strconv.FormatFloat(value, 'f', -1, 64)
-			}
-			details["realized_pnl_source"] = result.Source
-			encoded, err := json.Marshal(details)
-			if err != nil {
-				return err
-			}
-			r.Details = sql.NullString{String: string(encoded), Valid: true}
-			if err := s.q.UpdateExecutionContract(ctx, store.UpdateExecutionContractParams{ID: r.ID, UserID: r.UserID, Symbol: r.Symbol, DedupHash: r.DedupHash, Details: r.Details}); err != nil {
-				return err
-			}
-			if lot == "sbi:cash" {
-				r.Price, r.Fees, r.Commission = result.DisposalPrice, result.ApplicableCosts, 0
-			}
-		}
-		if cost, ok := basis[r.ID]; ok {
-			// Retain the broker reference price; persist derived basis for audit.
-			details := map[string]any{}
-			if err := json.Unmarshal([]byte(r.Details.String), &details); err != nil {
-				return err
-			}
-			unit := cost / r.Quantity
-			totalText, unitText := strconv.FormatFloat(cost, 'f', -1, 64), strconv.FormatFloat(unit, 'f', -1, 64)
-			if details["transferred_cost_basis"] != totalText || details["transferred_unit_cost"] != unitText {
-				details["transferred_cost_basis"], details["transferred_unit_cost"] = totalText, unitText
-				encoded, err := json.Marshal(details)
-				if err != nil {
-					return err
-				}
-				r.Details = sql.NullString{String: string(encoded), Valid: true}
-				if err := s.q.UpdateExecutionContract(ctx, store.UpdateExecutionContractParams{ID: r.ID, UserID: r.UserID, Symbol: r.Symbol, DedupHash: r.DedupHash, Details: r.Details}); err != nil {
-					return err
-				}
-			}
-			r.Price = unit
-			r.Fees = 0
-			r.Commission = 0
-		}
-		key := partitionKey(r.Symbol, r.InstrumentType, r.Details)
-		groups[key] = append(groups[key], Execution{
-			ID: r.ID, Symbol: r.Symbol, InstrumentType: r.InstrumentType, Side: r.Side,
-			Quantity: r.Quantity, Price: r.Price, Fees: r.Fees, Commission: r.Commission,
-			ExecutedAt: r.ExecutedAt, Multiplier: r.Multiplier, LotKey: lot,
-			BrokerReportedPnl:   reportedPnlFromDetails(r.Details),
-			SettlementType:      settlementType,
-			SettlementResult:    settlementResult(settlements, r.ID),
-			ConversionType:      conversionTypeFromDetails(r.Details),
-			SourceTimePrecision: sourceTimePrecisionFromDetails(r.Details),
-		})
+	groups, err := s.executionGroups(ctx, rows, true)
+	if err != nil {
+		return err
 	}
 
 	// Collect the whole regroup first, then write it in a handful of
@@ -390,4 +317,130 @@ func ni(p *int64) sql.NullInt64 {
 		return sql.NullInt64{}
 	}
 	return sql.NullInt64{Int64: *p, Valid: true}
+}
+
+func reportedBasisFromDetails(details sql.NullString) *float64 {
+	var d struct {
+		Basis *float64 `json:"broker_reported_close_basis"`
+	}
+	if !details.Valid || json.Unmarshal([]byte(details.String), &d) != nil {
+		return nil
+	}
+	return d.Basis
+}
+
+// executionGroups prepares the same broker inputs for writes and realized-money reads.
+func (s *Service) executionGroups(ctx context.Context, rows []store.Execution, persist bool) (map[string][]Execution, error) {
+	basis := positions.ConversionBasis(rows)
+	settlements := positions.SettlementResults(rows)
+	for _, r := range rows {
+		if lotKeyFromDetails(r.Details) == "sbi:cash" && conversionTypeFromDetails(r.Details) == "genbiki" {
+			if _, ok := basis[r.ID]; !ok {
+				return nil, fmt.Errorf("SBI genbiki %s: insufficient margin history for acquisition basis", r.ID)
+			}
+		}
+	}
+	// partition by symbol+instrument[+lot|+option contract]
+	groups := map[string][]Execution{}
+	for _, r := range rows {
+		lot := lotKeyFromDetails(r.Details)
+		settlementType := settlementTypeFromDetails(r.Details)
+		if settlementType == "genwatashi" && (lot == "sbi:cash" || lot == "sbi:margin-short") {
+			result, ok := settlements[r.ID]
+			if !ok {
+				return nil, fmt.Errorf("SBI genwatashi %s: missing or ambiguous settlement history", r.ID)
+			}
+			details := map[string]any{}
+			if err := json.Unmarshal([]byte(r.Details.String), &details); err != nil {
+				return nil, err
+			}
+			for field, value := range map[string]float64{
+				"cash_qty_disposed": result.CashQtyDisposed, "cash_cost_basis_used": result.CashCostBasisUsed,
+				"margin_short_qty_closed": result.MarginShortQtyClosed, "disposal_price": result.DisposalPrice,
+				"applicable_costs": result.ApplicableCosts, "realized_pnl": result.RealizedPnL,
+			} {
+				details[field] = strconv.FormatFloat(value, 'f', -1, 64)
+			}
+			details["realized_pnl_source"] = result.Source
+			encoded, err := json.Marshal(details)
+			if err != nil {
+				return nil, err
+			}
+			r.Details = sql.NullString{String: string(encoded), Valid: true}
+			if persist {
+				if err := s.q.UpdateExecutionContract(ctx, store.UpdateExecutionContractParams{ID: r.ID, UserID: r.UserID, Symbol: r.Symbol, DedupHash: r.DedupHash, Details: r.Details}); err != nil {
+					return nil, err
+				}
+			}
+			if lot == "sbi:cash" {
+				r.Price, r.Fees, r.Commission = result.DisposalPrice, result.ApplicableCosts, 0
+			}
+		}
+		if cost, ok := basis[r.ID]; ok {
+			// Retain the broker reference price; persist derived basis for audit.
+			details := map[string]any{}
+			if err := json.Unmarshal([]byte(r.Details.String), &details); err != nil {
+				return nil, err
+			}
+			unit := cost / r.Quantity
+			totalText, unitText := strconv.FormatFloat(cost, 'f', -1, 64), strconv.FormatFloat(unit, 'f', -1, 64)
+			if details["transferred_cost_basis"] != totalText || details["transferred_unit_cost"] != unitText {
+				details["transferred_cost_basis"], details["transferred_unit_cost"] = totalText, unitText
+				encoded, err := json.Marshal(details)
+				if err != nil {
+					return nil, err
+				}
+				r.Details = sql.NullString{String: string(encoded), Valid: true}
+				if persist {
+					if err := s.q.UpdateExecutionContract(ctx, store.UpdateExecutionContractParams{ID: r.ID, UserID: r.UserID, Symbol: r.Symbol, DedupHash: r.DedupHash, Details: r.Details}); err != nil {
+						return nil, err
+					}
+				}
+			}
+			r.Price = unit
+			r.Fees = 0
+			r.Commission = 0
+		}
+		key := partitionKey(r.Symbol, r.InstrumentType, r.Details)
+		groups[key] = append(groups[key], Execution{
+			ID: r.ID, Symbol: r.Symbol, InstrumentType: r.InstrumentType, Side: r.Side,
+			Quantity: r.Quantity, Price: r.Price, Fees: r.Fees, Commission: r.Commission,
+			ExecutedAt: r.ExecutedAt, Multiplier: r.Multiplier, LotKey: lot,
+			BrokerReportedPnl:        reportedPnlFromDetails(r.Details),
+			BrokerReportedCloseBasis: reportedBasisFromDetails(r.Details),
+			SettlementType:           settlementType,
+			SettlementResult:         settlementResult(settlements, r.ID),
+			ConversionType:           conversionTypeFromDetails(r.Details),
+			SourceTimePrecision:      sourceTimePrecisionFromDetails(r.Details),
+		})
+	}
+
+	return groups, nil
+}
+
+// SBIAccounting is read-only and retains all history needed for acquisition basis.
+func (s *Service) SBIAccounting(ctx context.Context, rows []store.Execution) ([]AccountingResult, error) {
+	groups, err := s.executionGroups(ctx, rows, false)
+	if err != nil {
+		return nil, err
+	}
+	out := []AccountingResult{}
+	strategies := map[string]AccountingStrategy{"sbi:cash": SBICashAccounting, "sbi:margin-long": SBIMarginAccounting, "sbi:margin-short": SBIMarginAccounting}
+	keys := make([]string, 0, len(groups))
+	for key := range groups {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		g := groups[key]
+		if len(g) == 0 || strategies[g[0].LotKey] == nil {
+			continue
+		}
+		result := Account(g, strategies)
+		if err := s.checkSplitBoundaries(ctx, g, &result); err != nil {
+			return nil, err
+		}
+		out = append(out, result)
+	}
+	return out, nil
 }

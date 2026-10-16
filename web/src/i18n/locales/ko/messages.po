@@ -10983,12 +10983,12 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/app/screens/settings/import-history.tsx:159
 msgid "accounts.sbiMarginPnLSource"
-msgstr ""
+msgstr "SBI realized P&L (pretax)"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ImportView.tsx:746
 msgid "imports.sbiEnrichmentHint"
-msgstr ""
+msgstr "SBI cash and margin pretax realized P&L updates matching closing executions only. Review each row before confirming; resolve conflicts and ambiguity first. No new fills are created."
 
 #. js-lingui-explicit-id
 #: src/components/ReportsControlBar.tsx:54
@@ -12968,7 +12968,7 @@ msgstr "API 자산 곡선에 기록된 최고점 대비 최대 하락 금액입�
 
 #. js-lingui-explicit-id
 msgid "metric.drawdown.formula"
-msgstr "자산은 0에서 시작해 부호 있는 현금 원장과 대상 청산 순손익을 시간순으로 더합니다. 최대(누적 최고점 − 자산)를 소수 둘째 자리로 반올림합니다."
+msgstr "자산은 0에서 현금 흐름과 거래 실현손익을 시간순으로 합산합니다. SBI는 부분 청산 이벤트를, 다른 브로커는 완료 그룹을 사용합니다. 최대 낙폭은 누적 최고값과 자산 차이의 최대치입니다."
 
 #. js-lingui-explicit-id
 msgid "metric.drawdown.unit"
@@ -13008,7 +13008,7 @@ msgstr "선택한 계좌의 부호 있는 현금 원장 합계 대비 헤더의 
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.formula"
-msgstr "필터링된 청산 거래 순손익 ÷ 선택 계좌의 부호 있는 현금 원장 합계 × 100. 초기 잔액은 이미 입금으로 기록되어 중복 합산하지 않습니다."
+msgstr "필터된 거래 실현손익 ÷ 선택 계좌의 부호 있는 현금 원장 합계 × 100. 기존 분모는 유지됩니다."
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.unit"
@@ -13016,7 +13016,7 @@ msgstr "%."
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.caveat"
-msgstr "자금이 0 이하이거나 필요한 데이터／통화 환산을 사용할 수 없으면 숨깁니다. 시간가중 또는 금액가중 수익률이 아니며 현금 흐름 날짜에 가중치를 적용하지 않습니다. 미청산 거래 및 미실현 손익은 제외합니다. 현재 환율 환산은 과거 환율 기여도 분석이 아닙니다."
+msgstr "자금이 0 이하이거나 데이터가 없으면 숨깁니다. 적격 SBI 부분 청산을 포함하고 다른 브로커는 완료 그룹을 유지합니다. 시간 가중과 미실현손익은 포함하지 않습니다."
 
 #. js-lingui-explicit-id
 msgid "metric.reportPnl.title"
@@ -13128,7 +13128,7 @@ msgstr "현재 헤더 필터 범위의 실현 거래 순손익입니다."
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.formula"
-msgstr "분석 요약에 포함된 청산 거래의 수수료 차감 후 순손익을 합산합니다. 현재 계좌 및 거래 필터가 적용됩니다."
+msgstr "SBI는 부분 청산을 포함한 개별 실현손익을 청산일로 합산합니다. 다른 브로커는 기존 완료 거래 그룹을 사용하며 계좌와 거래 필터가 적용됩니다."
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.unit"
@@ -13136,7 +13136,7 @@ msgstr "계좌 통화／환산된 표시 통화."
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.caveat"
-msgstr "미청산 거래(부분 청산 손익 포함)와 미실현 평가손익은 제외합니다. 현금 원장 흐름은 거래 손익이 아닙니다. 현재 환율 환산은 과거 환율 기여도 분석이 아닙니다."
+msgstr "SBI 보고 손익은 세전이며 보고서가 없으면 표시된 추정값을 사용할 수 있습니다. 미실현손익과 현금 흐름은 제외하고 거래 수·승률·수익계수는 완료 그룹을 유지합니다."
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.title"
@@ -13144,11 +13144,11 @@ msgstr "계좌 실현 손익"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.definition"
-msgstr "이 계좌의 불러온 거래 내역에서 사용 가능한 순손익 합계입니다."
+msgstr "적격 SBI 부분 청산을 포함한 이 계좌의 거래 실현손익입니다."
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.formula"
-msgstr "불러온 각 거래의 수수료 차감 후 순손익을 합산하며 누락된 손익은 0으로 더합니다. 헤더의 거래 필터와 별개로 이 계좌의 내역을 사용합니다."
+msgstr "SBI 개별 청산은 한 번만 합산하고 다른 브로커는 완료 그룹 금액을 유지합니다. 헤더 필터와 독립적인 계좌 전체 내역입니다."
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.unit"
@@ -13156,7 +13156,7 @@ msgstr "계좌 기준 통화."
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.caveat"
-msgstr "미청산 거래의 사용 가능한 부분 청산 실현 손익이 포함될 수 있습니다. 누락된 손익은 추정값이 아닙니다. 미실현 평가손익과 현금 원장 흐름은 제외합니다."
+msgstr "SBI 보고 손익은 세전이며 추정값은 표시됩니다. 증거가 없으면 손익을 만들지 않습니다. 배당·세금 현금·입출금은 별도이며 미실현 가치는 제외됩니다."
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.title"
@@ -13168,7 +13168,7 @@ msgstr "이 계좌의 부호 있는 현금 원장 합계 대비 계좌 상세의
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.formula"
-msgstr "사용 가능한 거래 순손익 합계 ÷ 이 계좌의 부호 있는 현금 원장 합계 × 100. 초기 잔액은 이미 입금으로 기록되어 중복 합산하지 않습니다."
+msgstr "계좌 거래 실현손익 ÷ 해당 계좌의 부호 있는 현금 원장 합계 × 100. 기존 분모는 유지됩니다."
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.unit"
@@ -13176,4 +13176,16 @@ msgstr "%."
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.caveat"
-msgstr "분모가 0일 때만 숨깁니다. 원장 합계가 음수이면 비율의 부호가 반전될 수 있습니다. 사용 가능한 부분 청산 손익이 포함될 수 있으며 누락된 손익은 0으로 더합니다. 시간가중 또는 금액가중 수익률이 아니며 미실현 손익은 제외합니다."
+msgstr "분모가 0일 때만 숨기며 음수 합계는 부호를 바꿀 수 있습니다. 적격 SBI 부분 청산을 포함하며 시간 가중과 미실현손익은 제외됩니다."
+
+#. js-lingui-explicit-id
+msgid "accounts.closedGross"
+msgstr "완료 그룹 총손익"
+
+#. js-lingui-explicit-id
+msgid "accounts.closedFees"
+msgstr "완료 그룹 수수료"
+
+#. js-lingui-explicit-id
+msgid "accounts.moneyPopulation"
+msgstr "거래 금액은 SBI 부분 청산을 포함합니다. 통계는 완료 거래 그룹을 사용합니다."

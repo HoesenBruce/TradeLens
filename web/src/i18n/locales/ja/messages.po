@@ -10983,12 +10983,12 @@ msgstr "表示中のカード、順序、現在の期間とフィルターを保
 #. js-lingui-explicit-id
 #: src/app/screens/settings/import-history.tsx:159
 msgid "accounts.sbiMarginPnLSource"
-msgstr ""
+msgstr "SBI 実現損益（税引前）"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ImportView.tsx:746
 msgid "imports.sbiEnrichmentHint"
-msgstr ""
+msgstr "SBI の現物・信用の税引前実現損益を一致する決済約定に補完します。各行を確認し、競合と曖昧な一致を解消してください。約定は追加されません。"
 
 #. js-lingui-explicit-id
 #: src/components/ReportsControlBar.tsx:54
@@ -12972,7 +12972,7 @@ msgstr "API資産曲線の記録上の最大ピークからの下落額。"
 
 #. js-lingui-explicit-id
 msgid "metric.drawdown.formula"
-msgstr "資産は0から始め、符号付き現金台帳と対象決済純損益を時系列に加算。最大値（過去ピーク − 資産）を小数2桁に丸めます。"
+msgstr "資産はゼロから資金移動と取引実現損益を時系列で加算します。SBI は部分決済を含む決済イベント、他社は完了グループを使用。最大ドローダウンは累積ピークと資産の差の最大値です。"
 
 #. js-lingui-explicit-id
 msgid "metric.drawdown.unit"
@@ -13012,7 +13012,7 @@ msgstr "選択口座の符号付き現金台帳合計に対するヘッダーの
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.formula"
-msgstr "絞り込み後の決済済み純損益 ÷ 選択口座の符号付き現金台帳合計 × 100。初期残高は入金済みとして記録され、二重加算しません。"
+msgstr "対象の取引実現損益 ÷ 選択口座の符号付き資金台帳合計 × 100。従来の分母は変更しません。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.unit"
@@ -13020,7 +13020,7 @@ msgstr "%。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountReturn.caveat"
-msgstr "資金が0以下、または必要なデータ・通貨換算が利用できない場合は非表示。時間加重・金額加重リターンではなく、入出金日による重み付けはありません。未決済取引と含み損益を除外。現在の為替換算は過去の為替要因の分析ではありません。"
+msgstr "資金が 0 以下、または必要データがない場合は非表示。対象の SBI 部分決済を含み、他社は完了グループを維持します。時間加重・含み損益は含みません。"
 
 #. js-lingui-explicit-id
 msgid "metric.reportPnl.title"
@@ -13132,7 +13132,7 @@ msgstr "ヘッダーの現在の絞り込み範囲における実現純損益。
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.formula"
-msgstr "集計対象の決済済み取引の手数料控除後純損益を合計。現在の口座と取引の絞り込みを適用。"
+msgstr "SBI は決済日ごとの実現損益（部分決済を含む）を集計し、他の証券会社は従来の完了取引グループを使います。口座・取引フィルターを適用します。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.unit"
@@ -13140,7 +13140,7 @@ msgstr "口座通貨／換算後の表示通貨。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountPerformance.caveat"
-msgstr "未決済取引（一部決済の損益を含む）と含み損益を除外。現金台帳の入出金は取引損益ではありません。現在の為替換算は過去の為替要因の分析ではありません。"
+msgstr "SBI の報告値は税引前です。報告がない場合は明示された推定値を使うことがあります。含み損益・資金移動を除外し、件数・勝率・PF は完了グループのままです。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.title"
@@ -13148,11 +13148,11 @@ msgstr "口座の実現損益"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.definition"
-msgstr "この口座の読み込み済み取引履歴にある利用可能な純損益の合計。"
+msgstr "対象の SBI 部分決済を含む、この口座の取引実現損益です。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.formula"
-msgstr "読み込み済み各取引の手数料控除後純損益を合計し、欠損値は0として加算。この口座の履歴を使い、ヘッダーの取引フィルターには依存しません。"
+msgstr "SBI は各決済結果を一度だけ計上し、他社は完了グループ金額を維持します。ヘッダーとは独立した口座全履歴です。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.unit"
@@ -13160,7 +13160,7 @@ msgstr "口座の基準通貨。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountRealizedPnl.caveat"
-msgstr "未決済取引の利用可能な一部決済済み実現損益を含む場合があります。欠損した損益は推定しません。含み損益と現金台帳の入出金を除外。"
+msgstr "SBI 報告値は税引前、推定値は明示されます。不足する結果は作りません。配当・税金の資金記録・入出金は別扱いで、含み損益を除きます。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.title"
@@ -13172,7 +13172,7 @@ msgstr "この口座の符号付き現金台帳合計に対する口座詳細の
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.formula"
-msgstr "利用可能な取引純損益の合計 ÷ この口座の符号付き現金台帳合計 × 100。初期残高は入金済みとして記録され、二重加算しません。"
+msgstr "口座の取引実現損益 ÷ この口座の符号付き資金台帳合計 × 100。従来の分母は変更しません。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.unit"
@@ -13180,4 +13180,16 @@ msgstr "%。"
 
 #. js-lingui-explicit-id
 msgid "metric.accountDetailReturn.caveat"
-msgstr "分母が0の場合のみ非表示。台帳合計が負の場合、比率の符号が反転することがあります。利用可能な一部決済損益を含む場合があり、欠損値は0として加算。時間加重・金額加重リターンではなく、含み損益を除外。"
+msgstr "分母がゼロの場合だけ非表示。負の合計では符号が逆転する場合があります。対象の SBI 部分決済を含み、時間加重・含み損益を除きます。"
+
+#. js-lingui-explicit-id
+msgid "accounts.closedGross"
+msgstr "完了グループの総損益"
+
+#. js-lingui-explicit-id
+msgid "accounts.closedFees"
+msgstr "完了グループの手数料"
+
+#. js-lingui-explicit-id
+msgid "accounts.moneyPopulation"
+msgstr "取引金額は SBI 部分決済を含みます。統計は完了取引グループを使用します。"
