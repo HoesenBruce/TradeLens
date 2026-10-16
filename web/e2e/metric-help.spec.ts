@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test.use({ serviceWorkers: "block" });
+test.use({ serviceWorkers: "block", hasTouch: true });
 for (const width of [1440, 390]) {
   test(`metric help keyboard, dismissal, localization and bounds at ${width}px`, async ({
     page,
@@ -29,7 +29,8 @@ for (const width of [1440, 390]) {
     ]) {
       await page.evaluate((locale) => localStorage.setItem("tm-locale", locale), locale);
       await page.reload();
-      await trigger.click();
+      if (width === 390) await trigger.tap();
+      else await trigger.click();
       await expect(dialog).toHaveAccessibleName(title);
       const closeLabels: Record<string, string> = {
         en: "Close explanation",
