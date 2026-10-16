@@ -240,6 +240,15 @@ export function AccountsTab({
       return { queryKey: ["trades", request], queryFn: () => tradesApi.list(request) };
     }),
   });
+  const accountMoney = useQueries({
+    queries: accounts.map((account) => {
+      const request = { account_id: account.id, target_currency: account.base_currency };
+      return {
+        queryKey: ["analytics", "summary", request],
+        queryFn: () => analyticsApi.summary(request),
+      };
+    }),
+  });
   const accountFunding = useQueries({
     queries: accounts.map((account) => {
       const request = { account_id: account.id, target_currency: account.base_currency };
@@ -258,14 +267,7 @@ export function AccountsTab({
     }
     return counts;
   }, [trades]);
-  const netPnlByAccount = useMemo(() => {
-    const totals = new Map<string, number>();
-    for (const trade of trades ?? []) {
-      if (typeof trade.net_pnl !== "number") continue;
-      totals.set(trade.account_id, (totals.get(trade.account_id) ?? 0) + trade.net_pnl);
-    }
-    return totals;
-  }, [trades]);
+
   async function handleDeleteCash(id: string) {
     try {
       await onDeleteCash(id);
@@ -770,11 +772,13 @@ export function AccountsTab({
               <div className="flex flex-col gap-2">
                 {accounts.map((acc, index) => {
                   const funding = accountFunding[index];
-                  const ready = accountTrades[index]?.isSuccess && funding?.isSuccess;
+                  const money = accountMoney[index];
+                  const ready =
+                    accountTrades[index]?.isSuccess && funding?.isSuccess && money?.isSuccess;
                   const balance = ledgerBalance(acc, funding?.data?.cash_transactions ?? []);
                   const isPrimary = acc.id === primaryId;
                   const tradeCount = tradeCountByAccount.get(acc.id) ?? 0;
-                  const netPnl = netPnlByAccount.get(acc.id) ?? 0;
+                  const netPnl = money?.data?.realized_pnl ?? money?.data?.net_pnl ?? 0;
                   const locale = intlLocale();
                   const equity = balance + netPnl;
                   const conn = connByAccount.get(acc.id);
@@ -1284,7 +1288,11 @@ export function RulesTab({
     !ytdSummaryQ.isError &&
     ytdSummaryQ.data != null &&
     annualGoal.currency === ytdSummaryQ.data.currency
-      ? computeAnnualGoalProgress(annualGoal.amount, ytdSummaryQ.data.net_pnl, goalYear)
+      ? computeAnnualGoalProgress(
+          annualGoal.amount,
+          ytdSummaryQ.data.realized_pnl ?? ytdSummaryQ.data.net_pnl,
+          goalYear,
+        )
       : null;
 
   function closeRuleModal() {

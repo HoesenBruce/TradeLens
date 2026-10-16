@@ -672,6 +672,39 @@ paths:
                     description: currency, target_currency, fx_policy latest, fx_rates and trades. Row P&L, fees, prices and initial_risk use output currency; source_pnl_currency retains provenance.
                     additionalProperties: true
 
+  /api/v1/trades/regroup:
+    post:
+      tags: [Trades]
+      summary: Preview or explicitly apply historical regroup
+      description: |
+        SBI-origin accounts require preview=true first, then preview_token from that
+        response to apply. Preview runs the actual regroup and rolls back every write.
+        The response lists changed groups with before/after basis, P&L and execution IDs,
+        preserved_trade_ids and removed_trade_ids. Apply refuses removals of existing
+        trade identities, stale tokens and failed regrouping atomically. Repeated application
+        of the same unchanged preview is idempotent. Back up and audit review associations
+        before applying. No automatic historical rewrite occurs on upgrade.
+        Non-SBI calls without review parameters retain the existing 204 response.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [account_id]
+              properties:
+                account_id: {type: string}
+                preview: {type: boolean, default: false}
+                preview_token: {type: string}
+      responses:
+        '200':
+          description: Preview or applied result with preview_token, applied, changed_groups and association identity impact
+        '204':
+          description: Legacy non-SBI regroup completed
+        '409':
+          description: Preview required, changed input, or removal of existing review identities
+        '500':
+          description: Regroup failed; reviewed operation rolled back
   /api/v1/trades/{id}:
     get:
       tags: [Trades]
@@ -1004,13 +1037,25 @@ paths:
             pattern: '^[A-Za-z]{3}$'
       responses:
         "200":
-          description: Recomputed summary in the actual output currency.
+          description: |
+            Review metrics retain their completed-group population. realized_pnl separately
+            reports trading money: explicit SBI close events (including partial closes)
+            plus existing non-SBI completed-group contributions, without double-counting.
+            SBI periods use close dates regardless of date_basis=open. Date-only SBI closes
+            use their Tokyo market date, compared with the requested calendar dates in tz.
+            The return denominator is unchanged; cash flows and unrealized value are separate.
           content:
             application/json:
               schema:
                 type: object
-                required: [currency, target_currency, fx_policy, fx_rates]
+                required: [currency, target_currency, fx_policy, fx_rates, realized_pnl, realized_event_count]
                 properties:
+                  realized_pnl:
+                    type: number
+                    description: Trading money in the normalized currency; review net_pnl is unchanged.
+                  realized_event_count:
+                    type: integer
+                    description: Money contributions, separate from total_trades. Conversion-zero events excluded.
                   currency:
                     type: string
                     description: Actual output currency; empty only for an empty account scope without a requested target.
@@ -1090,6 +1135,11 @@ paths:
     get:
       tags: [Analytics]
       summary: Equity curve
+      description: |
+        Trading money uses SBI individual close events and existing non-SBI completed
+        groups, with the same scope as summary.realized_pnl. Existing signed cash-ledger
+        contributions remain separate. Date-only SBI event points represent the market
+        date at the start of that calendar date in tz, never an inferred intraday time.
       operationId: analyticsEquityCurve
       parameters:
         - $ref: "#/components/parameters/AccountIdQuery"

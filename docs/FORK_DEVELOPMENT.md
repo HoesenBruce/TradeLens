@@ -353,3 +353,18 @@ units produce nullable quantities with an explanation, rather than fabricated ze
 Existing legacy quantity fields, execution records, accounting and monetary values
 remain unchanged; no migration or forced historical regroup is performed. See
 [issue #308 validation](validation/issue308/README.md) for semantics and evidence.
+
+### SBI cash close totals and reviewed recomputation (#339)
+
+Completed explicit SBI cash groups sum reconciled per-close net results. Broker-reported
+pretax P&L/basis takes precedence, with no second fee or tax deduction; missing reports
+use a labelled average-cost estimate. Cash acquisition cost is not rounded merely on a
+new day. Actual-time records keep their sequence, and date-only review remains uncertain.
+Genbiki basis derivation uses evidenced prior SBI margin-long close costs; conversion
+realization stays zero. Historical mark-to-market account-value replay is unchanged.
+
+SBI historical regroup now requires a transactional preview and its current token.
+Previews include changed groups and preserved/removed review IDs. Applying a preview
+that removes any existing trade ID is refused to protect associations. No automatic
+repair runs on upgrade. See [#339 validation](validation/issue339/README.md) for backup,
+association audit, repeat application, rollback and before/after examples.

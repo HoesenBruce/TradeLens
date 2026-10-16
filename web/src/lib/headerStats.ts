@@ -58,13 +58,18 @@ export function computeHeaderStats(opts: {
         opts.trades.some((t) => t.pnl_currency !== opts.currency)
       : !accountBaseCurrency(opts.accounts, opts.accountIds)
   ) {
-    return { netPnl: opts.summary?.net_pnl ?? 0, netPnlPct: null, cash: 0, active: 0 };
+    return {
+      netPnl: opts.summary?.realized_pnl ?? opts.summary?.net_pnl ?? 0,
+      netPnlPct: null,
+      cash: 0,
+      active: 0,
+    };
   }
   const accountIds = new Set(scopeAccounts(opts.accounts, opts.accountIds).map((a) => a.id));
   const cashFlow = opts.cashTx
     .filter((c) => accountIds.has(c.account_id))
     .reduce((s, c) => s + c.amount, 0);
-  const netPnl = opts.summary?.net_pnl ?? 0;
+  const netPnl = opts.summary?.realized_pnl ?? opts.summary?.net_pnl ?? 0;
   const active = opts.trades
     .filter((t) => t.status === "open")
     .reduce((s, t) => {

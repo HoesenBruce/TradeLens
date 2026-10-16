@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 
@@ -92,4 +93,28 @@ func TestSummaryMixedCurrencyNormalization(t *testing.T) {
 			require.Contains(t, rec.Body.String(), "unknown_currency")
 		})
 	}
+}
+
+func TestSBIRealizedPartialCloseCurrencyNormalization(t *testing.T) {
+	provider := marketdata.NewYahooProvider()
+	provider.Client = &http.Client{Transport: summaryFXTransport(func(r *http.Request) (*http.Response, error) {
+		quote := 150.0
+		if strings.Contains(r.URL.String(), "JPYUSD") {
+			quote = 1.0 / 150
+		}
+		return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(fmt.Sprintf(`{"chart":{"result":[{"timestamp":[1780000000],"indicators":{"quote":[{"close":[%.17g]}]}}]}}`, quote)))}, nil
+	})}
+	s := testServerWithProvider(t, true, nil, provider)
+	tok := registerAndLogin(t, s, "synthetic-sbi-fx@test.invalid")
+	acc := accountWithCurrency(t, s, tok, "SBI", "JPY")
+	csv := "約定日,銘柄コード,取引,約定数量,約定単価\n2026/10/01,1515,現物買,100,100\n2026/10/02,1515,現物売,50,96\n"
+	rec := httptest.NewRecorder()
+	s.Echo.ServeHTTP(rec, multipartFileReq(t, "/api/v1/imports/commit", tok, "synthetic.csv", csv, map[string]string{"account_id": acc, "column_mapping": `{"symbol":"銘柄コード","side":"取引","quantity":"約定数量","price":"約定単価","executed_at":"約定日","instrument_type":"=stock"}`}))
+	require.Equal(t, 200, rec.Code, rec.Body.String())
+	out := summaryFor(t, s, tok, "?account_id="+acc+"&target_currency=USD")
+	require.Equal(t, -1.33, out["realized_pnl"])
+	require.EqualValues(t, 0, out["net_pnl"])
+	require.EqualValues(t, 0, out["total_trades"])
+	require.Equal(t, "USD", out["currency"])
+	require.Len(t, out["fx_rates"], 1)
 }

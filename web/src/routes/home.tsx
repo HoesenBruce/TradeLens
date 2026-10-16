@@ -179,7 +179,7 @@ function HomePage() {
           (ytdSummaryQ.isError ? "Year-to-date analytics unavailable" : undefined)
         }
         goalSaving={saveAnnualGoalM.isPending || clearAnnualGoalM.isPending}
-        ytdNetPnl={ytdSummaryQ.data?.net_pnl}
+        ytdNetPnl={ytdSummaryQ.data?.realized_pnl ?? ytdSummaryQ.data?.net_pnl}
         ytdLoading={ytdSummaryQ.isLoading}
         onSaveGoal={async (amount) => {
           await saveAnnualGoalM.mutateAsync({

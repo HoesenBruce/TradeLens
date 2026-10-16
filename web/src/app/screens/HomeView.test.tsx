@@ -292,7 +292,7 @@ describe("HomeView", () => {
     expect(screen.getByText("Losses")).toBeInTheDocument();
     expect(screen.getByText("Avg win")).toBeInTheDocument();
     expect(screen.getByText("Avg loss")).toBeInTheDocument();
-    expect(screen.getByText(/Gross/)).toBeInTheDocument();
+    expect(screen.getByText(/Closed-group gross/)).toBeInTheDocument();
     expect(screen.getByText(/^Net$/)).toBeInTheDocument();
     expect(screen.getByText(/PF/)).toBeInTheDocument();
     // Gross must reconcile: gross - fees = net (-49.29 - 12.50 = -61.79), never the
@@ -656,4 +656,18 @@ it("updates dashboard labels when switching between Chinese and Japanese", async
   } finally {
     await act(() => loadLocale("en"));
   }
+});
+
+it("shows realized money while keeping completed-group statistics", () => {
+  render(
+    <HomeView
+      {...BASE}
+      summary={{ ...BASE.summary!, realized_pnl: -200, realized_event_count: 1 }}
+    />,
+  );
+  expect(screen.getByTestId("performance-strip")).toHaveTextContent("-$200.00");
+  expect(screen.getByTestId("performance-strip")).toHaveTextContent("0.53");
+  expect(screen.getByTestId("performance-strip")).toHaveTextContent(
+    "Statistics use completed trade groups",
+  );
 });
