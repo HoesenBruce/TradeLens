@@ -1,3 +1,4 @@
+import { ReportsMoney } from "./ReportsDisplayContext";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { BehaviorReport } from "@/lib/api/types";
 
@@ -107,6 +108,7 @@ export function BehaviorOverconfidenceCard({
           <StatCard
             label={localize({ id: "reports.inflatedPL", message: "Inflated P&L" })}
             value={money.format(sec.flagged.net_pnl)}
+            compactValue={money.formatCompact(sec.flagged.net_pnl)}
             accent={sec.flagged.net_pnl >= 0 ? "pos" : "neg"}
           />
           <StatCard
@@ -138,9 +140,10 @@ export function BehaviorOverconfidenceCard({
                 <button
                   type="button"
                   onClick={() => onSelectTradeId?.(ev.trade_id)}
-                  className="flex w-full items-center justify-between gap-3 rounded-md px-2 py-1.5 text-left text-[13px] hover:bg-accent"
+                  aria-label={`${ev.date} ${ev.symbol} ${money.format(ev.net_pnl)}`}
+                  className="flex w-full min-w-0 flex-wrap items-center justify-between gap-3 rounded-md px-2 py-1.5 text-left text-[13px] hover:bg-accent"
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex min-w-0 max-w-full flex-wrap items-center gap-2 wrap-anywhere">
                     <span className="tabular-nums text-foreground">
                       {fmtDayShort(`${ev.date}T12:00:00Z`, locale)}
                     </span>
@@ -153,11 +156,11 @@ export function BehaviorOverconfidenceCard({
                   <span
                     className={
                       ev.net_pnl >= 0
-                        ? "tabular-nums font-medium text-success"
-                        : "tabular-nums font-medium text-destructive"
+                        ? "min-w-0 max-w-full flex-[0_1_130px] tabular-nums font-medium text-success"
+                        : "min-w-0 max-w-full flex-[0_1_130px] tabular-nums font-medium text-destructive"
                     }
                   >
-                    {money.format(ev.net_pnl)}
+                    <ReportsMoney disclosure={false} value={ev.net_pnl} />
                   </span>
                 </button>
               </li>

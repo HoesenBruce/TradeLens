@@ -111,7 +111,11 @@ export function TradeJournalCard({ trade, onEdit }: TradeJournalCardProps) {
               </Pill>
             ) : null}
             {tags.map((tag) => (
-              <Pill key={tag.id} tone={tag.kind === "mistake" ? "neg" : "muted"}>
+              <Pill
+                key={tag.id}
+                tone={tag.kind === "mistake" ? "neg" : "muted"}
+                className="min-w-0 max-w-full whitespace-normal wrap-anywhere"
+              >
                 {tag.name}
               </Pill>
             ))}

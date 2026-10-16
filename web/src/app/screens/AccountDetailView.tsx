@@ -1,3 +1,4 @@
+import { Money } from "@/components/ResponsiveValue";
 import { MetricHelp } from "@/components/MetricHelp";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
@@ -39,7 +40,6 @@ import {
   POPULAR_BROKERS,
   primaryAccountId,
 } from "@/app/screens/settings/settings-sections";
-import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 function Stat({
   label,
@@ -57,7 +57,7 @@ function Stat({
       </p>
       <p
         className={cn(
-          "m-0 mt-1 text-[16px] font-semibold tabular-nums tracking-tight text-foreground",
+          "m-0 mt-1 min-w-0 max-w-full wrap-anywhere text-[16px] font-semibold tabular-nums tracking-tight text-foreground",
           className,
         )}
       >
@@ -381,7 +381,6 @@ export function AccountDetailView({
 }) {
   const { t: tr } = useLinguiMacro();
 
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   const toast = useToastManager();
   const accountsQ = useAccounts();
   const accounts = accountsQ.data ?? [];
@@ -474,18 +473,28 @@ export function AccountDetailView({
         <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
           <Stat
             label={tr({ id: "accounts.deposited", message: "Deposited" })}
-            value={fmtMoney(balance, account.base_currency, locale)}
+            value={<Money value={balance} currency={account.base_currency} locale={locale} />}
           />
           <Stat
             label={tr({ id: "accounts.equity", message: "Equity" })}
-            value={monetaryReady ? fmtMoney(equity, account.base_currency, locale) : "—"}
+            value={
+              monetaryReady ? (
+                <Money value={equity} currency={account.base_currency} locale={locale} />
+              ) : (
+                "—"
+              )
+            }
           />
           <Stat
             label={tr({ id: "accounts.realized", message: "Realized P&L" })}
             value={
-              <span className="inline-flex flex-wrap items-baseline gap-x-1">
-                <span className="inline-flex items-baseline">
-                  {monetaryReady ? fmtSignedMoney(netPnl, account.base_currency, locale) : "—"}
+              <span className="flex min-w-0 max-w-full flex-wrap items-baseline gap-x-1">
+                <span className="flex w-full min-w-0 items-baseline">
+                  {monetaryReady ? (
+                    <Money value={netPnl} currency={account.base_currency} locale={locale} signed />
+                  ) : (
+                    "—"
+                  )}
                   <MetricHelp metric="accountRealizedPnl" />
                 </span>
                 {pnlPct && (

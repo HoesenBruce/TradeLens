@@ -8,7 +8,7 @@ import { intlLocale } from "@/lib/locale";
 import { Card } from "./Card";
 import { EmptyState } from "./EmptyState";
 import { Pill } from "./Pill";
-import { useReportsMoney } from "./ReportsDisplayContext";
+import { ReportsMoney, useReportsMoney } from "./ReportsDisplayContext";
 import { Skeleton } from "./Skeleton";
 import { StatCard } from "./StatCard";
 
@@ -99,11 +99,13 @@ export function ReportsRuleCompliance({ report, loading, error }: ReportsRuleCom
           <StatCard
             label={localize({ id: "reports.pLRulesFollowed", message: "P&L, rules followed" })}
             value={money.format(report.compliant_pnl)}
+            compactValue={money.formatCompact(report.compliant_pnl)}
             accent={report.compliant_pnl >= 0 ? "pos" : "neg"}
           />
           <StatCard
             label={localize({ id: "reports.pLRulesBroken", message: "P&L, rules broken" })}
             value={money.format(report.breach_pnl)}
+            compactValue={money.formatCompact(report.breach_pnl)}
             accent={report.breach_pnl >= 0 ? "pos" : "neg"}
           />
           <StatCard
@@ -161,9 +163,9 @@ export function ReportsRuleCompliance({ report, loading, error }: ReportsRuleCom
               {recentBreaches.map((d) => (
                 <li
                   key={d.date}
-                  className="flex items-center justify-between gap-3 rounded-md px-2 py-1.5 text-[13px] hover:bg-accent"
+                  className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-md px-2 py-1.5 text-[13px] hover:bg-accent"
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex min-w-0 max-w-full flex-wrap items-center gap-2">
                     <span className="tabular-nums text-foreground">
                       {fmtDayShort(`${d.date}T12:00:00Z`, locale)}
                     </span>
@@ -192,11 +194,11 @@ export function ReportsRuleCompliance({ report, loading, error }: ReportsRuleCom
                   <span
                     className={
                       d.net_pnl >= 0
-                        ? "tabular-nums font-medium text-success"
-                        : "tabular-nums font-medium text-destructive"
+                        ? "min-w-0 max-w-full flex-[0_1_130px] tabular-nums font-medium text-success"
+                        : "min-w-0 max-w-full flex-[0_1_130px] tabular-nums font-medium text-destructive"
                     }
                   >
-                    {money.format(d.net_pnl)}
+                    <ReportsMoney value={d.net_pnl} />
                   </span>
                 </li>
               ))}

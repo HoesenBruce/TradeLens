@@ -1,8 +1,10 @@
 import { createContext, useContext, type ReactNode } from "react";
 import type { Summary, Trade } from "@/lib/api/types";
 import { fmtPct } from "@/lib/format";
-import { intlLocale } from "@/lib/locale";
+import { getIntlLocale } from "@/lib/locale";
+import { useLingui } from "@lingui/react";
 import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
+import { ResponsiveValue } from "./ResponsiveValue";
 
 export type PnlMode = "net" | "gross";
 export type UnitMode = "abs" | "pct";
@@ -29,6 +31,23 @@ const DEFAULT: ReportsDisplay = {
 
 const Ctx = createContext<ReportsDisplay>(DEFAULT);
 
+export function ReportsMoney({
+  value,
+  disclosure = true,
+}: {
+  value: number;
+  disclosure?: boolean;
+}) {
+  const money = useReportsMoney();
+  return (
+    <ResponsiveValue
+      value={money.format(value)}
+      compactValue={money.formatCompact(value)}
+      disclosure={disclosure}
+    />
+  );
+}
+
 export function ReportsDisplayProvider({
   value,
   children,
@@ -41,7 +60,8 @@ export function ReportsDisplayProvider({
 
 export function useReportsMoney() {
   const d = useContext(Ctx);
-  const locale = intlLocale();
+  const { i18n } = useLingui();
+  const locale = getIntlLocale(i18n.locale);
   // Privacy-bound formatters: their identity changes when privacy flips, so the
   // returned `money` object does too and every consumer's memo cache misses.
   const { privacy, fmtSignedMoney, fmtSignedMoneyCompact } = useMoneyFormatters();

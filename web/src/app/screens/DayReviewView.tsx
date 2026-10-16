@@ -176,7 +176,7 @@ export function DayReviewView({
   onOpenNotes,
   onNewNote,
 }: DayReviewViewProps) {
-  const { fmtSignedMoney } = useMoneyFormatters();
+  const { fmtSignedMoney, fmtSignedMoneyCompact } = useMoneyFormatters();
   const locale = intlLocale();
   const day = compliance?.days.find((d) => d.date === date);
   const netPnl = (summary?.net_pnl ?? 0) * fxRate;
@@ -232,6 +232,7 @@ export function DayReviewView({
               <StatCard
                 label="Net P&L"
                 value={fmtSignedMoney(netPnl, currency, locale)}
+                compactValue={fmtSignedMoneyCompact(netPnl, currency, locale)}
                 accent={netPnl >= 0 ? "pos" : "neg"}
               />
               <StatCard label="Trades" value={String(summary?.total_trades ?? 0)} />
@@ -242,6 +243,11 @@ export function DayReviewView({
               <StatCard
                 label="Fees"
                 value={fmtSignedMoney(-(summary?.total_fees ?? 0) * fxRate, currency, locale)}
+                compactValue={fmtSignedMoneyCompact(
+                  -(summary?.total_fees ?? 0) * fxRate,
+                  currency,
+                  locale,
+                )}
               />
             </div>
             {compliance?.rules_configured && (

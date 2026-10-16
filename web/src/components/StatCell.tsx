@@ -37,17 +37,17 @@ export function StatCell({
         {label}
         {metric && <MetricHelp metric={metric} />}
       </span>
-      <span className="flex min-w-0 items-baseline gap-1.5">
+      <span className="flex min-w-0 flex-wrap items-baseline gap-1.5">
         <span
           className={cn(
-            "truncate text-[20px] leading-none font-semibold tracking-[-0.02em] tabular-nums text-foreground",
+            "min-w-0 max-w-full wrap-anywhere text-[20px] leading-none font-semibold tracking-[-0.02em] tabular-nums text-foreground",
             valueClassName,
           )}
         >
           {children}
         </span>
         {hint ? (
-          <span className="shrink-0 text-[11px] leading-none tabular-nums text-muted-foreground">
+          <span className="min-w-0 max-w-full wrap-anywhere text-[11px] leading-none tabular-nums text-muted-foreground">
             {hint}
           </span>
         ) : null}

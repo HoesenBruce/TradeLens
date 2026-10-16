@@ -60,3 +60,11 @@ if (typeof globalThis.PointerEvent === "undefined") {
   }
   globalThis.PointerEvent = PointerEventPolyfill as unknown as typeof PointerEvent;
 }
+
+// jsdom has no SVG layout; native text fitting is checked in the browser regression.
+if (!("getComputedTextLength" in SVGElement.prototype)) {
+  Object.defineProperty(SVGElement.prototype, "getComputedTextLength", {
+    value: () => 0,
+    configurable: true,
+  });
+}

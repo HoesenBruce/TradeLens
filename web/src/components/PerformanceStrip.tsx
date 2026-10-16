@@ -2,7 +2,7 @@ import { MetricHelp } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { StatBar } from "./StatBar";
-import { ResponsiveMoney } from "./ResponsiveMoney";
+import { ResponsiveValue } from "./ResponsiveValue";
 import { pnlColor } from "./theme-tokens";
 import type { Summary, Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
@@ -36,13 +36,13 @@ function Meta({
   className?: string;
 }) {
   return (
-    <p className="m-0 flex min-w-0 max-w-full items-baseline gap-1.5 text-[13px] tabular-nums">
-      <span className="shrink-0 font-medium tracking-wide text-muted-foreground">
+    <p className="m-0 flex min-w-0 max-w-full flex-wrap items-baseline gap-1.5 text-[13px] tabular-nums">
+      <span className="min-w-0 max-w-full wrap-anywhere font-medium tracking-wide text-muted-foreground">
         {label}
         {metric && <MetricHelp metric={metric} />}
       </span>
       {compactValue ? (
-        <ResponsiveMoney
+        <ResponsiveValue
           value={value}
           compactValue={compactValue}
           className={cn("font-medium", className)}
@@ -88,7 +88,7 @@ export function PerformanceStrip({
           <MetricHelp metric="accountPerformance" />
         </p>
         <div className="mt-3 flex flex-1 flex-col items-center justify-center text-center">
-          <ResponsiveMoney
+          <ResponsiveValue
             value={fmtSignedMoney(money(net), currency, locale)}
             compactValue={fmtSignedMoneyCompact(money(net), currency, locale)}
             className={cn(

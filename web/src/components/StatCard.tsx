@@ -1,3 +1,4 @@
+import { ResponsiveValue } from "./ResponsiveValue";
 import { MetricHelp } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import { cn } from "@/lib/cn";
@@ -6,6 +7,7 @@ interface StatCardProps {
   label: string;
   metric?: MetricId;
   value: string;
+  compactValue?: string;
   accent?: "pos" | "neg" | "none";
   hint?: string;
   /**
@@ -53,6 +55,7 @@ export function StatCard({
   label,
   metric,
   value,
+  compactValue,
   accent,
   hint,
   variant = "panel",
@@ -64,7 +67,7 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "flex flex-col",
+        "flex min-w-0 max-w-full flex-col wrap-anywhere",
         centered
           ? "w-full items-center gap-2 p-3 text-center"
           : cn("gap-1 px-4", size === "sm" ? "py-2" : "py-3"),
@@ -97,18 +100,22 @@ export function StatCard({
         className={cn(
           valueSizeClass(size, centered),
           "font-semibold leading-none tabular-nums",
-          centered && "max-w-full truncate",
+          "w-full min-w-0 max-w-full wrap-anywhere",
         )}
         style={{
           color: accentColor(accent),
           transition: "color 150ms",
         }}
       >
-        {value}
+        {compactValue != null ? (
+          <ResponsiveValue value={value} compactValue={compactValue} />
+        ) : (
+          value
+        )}
       </span>
       {hint ? (
         <span
-          className={cn("text-xs", centered && "line-clamp-2 max-w-full text-[10px] leading-snug")}
+          className={cn("text-xs", centered && "max-w-full text-[10px] leading-snug")}
           style={{ color: "var(--muted-foreground)" }}
         >
           {hint}

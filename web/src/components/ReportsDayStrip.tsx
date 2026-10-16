@@ -1,3 +1,4 @@
+import { ResponsiveValue } from "./ResponsiveValue";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
@@ -79,7 +80,6 @@ export function ReportsDayStrip({ trades, loading, onDayClick }: ReportsDayStrip
           const label = fmtDayShort(`${d.date}T12:00:00Z`, locale);
           const CardTag = onDayClick ? "button" : "div";
           const pnlText = money.format(d.pnl);
-          const compact = pnlText.length >= 13;
           return (
             <CardTag
               key={d.date}
@@ -93,10 +93,10 @@ export function ReportsDayStrip({ trades, loading, onDayClick }: ReportsDayStrip
               )}
               aria-label={
                 onDayClick
-                  ? localize({
+                  ? `${localize({
                       id: "reports.viewTradesForValue0",
                       message: `View trades for ${{ value0: label }}`,
-                    })
+                    })}: ${pnlText}`
                   : undefined
               }
             >
@@ -105,15 +105,17 @@ export function ReportsDayStrip({ trades, loading, onDayClick }: ReportsDayStrip
                 title={pnlText}
                 className={cn(
                   "mt-1.5 min-w-0 max-w-full whitespace-nowrap font-semibold leading-none tabular-nums",
-                  pnlText.length >= 11
-                    ? "text-[9px] tracking-[-0.06em]"
-                    : "text-[13px] tracking-[-0.02em]",
+                  "text-[13px] tracking-[-0.02em]",
                   pnlColor(d.pnl),
                 )}
               >
-                {compact ? money.formatCompact(d.pnl) : pnlText}
+                <ResponsiveValue
+                  value={pnlText}
+                  compactValue={money.formatCompact(d.pnl)}
+                  disclosure={!onDayClick}
+                />
               </p>
-              <p className="mt-1 text-[9px] text-muted-foreground">
+              <p className="mt-1 max-w-full wrap-anywhere text-[10px] text-muted-foreground">
                 {localize({
                   id: "reports.dailyTradeCount",
                   message: `Trades: ${{ count: d.trades }}`,

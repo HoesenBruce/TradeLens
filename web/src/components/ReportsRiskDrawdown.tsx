@@ -109,6 +109,7 @@ export function ReportsRiskDrawdown({
             align="center"
             label={localize({ id: "reports.avgRiskTrade", message: "Avg Risk/Trade" })}
             value={risk.avg != null ? money.format(risk.avg) : "—"}
+            compactValue={risk.avg != null ? money.formatCompact(risk.avg) : "—"}
             hint={
               risk.avg != null
                 ? localize({

@@ -1,3 +1,4 @@
+import { Money, ResponsiveValue } from "@/components/ResponsiveValue";
 import { MetricHelp } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import { TradeHoldingDuration } from "./TradeHoldingDuration";
@@ -116,7 +117,7 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
           <DrawerTitle className="flex min-w-0 flex-col gap-0.5">
             {trade ? (
               <>
-                <span className="truncate text-[15px] leading-tight font-semibold tracking-tight">
+                <span className="max-w-full wrap-anywhere text-[15px] leading-tight font-semibold tracking-tight">
                   {trade.symbol}
                 </span>
                 {/* Contract details wrap part-by-part rather than mid-token, so a
@@ -257,12 +258,14 @@ function BentoStat({
   label,
   metric,
   value,
+  compactValue,
   hint,
   className,
 }: {
   label: string;
   metric?: MetricId;
   value: React.ReactNode;
+  compactValue?: string;
   hint?: string;
   className?: string;
 }) {
@@ -276,7 +279,11 @@ function BentoStat({
         className="text-sm tabular-nums whitespace-normal wrap-anywhere text-foreground"
         title={typeof value === "string" ? value : undefined}
       >
-        {value}
+        {compactValue != null && typeof value === "string" ? (
+          <ResponsiveValue value={value} compactValue={compactValue} />
+        ) : (
+          value
+        )}
       </span>
       {hint && <span className="text-[10px] text-muted-foreground">{hint}</span>}
     </div>
@@ -291,7 +298,7 @@ function TradeDetailSheetBody({
   onOpenFullPage: () => void;
 }) {
   useLingui();
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
+  const { fmtMoney, fmtMoneyCompact } = useMoneyFormatters();
   useDisplayTimePrefs();
   const currency = trade.pnl_currency;
   const pnl = trade.net_pnl;
@@ -329,18 +336,18 @@ function TradeDetailSheetBody({
         </div>
         {/* The stat column carries three figures per row and the hero carries
             one, so the extra share goes to the column that has to fit more.
-            Both tracks still floor at min-content, so a long P&L widens the
-            hero rather than being clipped by the ratio. */}
-        <div className="mt-3 grid grid-cols-[1fr_1.15fr] gap-px overflow-hidden rounded-md bg-border">
-          <div className="row-span-2 flex flex-col justify-between gap-3 bg-sidebar p-3.5">
+            Shrinkable tracks keep both figures inside the drawer while the
+            responsive amount chooses the appropriate display. */}
+        <div className="mt-3 grid grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-px overflow-hidden rounded-md bg-border">
+          <div className="row-span-2 flex min-w-0 flex-col justify-between gap-3 bg-sidebar p-3.5">
             <div>
               {pnl != null ? (
                 <>
-                  <p className={cn("m-0 tabular-nums", heroPnlClass(pnl))}>
-                    {fmtSignedMoney(pnl, currency, intlLocale())}
+                  <p className={cn("m-0 min-w-0 max-w-full tabular-nums", heroPnlClass(pnl))}>
+                    <Money value={pnl} currency={currency} locale={intlLocale()} signed />
                     <MetricHelp metric="pnl" />
                   </p>
-                  <p className="mt-1.5 mb-0 text-sm font-semibold tabular-nums">
+                  <p className="mt-1.5 mb-0 max-w-full wrap-anywhere text-sm font-semibold tabular-nums">
                     {trade.return_pct != null && (
                       <span className={pnlColor(trade.return_pct)}>
                         {trade.return_pct >= 0 ? "+" : ""}
@@ -361,13 +368,10 @@ function TradeDetailSheetBody({
             </div>
             {trade.gross_pnl != null && (
               <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
-                {fmtSignedMoney(trade.gross_pnl, currency, intlLocale())}{" "}
+                <Money value={trade.gross_pnl} currency={currency} locale={intlLocale()} signed />{" "}
                 {tr({ id: "trades.gross", message: "Gross" })}
-                <MetricHelp metric="pnl" /> − {fmtMoney(
-                  trade.fees_total,
-                  currency,
-                  intlLocale(),
-                )}{" "}
+                <MetricHelp metric="pnl" /> −{" "}
+                <Money value={trade.fees_total} currency={currency} locale={intlLocale()} />{" "}
                 {tr({ id: "trades.fees", message: "Fees" })}
               </p>
             )}
@@ -378,12 +382,22 @@ function TradeDetailSheetBody({
               value={
                 trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price, currency, intlLocale()) : "—"
               }
+              compactValue={
+                trade.qty_opened > 0
+                  ? fmtMoneyCompact(trade.avg_entry_price, currency, intlLocale())
+                  : "—"
+              }
             />
             <BentoStat
               label={tr({ id: "trades.exit", message: "Exit" })}
               value={
                 trade.avg_exit_price != null
                   ? fmtMoney(trade.avg_exit_price, currency, intlLocale())
+                  : "—"
+              }
+              compactValue={
+                trade.avg_exit_price != null
+                  ? fmtMoneyCompact(trade.avg_exit_price, currency, intlLocale())
                   : "—"
               }
             />
@@ -398,6 +412,7 @@ function TradeDetailSheetBody({
               metric="fees"
               label={tr({ id: "trades.fees", message: "Fees" })}
               value={fmtMoney(trade.fees_total, currency, intlLocale())}
+              compactValue={fmtMoneyCompact(trade.fees_total, currency, intlLocale())}
             />
           </div>
         </div>
@@ -441,7 +456,7 @@ function TradeDetailSheetBody({
             {trade.fills.map((f) => (
               <li
                 key={f.id}
-                className="-mx-2 flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-xs tabular-nums transition-colors hover:bg-accent"
+                className="-mx-2 flex min-w-0 flex-wrap items-center justify-between gap-2 rounded-md px-2 py-1.5 text-xs tabular-nums transition-colors hover:bg-accent"
               >
                 <span className="flex items-center gap-2">
                   <span
@@ -460,11 +475,16 @@ function TradeDetailSheetBody({
                     {f.trade_type === "genwatashi" ? "現渡" : f.side === "buy" ? "B" : "S"}
                   </span>
                   <span className="text-foreground">
-                    {f.quantity} @ {fmtMoney(f.price, currency, intlLocale())}
+                    {f.quantity} @{" "}
+                    <Money value={f.price} currency={currency} locale={intlLocale()} />
                   </span>
                   {f.fees + f.commission > 0 && (
                     <span className="text-muted-foreground">
-                      {fmtMoney(f.fees + f.commission, currency, intlLocale())}{" "}
+                      <Money
+                        value={f.fees + f.commission}
+                        currency={currency}
+                        locale={intlLocale()}
+                      />{" "}
                       {tr({ id: "trades.fee", message: "Fee" })}
                     </span>
                   )}

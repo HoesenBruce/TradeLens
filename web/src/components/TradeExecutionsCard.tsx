@@ -1,3 +1,4 @@
+import { Money } from "@/components/ResponsiveValue";
 import { useLingui } from "@lingui/react/macro";
 import type { ColumnDef } from "@/lib/table";
 import { useMemo } from "react";
@@ -192,7 +193,7 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
       title={tr({ id: "trades.executionsCount", message: `Executions (${fills.length})` })}
       action={
         fills.length > 0 ? (
-          <p className="m-0 text-[12px] tabular-nums text-muted-foreground">
+          <p className="m-0 min-w-0 max-w-full wrap-anywhere text-[12px] tabular-nums text-muted-foreground">
             {totalFees > 0
               ? tr({
                   id: "trades.feesAmount",
@@ -223,8 +224,8 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
                 className={cn("items-stretch gap-2 rounded-lg", outlineSurfaceClass)}
               >
                 <ItemContent className="gap-1">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="flex items-center gap-2">
+                  <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+                    <span className="flex min-w-0 max-w-full flex-1 items-center gap-2">
                       <Pill
                         tone={isMarginToCash(fill) ? "amber" : fill.side === "buy" ? "pos" : "neg"}
                         title={isMarginToCash(fill) ? fill.details?.conversion_id : undefined}
@@ -237,11 +238,12 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
                               ? tr({ id: "trades.buyUpper", message: "BUY" })
                               : tr({ id: "trades.sellUpper", message: "SELL" })}
                       </Pill>
-                      <span className="text-[15px] font-semibold tabular-nums text-foreground">
-                        {fmtQty(fill.quantity)} @ {fmtMoney(fill.price, currency, locale)}
+                      <span className="min-w-0 max-w-full flex-1 wrap-anywhere text-[15px] font-semibold tabular-nums text-foreground">
+                        {fmtQty(fill.quantity)} @{" "}
+                        <Money value={fill.price} currency={currency} locale={locale} />
                       </span>
                     </span>
-                    <span className="shrink-0 text-[13px] tabular-nums whitespace-nowrap text-muted-foreground">
+                    <span className="min-w-0 max-w-full wrap-anywhere text-[13px] tabular-nums text-muted-foreground">
                       {fill.details?.source_time_precision === "date"
                         ? fmtDate(fill.executed_at, locale, dateZone)
                         : singleDay
@@ -249,12 +251,12 @@ export function TradeExecutionsCard({ trade }: { trade: TradeDetail }) {
                           : `${fmtDate(fill.executed_at, locale)} ${fmtTime(fill.executed_at)}`}
                     </span>
                   </div>
-                  <p className="m-0 text-[12px] tabular-nums text-muted-foreground">
-                    {fmtMoney(
-                      fill.quantity * fill.price * (fill.multiplier || 1),
-                      currency,
-                      locale,
-                    )}
+                  <p className="m-0 min-w-0 max-w-full wrap-anywhere text-[12px] tabular-nums text-muted-foreground">
+                    <Money
+                      value={fill.quantity * fill.price * (fill.multiplier || 1)}
+                      currency={currency}
+                      locale={locale}
+                    />
                     {fee > 0
                       ? tr({
                           id: "trades.feeAmount",
