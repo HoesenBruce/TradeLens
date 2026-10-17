@@ -297,6 +297,14 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 					execution.ReportedRealizedPnl = &pnl
 				}
 			}
+			execution.SBIFields = sbiEvidence(row)
+			execution.SBIFields["約定単価"] = row[fields["price"]]
+			execution.SBIFields["約定数量"] = row[fields["quantity"]]
+			if execution.SourceTimePrecision == "date" {
+				execution.SBIFields["original_execution_date"] = execution.ExecutedAt.In(sbiZone).Format(time.DateOnly)
+			} else {
+				execution.SBIFields["original_executed_at"] = execution.ExecutedAt.Format(time.RFC3339Nano)
+			}
 			execution.LotKey = "sbi:" + strings.ReplaceAll(execution.PositionType, "_", "-")
 			// ponytail: SBI exports dates but no times; tiny offsets preserve its row and transfer-leg order.
 			execution.ExecutedAt = execution.ExecutedAt.Add(time.Duration(i*2+legIndex) * time.Microsecond)

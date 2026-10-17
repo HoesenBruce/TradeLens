@@ -368,3 +368,20 @@ Previews include changed groups and preserved/removed review IDs. Applying a pre
 that removes any existing trade ID is refused to protect associations. No automatic
 repair runs on upgrade. See [#339 validation](validation/issue339/README.md) for backup,
 association audit, repeat application, rollback and before/after examples.
+
+### SBI credit settlement matching and inferred opening allocations (#347)
+
+Realized-result enrichment filters explicit SBI credit repayments by stored broker
+settlement evidence before deciding ambiguity. Opening allocations use broker
+identification first; FIFO is allowed only among demonstrably equivalent live
+openings, with complete credit/charge evidence. Equal-time openings remain equivalent
+groups rather than arbitrary physical lot identities. Unresolved credit rows reject
+the entire enrichment batch.
+
+Report-to-repayment and repayment-to-opening provenance are separate. Inferred
+allocations are labelled `fifo_inferred`, retain original source precision, and do
+not imply SBI's actual designation or exact lot holding duration. Existing P&L,
+position valuation, review identities and other brokers retain their current paths.
+No schema migration, automatic historical rewrite or missing-evidence backfill.
+See [issue #347 validation](validation/issue347/README.md) for the evidence contract,
+quantity invariants, compatibility, tests and conservative limits.

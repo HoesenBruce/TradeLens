@@ -412,6 +412,7 @@ func (s *Service) executionGroups(ctx context.Context, rows []store.Execution, p
 			SettlementResult:         settlementResult(settlements, r.ID),
 			ConversionType:           conversionTypeFromDetails(r.Details),
 			SourceTimePrecision:      sourceTimePrecisionFromDetails(r.Details),
+			OpeningMatchProvenance:   openingMatchFromDetails(r.Details),
 		})
 	}
 
@@ -443,4 +444,12 @@ func (s *Service) SBIAccounting(ctx context.Context, rows []store.Execution) ([]
 		out = append(out, result)
 	}
 	return out, nil
+}
+
+func openingMatchFromDetails(details sql.NullString) string {
+	var value struct {
+		Match string `json:"sbi_opening_match_provenance"`
+	}
+	_ = json.Unmarshal([]byte(details.String), &value)
+	return value.Match
 }

@@ -85,6 +85,13 @@ func TestSBIReviewImportPersistenceAndDedup(t *testing.T) {
 			require.NoError(t, trades.NewService(q).Regroup(ctx, u.ID, acc.ID))
 			after, err := q.ListTrades(ctx, store.ListTradesParams{UserID: u.ID})
 			require.NoError(t, err)
+			// Regroup may advance its audit timestamp; all accounting and
+			// execution-derived fields, including real trade times, must agree.
+			require.Len(t, after, len(before))
+			for i := range before {
+				require.False(t, after[i].UpdatedAt.Before(before[i].UpdatedAt))
+				before[i].UpdatedAt = after[i].UpdatedAt
+			}
 			require.Equal(t, before, after)
 		})
 	}

@@ -119,6 +119,13 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 		details := sql.NullString{}
 		if pe.DedupKey == "" || pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" || pe.ReportedRealizedPnl != nil || pe.ReportedCloseBasis != nil || pe.EventType != "" || pe.SourceTimePrecision != "" {
 			payload := map[string]any{}
+			if pe.SBIFields != nil {
+				source, err := json.Marshal(pe.SBIFields)
+				if err != nil {
+					return res, err
+				}
+				payload["sbi_source"] = string(source)
+			}
 			if pe.DedupKey == "" {
 				payload["occ"] = strconv.Itoa(occurrences[i])
 			}

@@ -22,16 +22,20 @@ import (
 var ErrSBIEnrichmentUnresolved = errors.New("resolve invalid, ambiguous or conflicting enrichment rows before applying")
 
 type SBIMarginPnLRow struct {
-	Date        string   `json:"date"`
-	Symbol      string   `json:"symbol"`
-	Transaction string   `json:"transaction"`
-	Quantity    float64  `json:"quantity"`
-	Price       float64  `json:"price"`
-	Basis       float64  `json:"basis"`
-	PnL         *float64 `json:"pnl,omitempty"`
-	Status      string   `json:"status"`
-	Message     string   `json:"message,omitempty"`
-	ExecutionID string   `json:"execution_id,omitempty"`
+	Date            string                 `json:"date"`
+	Symbol          string                 `json:"symbol"`
+	Transaction     string                 `json:"transaction"`
+	Quantity        float64                `json:"quantity"`
+	Price           float64                `json:"price"`
+	Basis           float64                `json:"basis"`
+	PnL             *float64               `json:"pnl,omitempty"`
+	Status          string                 `json:"status"`
+	Message         string                 `json:"message,omitempty"`
+	ExecutionID     string                 `json:"execution_id,omitempty"`
+	MatchProvenance string                 `json:"match_provenance,omitempty"` // report row to close execution only
+	OpeningMatch    string                 `json:"opening_match_provenance,omitempty"`
+	Allocations     []SBIOpeningAllocation `json:"opening_allocations,omitempty"`
+	Evidence        map[string]string      `json:"evidence,omitempty"`
 }
 
 type SBIMarginPnLImport struct {
@@ -95,6 +99,9 @@ func ReadSBIMarginPnLCSV(data []byte) (SBIMarginPnLImport, bool, error) {
 				}
 			}
 			p := SBIMarginPnLRow{Date: row["約定日"], Symbol: symbol, Transaction: transaction}
+			if len(sbiEvidence(row)) > 0 {
+				p.Evidence = sbiEvidence(row)
+			}
 			quantity, qerr := sbiPnLNumber(firstValue(row, "数量", "約定数量"))
 			price, perr := sbiPnLNumber(firstValue(row, "単価", "約定単価"))
 			basis, berr := sbiPnLNumber(row["平均取得価額"])
@@ -142,13 +149,27 @@ func sbiPnLDate(raw string) (string, error) {
 func MatchSBIMarginPnL(rows []SBIMarginPnLRow, executions []store.Execution) []SBIMarginPnLRow {
 	out := append([]SBIMarginPnLRow(nil), rows...)
 	claimed := map[string]int{}
+	scopes := map[string]bool{}
+	for _, execution := range executions {
+		scopes[execution.UserID+"|"+execution.AccountID] = true
+	}
 	for i := range out {
 		row := &out[i]
 		if row.Status == "invalid_row" {
 			continue
 		}
+		row.ExecutionID, row.Message, row.MatchProvenance, row.OpeningMatch, row.Allocations = "", "", "", "", nil
 		date, _ := sbiPnLDate(row.Date)
-		var candidates []store.Execution
+		var candidates, compatible []store.Execution
+		credit := isSBICredit(*row)
+		if raw := row.Evidence["約定数量"]; credit && raw != "" && !sbiDecimal(raw, strconv.FormatFloat(row.Quantity, 'f', -1, 64)) {
+			row.Status, row.Message = "invalid_row", "SBI quantity cannot be represented safely; reconcile the source quantity before applying."
+			continue
+		}
+		if credit && len(scopes) > 1 {
+			row.Status, row.MatchProvenance, row.OpeningMatch, row.Message = "ambiguous_match", "unresolved", "unresolved", "Select one account before matching SBI settlement evidence."
+			continue
+		}
 		for _, execution := range executions {
 			var details map[string]any
 			if !execution.Details.Valid || json.Unmarshal([]byte(execution.Details.String), &details) != nil {
@@ -166,11 +187,21 @@ func MatchSBIMarginPnL(rows []SBIMarginPnLRow, executions []store.Execution) []S
 				continue
 			}
 			if execution.InstrumentType != "stock" || execution.Multiplier != 1 || lot != wantLot || details["position_effect"] != "reduce" || execution.Side != wantSide ||
-				execution.Symbol != row.Symbol || math.Abs(execution.Quantity-row.Quantity) > 0.000001 || math.Abs(execution.Price-row.Price) > 0.0001 ||
+				execution.Symbol != row.Symbol || (credit && (execution.Quantity != row.Quantity || execution.Price != row.Price)) || (!credit && (math.Abs(execution.Quantity-row.Quantity) > 0.000001 || math.Abs(execution.Price-row.Price) > 0.0001)) ||
 				execution.ExecutedAt.In(time.FixedZone("JST", 9*3600)).Format("2006-01-02") != date {
 				continue
 			}
 			candidates = append(candidates, execution)
+			if credit && sbiConsistent(*row, execution) {
+				compatible = append(compatible, execution)
+			}
+		}
+		if credit && len(candidates) > 0 {
+			if len(compatible) == 0 {
+				row.Status, row.Message = "conflict", "Stored SBI settlement evidence disagrees; inspect the original reports."
+				continue
+			}
+			candidates = compatible
 		}
 		if len(candidates) > 1 {
 			// Only identical results with complete multiplicity can be assigned safely.
@@ -183,7 +214,7 @@ func MatchSBIMarginPnL(rows []SBIMarginPnLRow, executions []store.Execution) []S
 				count++
 				identical = identical && sameSBIResult(other, *row)
 			}
-			if identical && count == len(candidates) {
+			if !credit && identical && count == len(candidates) {
 				sort.Slice(candidates, func(i, j int) bool { return candidates[i].ID < candidates[j].ID })
 				for _, candidate := range candidates {
 					if _, used := claimed[candidate.ID]; !used {
@@ -199,6 +230,9 @@ func MatchSBIMarginPnL(rows []SBIMarginPnLRow, executions []store.Execution) []S
 		case 1:
 			candidate := candidates[0]
 			row.ExecutionID = candidate.ID
+			if credit {
+				row.MatchProvenance = "exact"
+			}
 			if priorIndex, exists := claimed[candidate.ID]; exists {
 				prior := &out[priorIndex]
 				if !sameSBIResult(*prior, *row) {
@@ -222,23 +256,52 @@ func MatchSBIMarginPnL(rows []SBIMarginPnLRow, executions []store.Execution) []S
 			}
 			claimed[candidate.ID] = i
 		default:
-			row.Status, row.Message = "ambiguous_match", fmt.Sprintf("%d matching executions", len(candidates))
+			sort.Slice(candidates, func(i, j int) bool { return candidates[i].ID < candidates[j].ID })
+			row.Status, row.Message = "ambiguous_match", fmt.Sprintf("%d matching executions; provide distinguishing SBI settlement evidence", len(candidates))
 			for _, candidate := range candidates {
 				row.Message += " " + candidate.ID
 			}
 		}
 	}
+	matchSBIOpenings(out, executions)
 	return out
 }
 
 func sameSBIResult(a, b SBIMarginPnLRow) bool {
-	return a.Basis == b.Basis && a.PnL != nil && b.PnL != nil && *a.PnL == *b.PnL
+	if a.Basis != b.Basis || a.PnL == nil || b.PnL == nil || *a.PnL != *b.PnL {
+		return false
+	}
+	if isSBICredit(a) {
+		for key, value := range a.Evidence {
+			if !sbiTermEqual(key, value, b.Evidence[key]) {
+				return false
+			}
+		}
+		for key := range b.Evidence {
+			if a.Evidence[key] == "" {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 func CommitSBIMarginPnL(ctx context.Context, q store.Querier, userID, accountID string, rows []SBIMarginPnLRow, getters ...trades.BarsGetter) (int, error) {
 	for _, row := range rows {
-		if row.Status == "conflict" || row.Status == "ambiguous_match" || row.Status == "invalid_row" {
+		if row.Status != "enrichable" && row.Status != "already_enriched" && (isSBICredit(row) || row.Status != "no_matching_execution") {
 			return 0, ErrSBIEnrichmentUnresolved
+		}
+	}
+	all, err := q.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: userID, AccountID: accountID})
+	if err != nil {
+		return 0, err
+	}
+	fresh := MatchSBIMarginPnL(rows, all)
+	for i := range rows {
+		a, _ := json.Marshal(rows[i])
+		b, _ := json.Marshal(fresh[i])
+		if string(a) != string(b) {
+			return 0, fmt.Errorf("matched execution changed; preview again")
 		}
 	}
 	updated := 0
@@ -254,12 +317,16 @@ func CommitSBIMarginPnL(ctx context.Context, q store.Querier, userID, accountID 
 		if err := json.Unmarshal([]byte(execution.Details.String), &details); err != nil {
 			return updated, err
 		}
-		// Revalidate at the write boundary; callers must apply inside store.InTx.
-		matched := MatchSBIMarginPnL([]SBIMarginPnLRow{row}, []store.Execution{execution})
-		if matched[0].Status != "enrichable" {
-			return 0, fmt.Errorf("matched execution changed")
-		}
 		details["broker_reported_close_basis"] = row.Basis
+		if isSBICredit(row) {
+			details["sbi_report_match_provenance"] = row.MatchProvenance
+			details["sbi_opening_match_provenance"] = row.OpeningMatch
+			allocations, err := json.Marshal(row.Allocations)
+			if err != nil {
+				return updated, err
+			}
+			details["sbi_opening_allocations"] = string(allocations)
+		}
 		details["close_basis_source"] = "broker_reported"
 		details["realized_pnl_tax_basis"] = "pretax"
 		details["realized_pnl_report"] = "sbi_realized_pnl_detail"
