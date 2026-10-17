@@ -1,245 +1,235 @@
 import { useLingui } from "@lingui/react/macro";
-import { ChartCandlestick, CircleDot, ListFilterPlus, Search, Tags } from "lucide-react";
-import { useMemo, useState } from "react";
+import {
+  ArrowUpDown,
+  ChartCandlestick,
+  CircleDot,
+  Clock,
+  ListFilterPlus,
+  Search,
+  Tags,
+  Wallet,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
-import {
-  Filters,
-  type Filter,
-  type FilterFieldConfig,
-  type FilterOperator,
-} from "@/components/filters";
+import { Filters, type FilterFieldConfig, type FilterOperator } from "@/components/filters";
 import type {
   MarketFacetOption,
   SymbolFacetOption,
   TagFacetOption,
-  TradeStatusFilter,
+  TradeFilter,
 } from "@/lib/tradeFilters";
 
-type TradesFilterValue = string;
-
-function stableFilter(
-  field: string,
-  operator: string,
-  values: TradesFilterValue[],
-): Filter<TradesFilterValue> {
-  return { id: field, field, operator, values };
-}
-
-function valuesOf(filters: Filter<TradesFilterValue>[], field: string): string[] {
-  const match = filters.find((f) => f.field === field);
-  if (!match?.values?.length) return [];
-  return match.values.map(String);
-}
-
-function operatorOf(filters: Filter<TradesFilterValue>[], field: string, fallback: string): string {
-  return filters.find((f) => f.field === field)?.operator ?? fallback;
+export interface TradesFiltersProps {
+  triggerClassName?: string;
+  iconOnly?: boolean;
+  conditions: TradeFilter[];
+  onConditionsChange: (filters: TradeFilter[]) => void;
+  symbolOptions?: SymbolFacetOption[];
+  marketOptions?: MarketFacetOption[];
+  tagOptions?: TagFacetOption[];
 }
 
 export function TradesFilters({
   triggerClassName,
   iconOnly = false,
-  symbols,
-  onSymbolsChange,
+  conditions,
+  onConditionsChange,
   symbolOptions = [],
-  tradeStatus,
-  onToggleTradeStatus,
-  onClearStatus,
-  markets,
-  marketOptions,
-  onMarketsChange,
-  tagIds,
-  tagOptions,
-  onTagIdsChange,
-}: {
-  /** Styling for the "Add filter" trigger so it matches the sibling toolbar controls. */
-  triggerClassName?: string;
-  /** Drop the trigger label to the accessible name only — compact toolbars. */
-  iconOnly?: boolean;
-  symbols: string[];
-  onSymbolsChange: (symbols?: string[]) => void;
-  symbolOptions?: SymbolFacetOption[];
-  tradeStatus?: TradeStatusFilter;
-  onToggleTradeStatus?: (filter: TradeStatusFilter) => void;
-  onClearStatus?: () => void;
-  markets?: string[];
-  marketOptions?: MarketFacetOption[];
-  onMarketsChange?: (markets?: string[]) => void;
-  tagIds?: string[];
-  tagOptions?: TagFacetOption[];
-  onTagIdsChange?: (ids?: string[]) => void;
-}) {
-  // Persist operators so choosing "is not any of" / "includes all" doesn't snap back.
-  // Values live in the parent store; operators are UI-only until the data layer grows modes.
+  marketOptions = [],
+  tagOptions = [],
+}: TradesFiltersProps) {
   const { t: tr } = useLingui();
-  const [ops, setOps] = useState<Record<string, string>>({});
-
-  const fields = useMemo(() => {
-    const STATUS_OPTIONS = [
-      { value: "win", label: tr({ id: "trades.wins", message: "Wins" }) },
-      { value: "loss", label: tr({ id: "trades.losses", message: "Losses" }) },
-      { value: "open", label: tr({ id: "trades.open", message: "Open" }) },
-      { value: "wash", label: tr({ id: "trades.wash", message: "Wash" }) },
-    ] as const;
-
-    /** Scalar facets (one value per trade) — only OR / NOT OR make sense. */
-    const SCALAR_MULTI_OPS: FilterOperator[] = [
-      { value: "is_any_of", label: tr({ id: "trades.anyOf", message: "is any of" }) },
-      { value: "is_not_any_of", label: tr({ id: "trades.notAnyOf", message: "is not any of" }) },
-    ];
-
-    /** Tag facets (many per trade) — OR, NOT OR, and AND. */
-    const TAG_MULTI_OPS: FilterOperator[] = [
-      { value: "is_any_of", label: tr({ id: "trades.anyOf", message: "is any of" }) },
-      { value: "is_not_any_of", label: tr({ id: "trades.notAnyOf", message: "is not any of" }) },
-      { value: "includes_all", label: tr({ id: "trades.includesAll", message: "includes all" }) },
-    ];
-
-    const STATUS_OPS: FilterOperator[] = [
-      { value: "is", label: tr({ id: "trades.is", message: "is" }) },
-      { value: "is_not", label: tr({ id: "trades.isNot", message: "is not" }) },
-    ];
-
-    const next: FilterFieldConfig<TradesFilterValue>[] = [
-      {
-        key: "symbol",
-        label: tr({ id: "trades.symbol", message: "Symbol" }),
-        type: "multiselect",
-        icon: <Search className="size-3.5" strokeWidth={1.75} />,
-        searchable: true,
-        operators: SCALAR_MULTI_OPS,
-        options: symbolOptions.map((o) => ({
-          value: o.value,
-          label: o.label,
-        })),
-      },
-    ];
-
-    if (onToggleTradeStatus) {
-      next.push({
-        key: "status",
-        label: tr({ id: "trades.status", message: "Status" }),
-        type: "select",
-        icon: <CircleDot className="size-3.5" strokeWidth={1.75} />,
-        searchable: false,
-        operators: STATUS_OPS,
-        options: STATUS_OPTIONS.map((o) => ({ value: o.value, label: o.label })),
-      });
-    }
-
-    if (onMarketsChange && marketOptions && marketOptions.length > 0) {
-      next.push({
-        key: "market",
-        label: tr({ id: "trades.market", message: "Market" }),
-        type: "multiselect",
-        icon: <ChartCandlestick className="size-3.5" strokeWidth={1.75} />,
-        searchable: true,
-        operators: SCALAR_MULTI_OPS,
-        options: marketOptions.map((o) => ({ value: o.value, label: o.label })),
-      });
-    }
-
-    if (onTagIdsChange && tagOptions && tagOptions.length > 0) {
-      next.push({
-        key: "tags",
-        label: tr({ id: "trades.tags", message: "Tags" }),
-        type: "multiselect",
-        icon: <Tags className="size-3.5" strokeWidth={1.75} />,
-        searchable: true,
-        operators: TAG_MULTI_OPS,
-        options: tagOptions.map((o) => ({ value: o.value, label: o.label })),
-      });
-    }
-
-    return next;
-  }, [
-    tr,
-    symbolOptions,
-    onToggleTradeStatus,
-    marketOptions,
-    onMarketsChange,
-    tagOptions,
-    onTagIdsChange,
-  ]);
-
-  const filters = useMemo(() => {
-    const next: Filter<TradesFilterValue>[] = [];
-    if (symbols.length > 0) {
-      next.push(stableFilter("symbol", ops.symbol ?? "is_any_of", symbols));
-    }
-    if (tradeStatus) {
-      next.push(stableFilter("status", ops.status ?? "is", [tradeStatus]));
-    }
-    if (markets && markets.length > 0) {
-      next.push(stableFilter("market", ops.market ?? "is_any_of", markets));
-    }
-    if (tagIds && tagIds.length > 0) {
-      next.push(stableFilter("tags", ops.tags ?? "is_any_of", tagIds));
-    }
-    return next;
-  }, [symbols, tradeStatus, markets, tagIds, ops]);
-
-  function handleChange(next: Filter<TradesFilterValue>[]) {
-    setOps({
-      symbol: operatorOf(next, "symbol", "is_any_of"),
-      status: operatorOf(next, "status", "is"),
-      market: operatorOf(next, "market", "is_any_of"),
-      tags: operatorOf(next, "tags", "is_any_of"),
-    });
-
-    const nextSymbols = valuesOf(next, "symbol");
-    onSymbolsChange(nextSymbols.length ? nextSymbols : undefined);
-
-    if (onToggleTradeStatus) {
-      const nextStatus = valuesOf(next, "status")[0] as TradeStatusFilter | undefined;
-      if (!nextStatus) {
-        if (tradeStatus) {
-          if (onClearStatus) onClearStatus();
-          else onToggleTradeStatus(tradeStatus);
-        }
-      } else if (nextStatus !== tradeStatus) {
-        onToggleTradeStatus(nextStatus);
-      }
-    }
-
-    if (onMarketsChange) {
-      const nextMarkets = valuesOf(next, "market");
-      onMarketsChange(nextMarkets.length ? nextMarkets : undefined);
-    }
-
-    if (onTagIdsChange) {
-      const nextTags = valuesOf(next, "tags");
-      onTagIdsChange(nextTags.length ? nextTags : undefined);
-    }
-  }
+  const operators: FilterOperator[] = [
+    { value: "is_any_of", label: tr({ id: "trades.filterInclude", message: "Include" }) },
+    { value: "is_not_any_of", label: tr({ id: "trades.filterExclude", message: "Exclude" }) },
+  ];
+  const fields: FilterFieldConfig<string>[] = [
+    {
+      key: "symbol",
+      label: tr({ id: "trades.symbol", message: "Symbol" }),
+      icon: <Search />,
+      searchable: true,
+      options: symbolOptions,
+    },
+    {
+      key: "result",
+      label: tr({ id: "trades.tradeResult", message: "Trade result" }),
+      icon: <CircleDot />,
+      options: [
+        { value: "win", label: tr({ id: "trades.win", message: "Win" }) },
+        { value: "loss", label: tr({ id: "trades.loss", message: "Loss" }) },
+        { value: "wash", label: tr({ id: "trades.breakEven", message: "Break-even" }) },
+        { value: "unknown", label: tr({ id: "trades.resultUnknown", message: "Unknown result" }) },
+      ],
+    },
+    {
+      key: "direction",
+      label: tr({ id: "trades.direction", message: "Direction" }),
+      icon: <ArrowUpDown />,
+      options: [
+        { value: "long", label: tr({ id: "trades.long", message: "Long" }) },
+        { value: "short", label: tr({ id: "trades.short", message: "Short" }) },
+        {
+          value: "unknown",
+          label: tr({ id: "trades.directionUnknown", message: "Unknown direction" }),
+        },
+      ],
+    },
+    {
+      key: "progress",
+      label: tr({ id: "trades.closeProgress", message: "Close progress" }),
+      icon: <CircleDot />,
+      options: [
+        { value: "open", label: tr({ id: "trades.lifecycleOpen", message: "Position open" }) },
+        {
+          value: "partially_closed",
+          label: tr({ id: "trades.lifecyclePartial", message: "Partially closed" }),
+        },
+        {
+          value: "closed",
+          label: tr({ id: "trades.lifecycleClosed", message: "Position closed" }),
+        },
+        {
+          value: "unknown",
+          label: tr({ id: "trades.lifecycleUnknown", message: "Position unknown" }),
+        },
+      ],
+    },
+    {
+      key: "position_type",
+      label: tr({ id: "trades.positionTypeFilter", message: "Position type" }),
+      icon: <Wallet />,
+      options: [
+        { value: "cash", label: tr({ id: "trades.positionCash", message: "Cash" }) },
+        { value: "margin", label: tr({ id: "trades.positionMargin", message: "Margin" }) },
+        {
+          value: "unknown",
+          label: tr({ id: "trades.positionTypeUnknown", message: "Type unknown" }),
+        },
+      ],
+    },
+    {
+      key: "duration",
+      label: tr({ id: "trades.holdingDurationFilter", message: "Holding duration" }),
+      icon: <Clock />,
+      options: [
+        {
+          value: "elapsed_under_5m",
+          label: tr({ id: "trades.durationUnder5", message: "Elapsed: under 5 minutes" }),
+        },
+        {
+          value: "elapsed_5_30m",
+          label: tr({ id: "trades.duration5To30", message: "Elapsed: 5–30 minutes" }),
+        },
+        {
+          value: "elapsed_30_60m",
+          label: tr({ id: "trades.duration30To60", message: "Elapsed: 30–60 minutes" }),
+        },
+        {
+          value: "elapsed_1_4h",
+          label: tr({ id: "trades.duration1To4", message: "Elapsed: 1–4 hours" }),
+        },
+        {
+          value: "elapsed_4h_plus",
+          label: tr({ id: "trades.duration4Plus", message: "Elapsed: 4 hours or more" }),
+        },
+        {
+          value: "calendar_0",
+          label: tr({ id: "trades.durationSameDay", message: "Calendar: same day" }),
+        },
+        {
+          value: "calendar_1",
+          label: tr({ id: "trades.duration1Day", message: "Calendar: 1 day" }),
+        },
+        {
+          value: "calendar_2_5",
+          label: tr({ id: "trades.duration2To5Days", message: "Calendar: 2–5 days" }),
+        },
+        {
+          value: "calendar_6_plus",
+          label: tr({ id: "trades.duration6Plus", message: "Calendar: 6 days or more" }),
+        },
+        {
+          value: "unknown",
+          label: tr({ id: "trades.holdingUnknown", message: "Holding duration is unknown." }),
+        },
+      ],
+    },
+    {
+      key: "market",
+      label: tr({ id: "trades.market", message: "Market" }),
+      icon: <ChartCandlestick />,
+      searchable: true,
+      options: marketOptions,
+    },
+    {
+      key: "tags",
+      label: tr({ id: "trades.tags", message: "Tags" }),
+      icon: <Tags />,
+      searchable: true,
+      options: tagOptions,
+      operators: [
+        ...operators,
+        { value: "includes_all", label: tr({ id: "trades.includesAll", message: "includes all" }) },
+      ],
+    },
+  ].map((field) => {
+    const title = field.label;
+    return {
+      type: "multiselect",
+      searchable: false,
+      operators,
+      ...field,
+      removeLabel: tr({ id: "common.clearNamedFilter", message: `Clear ${title} filter` }),
+    };
+  });
 
   return (
-    <Filters
-      filters={filters}
-      fields={fields}
-      onChange={handleChange}
-      size="sm"
-      allowMultiple={false}
-      showSearchInput
-      // The stock trigger renders at the Button default size (h-9 on phones);
-      // supplying our own keeps it level with Created At / Sort.
-      trigger={
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          aria-label={tr({ id: "trades.addFilter", message: "Add filter" })}
-          className={cn(triggerClassName, iconOnly && "w-8 px-0 [&>svg]:mx-0")}
-        >
-          <ListFilterPlus size={14} strokeWidth={1.75} />
-          {iconOnly ? null : tr({ id: "trades.addFilter", message: "Add filter" })}
-        </Button>
-      }
-      i18n={{
-        addFilter: tr({ id: "trades.addFilter", message: "Add filter" }),
-        searchFields: tr({ id: "trades.searchFilters", message: "Search filters…" }),
-        noResultsFound: tr({ id: "trades.noSymbols", message: "No symbols found." }),
-      }}
-    />
+    <div className="flex flex-wrap items-center gap-2">
+      <Filters
+        filters={conditions}
+        fields={fields}
+        onChange={(next) => onConditionsChange(next.filter((f) => f.values.length > 0))}
+        size="sm"
+        allowMultiple={false}
+        showSearchInput
+        trigger={
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            aria-label={tr({ id: "trades.addFilter", message: "Add filter" })}
+            className={cn(triggerClassName, iconOnly && "w-8 px-0 [&>svg]:mx-0")}
+          >
+            <ListFilterPlus size={14} strokeWidth={1.75} />
+            {iconOnly ? null : tr({ id: "trades.addFilter", message: "Add filter" })}
+          </Button>
+        }
+        i18n={{
+          selectedCount: tr({ id: "trades.filterSelected", message: "selected" }),
+          addFilter: tr({ id: "trades.addFilter", message: "Add filter" }),
+          searchFields: tr({ id: "trades.searchFilters", message: "Search filters…" }),
+          noResultsFound: tr({ id: "trades.filterNoOptions", message: "No matching options." }),
+        }}
+      />
+      {conditions.some((f) => f.field === "duration") && (
+        <p className="w-full text-xs text-muted-foreground">
+          {tr({
+            id: "trades.durationFilterHint",
+            message:
+              "Elapsed ranges use precise timestamps; calendar ranges use date-only records in the market time zone. Open positions run to now.",
+          })}
+        </p>
+      )}
+      {conditions.some((f) => f.field === "result") && (
+        <p className="w-full text-xs text-muted-foreground">
+          {tr({
+            id: "trades.resultFilterHint",
+            message:
+              "Trade results include completed trades only, including when excluding a result.",
+          })}
+        </p>
+      )}
+    </div>
   );
 }

@@ -13213,3 +13213,87 @@ msgstr "種別不明"
 #: src/components/tradeColumns.tsx
 msgid "trades.positionType"
 msgstr "種別"
+
+#. js-lingui-explicit-id
+msgid "trades.duration1Day"
+msgstr "暦日：1日"
+
+#. js-lingui-explicit-id
+msgid "trades.duration2To5Days"
+msgstr "暦日：2～5日"
+
+#. js-lingui-explicit-id
+msgid "trades.duration6Plus"
+msgstr "暦日：6日以上"
+
+#. js-lingui-explicit-id
+msgid "trades.durationSameDay"
+msgstr "暦日：同日"
+
+#. js-lingui-explicit-id
+msgid "trades.durationFilterHint"
+msgstr "経過時間は正確なタイムスタンプを、暦日は日付のみの記録と市場のタイムゾーンを使用します。保有中の取引は現在まで計算します。"
+
+#. js-lingui-explicit-id
+msgid "trades.duration1To4"
+msgstr "経過時間：1～4時間"
+
+#. js-lingui-explicit-id
+msgid "trades.duration30To60"
+msgstr "経過時間：30～60分"
+
+#. js-lingui-explicit-id
+msgid "trades.duration4Plus"
+msgstr "経過時間：4時間以上"
+
+#. js-lingui-explicit-id
+msgid "trades.duration5To30"
+msgstr "経過時間：5～30分"
+
+#. js-lingui-explicit-id
+msgid "trades.durationUnder5"
+msgstr "経過時間：5分未満"
+
+#. js-lingui-explicit-id
+msgid "trades.filterExclude"
+msgstr "除外"
+
+#. js-lingui-explicit-id
+msgid "trades.exportFiltered"
+msgstr "絞り込んだ取引をエクスポート"
+
+#. js-lingui-explicit-id
+msgid "trades.holdingDurationFilter"
+msgstr "保有期間"
+
+#. js-lingui-explicit-id
+msgid "trades.filterInclude"
+msgstr "含む"
+
+#. js-lingui-explicit-id
+msgid "trades.filterNoOptions"
+msgstr "一致する選択肢がありません。"
+
+#. js-lingui-explicit-id
+msgid "trades.positionTypeFilter"
+msgstr "ポジション種別"
+
+#. js-lingui-explicit-id
+msgid "trades.resultFilterHint"
+msgstr "取引結果は決済済みの取引のみを対象とします。結果を除外する場合も同様です。"
+
+#. js-lingui-explicit-id
+msgid "trades.directionUnknown"
+msgstr "方向不明"
+
+#. js-lingui-explicit-id
+msgid "trades.resultUnknown"
+msgstr "結果不明"
+
+#. js-lingui-explicit-id
+msgid "trades.noMatchesFilterHint"
+msgstr "日付範囲を広げるか、取引フィルターを解除するか、口座を切り替えてください。"
+
+#. js-lingui-explicit-id
+msgid "trades.filterSelected"
+msgstr "件選択中"

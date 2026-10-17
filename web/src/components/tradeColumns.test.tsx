@@ -247,3 +247,10 @@ describe("tradeColumns", () => {
     expect(screen.getByText("$435.00")).toBeInTheDocument();
   });
 });
+
+it("uses final results only on the Trades surface while preserving the default badge semantics", () => {
+  const partial = { status: "open", net_pnl: 100 } as Trade;
+  expect(tradeStatus(partial).label).toBe("WIN");
+  expect(tradeStatus(partial, true).label).toBe("OPEN");
+  expect(tradeStatus({ status: "closed", net_pnl: null } as Trade, true).label).toBe("N/A");
+});
