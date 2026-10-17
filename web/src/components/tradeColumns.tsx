@@ -1,3 +1,4 @@
+import { finalTradeResult } from "@/lib/tradeFilters";
 import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
 import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { tradeStatusLabel } from "@/lib/tradeLabels";
@@ -49,10 +50,18 @@ export function tradeNotional(qty: number, price: number, instrumentType: string
   return qty * price * tradeNotionalMultiplier(instrumentType);
 }
 
-export function tradeStatus(t: Trade): {
+export function tradeStatus(
+  t: Trade,
+  finalOnly = false,
+): {
   label: "WIN" | "LOSS" | "OPEN" | "BE" | "N/A";
   tone: PillTone;
 } {
+  if (finalOnly) {
+    const result = finalTradeResult(t);
+    if (result == null) return { label: "OPEN", tone: "accent" };
+    if (result === "unknown") return { label: "N/A", tone: "muted" };
+  }
   if (t.status === "open" && t.net_pnl == null) return { label: "OPEN", tone: "accent" };
   if (t.net_pnl == null && t.accounting_warning) return { label: "N/A", tone: "muted" };
   if (t.net_pnl != null && t.net_pnl > 0) return { label: "WIN", tone: "pos" };
@@ -115,6 +124,7 @@ export function tradeColumns(
   currency: string,
   actions: TradeRowActions,
   fxRate = 1,
+  finalResults = false,
 ): ColumnDef<Trade>[] {
   return [
     {
@@ -135,15 +145,17 @@ export function tradeColumns(
     },
     {
       id: "status",
-      accessorFn: (row) => tradeStatus(row).label,
-      header: tr({ id: "trades.status", message: "Status" }),
+      accessorFn: (row) => tradeStatus(row, finalResults).label,
+      header: finalResults
+        ? tr({ id: "trades.tradeResult", message: "Trade result" })
+        : tr({ id: "trades.status", message: "Status" }),
       meta: {
         label: tr({ id: "trades.status", message: "Status" }),
         headerTitle: tr({ id: "trades.tradeResult", message: "Trade result" }),
         minWidth: 64,
       },
       cell: (i) => {
-        const s = tradeStatus(i.row.original);
+        const s = tradeStatus(i.row.original, finalResults);
         const titles: Record<typeof s.label, string> = {
           WIN: tr({ id: "trades.win", message: "Win" }),
           LOSS: tr({ id: "trades.loss", message: "Loss" }),
@@ -522,7 +534,7 @@ export function tradeSortColumns(): { id: string; label: string }[] {
     { id: "opened_at", label: tr({ id: "trades.createdAt", message: "Created At" }) },
     { id: "closed_at", label: tr({ id: "trades.closeDate", message: "Close date" }) },
     { id: "symbol", label: tr({ id: "trades.symbol", message: "Symbol" }) },
-    { id: "status", label: tr({ id: "trades.status", message: "Status" }) },
+    { id: "status", label: tr({ id: "trades.tradeResult", message: "Trade result" }) },
     { id: "direction", label: tr({ id: "trades.direction", message: "Direction" }) },
     { id: "instrument_type", label: tr({ id: "trades.market", message: "Market" }) },
     { id: "qty_opened", label: tr({ id: "trades.closeProgress", message: "Close progress" }) },
@@ -544,7 +556,7 @@ export function tradeViewColumns(): { id: string; label: string }[] {
   return [
     { id: "symbol", label: tr({ id: "trades.symbol", message: "Symbol" }) },
     { id: "stock_name", label: tr({ id: "trades.stockName", message: "Stock Name" }) },
-    { id: "status", label: tr({ id: "trades.status", message: "Status" }) },
+    { id: "status", label: tr({ id: "trades.tradeResult", message: "Trade result" }) },
     { id: "direction", label: tr({ id: "trades.direction", message: "Direction" }) },
     { id: "instrument_type", label: tr({ id: "trades.market", message: "Market" }) },
     { id: "qty_opened", label: tr({ id: "trades.closeProgress", message: "Close progress" }) },

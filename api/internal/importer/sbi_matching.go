@@ -165,6 +165,12 @@ func sbiRawBasis(r SBIMarginPnLRow) string {
 	return strconv.FormatFloat(r.Basis, 'f', -1, 64)
 }
 func sbiOpeningTermsMatch(r SBIMarginPnLRow, e store.Execution) bool {
+	if date := r.Evidence["建日"]; date != "" {
+		day, err := sbiPnLDate(date)
+		if err != nil || day != sbiDay(e) {
+			return false
+		}
+	}
 	source := sbiSource(e)
 	for _, key := range []string{"信用区分", "信用種類", "信用種別", "信用取引区分", "口座", "預り", "預り区分", "建市場", "返済期限"} {
 		if expected := r.Evidence[key]; expected != "" && source[key] != "" && !sbiTermEqual(key, expected, source[key]) {
@@ -345,12 +351,6 @@ func matchSBIOpenings(rows []SBIMarginPnLRow, executions []store.Execution) {
 				if !sbiOpeningConsistent(o.execution) || !sbiOpeningTermsMatch(r, o.execution) || !sbiDecimal(sbiRawPrice(o.execution), openingPrice) {
 					continue
 				}
-				if date := r.Evidence["建日"]; date != "" {
-					day, err := sbiPnLDate(date)
-					if err != nil || day != sbiDay(o.execution) {
-						continue
-					}
-				}
 				if price := r.Evidence["建単価"]; price != "" && !sbiDecimal(price, sbiRawPrice(o.execution)) {
 					continue
 				}
@@ -363,7 +363,7 @@ func matchSBIOpenings(rows []SBIMarginPnLRow, executions []store.Execution) {
 			// prices on both sides could produce the same weighted average.
 			lower, higher := false, false
 			for _, o := range opens {
-				if o.remaining <= 0 {
+				if o.remaining <= 0 || !sbiOpeningTermsMatch(r, o.execution) {
 					continue
 				}
 				cmp, valid := sbiDecimalCompare(sbiRawPrice(o.execution), openingPrice)

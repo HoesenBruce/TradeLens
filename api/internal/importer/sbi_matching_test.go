@@ -336,3 +336,14 @@ func TestSBIInferredResidualCannotBecomeBrokerExact(t *testing.T) {
 	}
 	require.Equal(t, []SBIOpeningAllocation{{[]string{"b"}, 50}}, got[1].Allocations)
 }
+
+func TestSBIBrokerDateExcludesOtherDaysBeforeAverageBasisProof(t *testing.T) {
+	a, b, c, d := syntheticSBIFill("a", "buy", 100, 100, 9), syntheticSBIFill("b", "buy", 100, 90, 10), syntheticSBIFill("c", "buy", 100, 110, 11), syntheticSBIFill("d", "sell", 50, 110, 12)
+	a.ExecutedAt = a.ExecutedAt.AddDate(0, 0, -1)
+	row := syntheticSBIReport(50)
+	row.Evidence = map[string]string{"建日": "2032/03/01"}
+	got := MatchSBIMarginPnL([]SBIMarginPnLRow{row}, []store.Execution{a, b, c, d})[0]
+	require.Equal(t, "enrichable", got.Status)
+	require.Equal(t, "exact", got.OpeningMatch)
+	require.Equal(t, []SBIOpeningAllocation{{[]string{"a"}, 50}}, got.Allocations)
+}

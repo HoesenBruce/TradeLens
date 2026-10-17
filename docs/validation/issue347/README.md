@@ -1,6 +1,9 @@
 # Issue #347: SBI settlement evidence and conditional FIFO
 
-Baseline: `f29388f9d60557d557379be59372ef88d7041b6b` (`origin/main`, fetched 2026-10-17).
+Initial audit baseline: `f29388f9d60557d557379be59372ef88d7041b6b`
+(`origin/main`, fetched 2026-10-17). Final integration baseline:
+`60f462a04c062ac7604bcf99ba083330d303ac98` (#348 merged during acceptance).
+The branch incorporates that main commit with a regular merge, without rewriting history.
 Branch: `fix/347-sbi-settlement-fifo`. Synthetic data only; temporary SQLite only.
 
 ## Baseline audit and scope
@@ -103,7 +106,7 @@ verified database-backup restore, consistent with the existing enrichment policy
 - Complete `go vet ./...`, `go test ./...`, `go build ./...`.
 - Relevant race suite: importer, trades and API with SBI, default, IBKR, partial,
   regroup and cross-user regression cases.
-- Web check (zero errors; inherited lint warnings), 204 files / 1278 unit tests, typecheck,
+- Web check (zero errors; inherited lint warnings), 206 files / 1314 unit tests, typecheck,
   production build. No dependencies added.
 - `sbi_matching_test.go`: unique settlement evidence in long/short buckets, unknown
   and contradictory results, different prices/dates/classes/fees/interest, missing
