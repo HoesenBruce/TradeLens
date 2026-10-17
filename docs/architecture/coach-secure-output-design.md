@@ -2,6 +2,8 @@
 
 Status: proposed implementation contract, 2026-10-13; independent B approval and D2 acceptance remain required. AI Coach is retained as a planned, supported feature. No production redesign implemented. Baseline/head and full inventory are in [split assessment](pr295-split-assessment.md).
 
+Exact B review packet: [Issue #300 contract](coach-output-contract-v1.md). It resolves the initial draft’s fact semantics, finite locale catalog, bounds, lifecycle and old-client behavior. Independent approval is pending.
+
 ## Decision
 
 Only server-approved bounded structured selections cross the model boundary. Only server-rendered text and verified, allowlisted user-owned facts cross the client boundary. JSON wrapping free text is insufficient. Remove arbitrary model text from headline, detail, next action, model metadata, error/progress and stored review display. Do not grow the recognizable-secret filter into the primary boundary.
@@ -43,14 +45,14 @@ Each provider record is one complete JSON object; provider stream deltas are buf
 
 All seven keys are required; exactly these keys are allowed. Unknown keys at any depth, duplicate keys, missing/null fields, invalid UTF-8/unpaired surrogates, trailing data, arrays as root, unsupported versions and type coercion fail closed. Go `DisallowUnknownFields` alone is insufficient for duplicate keys or required presence: require explicit token/presence validation too. Strings must exactly match server-advertised finite IDs/enums; they are selections, never display text. Ref tokens are request-local keys allocated by the server (e.g. `f0`), not database IDs or paths. The model cannot create facts.
 
-Initial approved catalog (all text maintained by the server):
+Initial proposed catalog (all text maintained by the server):
 
 | Template | Category / priority | Required fact and predicate | Action | Parameter contract |
 |---|---|---|---|---|
-| `define_stop` | risk / warn | `risk_defined` boolean = false for current trade | `record_stop` | Empty object |
+| `define_stop` | risk / warn | `stop_recorded` boolean = false for current trade | `record_stop` | Empty object |
 | `review_execution` | execution / tip | Existing execution-grade integer 1..5 for current trade | `review_journal` | Empty object |
 | `review_loss_streak` | session / warn | Current-account, entry-time loss-streak count >= 2 | `pause_review` | Empty object |
-| `record_review` | process / tip | Current trade review grade absent | `grade_trade` | Empty object |
+| `record_review` | process / tip | Current trade execution grade (`TradeQuality`) absent | `grade_trade` | Empty object |
 
 Category, priority and action must equal the catalog's values for that template; no independent covert string parameter. Model-selected confidence, monetary amounts, percentages, identifiers, prose, URLs, markdown and numeric digits to be printed are disallowed. v1 numeric parameters are deliberately an empty set: all displayed numbers are computed from server facts, with field-specific units, precision and domain validation. Any future numeric parameter needs a new schema/catalog version with finite integer range and demonstrated necessity, never an arbitrary float or decimal string. Reject NaN/infinity/overflow in fact computation; missing facts make the template ineligible. No template suggests or executes an order.
 
