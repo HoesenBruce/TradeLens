@@ -13209,3 +13209,87 @@ msgstr "類型未知"
 #: src/components/tradeColumns.tsx
 msgid "trades.positionType"
 msgstr "類型"
+
+#. js-lingui-explicit-id
+msgid "trades.duration1Day"
+msgstr "日曆日：1天"
+
+#. js-lingui-explicit-id
+msgid "trades.duration2To5Days"
+msgstr "日曆日：2–5天"
+
+#. js-lingui-explicit-id
+msgid "trades.duration6Plus"
+msgstr "日曆日：6天或以上"
+
+#. js-lingui-explicit-id
+msgid "trades.durationSameDay"
+msgstr "日曆日：同日"
+
+#. js-lingui-explicit-id
+msgid "trades.durationFilterHint"
+msgstr "精確時長區間使用精確時間戳；日曆日區間僅使用日期精度記錄，按市場時區計算。持倉中的交易計算至目前。"
+
+#. js-lingui-explicit-id
+msgid "trades.duration1To4"
+msgstr "精確時長：1–4小時"
+
+#. js-lingui-explicit-id
+msgid "trades.duration30To60"
+msgstr "精確時長：30–60分鐘"
+
+#. js-lingui-explicit-id
+msgid "trades.duration4Plus"
+msgstr "精確時長：4小時或以上"
+
+#. js-lingui-explicit-id
+msgid "trades.duration5To30"
+msgstr "精確時長：5–30分鐘"
+
+#. js-lingui-explicit-id
+msgid "trades.durationUnder5"
+msgstr "精確時長：少於5分鐘"
+
+#. js-lingui-explicit-id
+msgid "trades.filterExclude"
+msgstr "排除"
+
+#. js-lingui-explicit-id
+msgid "trades.exportFiltered"
+msgstr "匯出篩選交易"
+
+#. js-lingui-explicit-id
+msgid "trades.holdingDurationFilter"
+msgstr "持倉時長"
+
+#. js-lingui-explicit-id
+msgid "trades.filterInclude"
+msgstr "包含"
+
+#. js-lingui-explicit-id
+msgid "trades.filterNoOptions"
+msgstr "沒有符合的選項。"
+
+#. js-lingui-explicit-id
+msgid "trades.positionTypeFilter"
+msgstr "持倉類型"
+
+#. js-lingui-explicit-id
+msgid "trades.resultFilterHint"
+msgstr "交易結果僅包含已完成交易，排除某種結果時亦適用。"
+
+#. js-lingui-explicit-id
+msgid "trades.directionUnknown"
+msgstr "方向未知"
+
+#. js-lingui-explicit-id
+msgid "trades.resultUnknown"
+msgstr "結果未知"
+
+#. js-lingui-explicit-id
+msgid "trades.noMatchesFilterHint"
+msgstr "擴大日期範圍、清除交易篩選，或切換帳戶。"
+
+#. js-lingui-explicit-id
+msgid "trades.filterSelected"
+msgstr "項已選"

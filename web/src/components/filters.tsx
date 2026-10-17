@@ -517,6 +517,7 @@ export interface FilterFieldConfig<T = unknown> {
   placeholder?: string;
   searchable?: boolean;
   maxSelections?: number;
+  removeLabel?: string;
   min?: number;
   max?: number;
   step?: number;
@@ -1270,6 +1271,7 @@ export const FiltersContent = <T = unknown,>({
         return (
           <ButtonGroup
             key={filter.id}
+            aria-label={field.label}
             // Sera is an underline style: its group text and input group carry
             // only a bottom border. Normalise the boxed segments (the operator,
             // value and remove buttons) to the same treatment so the whole chip
@@ -1296,7 +1298,10 @@ export const FiltersContent = <T = unknown,>({
               autoFocus={false}
             />
 
-            <FilterRemoveButton onClick={() => removeFilter(filter.id)} />
+            <FilterRemoveButton
+              aria-label={field.removeLabel ?? `Clear ${field.label} filter`}
+              onClick={() => removeFilter(filter.id)}
+            />
           </ButtonGroup>
         );
       })}
@@ -1634,6 +1639,8 @@ export function Filters<T = unknown>({
   useEffect(() => {
     if (!addFilterOpen) {
       setOpenSubMenu(null);
+      setSessionFilterIds({});
+      setMenuSearchInput("");
     }
   }, [addFilterOpen]);
 
@@ -1709,10 +1716,10 @@ export function Filters<T = unknown>({
     const flatFields = flattenFields(fields);
     return flatFields.filter((field) => {
       if (!field.key || field.type === "separator") return false;
-      if (allowMultiple) return true;
+      if (allowMultiple || sessionFilterIds[field.key]) return true;
       return !filters.some((filter) => filter.field === field.key);
     });
-  }, [fields, filters, allowMultiple]);
+  }, [fields, filters, allowMultiple, sessionFilterIds]);
 
   const filteredFields = useMemo(() => {
     return selectableFields.filter(
@@ -2028,6 +2035,7 @@ export function Filters<T = unknown>({
           return (
             <ButtonGroup
               key={filter.id}
+              aria-label={field.label}
               // Sera is an underline style: its group text and input group carry
               // only a bottom border. Normalise the boxed segments (operator,
               // value, remove) to the same treatment so the whole chip reads as
@@ -2051,7 +2059,10 @@ export function Filters<T = unknown>({
                 onChange={(values) => updateFilter(filter.id, { values })}
                 autoFocus={filter.id === lastAddedFilterId}
               />
-              <FilterRemoveButton onClick={() => removeFilter(filter.id)} />
+              <FilterRemoveButton
+                aria-label={field.removeLabel ?? `Clear ${field.label} filter`}
+                onClick={() => removeFilter(filter.id)}
+              />
             </ButtonGroup>
           );
         })}

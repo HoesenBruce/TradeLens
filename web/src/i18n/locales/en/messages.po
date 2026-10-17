@@ -13212,3 +13212,87 @@ msgstr "Type unknown"
 #: src/components/tradeColumns.tsx
 msgid "trades.positionType"
 msgstr "Type"
+
+#. js-lingui-explicit-id
+msgid "trades.duration1Day"
+msgstr "Calendar: 1 day"
+
+#. js-lingui-explicit-id
+msgid "trades.duration2To5Days"
+msgstr "Calendar: 2–5 days"
+
+#. js-lingui-explicit-id
+msgid "trades.duration6Plus"
+msgstr "Calendar: 6 days or more"
+
+#. js-lingui-explicit-id
+msgid "trades.durationSameDay"
+msgstr "Calendar: same day"
+
+#. js-lingui-explicit-id
+msgid "trades.durationFilterHint"
+msgstr "Elapsed ranges use precise timestamps; calendar ranges use date-only records in the market time zone. Open positions run to now."
+
+#. js-lingui-explicit-id
+msgid "trades.duration1To4"
+msgstr "Elapsed: 1–4 hours"
+
+#. js-lingui-explicit-id
+msgid "trades.duration30To60"
+msgstr "Elapsed: 30–60 minutes"
+
+#. js-lingui-explicit-id
+msgid "trades.duration4Plus"
+msgstr "Elapsed: 4 hours or more"
+
+#. js-lingui-explicit-id
+msgid "trades.duration5To30"
+msgstr "Elapsed: 5–30 minutes"
+
+#. js-lingui-explicit-id
+msgid "trades.durationUnder5"
+msgstr "Elapsed: under 5 minutes"
+
+#. js-lingui-explicit-id
+msgid "trades.filterExclude"
+msgstr "Exclude"
+
+#. js-lingui-explicit-id
+msgid "trades.exportFiltered"
+msgstr "Export filtered trades"
+
+#. js-lingui-explicit-id
+msgid "trades.holdingDurationFilter"
+msgstr "Holding duration"
+
+#. js-lingui-explicit-id
+msgid "trades.filterInclude"
+msgstr "Include"
+
+#. js-lingui-explicit-id
+msgid "trades.filterNoOptions"
+msgstr "No matching options."
+
+#. js-lingui-explicit-id
+msgid "trades.positionTypeFilter"
+msgstr "Position type"
+
+#. js-lingui-explicit-id
+msgid "trades.resultFilterHint"
+msgstr "Trade results include completed trades only, including when excluding a result."
+
+#. js-lingui-explicit-id
+msgid "trades.directionUnknown"
+msgstr "Unknown direction"
+
+#. js-lingui-explicit-id
+msgid "trades.resultUnknown"
+msgstr "Unknown result"
+
+#. js-lingui-explicit-id
+msgid "trades.noMatchesFilterHint"
+msgstr "Widen the date range, clear trade filters, or switch account."
+
+#. js-lingui-explicit-id
+msgid "trades.filterSelected"
+msgstr "selected"

@@ -3,6 +3,10 @@ import {
   buildMarketFacetOptions,
   buildSymbolFacetOptions,
   buildTagFacetOptions,
+  applyTradeFilters,
+  finalTradeResult,
+  holdingDurationBucket,
+  tradePageFilters,
   filterTradesByMarkets,
   filterTradesByStatus,
   filterTradesBySymbols,
@@ -138,4 +142,215 @@ describe("tradeFilters", () => {
     expect(filterTradesBySymbols(trades, undefined)).toEqual(trades);
     expect(matchesTradeSymbolFilter(closedWin, ["AAPL"])).toBe(false);
   });
+});
+
+describe("Trades page conditions", () => {
+  const condition = (field: string, values: string[], operator = "is_any_of") => ({
+    id: field,
+    field,
+    values,
+    operator,
+  });
+  const quantities = (lifecycle: "open" | "partially_closed" | "closed" | "unknown") => ({
+    entry_qty: 100,
+    exit_qty: lifecycle === "closed" ? 100 : 50,
+    open_qty: lifecycle === "closed" ? 0 : 50,
+    remaining_pct: 50,
+    lifecycle,
+  });
+
+  it("separates completed results, unknown results, and realized partial closes for both operators", () => {
+    const partial = { ...closedWin, status: "open", quantities: quantities("partially_closed") };
+    const unknown = {
+      ...closedWin,
+      net_pnl: null,
+      quantities: quantities("unknown"),
+      accounting_warning: "Incomplete SBI opening evidence",
+    };
+    const trades = [closedWin, closedLoss, washTrade, partial, unknown];
+    expect(applyTradeFilters(trades, [condition("result", ["win", "wash"])])).toEqual([
+      closedWin,
+      washTrade,
+    ]);
+    expect(applyTradeFilters(trades, [condition("result", ["win"], "is_not_any_of")])).toEqual([
+      closedLoss,
+      washTrade,
+      unknown,
+    ]);
+    expect(finalTradeResult(partial)).toBeNull();
+    expect(finalTradeResult(unknown)).toBe("unknown");
+    expect(finalTradeResult({ ...closedWin, net_pnl: Number.NaN })).toBe("unknown");
+  });
+
+  it("uses position side, not option bias, and keeps unknown categories explicit", () => {
+    const put = {
+      ...closedWin,
+      direction: "long",
+      instrument_type: "option",
+      symbol: "XYZ 261218P00100000",
+    };
+    expect(applyTradeFilters([put], [condition("direction", ["long"])])).toEqual([put]);
+    expect(applyTradeFilters([put], [condition("direction", ["short"])])).toEqual([]);
+    const unknown = {
+      ...closedWin,
+      direction: "",
+      position_type: undefined,
+      quantities: undefined,
+    };
+    for (const field of ["direction", "position_type", "progress"]) {
+      expect(applyTradeFilters([unknown], [condition(field, ["unknown"])])).toEqual([unknown]);
+      expect(
+        applyTradeFilters([unknown], [condition(field, ["unknown"], "is_not_any_of")]),
+      ).toEqual([]);
+    }
+    expect(
+      applyTradeFilters([{ ...put, direction: " SELL " }], [condition("direction", ["short"])]),
+    ).toHaveLength(1);
+  });
+
+  it.each([
+    [0, "elapsed_under_5m"],
+    [299, "elapsed_under_5m"],
+    [300, "elapsed_5_30m"],
+    [1799, "elapsed_5_30m"],
+    [1800, "elapsed_30_60m"],
+    [3599, "elapsed_30_60m"],
+    [3600, "elapsed_1_4h"],
+    [14399, "elapsed_1_4h"],
+    [14400, "elapsed_4h_plus"],
+    [null, "unknown"],
+    [-1, "unknown"],
+    [Number.NaN, "unknown"],
+    [Infinity, "unknown"],
+  ])("classifies precise duration %s without display rounding", (seconds, bucket) => {
+    expect(
+      holdingDurationBucket({
+        ...closedWin,
+        holding: {
+          kind: "elapsed",
+          seconds,
+          calendar_days: null,
+          time_zone: "Asia/Tokyo",
+          ongoing: false,
+        },
+      }),
+    ).toBe(bucket);
+  });
+
+  it.each([
+    [0, "calendar_0"],
+    [1, "calendar_1"],
+    [2, "calendar_2_5"],
+    [5, "calendar_2_5"],
+    [6, "calendar_6_plus"],
+    [-1, "unknown"],
+    [0.5, "unknown"],
+    [null, "unknown"],
+  ])("keeps calendar duration %s separate from precise time", (calendar_days, bucket) => {
+    const trade = {
+      ...closedWin,
+      time_in_trade_secs: 0,
+      holding: {
+        kind: "calendar" as const,
+        seconds: null,
+        calendar_days,
+        time_zone: "Asia/Tokyo",
+        ongoing: true,
+      },
+    };
+    expect(holdingDurationBucket(trade)).toBe(bucket);
+    expect(applyTradeFilters([trade], [condition("duration", ["elapsed_under_5m"])])).toEqual([]);
+  });
+
+  it("does not fall back to legacy seconds when authoritative precision is unknown", () => {
+    expect(
+      holdingDurationBucket({
+        ...closedWin,
+        time_in_trade_secs: 0,
+        holding: {
+          kind: "unknown",
+          seconds: null,
+          calendar_days: null,
+          time_zone: "Asia/Tokyo",
+          ongoing: false,
+        },
+      }),
+    ).toBe("unknown");
+  });
+
+  it("combines OR selections with AND dimensions across the entire input collection", () => {
+    const trades = Array.from({ length: 45 }, (_, i) => ({
+      ...closedWin,
+      id: String(i),
+      direction: i > 20 ? "short" : "long",
+      quantities: quantities(i > 30 ? "partially_closed" : "open"),
+    }));
+    expect(
+      applyTradeFilters(trades, [
+        condition("direction", ["short"]),
+        condition("progress", ["open", "partially_closed"]),
+      ]),
+    ).toHaveLength(24);
+    expect(
+      applyTradeFilters(trades, [
+        condition("direction", ["short"]),
+        condition("progress", ["closed"]),
+      ]),
+    ).toEqual([]);
+  });
+
+  it("applies symbol/market/tag exclusion and all-tags operators", () => {
+    expect(
+      applyTradeFilters(
+        [closedWin, closedLoss],
+        [condition("symbol", [closedWin.symbol.toLowerCase()], "is_not_any_of")],
+      ),
+    ).toEqual([]);
+    expect(
+      applyTradeFilters(
+        [closedWin, closedLoss],
+        [condition("market", ["option"], "is_not_any_of")],
+      ),
+    ).toEqual([closedWin]);
+    expect(
+      applyTradeFilters([closedWin, closedLoss], [condition("tags", ["t1"], "is_not_any_of")]),
+    ).toEqual([closedLoss]);
+    expect(
+      applyTradeFilters([closedWin, closedLoss], [condition("tags", ["t1", "t2"], "includes_all")]),
+    ).toEqual([]);
+  });
+
+  it("preserves operators on re-entry and maps legacy open shortcuts to both ongoing stages", () => {
+    const saved = [condition("symbol", ["X"], "is_not_any_of"), condition("direction", ["short"])];
+    expect(tradePageFilters({ symbols: ["X"], tradeConditions: saved })).toEqual([
+      saved[1],
+      saved[0],
+    ]);
+    expect(tradePageFilters({ tradeStatus: "open" })).toEqual([
+      condition("progress", ["open", "partially_closed"]),
+    ]);
+    expect(tradePageFilters({ tradeStatus: "loss" })).toEqual([condition("result", ["loss"])]);
+  });
+});
+
+it("keeps UI filter IDs stable for multi-selection in shared facets", () => {
+  const filter = { id: "generated-id", field: "symbol", values: ["AAPL"], operator: "is_any_of" };
+  expect(tradePageFilters({ symbols: ["AAPL"], tradeConditions: [filter] })).toEqual([filter]);
+  const exclusion = { ...filter, operator: "is_not_any_of" };
+  expect(tradePageFilters({ tradeConditions: [exclusion] })).toEqual([exclusion]);
+});
+
+it("keeps known final P&L when an SBI warning only describes date precision or estimated basis", () => {
+  expect(
+    finalTradeResult({
+      ...closedWin,
+      accounting_warning: "SBI date-level reconciliation: exact elapsed holding time is unknown",
+    }),
+  ).toBe("win");
+  expect(
+    finalTradeResult({
+      ...closedWin,
+      accounting_warning: "SBI cash P&L uses an average-cost estimate",
+    }),
+  ).toBe("win");
 });

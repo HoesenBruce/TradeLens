@@ -68,6 +68,7 @@ export interface TradeListItemProps {
   onSelect: (trade: Trade) => void;
   /** Prefix the meta line with the trade date. Off for single-day lists. */
   showDate?: boolean;
+  finalResults?: boolean;
   className?: string;
 }
 
@@ -83,11 +84,12 @@ export function TradeListItem({
   fxRate = 1,
   onSelect,
   showDate = false,
+  finalResults = false,
   className,
 }: TradeListItemProps) {
   useLingui();
   const { fmtMoney, fmtMoneyCompact } = useMoneyFormatters();
-  const status = tradeStatus(trade);
+  const status = tradeStatus(trade, finalResults);
   const dir = resolveTradeDirection({
     direction: trade.direction,
     instrumentType: trade.instrument_type,

@@ -130,6 +130,8 @@ const base = {
   error: false,
   currency: "USD",
   symbols: [] as string[],
+  conditions: [],
+  onConditionsChange: vi.fn<(...args: any[]) => any>(),
   onSymbolsChange: vi.fn<(...args: any[]) => any>(),
   onSelectTrade: vi.fn<(...args: any[]) => any>(),
   onOpenFullPage: vi.fn<(...args: any[]) => any>(),
@@ -209,27 +211,29 @@ describe("TradesView", () => {
 
   it("wires status faceted filter", async () => {
     const user = filterUser();
-    const onToggleTradeStatus = vi.fn<(...args: any[]) => any>();
+    const onConditionsChange = vi.fn<(...args: any[]) => any>();
     render(
       <TradesView
         {...base}
         totalInScope={1}
         trades={[trade({ id: "t1", symbol: "AAPL", net_pnl: 10 })]}
-        onToggleTradeStatus={onToggleTradeStatus}
+        onConditionsChange={onConditionsChange}
       />,
     );
 
-    await openFilter(user, "Status");
-    const wins = await screen.findByRole("option", { name: /Wins/i });
+    await openFilter(user, "Trade result");
+    const wins = await screen.findByRole("option", { name: /^Win$/i });
     await waitFor(() => expect(wins.closest('[role="listbox"]')).toHaveFocus());
     await user.click(wins);
-    await waitFor(() => expect(onToggleTradeStatus).toHaveBeenCalledOnce());
-    expect(onToggleTradeStatus).toHaveBeenCalledWith("win");
+    await waitFor(() => expect(onConditionsChange).toHaveBeenCalledOnce());
+    expect(onConditionsChange).toHaveBeenCalledWith([
+      expect.objectContaining({ field: "result", values: ["win"] }),
+    ]);
   });
 
   it("wires symbol combobox options", async () => {
     const user = filterUser();
-    const onSymbolsChange = vi.fn<(...args: any[]) => any>();
+    const onConditionsChange = vi.fn<(...args: any[]) => any>();
     render(
       <TradesView
         {...base}
@@ -242,7 +246,7 @@ describe("TradesView", () => {
           { value: "AAPL", label: "AAPL", count: 1 },
           { value: "MSFT", label: "MSFT", count: 1 },
         ]}
-        onSymbolsChange={onSymbolsChange}
+        onConditionsChange={onConditionsChange}
       />,
     );
 
@@ -259,13 +263,15 @@ describe("TradesView", () => {
     await user.keyboard("{ArrowDown}");
     await waitFor(() => expect(symbolSearch).toHaveAttribute("aria-activedescendant", msft.id));
     await user.keyboard("{Enter}");
-    await waitFor(() => expect(onSymbolsChange).toHaveBeenCalledOnce());
-    expect(onSymbolsChange).toHaveBeenCalledWith(["MSFT"]);
+    await waitFor(() => expect(onConditionsChange).toHaveBeenCalledOnce());
+    expect(onConditionsChange).toHaveBeenCalledWith([
+      expect.objectContaining({ field: "symbol", values: ["MSFT"] }),
+    ]);
   });
 
   it("wires tags faceted filter", async () => {
     const user = filterUser();
-    const onTagIdsChange = vi.fn<(...args: any[]) => any>();
+    const onConditionsChange = vi.fn<(...args: any[]) => any>();
     render(
       <TradesView
         {...base}
@@ -287,7 +293,7 @@ describe("TradesView", () => {
           }),
         ]}
         tagOptions={[{ value: "tag1", label: "Breakout", count: 1 }]}
-        onTagIdsChange={onTagIdsChange}
+        onConditionsChange={onConditionsChange}
       />,
     );
 
@@ -295,20 +301,22 @@ describe("TradesView", () => {
     const tagSearch = await screen.findByPlaceholderText("Search tags...");
     await waitFor(() => expect(tagSearch).toHaveFocus());
     await user.click(await screen.findByRole("option", { name: /Breakout/i }));
-    await waitFor(() => expect(onTagIdsChange).toHaveBeenCalledOnce());
-    expect(onTagIdsChange).toHaveBeenCalledWith(["tag1"]);
+    await waitFor(() => expect(onConditionsChange).toHaveBeenCalledOnce());
+    expect(onConditionsChange).toHaveBeenCalledWith([
+      expect.objectContaining({ field: "tags", values: ["tag1"] }),
+    ]);
   });
 
   it("wires market faceted filter", async () => {
     const user = filterUser();
-    const onMarketsChange = vi.fn<(...args: any[]) => any>();
+    const onConditionsChange = vi.fn<(...args: any[]) => any>();
     render(
       <TradesView
         {...base}
         totalInScope={1}
         trades={[trade({ id: "t1", symbol: "AAPL", instrument_type: "stock" })]}
         marketOptions={[{ value: "stock", label: "Stock", count: 1 }]}
-        onMarketsChange={onMarketsChange}
+        onConditionsChange={onConditionsChange}
       />,
     );
 
@@ -317,8 +325,10 @@ describe("TradesView", () => {
     await waitFor(() => expect(marketSearch).toHaveFocus());
     await screen.findByRole("option", { name: /Stock/i });
     await user.keyboard("{Enter}");
-    await waitFor(() => expect(onMarketsChange).toHaveBeenCalledOnce());
-    expect(onMarketsChange).toHaveBeenCalledWith(["stock"]);
+    await waitFor(() => expect(onConditionsChange).toHaveBeenCalledOnce());
+    expect(onConditionsChange).toHaveBeenCalledWith([
+      expect.objectContaining({ field: "market", values: ["stock"] }),
+    ]);
   });
 
   it("paginates long trade lists", async () => {
@@ -429,4 +439,19 @@ it("updates translated column and filter labels when the active locale changes",
   } finally {
     await act(() => loadLocale("en"));
   }
+});
+
+it("sorts final result labels across the full dataset before pagination", () => {
+  const rows = [
+    trade({ id: "win", net_pnl: 10 }),
+    trade({ id: "loss", net_pnl: -10 }),
+    trade({ id: "partial", status: "open", net_pnl: 100 }),
+    trade({ id: "unknown", net_pnl: null }),
+  ];
+  expect(sortTrades(rows, [{ id: "status", desc: false }]).map((t) => t.id)).toEqual([
+    "loss",
+    "unknown",
+    "partial",
+    "win",
+  ]);
 });
