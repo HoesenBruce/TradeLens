@@ -190,13 +190,16 @@ export function tradeColumns(
         headerTitle: tr({ id: "trades.instrumentType", message: "Instrument type" }),
       },
       cell: (i) => (
-        <span className="flex flex-wrap items-center gap-1">
-          <Pill tone="muted" title={marketTitles()[i.getValue<string>()]}>
-            {marketLabel(i.getValue<string>())}
-          </Pill>
-          <TradePositionTypeBadge trade={i.row.original} />
-        </span>
+        <Pill tone="muted" title={marketTitles()[i.getValue<string>()]}>
+          {marketLabel(i.getValue<string>())}
+        </Pill>
       ),
+    },
+    {
+      accessorKey: "position_type",
+      header: tr({ id: "trades.positionType", message: "Type" }),
+      meta: { label: tr({ id: "trades.positionType", message: "Type" }), minWidth: 96 },
+      cell: (i) => <TradePositionTypeBadge trade={i.row.original} />,
     },
     {
       id: "qty_opened",

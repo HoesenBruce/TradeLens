@@ -13208,3 +13208,8 @@ msgstr "信用"
 #: src/components/TradePositionTypeBadge.tsx:13
 msgid "trades.positionTypeUnknown"
 msgstr "種別不明"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx
+msgid "trades.positionType"
+msgstr "種別"

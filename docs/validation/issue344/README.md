@@ -10,7 +10,7 @@ malformed details, and unsupported/manual/non-SBI evidence return `unknown`.
 Account labels/capabilities and long/short direction never establish a type.
 Clients connected to an older API that omits the field render no badge.
 
-One localized Pill is shared by the dashboard table, narrow list rows, trade
+One localized Pill is shared by the dashboard Type column, narrow list rows, trade
 log (shared components), detail drawer title, and full detail summary. Cash and
 Margin labels are translated across en, zh-CN, zh-HK, ja, and ko; Chinese displays
 现物 / 信用. Existing long/short and conversion event labels remain separate.
@@ -63,3 +63,23 @@ Evidence: [desktop recent trades](recent-desktop.png),
 
 Mobile native apps were not validated; outside current fork scope. No merge,
 release, deployment, or real-account historical repair was performed.
+
+## Follow-up: independent Type column
+
+The dashboard Recent Trades and shared trade-log table now place the badge in
+an independent localized Type column immediately after Market. Market displays
+only its instrument badge (e.g. STK). Narrow list cards and drawer/full-detail
+badges retain their existing placement.
+
+Focused Web regression run: 4 files / 46 tests passed. Web check again has zero
+errors (348 existing warnings); TypeScript and production build passed. No
+backend logic changed in this revision, so the already passing Go suite was not
+repeated.
+
+Built-in browser acceptance against the same real synthetic API verified separate
+Market/Type cells on Recent Trades and the trade log, ascending/descending type
+sorting and reset, menu re-entry, hiding the Type column and restoring it on
+reload. Inspected the rendered desktop columns and confirmed that narrow cards,
+the drawer, and the full detail page still show the existing Cash badge.
+
+[Shared trade-log Type column](trade-log-types.png).

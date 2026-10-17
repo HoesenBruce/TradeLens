@@ -13207,3 +13207,8 @@ msgstr "Margin"
 #: src/components/TradePositionTypeBadge.tsx:13
 msgid "trades.positionTypeUnknown"
 msgstr "Type unknown"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx
+msgid "trades.positionType"
+msgstr "Type"

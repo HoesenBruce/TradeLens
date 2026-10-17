@@ -13204,3 +13204,8 @@ msgstr "신용"
 #: src/components/TradePositionTypeBadge.tsx:13
 msgid "trades.positionTypeUnknown"
 msgstr "유형 알 수 없음"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx
+msgid "trades.positionType"
+msgstr "유형"
