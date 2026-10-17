@@ -2,7 +2,11 @@ import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
 // Only run against a disposable API with a synthetic user.
-test.use({ serviceWorkers: "block", viewport: { width: 1440, height: 1000 } });
+test.use({
+  timezoneId: "Asia/Tokyo",
+  serviceWorkers: "block",
+  viewport: { width: 1440, height: 1000 },
+});
 const api = process.env.E2E_API_URL ?? "http://localhost:8080/api/v1";
 const web = process.env.E2E_WEB_URL ?? "http://localhost:5173";
 const [title, columns, ...data] = readFileSync(
@@ -120,7 +124,15 @@ test("SBI closing-first import reconciles review roles, re-entry and duplicates"
   expect(missing.accounting_warning).toContain("Incomplete SBI opening evidence");
   await page.goto(`${web}/trades`);
   await expect(page.locator("tbody tr")).toHaveCount(4);
-  await expect(page.getByLabel("Open Qty 10 / Entry Qty 70", { exact: true })).toBeVisible();
+  const shortProgress = page
+    .locator("tbody tr")
+    .filter({ hasText: "Short" })
+    .getByRole("progressbar", { name: "Close progress" });
+  await expect(shortProgress).toBeVisible();
+  await expect(shortProgress).toHaveAttribute(
+    "aria-valuetext",
+    "Partially closed. 85.7% closed. Closed 60 / 70. Remaining 10 (14.3%)",
+  );
   await page.screenshot({ path: info.outputPath("list.png") });
   await page.locator("tbody tr").first().click();
   await expect(page.getByRole("dialog")).toContainText("SBI date-level reconciliation");
@@ -145,7 +157,9 @@ test("SBI closing-first import reconciles review roles, re-entry and duplicates"
     if (name === "short")
       await expect(page.getByText("Open Qty", { exact: true }).locator("..")).toBeVisible();
     if (name === "margin") {
-      await expect(page.getByText("Sep 1, 2026 → Sep 1, 2026", { exact: true })).toBeVisible();
+      await expect(
+        page.getByText("Sep 1, 2026 → Sep 1, 2026 · 0 days", { exact: true }),
+      ).toBeVisible();
       await page.getByRole("button", { name: "1D", exact: true }).click();
       await expect(page.locator("canvas").first()).toBeVisible();
       await page.screenshot({ path: info.outputPath("daily-chart.png") });

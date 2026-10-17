@@ -25,6 +25,7 @@ type Execution struct {
 	SettlementType           string
 	SettlementResult         *positions.Settlement
 	ConversionType           string
+	OpeningMatchProvenance   string
 	SourceTimePrecision      string // date means the timestamp is only a storage anchor
 }
 

@@ -52,7 +52,7 @@ func sbiReviewTrades(fills []Execution) []Trade {
 	var result []Trade
 	var cur *openState
 	var latest time.Time
-	missing, uncertain := false, false
+	missing, uncertain, inferred := false, false, false
 	finish := func(closed bool) {
 		var tr Trade
 		if closed {
@@ -64,18 +64,23 @@ func sbiReviewTrades(fills []Execution) []Trade {
 			tr.AccountingWarning = sbiDateWarning
 			tr.TimeInTradeSecs = nil
 		}
+		if inferred {
+			tr.TimeInTradeSecs = nil
+			tr.AccountingWarning = strings.TrimSpace(tr.AccountingWarning + " fifo_inferred: TradeLens equivalent-lot allocation; SBI repayment order and lot-level holding duration are unknown.")
+		}
 		if missing {
 			tr.TimeInTradeSecs = nil
 			tr.AccountingWarning = strings.TrimSpace(tr.AccountingWarning + " " + sbiMissingWarning)
 			tr.NetPnl, tr.GrossPnl, tr.ReturnPct = nil, nil, nil
 		}
 		result = append(result, tr)
-		cur, missing, uncertain = nil, false, false
+		cur, missing, uncertain, inferred = nil, false, false, false
 	}
 	for _, f := range sbiReviewOrder(fills) {
 		if f.Quantity <= 0 || f.Price < 0 {
 			continue
 		}
+		inferred = inferred || f.OpeningMatchProvenance == "fifo_inferred"
 		if cur == nil || f.ExecutedAt.After(latest) {
 			latest = f.ExecutedAt
 		}

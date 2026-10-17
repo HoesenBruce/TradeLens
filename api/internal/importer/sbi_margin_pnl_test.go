@@ -92,7 +92,13 @@ func TestSBIMarginPnLEnrichment(t *testing.T) {
 	short.Details.String = `{"lot":"sbi:margin-short","position_effect":"reduce"}`
 	shortRow := file.Parsed[0]
 	shortRow.Transaction = "信用返済買"
-	require.Equal(t, "enrichable", MatchSBIMarginPnL([]SBIMarginPnLRow{shortRow}, []store.Execution{short})[0].Status)
+	// A report alone cannot prove supported opening inventory.
+	require.Equal(t, "ambiguous_match", MatchSBIMarginPnL([]SBIMarginPnLRow{shortRow}, []store.Execution{short})[0].Status)
+	shortOpen := short
+	shortOpen.ID, shortOpen.Side, shortOpen.Price = "short-open", "sell", 6000
+	shortOpen.ExecutedAt = short.ExecutedAt.AddDate(0, 0, -1)
+	shortOpen.Details.String = `{"lot":"sbi:margin-short","position_effect":"increase"}`
+	require.Equal(t, "enrichable", MatchSBIMarginPnL([]SBIMarginPnLRow{shortRow}, []store.Execution{shortOpen, short})[0].Status)
 	fills = append(fills, fills[2])
 	fills[3].ID = "second-close"
 	require.Equal(t, "ambiguous_match", MatchSBIMarginPnL(file.Parsed, fills)[0].Status)
@@ -111,7 +117,7 @@ func TestSBIMarginPnLGeneratedReportLayout(t *testing.T) {
 	require.True(t, ok)
 	require.Len(t, got.Rows, 4)
 	require.Len(t, got.Parsed, 3)
-	require.Equal(t, SBIMarginPnLRow{Date: "2031/2/06", Symbol: "9101", Transaction: "信用返済売", Quantity: 37, Price: 783.5, Basis: 751, PnL: got.Parsed[0].PnL}, got.Parsed[0])
+	require.Equal(t, SBIMarginPnLRow{Date: "2031/2/06", Symbol: "9101", Transaction: "信用返済売", Quantity: 37, Price: 783.5, Basis: 751, PnL: got.Parsed[0].PnL, Evidence: map[string]string{"口座": "特定", "約定単価": "783.5", "約定数量": "37", "平均取得価額": "751"}}, got.Parsed[0])
 	require.Equal(t, 1183.50, *got.Parsed[0].PnL)
 	require.Equal(t, "9102", got.Parsed[1].Symbol)
 	require.Equal(t, "信用返済買", got.Parsed[1].Transaction)

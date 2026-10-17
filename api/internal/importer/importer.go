@@ -12,6 +12,7 @@ const (
 
 // ParsedExecution is a broker-agnostic fill produced by an Importer.
 type ParsedExecution struct {
+	SBIFields           map[string]string // original SBI settlement/credit evidence, when supplied
 	ExternalID          string
 	DedupKey            string // optional broker-stable identity when fill fields are not unique
 	Symbol              string

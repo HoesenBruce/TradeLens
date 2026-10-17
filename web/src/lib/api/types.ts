@@ -572,6 +572,11 @@ export interface ImportPreview {
 }
 
 export interface SBIEnrichmentRow {
+  /** Report row to repayment execution; separate from physical opening identity. */
+  match_provenance?: "exact" | "fifo_inferred" | "unresolved";
+  opening_match_provenance?: "exact" | "fifo_inferred" | "unresolved";
+  opening_allocations?: { execution_ids: string[]; quantity: number }[];
+  evidence?: Record<string, string>;
   date: string;
   symbol: string;
   transaction: string;
