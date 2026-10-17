@@ -1,3 +1,4 @@
+import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
 import { Money, ResponsiveValue } from "./ResponsiveValue";
 import { MetricHelp } from "./MetricHelp";
 import { fmtTradeHolding } from "@/lib/tradeHolding";
@@ -169,6 +170,7 @@ export function TradeListItem({
                 </>
               ) : null}
             </Pill>
+            <TradePositionTypeBadge trade={trade} />
             <Pill
               className="shrink-0"
               tone={status.tone}

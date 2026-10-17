@@ -666,6 +666,8 @@ paths:
                     items:
                       type: object
                       properties:
+                        position_type:
+                          $ref: "#/components/schemas/TradePositionType"
                         quantities:
                           $ref: "#/components/schemas/TradeQuantities"
                   - type: object
@@ -720,6 +722,8 @@ paths:
               schema:
                 type: object
                 properties:
+                  position_type:
+                    $ref: "#/components/schemas/TradePositionType"
                   quantities:
                     $ref: "#/components/schemas/TradeQuantities"
                 additionalProperties: true
@@ -2050,6 +2054,11 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    TradePositionType:
+      type: string
+      enum: [cash, margin, unknown]
+      description: Read-only classification from consistent explicit SBI execution buckets. Missing, unsupported, or conflicting evidence (including non-SBI/manual records) is unknown; never inferred from account labels or direction.
+
     TradeQuantities:
       type: object
       description: >

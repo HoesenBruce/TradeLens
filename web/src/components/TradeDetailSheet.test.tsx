@@ -126,6 +126,16 @@ describe("TradeDetailSheet", () => {
     } as never);
   });
 
+  it("shows the authoritative position type in the drawer title", () => {
+    mockedDetail.mockReturnValue({
+      data: { ...TRADE, position_type: "margin" },
+      isLoading: false,
+      isError: false,
+    } as never);
+    wrap(<TradeDetailSheet tradeId="t1" onClose={vi.fn<() => void>()} />);
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("Margin");
+  });
+
   it("surfaces an unavailable split result without a numeric P&L", () => {
     const warning =
       "Corporate-action boundary: stock_split on 2025-09-29 (ratio 7). P&L unavailable.";

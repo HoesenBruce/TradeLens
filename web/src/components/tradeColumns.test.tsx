@@ -145,6 +145,20 @@ describe("tradeNotional", () => {
 });
 
 describe("tradeColumns", () => {
+  it("distinguishes cash and margin for the same stock", () => {
+    render(
+      <DataTable
+        columns={tradeColumns("USD", { onOpenFullPage: vi.fn<(trade: Trade) => void>() })}
+        data={[
+          { ...TRADE, id: "cash", position_type: "cash" },
+          { ...TRADE, id: "margin", position_type: "margin" },
+        ]}
+      />,
+    );
+    expect(screen.getByText("Cash")).toBeVisible();
+    expect(screen.getByText("Margin")).toBeVisible();
+  });
+
   it("renders a full trade row", () => {
     render(
       <DataTable

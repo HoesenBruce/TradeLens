@@ -13192,3 +13192,18 @@ msgstr "Closed-group fees"
 #. js-lingui-explicit-id
 msgid "accounts.moneyPopulation"
 msgstr "Trading money includes SBI partial closes. Statistics use completed trade groups."
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:10
+msgid "trades.positionCash"
+msgstr "Cash"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:12
+msgid "trades.positionMargin"
+msgstr "Margin"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:13
+msgid "trades.positionTypeUnknown"
+msgstr "Type unknown"

@@ -226,6 +226,7 @@ export interface TradeQuantities {
 }
 
 export interface Trade {
+  position_type?: "cash" | "margin" | "unknown";
   holding?: {
     kind: "elapsed" | "calendar" | "unknown";
     seconds: number | null;

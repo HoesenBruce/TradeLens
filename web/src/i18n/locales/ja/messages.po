@@ -13193,3 +13193,18 @@ msgstr "完了グループの手数料"
 #. js-lingui-explicit-id
 msgid "accounts.moneyPopulation"
 msgstr "取引金額は SBI 部分決済を含みます。統計は完了取引グループを使用します。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:10
+msgid "trades.positionCash"
+msgstr "現物"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:12
+msgid "trades.positionMargin"
+msgstr "信用"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:13
+msgid "trades.positionTypeUnknown"
+msgstr "種別不明"

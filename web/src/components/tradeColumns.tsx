@@ -1,3 +1,4 @@
+import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
 import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { tradeStatusLabel } from "@/lib/tradeLabels";
 import { tradeQuantities, quantityText } from "@/lib/tradeQuantities";
@@ -189,9 +190,12 @@ export function tradeColumns(
         headerTitle: tr({ id: "trades.instrumentType", message: "Instrument type" }),
       },
       cell: (i) => (
-        <Pill tone="muted" title={marketTitles()[i.getValue<string>()]}>
-          {marketLabel(i.getValue<string>())}
-        </Pill>
+        <span className="flex flex-wrap items-center gap-1">
+          <Pill tone="muted" title={marketTitles()[i.getValue<string>()]}>
+            {marketLabel(i.getValue<string>())}
+          </Pill>
+          <TradePositionTypeBadge trade={i.row.original} />
+        </span>
       ),
     },
     {
