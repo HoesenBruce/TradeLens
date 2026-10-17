@@ -1,3 +1,4 @@
+import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
 import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { tradeStatusLabel } from "@/lib/tradeLabels";
 import { tradeQuantities, quantityText } from "@/lib/tradeQuantities";
@@ -193,6 +194,12 @@ export function tradeColumns(
           {marketLabel(i.getValue<string>())}
         </Pill>
       ),
+    },
+    {
+      accessorKey: "position_type",
+      header: tr({ id: "trades.positionType", message: "Type" }),
+      meta: { label: tr({ id: "trades.positionType", message: "Type" }), minWidth: 96 },
+      cell: (i) => <TradePositionTypeBadge trade={i.row.original} />,
     },
     {
       id: "qty_opened",

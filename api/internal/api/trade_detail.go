@@ -54,6 +54,7 @@ func (s *Server) buildTradeDetail(ctx context.Context, userID string, t store.Tr
 		holdingFills = append(holdingFills, store.ListOptionExecutionDetailsForUserRow{ExecutedAt: f.ExecutedAt, Details: f.Details})
 	}
 	d.Holding = tradeHolding(t, holdingFills, time.Now())
+	d.PositionType = tradePositionType(holdingFills)
 	if t.InstrumentType == "option" {
 		if right := optionRightFromFills(fills); right != "" {
 			d.OptionRight = &right

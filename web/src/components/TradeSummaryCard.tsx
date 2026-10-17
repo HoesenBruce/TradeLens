@@ -1,3 +1,4 @@
+import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
 import { Money } from "@/components/ResponsiveValue";
 import { MetricHelp } from "@/components/MetricHelp";
 import { TradeHoldingDuration } from "./TradeHoldingDuration";
@@ -110,6 +111,7 @@ export function TradeSummaryCard({
                   </>
                 ) : null}
               </Pill>
+              <TradePositionTypeBadge trade={trade} />
               <Pill
                 tone={status.tone}
                 title={

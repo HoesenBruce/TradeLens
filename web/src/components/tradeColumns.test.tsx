@@ -145,6 +145,26 @@ describe("tradeNotional", () => {
 });
 
 describe("tradeColumns", () => {
+  it("gives cash and margin their own Type column separate from Market", () => {
+    render(
+      <DataTable
+        columns={tradeColumns("USD", { onOpenFullPage: vi.fn<(trade: Trade) => void>() })}
+        data={[
+          { ...TRADE, id: "cash", position_type: "cash" },
+          { ...TRADE, id: "margin", position_type: "margin" },
+        ]}
+      />,
+    );
+    expect(screen.getByRole("columnheader", { name: /^Type$/ })).toBeVisible();
+    const cash = screen.getByText("Cash");
+    const margin = screen.getByText("Margin");
+    expect(cash).toBeVisible();
+    expect(margin).toBeVisible();
+    expect(cash.closest("td")).not.toHaveTextContent("STK");
+    expect(margin.closest("td")).not.toHaveTextContent("STK");
+    expect(screen.getAllByText("STK")).toHaveLength(2);
+  });
+
   it("renders a full trade row", () => {
     render(
       <DataTable

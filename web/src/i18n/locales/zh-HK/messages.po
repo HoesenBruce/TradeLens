@@ -13189,3 +13189,23 @@ msgstr "已完成組費用"
 #. js-lingui-explicit-id
 msgid "accounts.moneyPopulation"
 msgstr "交易金額包含 SBI 部分平倉；統計指標使用已完成交易組。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:10
+msgid "trades.positionCash"
+msgstr "現物"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:12
+msgid "trades.positionMargin"
+msgstr "信用"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:13
+msgid "trades.positionTypeUnknown"
+msgstr "類型未知"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx
+msgid "trades.positionType"
+msgstr "類型"

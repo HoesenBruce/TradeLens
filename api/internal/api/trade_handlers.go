@@ -96,6 +96,7 @@ func (s *Server) handleListTrades(c *echo.Context) error {
 	for _, t := range rows {
 		dto := toTradeDTO(t, tagsByTrade[t.ID])
 		dto.Holding = tradeHolding(t, holdingFills[t.ID], now)
+		dto.PositionType = tradePositionType(holdingFills[t.ID])
 		if right, ok := rightByTrade[t.ID]; ok {
 			dto.OptionRight = &right
 		}

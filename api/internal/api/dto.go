@@ -43,6 +43,7 @@ func sptr(n sql.NullString) *string {
 // tradeDTO flattens sqlc's sql.Null* fields into JSON-friendly nullable values
 // (a number or null), so clients see net_pnl: 200 rather than {Float64,Valid}.
 type tradeDTO struct {
+	PositionType      string             `json:"position_type"`
 	Holding           tradeHoldingDTO    `json:"holding"`
 	SourcePnlCurrency string             `json:"source_pnl_currency,omitempty"`
 	AccountingWarning string             `json:"accounting_warning,omitempty"`

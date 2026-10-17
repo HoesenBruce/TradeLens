@@ -1,3 +1,4 @@
+import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
 import { Money, ResponsiveValue } from "@/components/ResponsiveValue";
 import { MetricHelp } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
@@ -117,8 +118,11 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
           <DrawerTitle className="flex min-w-0 flex-col gap-0.5">
             {trade ? (
               <>
-                <span className="max-w-full wrap-anywhere text-[15px] leading-tight font-semibold tracking-tight">
-                  {trade.symbol}
+                <span className="flex max-w-full flex-wrap items-center gap-2">
+                  <span className="wrap-anywhere text-[15px] leading-tight font-semibold tracking-tight">
+                    {trade.symbol}
+                  </span>
+                  <TradePositionTypeBadge trade={trade} />
                 </span>
                 {/* Contract details wrap part-by-part rather than mid-token, so a
                     narrow drawer never splits an expiry date across two lines. */}
