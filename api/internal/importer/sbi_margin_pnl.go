@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"math"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -162,6 +163,7 @@ func MatchSBIMarginPnL(rows []SBIMarginPnLRow, executions []store.Execution) []S
 		date, _ := sbiPnLDate(row.Date)
 		var candidates, compatible []store.Execution
 		credit := isSBICredit(*row)
+		closeMatch := "exact"
 		if raw := row.Evidence["約定数量"]; credit && raw != "" && !sbiDecimal(raw, strconv.FormatFloat(row.Quantity, 'f', -1, 64)) {
 			row.Status, row.Message = "invalid_row", "SBI quantity cannot be represented safely; reconcile the source quantity before applying."
 			continue
@@ -211,14 +213,21 @@ func MatchSBIMarginPnL(rows []SBIMarginPnLRow, executions []store.Execution) []S
 				if other.Status == "invalid_row" || otherDate != date || other.Symbol != row.Symbol || other.Transaction != row.Transaction || other.Quantity != row.Quantity || other.Price != row.Price {
 					continue
 				}
+				if credit && !slices.ContainsFunc(candidates, func(e store.Execution) bool { return sbiConsistent(other, e) }) {
+					continue
+				}
 				count++
 				identical = identical && sameSBIResult(other, *row)
 			}
-			if !credit && identical && count == len(candidates) {
+			if identical && count == len(candidates) {
 				sort.Slice(candidates, func(i, j int) bool { return candidates[i].ID < candidates[j].ID })
 				for _, candidate := range candidates {
 					if _, used := claimed[candidate.ID]; !used {
 						candidates = []store.Execution{candidate}
+						closeMatch = "equivalent"
+						if credit {
+							row.Message = "Equivalent close results matched by complete multiplicity; individual repayment identity is unknown."
+						}
 						break
 					}
 				}
@@ -231,7 +240,7 @@ func MatchSBIMarginPnL(rows []SBIMarginPnLRow, executions []store.Execution) []S
 			candidate := candidates[0]
 			row.ExecutionID = candidate.ID
 			if credit {
-				row.MatchProvenance = "exact"
+				row.MatchProvenance = closeMatch
 			}
 			if priorIndex, exists := claimed[candidate.ID]; exists {
 				prior := &out[priorIndex]

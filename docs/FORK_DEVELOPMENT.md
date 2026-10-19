@@ -422,8 +422,9 @@ Realized-result enrichment filters explicit SBI credit repayments by stored brok
 settlement evidence before deciding ambiguity. Opening allocations use broker
 identification first; FIFO is allowed only among demonstrably equivalent live
 openings, with complete credit/charge evidence. Equal-time openings remain equivalent
-groups rather than arbitrary physical lot identities. Unresolved credit rows reject
-the entire enrichment batch.
+groups rather than arbitrary physical lot identities. Unresolved report-to-close
+matches reject the entire enrichment batch. Unresolved opening allocations retain
+their separate provenance and do not block a safely matched reported result (#350).
 
 Report-to-repayment and repayment-to-opening provenance are separate. Inferred
 allocations are labelled `fifo_inferred`, retain original source precision, and do
@@ -432,3 +433,25 @@ position valuation, review identities and other brokers retain their current pat
 No schema migration, automatic historical rewrite or missing-evidence backfill.
 See [issue #347 validation](validation/issue347/README.md) for the evidence contract,
 quantity invariants, compatibility, tests and conservative limits.
+
+### SBI reported results with unresolved opening allocations (#350)
+
+Matched SBI credit close results may receive the reported acquisition basis/P&L
+while opening provenance remains `unresolved`, with no invented opening allocations
+or lot-level duration. For example, a close reporting average basis 1,000 after
+openings at 900 and 1,100 can retain its reported result without assigning a physical
+opening lot. Missing supported holdings still retain the existing unavailable
+valuation/return protections; accepting a report does not reconstruct that history.
+
+Complete sets of indistinguishable credit results can match by multiplicity as
+`equivalent` report-to-close provenance. Two identical results and two compatible
+closes may be enriched together; one result against two compatible closes remains
+ambiguous. Stored settlement evidence partitions different result groups, and
+overlapping unknown evidence cannot be discarded to force a match. Conflicting
+results, invalid rows and unmatched credit closes still reject the batch atomically.
+
+No schema migration or automatic historical rewrite runs on upgrade. Applying a
+report retains existing regroup/statistics behavior and execution/review identities;
+unresolved opening provenance suppresses exact lot-level holding duration. Cash,
+settlement, other brokers and default partial-close P&L retain their existing paths.
+See [issue #350 validation](validation/issue350.md).

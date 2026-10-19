@@ -8,6 +8,40 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestSBIUnresolvedOpeningRetainsMoneyWithoutLotDuration(t *testing.T) {
+	for _, lot := range []string{"sbi:margin-long", "sbi:margin-short"} {
+		t.Run(lot, func(t *testing.T) {
+			openSide, closeSide := "buy", "sell"
+			if lot == "sbi:margin-short" {
+				openSide, closeSide = "sell", "buy"
+			}
+			fills := []Execution{
+				ex("open", openSide, 40, 100, "2031-04-07T09:00:00Z", 1),
+				ex("close", closeSide, 40, 110, "2031-04-08T09:00:00Z", 1),
+			}
+			for i := range fills {
+				fills[i].LotKey = lot
+			}
+			fills[1].BrokerReportedPnl = f64(396)
+			before := SBIMarginAccounting(fills).Trades[0]
+			require.NotNil(t, before.TimeInTradeSecs)
+			fills[1].OpeningMatchProvenance = "unresolved"
+			after := SBIMarginAccounting(fills).Trades[0]
+			require.Equal(t, before.NetPnl, after.NetPnl)
+			require.Equal(t, 396.0, *after.NetPnl)
+			require.Nil(t, after.TimeInTradeSecs)
+			require.Contains(t, after.AccountingWarning, "opening allocation unresolved")
+			// Default/IBKR accounting ignores the SBI-specific provenance marker.
+			for i := range fills {
+				fills[i].LotKey = "ibkr:margin"
+			}
+			generic := Account(fills, nil).Trades[0]
+			require.NotNil(t, generic.TimeInTradeSecs)
+			require.Empty(t, generic.AccountingWarning)
+		})
+	}
+}
+
 func TestSBIReviewDateOnlyRowPermutations(t *testing.T) {
 	for _, bucket := range []string{"sbi:cash", "sbi:margin-long", "sbi:margin-short"} {
 		t.Run(bucket, func(t *testing.T) {

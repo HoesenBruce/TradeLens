@@ -93,7 +93,10 @@ func TestSBIMarginPnLEnrichment(t *testing.T) {
 	shortRow := file.Parsed[0]
 	shortRow.Transaction = "信用返済買"
 	// A report alone cannot prove supported opening inventory.
-	require.Equal(t, "ambiguous_match", MatchSBIMarginPnL([]SBIMarginPnLRow{shortRow}, []store.Execution{short})[0].Status)
+	missingOpen := MatchSBIMarginPnL([]SBIMarginPnLRow{shortRow}, []store.Execution{short})[0]
+	require.Equal(t, "enrichable", missingOpen.Status)
+	require.Equal(t, "unresolved", missingOpen.OpeningMatch)
+	require.Empty(t, missingOpen.Allocations)
 	shortOpen := short
 	shortOpen.ID, shortOpen.Side, shortOpen.Price = "short-open", "sell", 6000
 	shortOpen.ExecutedAt = short.ExecutedAt.AddDate(0, 0, -1)

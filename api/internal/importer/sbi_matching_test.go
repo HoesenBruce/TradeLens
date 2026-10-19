@@ -9,6 +9,7 @@ import (
 	"github.com/tradermemos/api/internal/positions"
 	"github.com/tradermemos/api/internal/store"
 	"github.com/tradermemos/api/internal/trades"
+	"os"
 	"path/filepath"
 	"slices"
 	"testing"
@@ -70,6 +71,122 @@ func TestSBISettlementEvidenceBeforeAmbiguity(t *testing.T) {
 		})
 	}
 }
+
+func TestSBIEquivalentCloseResultsRequireCompleteEvidence(t *testing.T) {
+	for _, short := range []bool{false, true} {
+		t.Run(fmt.Sprint(short), func(t *testing.T) {
+			a, b := syntheticSBIFill("a", "sell", 100, 110, 11), syntheticSBIFill("b", "sell", 100, 110, 12)
+			row := syntheticSBIReport(100)
+			for _, e := range []*store.Execution{&a, &b} {
+				changeSBIDetails(e, func(d map[string]any) { d["broker_reported_realized_pnl"] = 1000.0 })
+				if short {
+					e.Side = "buy"
+					changeSBIDetails(e, func(d map[string]any) { d["lot"] = "sbi:margin-short" })
+				}
+			}
+			if short {
+				row.Transaction = "信用返済買"
+			}
+			fills := []store.Execution{b, a}
+			for range 2 {
+				got := MatchSBIMarginPnL([]SBIMarginPnLRow{row, row}, fills)
+				require.NotEqual(t, got[0].ExecutionID, got[1].ExecutionID)
+				for _, r := range got {
+					require.Equal(t, "enrichable", r.Status)
+					require.Equal(t, "equivalent", r.MatchProvenance)
+					require.Equal(t, "unresolved", r.OpeningMatch)
+					require.Empty(t, r.Allocations)
+				}
+				slices.Reverse(fills)
+			}
+			changed := row
+			changed.Basis++
+			for _, rows := range [][]SBIMarginPnLRow{{row}, {row, row, row}, {row, changed}} {
+				for _, r := range MatchSBIMarginPnL(rows, fills) {
+					require.Equal(t, "ambiguous_match", r.Status)
+				}
+			}
+			// Unknown evidence can also fit a different result; it must remain a candidate.
+			changeSBIDetails(&b, func(d map[string]any) { delete(d, "broker_reported_realized_pnl") })
+			c := a
+			c.ID = "c"
+			changed = row
+			pnl := 900.0
+			changed.PnL = &pnl
+			got := MatchSBIMarginPnL([]SBIMarginPnLRow{row, row, changed}, []store.Execution{a, b, c})
+			require.Equal(t, "ambiguous_match", got[0].Status)
+			require.Equal(t, "ambiguous_match", got[1].Status)
+		})
+	}
+}
+
+func TestSBIUnresolvedEnrichmentPreservesExecutionsAndValuation(t *testing.T) {
+	conn, err := db.Open(filepath.Join(t.TempDir(), "synthetic.db"))
+	require.NoError(t, err)
+	defer conn.Close()
+	require.NoError(t, db.Migrate(conn))
+	q := store.New(conn)
+	ctx := t.Context()
+	_, err = q.CreateUser(ctx, store.CreateUserParams{ID: "u", Email: "synthetic-350@test.invalid", PasswordHash: "x"})
+	require.NoError(t, err)
+	_, err = q.CreateAccount(ctx, store.CreateAccountParams{ID: "a", UserID: "u", Name: "Synthetic", Broker: "sbi", BaseCurrency: "JPY"})
+	require.NoError(t, err)
+	history, err := os.ReadFile("testdata/sbi-margin-pnl-unresolved-history.csv")
+	require.NoError(t, err)
+	_, raw, ok, err := ReadSBITradeCSV(history)
+	require.NoError(t, err)
+	require.True(t, ok)
+	parsed := ParseSBIRows(raw, nil, "")
+	require.Empty(t, parsed.Errors)
+	_, err = Commit(ctx, q, "u", "a", sql.NullString{}, parsed)
+	require.NoError(t, err)
+	query := store.ListExecutionsForAccountParams{UserID: "u", AccountID: "a"}
+	before, err := q.ListExecutionsForAccount(ctx, query)
+	require.NoError(t, err)
+	dates := []time.Time{time.Date(2031, 4, 7, 16, 0, 0, 0, time.UTC), time.Date(2031, 4, 8, 16, 0, 0, 0, time.UTC)}
+	snapshot := positions.Replay(before, dates)
+	data, err := os.ReadFile("testdata/sbi-margin-pnl-unresolved-report.csv")
+	require.NoError(t, err)
+	report, ok, err := ReadSBIMarginPnLCSV(data)
+	require.NoError(t, err)
+	require.True(t, ok)
+	matched := MatchSBIMarginPnL(report.Parsed, before)
+	n, err := CommitSBIMarginPnL(ctx, q, "u", "a", matched)
+	require.NoError(t, err)
+	require.Equal(t, 6, n)
+	after, err := q.ListExecutionsForAccount(ctx, query)
+	require.NoError(t, err)
+	require.Equal(t, snapshot, positions.Replay(after, dates))
+	require.Len(t, after, len(before))
+	for i, e := range after {
+		expected := before[i]
+		expected.Details = e.Details
+		require.Equal(t, expected, e)
+		old, current := sbiDetails(before[i]), sbiDetails(e)
+		require.Equal(t, old["broker_reported_realized_pnl"], current["broker_reported_realized_pnl"])
+		for _, r := range matched {
+			if r.ExecutionID != e.ID {
+				continue
+			}
+			require.Equal(t, r.Basis, current["broker_reported_close_basis"])
+			require.Equal(t, r.MatchProvenance, current["sbi_report_match_provenance"])
+			require.Equal(t, r.OpeningMatch, current["sbi_opening_match_provenance"])
+			if r.OpeningMatch == "unresolved" {
+				require.Equal(t, "null", current["sbi_opening_allocations"])
+			}
+		}
+	}
+	for range 2 {
+		slices.Reverse(report.Parsed)
+		repeated := MatchSBIMarginPnL(report.Parsed, after)
+		n, err = CommitSBIMarginPnL(ctx, q, "u", "a", repeated)
+		require.NoError(t, err)
+		require.Zero(t, n)
+		stable, err := q.ListExecutionsForAccount(ctx, query)
+		require.NoError(t, err)
+		require.Equal(t, after, stable)
+	}
+}
 func TestSBIConditionalFIFOAllocations(t *testing.T) {
 	for _, qty := range []float64{50, 100, 150, 200} {
 		t.Run(fmt.Sprint(qty), func(t *testing.T) {
@@ -121,11 +238,14 @@ func TestSBIRejectsNonEquivalentFIFO(t *testing.T) {
 			a, b, c := syntheticSBIFill("a", "buy", 100, 100, 9), syntheticSBIFill("b", "buy", 100, 100, 10), syntheticSBIFill("c", "sell", 150, 110, 11)
 			tc.change(&a, &b)
 			got := MatchSBIMarginPnL([]SBIMarginPnLRow{syntheticSBIReport(150)}, []store.Execution{a, b, c})
-			require.Equal(t, "ambiguous_match", got[0].Status)
+			if tc.name == "account" {
+				require.Equal(t, "ambiguous_match", got[0].Status)
+				return
+			}
+			require.Equal(t, "enrichable", got[0].Status)
+			require.Equal(t, "exact", got[0].MatchProvenance)
 			require.Equal(t, "unresolved", got[0].OpeningMatch)
 			require.Empty(t, got[0].Allocations)
-			_, err := CommitSBIMarginPnL(t.Context(), nil, "u", "a", got)
-			require.ErrorIs(t, err, ErrSBIEnrichmentUnresolved)
 		})
 	}
 }
@@ -190,7 +310,9 @@ func TestSBIBrokerOpeningEvidenceAndUnstableCloseTies(t *testing.T) {
 	rows := []SBIMarginPnLRow{r1, r2}
 	for range 2 {
 		for _, r := range MatchSBIMarginPnL(rows, fills) {
-			require.Equal(t, "ambiguous_match", r.Status)
+			require.Equal(t, "enrichable", r.Status)
+			require.Equal(t, "exact", r.MatchProvenance)
+			require.Equal(t, "unresolved", r.OpeningMatch)
 			require.Empty(t, r.Allocations)
 		}
 		slices.Reverse(fills)
@@ -201,7 +323,10 @@ func TestSBIBrokerOpeningEvidenceAndUnstableCloseTies(t *testing.T) {
 func TestSBIRawChargesAndConflictingDuplicateReports(t *testing.T) {
 	a, b, c := syntheticSBIFill("a", "buy", 100, 100, 9), syntheticSBIFill("b", "buy", 100, 100, 10), syntheticSBIFill("c", "sell", 150, 110, 11)
 	changeSBIDetails(&b, func(d map[string]any) { d["sbi_source"].(map[string]any)["手数料/諸経費等"] = "1" })
-	require.Equal(t, "ambiguous_match", MatchSBIMarginPnL([]SBIMarginPnLRow{syntheticSBIReport(150)}, []store.Execution{a, b, c})[0].Status)
+	matched := MatchSBIMarginPnL([]SBIMarginPnLRow{syntheticSBIReport(150)}, []store.Execution{a, b, c})[0]
+	require.Equal(t, "enrichable", matched.Status)
+	require.Equal(t, "unresolved", matched.OpeningMatch)
+	require.Empty(t, matched.Allocations)
 	c.Quantity = 50
 	r1 := syntheticSBIReport(50)
 	r2 := r1
