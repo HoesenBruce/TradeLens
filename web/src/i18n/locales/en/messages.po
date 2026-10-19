@@ -13349,3 +13349,72 @@ msgstr "Widen the date range, clear trade filters, or switch account."
 #. js-lingui-explicit-id
 msgid "trades.filterSelected"
 msgstr "selected"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:23
+msgid "imports.sbiGuide"
+msgstr "Which CSV should I export? What is it used for?"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:34
+msgid "imports.sbiExecutionsPurpose"
+msgstr "Required for trade history. Creates executions to reconstruct buys, sells, quantities, prices and dates. Include opening trades before the first closing trade you want to review; missing openings can leave reconstruction incomplete."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:42
+msgid "imports.sbiExecutionsExport"
+msgstr "Select the execution-date period and export the original CSV. Import this first, into the account that will receive any supplemental P&L data."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:54
+msgid "imports.sbiCashPurpose"
+msgstr "Required for cash-flow and contributed-capital reconstruction; optional for a trade-only journal. Creates supported cash movements such as deposits and withdrawals, not another set of trades."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:62
+msgid "imports.sbiCashExport"
+msgstr "Select the corresponding cash-movement period and export the original CSV. Upload separately, before or after execution history; include earlier funding if you need the full account history."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:74
+msgid "imports.sbiPnlPurpose"
+msgstr "Optional, after importing executions. Supplements existing SBI closes with broker-reported pretax realized P&L and acquisition basis, even when trade history was imported earlier. Creates no new executions or cash movements."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: "約定日"
+#. placeholder {1}: "照会"
+#. placeholder {2}: "CSVダウンロード"
+#. placeholder {3}: "売却 / 返済売 / 返済買 / 現渡"
+#: src/components/SBIImportGuide.tsx:82
+msgid "imports.sbiPnlExport"
+msgstr "Select {0}, the period and account, then {1}. Open the domestic-stock detail and use {2}; use detail rows, not summary totals. Supported transactions: {3}."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:88
+msgid "imports.sbiPnlPeriod"
+msgstr "Cover the same closing dates as the imported executions in this account. SBI CSV downloads cover executions through the previous day, with up to 5,000 detail rows per download; split longer periods. Matching uses date, symbol, transaction, quantity, price and available settlement evidence, not an assumed intraday order."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:95
+msgid "imports.sbiPnlCaveats"
+msgstr "Review the enrichment preview before confirming. Repeated or overlapping exports do not add trades or apply the same enrichment twice. Unmatched rows create nothing; check the account and date coverage. Invalid, ambiguous or conflicting rows need review and may block confirmation; existing values are not silently overwritten."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:102
+msgid "imports.sbiPnlValues"
+msgstr "Reconstructed estimates can differ from broker-reported values. Reported P&L is pretax; fees and taxes must not be deducted again. SBI may revise provisional basis and costs after settlement; a changed report can produce a conflict rather than an automatic replacement."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:114
+msgid "imports.sbiOfficialHelp"
+msgstr "SBI export help (Japanese)"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:118
+msgid "imports.sbiPreviewDuplicates"
+msgstr "Upload one original file at a time and check its preview. Execution and cash imports skip recognized duplicates in overlapping periods; inspect the result before uploading the next file."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:125
+msgid "imports.sbiHistoryGuide"
+msgstr "Import history records uploads. Reprocess is offered only for supported imports with retained source rows; it reparses those rows with current rules and can change historical results. Legacy imports without retained rows, cash-only imports and P&L enrichment cannot be replayed there. Reprocessing does not fetch missing broker data or replace P&L enrichment."

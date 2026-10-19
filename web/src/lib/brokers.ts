@@ -56,7 +56,7 @@ export const BROKERS: BrokerDef[] = [
     brand: "#E60012",
     monogram: "SBI",
     get formats() {
-      return "約定履歴 CSV · 入出金明細 CSV";
+      return "約定履歴 CSV · 入出金明細 CSV · 実現損益詳細 CSV";
     },
     get steps() {
       return [

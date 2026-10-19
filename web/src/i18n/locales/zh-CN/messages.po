@@ -13349,3 +13349,72 @@ msgstr "扩大日期范围、清除交易筛选，或切换账户。"
 #. js-lingui-explicit-id
 msgid "trades.filterSelected"
 msgstr "项已选"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:23
+msgid "imports.sbiGuide"
+msgstr "该导出哪个 CSV？分别有什么用途？"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:34
+msgid "imports.sbiExecutionsPurpose"
+msgstr "交易历史必需。创建成交记录，用于还原买卖、数量、价格和日期。请包含首次平仓之前的开仓记录；缺少开仓记录可能导致还原不完整。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:42
+msgid "imports.sbiExecutionsExport"
+msgstr "选择成交日期范围并导出原始 CSV。请先将此文件导入之后接收损益补充数据的同一账户。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:54
+msgid "imports.sbiCashPurpose"
+msgstr "还原现金流和投入本金时必需；仅记录交易时可选。创建入金、出金等受支持的资金流水，不会额外创建交易。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:62
+msgid "imports.sbiCashExport"
+msgstr "选择对应的资金流水期间并导出原始 CSV。单独上传，可在成交历史之前或之后导入；如需完整账户历史，请包含更早的入金。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:74
+msgid "imports.sbiPnlPurpose"
+msgstr "可选，须先导入成交记录。将券商报告的税前已实现损益及取得成本补充到已有 SBI 平仓记录，适用于之前已导入的交易历史。不会新建成交或资金流水。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: "約定日"
+#. placeholder {1}: "照会"
+#. placeholder {2}: "CSVダウンロード"
+#. placeholder {3}: "売却 / 返済売 / 返済買 / 現渡"
+#: src/components/SBIImportGuide.tsx:82
+msgid "imports.sbiPnlExport"
+msgstr "选择「{0}」、期间和账户，再点击「{1}」。打开日本股票明细并点击「{2}」；请使用逐笔明细，而非汇总。支持的交易：{3}。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:88
+msgid "imports.sbiPnlPeriod"
+msgstr "期间应覆盖该账户已导入成交记录的相同平仓日期。SBI CSV 可下载截至前一天的成交，每次最多 5,000 条明细；较长期间请分段导出。匹配使用日期、代码、交易类型、数量、价格及可用的交割证据，不推测日内先后顺序。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:95
+msgid "imports.sbiPnlCaveats"
+msgstr "确认前请检查补充数据预览。重复或重叠导出不会新增交易或重复补充。未匹配行不会创建任何记录；请检查账户和日期覆盖范围。无效、匹配不唯一或冲突的行需要核查，并可能阻止确认；不会静默覆盖已有值。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:102
+msgid "imports.sbiPnlValues"
+msgstr "还原的估算值可能与券商报告值不同。报告损益为税前值，已包含券商费用，请勿再次扣费；税款资金流水单独处理。SBI 可能在交割后修订暂算成本和费用；更新后的报告可能产生冲突，而非自动替换。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:114
+msgid "imports.sbiOfficialHelp"
+msgstr "SBI 导出帮助（日语）"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:118
+msgid "imports.sbiPreviewDuplicates"
+msgstr "每次上传一个原始文件并检查预览。成交和资金导入会跳过重叠期间中识别出的重复记录；上传下一文件前请检查结果。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:125
+msgid "imports.sbiHistoryGuide"
+msgstr "导入历史记录各次上传。只有受支持且保留了来源行的导入才提供“重处理”；它按当前规则重新解析这些行，可能改变历史结果。未保留来源行的旧导入、纯资金导入和损益补充无法在此重放。重处理不会获取缺失的券商数据，也不能替代损益补充。"

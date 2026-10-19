@@ -23,9 +23,9 @@ it("updates shared labels after language changes without translating canonical b
 it("keeps SBI website labels Japanese while translating the surrounding guide", async () => {
   const broker = findBroker("sbi")!;
   const guides = [];
-  for (const locale of ["en", "ja", "zh-CN"]) {
+  for (const locale of ["en", "ja", "zh-CN", "zh-HK", "ko"]) {
     await loadLocale(locale);
-    expect(broker.formats).toBe("約定履歴 CSV · 入出金明細 CSV");
+    expect(broker.formats).toBe("約定履歴 CSV · 入出金明細 CSV · 実現損益詳細 CSV");
     expect(broker.steps[0]).toContain("口座管理 → 取引履歴 → 約定履歴");
     expect(broker.steps[1]).toContain("入出金 → 入出金明細");
     const hint = i18n._("imports.sbiFiles", { 0: "約定履歴 CSV", 1: "入出金明細 CSV" });
@@ -34,5 +34,5 @@ it("keeps SBI website labels Japanese while translating the surrounding guide", 
     if (locale !== "en") expect(hint).not.toContain("Account reconstruction");
     guides.push(broker.steps.join(" "));
   }
-  expect(new Set(guides).size).toBe(3);
+  expect(new Set(guides).size).toBe(5);
 });
