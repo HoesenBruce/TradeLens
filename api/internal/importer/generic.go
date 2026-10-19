@@ -102,6 +102,7 @@ func (g *Generic) ParseRows(rows []map[string]string) ParseResult {
 			lot := uuid.New().String()
 			for j := range exs {
 				exs[j].LotKey = lot
+				exs[j].SourceRow = i + 1
 			}
 			res.Executions = append(res.Executions, exs...)
 			continue
@@ -111,6 +112,7 @@ func (g *Generic) ParseRows(rows []map[string]string) ParseResult {
 			res.Errors = append(res.Errors, RowError{Row: i + 1, Message: err.Error()})
 			continue
 		}
+		ex.SourceRow = i + 1
 		res.Executions = append(res.Executions, ex)
 	}
 	return res

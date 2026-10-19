@@ -12690,6 +12690,59 @@ msgstr "未決済数量 / 累計新規数量；残数量で並べ替え"
 msgid "review.ambiguousNotes"
 msgstr "レビューメモのセクションを特定できません。ジャーナル全体で整理してください。下書きは保持されています。"
 
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.retained_rows
+#. placeholder {1}: preview.executions
+#. placeholder {2}: preview.changed
+#: src/app/screens/settings/import-history.tsx:79
+msgid "imports.reprocessSummary"
+msgstr "元データ {0} 行 · 約定 {1} 件 · 変更 {2} 件 · 取引変更 {3} 件"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:71
+msgid "imports.applyReprocess"
+msgstr "再処理を適用"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:46
+#: src/app/screens/settings/import-history.tsx:80
+msgid "imports.associationsKept"
+msgstr "既存の日誌と振り返りの関連付けを保持しました。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:45
+msgid "imports.reprocessed"
+msgstr "インポートを再処理しました"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:244
+msgid "imports.newerSource"
+msgstr "更新された元データがあります。該当するインポートを使用してください。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:245
+msgid "imports.noRetainedSource"
+msgstr "保存された元データがありません。過去のインポート、重複のみ、または未対応の形式はここでは再処理できません。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:72
+msgid "imports.previewReprocess"
+msgstr "変更をプレビュー"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:77
+msgid "imports.reprocessDescription"
+msgstr "保存された元データを現在のルールで再解析し、この口座を再計算します。過去の損益が変わる場合があります。編集やグループ分けの競合がある場合は処理を停止し、既存データを保持します。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:58
+msgid "imports.reprocess"
+msgstr "再処理"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:61
+msgid "imports.reprocessTitle"
+msgstr "現在のルールで再処理"
 
 #. js-lingui-explicit-id
 msgid "trades.holdingUnknown"

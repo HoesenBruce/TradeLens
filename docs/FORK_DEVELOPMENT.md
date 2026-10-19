@@ -354,6 +354,53 @@ Existing legacy quantity fields, execution records, accounting and monetary valu
 remain unchanged; no migration or forced historical regroup is performed. See
 [issue #308 validation](validation/issue308/README.md) for semantics and evidence.
 
+
+### Retained CSV sources and explicit reprocessing (#312)
+
+New execution CSV imports retain decoded source row values (including unused columns),
+headers, effective mapping/timezone/date order and per-row option choices inside the
+database. Generic, SBI, journal and round-trip CSV rows opt in. The original file bytes,
+CSV container encoding and rejected/skipped non-fill rows are not archived. JSON,
+HTML/XLSX statements, cash-only CSVs and SBI P&L enrichment currently keep their existing
+import behavior but do not offer source replay. Legacy batches cannot recover missing
+original source content; a later upload can retain its matching imported executions.
+
+Identical source content/context/execution identities is stored once per account, even
+across repeated or overlapping uploads. Genuine same-second fills retain their existing
+broker/occurrence identities and multiplicity. A recognized execution's changed source
+content is retained as a revision without inserting a second execution. Earlier source
+rows covering those executions become inactive; unaffected rows in their original batch
+remain replayable. A duplicate-only upload points users back to the batch that first
+retained its rows. No retention expiry or absolute storage cap is introduced: storage
+grows with distinct source data and meaningful revisions, not repeated copies.
+Existing identity limitations remain: when a broker supplies no stable identity and
+changes identity-defining fields, replay does not guess whether two fills are corrections.
+
+Web import history offers **Reprocess** for current retained rows. The no-write preview
+shows source/execution counts, changed execution fields and changed calculated trades.
+Apply requires that preview's fingerprint; source/account data or calculated outcomes
+changing between preview and apply requires another preview. Both paths use a serializable
+transaction; previews always roll back. Errors leave executions, trades and source
+snapshots intact. Unexpected database/provider errors are not exposed in the response.
+
+Replay updates executions in place and uses the existing broker-specific regroup logic.
+It does not restore imported journal annotations over user edits. Execution IDs and
+all existing trade memberships must remain stable, preserving journals, notes, grades,
+risk, setups, tags, attachments and review links. Changed membership, missing legs,
+manually edited or subsequently enriched executions produce a conflict; manual review
+is required rather than deleting/rebuilding history or guessing associations.
+
+Replay remains synchronous; very large batches on a remote database can exceed request
+deadlines and roll back. Such workloads need batched updates or a background job.
+
+Historical P&L/statistics can change, including accounting-only changes with zero changed
+execution fields. No replay runs automatically on upgrade. Retained rows are included in
+SQLite database snapshots; PostgreSQL still needs the normal provider/pg_dump backup.
+Keep source data backups private: retained rows can include sensitive broker columns.
+Deleting an account cascades its retained sources. Reversed batches cannot replay;
+clearing/deleting executions cannot use replay as an undelete operation.
+
+Mobile contracts remain additive; mobile was not validated and is outside this issue.
 ### SBI cash close totals and reviewed recomputation (#339)
 
 Completed explicit SBI cash groups sum reconciled per-close net results. Broker-reported

@@ -12689,6 +12689,59 @@ msgstr "Remaining open quantity / cumulative entry quantity; sorted by open quan
 msgid "review.ambiguousNotes"
 msgstr "The Review notes section is ambiguous. Edit the full journal to resolve it; your draft is retained."
 
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.retained_rows
+#. placeholder {1}: preview.executions
+#. placeholder {2}: preview.changed
+#: src/app/screens/settings/import-history.tsx:79
+msgid "imports.reprocessSummary"
+msgstr "{0} source rows · {1} executions · {2} changed · {3} trades changed"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:71
+msgid "imports.applyReprocess"
+msgstr "Apply reprocessing"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:46
+#: src/app/screens/settings/import-history.tsx:80
+msgid "imports.associationsKept"
+msgstr "Existing journal and review links were preserved."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:45
+msgid "imports.reprocessed"
+msgstr "Import reprocessed"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:244
+msgid "imports.newerSource"
+msgstr "Newer source data exists; use its import batch."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:245
+msgid "imports.noRetainedSource"
+msgstr "No retained source rows. Older, duplicate-only or unsupported imports cannot be reprocessed here."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:72
+msgid "imports.previewReprocess"
+msgstr "Preview changes"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:77
+msgid "imports.reprocessDescription"
+msgstr "Reparse retained source rows and recalculate this account using current rules. Historical P&L may change. Edits or grouping conflicts stop processing without changing your data."
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:58
+msgid "imports.reprocess"
+msgstr "Reprocess"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:61
+msgid "imports.reprocessTitle"
+msgstr "Reprocess with current rules"
 
 #. js-lingui-explicit-id
 msgid "trades.holdingUnknown"

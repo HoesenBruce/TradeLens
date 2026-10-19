@@ -3,14 +3,14 @@ import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { intlLocale } from "@/lib/locale";
 import { t as tr } from "@lingui/core/macro";
 import { useState } from "react";
-import { Undo2 } from "lucide-react";
+import { RotateCw, Undo2 } from "lucide-react";
 import { Badge } from "@/components/reui/badge";
 import { EmptyState } from "@/components/EmptyState";
 import { Modal } from "@/components/Modal";
 import { useToastManager } from "@/components/Toast";
 import { Button } from "@/components/ui/button";
-import type { Account, ImportBatch } from "@/lib/api/types";
-import { useDeleteImport, useImports } from "@/lib/hooks/useImports";
+import type { Account, ImportBatch, ReprocessResult } from "@/lib/api/types";
+import { useDeleteImport, useImports, useReprocessImport } from "@/lib/hooks/useImports";
 import { SettingsGroup, SettingsSection } from "./settings-ui";
 
 /** Human name for an import batch's source key. */
@@ -20,6 +20,116 @@ function sourceLabel(source: string): string {
   if (source === "csv" || source === "json" || source === "file")
     return tr({ id: "accounts.fileSource", message: "File import" });
   return source;
+}
+
+function ReprocessButton({ batch }: { batch: ImportBatch }) {
+  const { t: tr } = useLinguiMacro();
+  const [open, setOpen] = useState(false);
+  const [preview, setPreview] = useState<ReprocessResult | null>(null);
+  const reprocess = useReprocessImport();
+  const toast = useToastManager();
+
+  function changeOpen(next: boolean) {
+    if (reprocess.isPending) return;
+    setOpen(next);
+    setPreview(null);
+    reprocess.reset();
+  }
+
+  function process(apply: boolean) {
+    reprocess.mutate(
+      { id: batch.id, fingerprint: apply ? preview?.fingerprint : undefined },
+      {
+        onSuccess: (result) => {
+          if (result.applied) {
+            setOpen(false);
+            setPreview(null);
+            toast.add({
+              title: tr({ id: "imports.reprocessed", message: "Import reprocessed" }),
+              description: tr({
+                id: "imports.associationsKept",
+                message: "Existing journal and review links were preserved.",
+              }),
+            });
+          } else {
+            setPreview(result);
+          }
+        },
+        onError: () => setPreview(null),
+      },
+    );
+  }
+
+  return (
+    <>
+      <Button type="button" variant="outline" size="sm" onClick={() => changeOpen(true)}>
+        <RotateCw size={13} strokeWidth={1.5} aria-hidden />
+        {tr({ id: "imports.reprocess", message: "Reprocess" })}
+      </Button>
+      <Modal
+        open={open}
+        onOpenChange={changeOpen}
+        title={tr({ id: "imports.reprocessTitle", message: "Reprocess with current rules" })}
+        className="max-w-[min(520px,94vw)]"
+        footer={
+          <>
+            <Button
+              type="button"
+              variant="ghost"
+              disabled={reprocess.isPending}
+              onClick={() => changeOpen(false)}
+            >
+              {tr({ id: "accounts.cancel", message: "Cancel" })}
+            </Button>
+            <Button
+              type="button"
+              disabled={reprocess.isPending}
+              onClick={() => process(preview !== null)}
+            >
+              {reprocess.isPending
+                ? tr({ id: "imports.processing", message: "Processing…" })
+                : preview
+                  ? tr({ id: "imports.applyReprocess", message: "Apply reprocessing" })
+                  : tr({ id: "imports.previewReprocess", message: "Preview changes" })}
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-3 text-[13px] leading-relaxed text-muted-foreground">
+          <p className="m-0 break-words font-medium text-foreground">{batch.filename}</p>
+          <p className="m-0">
+            {tr({
+              id: "imports.reprocessDescription",
+              message:
+                "Reparse retained source rows and recalculate this account using current rules. Historical P&L may change. Edits or grouping conflicts stop processing without changing your data.",
+            })}
+          </p>
+          {preview ? (
+            <div
+              role="status"
+              className="rounded-md border border-border bg-muted p-3 text-foreground"
+            >
+              {tr({
+                id: "imports.reprocessSummary",
+                message: `${preview.retained_rows} source rows · ${preview.executions} executions · ${preview.changed} changed · ${preview.trades_changed} trades changed`,
+              })}
+              <p className="mb-0 mt-2 text-muted-foreground">
+                {tr({
+                  id: "imports.associationsKept",
+                  message: "Existing journal and review links were preserved.",
+                })}
+              </p>
+            </div>
+          ) : null}
+          {reprocess.isError ? (
+            <p role="alert" className="m-0 text-destructive">
+              {reprocess.error.message}
+            </p>
+          ) : null}
+        </div>
+      </Modal>
+    </>
+  );
 }
 
 function RollbackButton({ batch, accountName }: { batch: ImportBatch; accountName: string }) {
@@ -175,6 +285,22 @@ export function ImportHistorySection({
                   {new Date(batch.created_at).toLocaleString(intlLocale())}
                 </p>
               </div>
+              {batch.reprocessable ? (
+                <ReprocessButton batch={batch} />
+              ) : batch.status === "committed" ? (
+                <span className="max-w-64 text-[11px] text-muted-foreground">
+                  {(batch.retained_rows ?? 0) > 0
+                    ? tr({
+                        id: "imports.newerSource",
+                        message: "Newer source data exists; use its import batch.",
+                      })
+                    : tr({
+                        id: "imports.noRetainedSource",
+                        message:
+                          "No retained source rows. Older, duplicate-only or unsupported imports cannot be reprocessed here.",
+                      })}
+                </span>
+              ) : null}
               {batch.source === "sbi_margin_pnl" ? (
                 <span className="text-[11px] text-muted-foreground">
                   {tr({
