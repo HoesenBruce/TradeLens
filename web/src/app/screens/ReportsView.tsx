@@ -1,4 +1,4 @@
-import { MetricHelp } from "@/components/MetricHelp";
+import { MetricLabel } from "@/components/MetricHelp";
 import { useLingui as useLinguiRuntime } from "@lingui/react";
 import { t as localize } from "@lingui/core/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
@@ -347,14 +347,15 @@ function SummaryMetricsGrid({
           className="min-h-[180px]"
           title={
             <BentoTitle tone="muted">
-              {localize({ id: "accounts.curve", message: "Equity curve" })}
-              {equityPoints.length > 0 && equity
-                ? localize({
-                    id: "reports.maxDdValue0",
-                    message: ` · Max DD ${{ value0: fmtMoney(equity.max_drawdown * (equityFx.rate ?? 1), equityFx.currency, locale) }}`,
-                  })
-                : null}
-              <MetricHelp metric="drawdown" />
+              <MetricLabel metric="drawdown">
+                {localize({ id: "accounts.curve", message: "Equity curve" })}
+                {equityPoints.length > 0 && equity
+                  ? localize({
+                      id: "reports.maxDdValue0",
+                      message: ` · Max DD ${{ value0: fmtMoney(equity.max_drawdown * (equityFx.rate ?? 1), equityFx.currency, locale) }}`,
+                    })
+                  : null}
+              </MetricLabel>
             </BentoTitle>
           }
           expandTitle="Equity curve"

@@ -1,5 +1,5 @@
 import type { MetricId } from "@/lib/metrics/definitions";
-import { MetricHelp } from "./MetricHelp";
+import { MetricLabel } from "./MetricHelp";
 import type { TradeDetail } from "@/lib/api/types";
 
 import type { ReactNode } from "react";
@@ -25,8 +25,7 @@ function StatCell({
   return (
     <div className="flex min-w-0 max-w-full flex-col gap-0.5 wrap-anywhere">
       <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-        {label}
-        {metric && <MetricHelp metric={metric} />}
+        <MetricLabel metric={metric}>{label}</MetricLabel>
       </span>
       <span className={cn("text-sm tabular-nums text-foreground", valueClassName)}>{value}</span>
     </div>

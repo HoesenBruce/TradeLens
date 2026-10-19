@@ -1,6 +1,6 @@
 import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
 import { Money } from "@/components/ResponsiveValue";
-import { MetricHelp } from "@/components/MetricHelp";
+import { MetricLabel } from "@/components/MetricHelp";
 import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
 import { TradeQuantityDetails } from "./TradeQuantities";
@@ -171,20 +171,23 @@ export function TradeSummaryCard({
                 )}
                 title={tr({ id: "trades.netAfterFees", message: "Net P&L after fees" })}
               >
-                {net != null ? (
-                  <Money value={net} currency={currency} locale={locale} signed />
-                ) : (
-                  "—"
-                )}
-                <MetricHelp metric="pnl" />
+                <MetricLabel metric="pnl">
+                  {net != null ? (
+                    <Money value={net} currency={currency} locale={locale} signed />
+                  ) : (
+                    "—"
+                  )}
+                </MetricLabel>
               </span>
               <div className="flex flex-wrap items-baseline gap-x-3 sm:justify-end">
                 {trade.return_pct != null && (
                   <span
                     className={cn("text-sm font-semibold tabular-nums", pnlColor(trade.return_pct))}
                   >
-                    {trade.return_pct >= 0 ? "+" : ""}
-                    {trade.return_pct.toFixed(2)}%<MetricHelp metric="tradeReturn" />
+                    <MetricLabel metric="tradeReturn">
+                      {trade.return_pct >= 0 ? "+" : ""}
+                      {trade.return_pct.toFixed(2)}%
+                    </MetricLabel>
                   </span>
                 )}
                 {trade.r_multiple != null && (
@@ -195,8 +198,10 @@ export function TradeSummaryCard({
                       message: "Realized R — net P&L ÷ planned risk",
                     })}
                   >
-                    {trade.r_multiple >= 0 ? "+" : ""}
-                    {trade.r_multiple.toFixed(2)}R<MetricHelp metric="realizedR" />
+                    <MetricLabel metric="realizedR">
+                      {trade.r_multiple >= 0 ? "+" : ""}
+                      {trade.r_multiple.toFixed(2)}R
+                    </MetricLabel>
                   </span>
                 )}
               </div>

@@ -3,7 +3,7 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, it, vi } from "vite-plus/test";
 import { i18n, loadLocale } from "@/i18n";
-import { MetricHelp } from "./MetricHelp";
+import { MetricHelp, MetricLabel } from "./MetricHelp";
 import { metricDefinitions } from "@/lib/metrics/definitions";
 
 afterEach(cleanup);
@@ -62,3 +62,21 @@ it.each([
     expect(screen.getByText(i18n._(entry.caveat), { exact: true })).toBeVisible();
   },
 );
+
+it("groups the visible label with its own help and omits help for ordinary labels", async () => {
+  await loadLocale("en");
+  const user = userEvent.setup();
+  render(
+    <I18nProvider i18n={i18n}>
+      <MetricLabel metric="holding">Visible holding label</MetricLabel>
+      <MetricLabel>Ordinary label</MetricLabel>
+    </I18nProvider>,
+  );
+  const trigger = screen.getByRole("button", { name: "Explain Holding duration" });
+  expect(trigger.closest("[data-metric-label]")).toHaveTextContent("Visible holding label");
+  expect(screen.getAllByRole("button")).toHaveLength(1);
+  await user.click(trigger);
+  expect(await screen.findByRole("dialog")).toHaveAccessibleName("Holding duration");
+  await user.click(screen.getByRole("button", { name: "Close explanation" }));
+  await waitFor(() => expect(trigger).toHaveFocus());
+});

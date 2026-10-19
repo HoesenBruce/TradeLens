@@ -1,4 +1,4 @@
-import { MetricHelp } from "./MetricHelp";
+import { MetricLabel } from "./MetricHelp";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import {
@@ -116,8 +116,9 @@ export function ReportsRollingWinRate({ trades, loading, error }: ReportsRolling
     <ChartCard
       title={
         <span>
-          {localize({ id: "reports.rollingWinRate", message: "Rolling Win Rate" })}
-          <MetricHelp metric="rollingWinRate" />
+          <MetricLabel metric="rollingWinRate">
+            {localize({ id: "reports.rollingWinRate", message: "Rolling Win Rate" })}
+          </MetricLabel>
         </span>
       }
       expandTitle={localize({ id: "reports.rollingWinRate", message: "Rolling Win Rate" })}

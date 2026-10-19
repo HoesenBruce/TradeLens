@@ -1,4 +1,4 @@
-import { MetricHelp } from "@/components/MetricHelp";
+import { MetricLabel } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
@@ -34,8 +34,7 @@ export function StatCell({
       )}
     >
       <span className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
-        {label}
-        {metric && <MetricHelp metric={metric} />}
+        <MetricLabel metric={metric}>{label}</MetricLabel>
       </span>
       <span className="flex min-w-0 flex-wrap items-baseline gap-1.5">
         <span

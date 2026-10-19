@@ -1,5 +1,5 @@
 import { Money } from "@/components/ResponsiveValue";
-import { MetricHelp } from "@/components/MetricHelp";
+import { MetricLabel } from "@/components/MetricHelp";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Pencil, RefreshCw } from "lucide-react";
@@ -46,7 +46,7 @@ function Stat({
   value,
   className,
 }: {
-  label: string;
+  label: ReactNode;
   value: ReactNode;
   className?: string;
 }) {
@@ -486,7 +486,11 @@ export function AccountDetailView({
             }
           />
           <Stat
-            label={tr({ id: "accounts.realized", message: "Realized P&L" })}
+            label={
+              <MetricLabel metric="accountRealizedPnl">
+                {tr({ id: "accounts.realized", message: "Realized P&L" })}
+              </MetricLabel>
+            }
             value={
               <span className="flex min-w-0 max-w-full flex-wrap items-baseline gap-x-1">
                 <span className="flex w-full min-w-0 items-baseline">
@@ -495,12 +499,10 @@ export function AccountDetailView({
                   ) : (
                     "—"
                   )}
-                  <MetricHelp metric="accountRealizedPnl" />
                 </span>
                 {pnlPct && (
                   <span className="inline-flex items-baseline">
-                    ({pnlPct})
-                    <MetricHelp metric="accountDetailReturn" />
+                    <MetricLabel metric="accountDetailReturn">({pnlPct})</MetricLabel>
                   </span>
                 )}
               </span>

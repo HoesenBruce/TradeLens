@@ -1,6 +1,6 @@
 import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
 import { Money, ResponsiveValue } from "@/components/ResponsiveValue";
-import { MetricHelp } from "@/components/MetricHelp";
+import { MetricLabel } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { fmtTradeTimeline } from "@/lib/tradeTimeline";
@@ -276,8 +276,7 @@ function BentoStat({
   return (
     <div className={cn("flex min-w-0 flex-col gap-1 bg-sidebar p-2 sm:p-2.5", className)}>
       <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-        {label}
-        {metric && <MetricHelp metric={metric} />}
+        <MetricLabel metric={metric}>{label}</MetricLabel>
       </span>
       <span
         className="text-sm tabular-nums whitespace-normal wrap-anywhere text-foreground"
@@ -348,20 +347,25 @@ function TradeDetailSheetBody({
               {pnl != null ? (
                 <>
                   <p className={cn("m-0 min-w-0 max-w-full tabular-nums", heroPnlClass(pnl))}>
-                    <Money value={pnl} currency={currency} locale={intlLocale()} signed />
-                    <MetricHelp metric="pnl" />
+                    <MetricLabel metric="pnl">
+                      <Money value={pnl} currency={currency} locale={intlLocale()} signed />
+                    </MetricLabel>
                   </p>
                   <p className="mt-1.5 mb-0 max-w-full wrap-anywhere text-sm font-semibold tabular-nums">
                     {trade.return_pct != null && (
                       <span className={pnlColor(trade.return_pct)}>
-                        {trade.return_pct >= 0 ? "+" : ""}
-                        {trade.return_pct.toFixed(2)}%<MetricHelp metric="tradeReturn" />
+                        <MetricLabel metric="tradeReturn">
+                          {trade.return_pct >= 0 ? "+" : ""}
+                          {trade.return_pct.toFixed(2)}%
+                        </MetricLabel>
                       </span>
                     )}
                     {trade.r_multiple != null && (
                       <span className={cn("ml-2", pnlColor(trade.r_multiple))}>
-                        {trade.r_multiple >= 0 ? "+" : ""}
-                        {trade.r_multiple.toFixed(2)}R<MetricHelp metric="realizedR" />
+                        <MetricLabel metric="realizedR">
+                          {trade.r_multiple >= 0 ? "+" : ""}
+                          {trade.r_multiple.toFixed(2)}R
+                        </MetricLabel>
                       </span>
                     )}
                   </p>
@@ -373,9 +377,10 @@ function TradeDetailSheetBody({
             {trade.gross_pnl != null && (
               <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
                 <Money value={trade.gross_pnl} currency={currency} locale={intlLocale()} signed />{" "}
-                {tr({ id: "trades.gross", message: "Gross" })}
-                <MetricHelp metric="pnl" /> −{" "}
-                <Money value={trade.fees_total} currency={currency} locale={intlLocale()} />{" "}
+                <MetricLabel metric="pnl">
+                  {tr({ id: "trades.gross", message: "Gross" })}
+                </MetricLabel>{" "}
+                − <Money value={trade.fees_total} currency={currency} locale={intlLocale()} />{" "}
                 {tr({ id: "trades.fees", message: "Fees" })}
               </p>
             )}
