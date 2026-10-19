@@ -427,11 +427,10 @@ func matchSBIOpenings(rows []SBIMarginPnLRow, executions []store.Execution) {
 						row.Message = "fifo_inferred: TradeLens equivalent-lot allocation; SBI's actual repayment order and lot-level holding duration are unknown."
 					}
 				} else {
-					row.Status = "ambiguous_match"
-					row.Message = "Opening allocation unresolved: provide original opening dates, prices, credit class and charge evidence; no SBI lot identity is inferred."
+					// A broker-reported close result does not require a proven opening lot.
+					row.Message = "Opening allocation unresolved: broker-reported close result retained; opening lots and lot-level holding duration are unknown."
 					if available < close.Quantity {
-						row.Status, row.MatchProvenance = "ambiguous_match", "unresolved"
-						row.Message = "Insufficient supported opening quantity; import complete SBI history and preview again."
+						row.Message = "Insufficient supported opening quantity: broker-reported close result retained; missing holdings and opening lots are not inferred."
 					}
 				}
 			}

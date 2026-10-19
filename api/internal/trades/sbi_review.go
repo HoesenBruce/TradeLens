@@ -52,7 +52,7 @@ func sbiReviewTrades(fills []Execution) []Trade {
 	var result []Trade
 	var cur *openState
 	var latest time.Time
-	missing, uncertain, inferred := false, false, false
+	missing, uncertain, inferred, unresolved := false, false, false, false
 	finish := func(closed bool) {
 		var tr Trade
 		if closed {
@@ -68,19 +68,24 @@ func sbiReviewTrades(fills []Execution) []Trade {
 			tr.TimeInTradeSecs = nil
 			tr.AccountingWarning = strings.TrimSpace(tr.AccountingWarning + " fifo_inferred: TradeLens equivalent-lot allocation; SBI repayment order and lot-level holding duration are unknown.")
 		}
+		if unresolved {
+			tr.TimeInTradeSecs = nil
+			tr.AccountingWarning = strings.TrimSpace(tr.AccountingWarning + " SBI opening allocation unresolved: broker-reported close result retained; opening lots and lot-level holding duration are unknown.")
+		}
 		if missing {
 			tr.TimeInTradeSecs = nil
 			tr.AccountingWarning = strings.TrimSpace(tr.AccountingWarning + " " + sbiMissingWarning)
 			tr.NetPnl, tr.GrossPnl, tr.ReturnPct = nil, nil, nil
 		}
 		result = append(result, tr)
-		cur, missing, uncertain, inferred = nil, false, false, false
+		cur, missing, uncertain, inferred, unresolved = nil, false, false, false, false
 	}
 	for _, f := range sbiReviewOrder(fills) {
 		if f.Quantity <= 0 || f.Price < 0 {
 			continue
 		}
 		inferred = inferred || f.OpeningMatchProvenance == "fifo_inferred"
+		unresolved = unresolved || f.OpeningMatchProvenance == "unresolved"
 		if cur == nil || f.ExecutedAt.After(latest) {
 			latest = f.ExecutedAt
 		}
@@ -114,6 +119,7 @@ func sbiReviewTrades(fills []Execution) []Trade {
 				Direction: direction, Status: "closed", OpenedAt: at, ClosedAt: &at,
 				AvgExitPrice: f64(f.Price), FeesTotal: money.Round2(f.Fees + f.Commission),
 				AccountingWarning: warning, ExecutionIDs: []string{f.ID}})
+			unresolved = false
 			continue
 		}
 		uncertain = uncertain || f.SourceTimePrecision == "date"
