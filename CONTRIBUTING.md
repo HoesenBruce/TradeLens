@@ -197,7 +197,7 @@ make down
 make logs
 ```
 
-Registry / tag: copy [`.env.example`](.env.example) → `.env` and review `TM_IMAGE_REGISTRY` / `TM_IMAGE_TAG`. Pin a stable version for production (example: `0.2.1`); unset tags default to moving `latest`. Official GHCR images are available; automated publishing remains disabled. See [release policy](docs/release.md).
+Registry / tag: copy [`.env.example`](.env.example) → `.env` and review `TM_IMAGE_REGISTRY` / `TM_IMAGE_TAG`. Pin an owner-approved version or digest for production; unset tags default to moving `latest`. Release Please and the Docker publisher are active, with owner approval required for GHCR publication and Render deployment. Recheck current release and security acceptance in [release policy](docs/release.md) before upgrading.
 
 ### Vite+ commands (run from `web/`)
 

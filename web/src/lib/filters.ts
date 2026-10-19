@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { useShallow } from "zustand/react/shallow";
 import { persist } from "zustand/middleware";
 import { resolveMarketTimezone, rfc3339OffsetSuffix, useDisplayPrefs } from "./displayPrefs";
-import type { TradeStatusFilter } from "./tradeFilters";
+import type { TradeFilter, TradeStatusFilter } from "./tradeFilters";
 
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 const FILTERS_STORAGE_KEY = "tm_filters";
@@ -60,6 +60,7 @@ interface FilterState {
   /** Multi-select symbols — trade matches if its symbol is selected (OR). */
   symbols?: string[];
   tradeStatus?: TradeStatusFilter;
+  tradeConditions?: TradeFilter[];
   /** Multi-select tag ids — trade matches if it has any selected tag. */
   tagIds?: string[];
   /** Multi-select instrument types — trade matches if type is selected. */
@@ -90,15 +91,27 @@ export const useFilters = create<FilterState>()(
       setAccounts: (accountIds) => set({ accountIds: accountIds?.length ? accountIds : undefined }),
       setAccount: (id) => set({ accountIds: id ? [id] : undefined }),
       setRange: (from, to) => set({ from, to }),
-      setSymbols: (symbols) => set({ symbols: symbols?.length ? symbols : undefined }),
-      setSymbol: (symbol) => set({ symbols: symbol ? [symbol] : undefined }),
+      setSymbols: (symbols) =>
+        set((s) => ({
+          symbols: symbols?.length ? symbols : undefined,
+          tradeConditions: s.tradeConditions?.filter((f) => f.field !== "symbol"),
+        })),
+      setSymbol: (symbol) => get().setSymbols(symbol ? [symbol] : undefined),
       setTradeStatus: (tradeStatus) => set({ tradeStatus }),
       toggleTradeStatus: (tradeStatus) =>
         set((s) => ({
           tradeStatus: s.tradeStatus === tradeStatus ? undefined : tradeStatus,
         })),
-      setTagIds: (tagIds) => set({ tagIds: tagIds?.length ? tagIds : undefined }),
-      setMarkets: (markets) => set({ markets: markets?.length ? markets : undefined }),
+      setTagIds: (tagIds) =>
+        set((s) => ({
+          tagIds: tagIds?.length ? tagIds : undefined,
+          tradeConditions: s.tradeConditions?.filter((f) => f.field !== "tags"),
+        })),
+      setMarkets: (markets) =>
+        set((s) => ({
+          markets: markets?.length ? markets : undefined,
+          tradeConditions: s.tradeConditions?.filter((f) => f.field !== "market"),
+        })),
       reset: () =>
         set({
           accountIds: undefined,
@@ -106,6 +119,7 @@ export const useFilters = create<FilterState>()(
           to: undefined,
           symbols: undefined,
           tradeStatus: undefined,
+          tradeConditions: undefined,
           tagIds: undefined,
           markets: undefined,
         }),

@@ -1,3 +1,9 @@
+import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
+import { Money, ResponsiveValue } from "@/components/ResponsiveValue";
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
+import { TradeHoldingDuration } from "./TradeHoldingDuration";
+import { fmtTradeTimeline } from "@/lib/tradeTimeline";
 import { tradeStatusLabel } from "@/lib/tradeLabels";
 import { TradeQuantityDetails } from "./TradeQuantities";
 import { useLingui } from "@lingui/react";
@@ -112,8 +118,11 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
           <DrawerTitle className="flex min-w-0 flex-col gap-0.5">
             {trade ? (
               <>
-                <span className="truncate text-[15px] leading-tight font-semibold tracking-tight">
-                  {trade.symbol}
+                <span className="flex max-w-full flex-wrap items-center gap-2">
+                  <span className="wrap-anywhere text-[15px] leading-tight font-semibold tracking-tight">
+                    {trade.symbol}
+                  </span>
+                  <TradePositionTypeBadge trade={trade} />
                 </span>
                 {/* Contract details wrap part-by-part rather than mid-token, so a
                     narrow drawer never splits an expiry date across two lines. */}
@@ -251,12 +260,16 @@ export function TradeDetailSheet({ tradeId, onClose }: TradeDetailSheetProps) {
 
 function BentoStat({
   label,
+  metric,
   value,
+  compactValue,
   hint,
   className,
 }: {
   label: string;
-  value: string;
+  metric?: MetricId;
+  value: React.ReactNode;
+  compactValue?: string;
   hint?: string;
   className?: string;
 }) {
@@ -264,12 +277,17 @@ function BentoStat({
     <div className={cn("flex min-w-0 flex-col gap-1 bg-sidebar p-2 sm:p-2.5", className)}>
       <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
+        {metric && <MetricHelp metric={metric} />}
       </span>
       <span
-        className="truncate text-sm tabular-nums whitespace-nowrap text-foreground"
-        title={value}
+        className="text-sm tabular-nums whitespace-normal wrap-anywhere text-foreground"
+        title={typeof value === "string" ? value : undefined}
       >
-        {value}
+        {compactValue != null && typeof value === "string" ? (
+          <ResponsiveValue value={value} compactValue={compactValue} />
+        ) : (
+          value
+        )}
       </span>
       {hint && <span className="text-[10px] text-muted-foreground">{hint}</span>}
     </div>
@@ -284,18 +302,15 @@ function TradeDetailSheetBody({
   onOpenFullPage: () => void;
 }) {
   useLingui();
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
+  const { fmtMoney, fmtMoneyCompact } = useMoneyFormatters();
   useDisplayTimePrefs();
   const currency = trade.pnl_currency;
   const pnl = trade.net_pnl;
   const status = tradeStatus(trade);
   const hold = computeRiskReward(trade).holdLabel;
-  const dateOnly = trade.fills.some((f) => f.details?.source_time_precision === "date");
   const dateZone = trade.fills.some((f) => f.details?.lot?.startsWith("sbi:"))
     ? "Asia/Tokyo"
     : undefined;
-  const displayDate = (value: string) =>
-    dateOnly ? fmtDate(value, intlLocale(), dateZone) : fmtDateTime(value);
 
   return (
     <div className="flex flex-col gap-5 px-4 py-4">
@@ -320,39 +335,33 @@ function TradeDetailSheetBody({
             {tradeStatusLabel(status.label)}
           </Pill>
           <span className="text-xs tabular-nums text-muted-foreground">
-            {trade.status === "open"
-              ? tr({
-                  id: "trades.stillOpen",
-                  message: `${displayDate(trade.opened_at)} · still open`,
-                })
-              : `${displayDate(trade.opened_at)} → ${
-                  trade.closed_at ? displayDate(trade.closed_at) : "—"
-                }${hold === "-" ? "" : ` · ${hold}`}`}
+            {fmtTradeTimeline(trade, hold)}
           </span>
         </div>
         {/* The stat column carries three figures per row and the hero carries
             one, so the extra share goes to the column that has to fit more.
-            Both tracks still floor at min-content, so a long P&L widens the
-            hero rather than being clipped by the ratio. */}
-        <div className="mt-3 grid grid-cols-[1fr_1.15fr] gap-px overflow-hidden rounded-md bg-border">
-          <div className="row-span-2 flex flex-col justify-between gap-3 bg-sidebar p-3.5">
+            Shrinkable tracks keep both figures inside the drawer while the
+            responsive amount chooses the appropriate display. */}
+        <div className="mt-3 grid grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-px overflow-hidden rounded-md bg-border">
+          <div className="row-span-2 flex min-w-0 flex-col justify-between gap-3 bg-sidebar p-3.5">
             <div>
               {pnl != null ? (
                 <>
-                  <p className={cn("m-0 tabular-nums", heroPnlClass(pnl))}>
-                    {fmtSignedMoney(pnl, currency, intlLocale())}
+                  <p className={cn("m-0 min-w-0 max-w-full tabular-nums", heroPnlClass(pnl))}>
+                    <Money value={pnl} currency={currency} locale={intlLocale()} signed />
+                    <MetricHelp metric="pnl" />
                   </p>
-                  <p className="mt-1.5 mb-0 text-sm font-semibold tabular-nums">
+                  <p className="mt-1.5 mb-0 max-w-full wrap-anywhere text-sm font-semibold tabular-nums">
                     {trade.return_pct != null && (
                       <span className={pnlColor(trade.return_pct)}>
                         {trade.return_pct >= 0 ? "+" : ""}
-                        {trade.return_pct.toFixed(2)}%
+                        {trade.return_pct.toFixed(2)}%<MetricHelp metric="tradeReturn" />
                       </span>
                     )}
                     {trade.r_multiple != null && (
                       <span className={cn("ml-2", pnlColor(trade.r_multiple))}>
                         {trade.r_multiple >= 0 ? "+" : ""}
-                        {trade.r_multiple.toFixed(2)}R
+                        {trade.r_multiple.toFixed(2)}R<MetricHelp metric="realizedR" />
                       </span>
                     )}
                   </p>
@@ -363,9 +372,10 @@ function TradeDetailSheetBody({
             </div>
             {trade.gross_pnl != null && (
               <p className="m-0 text-[10px] tabular-nums text-muted-foreground">
-                {fmtSignedMoney(trade.gross_pnl, currency, intlLocale())}{" "}
-                {tr({ id: "trades.gross", message: "Gross" })} −{" "}
-                {fmtMoney(trade.fees_total, currency, intlLocale())}{" "}
+                <Money value={trade.gross_pnl} currency={currency} locale={intlLocale()} signed />{" "}
+                {tr({ id: "trades.gross", message: "Gross" })}
+                <MetricHelp metric="pnl" /> −{" "}
+                <Money value={trade.fees_total} currency={currency} locale={intlLocale()} />{" "}
                 {tr({ id: "trades.fees", message: "Fees" })}
               </p>
             )}
@@ -376,6 +386,11 @@ function TradeDetailSheetBody({
               value={
                 trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price, currency, intlLocale()) : "—"
               }
+              compactValue={
+                trade.qty_opened > 0
+                  ? fmtMoneyCompact(trade.avg_entry_price, currency, intlLocale())
+                  : "—"
+              }
             />
             <BentoStat
               label={tr({ id: "trades.exit", message: "Exit" })}
@@ -384,25 +399,29 @@ function TradeDetailSheetBody({
                   ? fmtMoney(trade.avg_exit_price, currency, intlLocale())
                   : "—"
               }
+              compactValue={
+                trade.avg_exit_price != null
+                  ? fmtMoneyCompact(trade.avg_exit_price, currency, intlLocale())
+                  : "—"
+              }
             />
           </div>
-          {/* `auto` rather than a fixed ratio: these three hold a count, a
-              duration and a money amount, and which one needs the most room
-              changes per trade. A fixed split gave Hold 80px to render "7m"
-              while Fees truncated "$6.88" in 35px. Each track now takes what
-              its own value needs and the slack is shared; `truncate` on the
-              value stays as the last resort when all three run long. */}
-          <TradeQuantityDetails trade={trade} />
           <div className="grid grid-cols-2 gap-px">
             <BentoStat
+              metric="holding"
               label={tr({ id: "trades.hold", message: "Hold" })}
-              value={hold === "-" ? "—" : hold}
+              value={<TradeHoldingDuration trade={trade} />}
             />
             <BentoStat
+              metric="fees"
               label={tr({ id: "trades.fees", message: "Fees" })}
               value={fmtMoney(trade.fees_total, currency, intlLocale())}
+              compactValue={fmtMoneyCompact(trade.fees_total, currency, intlLocale())}
             />
           </div>
+        </div>
+        <div className="mt-3">
+          <TradeQuantityDetails trade={trade} />
         </div>
         {(trade.tags.length > 0 || trade.setup) && (
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -441,7 +460,7 @@ function TradeDetailSheetBody({
             {trade.fills.map((f) => (
               <li
                 key={f.id}
-                className="-mx-2 flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-xs tabular-nums transition-colors hover:bg-accent"
+                className="-mx-2 flex min-w-0 flex-wrap items-center justify-between gap-2 rounded-md px-2 py-1.5 text-xs tabular-nums transition-colors hover:bg-accent"
               >
                 <span className="flex items-center gap-2">
                   <span
@@ -460,11 +479,16 @@ function TradeDetailSheetBody({
                     {f.trade_type === "genwatashi" ? "現渡" : f.side === "buy" ? "B" : "S"}
                   </span>
                   <span className="text-foreground">
-                    {f.quantity} @ {fmtMoney(f.price, currency, intlLocale())}
+                    {f.quantity} @{" "}
+                    <Money value={f.price} currency={currency} locale={intlLocale()} />
                   </span>
                   {f.fees + f.commission > 0 && (
                     <span className="text-muted-foreground">
-                      {fmtMoney(f.fees + f.commission, currency, intlLocale())}{" "}
+                      <Money
+                        value={f.fees + f.commission}
+                        currency={currency}
+                        locale={intlLocale()}
+                      />{" "}
                       {tr({ id: "trades.fee", message: "Fee" })}
                     </span>
                   )}

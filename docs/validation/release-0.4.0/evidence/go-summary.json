@@ -1,0 +1,72 @@
+{
+  "go-tests": {
+    "tests": {
+      "pass": 1169,
+      "skip": 10
+    },
+    "packages": {
+      "skip": 5,
+      "pass": 27
+    },
+    "skips": [
+      "TestBulkWriterConformance/postgres",
+      "TestDeleteTradesNotInAccountConformance/postgres",
+      "TestImportCommitConformance/postgres",
+      "TestPostgresListQueries",
+      "TestPostgresQuerier_CreateUser",
+      "TestOpenMigrate_Postgres",
+      "TestTimeStoredAsUTC_Postgres",
+      "TestPersistencePostgres",
+      "TestNewsAndAssetsRoundTripPostgres",
+      "TestPredictionsPostgres"
+    ],
+    "failures": [],
+    "raw_sha256": "c78ccf1d60761f78032ba95536811dae45fd300b3f0cfba9875bc70e3c6ad79c"
+  },
+  "go-race": {
+    "tests": {
+      "pass": 1169,
+      "skip": 10
+    },
+    "packages": {
+      "skip": 5,
+      "pass": 27
+    },
+    "skips": [
+      "TestBulkWriterConformance/postgres",
+      "TestDeleteTradesNotInAccountConformance/postgres",
+      "TestImportCommitConformance/postgres",
+      "TestPostgresListQueries",
+      "TestPostgresQuerier_CreateUser",
+      "TestOpenMigrate_Postgres",
+      "TestTimeStoredAsUTC_Postgres",
+      "TestNewsAndAssetsRoundTripPostgres",
+      "TestPersistencePostgres",
+      "TestPredictionsPostgres"
+    ],
+    "failures": [],
+    "raw_sha256": "b3c1fcab5263d4a541e51b723e0c455714ac757da49841af7554645dc68c12d5"
+  },
+  "postgres-tests": {
+    "tests": {
+      "pass": 92
+    },
+    "packages": {
+      "pass": 3
+    },
+    "skips": [],
+    "failures": [],
+    "raw_sha256": "12a9a9d4dcca464b288dfa8f476748f81e1c637963f4dd6cd981170f08a29bbf"
+  },
+  "postgres-race-clean": {
+    "tests": {
+      "pass": 92
+    },
+    "packages": {
+      "pass": 3
+    },
+    "skips": [],
+    "failures": [],
+    "raw_sha256": "3229d38e4d1eed556660a9670a1da00d9eb76d980309fbbfde4e05adb3c259ba"
+  }
+}

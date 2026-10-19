@@ -35,7 +35,10 @@ func ReprocessedExecution(ctx context.Context, q store.Querier, old store.Execut
 	if pe.SettlementID != "" {
 		pe.SettlementID = text("settlement_id")
 	}
-	params := executionParams(pe, old.ID, old.UserID, old.AccountID, old.ImportBatchID, hash, resolveMultiplierCached(ctx, q, map[string]float64{}, pe), occurrence)
+	params, err := executionParams(pe, old.ID, old.UserID, old.AccountID, old.ImportBatchID, hash, resolveMultiplierCached(ctx, q, map[string]float64{}, pe), occurrence)
+	if err != nil {
+		return store.ReplaceImportedExecutionParams{}, err
+	}
 	// Preserve supplemental broker evidence and derived fields not supplied by this source row.
 	updated := map[string]json.RawMessage{}
 	if params.Details.Valid {

@@ -1,5 +1,5 @@
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type SVGProps } from "react";
 import type { ShareCardData } from "@/lib/shareCard";
 import { BRAND } from "@/lib/brand";
 import { downloadBlob, svgToPngBlob } from "@/lib/svgToPng";
@@ -24,8 +24,44 @@ const CARD = {
 
 const FONT = "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif";
 
+/** SVG text needs its own fit pass because the exported PNG has fixed bounds. */
+function FitText({
+  width,
+  compactValue,
+  children,
+  fontSize = 24,
+  ...props
+}: SVGProps<SVGTextElement> & { width: number; compactValue?: string; children: string }) {
+  const ref = useRef<SVGTextElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.textContent = children;
+    el.setAttribute("font-size", String(fontSize));
+    if (el.getComputedTextLength() > width && compactValue) el.textContent = compactValue;
+    const length = el.getComputedTextLength();
+    if (length > width) {
+      const size = Math.max(16, (Number(fontSize) * width) / length);
+      el.setAttribute("font-size", String(size));
+      // Fixed images abbreviate extreme names at a readable size; SVG keeps the full title.
+      const text = el.textContent ?? "";
+      let end = text.length;
+      while (el.getComputedTextLength() > width && end > 1)
+        el.textContent = text.slice(0, --end) + "…";
+    }
+  }, [children, compactValue, fontSize, width]);
+  return (
+    <g>
+      <title>{children}</title>
+      <text {...props} ref={ref} fontSize={fontSize}>
+        {children}
+      </text>
+    </g>
+  );
+}
+
 function chipWidth(text: string): number {
-  return text.length * 15 + 40;
+  return Math.min(510, text.length * 15 + 40);
 }
 
 function Chip({ x, y, text, color }: { x: number; y: number; text: string; color: string }) {
@@ -33,7 +69,8 @@ function Chip({ x, y, text, color }: { x: number; y: number; text: string; color
   return (
     <g>
       <rect x={x} y={y} width={w} height={46} rx={23} fill={color} opacity={0.14} />
-      <text
+      <FitText
+        width={w - 32}
         x={x + w / 2}
         y={y + 31}
         textAnchor="middle"
@@ -44,7 +81,7 @@ function Chip({ x, y, text, color }: { x: number; y: number; text: string; color
         fill={color}
       >
         {text}
-      </text>
+      </FitText>
     </g>
   );
 }
@@ -90,16 +127,26 @@ export function ShareCardSvg({
         {data.dateLabel}
       </text>
 
-      <text x={80} y={240} fontFamily={FONT} fontSize={78} fontWeight={700} fill={CARD.text}>
+      <FitText
+        width={1040}
+        x={80}
+        y={240}
+        fontFamily={FONT}
+        fontSize={78}
+        fontWeight={700}
+        fill={CARD.text}
+      >
         {data.title}
-      </text>
+      </FitText>
       {data.chips.map((chip) => {
         const x = chipX;
         chipX += chipWidth(chip.text) + 14;
         return <Chip key={chip.text} x={x} y={272} text={chip.text} color={card[chip.tone]} />;
       })}
 
-      <text
+      <FitText
+        width={1040}
+        compactValue={data.hero.compactValue}
         x={80}
         y={470}
         fontFamily={FONT}
@@ -109,8 +156,9 @@ export function ShareCardSvg({
         style={{ fontVariantNumeric: "tabular-nums" }}
       >
         {data.hero.value}
-      </text>
-      <text
+      </FitText>
+      <FitText
+        width={1040}
         x={80}
         y={512}
         fontFamily={FONT}
@@ -120,11 +168,12 @@ export function ShareCardSvg({
         fill={CARD.muted}
       >
         {data.hero.label.toUpperCase()}
-      </text>
+      </FitText>
 
       {data.stats.map((s, i) => (
         <g key={s.label}>
-          <text
+          <FitText
+            width={290}
             x={80 + i * 310}
             y={562}
             fontFamily={FONT}
@@ -134,8 +183,10 @@ export function ShareCardSvg({
             fill={CARD.muted}
           >
             {s.label.toUpperCase()}
-          </text>
-          <text
+          </FitText>
+          <FitText
+            width={290}
+            compactValue={s.compactValue}
             x={80 + i * 310}
             y={600}
             fontFamily={FONT}
@@ -145,7 +196,7 @@ export function ShareCardSvg({
             style={{ fontVariantNumeric: "tabular-nums" }}
           >
             {s.value}
-          </text>
+          </FitText>
         </g>
       ))}
     </svg>

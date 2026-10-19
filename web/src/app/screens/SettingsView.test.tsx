@@ -4,10 +4,11 @@ import userEvent from "@testing-library/user-event";
 import type { ComponentProps } from "react";
 import { describe, expect, it, beforeEach, vi } from "vite-plus/test";
 import { Toaster } from "@/components/Toaster";
+import { loadLocale } from "@/i18n";
 import { ThemeProvider } from "@/components/theme-provider";
 import type { Account, CashTransaction, Tag } from "@/lib/api/types";
 import { renderWithI18n } from "@/test/renderWithI18n";
-import { DEFAULT_LOCALE, setStoredLocale } from "@/lib/locale";
+import { DEFAULT_LOCALE, LOCALES, setStoredLocale } from "@/lib/locale";
 import { SettingsView } from "./SettingsView";
 
 function renderSettings(props: ComponentProps<typeof SettingsView>) {
@@ -38,10 +39,21 @@ vi.mock("../../lib/api/trades", () => ({
 }));
 vi.mock("../../lib/api/analytics", () => ({
   analyticsApi: {
+    summary: vi.fn(async (request: { target_currency: string }) => ({
+      currency: request.target_currency,
+      net_pnl: 999,
+      realized_pnl: request.target_currency === "JPY" ? 200 : 20,
+    })),
     equityCurve: vi.fn<
       (request: { account_id: string; target_currency: string }) => Promise<unknown>
     >(async (request) => ({
       currency: request.target_currency,
+      points: [
+        {
+          at: "2026-10-01T00:00:00Z",
+          equity: 10000.01 + (request.target_currency === "JPY" ? 200 : 20),
+        },
+      ],
       cash_transactions: [
         { account_id: request.account_id, amount: 10000, currency: request.target_currency },
       ],
@@ -489,7 +501,7 @@ describe("SettingsView", () => {
     expect(
       screen.getByText(/Self-hosted trading journal, portfolio analytics/i),
     ).toBeInTheDocument();
-    expect(screen.getByText("sinhong2011 and contributors")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "sinhong2011" })).toBeInTheDocument();
     expect(screen.getByText("Backend API")).toBeInTheDocument();
     expect(screen.getByText("Updates")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /check for updates/i })).toBeInTheDocument();
@@ -513,4 +525,57 @@ describe("SettingsView", () => {
       "https://github.com/HoesenBruce/TradeLens/blob/main/NOTICE",
     );
   });
+});
+
+describe("About attribution", () => {
+  it.each([
+    [
+      "en",
+      "TradeLens is based on TraderMemos, originally developed by sinhong2011 and contributors.",
+      "Original upstream author",
+    ],
+    ["zh-CN", "TradeLens 基于 TraderMemos，由 sinhong2011 和贡献者最初开发。", "原始上游作者"],
+    ["zh-HK", "TradeLens 基於 TraderMemos，由 sinhong2011 及貢獻者最初開發。", "原始上游作者"],
+    [
+      "ja",
+      "TradeLens は、sinhong2011 とコントリビューターが開発した TraderMemos を基にしています。",
+      "上流プロジェクトの原作者",
+    ],
+    [
+      "ko",
+      "TradeLens는 sinhong2011 및 기여자가 개발한 TraderMemos를 기반으로 합니다.",
+      "업스트림 원저자",
+    ],
+  ] as const)(
+    "preserves a single linked credit in %s",
+    async (locale, attribution, removedTitle) => {
+      await loadLocale(locale);
+      window.location.hash = "#about";
+      const { container } = renderSettings({ ...baseProps });
+      const author = await screen.findByRole("link", { name: "sinhong2011" });
+      expect(author.parentElement).toHaveTextContent(attribution);
+      expect(container.textContent?.match(/sinhong2011/g)).toHaveLength(1);
+      expect(screen.queryByText(removedTitle)).not.toBeInTheDocument();
+      expect(container.querySelector('img[src="https://github.com/sinhong2011.png"]')).toBeNull();
+      for (const href of [
+        "https://github.com/sinhong2011",
+        "https://github.com/sinhong2011/TraderMemos",
+        "https://github.com/HoesenBruce/TradeLens/blob/main/LICENSE",
+        "https://github.com/HoesenBruce/TradeLens/blob/main/NOTICE",
+      ]) {
+        const link = container.querySelector(`a[href="${href}"]`);
+        expect(link).toHaveAttribute("target", "_blank");
+        expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      }
+      const user = userEvent.setup();
+      author.focus();
+      await user.tab();
+      expect(
+        container.querySelector('a[href="https://github.com/sinhong2011/TraderMemos"]'),
+      ).toHaveFocus();
+      await user.tab({ shift: true });
+      expect(author).toHaveFocus();
+      expect(document.documentElement).toHaveAttribute("lang", LOCALES[locale].intl);
+    },
+  );
 });

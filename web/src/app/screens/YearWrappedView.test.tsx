@@ -74,7 +74,9 @@ describe("YearWrappedView", () => {
     expect(screen.getByText("ES · 2026-03-10")).toBeInTheDocument();
     // Busiest month callout (label also appears under the month bars)
     expect(screen.getAllByText("Mar").length).toBeGreaterThanOrEqual(2);
-    expect(screen.getByText(/Busiest month:/)).toBeInTheDocument();
+    expect(screen.getByText(/Busiest month:/)).toHaveTextContent("+$200.00");
+    // Trans retains its numeric placeholders when the amount becomes responsive.
+    expect(screen.getAllByText("+$50.00").length).toBeGreaterThan(0);
   });
 
   it("shows an empty state when the year has no closed trades", () => {

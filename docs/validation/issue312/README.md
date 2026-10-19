@@ -77,3 +77,19 @@ Screenshots: [preview](preview.jpg), [applied](applied.jpg),
 [conflict](conflict.jpg), [review read-back](review-readback.jpg).
 
 Mobile not validated; outside current fork scope. No merge, release or deployment.
+
+## Integration refresh — 2026-10-19
+
+Merged main `27077d96` into the PR branch, retaining SBI settlement evidence
+in the shared first-import/reprocess serializer. Added a regression for retained
+and revised SBI source evidence. All Go tests and vet passed; related Web/i18n
+tests passed (4 files / 19 tests), as did Web check (existing warnings), TypeScript
+and production build.
+
+Codex built-in browser used the merged tree with a disposable SQLite API on 8097
+and Web on 5197. Synthetic CSV imports exercised preview, cancel, re-entry,
+conflict rejection, apply/read-back and repeat preview. A simulated previous-parser
+fee omission produced 2 changed executions / 1 changed trade; apply restored total
+fees to 5 and net P&L to 95, then repeat preview showed zero changes. The original
+full acceptance above remains the evidence for upload mapping, review associations
+and unavailable-source cases. PostgreSQL was not rerun in this refresh.

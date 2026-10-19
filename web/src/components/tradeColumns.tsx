@@ -1,3 +1,6 @@
+import { finalTradeResult } from "@/lib/tradeFilters";
+import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
+import { TradeHoldingDuration } from "./TradeHoldingDuration";
 import { tradeStatusLabel } from "@/lib/tradeLabels";
 import { tradeQuantities, quantityText } from "@/lib/tradeQuantities";
 import { TradeQuantityCell } from "./TradeQuantities";
@@ -5,7 +8,7 @@ import { t as tr } from "@lingui/core/macro";
 import type { ColumnDef, ColumnPinningState } from "@/lib/table";
 import type { Trade } from "@/lib/api/types";
 
-import { fmtDateTime, fmtDuration, fmtTradeDay } from "@/lib/format";
+import { fmtDateTime, fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { resolveTradeDirection } from "@/lib/tradeDirection";
 import { DirCell } from "./DirCell";
@@ -47,10 +50,18 @@ export function tradeNotional(qty: number, price: number, instrumentType: string
   return qty * price * tradeNotionalMultiplier(instrumentType);
 }
 
-export function tradeStatus(t: Trade): {
+export function tradeStatus(
+  t: Trade,
+  finalOnly = false,
+): {
   label: "WIN" | "LOSS" | "OPEN" | "BE" | "N/A";
   tone: PillTone;
 } {
+  if (finalOnly) {
+    const result = finalTradeResult(t);
+    if (result == null) return { label: "OPEN", tone: "accent" };
+    if (result === "unknown") return { label: "N/A", tone: "muted" };
+  }
   if (t.status === "open" && t.net_pnl == null) return { label: "OPEN", tone: "accent" };
   if (t.net_pnl == null && t.accounting_warning) return { label: "N/A", tone: "muted" };
   if (t.net_pnl != null && t.net_pnl > 0) return { label: "WIN", tone: "pos" };
@@ -113,6 +124,7 @@ export function tradeColumns(
   currency: string,
   actions: TradeRowActions,
   fxRate = 1,
+  finalResults = false,
 ): ColumnDef<Trade>[] {
   return [
     {
@@ -133,15 +145,17 @@ export function tradeColumns(
     },
     {
       id: "status",
-      accessorFn: (row) => tradeStatus(row).label,
-      header: tr({ id: "trades.status", message: "Status" }),
+      accessorFn: (row) => tradeStatus(row, finalResults).label,
+      header: finalResults
+        ? tr({ id: "trades.tradeResult", message: "Trade result" })
+        : tr({ id: "trades.status", message: "Status" }),
       meta: {
         label: tr({ id: "trades.status", message: "Status" }),
         headerTitle: tr({ id: "trades.tradeResult", message: "Trade result" }),
         minWidth: 64,
       },
       cell: (i) => {
-        const s = tradeStatus(i.row.original);
+        const s = tradeStatus(i.row.original, finalResults);
         const titles: Record<typeof s.label, string> = {
           WIN: tr({ id: "trades.win", message: "Win" }),
           LOSS: tr({ id: "trades.loss", message: "Loss" }),
@@ -194,18 +208,25 @@ export function tradeColumns(
       ),
     },
     {
+      accessorKey: "position_type",
+      header: tr({ id: "trades.positionType", message: "Type" }),
+      meta: { label: tr({ id: "trades.positionType", message: "Type" }), minWidth: 96 },
+      cell: (i) => <TradePositionTypeBadge trade={i.row.original} />,
+    },
+    {
       id: "qty_opened",
       accessorFn: (row) => tradeQuantities(row).open_qty ?? undefined,
       sortUndefined: "last",
-      header: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }),
+      header: tr({ id: "trades.closeProgress", message: "Close progress" }),
       meta: {
         align: "right",
-        label: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }),
+        metric: "quantities",
+        label: tr({ id: "trades.closeProgress", message: "Close progress" }),
         headerTitle: tr({
-          id: "trades.quantitySortHint",
-          message: "Remaining open quantity / cumulative entry quantity; sorted by open quantity",
+          id: "trades.closeProgressSortHint",
+          message: "Closed versus remaining quantity; sorted by remaining quantity",
         }),
-        minWidth: 80,
+        minWidth: 180,
       },
       cell: (i) => <TradeQuantityCell trade={i.row.original} />,
       sortFn: (a, b, id) => {
@@ -315,6 +336,7 @@ export function tradeColumns(
       header: tr({ id: "trades.position", message: "Position" }),
       meta: {
         align: "right",
+        metric: "quantities",
         label: tr({ id: "trades.position", message: "Position" }),
         headerTitle: tr({ id: "trades.openPosition", message: "Position still open" }),
         minWidth: 80,
@@ -337,26 +359,19 @@ export function tradeColumns(
       header: tr({ id: "trades.hold", message: "Hold" }),
       meta: {
         align: "right",
+        metric: "holding",
         label: tr({ id: "trades.hold", message: "Hold" }),
         headerTitle: tr({ id: "trades.holdHint", message: "Time in trade" }),
         minWidth: 56,
       },
-      cell: (i) => {
-        const v = i.getValue<number | null>();
-        return v == null || v <= 0 ? (
-          muted("-")
-        ) : (
-          <span className="tabular-nums text-muted-foreground" title={fmtDuration(v)}>
-            {fmtDuration(v)}
-          </span>
-        );
-      },
+      cell: (i) => <TradeHoldingDuration trade={i.row.original} />,
     },
     {
       accessorKey: "fees_total",
       header: tr({ id: "trades.fees", message: "Fees" }),
       meta: {
         align: "right",
+        metric: "fees",
         label: tr({ id: "trades.fees", message: "Fees" }),
         headerTitle: tr({ id: "trades.feesHint", message: "Total fees and commissions" }),
         minWidth: 72,
@@ -368,6 +383,7 @@ export function tradeColumns(
       header: tr({ id: "trades.pnl", message: "P&L" }),
       meta: {
         align: "right",
+        metric: "pnl",
         label: tr({ id: "trades.pnl", message: "P&L" }),
         headerTitle: tr({ id: "trades.netPnl", message: "Net P&L" }),
         minWidth: 112,
@@ -383,6 +399,7 @@ export function tradeColumns(
       header: tr({ id: "trades.pnlPercent", message: "P&L %" }),
       meta: {
         align: "right",
+        metric: "tradeReturn",
         label: tr({ id: "trades.pnlPercent", message: "P&L %" }),
         headerTitle: tr({
           id: "trades.pnlPercentHint",
@@ -432,6 +449,7 @@ export function tradeColumns(
       header: "R",
       meta: {
         align: "right",
+        metric: "realizedR",
         label: "R",
         headerTitle: tr({
           id: "trades.riskHint",
@@ -516,10 +534,10 @@ export function tradeSortColumns(): { id: string; label: string }[] {
     { id: "opened_at", label: tr({ id: "trades.createdAt", message: "Created At" }) },
     { id: "closed_at", label: tr({ id: "trades.closeDate", message: "Close date" }) },
     { id: "symbol", label: tr({ id: "trades.symbol", message: "Symbol" }) },
-    { id: "status", label: tr({ id: "trades.status", message: "Status" }) },
+    { id: "status", label: tr({ id: "trades.tradeResult", message: "Trade result" }) },
     { id: "direction", label: tr({ id: "trades.direction", message: "Direction" }) },
     { id: "instrument_type", label: tr({ id: "trades.market", message: "Market" }) },
-    { id: "qty_opened", label: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }) },
+    { id: "qty_opened", label: tr({ id: "trades.closeProgress", message: "Close progress" }) },
     { id: "avg_entry_price", label: tr({ id: "trades.entry", message: "Entry" }) },
     { id: "avg_exit_price", label: tr({ id: "trades.exit", message: "Exit" }) },
     { id: "ent_tot", label: tr({ id: "trades.entryTotal", message: "Entry total" }) },
@@ -538,10 +556,10 @@ export function tradeViewColumns(): { id: string; label: string }[] {
   return [
     { id: "symbol", label: tr({ id: "trades.symbol", message: "Symbol" }) },
     { id: "stock_name", label: tr({ id: "trades.stockName", message: "Stock Name" }) },
-    { id: "status", label: tr({ id: "trades.status", message: "Status" }) },
+    { id: "status", label: tr({ id: "trades.tradeResult", message: "Trade result" }) },
     { id: "direction", label: tr({ id: "trades.direction", message: "Direction" }) },
     { id: "instrument_type", label: tr({ id: "trades.market", message: "Market" }) },
-    { id: "qty_opened", label: tr({ id: "trades.openEntryQty", message: "Open Qty / Entry Qty" }) },
+    { id: "qty_opened", label: tr({ id: "trades.closeProgress", message: "Close progress" }) },
     { id: "avg_entry_price", label: tr({ id: "trades.entry", message: "Entry" }) },
     { id: "avg_exit_price", label: tr({ id: "trades.exit", message: "Exit" }) },
     { id: "ent_tot", label: tr({ id: "trades.entryTotal", message: "Entry total" }) },

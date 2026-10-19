@@ -1,3 +1,7 @@
+import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
+import { Money, ResponsiveValue } from "./ResponsiveValue";
+import { MetricHelp } from "./MetricHelp";
+import { fmtTradeHolding } from "@/lib/tradeHolding";
 import { useLingui } from "@lingui/react";
 import { t } from "@lingui/core/macro";
 import { directionLabel, tradeStatusLabel } from "@/lib/tradeLabels";
@@ -6,7 +10,7 @@ import type { Trade } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
 import { TradeQuantityCell } from "./TradeQuantities";
 
-import { fmtDuration, fmtTradeDay } from "@/lib/format";
+import { fmtTradeDay } from "@/lib/format";
 import { intlLocale } from "@/lib/locale";
 import { resolveTradeDirection } from "@/lib/tradeDirection";
 import { DIR_TONE_CLASS } from "./DirCell";
@@ -23,6 +27,7 @@ const MAX_TAGS = 2;
 export interface TradeMetaPart {
   key: string;
   text: string;
+  description?: string;
   /** Dropped when the row itself gets narrow (~<19rem), not the viewport. */
   optional?: boolean;
 }
@@ -45,11 +50,12 @@ function listDate(iso: string | null): string {
 
 /** Footer line: market, date, hold, R multiple. */
 export function tradeListMeta(trade: Trade, showDate = false): TradeMetaPart[] {
-  const hold = fmtDuration(trade.time_in_trade_secs);
+  const hold = fmtTradeHolding(trade);
   const r = tradeRMultiple(trade);
   const parts: TradeMetaPart[] = [{ key: "market", text: marketLabel(trade.instrument_type) }];
   if (showDate) parts.push({ key: "date", text: listDate(trade.opened_at) });
-  if (hold !== "-") parts.push({ key: "hold", text: hold, optional: true });
+  if (hold.value !== "—")
+    parts.push({ key: "hold", text: hold.value, description: hold.description });
   if (r != null) parts.push({ key: "r", text: `${r.toFixed(2)}R`, optional: true });
   return parts;
 }
@@ -62,6 +68,7 @@ export interface TradeListItemProps {
   onSelect: (trade: Trade) => void;
   /** Prefix the meta line with the trade date. Off for single-day lists. */
   showDate?: boolean;
+  finalResults?: boolean;
   className?: string;
 }
 
@@ -77,11 +84,12 @@ export function TradeListItem({
   fxRate = 1,
   onSelect,
   showDate = false,
+  finalResults = false,
   className,
 }: TradeListItemProps) {
   useLingui();
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
-  const status = tradeStatus(trade);
+  const { fmtMoney, fmtMoneyCompact } = useMoneyFormatters();
+  const status = tradeStatus(trade, finalResults);
   const dir = resolveTradeDirection({
     direction: trade.direction,
     instrumentType: trade.instrument_type,
@@ -134,11 +142,11 @@ export function TradeListItem({
       }}
     >
       <ItemContent className="gap-1">
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
           {/* Wraps rather than truncates: the symbol is the row's identity, so on
               a cramped row it takes a second line instead of being clipped. */}
-          <ItemTitle className="min-w-0 flex-wrap gap-x-1.5 gap-y-1 text-base">
-            <span className="mr-0.5 font-semibold tracking-tight text-foreground">
+          <ItemTitle className="min-w-0 max-w-full flex-[1_1_140px] flex-wrap gap-x-1.5 gap-y-1 text-base">
+            <span className="mr-0.5 min-w-0 max-w-full wrap-anywhere font-semibold tracking-tight text-foreground">
               {trade.symbol}
             </span>
             {trade.stock_name ? (
@@ -164,6 +172,7 @@ export function TradeListItem({
                 </>
               ) : null}
             </Pill>
+            <TradePositionTypeBadge trade={trade} />
             <Pill
               className="shrink-0"
               tone={status.tone}
@@ -178,21 +187,32 @@ export function TradeListItem({
           </ItemTitle>
           <span
             className={cn(
-              "shrink-0 text-[17px] leading-snug font-semibold tabular-nums whitespace-nowrap",
+              "flex min-w-0 max-w-full flex-[1_1_140px] items-baseline text-[17px] leading-snug font-semibold tabular-nums",
               "@max-[19rem]/trade-row:text-[14px]",
               trade.net_pnl != null ? pnlColor(trade.net_pnl) : "text-muted-foreground",
             )}
           >
-            {trade.net_pnl != null
-              ? fmtSignedMoney(trade.net_pnl * fxRate, currency, intlLocale())
-              : "—"}
+            {trade.net_pnl != null ? (
+              <Money value={trade.net_pnl * fxRate} currency={currency} signed disclosure={false} />
+            ) : (
+              "—"
+            )}
+            <MetricHelp metric="pnl" />
           </span>
         </div>
 
-        <div className="flex items-baseline justify-between gap-3 text-[14px] tabular-nums">
-          <span className="min-w-0 truncate text-foreground">
-            <TradeQuantityCell trade={trade} />
-            {` @ ${trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, intlLocale()) : "—"}${trade.avg_exit_price != null ? ` → ${fmtMoney(trade.avg_exit_price * fxRate, currency, intlLocale())}` : ""}`}
+        <div className="flex min-w-0 items-start">
+          <TradeQuantityCell trade={trade} />
+          <MetricHelp metric="quantities" />
+        </div>
+        <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-3 text-[14px] tabular-nums">
+          <span className="min-w-0 max-w-full flex-1 text-foreground">
+            <ResponsiveValue
+              disclosure={false}
+              value={`@ ${trade.qty_opened > 0 ? fmtMoney(trade.avg_entry_price * fxRate, currency, intlLocale()) : "—"}${trade.avg_exit_price != null ? ` → ${fmtMoney(trade.avg_exit_price * fxRate, currency, intlLocale())}` : ""}`}
+              compactValue={`@ ${trade.qty_opened > 0 ? fmtMoneyCompact(trade.avg_entry_price * fxRate, currency, intlLocale()) : "—"}${trade.avg_exit_price != null ? ` → ${fmtMoneyCompact(trade.avg_exit_price * fxRate, currency, intlLocale())}` : ""}`}
+            />
+
             {/* Position size, so an option's P&L reconciles: 1 contract moving
                 $0.18 is $18, not $0.18, and the ×100 is invisible otherwise. */}
             <span className="text-muted-foreground @max-[19rem]/trade-row:hidden">
@@ -208,27 +228,34 @@ export function TradeListItem({
           {trade.return_pct != null && (
             // Muted, not a second green/red: one colored number per row keeps
             // the P&L the thing the eye lands on.
-            <span className="shrink-0 whitespace-nowrap text-muted-foreground">
+            <span className="min-w-0 max-w-full wrap-anywhere text-muted-foreground">
               {trade.return_pct >= 0 ? "+" : ""}
-              {trade.return_pct.toFixed(2)}%
+              {trade.return_pct.toFixed(2)}%<MetricHelp metric="tradeReturn" />
             </span>
           )}
         </div>
 
-        <div className="flex items-center justify-between gap-2">
-          <p className="m-0 min-w-0 truncate text-[12px] leading-normal text-muted-foreground">
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+          <p className="m-0 min-w-0 max-w-full wrap-anywhere text-[12px] leading-normal text-muted-foreground">
             {tradeListMeta(trade, showDate).map((part, i) => (
               <span
                 key={part.key}
+                title={part.description}
+                aria-label={part.description ? `${part.text}. ${part.description}` : undefined}
                 className={part.optional ? "@max-[19rem]/trade-row:hidden" : undefined}
               >
                 {i > 0 ? <span aria-hidden> · </span> : null}
                 {part.text}
+                {part.key === "hold" ? (
+                  <MetricHelp metric="holding" />
+                ) : part.key === "r" ? (
+                  <MetricHelp metric="realizedR" />
+                ) : null}
               </span>
             ))}
           </p>
           {(shownTags.length > 0 || hasNotes) && (
-            <span className="flex shrink-0 items-center gap-1.5 @max-[19rem]/trade-row:hidden">
+            <span className="flex min-w-0 max-w-full flex-wrap items-center gap-1.5 @max-[19rem]/trade-row:hidden">
               {hasNotes ? (
                 <NotebookPen
                   size={13}
@@ -238,7 +265,12 @@ export function TradeListItem({
                 />
               ) : null}
               {shownTags.map((t) => (
-                <Pill key={t.id} tone={t.kind === "mistake" ? "neg" : "muted"} title={t.name}>
+                <Pill
+                  key={t.id}
+                  tone={t.kind === "mistake" ? "neg" : "muted"}
+                  title={t.name}
+                  className="min-w-0 max-w-full whitespace-normal wrap-anywhere"
+                >
                   {t.name}
                 </Pill>
               ))}

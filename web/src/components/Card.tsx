@@ -26,7 +26,11 @@ export function Card({
 
   return (
     <section
-      className={cn("flex flex-col rounded-lg bg-card", fill && "min-h-0 flex-1", className)}
+      className={cn(
+        "flex min-w-0 max-w-full flex-col rounded-lg bg-card",
+        fill && "min-h-0 flex-1",
+        className,
+      )}
     >
       {hasHeader ? (
         <header className="flex flex-wrap items-start justify-between gap-4 px-4 py-3">
@@ -49,6 +53,7 @@ export function Card({
       ) : null}
       <div
         className={cn(
+          "min-w-0 max-w-full wrap-anywhere",
           fill && "flex min-h-0 flex-1 flex-col",
           !flush && (hasHeader ? "px-4 pb-4" : "p-4"),
         )}

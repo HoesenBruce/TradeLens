@@ -1,3 +1,6 @@
+import { ResponsiveValue } from "./ResponsiveValue";
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { useRouterState } from "@tanstack/react-router";
 import { Eye, EyeOff, Search, X } from "lucide-react";
@@ -37,11 +40,33 @@ import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 const AUTO_VALUE = "__auto__";
 
-function HeaderStat({ label, value }: { label: string; value: string }) {
+function HeaderStat({
+  label,
+  metric,
+  value,
+  compactValue,
+}: {
+  label: string;
+  metric?: MetricId;
+  value: string;
+  compactValue?: string;
+}) {
   return (
-    <span className="inline-flex items-baseline gap-1 text-[13px] font-medium whitespace-nowrap">
-      <span className="uppercase tracking-widest text-muted-foreground">{label}</span>
-      <RollingNumber value={value} className="font-semibold text-foreground" />
+    <span className="inline-flex min-w-0 items-baseline gap-1 text-[13px] font-medium">
+      <span className="uppercase tracking-widest text-muted-foreground">
+        {label}
+        {metric && <MetricHelp metric={metric} />}
+      </span>
+      {compactValue ? (
+        <ResponsiveValue
+          value={value}
+          compactValue={compactValue}
+          className="font-semibold text-foreground"
+          renderValue={(v) => <RollingNumber value={v} />}
+        />
+      ) : (
+        <RollingNumber value={value} className="font-semibold text-foreground" />
+      )}
     </span>
   );
 }
@@ -285,7 +310,7 @@ function PrivacyToggle() {
 }
 
 export function HeaderBar() {
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
+  const { fmtMoney, fmtSignedMoney, fmtMoneyCompact, fmtSignedMoneyCompact } = useMoneyFormatters();
   const { t: tr } = useLinguiMacro();
 
   const paletteLabel = useHotkeyLabel("palette");
@@ -374,32 +399,45 @@ export function HeaderBar() {
         <div
           className={cn(
             heroPnlClass(stats.netPnl),
-            "flex shrink-0 items-baseline gap-1.5 text-[17px] sm:text-[20px]",
+            "flex min-w-0 flex-1 flex-wrap items-baseline gap-1.5 text-[17px] sm:text-[20px]",
             fxLoading && "opacity-60",
           )}
         >
-          <RollingNumber
+          <ResponsiveValue
+            className="min-w-0 flex-[1_1_100px]"
+            renderValue={(v) => <RollingNumber value={v} />}
+            compactValue={
+              summaryQ.isError || !summary
+                ? "—"
+                : fmtSignedMoneyCompact(toDisplay(stats.netPnl), currency, intlLocale())
+            }
             value={
               summaryQ.isError || !summary
                 ? "—"
                 : fmtSignedMoney(toDisplay(stats.netPnl), currency, intlLocale())
             }
           />
+          <MetricHelp metric="accountPerformance" />
           {fundingReady && stats.netPnlPct != null ? (
-            <RollingNumber
-              value={fmtSignedPct(stats.netPnlPct, intlLocale())}
-              className="text-[12px] font-medium opacity-70 sm:text-[13px]"
-            />
+            <span className="inline-flex min-w-0 max-w-full flex-wrap items-baseline gap-0.5 wrap-anywhere">
+              <RollingNumber
+                value={fmtSignedPct(stats.netPnlPct, intlLocale())}
+                className="text-[12px] font-medium opacity-70 sm:text-[13px]"
+              />
+              <MetricHelp metric="accountReturn" />
+            </span>
           ) : null}
         </div>
         <div aria-hidden className="hidden h-7 w-px shrink-0 bg-border md:block" />
         <div className="hidden min-w-0 items-center gap-2 md:flex">
           <HeaderStat
+            metric="winRate"
             label={tr({ id: "market.wr", message: "WR" })}
             value={summary ? fmtPct(summary.win_rate, intlLocale()) : "—"}
           />
           <StatDivider />
           <HeaderStat
+            metric="profitFactor"
             label={tr({ id: "market.pf", message: "PF" })}
             value={summary?.profit_factor != null ? summary.profit_factor.toFixed(2) : "—"}
           />
@@ -407,6 +445,9 @@ export function HeaderBar() {
           <HeaderStat
             label={tr({ id: "market.balance", message: "Balance" })}
             value={fundingReady ? fmtMoney(toDisplay(stats.cash), currency, intlLocale()) : "—"}
+            compactValue={
+              fundingReady ? fmtMoneyCompact(toDisplay(stats.cash), currency, intlLocale()) : "—"
+            }
           />
         </div>
         {symbols?.length && !onTradesPage ? (

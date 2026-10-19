@@ -1,7 +1,9 @@
+import { Money } from "@/components/ResponsiveValue";
+import { MetricHelp } from "@/components/MetricHelp";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Pencil, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Card } from "@/components/Card";
 import { EmptyState } from "@/components/EmptyState";
 import { FlexSyncButton } from "@/components/FlexSyncModal";
@@ -27,6 +29,7 @@ import {
 } from "@/lib/hooks/useAccounts";
 import { useCash } from "@/lib/hooks/useCash";
 import { useFlexSync, useRunFlexSync } from "@/lib/hooks/useFlexSync";
+import { useSummary } from "@/lib/hooks/useAnalytics";
 import { useTrades } from "@/lib/hooks/useTrades";
 import { intlLocale } from "@/lib/locale";
 import { ClearTradesButton, DeleteAccountButton } from "@/app/screens/settings/settings-ui";
@@ -37,9 +40,16 @@ import {
   POPULAR_BROKERS,
   primaryAccountId,
 } from "@/app/screens/settings/settings-sections";
-import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
-function Stat({ label, value, className }: { label: string; value: string; className?: string }) {
+function Stat({
+  label,
+  value,
+  className,
+}: {
+  label: string;
+  value: ReactNode;
+  className?: string;
+}) {
   return (
     <div className="min-w-0">
       <p className="m-0 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
@@ -47,7 +57,7 @@ function Stat({ label, value, className }: { label: string; value: string; class
       </p>
       <p
         className={cn(
-          "m-0 mt-1 text-[16px] font-semibold tabular-nums tracking-tight text-foreground",
+          "m-0 mt-1 min-w-0 max-w-full wrap-anywhere text-[16px] font-semibold tabular-nums tracking-tight text-foreground",
           className,
         )}
       >
@@ -371,13 +381,13 @@ export function AccountDetailView({
 }) {
   const { t: tr } = useLinguiMacro();
 
-  const { fmtMoney, fmtSignedMoney } = useMoneyFormatters();
   const toast = useToastManager();
   const accountsQ = useAccounts();
   const accounts = accountsQ.data ?? [];
   const account = accounts.find((a) => a.id === accountId);
   const tradesQ = useTrades({ account_id: accountId });
   const cashQ = useCash({ account_id: accountId });
+  const summaryQ = useSummary({ account_id: accountId });
   const deleteAccount = useDeleteAccount();
   const clearTrades = useClearAccountTrades();
 
@@ -400,7 +410,8 @@ export function AccountDetailView({
   }
 
   const trades = tradesQ.data ?? [];
-  const netPnl = trades.reduce((sum, t) => sum + (t.net_pnl ?? 0), 0);
+  const monetaryReady = !summaryQ.isError && summaryQ.data != null;
+  const netPnl = summaryQ.data?.realized_pnl ?? summaryQ.data?.net_pnl ?? 0;
   const tradeCount = trades.length;
   const balance = ledgerBalance(account, cashQ.data ?? []);
   const equity = balance + netPnl;
@@ -408,7 +419,7 @@ export function AccountDetailView({
   const isPrimary = account.id === primaryAccountId(accounts);
   const isOnlyAccount = accounts.length === 1;
   const pnlPct =
-    balance !== 0
+    monetaryReady && balance !== 0
       ? (netPnl / balance).toLocaleString(locale, {
           style: "percent",
           maximumFractionDigits: 2,
@@ -462,15 +473,38 @@ export function AccountDetailView({
         <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
           <Stat
             label={tr({ id: "accounts.deposited", message: "Deposited" })}
-            value={fmtMoney(balance, account.base_currency, locale)}
+            value={<Money value={balance} currency={account.base_currency} locale={locale} />}
           />
           <Stat
             label={tr({ id: "accounts.equity", message: "Equity" })}
-            value={fmtMoney(equity, account.base_currency, locale)}
+            value={
+              monetaryReady ? (
+                <Money value={equity} currency={account.base_currency} locale={locale} />
+              ) : (
+                "—"
+              )
+            }
           />
           <Stat
             label={tr({ id: "accounts.realized", message: "Realized P&L" })}
-            value={`${fmtSignedMoney(netPnl, account.base_currency, locale)}${pnlPct ? ` (${pnlPct})` : ""}`}
+            value={
+              <span className="flex min-w-0 max-w-full flex-wrap items-baseline gap-x-1">
+                <span className="flex w-full min-w-0 items-baseline">
+                  {monetaryReady ? (
+                    <Money value={netPnl} currency={account.base_currency} locale={locale} signed />
+                  ) : (
+                    "—"
+                  )}
+                  <MetricHelp metric="accountRealizedPnl" />
+                </span>
+                {pnlPct && (
+                  <span className="inline-flex items-baseline">
+                    ({pnlPct})
+                    <MetricHelp metric="accountDetailReturn" />
+                  </span>
+                )}
+              </span>
+            }
             className={
               netPnl > 0 ? "text-profit" : netPnl < 0 ? "text-loss" : "text-muted-foreground"
             }

@@ -18,7 +18,7 @@ import { Skeleton } from "./Skeleton";
 import { pnlColor } from "./theme-tokens";
 import { TradeListItem } from "./TradeListItem";
 import { WinLossRecord } from "./WinLossRecord";
-import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
+import { Money } from "./ResponsiveValue";
 
 function formatDayTitle(isoDate: string): string {
   return new Date(`${isoDate}T00:00:00`).toLocaleDateString(intlLocale(), {
@@ -65,7 +65,6 @@ function DaySummary({
   currency: string;
   fxRate?: number;
 }) {
-  const { fmtSignedMoney } = useMoneyFormatters();
   const locale = intlLocale();
   const summary = summarizeDayTrades(trades);
   const winRateLabel = summary.winRate != null ? `${(summary.winRate * 100).toFixed(1)}%` : null;
@@ -78,7 +77,7 @@ function DaySummary({
           pnlColor(summary.pnl),
         )}
       >
-        {fmtSignedMoney(summary.pnl * fxRate, currency, locale)}
+        <Money value={summary.pnl * fxRate} currency={currency} locale={locale} signed />
       </p>
       <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[13px] tabular-nums text-muted-foreground">
         <span>

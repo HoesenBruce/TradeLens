@@ -2,13 +2,17 @@ package api
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"math"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v5"
 	"github.com/tradermemos/api/internal/auth"
+	"github.com/tradermemos/api/internal/marketdata"
 	"github.com/tradermemos/api/internal/store"
+	"github.com/tradermemos/api/internal/trades"
 )
 
 func (s *Server) tradeRoutes(g *echo.Group) {
@@ -81,11 +85,18 @@ func (s *Server) handleListTrades(c *echo.Context) error {
 	if err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not load option contracts", nil)
 	}
+	holdingFills := make(map[string][]store.ListOptionExecutionDetailsForUserRow)
+	for _, f := range optionRows {
+		holdingFills[f.TradeID] = append(holdingFills[f.TradeID], f)
+	}
+	now := time.Now()
 	rightByTrade := optionRightsByTrade(optionRows)
 	stockNameByTrade := stockNamesByTrade(optionRows)
 	out := make([]tradeDTO, 0, len(rows))
 	for _, t := range rows {
 		dto := toTradeDTO(t, tagsByTrade[t.ID])
+		dto.Holding = tradeHolding(t, holdingFills[t.ID], now)
+		dto.PositionType = tradePositionType(holdingFills[t.ID])
 		if right, ok := rightByTrade[t.ID]; ok {
 			dto.OptionRight = &right
 		}
@@ -412,13 +423,44 @@ func (s *Server) handleDeleteTrade(c *echo.Context) error {
 }
 
 type regroupReq struct {
-	AccountID string `json:"account_id"`
+	AccountID    string `json:"account_id"`
+	Preview      bool   `json:"preview"`
+	PreviewToken string `json:"preview_token"`
 }
 
 func (s *Server) handleRegroup(c *echo.Context) error {
 	var in regroupReq
 	if err := c.Bind(&in); err != nil || in.AccountID == "" {
 		return Fail(http.StatusBadRequest, "bad_request", "account_id is required", nil)
+	}
+	ctx, uid := c.Request().Context(), auth.UserID(c)
+	rows, err := s.deps.Store.ListExecutionsForAccount(ctx, store.ListExecutionsForAccountParams{UserID: uid, AccountID: in.AccountID})
+	if err != nil {
+		return Fail(http.StatusInternalServerError, "internal", "could not load executions", nil)
+	}
+	sbi := false
+	for _, row := range rows {
+		var d struct {
+			Lot string `json:"lot"`
+		}
+		_ = json.Unmarshal([]byte(row.Details.String), &d)
+		sbi = sbi || d.Lot == "sbi:cash" || d.Lot == "sbi:margin-long" || d.Lot == "sbi:margin-short"
+	}
+	if sbi || in.Preview || in.PreviewToken != "" {
+		var bindBars func(store.Querier) trades.BarsGetter
+		if s.deps.Trades.GetBars != nil && s.deps.Market != nil {
+			bindBars = func(q store.Querier) trades.BarsGetter {
+				return marketdata.NewService(q, s.deps.Market.Provider).GetBars
+			}
+		}
+		review, err := s.deps.Trades.ReviewedRegroup(ctx, uid, in.AccountID, in.Preview, in.PreviewToken, bindBars)
+		if errors.Is(err, trades.ErrRegroupReview) {
+			return Fail(http.StatusConflict, "conflict", err.Error(), nil)
+		}
+		if err != nil {
+			return Fail(http.StatusInternalServerError, "internal", "could not preview or apply regroup", nil)
+		}
+		return c.JSON(http.StatusOK, review)
 	}
 	if err := s.deps.Trades.Regroup(c.Request().Context(), auth.UserID(c), in.AccountID); err != nil {
 		return Fail(http.StatusInternalServerError, "internal", "could not regroup", nil)

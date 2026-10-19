@@ -125,7 +125,7 @@ export function PositionSizeModal({
           <p className="m-0 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
             {localize({ id: "calculator.suggestedSize", message: "Suggested size" })}
           </p>
-          <p className="mt-1 mb-0 text-2xl tabular-nums text-foreground">
+          <p className="mt-1 mb-0 min-w-0 max-w-full wrap-anywhere text-2xl tabular-nums text-foreground">
             {result.qty} {localize({ id: "calculator.shares", message: "shares" })}
           </p>
           <p className="mt-1 mb-0 text-[11px] text-muted-foreground">

@@ -1,3 +1,4 @@
+import { ReportsMoney } from "./ReportsDisplayContext";
 import { t as localize } from "@lingui/core/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { Card } from "./Card";
@@ -65,17 +66,19 @@ export function ReportsExecutionGrade({ breakdown, loading, error }: ReportsExec
             const barColor = pnl > 0 ? "var(--profit)" : pnl < 0 ? "var(--loss)" : "var(--flat)";
             return (
               <li key={g.key} data-testid="exec-grade-row" className="flex flex-col gap-1">
-                <div className="flex items-baseline justify-between gap-3">
+                <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-3">
                   <span data-testid="exec-grade-label" className="text-sm font-semibold text-fg">
                     {label}
                   </span>
-                  <span className="flex items-baseline gap-3">
+                  <span className="flex min-w-0 max-w-full flex-wrap items-baseline gap-3">
                     <span className="text-[10px] tracking-wide text-flat">
                       {localize({ id: "accounts.pf", message: "PF" })}{" "}
                       {pfText(g.summary.profit_factor)}
                     </span>
-                    <span className={`text-sm font-semibold tabular-nums ${pnlColor(pnl)}`}>
-                      {money.format(pnl)}
+                    <span
+                      className={`min-w-0 max-w-full flex-[1_1_100px] text-sm font-semibold tabular-nums ${pnlColor(pnl)}`}
+                    >
+                      <ReportsMoney value={pnl} />
                     </span>
                   </span>
                 </div>

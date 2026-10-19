@@ -1,7 +1,7 @@
 import { useLingui } from "@lingui/react";
 import { t as tr } from "@lingui/core/macro";
 import type { SortingState, VisibilityState } from "@/lib/table";
-import { List, Plus, Search, Upload } from "lucide-react";
+import { Download, List, Plus, Search, Upload } from "lucide-react";
 import { tradeQuantities } from "@/lib/tradeQuantities";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -19,6 +19,7 @@ import {
   tradeSortColumns,
   tradeViewColumns,
   tradeColumns,
+  tradeStatus,
 } from "@/components/tradeColumns";
 import { TradeListItem } from "@/components/TradeListItem";
 import { TradesFilters } from "@/components/TradesFilters";
@@ -34,8 +35,11 @@ import type {
   MarketFacetOption,
   SymbolFacetOption,
   TagFacetOption,
-  TradeStatusFilter,
+  TradeFilter,
 } from "@/lib/tradeFilters";
+
+import { tradesCSV } from "@/lib/tradeExport";
+import { triggerDownload } from "@/lib/api/exports";
 
 const DEFAULT_PAGE_SIZE = 20;
 /**
@@ -60,6 +64,11 @@ export function sortTrades(trades: Trade[], sorting: SortingState): Trade[] {
   if (sorting.length === 0) return trades;
   return [...trades].sort((rowA, rowB) => {
     for (const { id, desc } of sorting) {
+      if (id === "status") {
+        const cmp = tradeStatus(rowA, true).label.localeCompare(tradeStatus(rowB, true).label);
+        if (cmp !== 0) return desc ? -cmp : cmp;
+        continue;
+      }
       if (id === "qty_opened" || id === "pos") {
         const a = tradeQuantities(rowA).open_qty,
           b = tradeQuantities(rowB).open_qty;
@@ -89,17 +98,14 @@ export interface TradesViewProps {
   totalInScope: number;
   scopeLoading: boolean;
   hasNarrowingFilters: boolean;
-  tradeStatus?: TradeStatusFilter;
-  onToggleTradeStatus?: (filter: TradeStatusFilter) => void;
+  conditions: TradeFilter[];
+  onConditionsChange: (filters: TradeFilter[]) => void;
   tagIds?: string[];
   tagOptions?: TagFacetOption[];
-  onTagIdsChange?: (ids?: string[]) => void;
   markets?: string[];
   marketOptions?: MarketFacetOption[];
-  onMarketsChange?: (markets?: string[]) => void;
   symbolOptions?: SymbolFacetOption[];
   onClearFilters: () => void;
-  onClearStatus?: () => void;
   onImport: () => void;
   onNewTrade: () => void;
   onRetry?: () => void;
@@ -118,17 +124,14 @@ export function TradesView({
   totalInScope,
   scopeLoading,
   hasNarrowingFilters,
-  tradeStatus,
-  onToggleTradeStatus,
+  conditions,
+  onConditionsChange,
   tagIds,
   tagOptions,
-  onTagIdsChange,
   markets,
   marketOptions,
-  onMarketsChange,
   symbolOptions = [],
   onClearFilters,
-  onClearStatus,
   onImport,
   onNewTrade,
   onRetry,
@@ -182,7 +185,7 @@ export function TradesView({
 
   useEffect(() => {
     setPage(1);
-  }, [symbols, tradeStatus, tagIds, markets, pageSize]);
+  }, [symbols, conditions, tagIds, markets, pageSize]);
 
   const filteredEmpty = !loading && !error && trades.length === 0;
   const trulyEmpty = filteredEmpty && !scopeLoading && totalInScope === 0 && !hasNarrowingFilters;
@@ -203,18 +206,11 @@ export function TradesView({
         <TradesFilters
           triggerClassName={toolbarControlClass}
           iconOnly={compact}
-          symbols={symbols}
-          onSymbolsChange={onSymbolsChange}
           symbolOptions={symbolOptions}
-          tradeStatus={tradeStatus}
-          onToggleTradeStatus={onToggleTradeStatus}
-          onClearStatus={onClearStatus}
-          markets={markets}
+          conditions={conditions}
+          onConditionsChange={onConditionsChange}
           marketOptions={marketOptions}
-          onMarketsChange={onMarketsChange}
-          tagIds={tagIds}
           tagOptions={tagOptions}
-          onTagIdsChange={onTagIdsChange}
         />
         <CreatedAtFilter className={toolbarControlClass} iconOnly={compact} />
         {hasNarrowingFilters ? (
@@ -231,6 +227,22 @@ export function TradesView({
       </div>
 
       <div className="flex flex-1 items-center gap-2 md:flex-none md:justify-end">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className={toolbarControlClass}
+          disabled={loading || error || sortedTrades.length === 0}
+          onClick={() =>
+            triggerDownload(
+              new Blob([tradesCSV(sortedTrades)], { type: "text/csv;charset=utf-8" }),
+              "tradelens-filtered-trades.csv",
+            )
+          }
+        >
+          <Download size={14} />
+          {tr({ id: "trades.exportFiltered", message: "Export filtered trades" })}
+        </Button>
         <SortList
           iconOnly={compact}
           sorting={sorting}
@@ -306,9 +318,8 @@ export function TradesView({
       <EmptyState
         title={tr({ id: "trades.noMatches", message: "No trades match these filters" })}
         hint={tr({
-          id: "trades.noMatchesHint",
-          message:
-            "Widen the date range, clear symbol/status/market/tags filters, or switch account.",
+          id: "trades.noMatchesFilterHint",
+          message: "Widen the date range, clear trade filters, or switch account.",
         })}
         icon={<Search size={36} strokeWidth={1.5} />}
         actions={
@@ -345,6 +356,7 @@ export function TradesView({
                 currency={displayCurrency}
                 fxRate={fxRate}
                 showDate
+                finalResults
                 onSelect={(t) => onSelectTrade(t.id)}
               />
             </div>
@@ -364,6 +376,7 @@ export function TradesView({
             onDeleted: onDeleted ? (t) => onDeleted(t.id) : undefined,
           },
           fxRate,
+          true,
         )}
         data={pageTrades}
         onRowClick={(t) => onSelectTrade(t.id)}

@@ -1,0 +1,19 @@
+{
+  "platform": {
+    "architecture": "arm64",
+    "os": "linux"
+  },
+  "labels": {
+    "maintainer": "NGINX Docker Maintainers <docker-maint@nginx.com>",
+    "org.opencontainers.image.created": "2026-10-09T14:30:27.397Z",
+    "org.opencontainers.image.description": "Self-hosted trading journal with broker imports, trade analytics, and portfolio analysis.",
+    "org.opencontainers.image.licenses": "AGPL-3.0",
+    "org.opencontainers.image.revision": "58f6a3c1a80cc195c3650fd48ef71680684ccb50",
+    "org.opencontainers.image.source": "https://github.com/HoesenBruce/TradeLens",
+    "org.opencontainers.image.title": "TradeLens web",
+    "org.opencontainers.image.url": "https://github.com/HoesenBruce/TradeLens",
+    "org.opencontainers.image.version": "0.3.1"
+  },
+  "user": "root",
+  "root_digest": "sha256:109fa4d1b7e09f749b75bd298a74d4b971b08c0a57bf16e77112048de43a701f"
+}

@@ -27,12 +27,18 @@ export function TradeShareModal({
 
   const { i18n } = useLingui();
   const locale = i18n.locale;
-  const { fmtSignedMoney } = useMoneyFormatters();
+  const { fmtSignedMoney, fmtSignedMoneyCompact } = useMoneyFormatters();
   const [showAmounts, setShowAmounts] = useState(false);
 
   const data = useMemo(
-    () => buildTradeShareCard(trade, insights, { showAmounts, locale, fmtSignedMoney }),
-    [trade, insights, showAmounts, locale, fmtSignedMoney],
+    () =>
+      buildTradeShareCard(trade, insights, {
+        showAmounts,
+        locale,
+        fmtSignedMoney,
+        fmtSignedMoneyCompact,
+      }),
+    [trade, insights, showAmounts, locale, fmtSignedMoney, fmtSignedMoneyCompact],
   );
 
   return (

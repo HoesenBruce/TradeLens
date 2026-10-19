@@ -342,7 +342,7 @@ func (g *Generic) parseRow(row map[string]string) (ParsedExecution, error) {
 		return p, fmt.Errorf("invalid date %q", g.col(row, "executed_at"))
 	}
 	p.ExecutedAt = ts
-	if g.dateOnlyOffset != 0 && isDateOnly(dateValue) {
+	if isDateOnly(dateValue) {
 		p.ExecutedAt = p.ExecutedAt.Add(g.dateOnlyOffset)
 		p.SourceTimePrecision = "date"
 	}

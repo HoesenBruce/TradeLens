@@ -1,3 +1,5 @@
+import { ResponsiveValue } from "./ResponsiveValue";
+import { MetricHelp } from "./MetricHelp";
 import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
@@ -34,7 +36,7 @@ export function ReportsPeriodReturns({
 }: ReportsPeriodReturnsProps) {
   const { t: localize } = useSecondaryLingui();
 
-  const { fmtSignedMoney } = useMoneyFormatters();
+  const { fmtSignedMoney, fmtSignedMoneyCompact } = useMoneyFormatters();
   useDisplayTimePrefs();
   const locale = intlLocale();
   const money = useReportsMoney();
@@ -49,6 +51,9 @@ export function ReportsPeriodReturns({
     usePct
       ? fmtSignedPct(raw / denominator, locale)
       : fmtSignedMoney(raw * fxRate, currency, locale);
+
+  const formatCompact = (raw: number) =>
+    usePct ? format(raw) : fmtSignedMoneyCompact(raw * fxRate, currency, locale);
 
   const cells: { label: string; hint: string; value: number }[] = [
     {
@@ -78,6 +83,7 @@ export function ReportsPeriodReturns({
       <div className="mb-2 flex items-center justify-between gap-2">
         <p className="text-[10px] font-semibold tracking-wide text-chart-3">
           {localize({ id: "reports.periodReturns", message: "Period returns" })}
+          <MetricHelp metric="periodReturns" />
         </p>
         {pctEnabled ? (
           <SegmentedControl
@@ -102,7 +108,7 @@ export function ReportsPeriodReturns({
                 pnlColor(c.value),
               )}
             >
-              {format(c.value)}
+              <ResponsiveValue value={format(c.value)} compactValue={formatCompact(c.value)} />
             </p>
             <p className="text-[10px] text-muted-foreground">{c.hint}</p>
           </div>

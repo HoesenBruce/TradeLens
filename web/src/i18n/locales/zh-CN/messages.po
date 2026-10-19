@@ -6813,7 +6813,7 @@ msgstr "收益 / 亏损"
 #. js-lingui-explicit-id
 #: src/app/screens/ImportView.tsx:746
 msgid "imports.sbiEnrichmentHint"
-msgstr "SBI 信用实现损益仅补充匹配到的平仓成交。确认前请核对每一行；不会新增成交。"
+msgstr "SBI 现货及信用税前已实现损益仅补充匹配的平仓成交。确认前请逐行检查并解决冲突及歧义；不会新增成交。"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ImportView.tsx:890
@@ -6868,7 +6868,7 @@ msgstr "此补充批次无法单独回滚"
 #. js-lingui-explicit-id
 #: src/app/screens/settings/import-history.tsx:159
 msgid "accounts.sbiMarginPnLSource"
-msgstr "SBI 信用实现损益"
+msgstr "SBI 已实现损益（税前）"
 
 #. js-lingui-explicit-id
 #: src/components/charts/TradeChart.tsx:305
@@ -12742,3 +12742,610 @@ msgstr "重新处理"
 #: src/app/screens/settings/import-history.tsx:61
 msgid "imports.reprocessTitle"
 msgstr "按当前规则重新处理"
+
+#. js-lingui-explicit-id
+msgid "trades.holdingUnknown"
+msgstr "持有时长未知。"
+
+#. js-lingui-explicit-id
+msgid "trades.calendarHoldingHint"
+msgstr "按 {zone} 当地日期计算的日历天数；无法确定精确耗时。"
+
+#. js-lingui-explicit-id
+msgid "trades.elapsedHoldingHint"
+msgstr "根据精确时间戳计算的实际耗时。"
+
+#. js-lingui-explicit-id
+msgid "trades.holdingOngoing"
+msgstr "{value} · 持有中"
+
+#. js-lingui-explicit-id
+msgid "trades.ongoingPosition"
+msgstr "尚未平仓"
+
+
+#. js-lingui-explicit-id
+msgid "trades.closedQuantitySummary"
+msgstr "已平仓 {closed} / {entry}"
+
+#. js-lingui-explicit-id
+msgid "trades.remainingQuantitySummary"
+msgstr "剩余 {remaining}（{remainingPct}）"
+
+#. js-lingui-explicit-id
+msgid "trades.closedPercent"
+msgstr "已平仓 {pct}"
+
+#. js-lingui-explicit-id
+msgid "trades.closeProgress"
+msgstr "平仓进度"
+
+#. js-lingui-explicit-id
+msgid "trades.closeProgressSortHint"
+msgstr "已平仓与剩余数量；按剩余数量排序"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:33
+msgid "metric.close"
+msgstr "关闭说明"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:27
+msgid "metric.formula"
+msgstr "计算方式"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:20
+msgid "metric.holding.caveat"
+msgstr "SBI或CSV成交只有日期时，无法确定日内持仓时间。缺少开仓历史、精度未知或边界无效时显示 —。市场时区和精度由API提供；查看者时区不会改变日历天数。"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:19
+msgid "metric.holding.unit"
+msgstr "天、小时和分钟；仅日期记录使用日历天数。"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:15
+msgid "metric.help"
+msgstr "解释{title}"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:16
+msgid "metric.holding.title"
+msgstr "持仓时长"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:29
+msgid "metric.caveat"
+msgstr "限制"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:18
+msgid "metric.holding.formula"
+msgstr "起止时间精确时：显示实际经过时间并四舍五入到分钟（不足一分钟显示 <1m）。任一端只有日期时：按交易所当地日历日期相减；同日为0天，次日为1天。"
+
+#. js-lingui-explicit-id
+#: src/lib/metrics/definitions.ts:17
+msgid "metric.holding.definition"
+msgstr "从记录的开仓到平仓的时间；未平仓交易计算到现在。"
+
+#. js-lingui-explicit-id
+#: src/components/MetricHelp.tsx:28
+msgid "metric.unit"
+msgstr "单位"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.title"
+msgstr "开仓、平仓与剩余数量"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.definition"
+msgstr "trade.quantities 提供累计开仓数量及当前以标的单位计的剩余敞口。"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.formula"
+msgstr "平仓量 = 开仓量 − 剩余量。平仓进度 = 平仓量 ÷ 开仓量 × 100，限制在0–100%；剩余比例 = 100 − 平仓进度。"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.unit"
+msgstr "股、合约或标的单位；%。"
+
+#. js-lingui-explicit-id
+msgid "metric.quantities.caveat"
+msgstr "多空均用正数量。反转属于独立交易周期；已确认公司行动使用归一化单位。缺少开仓历史、单位未确认或库存不一致时显示 —，不是零。这不是当前市值。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.title"
+msgstr "已实现毛盈亏与净盈亏"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.definition"
+msgstr "记录的扣费前后交易结果；不含未实现盯市盈亏和单独关联的股息。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.formula"
+msgstr "默认已平仓交易：带方向符号的（加权平仓价 − 加权开仓价）× 平仓量 × 乘数；净盈亏 = 毛盈亏 − 费用。统计汇总符合条件的已平仓金额。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.unit"
+msgstr "交易盈亏币种；金额通常先四舍五入至两位小数再显示。"
+
+#. js-lingui-explicit-id
+msgid "metric.pnl.caveat"
+msgstr "SBI沿用结算／平均成本路径，部分平仓可能有已实现盈亏。默认未平仓交易在全部平仓前盈亏不可用；统计排除未平仓交易。成本或结算证据缺失保持 —。含股息总盈亏为独立指标。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.title"
+msgstr "费用与佣金"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.definition"
+msgstr "分配到交易或符合条件的已平仓样本的已记录费用。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.formula"
+msgstr "交易费用 = 分配的成交费用 + 佣金。详情费用占比 = 费用 ÷ 毛盈亏绝对值；毛盈亏为零或未知时不显示。报表费用比例 = 总费用 ÷（盈利净额 + 亏损净额绝对值）× 100；分母为零时为0%。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.unit"
+msgstr "盈亏币种；费用占比为%。"
+
+#. js-lingui-explicit-id
+msgid "metric.fees.caveat"
+msgstr "反转费用沿用现有分配方式；SBI按适用规则使用已记录的结算费用。不估算来源缺失的收费。报表比例基于净盈亏绝对变动，不是成交额或投入资本。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.title"
+msgstr "交易盈亏比例"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.definition"
+msgstr "API提供的已实现盈亏相对开仓基数的比例，不是相对账户资本。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.formula"
+msgstr "默认已平仓交易：净盈亏 ÷（未舍入加权开仓价 × 平仓量 × 乘数）× 100。SBI结算覆盖路径使用已记录平均开仓价 × 开仓量。结果四舍五入到两位小数。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.unit"
+msgstr "%。"
+
+#. js-lingui-explicit-id
+msgid "metric.tradeReturn.caveat"
+msgstr "分母沿用券商路径，不是剩余敞口。默认基数为零返回0；盈亏不可用保持 —。显示价格已舍入，未必可精确复算比例。不含股息。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.title"
+msgstr "计划收益／风险"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.definition"
+msgstr "记录的目标价与止损价的价格距离比，未扣费。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.formula"
+msgstr "多头：（目标 − 开仓价）÷（开仓价 − 止损）。空头：（开仓价 − 目标）÷（止损 − 开仓价）。开仓价为记录的平均开仓价。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.unit"
+msgstr "比率，显示为收益:1。"
+
+#. js-lingui-explicit-id
+msgid "metric.plannedRR.caveat"
+msgstr "必须同时有目标和止损，且风险距离为正，否则为 —。数量、乘数、费用和日志初始风险不参与计算。目标在不利方向时收益可为负。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.title"
+msgstr "已实现R"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.definition"
+msgstr "已记录净交易盈亏相对日志初始风险的倍数。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.formula"
+msgstr "净盈亏 ÷ 初始风险。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.unit"
+msgstr "R（风险倍数），显示两位小数。"
+
+#. js-lingui-explicit-id
+msgid "metric.realizedR.caveat"
+msgstr "风险缺失、为零或盈亏不可用时为 —。列表要求正风险，详情API接受非零风险。不含股息。它与目标／止损的计划收益风险比不同。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.title"
+msgstr "胜率"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.definition"
+msgstr "符合条件的已平仓交易中，扣费后净盈亏为正的比例。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.formula"
+msgstr "盈利笔数 ÷（盈利 + 亏损 + 持平笔数）× 100。每笔交易计一次，不按成交次数。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.unit"
+msgstr "%；API保存0到1的比例。"
+
+#. js-lingui-explicit-id
+msgid "metric.winRate.caveat"
+msgstr "持平计入分母。未平仓／部分平仓和盈亏未知的交易不进入统计，即使部分已实现盈亏可用。没有符合条件的交易时为0%。样本受账户／日期筛选影响。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.title"
+msgstr "平均盈利／亏损比"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.definition"
+msgstr "已平仓样本中盈利与亏损净额的相对大小。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.formula"
+msgstr "均值模式：正净盈亏均值 ÷ 负净盈亏绝对值均值。中位数模式使用对应中位数。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.unit"
+msgstr "倍数，显示×。"
+
+#. js-lingui-explicit-id
+msgid "metric.payoff.caveat"
+msgstr "API先将均值／中位数舍入至两位小数再求比。无亏损但盈利为正显示∞；两者都无或比率为零显示 —。持平不属于任一组。净／毛显示切换不改变此比率分组。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.title"
+msgstr "盈利因子"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.definition"
+msgstr "符合条件的已平仓交易中，盈利净额相对亏损净额绝对值的比率。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.formula"
+msgstr "正净盈亏之和 ÷ 负净盈亏之和的绝对值，四舍五入至两位小数。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.unit"
+msgstr "无币种比率。"
+
+#. js-lingui-explicit-id
+msgid "metric.profitFactor.caveat"
+msgstr "API字段虽叫gross_profit／gross_loss，实际是扣费后净额分组。无亏损时API返回0而非无穷大；顶部显示0.00，部分卡片显示 —。持平不增加任何一组。净／毛显示模式不改变汇总盈利因子。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.title"
+msgstr "最大回撤金额"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.definition"
+msgstr "API权益曲线上记录的最大峰谷跌幅。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.formula"
+msgstr "权益从零开始，按时间累加资金流水和交易已实现损益。SBI 使用逐笔平仓事件（含部分平仓），其他券商保留已完成组口径。最大回撤为运行峰值减权益的最大值。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.unit"
+msgstr "曲线币种；卡片用负金额显示跌幅。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdown.caveat"
+msgstr "这是现金账本权益，不是单纯累计盈亏，也不是盯市账户价值。出金可能产生回撤。初始余额已作为账本入金，不重复加入。无正回撤时卡片显示 —；报表百分比模式将金额除以资金分母。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.title"
+msgstr "权益回撤比例"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.definition"
+msgstr "相对所选图表窗口内权益历史峰值的跌幅。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.formula"
+msgstr "每个可见点：（权益 − 可见范围历史峰值）÷ 峰值 × 100；峰值不大于0时为0。最大回撤取最负值，当前回撤取末值。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.unit"
+msgstr "%，为零或负，显示两位小数。"
+
+#. js-lingui-explicit-id
+msgid "metric.drawdownPct.caveat"
+msgstr "切换范围后，峰值从首个可见点重新计算。现金流影响此API权益曲线，不含未实现市值。空序列内部为0，面板显示无数据。这不是汇总回撤金额除以入金资本。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.title"
+msgstr "收益比例"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.definition"
+msgstr "顶部已实现交易净盈亏相对所选账户带符号现金账本总额的比例。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.formula"
+msgstr "筛选范围内的交易已实现损益 ÷ 所选账户带符号资金账本合计 × 100；原有资金分母保持不变。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.unit"
+msgstr "%。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountReturn.caveat"
+msgstr "资金 ≤ 0 或所需数据不可用时隐藏。包含符合条件的 SBI 部分平仓；其他券商保留已完成组口径。不做时间加权，不含未实现损益。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.title"
+msgstr "报表盈亏显示"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.definition"
+msgstr "报表主值随净／毛及币种／百分比切换；底层统计仍按净盈亏分组。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.formula"
+msgstr "净值 = 汇总净盈亏。毛主值 = 已存毛盈亏，旧API回退到净额 + 费用。百分比 = 所选金额 ÷ 正的带符号现金账本总额 × 100。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.unit"
+msgstr "归一化显示币种或%。"
+
+#. js-lingui-explicit-id
+msgid "metric.reportPnl.caveat"
+msgstr "辅助Gross行当前为盈利净额 + 亏损净额绝对值，不是扣费前主值；费用比例也用该绝对净额基数。资金不为正时禁用百分比。不增加时间／现金流加权或未实现盈亏；样本受筛选和汇率可用性限制。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.title"
+msgstr "期间收益"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.definition"
+msgstr "每个有交易期间的平均记录盈亏，以及线性年化速率。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.formula"
+msgstr "所选净／毛盈亏总额 ÷ 有交易的日、周或月数。年化 = 总额 × 365 ÷ 首尾均含的日历天跨度（至少1天）。百分比 = 结果 ÷ 正的现金账本总额 × 100。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.unit"
+msgstr "显示币种或%；周从星期一开始。"
+
+#. js-lingui-explicit-id
+msgid "metric.periodReturns.caveat"
+msgstr "只用净盈亏已知的已平仓交易，平仓日期遵循显示时钟；均值只含有交易的期间。无已平仓交易时隐藏。不是复利、时间加权或资金加权收益；短样本年化可能极大。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.title"
+msgstr "滚动胜率"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.definition"
+msgstr "按平仓时间排序，最近所选交易笔数的胜率。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.formula"
+msgstr "最近N笔符合条件的交易中正净盈亏笔数 ÷ N × 100；窗口填满后每笔生成一个点。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.unit"
+msgstr "%；N为所选交易笔数。"
+
+#. js-lingui-explicit-id
+msgid "metric.rollingWinRate.caveat"
+msgstr "持平占一个分母位置；排除未平仓和净盈亏未知交易。少于N笔时无点。净／毛显示切换不改变该净额序列。图表范围还可能限制输入。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.title"
+msgstr "指标演变"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.definition"
+msgstr "所选范围内每个日／周／月分组截至当时的累计交易指标。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.formula"
+msgstr "胜率 = 所选盈亏中正值笔数 ÷ 累计交易数。盈利因子 = 正值总额 ÷ 负值总额绝对值（无亏损为0）。盈亏为所选净／毛盈亏累计和。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.unit"
+msgstr "%；比率；显示币种或资金分母百分比。"
+
+#. js-lingui-explicit-id
+msgid "metric.evolution.caveat"
+msgstr "不同于汇总胜率／盈利因子，此图按所选净／毛盈亏分类。持平保留在胜率分母；排除净额未知及未平仓交易。分组用UTC日期，周从星期一开始。累计盈亏不加入现金流和未实现价值。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.title"
+msgstr "模拟最大回撤"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.definition"
+msgstr "每条自助抽样路径中累计净盈亏最大跌幅的中位数。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.formula"
+msgstr "每条路径从0开始，重采样历史已平仓净盈亏，记录（历史峰值 − 累计盈亏）的最大值，再取所有路径的第50百分位。较差情况提示用第95百分位。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.unit"
+msgstr "显示币种；百分比模式将金额除以报表资金分母。"
+
+#. js-lingui-explicit-id
+msgid "metric.simulationDrawdown.caveat"
+msgstr "这是模拟累计盈亏，不是账户权益；不含现金流和未实现价值。即使毛显示模式也使用净结果。模拟设置和样本量影响结果；历史不足时不显示模拟。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.title"
+msgstr "账户绩效"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.definition"
+msgstr "当前顶部筛选范围内的已实现交易净盈亏。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.formula"
+msgstr "SBI 按平仓日期汇总逐笔已实现损益，包括部分平仓；其他券商保留已完成交易组口径。账户和交易筛选生效。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.unit"
+msgstr "账户／归一化显示币种。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountPerformance.caveat"
+msgstr "SBI 券商报告值为税前损益；缺少报告时可能采用已标注的估算。排除未实现损益和资金流水；交易数、胜率和盈利因子仍基于已完成交易组。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.title"
+msgstr "账户已实现盈亏"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.definition"
+msgstr "本账户交易已实现损益，包括符合条件的 SBI 部分平仓。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.formula"
+msgstr "SBI 逐笔平仓结果仅计一次；其他券商保留已完成组金额。使用本账户完整历史，不受顶部筛选影响。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.unit"
+msgstr "账户基础币种。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountRealizedPnl.caveat"
+msgstr "SBI 报告损益为税前，回退估算会标注；不凭空补造缺失结果。分红、税款流水和出入金单独处理，不含未实现市值变动。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.title"
+msgstr "账户收益比例"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.definition"
+msgstr "账户详情中的已实现盈亏相对该账户带符号现金账本总额的比例。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.formula"
+msgstr "本账户交易已实现损益 ÷ 本账户带符号资金账本合计 × 100；原有分母不变。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.unit"
+msgstr "%。"
+
+#. js-lingui-explicit-id
+msgid "metric.accountDetailReturn.caveat"
+msgstr "仅在分母为零时隐藏；负资金合计可能反转百分比符号。包含符合条件的 SBI 部分平仓，不做时间加权，不含未实现损益。"
+
+#. js-lingui-explicit-id
+msgid "accounts.closedGross"
+msgstr "已完成组毛盈亏"
+
+#. js-lingui-explicit-id
+msgid "accounts.closedFees"
+msgstr "已完成组费用"
+
+#. js-lingui-explicit-id
+msgid "accounts.moneyPopulation"
+msgstr "交易金额包含 SBI 部分平仓；统计指标使用已完成交易组。"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:10
+msgid "trades.positionCash"
+msgstr "现物"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:12
+msgid "trades.positionMargin"
+msgstr "信用"
+
+#. js-lingui-explicit-id
+#: src/components/TradePositionTypeBadge.tsx:13
+msgid "trades.positionTypeUnknown"
+msgstr "类型未知"
+
+#. js-lingui-explicit-id
+#: src/components/tradeColumns.tsx
+msgid "trades.positionType"
+msgstr "类型"
+
+#. js-lingui-explicit-id
+msgid "trades.duration1Day"
+msgstr "自然日：1天"
+
+#. js-lingui-explicit-id
+msgid "trades.duration2To5Days"
+msgstr "自然日：2–5天"
+
+#. js-lingui-explicit-id
+msgid "trades.duration6Plus"
+msgstr "自然日：6天及以上"
+
+#. js-lingui-explicit-id
+msgid "trades.durationSameDay"
+msgstr "自然日：同日"
+
+#. js-lingui-explicit-id
+msgid "trades.durationFilterHint"
+msgstr "精确时长区间使用精确时间戳；自然日区间仅使用日期精度记录，按市场时区计算。持仓中的交易计算至当前。"
+
+#. js-lingui-explicit-id
+msgid "trades.duration1To4"
+msgstr "精确时长：1–4小时"
+
+#. js-lingui-explicit-id
+msgid "trades.duration30To60"
+msgstr "精确时长：30–60分钟"
+
+#. js-lingui-explicit-id
+msgid "trades.duration4Plus"
+msgstr "精确时长：4小时及以上"
+
+#. js-lingui-explicit-id
+msgid "trades.duration5To30"
+msgstr "精确时长：5–30分钟"
+
+#. js-lingui-explicit-id
+msgid "trades.durationUnder5"
+msgstr "精确时长：少于5分钟"
+
+#. js-lingui-explicit-id
+msgid "trades.filterExclude"
+msgstr "排除"
+
+#. js-lingui-explicit-id
+msgid "trades.exportFiltered"
+msgstr "导出筛选交易"
+
+#. js-lingui-explicit-id
+msgid "trades.holdingDurationFilter"
+msgstr "持仓时长"
+
+#. js-lingui-explicit-id
+msgid "trades.filterInclude"
+msgstr "包含"
+
+#. js-lingui-explicit-id
+msgid "trades.filterNoOptions"
+msgstr "没有匹配的选项。"
+
+#. js-lingui-explicit-id
+msgid "trades.positionTypeFilter"
+msgstr "持仓类型"
+
+#. js-lingui-explicit-id
+msgid "trades.resultFilterHint"
+msgstr "交易结果仅包含已完成交易，排除某种结果时也适用。"
+
+#. js-lingui-explicit-id
+msgid "trades.directionUnknown"
+msgstr "方向未知"
+
+#. js-lingui-explicit-id
+msgid "trades.resultUnknown"
+msgstr "结果未知"
+
+#. js-lingui-explicit-id
+msgid "trades.noMatchesFilterHint"
+msgstr "扩大日期范围、清除交易筛选，或切换账户。"
+
+#. js-lingui-explicit-id
+msgid "trades.filterSelected"
+msgstr "项已选"

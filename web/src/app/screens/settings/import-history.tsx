@@ -268,7 +268,7 @@ export function ImportHistorySection({
                     {batch.source === "sbi_margin_pnl"
                       ? tr({
                           id: "accounts.sbiMarginPnLSource",
-                          message: "SBI margin realized P&L",
+                          message: "SBI realized P&L (pretax)",
                         })
                       : sourceLabel(batch.source)}
                   </span>

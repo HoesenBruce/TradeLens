@@ -1,3 +1,4 @@
+import { ResponsiveValue } from "@/components/ResponsiveValue";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { Link2Off } from "lucide-react";
@@ -39,11 +40,13 @@ function Eyebrow({ children }: { children: ReactNode }) {
 function StatCell({
   label,
   value,
+  compactValue,
   hint,
   tone,
 }: {
   label: string;
   value: string;
+  compactValue?: string;
   hint?: string;
   tone?: "pos" | "neg" | "muted";
 }) {
@@ -52,16 +55,24 @@ function StatCell({
       <p className="text-[11px] text-muted-foreground">{label}</p>
       <p
         className={cn(
-          "mt-1 truncate text-[20px] font-semibold leading-none tracking-[-0.02em] tabular-nums",
+          "mt-1 min-w-0 max-w-full wrap-anywhere text-[20px] font-semibold leading-none tracking-[-0.02em] tabular-nums",
           tone === "pos" && "text-profit",
           tone === "neg" && "text-loss",
           tone === "muted" && "text-muted-foreground",
           !tone && "text-foreground",
         )}
       >
-        {value}
+        {compactValue != null && typeof value === "string" ? (
+          <ResponsiveValue value={value} compactValue={compactValue} />
+        ) : (
+          value
+        )}
       </p>
-      {hint ? <p className="mt-1 truncate text-[11px] text-muted-foreground">{hint}</p> : null}
+      {hint ? (
+        <p className="mt-1 min-w-0 max-w-full wrap-anywhere text-[11px] text-muted-foreground">
+          {hint}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -118,7 +129,7 @@ function ShareEquityLine({ data }: { data: PublicShareSummary }) {
 
 /** Read-only public performance page behind a share link (`/s/$token`). */
 export function PublicShareView({ token }: PublicShareViewProps) {
-  const { fmtSignedMoney } = useMoneyFormatters();
+  const { fmtSignedMoney, fmtSignedMoneyCompact } = useMoneyFormatters();
   const { data, isPending, isError } = usePublicShare(token);
   const locale = intlLocale();
 
@@ -164,6 +175,7 @@ export function PublicShareView({ token }: PublicShareViewProps) {
   const showAmounts = data.show_amounts;
   const currency = data.currency ?? "USD";
   const money = (v: number) => fmtSignedMoney(v, currency, locale);
+  const moneyCompact = (v: number) => fmtSignedMoneyCompact(v, currency, locale);
   const range =
     data.first_day && data.last_day
       ? data.first_day === data.last_day
@@ -183,13 +195,20 @@ export function PublicShareView({ token }: PublicShareViewProps) {
           <Eyebrow>{showAmounts ? t`Net P&L` : t`Win rate`}</Eyebrow>
           <p
             className={cn(
-              "mt-4 text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[52px]",
+              "mt-4 w-full min-w-0 max-w-full wrap-anywhere text-[44px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[52px]",
               showAmounts ? pnlColor(s.net_pnl ?? 0) : "text-foreground",
               showAmounts && (s.net_pnl ?? 0) > 0 && "drop-shadow-[0_0_32px_var(--profit)]",
               showAmounts && (s.net_pnl ?? 0) < 0 && "drop-shadow-[0_0_32px_var(--loss)]",
             )}
           >
-            {showAmounts ? money(s.net_pnl ?? 0) : fmtPct(s.win_rate, locale)}
+            {showAmounts ? (
+              <ResponsiveValue
+                value={money(s.net_pnl ?? 0)}
+                compactValue={moneyCompact(s.net_pnl ?? 0)}
+              />
+            ) : (
+              fmtPct(s.win_rate, locale)
+            )}
           </p>
           <p className="mt-4 text-[13px] text-muted-foreground">
             {t`${s.total_trades} trades`}
@@ -203,7 +222,7 @@ export function PublicShareView({ token }: PublicShareViewProps) {
         <ShareCard>
           <Eyebrow>{t`The edge`}</Eyebrow>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:gap-5">
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex min-w-0 flex-col items-center justify-center">
               <p className="mb-2 self-start text-[11px] text-muted-foreground">{t`Profit factor`}</p>
               <GaugeArc
                 value={pfFraction}
@@ -221,7 +240,7 @@ export function PublicShareView({ token }: PublicShareViewProps) {
               </GaugeArc>
               <p className="mt-1 text-[10px] text-muted-foreground">{t`1.0 = break-even`}</p>
             </div>
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex min-w-0 flex-col items-center justify-center">
               <p className="mb-2 self-start text-[11px] text-muted-foreground">{t`Win rate`}</p>
               <DonutRing
                 className="w-full max-w-[120px]"
@@ -248,6 +267,7 @@ export function PublicShareView({ token }: PublicShareViewProps) {
               <StatCell
                 label={t`Expectancy`}
                 value={money(s.expectancy)}
+                compactValue={moneyCompact(s.expectancy)}
                 hint={t`per trade`}
                 tone={s.expectancy >= 0 ? "pos" : "neg"}
               />
@@ -306,6 +326,7 @@ export function PublicShareView({ token }: PublicShareViewProps) {
               <StatCell
                 label={t`Best day`}
                 value={money(data.best_day_pnl)}
+                compactValue={moneyCompact(data.best_day_pnl)}
                 tone={data.best_day_pnl > 0 ? "pos" : "muted"}
               />
             ) : null}
@@ -313,6 +334,7 @@ export function PublicShareView({ token }: PublicShareViewProps) {
               <StatCell
                 label={t`Worst day`}
                 value={money(data.worst_day_pnl)}
+                compactValue={moneyCompact(data.worst_day_pnl)}
                 tone={data.worst_day_pnl < 0 ? "neg" : "muted"}
               />
             ) : null}
@@ -357,19 +379,22 @@ export function PublicShareView({ token }: PublicShareViewProps) {
               {data.top_symbols.map((sym, i) => (
                 <p
                   key={sym.symbol}
-                  className="flex items-baseline justify-between gap-3 text-[13px] tabular-nums"
+                  className="flex min-w-0 flex-wrap items-baseline justify-between gap-3 text-[13px] tabular-nums"
                 >
-                  <span className="min-w-0 truncate text-muted-foreground">
+                  <span className="min-w-0 max-w-full wrap-anywhere text-muted-foreground">
                     <span className="mr-2 font-semibold text-foreground">#{i + 1}</span>
                     {sym.symbol}
                   </span>
-                  <span className="shrink-0">
+                  <span className="min-w-0 max-w-full wrap-anywhere">
                     {t`${sym.trades} trades`}
                     {sym.pnl != null ? (
                       <>
                         {" · "}
                         <span className={cn("font-semibold", pnlColor(sym.pnl))}>
-                          {money(sym.pnl)}
+                          <ResponsiveValue
+                            value={money(sym.pnl)}
+                            compactValue={moneyCompact(sym.pnl)}
+                          />
                         </span>
                       </>
                     ) : null}

@@ -94,7 +94,7 @@ export function KellyModal({
           <p className="m-0 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
             {localize({ id: "calculator.fullKelly", message: "Full Kelly" })}
           </p>
-          <p className="mt-1 mb-0 text-2xl tabular-nums text-foreground">
+          <p className="mt-1 mb-0 min-w-0 max-w-full wrap-anywhere text-2xl tabular-nums text-foreground">
             {(kelly * 100).toFixed(1)}%
           </p>
           {kelly > 0 ? (

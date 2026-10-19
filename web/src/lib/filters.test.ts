@@ -80,3 +80,27 @@ describe("filter store", () => {
     }
   });
 });
+
+it("clears Trades-only criteria on reset and does not persist them", () => {
+  useFilters.setState({
+    tradeConditions: [
+      { id: "direction", field: "direction", operator: "is_not_any_of", values: ["short"] },
+    ],
+  });
+  expect(
+    JSON.parse(localStorage.getItem("tm_filters") ?? "{}").state?.tradeConditions,
+  ).toBeUndefined();
+  useFilters.getState().reset();
+  expect(useFilters.getState().tradeConditions).toBeUndefined();
+});
+
+it("shared symbol shortcuts replace an existing Trades exclusion", () => {
+  useFilters.setState({
+    tradeConditions: [
+      { id: "symbol", field: "symbol", operator: "is_not_any_of", values: ["AAPL"] },
+    ],
+  });
+  useFilters.getState().setSymbol("NVDA");
+  expect(useFilters.getState().symbols).toEqual(["NVDA"]);
+  expect(useFilters.getState().tradeConditions).toEqual([]);
+});

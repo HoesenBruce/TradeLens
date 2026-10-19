@@ -1,3 +1,4 @@
+import { MetricHelp } from "@/components/MetricHelp";
 import { useLingui as useLinguiRuntime } from "@lingui/react";
 import { t as localize } from "@lingui/core/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
@@ -353,6 +354,7 @@ function SummaryMetricsGrid({
                     message: ` · Max DD ${{ value0: fmtMoney(equity.max_drawdown * (equityFx.rate ?? 1), equityFx.currency, locale) }}`,
                   })
                 : null}
+              <MetricHelp metric="drawdown" />
             </BentoTitle>
           }
           expandTitle="Equity curve"
@@ -489,6 +491,7 @@ export function buildColumns(dimLabel: string): ColumnDef<BreakGroup>[] {
     },
     {
       id: "win_rate",
+      meta: { metric: "winRate" },
       accessorFn: (row) => row.summary.win_rate,
       header: localize({ id: "reports.winRate", message: "Win Rate" }),
       cell: (info) => (
@@ -499,12 +502,14 @@ export function buildColumns(dimLabel: string): ColumnDef<BreakGroup>[] {
     },
     {
       id: "net_pnl",
+      meta: { metric: "reportPnl" },
       accessorFn: (row) => row.summary.net_pnl,
       header: localize({ id: "accounts.netPnl", message: "Net P&L" }),
       cell: (info) => <PnlCell summary={info.row.original.summary} />,
     },
     {
       id: "profit_factor",
+      meta: { metric: "profitFactor" },
       accessorFn: (row) => row.summary.profit_factor,
       header: localize({ id: "reports.profitFactor", message: "Profit Factor" }),
       cell: (info) => {

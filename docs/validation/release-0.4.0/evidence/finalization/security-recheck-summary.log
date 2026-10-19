@@ -1,0 +1,107 @@
+Source: e23ccbcf702c3e99989cb755b4b3bb88179d32aa
+Scope: provider confidentiality, legacy isolation, selected cross-user routes and Review acceptance.
+All 14 top-level tests PASS; no full-suite rerun.
+Full raw log SHA256: b4284245a110488bc64cc816bdf8219700946b525a42918b6f0425a155186410
+
+=== RUN   TestSafePreservesIdentityWithoutDiagnostics
+--- PASS: TestSafePreservesIdentityWithoutDiagnostics (0.00s)
+PASS
+ok  	github.com/tradermemos/api/internal/providererrors	1.378s
+PASS
+ok  	github.com/tradermemos/api/internal/ocr	1.390s [no tests to run]
+=== RUN   TestClientSafeErrorIdentity
+--- PASS: TestClientSafeErrorIdentity (0.01s)
+=== RUN   TestClientDiagnosticFailureMatrix
+=== RUN   TestClientDiagnosticFailureMatrix/status
+=== RUN   TestClientDiagnosticFailureMatrix/body
+=== RUN   TestClientDiagnosticFailureMatrix/malformed
+=== RUN   TestClientDiagnosticFailureMatrix/transport
+=== RUN   TestClientDiagnosticFailureMatrix/timeout
+=== RUN   TestClientDiagnosticFailureMatrix/cancel
+--- PASS: TestClientDiagnosticFailureMatrix (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/status (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/body (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/malformed (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/transport (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/timeout (0.00s)
+    --- PASS: TestClientDiagnosticFailureMatrix/cancel (0.00s)
+PASS
+ok  	github.com/tradermemos/api/internal/flexsync	1.319s
+=== RUN   TestProviderNotificationFailureMatrix
+=== RUN   TestProviderNotificationFailureMatrix/status
+=== RUN   TestProviderNotificationFailureMatrix/malformed
+=== RUN   TestProviderNotificationFailureMatrix/transport
+=== RUN   TestProviderNotificationFailureMatrix/timeout
+=== RUN   TestProviderNotificationFailureMatrix/cancel
+--- PASS: TestProviderNotificationFailureMatrix (0.00s)
+    --- PASS: TestProviderNotificationFailureMatrix/status (0.00s)
+    --- PASS: TestProviderNotificationFailureMatrix/malformed (0.00s)
+    --- PASS: TestProviderNotificationFailureMatrix/transport (0.00s)
+    --- PASS: TestProviderNotificationFailureMatrix/timeout (0.00s)
+    --- PASS: TestProviderNotificationFailureMatrix/cancel (0.00s)
+PASS
+ok  	github.com/tradermemos/api/internal/alerts	1.306s
+=== RUN   TestLegacyEntryPointsFailClosed
+--- PASS: TestLegacyEntryPointsFailClosed (0.00s)
+PASS
+ok  	github.com/tradermemos/api/internal/coach	1.195s
+=== RUN   TestLegacyPersistenceCannotBypassAvailability
+--- PASS: TestLegacyPersistenceCannotBypassAvailability (0.00s)
+=== RUN   TestCoachIsolationAcrossConfigurationAndRestart
+--- PASS: TestCoachIsolationAcrossConfigurationAndRestart (0.32s)
+=== RUN   TestCoachNewInstallationAndEnvironmentCannotEnableLegacy
+=== RUN   TestCoachNewInstallationAndEnvironmentCannotEnableLegacy/false
+=== RUN   TestCoachNewInstallationAndEnvironmentCannotEnableLegacy/true
+--- PASS: TestCoachNewInstallationAndEnvironmentCannotEnableLegacy (0.23s)
+    --- PASS: TestCoachNewInstallationAndEnvironmentCannotEnableLegacy/false (0.11s)
+    --- PASS: TestCoachNewInstallationAndEnvironmentCannotEnableLegacy/true (0.12s)
+=== RUN   TestCrossUserIsolationProviderConfigurationDiagnostics
+--- PASS: TestCrossUserIsolationProviderConfigurationDiagnostics (0.36s)
+=== RUN   TestCrossUserIsolationAsyncProviderErrors
+--- PASS: TestCrossUserIsolationAsyncProviderErrors (0.28s)
+=== RUN   TestCrossUserIsolationStoredProviderErrors
+--- PASS: TestCrossUserIsolationStoredProviderErrors (0.30s)
+=== RUN   TestCrossUserIsolationProviderFailureMatrix
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/status/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/status/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/status/pat
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/embedded/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/embedded/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/embedded/pat
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/malformed/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/malformed/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/malformed/pat
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/transport/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/transport/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/transport/pat
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/timeout/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/timeout/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/timeout/pat
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/cancel/owner
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/cancel/jwt
+=== RUN   TestCrossUserIsolationProviderFailureMatrix/cancel/pat
+--- PASS: TestCrossUserIsolationProviderFailureMatrix (0.27s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/status/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/status/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/status/pat (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/embedded/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/embedded/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/embedded/pat (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/malformed/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/malformed/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/malformed/pat (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/transport/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/transport/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/transport/pat (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/timeout/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/timeout/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/timeout/pat (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/cancel/owner (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/cancel/jwt (0.00s)
+    --- PASS: TestCrossUserIsolationProviderFailureMatrix/cancel/pat (0.00s)
+=== RUN   TestReviewAcceptanceNarrowPatchPreservesRows
+--- PASS: TestReviewAcceptanceNarrowPatchPreservesRows (0.28s)
+=== RUN   TestReviewAcceptanceIsolationAndAlertPersistence
+--- PASS: TestReviewAcceptanceIsolationAndAlertPersistence (0.27s)
+PASS
+ok  	github.com/tradermemos/api/internal/api	3.650s

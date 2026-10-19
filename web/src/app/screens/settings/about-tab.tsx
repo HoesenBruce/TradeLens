@@ -14,13 +14,7 @@ import { AppLogo } from "@/components/AppLogo";
 import { BRAND } from "@/lib/brand";
 import { Pill } from "@/components/Pill";
 import { Button } from "@/components/ui/button";
-import {
-  aboutContent,
-  DEVELOPER_AVATAR,
-  DEVELOPER_GITHUB,
-  DEVELOPER_NAME,
-  REPO_URL,
-} from "@/lib/aboutContent";
+import { aboutContent, UPSTREAM_AUTHOR, UPSTREAM_AUTHOR_URL, REPO_URL } from "@/lib/aboutContent";
 import { getBaseUrl } from "@/lib/api/client";
 import { useAppUpdate } from "@/lib/appUpdate";
 import { cn } from "@/lib/cn";
@@ -154,6 +148,7 @@ export function AboutTab() {
 
   const { locale } = useLocale();
   const content = aboutContent(locale);
+  const [beforeAuthor, afterAuthor] = content.attribution.split(UPSTREAM_AUTHOR);
   const updateNotices = useDisplayPrefs((s) => s.updateNotices);
   const setUpdateNotices = useDisplayPrefs((s) => s.setUpdateNotices);
   const apiBase = getBaseUrl();
@@ -270,7 +265,16 @@ export function AboutTab() {
       >
         <AboutCard className="p-2">
           <p className="m-0 px-4 py-3.5 text-[13px] leading-relaxed text-muted-foreground">
-            {content.attribution}
+            {beforeAuthor}
+            <a
+              href={UPSTREAM_AUTHOR_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-sm underline underline-offset-4 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
+              {UPSTREAM_AUTHOR}
+            </a>
+            {afterAuthor}
           </p>
           <AboutLinkRow
             label="TraderMemos"
@@ -564,40 +568,6 @@ export function AboutTab() {
             {content.philosophy}
           </p>
           <p className="m-0 mt-3 text-[12px] text-muted-foreground">{content.licenseNote}</p>
-        </AboutCard>
-      </SettingsSection>
-
-      {/* Developer */}
-      <SettingsSection title={content.developerTitle}>
-        <AboutCard className="px-5 py-4">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <img
-                src={DEVELOPER_AVATAR}
-                alt=""
-                width={44}
-                height={44}
-                className="size-11 rounded-full bg-sidebar ring-1 ring-border/50"
-              />
-              <div>
-                <div className="text-[14px] font-semibold tracking-tight text-foreground">
-                  {DEVELOPER_NAME}
-                </div>
-                <p className="m-0 mt-0.5 text-[12px] text-muted-foreground">
-                  {content.developerRole}
-                </p>
-              </div>
-            </div>
-            <a
-              href={DEVELOPER_GITHUB}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-md bg-sidebar px-3 py-2 text-[12px] font-medium text-foreground no-underline transition-colors duration-150 hover:bg-accent hover:text-primary"
-            >
-              <Github size={14} strokeWidth={1.5} aria-hidden />
-              {content.developerGithubLabel}
-            </a>
-          </div>
         </AboutCard>
       </SettingsSection>
 

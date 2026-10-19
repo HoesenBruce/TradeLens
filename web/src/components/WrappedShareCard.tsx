@@ -25,7 +25,7 @@ export function WrappedShareModal({
 
   const { i18n } = useLingui();
   const locale = i18n.locale;
-  const { fmtSignedMoney } = useMoneyFormatters();
+  const { fmtSignedMoney, fmtSignedMoneyCompact } = useMoneyFormatters();
   const [showAmounts, setShowAmounts] = useState(false);
 
   const data = useMemo(
@@ -37,8 +37,18 @@ export function WrappedShareModal({
         fxRate,
         inProgress,
         fmtSignedMoney,
+        fmtSignedMoneyCompact,
       }),
-    [wrapped, showAmounts, currency, fxRate, inProgress, locale, fmtSignedMoney],
+    [
+      wrapped,
+      showAmounts,
+      currency,
+      fxRate,
+      inProgress,
+      locale,
+      fmtSignedMoney,
+      fmtSignedMoneyCompact,
+    ],
   );
 
   return (

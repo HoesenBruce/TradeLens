@@ -226,6 +226,14 @@ export interface TradeQuantities {
 }
 
 export interface Trade {
+  position_type?: "cash" | "margin" | "unknown";
+  holding?: {
+    kind: "elapsed" | "calendar" | "unknown";
+    seconds: number | null;
+    calendar_days: number | null;
+    time_zone: string;
+    ongoing: boolean;
+  };
   /** Authoritative normalized inventory read model; absent on older servers. */
   quantities?: TradeQuantities;
   accounting_warning?: string;
@@ -279,6 +287,9 @@ export interface TradeDetail extends Trade {
 
 // Summary matches analytics.Summary from api/internal/analytics/analytics.go
 export interface Summary {
+  /** Trading money: SBI close events (including partials) plus other closed groups. */
+  realized_pnl?: number;
+  realized_event_count?: number;
   /** Output currency from the aggregate API; absent on legacy/R responses. */
   currency?: string;
   target_currency?: string;
@@ -573,6 +584,11 @@ export interface ImportPreview {
 }
 
 export interface SBIEnrichmentRow {
+  /** Report row to repayment execution; separate from physical opening identity. */
+  match_provenance?: "exact" | "fifo_inferred" | "unresolved";
+  opening_match_provenance?: "exact" | "fifo_inferred" | "unresolved";
+  opening_allocations?: { execution_ids: string[]; quantity: number }[];
+  evidence?: Record<string, string>;
   date: string;
   symbol: string;
   transaction: string;

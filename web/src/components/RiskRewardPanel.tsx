@@ -1,40 +1,36 @@
+import type { MetricId } from "@/lib/metrics/definitions";
+import { MetricHelp } from "./MetricHelp";
 import type { TradeDetail } from "@/lib/api/types";
 
-import { intlLocale } from "@/lib/locale";
+import type { ReactNode } from "react";
+import { Money } from "./ResponsiveValue";
 import { computeRiskReward, type RiskRewardMetrics } from "@/lib/riskReward";
 import { cn } from "@/lib/cn";
 import { cardSectionLabelClass } from "./StatCell";
 import { pnlColor } from "./theme-tokens";
-import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 
 const sectionLabelClass = cn(cardSectionLabelClass, "mb-3");
 
 function StatCell({
   label,
+  metric,
   value,
   valueClassName,
 }: {
   label: string;
-  value: string;
+  metric?: MetricId;
+  value: ReactNode;
   valueClassName?: string;
 }) {
   return (
-    <div className="flex flex-col gap-0.5">
+    <div className="flex min-w-0 max-w-full flex-col gap-0.5 wrap-anywhere">
       <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
+        {metric && <MetricHelp metric={metric} />}
       </span>
       <span className={cn("text-sm tabular-nums text-foreground", valueClassName)}>{value}</span>
     </div>
   );
-}
-
-function formatMoneyOrDash(
-  fmtMoney: (v: number, currency: string, locale: string) => string,
-  v: number | null,
-  currency: string,
-): string {
-  if (v == null) return "-";
-  return fmtMoney(v, currency, intlLocale());
 }
 
 export interface RiskRewardPanelProps {
@@ -51,24 +47,24 @@ export function RiskRewardPanel({
   className,
   hideWhenEmpty = false,
 }: RiskRewardPanelProps) {
-  const { fmtMoney } = useMoneyFormatters();
   const m = metrics ?? computeRiskReward(trade);
   const currency = trade.pnl_currency;
 
   const maxProfitValue =
-    m.maxProfit != null
-      ? formatMoneyOrDash(fmtMoney, m.maxProfit, currency)
-      : m.target != null
-        ? "∞"
-        : null;
+    m.maxProfit != null ? (
+      <Money value={m.maxProfit} currency={currency} />
+    ) : m.target != null ? (
+      "∞"
+    ) : null;
 
-  const cells: { label: string; value: string; valueClassName?: string }[] = [];
+  const cells: { label: string; value: ReactNode; valueClassName?: string; metric?: MetricId }[] =
+    [];
 
   if (m.target != null) {
-    cells.push({ label: "Target", value: fmtMoney(m.target, currency, intlLocale()) });
+    cells.push({ label: "Target", value: <Money value={m.target} currency={currency} /> });
   }
   if (m.stop != null) {
-    cells.push({ label: "Stop", value: fmtMoney(m.stop, currency, intlLocale()) });
+    cells.push({ label: "Stop", value: <Money value={m.stop} currency={currency} /> });
   }
   if (maxProfitValue != null) {
     cells.push({
@@ -80,21 +76,22 @@ export function RiskRewardPanel({
   if (m.maxLoss != null) {
     cells.push({
       label: "Max loss",
-      value: formatMoneyOrDash(fmtMoney, m.maxLoss, currency),
+      value: <Money value={m.maxLoss} currency={currency} />,
       valueClassName: pnlColor(m.maxLoss),
     });
   }
   if (m.breakeven != null) {
     cells.push({
       label: "Breakeven",
-      value: fmtMoney(m.breakeven, currency, intlLocale()),
+      value: <Money value={m.breakeven} currency={currency} />,
     });
   }
   if (m.plannedRR != null) {
-    cells.push({ label: "Planned R:R", value: `${m.plannedRR.toFixed(2)}:1` });
+    cells.push({ metric: "plannedRR", label: "Planned R:R", value: `${m.plannedRR.toFixed(2)}:1` });
   }
   if (trade.r_multiple != null) {
     cells.push({
+      metric: "realizedR",
       label: "R-multiple",
       value: `${trade.r_multiple >= 0 ? "+" : ""}${trade.r_multiple.toFixed(2)}R`,
       valueClassName: pnlColor(trade.r_multiple),
@@ -120,6 +117,7 @@ export function RiskRewardPanel({
         {cells.map((cell) => (
           <StatCell
             key={cell.label}
+            metric={cell.metric}
             label={cell.label}
             value={cell.value}
             valueClassName={cell.valueClassName}

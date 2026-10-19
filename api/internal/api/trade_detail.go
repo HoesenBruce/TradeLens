@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 
 	"github.com/tradermemos/api/internal/store"
 )
@@ -48,6 +49,12 @@ func (s *Server) buildTradeDetail(ctx context.Context, userID string, t store.Tr
 		fills = []store.Execution{}
 	}
 	d.Fills = toExecutionDTOs(fills)
+	holdingFills := make([]store.ListOptionExecutionDetailsForUserRow, 0, len(fills))
+	for _, f := range fills {
+		holdingFills = append(holdingFills, store.ListOptionExecutionDetailsForUserRow{ExecutedAt: f.ExecutedAt, Details: f.Details})
+	}
+	d.Holding = tradeHolding(t, holdingFills, time.Now())
+	d.PositionType = tradePositionType(holdingFills)
 	if t.InstrumentType == "option" {
 		if right := optionRightFromFills(fills); right != "" {
 			d.OptionRight = &right

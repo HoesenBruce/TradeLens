@@ -41,6 +41,26 @@ func isolationJSONEqual(t *testing.T, expected, actual string, context ...any) {
 	var left, right any
 	require.NoError(t, json.Unmarshal([]byte(expected), &left))
 	require.NoError(t, json.Unmarshal([]byte(actual), &right))
+	// Ongoing elapsed seconds advance between requests; ownership and all
+	// other holding metadata must remain identical.
+	var normalize func(any)
+	normalize = func(value any) {
+		switch v := value.(type) {
+		case []any:
+			for _, item := range v {
+				normalize(item)
+			}
+		case map[string]any:
+			if h, ok := v["holding"].(map[string]any); ok && h["ongoing"] == true && h["kind"] == "elapsed" {
+				h["seconds"] = nil
+			}
+			for _, item := range v {
+				normalize(item)
+			}
+		}
+	}
+	normalize(left)
+	normalize(right)
 	require.Equal(t, sha256.Sum256([]byte(isolationJSON(t, left))), sha256.Sum256([]byte(isolationJSON(t, right))), context...)
 }
 

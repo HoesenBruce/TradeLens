@@ -1,3 +1,4 @@
+import { ReportsMoney } from "./ReportsDisplayContext";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { BreakGroup } from "@/lib/api/types";
 import { cn } from "@/lib/cn";
@@ -57,13 +58,18 @@ export function ReportsHourlyList({ breakdown, loading, error }: ReportsHourlyLi
               const width = (Math.abs(pnl) / maxAbs) * 100;
               return (
                 <li key={g.key} className="min-w-0">
-                  <div className="flex items-baseline justify-between gap-2">
+                  <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-2">
                     <span className="text-[11px] font-medium text-muted-foreground">
                       {formatHourKeyLabel(g.key)}
                     </span>
-                    <span className="flex items-baseline gap-2">
-                      <span className={cn("text-[12px] font-semibold tabular-nums", pnlColor(pnl))}>
-                        {money.format(pnl)}
+                    <span className="flex min-w-0 max-w-full flex-wrap items-baseline gap-2">
+                      <span
+                        className={cn(
+                          "min-w-0 max-w-full flex-[1_1_100px] text-[12px] font-semibold tabular-nums",
+                          pnlColor(pnl),
+                        )}
+                      >
+                        <ReportsMoney value={pnl} />
                       </span>
                       <span className="text-[10px] tabular-nums text-muted-foreground">
                         {fmtPct(g.summary.win_rate, locale)}

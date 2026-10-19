@@ -1,13 +1,14 @@
 import { t as localize } from "@lingui/core/macro";
 import type { TradeDetail } from "@/lib/api/types";
 import { getDisplayTimeOpts } from "@/lib/displayPrefs";
-import { fmtPct, fmtSignedMoney } from "@/lib/format";
+import { fmtPct, fmtSignedMoney, fmtSignedMoneyCompact } from "@/lib/format";
 import type { TradeInsights } from "@/lib/tradeInsights";
 import type { YearWrapped } from "@/lib/wrapped";
 
 export interface ShareCardStat {
   label: string;
   value: string;
+  compactValue?: string;
 }
 
 export type ShareCardTone = "profit" | "loss" | "flat";
@@ -50,6 +51,7 @@ export function buildTradeShareCard(
     locale: string;
     /** Privacy-bound formatter from useMoneyFormatters(); defaults to the module one. */
     fmtSignedMoney?: typeof fmtSignedMoney;
+    fmtSignedMoneyCompact?: typeof fmtSignedMoneyCompact;
   },
 ): ShareCardData {
   const net = trade.net_pnl ?? 0;
@@ -90,6 +92,11 @@ export function buildTradeShareCard(
     hero = {
       label: localize({ id: "accounts.netPnl", message: "Net P&L" }),
       value: (opts.fmtSignedMoney ?? fmtSignedMoney)(net, trade.pnl_currency, opts.locale),
+      compactValue: (opts.fmtSignedMoneyCompact ?? opts.fmtSignedMoney ?? fmtSignedMoneyCompact)(
+        net,
+        trade.pnl_currency,
+        opts.locale,
+      ),
     };
   } else if (r != null) {
     hero = {
@@ -163,11 +170,18 @@ export function buildWrappedShareCard(
     inProgress?: boolean;
     /** Privacy-bound formatter from useMoneyFormatters(); defaults to the module one. */
     fmtSignedMoney?: typeof fmtSignedMoney;
+    fmtSignedMoneyCompact?: typeof fmtSignedMoneyCompact;
   },
 ): ShareCardData {
   const tone: ShareCardTone = wrapped.netPnl > 0 ? "profit" : wrapped.netPnl < 0 ? "loss" : "flat";
   const money = (v: number) =>
     (opts.fmtSignedMoney ?? fmtSignedMoney)(v * opts.fxRate, opts.currency, opts.locale);
+  const compactMoney = (v: number) =>
+    (opts.fmtSignedMoneyCompact ?? opts.fmtSignedMoney ?? fmtSignedMoneyCompact)(
+      v * opts.fxRate,
+      opts.currency,
+      opts.locale,
+    );
   const winRate = fmtPct(wrapped.winRate, opts.locale);
   const profitFactor = wrapped.profitFactor > 0 ? wrapped.profitFactor.toFixed(2) : "0.00";
 
@@ -175,6 +189,7 @@ export function buildWrappedShareCard(
     ? {
         label: localize({ id: "accounts.netPnl", message: "Net P&L" }),
         value: money(wrapped.netPnl),
+        compactValue: compactMoney(wrapped.netPnl),
       }
     : { label: localize({ id: "accounts.winRate", message: "Win rate" }), value: winRate };
 
@@ -190,6 +205,7 @@ export function buildWrappedShareCard(
       ? {
           label: localize({ id: "accounts.bestDay", message: "Best day" }),
           value: money(wrapped.bestDay.pnl),
+          compactValue: compactMoney(wrapped.bestDay.pnl),
         }
       : null,
     !opts.showAmounts

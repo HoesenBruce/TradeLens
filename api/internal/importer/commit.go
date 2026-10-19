@@ -114,7 +114,11 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 		}
 		seen[hash] = struct{}{}
 		id := uuid.New().String()
-		inserts = append(inserts, executionParams(pe, id, userID, accountID, batchID, hash, mult, occurrences[i]))
+		params, err := executionParams(pe, id, userID, accountID, batchID, hash, mult, occurrences[i])
+		if err != nil {
+			return res, err
+		}
+		inserts = append(inserts, params)
 		res.Inserted++
 		if pe.Annotation != nil {
 			pendingAnns = append(pendingAnns, pending{tradeID: id, ann: pe.Annotation})
@@ -428,14 +432,21 @@ func UpsertSetups(ctx context.Context, q store.Querier, userID string, catalog [
 	return applied, nil
 }
 
-func executionParams(pe ParsedExecution, id, userID, accountID string, batchID sql.NullString, hash string, mult float64, occurrence int) store.InsertExecutionParams {
+func executionParams(pe ParsedExecution, id, userID, accountID string, batchID sql.NullString, hash string, mult float64, occurrence int) (store.InsertExecutionParams, error) {
 	ext := sql.NullString{}
 	if pe.ExternalID != "" {
 		ext = sql.NullString{String: pe.ExternalID, Valid: true}
 	}
 	details := sql.NullString{}
-	if pe.DedupKey == "" || pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" || pe.ReportedRealizedPnl != nil || pe.ReportedCloseBasis != nil || pe.EventType != "" || pe.SourceTimePrecision != "" {
+	if pe.DedupKey == "" || pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" || pe.ReportedRealizedPnl != nil || pe.ReportedCloseBasis != nil || pe.EventType != "" || pe.SourceTimePrecision != "" || pe.SBIFields != nil {
 		payload := map[string]any{}
+		if pe.SBIFields != nil {
+			source, err := json.Marshal(pe.SBIFields)
+			if err != nil {
+				return store.InsertExecutionParams{}, err
+			}
+			payload["sbi_source"] = string(source)
+		}
 		if pe.DedupKey == "" {
 			payload["occ"] = strconv.Itoa(occurrence)
 		}
@@ -494,5 +505,5 @@ func executionParams(pe ParsedExecution, id, userID, accountID string, batchID s
 		Quantity: pe.Quantity, Price: pe.Price, Fees: pe.Fees, Commission: pe.Commission,
 		ExecutedAt: pe.ExecutedAt, Multiplier: mult, Details: details,
 		ImportBatchID: batchID, DedupHash: hash,
-	}
+	}, nil
 }

@@ -401,3 +401,34 @@ Deleting an account cascades its retained sources. Reversed batches cannot repla
 clearing/deleting executions cannot use replay as an undelete operation.
 
 Mobile contracts remain additive; mobile was not validated and is outside this issue.
+### SBI cash close totals and reviewed recomputation (#339)
+
+Completed explicit SBI cash groups sum reconciled per-close net results. Broker-reported
+pretax P&L/basis takes precedence, with no second fee or tax deduction; missing reports
+use a labelled average-cost estimate. Cash acquisition cost is not rounded merely on a
+new day. Actual-time records keep their sequence, and date-only review remains uncertain.
+Genbiki basis derivation uses evidenced prior SBI margin-long close costs; conversion
+realization stays zero. Historical mark-to-market account-value replay is unchanged.
+
+SBI historical regroup now requires a transactional preview and its current token.
+Previews include changed groups and preserved/removed review IDs. Applying a preview
+that removes any existing trade ID is refused to protect associations. No automatic
+repair runs on upgrade. See [#339 validation](validation/issue339/README.md) for backup,
+association audit, repeat application, rollback and before/after examples.
+
+### SBI credit settlement matching and inferred opening allocations (#347)
+
+Realized-result enrichment filters explicit SBI credit repayments by stored broker
+settlement evidence before deciding ambiguity. Opening allocations use broker
+identification first; FIFO is allowed only among demonstrably equivalent live
+openings, with complete credit/charge evidence. Equal-time openings remain equivalent
+groups rather than arbitrary physical lot identities. Unresolved credit rows reject
+the entire enrichment batch.
+
+Report-to-repayment and repayment-to-opening provenance are separate. Inferred
+allocations are labelled `fifo_inferred`, retain original source precision, and do
+not imply SBI's actual designation or exact lot holding duration. Existing P&L,
+position valuation, review identities and other brokers retain their current paths.
+No schema migration, automatic historical rewrite or missing-evidence backfill.
+See [issue #347 validation](validation/issue347/README.md) for the evidence contract,
+quantity invariants, compatibility, tests and conservative limits.

@@ -15,7 +15,7 @@ func TestGenwatashiReportedPnlMatchesDisposalOnly(t *testing.T) {
 	require.True(t, ok)
 	require.Len(t, report.Parsed, 2)
 	date, _ := time.Parse(time.RFC3339, "2026-09-03T00:00:00Z")
-	cash := store.Execution{ID: "cash", Symbol: "1515", Side: "sell", Quantity: 100, Price: 1000, ExecutedAt: date, Details: sql.NullString{String: `{"lot":"sbi:cash","position_effect":"reduce","settlement_type":"genwatashi"}`, Valid: true}}
+	cash := store.Execution{ID: "cash", InstrumentType: "stock", Multiplier: 1, Symbol: "1515", Side: "sell", Quantity: 100, Price: 1000, ExecutedAt: date, Details: sql.NullString{String: `{"lot":"sbi:cash","position_effect":"reduce","settlement_type":"genwatashi"}`, Valid: true}}
 	short := cash
 	short.ID = "short"
 	short.Side = "buy"

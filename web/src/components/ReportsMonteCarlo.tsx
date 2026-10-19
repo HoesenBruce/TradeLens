@@ -86,6 +86,7 @@ export function ReportsMonteCarlo({
               align="center"
               label={localize({ id: "reports.medianOutcome", message: "Median Outcome" })}
               value={money.format(simulation.terminal.p50)}
+              compactValue={money.formatCompact(simulation.terminal.p50)}
               accent={simulation.terminal.p50 >= 0 ? "pos" : "neg"}
               hint={localize({
                 id: "reports.overTheNextValue0Trades",
@@ -97,6 +98,7 @@ export function ReportsMonteCarlo({
               align="center"
               label={localize({ id: "reports.bestCase", message: "Best Case" })}
               value={money.format(simulation.terminal.p95)}
+              compactValue={money.formatCompact(simulation.terminal.p95)}
               accent={simulation.terminal.p95 > 0 ? "pos" : "none"}
               hint={localize({ id: "reports.95thPercentile", message: "95th percentile" })}
             />
@@ -105,6 +107,7 @@ export function ReportsMonteCarlo({
               align="center"
               label={localize({ id: "reports.worstCase", message: "Worst Case" })}
               value={money.format(simulation.terminal.p05)}
+              compactValue={money.formatCompact(simulation.terminal.p05)}
               accent={simulation.terminal.p05 < 0 ? "neg" : "none"}
               hint={localize({ id: "reports.5thPercentile", message: "5th percentile" })}
             />
@@ -115,7 +118,9 @@ export function ReportsMonteCarlo({
                 id: "reports.typicalMaxDrawdown",
                 message: "Typical Max Drawdown",
               })}
+              metric="simulationDrawdown"
               value={money.format(-simulation.max_drawdown.p50)}
+              compactValue={money.formatCompact(-simulation.max_drawdown.p50)}
               accent="neg"
               hint={localize({
                 id: "reports.1In20WorseThanValue0",

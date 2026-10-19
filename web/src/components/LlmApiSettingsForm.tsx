@@ -295,8 +295,8 @@ export function LlmApiSettingsForm({
                       onChange={(e) => field.handleChange(e.target.value)}
                       placeholder={settings.default_prompt || labels.customPromptHint}
                       spellCheck={false}
-                      rows={2}
-                      className="w-full text-[12px] leading-relaxed whitespace-pre-wrap **:data-[slot=textarea]:max-h-56 **:data-[slot=textarea]:overflow-y-auto"
+                      rows={8}
+                      className="min-w-0 max-w-full resize-none text-[12px] leading-relaxed *:data-[slot=textarea]:box-border *:data-[slot=textarea]:field-sizing-fixed *:data-[slot=textarea]:max-h-96 *:data-[slot=textarea]:min-h-45 *:data-[slot=textarea]:min-w-0 *:data-[slot=textarea]:resize-y *:data-[slot=textarea]:overflow-y-auto *:data-[slot=textarea]:whitespace-pre-wrap *:data-[slot=textarea]:wrap-anywhere"
                       aria-label={labels.customPrompt}
                     />
                   </SettingsGroupRow>

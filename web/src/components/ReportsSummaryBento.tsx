@@ -1,3 +1,7 @@
+import { ResponsiveValue } from "@/components/ResponsiveValue";
+import { ReportsMoney } from "./ReportsDisplayContext";
+import { MetricHelp } from "@/components/MetricHelp";
+import type { MetricId } from "@/lib/metrics/definitions";
 import { t as localize } from "@lingui/core/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import type { ReactNode } from "react";
@@ -55,17 +59,30 @@ function Eyebrow({
 
 function MetaRow({
   label,
+  metric,
   value,
+  compactValue,
   className,
 }: {
   label: string;
+  metric?: MetricId;
   value: string;
+  compactValue?: string;
   className?: string;
 }) {
   return (
-    <p className="flex items-baseline justify-between gap-3 text-[13px] tabular-nums">
-      <span className="text-muted-foreground">{label}</span>
-      <span className={cn("font-semibold", className)}>{value}</span>
+    <p className="flex min-w-0 flex-wrap items-baseline justify-between gap-3 text-[13px] tabular-nums">
+      <span className="text-muted-foreground">
+        {label}
+        {metric && <MetricHelp metric={metric} />}
+      </span>
+      <span className={cn("min-w-0 max-w-full flex-1 text-right font-semibold", className)}>
+        {compactValue != null && typeof value === "string" ? (
+          <ResponsiveValue value={value} compactValue={compactValue} />
+        ) : (
+          value
+        )}
+      </span>
     </p>
   );
 }
@@ -73,11 +90,13 @@ function MetaRow({
 function ContextItem({
   label,
   value,
+  compactValue,
   hint,
   tone,
 }: {
   label: string;
   value: string;
+  compactValue?: string;
   hint?: string;
   tone?: "pos" | "neg" | "muted";
 }) {
@@ -86,16 +105,24 @@ function ContextItem({
       <p className="text-[11px] text-muted-foreground">{label}</p>
       <p
         className={cn(
-          "mt-1 truncate text-[17px] font-semibold leading-none tracking-[-0.02em] tabular-nums",
+          "mt-1 min-w-0 max-w-full wrap-anywhere text-[17px] font-semibold leading-none tracking-[-0.02em] tabular-nums",
           tone === "pos" && "text-profit",
           tone === "neg" && "text-loss",
           tone === "muted" && "text-muted-foreground",
           !tone && "text-foreground",
         )}
       >
-        {value}
+        {compactValue != null && typeof value === "string" ? (
+          <ResponsiveValue value={value} compactValue={compactValue} />
+        ) : (
+          value
+        )}
       </p>
-      {hint ? <p className="mt-1 truncate text-[10px] text-muted-foreground">{hint}</p> : null}
+      {hint ? (
+        <p className="mt-1 min-w-0 max-w-full wrap-anywhere text-[10px] text-muted-foreground">
+          {hint}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -151,27 +178,32 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
             <Eyebrow>{localize({ id: "accounts.performance", message: "Performance" })}</Eyebrow>
             <p className="mt-2 text-[12px] text-muted-foreground">
               {localize({ id: "accounts.netPnl", message: "Net P&L" })}
+              <MetricHelp metric="reportPnl" />
             </p>
             <p
               className={cn(
-                "mt-3 text-center text-[36px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[40px]",
+                "mt-3 w-full min-w-0 max-w-full text-center text-[36px] font-semibold leading-none tracking-[-0.04em] tabular-nums sm:text-[40px]",
                 pnlColor(heroPnl),
                 heroPnl > 0 && "drop-shadow-[0_0_32px_var(--profit)]",
                 heroPnl < 0 && "drop-shadow-[0_0_32px_var(--loss)]",
               )}
             >
-              {money.format(heroPnl)}
+              <ReportsMoney value={heroPnl} />
             </p>
           </div>
           <div className="mt-6 space-y-2.5">
             <MetaRow
+              metric="reportPnl"
               label={localize({ id: "accounts.gross", message: "Gross" })}
               value={money.format(grossVolume)}
+              compactValue={money.formatCompact(grossVolume)}
               className={pnlColor(grossVolume)}
             />
             <MetaRow
+              metric="fees"
               label={localize({ id: "imports.fieldFees", message: "Fees" })}
               value={`${money.format(summary.total_fees)} (${feePct.toFixed(1)}%)`}
+              compactValue={`${money.formatCompact(summary.total_fees)} (${feePct.toFixed(1)}%)`}
               className="text-destructive"
             />
             <MetaRow
@@ -181,6 +213,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
             <MetaRow
               label={localize({ id: "reports.expectancy", message: "Expectancy" })}
               value={money.format(summary.expectancy)}
+              compactValue={money.formatCompact(summary.expectancy)}
               className={pnlColor(summary.expectancy)}
             />
           </div>
@@ -189,9 +222,10 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
         <BentoCell className="lg:col-span-7">
           <Eyebrow>{localize({ id: "reports.edgeMetrics", message: "Edge metrics" })}</Eyebrow>
           <div className="mt-3 grid flex-1 grid-cols-2 gap-4 sm:gap-5">
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex min-w-0 flex-col items-center justify-center">
               <p className="mb-2 self-start text-[11px] text-muted-foreground">
                 {localize({ id: "accounts.profitFactor", message: "Profit factor" })}
+                <MetricHelp metric="profitFactor" />
               </p>
               <GaugeArc
                 value={pfFraction}
@@ -212,9 +246,10 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
               </p>
             </div>
 
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex min-w-0 flex-col items-center justify-center">
               <p className="mb-2 self-start text-[11px] text-muted-foreground">
                 {localize({ id: "accounts.winRate", message: "Win rate" })}
+                <MetricHelp metric="winRate" />
               </p>
               <DonutRing
                 className="w-full max-w-[120px]"
@@ -236,9 +271,10 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
               </DonutRing>
             </div>
 
-            <div className="flex flex-col justify-center">
+            <div className="flex min-w-0 flex-col justify-center">
               <p className="text-[11px] text-muted-foreground">
                 {localize({ id: "reports.payoffRatio", message: "Payoff ratio" })}
+                <MetricHelp metric="payoff" />
               </p>
               <p
                 className={cn(
@@ -258,7 +294,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
               </p>
             </div>
 
-            <div className="flex flex-col justify-center">
+            <div className="flex min-w-0 flex-col justify-center">
               <div className="flex items-baseline justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-[10px] text-muted-foreground">
@@ -267,8 +303,8 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
                       message: `${{ statistic: statLabel }} win`,
                     })}
                   </p>
-                  <p className="mt-0.5 truncate text-[14px] font-semibold tabular-nums text-profit">
-                    {money.format(avgWin)}
+                  <p className="mt-0.5 min-w-0 max-w-full text-[14px] font-semibold tabular-nums text-profit">
+                    <ReportsMoney value={avgWin} />
                   </p>
                 </div>
                 <div className="min-w-0 text-right">
@@ -278,8 +314,8 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
                       message: `${{ statistic: statLabel }} loss`,
                     })}
                   </p>
-                  <p className="mt-0.5 truncate text-[14px] font-semibold tabular-nums text-loss">
-                    {money.format(avgLoss)}
+                  <p className="mt-0.5 min-w-0 max-w-full text-[14px] font-semibold tabular-nums text-loss">
+                    <ReportsMoney value={avgLoss} />
                   </p>
                 </div>
               </div>
@@ -292,20 +328,20 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
                 ) : null}
               </div>
               <div className="mt-3 grid grid-cols-2 gap-2">
-                <div>
+                <div className="min-w-0">
                   <p className="text-[10px] text-muted-foreground">
                     {localize({ id: "reports.largestWin", message: "Largest win" })}
                   </p>
-                  <p className="mt-0.5 text-[13px] font-semibold tabular-nums text-profit">
-                    {money.format(summary.largest_win)}
+                  <p className="mt-0.5 min-w-0 max-w-full text-[13px] font-semibold tabular-nums text-profit">
+                    <ReportsMoney value={summary.largest_win} />
                   </p>
                 </div>
-                <div className="text-right">
+                <div className="min-w-0 text-right">
                   <p className="text-[10px] text-muted-foreground">
                     {localize({ id: "reports.largestLoss", message: "Largest loss" })}
                   </p>
-                  <p className="mt-0.5 text-[13px] font-semibold tabular-nums text-loss">
-                    {money.format(summary.largest_loss)}
+                  <p className="mt-0.5 min-w-0 max-w-full text-[13px] font-semibold tabular-nums text-loss">
+                    <ReportsMoney value={summary.largest_loss} />
                   </p>
                 </div>
               </div>
@@ -322,11 +358,11 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
           </Eyebrow>
           <p
             className={cn(
-              "mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[26px]",
+              "mt-3 w-full min-w-0 max-w-full wrap-anywhere text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[26px]",
               pnlColor(avgTrade),
             )}
           >
-            {money.format(avgTrade)}
+            <ReportsMoney value={avgTrade} />
           </p>
         </BentoCell>
 
@@ -334,7 +370,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
           <Eyebrow tone="muted">{localize({ id: "reports.kelly", message: "Kelly %" })}</Eyebrow>
           <p
             className={cn(
-              "mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[26px]",
+              "mt-3 w-full min-w-0 max-w-full wrap-anywhere text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[26px]",
               kellyDefined && kelly > 0 && "text-profit",
               kellyDefined && kelly < 0 && "text-loss",
               (!kellyDefined || kelly === 0) && "text-muted-foreground",
@@ -361,7 +397,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
           <Eyebrow tone="muted">SQN</Eyebrow>
           <p
             className={cn(
-              "mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[26px]",
+              "mt-3 w-full min-w-0 max-w-full wrap-anywhere text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[26px]",
               sqnDefined && sqn >= 2.5 && "text-profit",
               sqnDefined && sqn < 1 && "text-loss",
               sqnDefined && sqn >= 1 && sqn < 2.5 && "text-foreground",
@@ -383,9 +419,10 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
         <BentoCell>
           <Eyebrow tone="muted">
             {localize({ id: "accounts.maxDrawdown", message: "Max drawdown" })}
+            <MetricHelp metric="drawdown" />
           </Eyebrow>
-          <p className="mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-loss sm:text-[26px]">
-            {maxDrawdown != null && maxDrawdown > 0 ? money.format(-maxDrawdown) : "—"}
+          <p className="mt-3 w-full min-w-0 max-w-full wrap-anywhere text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-loss sm:text-[26px]">
+            {maxDrawdown != null && maxDrawdown > 0 ? <ReportsMoney value={-maxDrawdown} /> : "—"}
           </p>
           <p className="mt-2 text-center text-[10px] text-muted-foreground">
             {localize({ id: "reports.peakPullback", message: "peak pullback" })}
@@ -395,9 +432,10 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
         <BentoCell>
           <Eyebrow tone="muted">
             {localize({ id: "reports.totalFees", message: "Total fees" })}
+            <MetricHelp metric="fees" />
           </Eyebrow>
-          <p className="mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-destructive sm:text-[26px]">
-            {money.format(summary.total_fees)}
+          <p className="mt-3 w-full min-w-0 max-w-full wrap-anywhere text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-destructive sm:text-[26px]">
+            <ReportsMoney value={summary.total_fees} />
           </p>
           <p className="mt-2 text-center text-[10px] text-muted-foreground">
             {feePct.toFixed(1)}
@@ -409,7 +447,7 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
           <Eyebrow tone="muted">
             {localize({ id: "reports.openBreakeven", message: "Open / breakeven" })}
           </Eyebrow>
-          <p className="mt-3 text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-foreground sm:text-[26px]">
+          <p className="mt-3 w-full min-w-0 max-w-full wrap-anywhere text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-foreground sm:text-[26px]">
             {openTrades} / {summary.breakeven}
           </p>
           <p className="mt-2 text-center text-[10px] text-muted-foreground">
@@ -445,12 +483,14 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
           <ContextItem
             label={localize({ id: "accounts.bestDay", message: "Best day" })}
             value={insights.bestDay ? money.format(insights.bestDay.pnl) : "—"}
+            compactValue={insights.bestDay ? money.formatCompact(insights.bestDay.pnl) : "—"}
             hint={insights.bestDay?.date}
             tone={insights.bestDay && insights.bestDay.pnl > 0 ? "pos" : undefined}
           />
           <ContextItem
             label={localize({ id: "accounts.worstDay", message: "Worst day" })}
             value={insights.worstDay ? money.format(insights.worstDay.pnl) : "—"}
+            compactValue={insights.worstDay ? money.formatCompact(insights.worstDay.pnl) : "—"}
             hint={insights.worstDay?.date}
             tone={insights.worstDay && insights.worstDay.pnl < 0 ? "neg" : undefined}
           />

@@ -1,6 +1,7 @@
 import { cn } from "@/lib/cn";
 import type { PillTone } from "./Pill";
 import { Button } from "./ui/button";
+import { ResponsiveValue } from "./ResponsiveValue";
 
 const TONE_VALUE: Record<PillTone, string> = {
   pos: "text-profit",
@@ -17,6 +18,7 @@ const TONE_VALUE: Record<PillTone, string> = {
 export function StatBar({
   label,
   value,
+  compactValue,
   sub,
   tone = "muted",
   onClick,
@@ -24,6 +26,7 @@ export function StatBar({
 }: {
   label: string;
   value: string;
+  compactValue?: string;
   sub?: string;
   tone?: PillTone;
   onClick?: () => void;
@@ -31,7 +34,10 @@ export function StatBar({
 }) {
   const interactive = Boolean(onClick);
 
-  const shell = cn("flex h-full min-h-[91px] w-full flex-col rounded-lg px-3 py-3.5", "bg-card");
+  const shell = cn(
+    "flex h-full min-h-[91px] min-w-0 w-full flex-col rounded-lg px-3 py-3.5",
+    "bg-card",
+  );
 
   const inner = (
     <>
@@ -44,15 +50,32 @@ export function StatBar({
       >
         {label}
       </span>
-      <div className="mt-2 flex flex-1 flex-col items-center justify-center text-center">
-        <div className="flex items-baseline justify-center gap-1.5">
-          <span
-            className={cn("text-[18px] font-semibold leading-none tabular-nums", TONE_VALUE[tone])}
-          >
-            {value}
-          </span>
+      <div className="mt-2 flex min-w-0 flex-1 flex-col items-center justify-center text-center">
+        <div className="flex w-full min-w-0 flex-wrap items-baseline justify-center gap-1.5">
+          {compactValue ? (
+            <ResponsiveValue
+              value={value}
+              compactValue={compactValue}
+              disclosure={!interactive}
+              className={cn(
+                "min-w-0 max-w-full wrap-anywhere text-[18px] font-semibold leading-none tabular-nums",
+                TONE_VALUE[tone],
+              )}
+            />
+          ) : (
+            <span
+              className={cn(
+                "min-w-0 max-w-full wrap-anywhere text-[18px] font-semibold leading-none tabular-nums",
+                TONE_VALUE[tone],
+              )}
+            >
+              {value}
+            </span>
+          )}
           {sub ? (
-            <span className="text-[13px] tabular-nums text-muted-foreground">{sub}</span>
+            <span className="min-w-0 max-w-full wrap-anywhere text-[13px] tabular-nums text-muted-foreground">
+              {sub}
+            </span>
           ) : null}
         </div>
       </div>

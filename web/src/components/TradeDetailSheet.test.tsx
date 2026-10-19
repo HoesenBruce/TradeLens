@@ -126,6 +126,16 @@ describe("TradeDetailSheet", () => {
     } as never);
   });
 
+  it("shows the authoritative position type in the drawer title", () => {
+    mockedDetail.mockReturnValue({
+      data: { ...TRADE, position_type: "margin" },
+      isLoading: false,
+      isError: false,
+    } as never);
+    wrap(<TradeDetailSheet tradeId="t1" onClose={vi.fn<() => void>()} />);
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("Margin");
+  });
+
   it("surfaces an unavailable split result without a numeric P&L", () => {
     const warning =
       "Corporate-action boundary: stock_split on 2025-09-29 (ratio 7). P&L unavailable.";
@@ -152,9 +162,9 @@ describe("TradeDetailSheet", () => {
     expect(screen.getByText("WIN")).toBeInTheDocument();
     // Identity is the drawer title: symbol on top, contract meta beneath it.
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(/CL8698\s*STK\s*·\s*LONG/);
-    expect(screen.getByText("+$2.50")).toBeInTheDocument();
-    // Status line shows opened → closed dates (Jul 13 or 14 depending on TZ)
-    expect(screen.getByText(/Jul 1[34].*→.*Jul 1[34]/)).toBeInTheDocument();
+    expect(screen.getAllByText("+$2.50").length).toBeGreaterThan(0);
+    // Same-day timeline shows the date once, then the precise opening/closing times.
+    expect(screen.getByText(/Jul 1[34].*→.*<1m/)).toBeInTheDocument();
     expect(screen.getByText("Entry")).toBeInTheDocument();
     expect(screen.getByText("Exit")).toBeInTheDocument();
     expect(screen.queryByText("Target")).not.toBeInTheDocument();
@@ -194,8 +204,12 @@ describe("TradeDetailSheet", () => {
     wrap(<TradeDetailSheet tradeId="t1" onClose={vi.fn<(...args: any[]) => any>()} />);
 
     expect(screen.getByText("Fees")).toBeInTheDocument();
-    expect(screen.getByText("$0.35")).toBeInTheDocument();
-    expect(screen.getByText(/\+\$2\.85 gross/i)).toBeInTheDocument();
+    expect(screen.getAllByText("$0.35").length).toBeGreaterThan(0);
+    expect(
+      screen.getByText(
+        (_, el) => el?.tagName === "P" && /\+\$2\.85\s+gross/i.test(el.textContent ?? ""),
+      ),
+    ).toBeInTheDocument();
     // Exactly 2: one in the bento hero cell, one in RiskRewardPanel.
     expect(screen.getAllByText("+0.50R")).toHaveLength(2);
   });
@@ -260,6 +274,10 @@ describe("TradeDetailSheet", () => {
 
     expect(screen.getByText("B")).toBeInTheDocument();
     expect(screen.getByText("S")).toBeInTheDocument();
-    expect(screen.getByText(/\$0\.35 fee/i)).toBeInTheDocument();
+    expect(
+      screen.getAllByText(
+        (_, el) => el?.tagName === "SPAN" && /\$0\.35\s+fee/i.test(el.textContent ?? ""),
+      ).length,
+    ).toBeGreaterThan(0);
   });
 });

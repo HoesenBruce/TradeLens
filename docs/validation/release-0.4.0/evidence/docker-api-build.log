@@ -1,0 +1,43 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.19kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/debian:bookworm-slim
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/golang:1.27-bookworm
+#3 ...
+
+#4 [auth] library/golang:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/golang:1.27-bookworm
+#3 DONE 2.8s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 761B done
+#5 DONE 0.0s
+
+#6 [stage-1 1/4] FROM docker.io/library/debian:bookworm-slim@sha256:7c7b2c966bc9ee8cedfeef67e0e279108992c77681fa595db4a9d65c06ccc587
+#6 resolve docker.io/library/debian:bookworm-slim@sha256:7c7b2c966bc9ee8cedfeef67e0e279108992c77681fa595db4a9d65c06ccc587 0.0s done
+#6 DONE 0.0s
+
+#7 [build 1/6] FROM docker.io/library/golang:1.27-bookworm@sha256:5cf287a799e6b94384bad13d16b14904c531f51ba65792237e122ce42b392f61
+#7 resolve docker.io/library/golang:1.27-bookworm@sha256:5cf287a799e6b94384bad13d16b14904c531f51ba65792237e122ce42b392f61 0.0s done
+#7 DONE 0.0s
+
+#8 [internal] load build context
+#8 transferring context: 2.83MB 0.3s done
+#8 DONE 0.3s
+
+#9 [build 2/6] WORKDIR /src
+#9 CACHED
+
+#10 [build 3/6] COPY api/go.mod api/go.sum ./
+#10 CACHED
+
+#11 [build 4/6] RUN go mod download
+#11 CANCELED
+ERROR: failed to build: failed to solve: Canceled: context canceled

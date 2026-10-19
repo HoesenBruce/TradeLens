@@ -111,7 +111,7 @@ function TradeCoachNotes({ notes }: { notes: TradeCoachNote[] }) {
   if (notes.length === 0) return null;
 
   return (
-    <ul className="m-0 flex list-none flex-col gap-2 p-0">
+    <ul className="m-0 flex min-w-0 max-w-full list-none flex-col gap-2 p-0 wrap-anywhere">
       {notes.map((note) => (
         <li key={note.id} className="rounded-lg bg-sidebar px-3 py-2.5">
           <p className="m-0 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
@@ -1111,7 +1111,7 @@ export function TradeDetailView({
 
   return (
     <Page fill>
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
         {onBack ? (
           <Button
             type="button"
