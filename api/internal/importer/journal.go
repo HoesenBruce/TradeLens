@@ -89,8 +89,9 @@ func (j *Journal) ParseRowsWithOptions(rows []map[string]string, opts *JournalPa
 			continue
 		}
 		lot := uuid.New().String()
-		for i := range exs {
-			exs[i].LotKey = lot
+		for leg := range exs {
+			exs[leg].SourceRow = i + 1
+			exs[leg].LotKey = lot
 		}
 		exs[0].Annotation = ann
 		res.Executions = append(res.Executions, exs...)

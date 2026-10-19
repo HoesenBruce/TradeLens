@@ -12689,6 +12689,59 @@ msgstr "剩余未平数量 / 累计开仓数量；按剩余量排序"
 msgid "review.ambiguousNotes"
 msgstr "无法明确定位复盘笔记章节。请在完整交易日志中处理；本次草稿已保留。"
 
+#. js-lingui-explicit-id
+#. placeholder {0}: preview.retained_rows
+#. placeholder {1}: preview.executions
+#. placeholder {2}: preview.changed
+#: src/app/screens/settings/import-history.tsx:79
+msgid "imports.reprocessSummary"
+msgstr "{0} 条源记录 · {1} 笔成交 · {2} 笔变更 · {3} 笔交易变更"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:71
+msgid "imports.applyReprocess"
+msgstr "应用重新处理"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:46
+#: src/app/screens/settings/import-history.tsx:80
+msgid "imports.associationsKept"
+msgstr "已保留原有日志与复盘关联。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:45
+msgid "imports.reprocessed"
+msgstr "导入已重新处理"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:244
+msgid "imports.newerSource"
+msgstr "存在更新的源数据，请使用对应的导入批次。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:245
+msgid "imports.noRetainedSource"
+msgstr "没有保留的源记录。旧导入、仅含重复数据或尚不支持的导入无法在此重新处理。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:72
+msgid "imports.previewReprocess"
+msgstr "预览变更"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:77
+msgid "imports.reprocessDescription"
+msgstr "使用当前规则重新解析保留的源记录，并重新计算此账户。历史盈亏可能变化；遇到编辑或分组冲突时会停止处理，保留现有数据。"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:58
+msgid "imports.reprocess"
+msgstr "重新处理"
+
+#. js-lingui-explicit-id
+#: src/app/screens/settings/import-history.tsx:61
+msgid "imports.reprocessTitle"
+msgstr "按当前规则重新处理"
 
 #. js-lingui-explicit-id
 msgid "trades.holdingUnknown"

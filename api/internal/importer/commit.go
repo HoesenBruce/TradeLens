@@ -15,12 +15,13 @@ import (
 
 // CommitResult is the outcome of inserting parsed executions and annotations.
 type CommitResult struct {
-	Inserted  int
-	Skipped   int
-	Annotated int
-	Trades    int
-	Errors    []RowError
-	Format    string
+	Inserted        int
+	Skipped         int
+	Annotated       int
+	Trades          int
+	Errors          []RowError
+	Format          string
+	ExecutionHashes []string // aligned with parsed executions, including duplicate fills
 }
 
 // Commit inserts executions, regroups trades, then applies journal annotations.
@@ -60,6 +61,7 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 			hashes[i] = DedupHashOccurrence(dedupSymbol(pe), pe.Side, pe.Quantity, pe.Price, pe.ExecutedAt, occurrences[i])
 		}
 	}
+	res.ExecutionHashes = hashes
 	seen, err := store.BulkExistingDedupHashes(ctx, q, accountID, hashes)
 	if err != nil {
 		return res, fmt.Errorf("dedup check for %d executions: %w", len(hashes), err)
@@ -111,80 +113,12 @@ func Commit(ctx context.Context, q store.Querier, userID, accountID string, batc
 			continue
 		}
 		seen[hash] = struct{}{}
-		ext := sql.NullString{}
-		if pe.ExternalID != "" {
-			ext = sql.NullString{String: pe.ExternalID, Valid: true}
-		}
 		id := uuid.New().String()
-		details := sql.NullString{}
-		if pe.DedupKey == "" || pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" || pe.ReportedRealizedPnl != nil || pe.ReportedCloseBasis != nil || pe.EventType != "" || pe.SourceTimePrecision != "" {
-			payload := map[string]any{}
-			if pe.SBIFields != nil {
-				source, err := json.Marshal(pe.SBIFields)
-				if err != nil {
-					return res, err
-				}
-				payload["sbi_source"] = string(source)
-			}
-			if pe.DedupKey == "" {
-				payload["occ"] = strconv.Itoa(occurrences[i])
-			}
-			if pe.SourceTimePrecision != "" {
-				payload["source_time_precision"] = pe.SourceTimePrecision
-			}
-			if pe.LotKey != "" {
-				payload["lot"] = pe.LotKey
-			}
-			if pe.OptionRight != "" {
-				payload["option_right"] = pe.OptionRight
-			}
-			if pe.Strike != "" {
-				payload["strike"] = pe.Strike
-			}
-			if pe.Expiry != "" {
-				payload["expiry"] = pe.Expiry
-			}
-			if pe.StockName != "" {
-				payload["stock_name"] = pe.StockName
-			}
-			if pe.PositionType != "" {
-				payload["position_type"] = pe.PositionType
-			}
-			if pe.PositionEffect != "" {
-				payload["position_effect"] = pe.PositionEffect
-			}
-			if pe.ReportedRealizedPnl != nil {
-				payload["broker_reported_realized_pnl"] = *pe.ReportedRealizedPnl
-				payload["realized_pnl_source"] = "broker_reported"
-			}
-			if pe.ReportedCloseBasis != nil {
-				payload["broker_reported_close_basis"] = *pe.ReportedCloseBasis
-			}
-			if pe.EventType != "" {
-				payload["event_type"] = pe.EventType
-				if pe.ConversionType != "" {
-					payload["conversion_type"] = pe.ConversionType
-					payload["conversion_id"] = pe.ConversionID
-				}
-				if pe.SettlementType != "" {
-					payload["settlement_type"] = pe.SettlementType
-					payload["settlement_id"] = pe.SettlementID
-				}
-				if pe.SettlementProceeds != nil {
-					payload["broker_reported_settlement_proceeds"] = *pe.SettlementProceeds
-				}
-			}
-			if b, err := json.Marshal(payload); err == nil {
-				details = sql.NullString{String: string(b), Valid: true}
-			}
+		params, err := executionParams(pe, id, userID, accountID, batchID, hash, mult, occurrences[i])
+		if err != nil {
+			return res, err
 		}
-		inserts = append(inserts, store.InsertExecutionParams{
-			ID: id, UserID: userID, AccountID: accountID, ExternalID: ext,
-			Symbol: pe.Symbol, InstrumentType: pe.InstrumentType, Side: pe.Side,
-			Quantity: pe.Quantity, Price: pe.Price, Fees: pe.Fees, Commission: pe.Commission,
-			ExecutedAt: pe.ExecutedAt, Multiplier: mult, Details: details,
-			ImportBatchID: batchID, DedupHash: hash,
-		})
+		inserts = append(inserts, params)
 		res.Inserted++
 		if pe.Annotation != nil {
 			pendingAnns = append(pendingAnns, pending{tradeID: id, ann: pe.Annotation})
@@ -496,4 +430,80 @@ func UpsertSetups(ctx context.Context, q store.Querier, userID string, catalog [
 		applied++
 	}
 	return applied, nil
+}
+
+func executionParams(pe ParsedExecution, id, userID, accountID string, batchID sql.NullString, hash string, mult float64, occurrence int) (store.InsertExecutionParams, error) {
+	ext := sql.NullString{}
+	if pe.ExternalID != "" {
+		ext = sql.NullString{String: pe.ExternalID, Valid: true}
+	}
+	details := sql.NullString{}
+	if pe.DedupKey == "" || pe.LotKey != "" || pe.OptionRight != "" || pe.Strike != "" || pe.Expiry != "" || pe.StockName != "" || pe.PositionType != "" || pe.PositionEffect != "" || pe.ReportedRealizedPnl != nil || pe.ReportedCloseBasis != nil || pe.EventType != "" || pe.SourceTimePrecision != "" || pe.SBIFields != nil {
+		payload := map[string]any{}
+		if pe.SBIFields != nil {
+			source, err := json.Marshal(pe.SBIFields)
+			if err != nil {
+				return store.InsertExecutionParams{}, err
+			}
+			payload["sbi_source"] = string(source)
+		}
+		if pe.DedupKey == "" {
+			payload["occ"] = strconv.Itoa(occurrence)
+		}
+		if pe.SourceTimePrecision != "" {
+			payload["source_time_precision"] = pe.SourceTimePrecision
+		}
+		if pe.LotKey != "" {
+			payload["lot"] = pe.LotKey
+		}
+		if pe.OptionRight != "" {
+			payload["option_right"] = pe.OptionRight
+		}
+		if pe.Strike != "" {
+			payload["strike"] = pe.Strike
+		}
+		if pe.Expiry != "" {
+			payload["expiry"] = pe.Expiry
+		}
+		if pe.StockName != "" {
+			payload["stock_name"] = pe.StockName
+		}
+		if pe.PositionType != "" {
+			payload["position_type"] = pe.PositionType
+		}
+		if pe.PositionEffect != "" {
+			payload["position_effect"] = pe.PositionEffect
+		}
+		if pe.ReportedRealizedPnl != nil {
+			payload["broker_reported_realized_pnl"] = *pe.ReportedRealizedPnl
+			payload["realized_pnl_source"] = "broker_reported"
+		}
+		if pe.ReportedCloseBasis != nil {
+			payload["broker_reported_close_basis"] = *pe.ReportedCloseBasis
+		}
+		if pe.EventType != "" {
+			payload["event_type"] = pe.EventType
+			if pe.ConversionType != "" {
+				payload["conversion_type"] = pe.ConversionType
+				payload["conversion_id"] = pe.ConversionID
+			}
+			if pe.SettlementType != "" {
+				payload["settlement_type"] = pe.SettlementType
+				payload["settlement_id"] = pe.SettlementID
+			}
+			if pe.SettlementProceeds != nil {
+				payload["broker_reported_settlement_proceeds"] = *pe.SettlementProceeds
+			}
+		}
+		if b, err := json.Marshal(payload); err == nil {
+			details = sql.NullString{String: string(b), Valid: true}
+		}
+	}
+	return store.InsertExecutionParams{
+		ID: id, UserID: userID, AccountID: accountID, ExternalID: ext,
+		Symbol: pe.Symbol, InstrumentType: pe.InstrumentType, Side: pe.Side,
+		Quantity: pe.Quantity, Price: pe.Price, Fees: pe.Fees, Commission: pe.Commission,
+		ExecutedAt: pe.ExecutedAt, Multiplier: mult, Details: details,
+		ImportBatchID: batchID, DedupHash: hash,
+	}, nil
 }

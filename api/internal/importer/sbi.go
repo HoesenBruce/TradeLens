@@ -245,6 +245,7 @@ func ParseSBIRows(rows []map[string]string, mapping map[string]string, sourceTZ 
 			}
 
 			execution := parsed.Executions[0]
+			execution.SourceRow = i + 1
 			execution.PositionType, execution.PositionEffect, _ = sbiSemantics(leg)
 			if transaction == leg && execution.PositionEffect == PositionReduce {
 				raw := strings.TrimSpace(strings.ReplaceAll(row["平均取得価額"], ",", ""))

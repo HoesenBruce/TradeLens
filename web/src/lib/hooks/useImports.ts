@@ -40,3 +40,25 @@ export function useDeleteImport() {
     },
   });
 }
+
+export function useReprocessImport() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, fingerprint }: { id: string; fingerprint?: string }) =>
+      importsApi.reprocess(id, fingerprint),
+    onSuccess: (result) => {
+      if (!result.applied) return;
+      for (const key of [
+        "imports",
+        "executions",
+        "trades",
+        "trade",
+        "analytics",
+        "accounts",
+        "prop",
+      ]) {
+        void queryClient.invalidateQueries({ queryKey: [key] });
+      }
+    },
+  });
+}

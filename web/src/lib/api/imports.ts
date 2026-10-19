@@ -1,5 +1,5 @@
 import { apiFetch } from "./client";
-import type { ImportBatch, ImportPreview, ImportResult } from "./types";
+import type { ImportBatch, ImportPreview, ImportResult, ReprocessResult } from "./types";
 
 export const importsApi = {
   // Step 1: parse-only preview (no DB writes)
@@ -12,5 +12,10 @@ export const importsApi = {
       body: formData,
     }),
   list: () => apiFetch<ImportBatch[]>("/imports"),
+  reprocess: (id: string, fingerprint?: string) =>
+    apiFetch<ReprocessResult>(`/imports/${id}/reprocess`, {
+      method: "POST",
+      body: JSON.stringify({ apply: fingerprint !== undefined, fingerprint }),
+    }),
   delete: (id: string) => apiFetch<void>(`/imports/${id}`, { method: "DELETE" }),
 };
