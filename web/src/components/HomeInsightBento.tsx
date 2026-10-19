@@ -1,5 +1,5 @@
 import { ResponsiveValue } from "./ResponsiveValue";
-import { MetricHelp } from "./MetricHelp";
+import { MetricLabel } from "./MetricHelp";
 import { useLingui } from "@lingui/react";
 import type { ReactNode } from "react";
 import type { Summary, Trade } from "@/lib/api/types";
@@ -176,12 +176,13 @@ export function HomeInsightBento({
           {[bestTrade, worstTrade, maxDd, profitFactor].map((row) => (
             <div key={row.label} className="min-w-0">
               <Title tone="muted">
-                {row.label}
-                {row === maxDd ? (
-                  <MetricHelp metric="drawdown" />
-                ) : row === profitFactor ? (
-                  <MetricHelp metric="profitFactor" />
-                ) : null}
+                <MetricLabel
+                  metric={
+                    row === maxDd ? "drawdown" : row === profitFactor ? "profitFactor" : undefined
+                  }
+                >
+                  {row.label}
+                </MetricLabel>
               </Title>
               <p
                 className={cn(
@@ -206,8 +207,7 @@ export function HomeInsightBento({
       <BentoCell className="col-span-1 sm:col-span-2 lg:col-span-4">
         <Title>{stability.title}</Title>
         <Title tone="muted" className="mt-3">
-          {stability.hero.label}
-          <MetricHelp metric="winRate" />
+          <MetricLabel metric="winRate">{stability.hero.label}</MetricLabel>
         </Title>
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
           <HeroValue row={stability.hero} center />

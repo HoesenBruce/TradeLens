@@ -1,6 +1,6 @@
 import { ResponsiveValue } from "@/components/ResponsiveValue";
 import { ReportsMoney } from "./ReportsDisplayContext";
-import { MetricHelp } from "@/components/MetricHelp";
+import { MetricLabel } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import { t as localize } from "@lingui/core/macro";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
@@ -73,8 +73,7 @@ function MetaRow({
   return (
     <p className="flex min-w-0 flex-wrap items-baseline justify-between gap-3 text-[13px] tabular-nums">
       <span className="text-muted-foreground">
-        {label}
-        {metric && <MetricHelp metric={metric} />}
+        <MetricLabel metric={metric}>{label}</MetricLabel>
       </span>
       <span className={cn("min-w-0 max-w-full flex-1 text-right font-semibold", className)}>
         {compactValue != null && typeof value === "string" ? (
@@ -177,8 +176,9 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
           <div>
             <Eyebrow>{localize({ id: "accounts.performance", message: "Performance" })}</Eyebrow>
             <p className="mt-2 text-[12px] text-muted-foreground">
-              {localize({ id: "accounts.netPnl", message: "Net P&L" })}
-              <MetricHelp metric="reportPnl" />
+              <MetricLabel metric="reportPnl">
+                {localize({ id: "accounts.netPnl", message: "Net P&L" })}
+              </MetricLabel>
             </p>
             <p
               className={cn(
@@ -224,8 +224,9 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
           <div className="mt-3 grid flex-1 grid-cols-2 gap-4 sm:gap-5">
             <div className="flex min-w-0 flex-col items-center justify-center">
               <p className="mb-2 self-start text-[11px] text-muted-foreground">
-                {localize({ id: "accounts.profitFactor", message: "Profit factor" })}
-                <MetricHelp metric="profitFactor" />
+                <MetricLabel metric="profitFactor">
+                  {localize({ id: "accounts.profitFactor", message: "Profit factor" })}
+                </MetricLabel>
               </p>
               <GaugeArc
                 value={pfFraction}
@@ -248,8 +249,9 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
 
             <div className="flex min-w-0 flex-col items-center justify-center">
               <p className="mb-2 self-start text-[11px] text-muted-foreground">
-                {localize({ id: "accounts.winRate", message: "Win rate" })}
-                <MetricHelp metric="winRate" />
+                <MetricLabel metric="winRate">
+                  {localize({ id: "accounts.winRate", message: "Win rate" })}
+                </MetricLabel>
               </p>
               <DonutRing
                 className="w-full max-w-[120px]"
@@ -273,8 +275,9 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
 
             <div className="flex min-w-0 flex-col justify-center">
               <p className="text-[11px] text-muted-foreground">
-                {localize({ id: "reports.payoffRatio", message: "Payoff ratio" })}
-                <MetricHelp metric="payoff" />
+                <MetricLabel metric="payoff">
+                  {localize({ id: "reports.payoffRatio", message: "Payoff ratio" })}
+                </MetricLabel>
               </p>
               <p
                 className={cn(
@@ -418,8 +421,9 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
 
         <BentoCell>
           <Eyebrow tone="muted">
-            {localize({ id: "accounts.maxDrawdown", message: "Max drawdown" })}
-            <MetricHelp metric="drawdown" />
+            <MetricLabel metric="drawdown">
+              {localize({ id: "accounts.maxDrawdown", message: "Max drawdown" })}
+            </MetricLabel>
           </Eyebrow>
           <p className="mt-3 w-full min-w-0 max-w-full wrap-anywhere text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-loss sm:text-[26px]">
             {maxDrawdown != null && maxDrawdown > 0 ? <ReportsMoney value={-maxDrawdown} /> : "—"}
@@ -431,8 +435,9 @@ export function ReportsSummaryBento({ summary, trades, equity }: ReportsSummaryB
 
         <BentoCell>
           <Eyebrow tone="muted">
-            {localize({ id: "reports.totalFees", message: "Total fees" })}
-            <MetricHelp metric="fees" />
+            <MetricLabel metric="fees">
+              {localize({ id: "reports.totalFees", message: "Total fees" })}
+            </MetricLabel>
           </Eyebrow>
           <p className="mt-3 w-full min-w-0 max-w-full wrap-anywhere text-center text-[24px] font-semibold leading-none tracking-[-0.03em] tabular-nums text-destructive sm:text-[26px]">
             <ReportsMoney value={summary.total_fees} />

@@ -15,6 +15,20 @@ function stopRowActivation(event: KeyboardEvent) {
   if (event.key === "Enter" || event.key === " ") event.stopPropagation();
 }
 
+/** Keep the trigger in the label's intrinsic-width group, even inside stretched cards. */
+export function MetricLabel({ children, metric }: { children: ReactNode; metric?: MetricId }) {
+  if (!metric) return children;
+  return (
+    <span
+      data-metric-label
+      className="inline-flex w-fit min-w-0 max-w-full items-center gap-1 align-middle"
+    >
+      <span className="min-w-0 wrap-anywhere">{children}</span>
+      {metric && <MetricHelp metric={metric} />}
+    </span>
+  );
+}
+
 export function MetricHelp({ metric, breakdown }: { metric: MetricId; breakdown?: ReactNode }) {
   const { i18n, t } = useLingui();
   const entry: MetricDefinition = metricDefinitions[metric];

@@ -1,6 +1,6 @@
 import { TradePositionTypeBadge } from "./TradePositionTypeBadge";
 import { Money, ResponsiveValue } from "./ResponsiveValue";
-import { MetricHelp } from "./MetricHelp";
+import { MetricHelp, MetricLabel } from "./MetricHelp";
 import { fmtTradeHolding } from "@/lib/tradeHolding";
 import { useLingui } from "@lingui/react";
 import { t } from "@lingui/core/macro";
@@ -192,16 +192,22 @@ export function TradeListItem({
               trade.net_pnl != null ? pnlColor(trade.net_pnl) : "text-muted-foreground",
             )}
           >
-            {trade.net_pnl != null ? (
-              <Money value={trade.net_pnl * fxRate} currency={currency} signed disclosure={false} />
-            ) : (
-              "—"
-            )}
-            <MetricHelp metric="pnl" />
+            <MetricLabel metric="pnl">
+              {trade.net_pnl != null ? (
+                <Money
+                  value={trade.net_pnl * fxRate}
+                  currency={currency}
+                  signed
+                  disclosure={false}
+                />
+              ) : (
+                "—"
+              )}
+            </MetricLabel>
           </span>
         </div>
 
-        <div className="flex min-w-0 items-start">
+        <div className="inline-flex w-fit min-w-0 max-w-full items-start gap-1">
           <TradeQuantityCell trade={trade} />
           <MetricHelp metric="quantities" />
         </div>
@@ -229,8 +235,10 @@ export function TradeListItem({
             // Muted, not a second green/red: one colored number per row keeps
             // the P&L the thing the eye lands on.
             <span className="min-w-0 max-w-full wrap-anywhere text-muted-foreground">
-              {trade.return_pct >= 0 ? "+" : ""}
-              {trade.return_pct.toFixed(2)}%<MetricHelp metric="tradeReturn" />
+              <MetricLabel metric="tradeReturn">
+                {trade.return_pct >= 0 ? "+" : ""}
+                {trade.return_pct.toFixed(2)}%
+              </MetricLabel>
             </span>
           )}
         </div>
@@ -245,12 +253,13 @@ export function TradeListItem({
                 className={part.optional ? "@max-[19rem]/trade-row:hidden" : undefined}
               >
                 {i > 0 ? <span aria-hidden> · </span> : null}
-                {part.text}
-                {part.key === "hold" ? (
-                  <MetricHelp metric="holding" />
-                ) : part.key === "r" ? (
-                  <MetricHelp metric="realizedR" />
-                ) : null}
+                <MetricLabel
+                  metric={
+                    part.key === "hold" ? "holding" : part.key === "r" ? "realizedR" : undefined
+                  }
+                >
+                  {part.text}
+                </MetricLabel>
               </span>
             ))}
           </p>

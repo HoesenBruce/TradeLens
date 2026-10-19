@@ -1,4 +1,4 @@
-import { MetricHelp } from "@/components/MetricHelp";
+import { MetricLabel } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { StatBar } from "./StatBar";
@@ -38,8 +38,7 @@ function Meta({
   return (
     <p className="m-0 flex min-w-0 max-w-full flex-wrap items-baseline gap-1.5 text-[13px] tabular-nums">
       <span className="min-w-0 max-w-full wrap-anywhere font-medium tracking-wide text-muted-foreground">
-        {label}
-        {metric && <MetricHelp metric={metric} />}
+        <MetricLabel metric={metric}>{label}</MetricLabel>
       </span>
       {compactValue ? (
         <ResponsiveValue
@@ -84,8 +83,9 @@ export function PerformanceStrip({
           {tr({ id: "accounts.performance", message: "Performance" })}
         </p>
         <p className="mt-3 self-start text-[12px] font-medium tracking-wide text-muted-foreground">
-          {tr({ id: "accounts.net", message: "Net" })}
-          <MetricHelp metric="accountPerformance" />
+          <MetricLabel metric="accountPerformance">
+            {tr({ id: "accounts.net", message: "Net" })}
+          </MetricLabel>
         </p>
         <div className="mt-3 flex flex-1 flex-col items-center justify-center text-center">
           <ResponsiveValue

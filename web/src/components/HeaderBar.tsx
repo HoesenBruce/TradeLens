@@ -1,5 +1,5 @@
 import { ResponsiveValue } from "./ResponsiveValue";
-import { MetricHelp } from "@/components/MetricHelp";
+import { MetricLabel } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import { useLingui as useLinguiMacro } from "@lingui/react/macro";
 import { useRouterState } from "@tanstack/react-router";
@@ -54,8 +54,7 @@ function HeaderStat({
   return (
     <span className="inline-flex min-w-0 items-baseline gap-1 text-[13px] font-medium">
       <span className="uppercase tracking-widest text-muted-foreground">
-        {label}
-        {metric && <MetricHelp metric={metric} />}
+        <MetricLabel metric={metric}>{label}</MetricLabel>
       </span>
       {compactValue ? (
         <ResponsiveValue
@@ -403,28 +402,30 @@ export function HeaderBar() {
             fxLoading && "opacity-60",
           )}
         >
-          <ResponsiveValue
-            className="min-w-0 flex-[1_1_100px]"
-            renderValue={(v) => <RollingNumber value={v} />}
-            compactValue={
-              summaryQ.isError || !summary
-                ? "—"
-                : fmtSignedMoneyCompact(toDisplay(stats.netPnl), currency, intlLocale())
-            }
-            value={
-              summaryQ.isError || !summary
-                ? "—"
-                : fmtSignedMoney(toDisplay(stats.netPnl), currency, intlLocale())
-            }
-          />
-          <MetricHelp metric="accountPerformance" />
+          <MetricLabel metric="accountPerformance">
+            <ResponsiveValue
+              className="min-w-0"
+              renderValue={(v) => <RollingNumber value={v} />}
+              compactValue={
+                summaryQ.isError || !summary
+                  ? "—"
+                  : fmtSignedMoneyCompact(toDisplay(stats.netPnl), currency, intlLocale())
+              }
+              value={
+                summaryQ.isError || !summary
+                  ? "—"
+                  : fmtSignedMoney(toDisplay(stats.netPnl), currency, intlLocale())
+              }
+            />
+          </MetricLabel>
           {fundingReady && stats.netPnlPct != null ? (
             <span className="inline-flex min-w-0 max-w-full flex-wrap items-baseline gap-0.5 wrap-anywhere">
-              <RollingNumber
-                value={fmtSignedPct(stats.netPnlPct, intlLocale())}
-                className="text-[12px] font-medium opacity-70 sm:text-[13px]"
-              />
-              <MetricHelp metric="accountReturn" />
+              <MetricLabel metric="accountReturn">
+                <RollingNumber
+                  value={fmtSignedPct(stats.netPnlPct, intlLocale())}
+                  className="text-[12px] font-medium opacity-70 sm:text-[13px]"
+                />
+              </MetricLabel>
             </span>
           ) : null}
         </div>

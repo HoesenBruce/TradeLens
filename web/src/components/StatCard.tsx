@@ -1,5 +1,5 @@
 import { ResponsiveValue } from "./ResponsiveValue";
-import { MetricHelp } from "@/components/MetricHelp";
+import { MetricLabel } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import { cn } from "@/lib/cn";
 
@@ -92,8 +92,7 @@ export function StatCard({
         )}
         style={{ color: "var(--muted-foreground)" }}
       >
-        {label}
-        {metric && <MetricHelp metric={metric} />}
+        <MetricLabel metric={metric}>{label}</MetricLabel>
       </span>
 
       <span

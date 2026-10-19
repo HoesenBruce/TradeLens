@@ -7,7 +7,7 @@ for (const width of [1440, 390]) {
   }, info) => {
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/e2e/fixtures/metric-help.html");
-    const trigger = page.locator('[data-metric-help="holding"]');
+    const trigger = page.getByTestId("short-label").locator('[data-metric-help="holding"]');
     await trigger.focus();
     await page.keyboard.press("Enter");
     const dialog = page.getByRole("dialog");

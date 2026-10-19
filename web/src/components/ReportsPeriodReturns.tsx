@@ -1,5 +1,5 @@
 import { ResponsiveValue } from "./ResponsiveValue";
-import { MetricHelp } from "./MetricHelp";
+import { MetricLabel } from "./MetricHelp";
 import { useMoneyFormatters } from "@/lib/useMoneyFormatters";
 import { useLingui as useSecondaryLingui } from "@lingui/react/macro";
 import { useState } from "react";
@@ -82,8 +82,9 @@ export function ReportsPeriodReturns({
     <section className="min-w-0">
       <div className="mb-2 flex items-center justify-between gap-2">
         <p className="text-[10px] font-semibold tracking-wide text-chart-3">
-          {localize({ id: "reports.periodReturns", message: "Period returns" })}
-          <MetricHelp metric="periodReturns" />
+          <MetricLabel metric="periodReturns">
+            {localize({ id: "reports.periodReturns", message: "Period returns" })}
+          </MetricLabel>
         </p>
         {pctEnabled ? (
           <SegmentedControl

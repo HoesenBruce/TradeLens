@@ -1,4 +1,4 @@
-import { MetricHelp } from "@/components/MetricHelp";
+import { MetricLabel } from "@/components/MetricHelp";
 import type { MetricId } from "@/lib/metrics/definitions";
 import {
   type Column,
@@ -263,15 +263,17 @@ export function DataTable<T extends RowData>({
                       pinningCellClass(header.column, "header", pinActive, headerSurface),
                     )}
                   >
-                    <div className="flex items-center gap-1">
-                      <ColumnHeader
-                        column={header.column}
-                        title={label}
-                        titleAttr={meta?.headerTitle}
-                        alignRight={alignRight}
-                        comfortable={comfortable}
-                      />
-                      {meta?.metric && <MetricHelp metric={meta.metric} />}
+                    <div className={cn("flex items-center", alignRight && "justify-end")}>
+                      <MetricLabel metric={meta?.metric}>
+                        <ColumnHeader
+                          column={header.column}
+                          className={meta?.metric ? "w-auto" : undefined}
+                          title={label}
+                          titleAttr={meta?.headerTitle}
+                          alignRight={alignRight}
+                          comfortable={comfortable}
+                        />
+                      </MetricLabel>
                     </div>
                   </th>
                 );
