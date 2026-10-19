@@ -6062,7 +6062,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:76
 msgid "market.sbiNote"
-msgstr ""
+msgstr "支援現貨、信用交易和現引持倉轉換。"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ReplayView.tsx:232
@@ -6454,7 +6454,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:63
 msgid "market.sbi1"
-msgstr ""
+msgstr "在 SBI Securities 開啟「{0}」，選擇匯入期間並匯出 CSV。"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ReplayView.tsx:330
@@ -6677,7 +6677,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:64
 msgid "market.sbi2"
-msgstr ""
+msgstr "開啟「{0}」，選擇對應期間並匯出 CSV。"
 
 #. js-lingui-explicit-id
 #. placeholder {0}: Math.abs(pnl.position)
@@ -6821,7 +6821,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:68
 msgid "market.sbi3"
-msgstr ""
+msgstr "匯入兩種檔案以還原交易、現金流和投入本金。每次上傳一個原始 CSV；系統會自動處理 CP932 編碼和報表標頭。"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ConnectView.tsx:105
@@ -13346,3 +13346,77 @@ msgstr "擴大日期範圍、清除交易篩選，或切換帳戶。"
 #. js-lingui-explicit-id
 msgid "trades.filterSelected"
 msgstr "項已選"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:23
+msgid "imports.sbiGuide"
+msgstr "應匯出哪個 CSV？各有甚麼用途？"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:34
+msgid "imports.sbiExecutionsPurpose"
+msgstr "交易歷史必需。建立成交紀錄，用於還原買賣、數量、價格和日期。請包含首次平倉之前的開倉紀錄；缺少開倉紀錄可能導致還原不完整。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:42
+msgid "imports.sbiExecutionsExport"
+msgstr "選擇成交日期範圍並匯出原始 CSV。請先將此檔案匯入之後接收損益補充資料的同一帳戶。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:54
+msgid "imports.sbiCashPurpose"
+msgstr "還原現金流和投入本金時必需；只記錄交易時可選。建立入金、出金等受支援的資金流水，不會額外建立交易。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:62
+msgid "imports.sbiCashExport"
+msgstr "選擇對應的資金流水期間並匯出原始 CSV。獨立上傳，可在成交歷史之前或之後匯入；如需完整帳戶歷史，請包含更早的入金。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:74
+msgid "imports.sbiPnlPurpose"
+msgstr "可選，須先匯入成交紀錄。將券商報告的稅前已實現損益及取得成本補充至已有 SBI 平倉紀錄，適用於之前已匯入的交易歷史。不會新增成交或資金流水。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: "約定日"
+#. placeholder {1}: "照会"
+#. placeholder {2}: "CSVダウンロード"
+#. placeholder {3}: "売却 / 返済売 / 返済買 / 現渡"
+#: src/components/SBIImportGuide.tsx:82
+msgid "imports.sbiPnlExport"
+msgstr "選擇「{0}」、期間和帳戶，再按「{1}」。開啟日本股票明細並按「{2}」；請使用逐筆明細，而非彙總。支援的交易：{3}。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:88
+msgid "imports.sbiPnlPeriod"
+msgstr "期間應涵蓋該帳戶已匯入成交紀錄的相同平倉日期。SBI CSV 可下載截至前一天的成交，每次最多 5,000 條明細；較長期間請分段匯出。配對使用日期、代碼、交易類型、數量、價格及可用的交收證據，不推測日內先後次序。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:95
+msgid "imports.sbiPnlCaveats"
+msgstr "確認前請檢查補充資料預覽。重複或重疊匯出不會新增交易或重複補充。未配對行不會建立任何紀錄；請檢查帳戶和日期涵蓋範圍。無效、配對不唯一或衝突的行需要核查，並可能阻止確認；不會自動覆寫已有值。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:102
+msgid "imports.sbiPnlValues"
+msgstr "還原的估算值可能與券商報告值不同。報告損益為稅前值，已包含券商費用，請勿再次扣費；稅款資金流水獨立處理。SBI 可能在交收後修訂暫算成本和費用；更新後的報告可能產生衝突，而非自動替換。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:114
+msgid "imports.sbiOfficialHelp"
+msgstr "SBI 匯出說明（日語）"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:118
+msgid "imports.sbiPreviewDuplicates"
+msgstr "每次上傳一個原始檔案並檢查預覽。成交和資金匯入會略過重疊期間中識別出的重複紀錄；上傳下一檔案前請檢查結果。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:125
+msgid "imports.sbiHistoryGuide"
+msgstr "匯入歷史記錄各次上傳。只有受支援且保留了來源行的匯入才提供「重新處理」；它按目前規則重新解析這些行，可能改變歷史結果。未保留來源行的舊匯入、純資金匯入和損益補充無法在此重播。重新處理不會取得缺失的券商資料，也不能取代損益補充。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:17
+msgid "imports.sbiFiles"
+msgstr "帳戶還原同時使用 {0} 和 {1}。請逐一匯入檔案。"

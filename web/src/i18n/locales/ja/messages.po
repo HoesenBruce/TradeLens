@@ -13350,3 +13350,72 @@ msgstr "日付範囲を広げるか、取引フィルターを解除するか、
 #. js-lingui-explicit-id
 msgid "trades.filterSelected"
 msgstr "件選択中"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:23
+msgid "imports.sbiGuide"
+msgstr "どの CSV を出力する？何に使う？"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:34
+msgid "imports.sbiExecutionsPurpose"
+msgstr "取引履歴には必須です。売買・数量・価格・日付を再構成する約定データを作成します。確認したい最初の決済より前の新規建てを含めてください。新規建てが不足すると再構成が不完全になる場合があります。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:42
+msgid "imports.sbiExecutionsExport"
+msgstr "約定日の期間を選び、元の CSV を出力します。損益補完データを取り込む予定の同じ口座に、先にこのファイルを取り込んでください。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:54
+msgid "imports.sbiCashPurpose"
+msgstr "資金収支・拠出元本の再構成には必須ですが、取引記録だけなら任意です。入出金など対応する資金移動を作成し、取引を追加作成するものではありません。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:62
+msgid "imports.sbiCashExport"
+msgstr "対応する資金移動の期間を選び、元の CSV を出力します。約定履歴の前後どちらでも、別々にアップロードできます。口座の全履歴が必要な場合は、それ以前の入金も含めてください。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:74
+msgid "imports.sbiPnlPurpose"
+msgstr "任意です。約定データを先に取り込んでください。既存の SBI 決済に、証券会社が報告した税引前実現損益と取得原価を補完します。以前に取り込んだ取引にも利用できます。約定や資金移動は新規作成しません。"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: "約定日"
+#. placeholder {1}: "照会"
+#. placeholder {2}: "CSVダウンロード"
+#. placeholder {3}: "売却 / 返済売 / 返済買 / 現渡"
+#: src/components/SBIImportGuide.tsx:82
+msgid "imports.sbiPnlExport"
+msgstr "「{0}」、期間、口座を選び、「{1}」をクリックします。国内株式の明細を開き、「{2}」を使用してください。集計ではなく個別明細を使用します。対応する取引：{3}。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:88
+msgid "imports.sbiPnlPeriod"
+msgstr "この口座に取り込んだ約定と同じ決済日の期間を指定します。SBI CSV は前日の約定分まで、1 回につき明細 5,000 件までダウンロードできます。長い期間は分割してください。日付・銘柄・取引・数量・単価と利用可能な決済証拠で照合し、日中の順序は推測しません。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:95
+msgid "imports.sbiPnlCaveats"
+msgstr "確定前に補完プレビューを確認してください。再取込や重複期間の出力でも、取引の追加や同じ補完の二重適用は行いません。未一致の行は何も作成しません。口座と対象期間を確認してください。無効・複数一致・競合の行は確認が必要で、確定できない場合があります。既存値を無断で上書きしません。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:102
+msgid "imports.sbiPnlValues"
+msgstr "再構成した推計値と証券会社の報告値は異なる場合があります。報告損益は税引前で諸費用を含むため、手数料を再度差し引かないでください。税金の資金移動は別に扱います。SBI は受渡後に概算原価や費用を修正する場合があり、変更後の報告は自動置換ではなく競合になることがあります。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:114
+msgid "imports.sbiOfficialHelp"
+msgstr "SBI の出力ヘルプ（日本語）"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:118
+msgid "imports.sbiPreviewDuplicates"
+msgstr "元のファイルを 1 つずつアップロードしてプレビューを確認します。約定・資金の取込では、重複期間内で識別された重複をスキップします。次のファイルを取り込む前に結果を確認してください。"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:125
+msgid "imports.sbiHistoryGuide"
+msgstr "取込履歴はアップロードを記録します。「再処理」は元データ行を保持した対応済みの取込でのみ利用でき、現在のルールで再解析するため過去の結果が変わる場合があります。元データ行のない旧取込、資金のみの取込、損益補完はここでは再実行できません。再処理は不足する証券会社データの取得や損益補完の代替ではありません。"

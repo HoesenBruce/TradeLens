@@ -6062,7 +6062,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:76
 msgid "market.sbiNote"
-msgstr ""
+msgstr "현물, 신용 거래 및 現引 포지션 전환을 지원합니다."
 
 #. js-lingui-explicit-id
 #: src/app/screens/ReplayView.tsx:232
@@ -6454,7 +6454,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:63
 msgid "market.sbi1"
-msgstr ""
+msgstr "SBI Securities에서 「{0}」를 열고 가져올 기간을 선택한 뒤 CSV를 내보내세요."
 
 #. js-lingui-explicit-id
 #: src/app/screens/ReplayView.tsx:330
@@ -6677,7 +6677,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:64
 msgid "market.sbi2"
-msgstr ""
+msgstr "「{0}」를 열고 해당 기간을 선택한 뒤 CSV를 내보내세요."
 
 #. js-lingui-explicit-id
 #. placeholder {0}: Math.abs(pnl.position)
@@ -6821,7 +6821,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:68
 msgid "market.sbi3"
-msgstr ""
+msgstr "거래, 현금 흐름, 납입 원금을 재구성하려면 두 파일을 모두 가져오세요. 원본 CSV를 하나씩 업로드하세요. CP932 인코딩과 보고서 머리글은 자동으로 처리됩니다."
 
 #. js-lingui-explicit-id
 #: src/app/screens/ConnectView.tsx:105
@@ -13346,3 +13346,77 @@ msgstr "날짜 범위를 넓히거나 거래 필터를 지우거나 계좌를 �
 #. js-lingui-explicit-id
 msgid "trades.filterSelected"
 msgstr "개 선택됨"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:23
+msgid "imports.sbiGuide"
+msgstr "어떤 CSV를 내보내야 하나요? 어디에 사용하나요?"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:34
+msgid "imports.sbiExecutionsPurpose"
+msgstr "거래 이력에 필수입니다. 매수·매도, 수량, 가격, 날짜를 재구성할 체결을 생성합니다. 검토할 첫 청산 이전의 진입 거래도 포함하세요. 진입 이력이 없으면 재구성이 불완전할 수 있습니다."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:42
+msgid "imports.sbiExecutionsExport"
+msgstr "체결일 기준 기간을 선택하고 원본 CSV를 내보내세요. 나중에 손익 보완 데이터를 받을 동일한 계좌에 이 파일을 먼저 가져오세요."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:54
+msgid "imports.sbiCashPurpose"
+msgstr "현금 흐름과 납입 원금 재구성에 필수이며, 거래만 기록한다면 선택 사항입니다. 입금·출금 등 지원되는 현금 이동을 생성하며 거래를 추가로 생성하지 않습니다."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:62
+msgid "imports.sbiCashExport"
+msgstr "해당 현금 이동 기간을 선택하고 원본 CSV를 내보내세요. 체결 이력 전후 어느 때든 별도로 업로드할 수 있습니다. 전체 계좌 이력이 필요하면 이전 입금도 포함하세요."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:74
+msgid "imports.sbiPnlPurpose"
+msgstr "선택 사항이며 체결을 먼저 가져와야 합니다. 기존 SBI 청산에 증권사 보고 세전 실현손익과 취득원가를 보완합니다. 이전에 가져온 거래 이력에도 사용할 수 있습니다. 새 체결이나 현금 이동은 생성하지 않습니다."
+
+#. js-lingui-explicit-id
+#. placeholder {0}: "約定日"
+#. placeholder {1}: "照会"
+#. placeholder {2}: "CSVダウンロード"
+#. placeholder {3}: "売却 / 返済売 / 返済買 / 現渡"
+#: src/components/SBIImportGuide.tsx:82
+msgid "imports.sbiPnlExport"
+msgstr "「{0}」, 기간, 계좌를 선택한 뒤 「{1}」를 클릭하세요. 일본 주식 상세를 열고 「{2}」를 사용하세요. 합계가 아닌 개별 명세를 사용합니다. 지원 거래: {3}."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:88
+msgid "imports.sbiPnlPeriod"
+msgstr "이 계좌에 가져온 체결의 청산일과 같은 기간을 선택하세요. SBI CSV는 전날 체결분까지, 다운로드당 상세 5,000건까지 제공합니다. 긴 기간은 나누세요. 날짜, 종목, 거래 유형, 수량, 가격과 사용 가능한 결제 증거로 매칭하며 장중 순서를 추측하지 않습니다."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:95
+msgid "imports.sbiPnlCaveats"
+msgstr "확정 전 보완 미리보기를 확인하세요. 반복 또는 기간이 겹치는 파일은 거래를 추가하거나 동일한 보완을 두 번 적용하지 않습니다. 미매칭 행은 아무것도 생성하지 않으므로 계좌와 날짜 범위를 확인하세요. 유효하지 않거나 매칭이 모호하거나 충돌하는 행은 검토가 필요하며 확정이 차단될 수 있습니다. 기존 값을 자동으로 덮어쓰지 않습니다."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:102
+msgid "imports.sbiPnlValues"
+msgstr "재구성한 추정치와 증권사 보고 값은 다를 수 있습니다. 보고 손익은 증권사 비용이 포함된 세전 금액이므로 수수료를 다시 차감하지 마세요. 세금 현금 이동은 별도로 처리합니다. SBI가 결제 후 잠정 원가와 비용을 수정하면 자동 교체가 아닌 충돌이 발생할 수 있습니다."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:114
+msgid "imports.sbiOfficialHelp"
+msgstr "SBI 내보내기 도움말(일본어)"
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:118
+msgid "imports.sbiPreviewDuplicates"
+msgstr "원본 파일을 하나씩 업로드하고 미리보기를 확인하세요. 체결 및 현금 가져오기는 겹치는 기간에서 인식한 중복을 건너뜁니다. 다음 파일을 업로드하기 전에 결과를 확인하세요."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:125
+msgid "imports.sbiHistoryGuide"
+msgstr "가져오기 이력에는 업로드가 기록됩니다. 재처리는 원본 행이 보관된 지원 가져오기에만 제공되며 현재 규칙으로 다시 분석하므로 과거 결과가 바뀔 수 있습니다. 원본 행이 없는 이전 가져오기, 현금 전용 가져오기, 손익 보완은 여기서 재실행할 수 없습니다. 재처리는 누락된 증권사 데이터를 가져오거나 손익 보완을 대신하지 않습니다."
+
+#. js-lingui-explicit-id
+#: src/components/SBIImportGuide.tsx:17
+msgid "imports.sbiFiles"
+msgstr "계좌 재구성에는 {0}와 {1}를 모두 사용합니다. 각 파일을 별도로 가져오세요."

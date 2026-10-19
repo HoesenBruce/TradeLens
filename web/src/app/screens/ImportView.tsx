@@ -29,6 +29,7 @@ import { ControlledPopover } from "@/components/ControlledPopover";
 import { OptionsSelect } from "@/components/OptionsSelect";
 import { ToneToggle } from "@/components/ToneToggle";
 import { Skeleton } from "@/components/Skeleton";
+import { SBIImportGuide } from "@/components/SBIImportGuide";
 import { useToastManager } from "@/components/Toast";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
@@ -387,13 +388,10 @@ function Step1Upload({
   return (
     <Card title={tr({ id: "imports.uploadFile", message: "Upload file" })} fill>
       <div className="flex min-h-0 flex-1 flex-col gap-4">
-        {brokerKey === "sbi" && (
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            {tr({
-              id: "imports.sbiFiles",
-              message: `Account reconstruction uses both ${"約定履歴 CSV"} and ${"入出金明細 CSV"}. Import each file separately.`,
-            })}
-          </p>
+        {(brokerKey === "sbi" ||
+          (!brokerKey &&
+            accounts.find((a) => a.id === effectiveAccountId)?.broker === "SBI Securities")) && (
+          <SBIImportGuide />
         )}
         {accountsLoading ? (
           <Skeleton height="36px" />

@@ -66,6 +66,40 @@ const mockResult: ImportResult = {
 };
 
 describe("ImportView - Step 1", () => {
+  it("shows the SBI guide for the selected SBI account without changing the upload", async () => {
+    const user = (await import("@testing-library/user-event")).default.setup();
+    const onPreview = vi.fn<(...args: any[]) => any>();
+    renderImportView({
+      accounts: [...accounts, { ...accounts[0], id: "sbi", name: "SBI", broker: "SBI Securities" }],
+      accountsLoading: false,
+      onPreview,
+      onCommit: vi.fn<(...args: any[]) => any>(),
+      onDone: vi.fn<(...args: any[]) => any>(),
+    });
+    const guideName = "Which CSV should I export? What is it used for?";
+    expect(screen.queryByRole("button", { name: guideName })).not.toBeInTheDocument();
+    await user.selectOptions(screen.getByLabelText("Account select"), "sbi");
+    const guide = screen.getByRole("button", { name: guideName });
+    expect(guide).toHaveAttribute("aria-expanded", "false");
+    const file = new File(["synthetic"], "history.csv", { type: "text/csv" });
+    fireEvent.change(screen.getByLabelText("Import file input"), { target: { files: [file] } });
+    await user.click(guide);
+    expect(guide).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText(/Creates no new executions or cash movements/)).toBeVisible();
+    await user.click(guide);
+    expect(guide).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByText("history.csv")).toBeVisible();
+    await user.selectOptions(screen.getByLabelText("Account select"), "a1");
+    expect(screen.queryByRole("button", { name: guideName })).not.toBeInTheDocument();
+    await user.selectOptions(screen.getByLabelText("Account select"), "sbi");
+    expect(screen.getByRole("button", { name: guideName })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+    expect(screen.getByRole("button", { name: "Preview import" })).toBeEnabled();
+    expect(onPreview).not.toHaveBeenCalled();
+  });
+
   it("renders the file input in step 1", () => {
     renderImportView({
       accounts,
