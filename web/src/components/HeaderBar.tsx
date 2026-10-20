@@ -53,7 +53,7 @@ function HeaderStat({
 }) {
   return (
     <span className="inline-flex min-w-0 items-baseline gap-1 text-[13px] font-medium">
-      <span className="uppercase tracking-widest text-muted-foreground">
+      <span className="shrink-0 uppercase tracking-widest whitespace-nowrap text-muted-foreground">
         <MetricLabel metric={metric}>{label}</MetricLabel>
       </span>
       {compactValue ? (
