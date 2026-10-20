@@ -47,7 +47,8 @@ No hosted TradeLens origin is assumed. Set `NEXT_PUBLIC_SITE_URL` to your own pu
 origin before publishing; the default is localhost for preview. Home is localized in
 four languages. Inherited docs/SEO/mobile content is marked as upstream reference,
 not a support guarantee; focused fork guides link to the TradeLens repository.
-The optional hosted demo belongs to TraderMemos. Screenshots in
+The [hosted TradeLens demo](https://tradelens-demo.onrender.com/home) is read-only
+and uses fictional data. Render Free may take time to wake after inactivity. Screenshots in
 `public/screenshots/showcase/` are exact copies of #254 synthetic UI captures;
 see `docs/screenshots/screenshot-manifest.json` and its #255 copy records.
 Legacy USD screenshots remain for inherited feature-reference pages.

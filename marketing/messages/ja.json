@@ -14,7 +14,6 @@
     "readGuide": "機能ガイドを読む",
     "foundationTitle": "TraderMemos の基盤を継承",
     "foundationBody": "sinhong2011 と貢献者による TraderMemos は、取引日誌、グループ化、汎用分析、損益カレンダー、Playbook、リプレイ、共有、リスク管理を提供します。TradeLens は SBI 会計、ニュース研究、評価額、Generic Bars HTTP 接続と Web 翻訳を拡張します。相場履歴は不完全な場合があり、収集サービスは別途必要です。帰属表示と AGPL-3.0 を維持します。",
-    "upstreamDemo": "任意の TraderMemos デモ — 上流のみ",
     "startTitle": "自分のサーバーで実行",
     "startBody": "公式のホスト型 TradeLens サービスを示すものではありません。フォークを取得し、.env と固定イメージ版を確認して Web/API Compose を起動。localhost:3000 で所有者を作成します。合成展示には独立した新規の一時 API・DB とローカル相場フィクスチャが必要です。",
     "deploymentNote": "Compose は TradeLens GHCR イメージを使用し、ソースビルドも可能です。Docker 公開は現在手動停止中で、継続公開ではありません。上流と TradeLens の DB マイグレーションは分岐済みです。同じ DB を交互に使用しないでください。更新前に DB・添付ファイル・設定をバックアップし、本番には TLS を設定してください。",

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { BrowserFrame } from '@/components/browser-frame';
-import { appName, gitConfig, demoConfig } from '@/lib/shared';
+import { appName, gitConfig } from '@/lib/shared';
 import { localeAlternates, socialCard } from '@/lib/metadata';
 import { resolveLocale } from '@/i18n/locales';
 import portfolio from '@/public/screenshots/showcase/portfolio.jpg';
@@ -68,7 +68,6 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
           <Link href="https://github.com/sinhong2011/TraderMemos">TraderMemos · sinhong2011</Link>
           <Link href={guide('NOTICE')}>NOTICE</Link>
           <Link href={guide('LICENSE')}>AGPL-3.0</Link>
-          <Link href={demoConfig.url}>{t('upstreamDemo')}</Link>
         </div>
       </section>
       <section id="start" className="space-y-5 border-t border-fd-border px-6 py-12 sm:px-10">

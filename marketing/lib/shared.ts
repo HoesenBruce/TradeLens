@@ -12,10 +12,3 @@ export const gitConfig = {
   repo: 'TradeLens',
   branch: 'main',
 };
-
-// Optional upstream-only demo; never an official TradeLens installation.
-export const demoConfig = {
-  url: 'https://tradermemos.netlify.app',
-  user: 'tradermemosdemo',
-  password: 'demopassword',
-};

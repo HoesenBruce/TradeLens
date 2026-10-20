@@ -27,7 +27,15 @@ TradeLens retains the original project’s AGPL-3.0 license and attribution; see
 
 <br/>
 
-[Quick start](#quick-start) · [SBI guide](docs/features/sbi-import.md) · [News research](docs/features/news-predictions.md) · [Synthetic showcase](docs/showcase-demo.md) · [Docs](#docs) · [Upstream credits](#license)
+**[Live Demo](https://tradelens-demo.onrender.com/home)** · [Quick start](#quick-start) · [SBI guide](docs/features/sbi-import.md) · [News research](docs/features/news-predictions.md) · [Synthetic showcase](docs/showcase-demo.md) · [Docs](#docs) · [Upstream credits](#license)
+
+**Demo URL:** https://tradelens-demo.onrender.com/home
+
+**Username:** `demo@example.com` · **Password:** `fictional-demo-password`
+
+The official TradeLens demo is **read-only** and uses **fictional/synthetic data**,
+not real investment performance. Do not enter or upload private data.
+Hosted on Render Free; it may take time to wake after inactivity.
 
 </div>
 
@@ -165,8 +173,10 @@ No real prices, news, credentials or AI provider are required. Save timestamps c
 backdated through supported APIs. The whole seed refuses reruns; reset with a new database.
 
 For the optional legacy USD generator, see `python3 scripts/seed-demo.py --help`
-(`--mode legacy`, the default). The separate [upstream demo book](docs/demo/) and
-[upstream hosted demo](#upstream-live-demo) illustrate TraderMemos, not TradeLens extensions.
+(`--mode legacy`, the default). This local showcase is a disposable setup you run
+yourself; the [hosted TradeLens demo](https://tradelens-demo.onrender.com/home) is
+read-only. The separate [upstream demo book](docs/demo/) illustrates the TraderMemos
+foundation.
 
 ## Docs
 
@@ -196,14 +206,6 @@ Start with the fork guides below. The inherited marketing/docs sources are in [m
 | **Sync agent** | [tm-sync](docs/tm-sync.md) — a Go binary that watches statement folders and imports on change |
 | **Design** | shadcn/ui + coss ui tokens — see [DESIGN.md](DESIGN.md) |
 
-## Upstream live demo
-
-Try the original TraderMemos (not a TradeLens deployment) without installing anything: **[tradermemos.netlify.app](https://tradermemos.netlify.app)**
-
-Sign in with `tradermemosdemo` / `demopassword`. The demo account carries a seeded dataset — treat it as a shared sandbox, and don't store anything real in it.
-
-If TraderMemos is part of your daily review, consider [sponsoring its development](https://github.com/sponsors/sinhong2011) — it keeps the project free and self-hosted for everyone.
-
 ## Star history
 
 ### TradeLens
@@ -228,6 +230,8 @@ TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos).
 TradeLens is based on [TraderMemos](https://github.com/sinhong2011/TraderMemos), originally developed by [sinhong2011](https://github.com/sinhong2011) and contributors.
 
 TradeLens is distributed under the GNU AGPL-3.0. See [LICENSE](LICENSE) for the full license terms and [NOTICE](NOTICE) for attribution.
+
+If TraderMemos is part of your daily review, consider [sponsoring its development](https://github.com/sponsors/sinhong2011).
 
 See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for copied-component licenses,
 font distribution notices and external ReUI development-resource guidance.
