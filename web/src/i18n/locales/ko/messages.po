@@ -6821,7 +6821,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:68
 msgid "market.sbi3"
-msgstr "거래, 현금 흐름, 납입 원금을 재구성하려면 두 파일을 모두 가져오세요. 원본 CSV를 하나씩 업로드하세요. CP932 인코딩과 보고서 머리글은 자동으로 처리됩니다."
+msgstr "約定履歴 CSV는 거래 내역을, 入出金明細 CSV는 입출금과 납입 원금을 재구성합니다. 원본 CSV를 한 번에 하나씩 업로드하세요. CP932 인코딩과 보고서 헤더는 자동으로 처리됩니다."
 
 #. js-lingui-explicit-id
 #: src/app/screens/ConnectView.tsx:105
@@ -13420,3 +13420,7 @@ msgstr "가져오기 이력에는 업로드가 기록됩니다. 재처리는 원
 #: src/components/SBIImportGuide.tsx:17
 msgid "imports.sbiFiles"
 msgstr "계좌 재구성에는 {0}와 {1}를 모두 사용합니다. 각 파일을 별도로 가져오세요."
+
+#. js-lingui-explicit-id
+msgid "market.sbiPnlExport"
+msgstr "선택 사항: My資産 → 実現損益詳細 → 国内株式（現物） / 国内株式（信用）에서 実現損益詳細 CSV를 내보내세요. 체결 내역을 먼저 가져온 뒤 같은 계좌로 가져오면 기존 청산 체결에 세전 실현손익과 취득원가를 보완합니다. 체결이나 입출금은 새로 생성하지 않습니다."

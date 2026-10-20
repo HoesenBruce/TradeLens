@@ -6821,7 +6821,7 @@ msgstr "ツール"
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:68
 msgid "market.sbi3"
-msgstr "両方のファイルを取り込み、取引・入出金・拠出元本を再構築します。元のCSVを1ファイルずつアップロードしてください。CP932とレポートヘッダーは自動処理されます。"
+msgstr "約定履歴 CSV は取引履歴、入出金明細 CSV は入出金と拠出元本の再構築に使用します。元の CSV を1つずつアップロードしてください。CP932 エンコードと帳票ヘッダーは自動処理されます。"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ConnectView.tsx:105
@@ -13419,3 +13419,7 @@ msgstr "元のファイルを 1 つずつアップロードしてプレビュー
 #: src/components/SBIImportGuide.tsx:125
 msgid "imports.sbiHistoryGuide"
 msgstr "取込履歴はアップロードを記録します。「再処理」は元データ行を保持した対応済みの取込でのみ利用でき、現在のルールで再解析するため過去の結果が変わる場合があります。元データ行のない旧取込、資金のみの取込、損益補完はここでは再実行できません。再処理は不足する証券会社データの取得や損益補完の代替ではありません。"
+
+#. js-lingui-explicit-id
+msgid "market.sbiPnlExport"
+msgstr "任意：My資産 → 実現損益詳細 → 国内株式（現物） / 国内株式（信用）から実現損益詳細 CSV を出力します。約定履歴の取り込み後、同じ口座に取り込み、既存の決済約定に税引前の実現損益と取得原価を補完します。約定や入出金は追加されません。"

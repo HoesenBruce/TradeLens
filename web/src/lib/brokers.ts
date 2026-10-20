@@ -69,9 +69,14 @@ export const BROKERS: BrokerDef[] = [
           message: `Open ${"入出金 → 入出金明細"}, select the corresponding period, and export the CSV.`,
         }),
         tr({
+          id: "market.sbiPnlExport",
+          message:
+            "Optional: export 実現損益詳細 CSV from My資産 → 実現損益詳細 → 国内株式（現物） / 国内株式（信用）. After execution history, import it into the same account to supplement existing closes with pretax realized P&L and acquisition basis. It creates no executions or cash movements.",
+        }),
+        tr({
           id: "market.sbi3",
           message:
-            "Import both exports to reconstruct trades, cash flows, and contributed capital. Upload one original CSV at a time; CP932 encoding and report headers are handled automatically.",
+            "Use 約定履歴 CSV for trades and 入出金明細 CSV for cash flows and contributed capital. Upload one original CSV at a time; CP932 encoding and report headers are handled automatically.",
         }),
       ];
     },

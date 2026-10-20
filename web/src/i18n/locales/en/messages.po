@@ -6820,7 +6820,7 @@ msgstr "Tools"
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:68
 msgid "market.sbi3"
-msgstr "Import both exports to reconstruct trades, cash flows, and contributed capital. Upload one original CSV at a time; CP932 encoding and report headers are handled automatically."
+msgstr "Use 約定履歴 CSV for trades and 入出金明細 CSV for cash flows and contributed capital. Upload one original CSV at a time; CP932 encoding and report headers are handled automatically."
 
 #. js-lingui-explicit-id
 #: src/app/screens/ConnectView.tsx:105
@@ -13418,3 +13418,7 @@ msgstr "Upload one original file at a time and check its preview. Execution and 
 #: src/components/SBIImportGuide.tsx:125
 msgid "imports.sbiHistoryGuide"
 msgstr "Import history records uploads. Reprocess is offered only for supported imports with retained source rows; it reparses those rows with current rules and can change historical results. Legacy imports without retained rows, cash-only imports and P&L enrichment cannot be replayed there. Reprocessing does not fetch missing broker data or replace P&L enrichment."
+
+#. js-lingui-explicit-id
+msgid "market.sbiPnlExport"
+msgstr "Optional: export 実現損益詳細 CSV from My資産 → 実現損益詳細 → 国内株式（現物） / 国内株式（信用）. After execution history, import it into the same account to supplement existing closes with pretax realized P&L and acquisition basis. It creates no executions or cash movements."
