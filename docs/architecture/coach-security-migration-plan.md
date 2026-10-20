@@ -2,6 +2,8 @@
 
 Status: proposed, no migration or feature setting executed. Core D1 and Coach D2 are separate gates; see the roadmap. Applies to main `25fe2f97d41053f2eb8e84362e28ad950c35f55e`; [architecture C contract](coach-secure-output-design.md).
 
+Exact B review packet: [Issue #300 contract](coach-output-contract-v1.md). Named owners and independent approval remain pending; the packet specifies unavailable generation for old clients and safe history adaptation.
+
 ## Current contracts and affected surfaces
 
 Current `coach_reviews` stores `id,user_id,trade_id,model,notes,next_action,created_at`; notes and next action are free text. SQL exists for SQLite and PostgreSQL. `saveCoachReview` writes after successful generation; the current handler can return success without a stored ID when persistence fails. Current history deserializes notes; #295 additionally checks against current configuration, which cannot prove safety after secret rotation.
@@ -28,7 +30,14 @@ Implement matching SQLite/PostgreSQL migrations, sqlc queries/generated stores a
 
 Use `output_version=2` for v2 events and history. Version the **client** envelope separately from model schema version=1. Include `status` on history entries: `complete`, `legacy_withheld`, `unavailable`. Blocking v2 returns only validated rendered findings and a persisted completion result; save failure is a generic error.
 
-During compatibility window, absent version invokes a server adapter from validated v2 data to existing `notes/next_action/source` DTOs and `note/done/error` events. It never invokes the old generator/guard. Ignore v2 progress for old clients, use server-generated note IDs/tone/priority, and send fixed generic errors with the existing HTTP/status contract. Legacy history must be adapted to a fixed placeholder note or omitted with a documented count; choose placeholder for consistent visible history. Omit raw `model`. Disabled capability returns the existing `source:off, notes:[]` shape or documented generic disabled error; enforce before any provider access. Test old client fixtures against this adapter. No automatic client fallback to the original free-text endpoint.
+During the compatibility window, absent-version generation returns the existing
+`source:off, notes:[]` JSON shape or a fixed generic unavailable SSE error, before
+provider access. Old clients must upgrade to v2 for generation; there is no
+free-text fallback or implicit billable retry. History alone adapts validated v2
+findings to existing notes DTOs and legacy rows to fixed placeholder notes, with
+server-generated IDs and catalog tone/priority mapping. Omit raw `model`. Test
+old client fixtures against this explicit unavailable/history contract. See the
+Issue #300 packet for precise fields and mappings.
 
 New Web updates API types, parser and hook together: runtime validate server envelopes, run/sequence handling, required terminal event, explicit provisional state, error/cancel cleanup, history placeholder, locale switching, privacy formatting and generic errors without unhandled rejected Promise. Do not ignore malformed v2 frames and pretend success. Include abort on navigation/reset; failed run retries cannot append old previews or duplicate completed rows. Authenticated capability contains only availability and supported output versions, never owner configuration.
 
