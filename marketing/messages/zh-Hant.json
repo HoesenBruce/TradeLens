@@ -14,7 +14,6 @@
     "readGuide": "閱讀功能指南",
     "foundationTitle": "建構於 TraderMemos 基礎之上",
     "foundationBody": "sinhong2011 與貢獻者開發的 TraderMemos 提供交易日誌、分組、通用分析、損益日曆、策略庫、回放、分享與風險工具。TradeLens 擴充 SBI 會計、新聞研究、估值、Generic Bars HTTP 串接及 Web 在地化。行情歷史可能不完整；蒐集器為獨立服務。保留上游署名與 AGPL-3.0。",
-    "upstreamDemo": "選用 TraderMemos 示範 — 僅屬上游",
     "startTitle": "在自己的伺服器上執行",
     "startBody": "此處不提供官方代管 TradeLens 服務。複製分支儲存庫，檢查 .env、固定映像版本，再啟動 Web/API Compose。開啟 localhost:3000 建立擁有者。合成展示需要獨立且全新的暫存 API、資料庫與本機行情測試服務。",
     "deploymentNote": "Compose 使用 TradeLens GHCR 映像，亦保留原始碼建構方案。Docker 發佈目前為手動停用，並非持續發佈。TradeLens 與上游資料庫遷移已分歧，切勿交替使用同一資料庫。升級前備份資料庫、附件與部署設定，正式環境設定 TLS。",

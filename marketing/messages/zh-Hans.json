@@ -14,7 +14,6 @@
     "readGuide": "阅读功能指南",
     "foundationTitle": "基于 TraderMemos 的基础能力",
     "foundationBody": "sinhong2011 和贡献者开发的 TraderMemos 提供交易日志、分组、通用分析、盈亏日历、策略库、回放、分享和风险工具。TradeLens 扩展 SBI 会计、新闻研究、估值、Generic Bars HTTP 接入和 Web 本地化。行情历史可能不完整；采集器是独立服务。保留上游署名及 AGPL-3.0。",
-    "upstreamDemo": "可选 TraderMemos 演示 — 仅属上游",
     "startTitle": "在自己的服务器上运行",
     "startBody": "此处不提供官方托管 TradeLens 服务。克隆分支仓库，检查 .env、固定镜像版本，再启动 Web/API Compose。访问 localhost:3000 创建所有者。合成展示需要独立的全新临时 API、数据库和本地夹具行情服务。",
     "deploymentNote": "Compose 使用 TradeLens GHCR 镜像，并保留源码构建方案。Docker 发布目前为手动禁用，并非持续发布。TradeLens 与上游数据库迁移已分叉，切勿交替使用同一个数据库。升级前备份数据库、附件和部署配置，生产环境配置 TLS。",

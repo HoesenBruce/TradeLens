@@ -14,7 +14,6 @@
     "readGuide": "Read the focused guide",
     "foundationTitle": "Built on the TraderMemos foundation",
     "foundationBody": "TraderMemos by sinhong2011 and contributors supplies journaling, grouping, generic analytics, the P&L calendar, Playbook, replay, sharing and risk tools. TradeLens extends SBI accounting, news research, valuation, Generic Bars HTTP integration and Web localization. Provider history may be incomplete; a data collector is a separate service. Attribution and AGPL-3.0 are retained.",
-    "upstreamDemo": "Optional TraderMemos demo — upstream only",
     "startTitle": "Run it on your own server",
     "startBody": "No official hosted TradeLens service is implied. Clone the fork, review .env, pin the image version and start the Web/API Compose stack. Open localhost:3000 and create the owner. The synthetic showcase requires its own fresh disposable API/database and local fixture provider.",
     "deploymentNote": "Compose uses TradeLens GHCR images; source-build fallback is available. Docker publishing is currently disabled manually, so images are not continuously published. Never alternate upstream TraderMemos and TradeLens on an existing database: their migrations diverge. Back up the database, attachments and deployment configuration before upgrades. Put TLS in front for production.",
