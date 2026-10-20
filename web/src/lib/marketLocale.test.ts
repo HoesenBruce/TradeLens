@@ -28,6 +28,12 @@ it("keeps SBI website labels Japanese while translating the surrounding guide", 
     expect(broker.formats).toBe("約定履歴 CSV · 入出金明細 CSV · 実現損益詳細 CSV");
     expect(broker.steps[0]).toContain("口座管理 → 取引履歴 → 約定履歴");
     expect(broker.steps[1]).toContain("入出金 → 入出金明細");
+    expect(broker.steps[2]).toContain("実現損益詳細 CSV");
+    expect(broker.steps[2]).toContain(
+      "My資産 → 実現損益詳細 → 国内株式（現物） / 国内株式（信用）",
+    );
+    expect(broker.steps.join(" ")).not.toContain("Import both exports");
+    if (locale !== "en") expect(broker.steps[2]).not.toContain("Optional:");
     const hint = i18n._("imports.sbiFiles", { 0: "約定履歴 CSV", 1: "入出金明細 CSV" });
     expect(hint).toContain("約定履歴 CSV");
     expect(hint).toContain("入出金明細 CSV");

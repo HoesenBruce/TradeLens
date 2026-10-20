@@ -6821,7 +6821,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:68
 msgid "market.sbi3"
-msgstr "匯入兩種檔案以還原交易、現金流和投入本金。每次上傳一個原始 CSV；系統會自動處理 CP932 編碼和報表標頭。"
+msgstr "約定履歴 CSV 用於重建交易，入出金明細 CSV 用於重建資金流水及投入本金。每次上傳一個原始 CSV；系統會自動處理 CP932 編碼和報表標頭。"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ConnectView.tsx:105
@@ -13420,3 +13420,7 @@ msgstr "匯入歷史記錄各次上傳。只有受支援且保留了來源行的
 #: src/components/SBIImportGuide.tsx:17
 msgid "imports.sbiFiles"
 msgstr "帳戶還原同時使用 {0} 和 {1}。請逐一匯入檔案。"
+
+#. js-lingui-explicit-id
+msgid "market.sbiPnlExport"
+msgstr "可選：從 My資産 → 実現損益詳細 → 国内株式（現物） / 国内株式（信用）匯出実現損益詳細 CSV。先匯入成交紀錄，再將此檔案匯入同一帳戶，為已有平倉成交補充稅前已實現損益及取得成本；不會新增成交或資金流水。"

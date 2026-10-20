@@ -6677,7 +6677,7 @@ msgstr "工具"
 #. js-lingui-explicit-id
 #: src/lib/brokers.ts:68
 msgid "market.sbi3"
-msgstr "导入两种文件以重建交易、资金流水及投入本金。每次上传一个原始 CSV；系统会自动处理 CP932 编码和报表头。"
+msgstr "約定履歴 CSV 用于重建交易，入出金明細 CSV 用于重建资金流水及投入本金。每次上传一个原始 CSV；系统会自动处理 CP932 编码和报表头。"
 
 #. js-lingui-explicit-id
 #: src/app/screens/ConnectView.tsx:105
@@ -13418,3 +13418,7 @@ msgstr "每次上传一个原始文件并检查预览。成交和资金导入会
 #: src/components/SBIImportGuide.tsx:125
 msgid "imports.sbiHistoryGuide"
 msgstr "导入历史记录各次上传。只有受支持且保留了来源行的导入才提供“重处理”；它按当前规则重新解析这些行，可能改变历史结果。未保留来源行的旧导入、纯资金导入和损益补充无法在此重放。重处理不会获取缺失的券商数据，也不能替代损益补充。"
+
+#. js-lingui-explicit-id
+msgid "market.sbiPnlExport"
+msgstr "可选：从 My資産 → 実現損益詳細 → 国内株式（現物） / 国内株式（信用）导出実現損益詳細 CSV。先导入成交记录，再将此文件导入同一账户，为已有平仓成交补充税前已实现盈亏及取得成本；不会新增成交或资金流水。"
