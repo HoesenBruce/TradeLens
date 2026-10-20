@@ -27,14 +27,15 @@ TradeLens retains the original project’s AGPL-3.0 license and attribution; see
 
 <br/>
 
-**[Live Demo](https://tradelens-demo.onrender.com/home)** · [Quick start](#quick-start) · [SBI guide](docs/features/sbi-import.md) · [News research](docs/features/news-predictions.md) · [Synthetic showcase](docs/showcase-demo.md) · [Docs](#docs) · [Upstream credits](#license)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-8b5cf6?style=for-the-badge)](https://tradelens-demo.onrender.com/home) [![Quick Start](https://img.shields.io/badge/Quick_Start-0969da?style=for-the-badge)](#quick-start)
 
-**Demo URL:** https://tradelens-demo.onrender.com/home
+[SBI guide](docs/features/sbi-import.md) · [News research](docs/features/news-predictions.md) · [Synthetic showcase](docs/showcase-demo.md) · [Docs](#docs) · [Upstream credits](#license)
+
+**Read-only demo · Synthetic trading data**
 
 **Username:** `demo@example.com` · **Password:** `fictional-demo-password`
 
-The official TradeLens demo is **read-only** and uses **fictional/synthetic data**,
-not real investment performance. Do not enter or upload private data.
+For product evaluation, not real investment performance. Do not enter or upload private data.
 Hosted on Render Free; it may take time to wake after inactivity.
 
 </div>
