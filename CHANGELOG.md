@@ -5,6 +5,37 @@ All notable changes to TraderMemos are documented in this file.
 Release versioning is managed by [release-please](https://github.com/googleapis/release-please).
 See [docs/release.md](docs/release.md) for the release workflow.
 
+## [0.5.0](https://github.com/HoesenBruce/TradeLens/compare/v0.4.0...v0.5.0) (2026-10-20)
+
+
+### Features
+
+* **import:** retain deduplicated CSV sources and reprocess imports ([#313](https://github.com/HoesenBruce/TradeLens/issues/313)) ([5a10dfe](https://github.com/HoesenBruce/TradeLens/commit/5a10dfe3416df356e14b50cac51e111f40ba518c))
+* **metrics:** add accessible localized metric help ([#326](https://github.com/HoesenBruce/TradeLens/issues/326)) ([8adee59](https://github.com/HoesenBruce/TradeLens/commit/8adee59ae642ea514d25e3f863fdcef10b7c308b))
+* **metrics:** explain trading and portfolio indicators ([#325](https://github.com/HoesenBruce/TradeLens/issues/325)) ([#328](https://github.com/HoesenBruce/TradeLens/issues/328)) ([cfe29c8](https://github.com/HoesenBruce/TradeLens/commit/cfe29c83d8f7aa58e6125081309ac4e691dea2ab))
+* **sbi:** enrich cash closes with reported pretax results ([#338](https://github.com/HoesenBruce/TradeLens/issues/338)) ([#341](https://github.com/HoesenBruce/TradeLens/issues/341)) ([b14bbff](https://github.com/HoesenBruce/TradeLens/commit/b14bbff1a910658524b9a500100fc94186ac60c0))
+* **sbi:** show Cash/Margin badges in recent trades and details ([#345](https://github.com/HoesenBruce/TradeLens/issues/345)) ([f29388f](https://github.com/HoesenBruce/TradeLens/commit/f29388f9d60557d557379be59372ef88d7041b6b))
+* **web:** expand trade filters and export matching trades ([#348](https://github.com/HoesenBruce/TradeLens/issues/348)) ([60f462a](https://github.com/HoesenBruce/TradeLens/commit/60f462a04c062ac7604bcf99ba083330d303ac98))
+
+
+### Bug Fixes
+
+* **about:** remove duplicate upstream card and link author ([#320](https://github.com/HoesenBruce/TradeLens/issues/320)) ([7aad3b4](https://github.com/HoesenBruce/TradeLens/commit/7aad3b43ddb8e71d32df01ac2a3b36186edf58f7))
+* **sbi:** enrich matched close results without opening-lot proof ([#351](https://github.com/HoesenBruce/TradeLens/issues/351)) ([460585c](https://github.com/HoesenBruce/TradeLens/commit/460585c4d846549342ac0abe00c7bcdd3b8f0abb))
+* **sbi:** include partial-close realized P&L in account performance ([#343](https://github.com/HoesenBruce/TradeLens/issues/343)) ([475f197](https://github.com/HoesenBruce/TradeLens/commit/475f1974f4a7c3130785ec564d2ba22f101ce845))
+* **sbi:** prioritize settlement evidence and infer equivalent FIFO lots ([#349](https://github.com/HoesenBruce/TradeLens/issues/349)) ([27077d9](https://github.com/HoesenBruce/TradeLens/commit/27077d96ba4f775f14d2482c654ce9bd5b08753a))
+* **sbi:** reconcile cash groups with close results ([#339](https://github.com/HoesenBruce/TradeLens/issues/339)) ([#342](https://github.com/HoesenBruce/TradeLens/issues/342)) ([4ac6bd7](https://github.com/HoesenBruce/TradeLens/commit/4ac6bd76f1487ab3771dfcee5e69aed9d519d31a))
+* **settings:** contain custom prompt textarea ([#319](https://github.com/HoesenBruce/TradeLens/issues/319)) ([#327](https://github.com/HoesenBruce/TradeLens/issues/327)) ([72a25ab](https://github.com/HoesenBruce/TradeLens/commit/72a25ab7ed6b489c5247c012e4d87b4fbf0946a3))
+* **trades:** show calendar holding days for date-only trades ([#321](https://github.com/HoesenBruce/TradeLens/issues/321)) ([8485986](https://github.com/HoesenBruce/TradeLens/commit/848598680a4d1734b5a536d22b73dc1ed1dfaa12))
+* **trades:** show responsive closed and remaining quantity progress ([#323](https://github.com/HoesenBruce/TradeLens/issues/323)) ([35b0760](https://github.com/HoesenBruce/TradeLens/commit/35b0760ebe5be874e0104df24e5fc97237f01da8))
+* **web:** include SBI realized P&L CSV in export guide ([#357](https://github.com/HoesenBruce/TradeLens/issues/357)) ([#359](https://github.com/HoesenBruce/TradeLens/issues/359)) ([f333d72](https://github.com/HoesenBruce/TradeLens/commit/f333d72c750348333d30c79cdb0b289684675920))
+* **web:** keep header stat labels on one line ([#356](https://github.com/HoesenBruce/TradeLens/issues/356)) ([#358](https://github.com/HoesenBruce/TradeLens/issues/358)) ([58d31aa](https://github.com/HoesenBruce/TradeLens/commit/58d31aa68862104012fa77b521838655edc40fb4))
+* **web:** keep metric help attached to labels ([#353](https://github.com/HoesenBruce/TradeLens/issues/353)) ([#354](https://github.com/HoesenBruce/TradeLens/issues/354)) ([2b13551](https://github.com/HoesenBruce/TradeLens/commit/2b13551a68947df40746a2b5dbebd627d8eadf53))
+* **web:** keep narrow performance cards readable ([#330](https://github.com/HoesenBruce/TradeLens/issues/330)) ([#332](https://github.com/HoesenBruce/TradeLens/issues/332)) ([8b57f86](https://github.com/HoesenBruce/TradeLens/commit/8b57f8655ff68370faccc86bdf81394c299c5398))
+* **web:** keep statistic cards readable at narrow widths ([#333](https://github.com/HoesenBruce/TradeLens/issues/333)) ([#337](https://github.com/HoesenBruce/TradeLens/issues/337)) ([5fe1cd8](https://github.com/HoesenBruce/TradeLens/commit/5fe1cd8103353a0aa42bf76f31a1e19bdb19a864))
+* **web:** separate performance amount and return explanations ([#329](https://github.com/HoesenBruce/TradeLens/issues/329)) ([#331](https://github.com/HoesenBruce/TradeLens/issues/331)) ([c91505a](https://github.com/HoesenBruce/TradeLens/commit/c91505a004792d47a8854056722efb5641822d48))
+* **web:** use neutral computation heading in metric help ([#334](https://github.com/HoesenBruce/TradeLens/issues/334)) ([#335](https://github.com/HoesenBruce/TradeLens/issues/335)) ([89fe78e](https://github.com/HoesenBruce/TradeLens/commit/89fe78edc9e8cb7037de7502ae83adf5fd8c4352))
+
 ## [0.4.0](https://github.com/HoesenBruce/TradeLens/compare/v0.3.1...v0.4.0) (2026-10-15)
 
 
