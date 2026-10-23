@@ -158,7 +158,7 @@ jobs:
           VERSION: ${{ needs.metadata.outputs.version }}
         run: |
           printf '%s@%s source=%s version=%s\n' "$IMAGE" "$DIGEST" "$SOURCE_SHA" "$VERSION" | tee image-digest.txt >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: ghcr-digest-${{ matrix.image }}-${{ needs.metadata.outputs.commit }}
           path: image-digest.txt
